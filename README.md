@@ -10,6 +10,8 @@ Create custom themes, change the list of verbs shown during generation (when Hai
 
 tweakcc works by patching the Claude Code's minified `cli.js` file.  When you update your Claude Code installation, your customizations will be overwritten, but they're remembered in your `~/.tweakcc/config.js` configuration file, so they can be reapplied by just rerunning the tool.
 
+Works with Claude Code 1.0.60.
+
 ## Demo
 
 Coming soon.
