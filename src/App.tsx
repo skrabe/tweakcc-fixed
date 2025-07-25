@@ -1,10 +1,4 @@
-import {
-  useState,
-  useEffect,
-  createContext,
-  useCallback,
-  useMemo,
-} from 'react';
+import { useState, useEffect, createContext, useCallback } from 'react';
 import { Box, useInput } from 'ink';
 import { MainView } from './components/MainView.js';
 import { ThemesView } from './components/ThemesView.js';
@@ -31,7 +25,8 @@ import { applyCustomization } from './utils/patching.js';
 
 export const SettingsContext = createContext({
   settings: DEFAULT_SETTINGS,
-  updateSettings: (updateFn: (settings: Settings) => void) => {},
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  updateSettings: (_updateFn: (settings: Settings) => void) => {},
   changesApplied: false,
 });
 

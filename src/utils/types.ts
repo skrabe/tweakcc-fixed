@@ -363,8 +363,8 @@ export const DEFAULT_SETTINGS: Settings = {
       process.env.TERM === 'xterm-ghostty'
         ? ['·', '✢', '✳', '✶', '✻', '*']
         : process.platform === 'darwin'
-        ? ['·', '✢', '✳', '✶', '✻', '✽']
-        : ['·', '✢', '*', '✶', '✻', '✽'],
+          ? ['·', '✢', '✳', '✶', '✻', '✽']
+          : ['·', '✢', '*', '✶', '✻', '✽'],
     reverseMirror: true,
   },
 };

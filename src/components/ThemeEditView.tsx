@@ -33,14 +33,19 @@ export function ThemeEditView({ onBack, themeId }: ThemeEditViewProps) {
   const [editingValue, setEditingValue] = useState('');
   const [originalValue, setOriginalValue] = useState('');
 
-  const updateTheme = useCallback((updateFn: (theme: Theme) => void) => {
-    updateSettings(settings => {
-      const themeIndex = settings.themes.findIndex(t => t.id === currentThemeId);
-      if (themeIndex !== -1) {
-        updateFn(settings.themes[themeIndex]);
-      }
-    });
-  }, [currentThemeId, updateSettings]);
+  const updateTheme = useCallback(
+    (updateFn: (theme: Theme) => void) => {
+      updateSettings(settings => {
+        const themeIndex = settings.themes.findIndex(
+          t => t.id === currentThemeId
+        );
+        if (themeIndex !== -1) {
+          updateFn(settings.themes[themeIndex]);
+        }
+      });
+    },
+    [currentThemeId, updateSettings]
+  );
 
   useInput((input, key) => {
     if (editingColorIndex === null && editingNameId === null) {
@@ -95,7 +100,9 @@ export function ThemeEditView({ onBack, themeId }: ThemeEditViewProps) {
           const oldThemeId = currentThemeId;
           setCurrentThemeId(editingValue);
           updateSettings(settings => {
-            const themeIndex = settings.themes.findIndex(t => t.id === oldThemeId);
+            const themeIndex = settings.themes.findIndex(
+              t => t.id === oldThemeId
+            );
             if (themeIndex !== -1) {
               settings.themes[themeIndex].id = editingValue;
             }
@@ -226,7 +233,8 @@ export function ThemeEditView({ onBack, themeId }: ThemeEditViewProps) {
         <Box>
           <Text backgroundColor="#ffd500" color="black" bold>
             {' '}
-            Editing theme &ldquo;{currentTheme.name}&rdquo; ({currentTheme.id}){' '}
+            Editing theme &ldquo;{currentTheme.name}&rdquo; ({currentTheme.id}
+            ){' '}
           </Text>
         </Box>
 

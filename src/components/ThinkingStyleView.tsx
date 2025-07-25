@@ -33,8 +33,21 @@ const PRESETS = [
     reverseMirror: true,
   },
   {
-    name: "Clock",
-    phases: ["🕛", "🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗", "🕘", "🕙", "🕚"],
+    name: 'Clock',
+    phases: [
+      '🕛',
+      '🕐',
+      '🕑',
+      '🕒',
+      '🕓',
+      '🕔',
+      '🕕',
+      '🕖',
+      '🕗',
+      '🕘',
+      '🕙',
+      '🕚',
+    ],
     reverseMirror: false,
   },
   { name: 'Globe', phases: ['🌍', '🌎', '🌏'], reverseMirror: false },
@@ -125,7 +138,7 @@ export function ThinkingStyleView({ onBack }: ThinkingStyleViewProps) {
     if (editingPhase || addingNewPhase) {
       if (key.return && phaseInput.trim()) {
         // Depending on if we're adding a new phase or editing an existing one...
-        let newPhases = addingNewPhase
+        const newPhases = addingNewPhase
           ? // Add the new phase.
             [...phases, phaseInput.trim()]
           : // Replace the selectedPhaseIndex'th phase with the new phase.
@@ -289,8 +302,8 @@ export function ThinkingStyleView({ onBack }: ThinkingStyleViewProps) {
               {selectedOption === 'updateInterval'
                 ? 'edit interval'
                 : selectedOption === 'presets'
-                ? 'apply preset'
-                : 'save'}
+                  ? 'apply preset'
+                  : 'save'}
             </Text>
           </Box>
           <Box>

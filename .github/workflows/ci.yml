@@ -34,3 +34,6 @@ jobs:
 
       - name: Lint project
         run: pnpm lint
+
+      - name: Check formatting
+        run: pnpm prettier --check src

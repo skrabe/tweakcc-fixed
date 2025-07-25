@@ -98,10 +98,10 @@ export function MainView({ onSubmit, notification }: MainViewProps) {
             notification?.type === 'success'
               ? 'green'
               : notification?.type === 'error'
-              ? 'red'
-              : notification?.type === 'info'
-              ? 'blue'
-              : 'yellow'
+                ? 'red'
+                : notification?.type === 'info'
+                  ? 'blue'
+                  : 'yellow'
           }
           paddingLeft={1}
           flexDirection="column"
@@ -111,10 +111,10 @@ export function MainView({ onSubmit, notification }: MainViewProps) {
               notification?.type === 'success'
                 ? 'green'
                 : notification?.type === 'error'
-                ? 'red'
-                : notification?.type === 'info'
-                ? 'blue'
-                : 'yellow'
+                  ? 'red'
+                  : notification?.type === 'info'
+                    ? 'blue'
+                    : 'yellow'
             }
           >
             {notification?.message}

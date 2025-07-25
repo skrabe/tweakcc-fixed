@@ -8,7 +8,10 @@ export function getCurrentClaudeCodeTheme(): string {
     const ccConfigPath = path.join(os.homedir(), '.claude.json');
     const ccConfig = JSON.parse(fs.readFileSync(ccConfigPath, 'utf8'));
     return ccConfig.theme || 'dark';
-  } catch {}
+  } catch {
+    // Do nothing.
+  }
+
   return 'dark';
 }
 

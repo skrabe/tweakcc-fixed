@@ -40,8 +40,8 @@ export function SelectInput({
               bold={index === selectedIndex}
               color={index === selectedIndex ? 'cyan' : undefined}
               {...(index === selectedIndex
-                ? item.selectedStyles ?? {}
-                : item.styles ?? {})}
+                ? (item.selectedStyles ?? {})
+                : (item.styles ?? {}))}
             >
               {index === selectedIndex ? '❯ ' : '  '}
               {item.name}

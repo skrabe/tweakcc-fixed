@@ -371,8 +371,8 @@ export function LaunchTextView({ onBack }: LaunchTextViewProps) {
               {editingText
                 ? textInput
                 : method === 'figlet'
-                ? figletText
-                : customText}
+                  ? figletText
+                  : customText}
             </Text>
           </Box>
         </Box>

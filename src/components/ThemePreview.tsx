@@ -25,11 +25,11 @@ export function ThemePreview({ theme }: ThemePreviewProps) {
               backgroundColor={theme.colors.diffRemoved}
               color={theme.colors.text}
             >
-              - console.log("
+              - console.log(&quot;
               <Text backgroundColor={theme.colors.diffRemovedWord}>
                 Hello, World!
               </Text>
-              ");
+              &quot;);
             </Text>
             {'           '}│
           </Text>
@@ -39,11 +39,11 @@ export function ThemePreview({ theme }: ThemePreviewProps) {
               backgroundColor={theme.colors.diffAdded}
               color={theme.colors.text}
             >
-              + console.log("
+              + console.log(&quot;
               <Text backgroundColor={theme.colors.diffAddedWord}>
                 Hello, Claude!
               </Text>
-              ");
+              &quot;);
             </Text>
             {'          '}│
           </Text>

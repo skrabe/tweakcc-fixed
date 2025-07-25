@@ -59,30 +59,33 @@ export function ThemesView({ onBack }: ThemesViewProps) {
     setSelectedIndex(0);
   };
 
-  useInput((input, key) => {
-    if (key.escape) {
-      onBack();
-    } else if (key.upArrow) {
-      setSelectedIndex(prev => Math.max(0, prev - 1));
-    } else if (key.downArrow) {
-      setSelectedIndex(prev => Math.min(themes.length - 1, prev + 1));
-    } else if (key.return) {
-      const selectedTheme = themes[selectedIndex];
-      if (selectedTheme) {
-        setEditingThemeId(selectedTheme.id);
-        setInputActive(false);
+  useInput(
+    (input, key) => {
+      if (key.escape) {
+        onBack();
+      } else if (key.upArrow) {
+        setSelectedIndex(prev => Math.max(0, prev - 1));
+      } else if (key.downArrow) {
+        setSelectedIndex(prev => Math.min(themes.length - 1, prev + 1));
+      } else if (key.return) {
+        const selectedTheme = themes[selectedIndex];
+        if (selectedTheme) {
+          setEditingThemeId(selectedTheme.id);
+          setInputActive(false);
+        }
+      } else if (input === 'n') {
+        handleCreateTheme();
+      } else if (input === 'd') {
+        const selectedTheme = themes[selectedIndex];
+        if (selectedTheme) {
+          handleDeleteTheme(selectedTheme.id);
+        }
+      } else if (key.ctrl && input === 'r') {
+        handleResetThemes();
       }
-    } else if (input === 'n') {
-      handleCreateTheme();
-    } else if (input === 'd') {
-      const selectedTheme = themes[selectedIndex];
-      if (selectedTheme) {
-        handleDeleteTheme(selectedTheme.id);
-      }
-    } else if (key.ctrl && input === 'r') {
-      handleResetThemes();
-    }
-  }, { isActive: inputActive });
+    },
+    { isActive: inputActive }
+  );
 
   // Handle editing theme view after all hooks are called
   if (editingThemeId) {
