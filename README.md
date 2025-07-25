@@ -14,6 +14,8 @@ Works with Claude Code 1.0.60.
 
 ## Running
 
+Use `npx tweakcc` or build and run it locally:
+
 ```
 git clone https://github.com/Piebald-AI/tweakcc.git
 cd tweakcc
@@ -25,3 +27,7 @@ node dist/index.js
 ## Demo
 
 Coming soon.
+
+## License
+
+[MIT](./LICENSE)
