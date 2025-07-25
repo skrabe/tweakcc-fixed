@@ -33,8 +33,8 @@ const PRESETS = [
     reverseMirror: true,
   },
   {
-    name: 'Clock',
-    phases: ['🕐', '🕑', '🕒', '🕓', '🕔', '🕕'],
+    name: "Clock",
+    phases: ["🕛", "🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗", "🕘", "🕙", "🕚"],
     reverseMirror: false,
   },
   { name: 'Globe', phases: ['🌍', '🌎', '🌏'], reverseMirror: false },
