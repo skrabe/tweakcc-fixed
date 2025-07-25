@@ -26,8 +26,28 @@ node dist/index.js
 
 ## Demo
 
-Coming soon.
+Edit themes:
+
+<img alt="tweakcc theme edit view" src="./assets/theme_1.png" width="600">
+
+Built-in color picker:
+
+<img alt="tweakcc theme color edit view" src="./assets/theme_2.png" width="600">
+
+Edit the thinking spinner:
+
+<img alt="tweakcc thinking styles edit view" src="./assets/thinking_styles.png" width="600">
+
+Apply your changes:
+
+<img alt="tweakcc launch screen" src="./assets/startup.png" width="600">
+
+Run Claude Code!
+
+<img alt="Customized Claude Code demo" src="./assets/claude_demo.png" width="600">
 
 ## License
 
 [MIT](./LICENSE)
+
+Copyright © 2025 [Piebald LLC](https://piebald.ai).
