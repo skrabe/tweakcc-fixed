@@ -1,5 +1,7 @@
 # tweakcc
 
+[![Mentioned in Awesome Claude Code](https://awesome.re/mentioned-badge.svg)](https://github.com/hesreallyhim/awesome-claude-code)
+
 Customize your Claude Code installations styles.
 
 ```
