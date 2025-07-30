@@ -38,7 +38,6 @@ export interface LaunchTextConfig {
 }
 
 export interface ThinkingVerbsConfig {
-  useHaikuGenerated: boolean;
   punctuation: string;
   verbs: string[];
 }
@@ -260,8 +259,7 @@ export const DEFAULT_SETTINGS: Settings = {
     customText: '',
   },
   thinkingVerbs: {
-    useHaikuGenerated: true,
-    punctuation: '…',
+    punctuation: '… ',
     verbs: [
       'Accomplishing',
       'Actioning',

@@ -296,39 +296,6 @@ export const writeThinkerSymbolSpeed = (
   return newContent;
 };
 
-const getUseHaikuVerbsLocation = (oldFile: string): LocationResult | null => {
-  const envPattern = /process\.env\.DISABLE_NON_ESSENTIAL_MODEL_CALLS/;
-  const match = oldFile.match(envPattern);
-
-  if (!match || match.index == undefined) {
-    console.error('patch: use haiku verbs: failed to find match');
-    return null;
-  }
-
-  return {
-    startIndex: match.index,
-    endIndex: match.index + match[0].length,
-  };
-};
-
-export const writeUseHaikuVerbs = (
-  oldFile: string,
-  useHaiku: boolean
-): string | null => {
-  const location = getUseHaikuVerbsLocation(oldFile);
-  if (!location) {
-    return null;
-  }
-
-  const newValue = useHaiku ? '"0"' : '"1"';
-  const newFile =
-    oldFile.slice(0, location.startIndex) +
-    newValue +
-    oldFile.slice(location.endIndex);
-
-  showDiff(oldFile, newFile, newValue, location.startIndex, location.endIndex);
-  return newFile;
-};
 
 const getThinkerVerbsLocation = (
   oldFile: string
@@ -340,23 +307,11 @@ const getThinkerVerbsLocation = (
     return null;
   }
 
-  // 1.0.35 had these but apparently not 1.0.60.
-  //const exclPattern = /new Set\(\[\s*(?:"[A-Z][a-z]+ing",?\s*)+\]\)/s;
-  //const exclMatch = oldFile.match(exclPattern);
-  //if (!exclMatch || exclMatch.index == undefined) {
-  //  console.error('patch: thinker verbs: failed to find badMatch');
-  //  return null;
-  //}
-
   return {
     okayVerbs: {
       startIndex: okayMatch.index,
       endIndex: okayMatch.index + okayMatch[0].length,
     },
-    //badVerbs: {
-    //  startIndex: exclMatch.index,
-    //  endIndex: exclMatch.index + exclMatch[0].length,
-    //},
   };
 };
 
@@ -550,8 +505,6 @@ export const applyCustomization = async (
   // Apply thinking verbs
   // prettier-ignore
   if (config.settings.thinkingVerbs) {
-    if ((result = writeUseHaikuVerbs(content, config.settings.thinkingVerbs.useHaikuGenerated)))
-      content = result;
     if ((result = writeThinkerVerbs(content, config.settings.thinkingVerbs.verbs)))
       content = result;
     if ((result = writeThinkerPunctuation(content, config.settings.thinkingVerbs.punctuation)))
