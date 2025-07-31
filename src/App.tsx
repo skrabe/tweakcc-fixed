@@ -26,7 +26,7 @@ import { applyCustomization } from './utils/patching.js';
 export const SettingsContext = createContext({
   settings: DEFAULT_SETTINGS,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  updateSettings: (_updateFn: (settings: Settings) => void) => {},
+  updateSettings: (_updateFn: (settings: Settings) => void) => { },
   changesApplied: false,
 });
 
@@ -46,16 +46,6 @@ export default function App() {
     };
     loadConfig();
   }, []);
-
-  // Load Claude Code installation info; used for the revert, apply, and locate cli.js options.
-  const [ccInstInfo, setCcInstInfo] =
-    useState<ClaudeCodeInstallationInfo | null>(null);
-  useEffect(() => {
-    const loadCcInstInfo = async () => {
-      setCcInstInfo(await findClaudeCodeInstallation(config));
-    };
-    loadCcInstInfo();
-  }, [config]);
 
   // Function to update the settings, automatically updated changesApplied.
   const updateSettings = useCallback(
@@ -78,9 +68,13 @@ export default function App() {
   } | null>(null);
 
   // Startup check.
+  // Load Claude Code installation info; used for the revert, apply, and locate cli.js options.
+  const [ccInstInfo, setCcInstInfo] =
+    useState<ClaudeCodeInstallationInfo | null>(null);
   useEffect(() => {
     const performStartupCheck = async () => {
       const info = await startupCheck();
+      setCcInstInfo(info.ccInstInfo);
       if (info.wasUpdated) {
         setNotification({
           message: `Your Claude Code installation was updated from ${info.oldVersion} to ${info.newVersion}, and the patching was likely overwritten
@@ -89,7 +83,7 @@ Please reapply your changes below.`,
           type: 'warning',
         });
         // Update settings to trigger changedApplied:false.
-        updateSettings(() => {});
+        updateSettings(() => { });
       }
     };
     performStartupCheck();
@@ -136,7 +130,7 @@ Please reapply your changes below.`,
               message: 'Original Claude Code restored successfully!',
               type: 'success',
             });
-            updateSettings(() => {});
+            updateSettings(() => { });
           });
         }
         break;

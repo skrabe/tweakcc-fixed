@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as os from 'os';
+import * as fs from 'fs';
 
 export interface Theme {
   name: string;
@@ -388,7 +389,21 @@ if (process.env.N_PREFIX) {
   // prettier-ignore
   CLIJS_SEARCH_PATHS.push(path.join(process.env.N_PREFIX, 'lib', 'node_modules', '@anthropic-ai', 'claude-code'));
 }
+
+// NVM - add all Node.js versions
+try {
+  const nvmDir = path.join(os.homedir(), '.nvm', 'versions', 'node');
+  if (fs.existsSync(nvmDir)) {
+    const versions = fs.readdirSync(nvmDir);
+    for (const version of versions) {
+      CLIJS_SEARCH_PATHS.push(path.join(nvmDir, version, 'lib', 'node_modules', '@anthropic-ai', 'claude-code'));
+    }
+  }
+} catch {
+  console.log("Could not add NVM paths to search list");
+}
 if (process.platform != 'win32') {
   // prettier-ignore
   CLIJS_SEARCH_PATHS.push(path.join('/usr', 'local', 'lib', 'node_modules', '@anthropic-ai', 'claude-code'));
 }
+

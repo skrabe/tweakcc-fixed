@@ -84,11 +84,7 @@ export const findClaudeCodeInstallation = async (
   config: TweakccConfig
 ): Promise<ClaudeCodeInstallationInfo> => {
   if (config.ccInstallationDir) {
-    return {
-      cliPath: path.join(config.ccInstallationDir, 'cli.js'),
-      packageJsonPath: path.join(config.ccInstallationDir, 'package.json'),
-      version: config.ccVersion,
-    };
+    CLIJS_SEARCH_PATHS.unshift(config.ccInstallationDir)
   }
 
   for (const searchPath of CLIJS_SEARCH_PATHS) {
@@ -104,12 +100,13 @@ export const findClaudeCodeInstallation = async (
         version: packageJson.version,
       };
     } catch {
-      // Continue searching if this path fails
+      // Continue searching if this path fails.
       continue;
     }
   }
 
-  console.error(`Cannot find Claude Code's cli.js -- do you have Claude Code installed?
+  console.clear();
+  console.error(`\x1b[31mCannot find Claude Code's cli.js -- do you have Claude Code installed?
 
 Searched at the following locations:
 ${CLIJS_SEARCH_PATHS.map(p => '- ' + p).join('\n')}
@@ -119,16 +116,16 @@ https://github.com/piebald-ai/tweakcc/issues and tell us where you have it--we'l
 location to our search list and release an update today!  Or you can specify the path to its
 \`cli.js\` file in ${CONFIG_FILE}:
 {
-  "ccInstallationDir": "${
-    process.platform == 'win32'
+  "ccInstallationDir": "${process.platform == 'win32'
       ? 'C:\\absolute\\path\\to\\@anthropic-ai\\claude-code'
       : '/absolute/path/to/@anthropic-ai/claude-code'
-  }"
+    }"
 }
-(Note: don't include cli.js in the path.)
+(Note: don't include cli.js in the path.)\x1b[0m
 `);
   process.exit(1);
-};
+
+}
 
 const backupClijs = async (ccInstInfo: ClaudeCodeInstallationInfo) => {
   await ensureConfigDir();
@@ -159,6 +156,7 @@ export async function startupCheck(): Promise<{
   wasUpdated: boolean;
   oldVersion: string | null;
   newVersion: string | null;
+  ccInstInfo: ClaudeCodeInstallationInfo;
 }> {
   const config = await readConfigFile();
 
@@ -181,6 +179,7 @@ export async function startupCheck(): Promise<{
       wasUpdated: true,
       oldVersion: backedUpVersion,
       newVersion: realVersion,
+      ccInstInfo,
     };
   }
 
@@ -188,5 +187,6 @@ export async function startupCheck(): Promise<{
     wasUpdated: false,
     oldVersion: null,
     newVersion: null,
+    ccInstInfo,
   };
 }
