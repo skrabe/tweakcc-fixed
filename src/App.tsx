@@ -14,7 +14,6 @@ import {
   TweakccConfig,
 } from './utils/types.js';
 import {
-  findClaudeCodeInstallation,
   readConfigFile,
   restoreClijsFromBackup,
   startupCheck,

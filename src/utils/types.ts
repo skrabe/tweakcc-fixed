@@ -405,5 +405,8 @@ try {
 if (process.platform != 'win32') {
   // prettier-ignore
   CLIJS_SEARCH_PATHS.push(path.join('/usr', 'local', 'lib', 'node_modules', '@anthropic-ai', 'claude-code'));
+  // OSX Brew
+  // prettier-ignore
+  CLIJS_SEARCH_PATHS.push(path.join('/opt', 'homebrew', 'lib', 'node_modules', '@anthropic-ai', 'claude-code'));
 }
 
