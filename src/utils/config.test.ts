@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import * as config from './config';
+import * as config from './config.js';
 import { CLIJS_SEARCH_PATHS, CONFIG_DIR, CONFIG_FILE, DEFAULT_SETTINGS } from './types';
 import fs from 'node:fs/promises';
 import path from 'node:path';
