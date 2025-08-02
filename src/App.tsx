@@ -25,7 +25,7 @@ import { applyCustomization } from './utils/patching.js';
 export const SettingsContext = createContext({
   settings: DEFAULT_SETTINGS,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  updateSettings: (_updateFn: (settings: Settings) => void) => { },
+  updateSettings: (_updateFn: (settings: Settings) => void) => {},
   changesApplied: false,
 });
 
@@ -82,7 +82,7 @@ Please reapply your changes below.`,
           type: 'warning',
         });
         // Update settings to trigger changedApplied:false.
-        updateSettings(() => { });
+        updateSettings(() => {});
       }
     };
     performStartupCheck();
@@ -129,7 +129,7 @@ Please reapply your changes below.`,
               message: 'Original Claude Code restored successfully!',
               type: 'success',
             });
-            updateSettings(() => { });
+            updateSettings(() => {});
           });
         }
         break;
