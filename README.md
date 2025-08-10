@@ -48,6 +48,10 @@ Run Claude Code!
 
 <img alt="Customized Claude Code demo" src="https://raw.githubusercontent.com/Piebald-AI/tweakcc/main/assets/claude_demo.png" width="600">
 
+## Related projects
+
+[**ccstatusline**](https://github.com/sirmalloc/ccstatusline) - A highly customizable status line formatter for Claude Code CLI that displays model info, git branch, token usage, and other metrics in your terminal.
+
 ## FAQ
 
 ### How can I customize my Claude Code theme?
