@@ -14,6 +14,19 @@ tweakcc works by patching the Claude Code's minified `cli.js` file.  When you up
 
 Works with Claude Code 1.0.72.
 
+## Demo
+
+<img alt="Animated GIF demonstrating launching tweakcc, creating a new theme, changing its colors, applying the customimations, launching Claude Code, and selecting and trying out the new theme" src="./assets/themes-demo.gif" width="600">
+
+## Features
+
+- Create new and modify(/remove) existing themes
+- Change thinking verbs
+- Customize spinner animation
+- Built-in color picker with HSL and RGB sliders and pasting support
+- Works across Claude Code updates
+- Restore your original Claude Code
+
 ## Running
 
 Use `npx tweakcc` or build and run it locally:
@@ -25,28 +38,6 @@ pnpm i
 pnpm build
 node dist/index.js
 ```
-
-## Demo
-
-Edit themes:
-
-<img alt="tweakcc theme edit view" src="https://raw.githubusercontent.com/Piebald-AI/tweakcc/main/assets/theme_1.png" width="600">
-
-Built-in color picker:
-
-<img alt="tweakcc theme color edit view" src="https://raw.githubusercontent.com/Piebald-AI/tweakcc/main/assets/theme_2.png" width="600">
-
-Edit the thinking spinner:
-
-<img alt="tweakcc thinking styles edit view" src="https://raw.githubusercontent.com/Piebald-AI/tweakcc/main/assets/thinking_styles.png" width="600">
-
-Apply your changes:
-
-<img alt="tweakcc launch screen" src="https://raw.githubusercontent.com/Piebald-AI/tweakcc/main/assets/startup.png" width="600">
-
-Run Claude Code!
-
-<img alt="Customized Claude Code demo" src="https://raw.githubusercontent.com/Piebald-AI/tweakcc/main/assets/claude_demo.png" width="600">
 
 ## Related projects
 
