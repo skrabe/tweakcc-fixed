@@ -6,17 +6,16 @@ import { LaunchTextView } from './components/LaunchTextView.js';
 import { ThinkingVerbsView } from './components/ThinkingVerbsView.js';
 import { ThinkingStyleView } from './components/ThinkingStyleView.js';
 import {
-  ClaudeCodeInstallationInfo,
   CONFIG_FILE,
   DEFAULT_SETTINGS,
   MainMenuItem,
   Settings,
+  StartupCheckInfo,
   TweakccConfig,
 } from './utils/types.js';
 import {
   readConfigFile,
   restoreClijsFromBackup,
-  startupCheck,
   updateConfigFile,
 } from './utils/config.js';
 import { revealFileInExplorer } from './utils/misc.js';
@@ -29,7 +28,11 @@ export const SettingsContext = createContext({
   changesApplied: false,
 });
 
-export default function App() {
+export default function App({
+  startupCheckInfo,
+}: {
+  startupCheckInfo: StartupCheckInfo;
+}) {
   const [config, setConfig] = useState<TweakccConfig>({
     settings: DEFAULT_SETTINGS,
     changesApplied: false,
@@ -67,25 +70,17 @@ export default function App() {
   } | null>(null);
 
   // Startup check.
-  // Load Claude Code installation info; used for the revert, apply, and locate cli.js options.
-  const [ccInstInfo, setCcInstInfo] =
-    useState<ClaudeCodeInstallationInfo | null>(null);
   useEffect(() => {
-    const performStartupCheck = async () => {
-      const info = await startupCheck();
-      setCcInstInfo(info.ccInstInfo);
-      if (info.wasUpdated) {
-        setNotification({
-          message: `Your Claude Code installation was updated from ${info.oldVersion} to ${info.newVersion}, and the patching was likely overwritten
+    if (startupCheckInfo.wasUpdated) {
+      setNotification({
+        message: `Your Claude Code installation was updated from ${startupCheckInfo.oldVersion} to ${startupCheckInfo.newVersion}, and the patching was likely overwritten
 (However, your customization are still remembered in ${CONFIG_FILE}.)
 Please reapply your changes below.`,
-          type: 'warning',
-        });
-        // Update settings to trigger changedApplied:false.
-        updateSettings(() => {});
-      }
-    };
-    performStartupCheck();
+        type: 'warning',
+      });
+      // Update settings to trigger changedApplied:false.
+      updateSettings(() => {});
+    }
   }, []);
 
   // Ctrl+C/Escape/Q to exit.
@@ -108,23 +103,25 @@ Please reapply your changes below.`,
         setCurrentView(item);
         break;
       case MainMenuItem.APPLY_CHANGES:
-        if (ccInstInfo) {
+        if (startupCheckInfo.ccInstInfo) {
           setNotification({
             message: 'Applying patches...',
             type: 'info',
           });
-          applyCustomization(config, ccInstInfo).then(newConfig => {
-            setConfig(newConfig);
-            setNotification({
-              message: 'Customization patches applied successfully!',
-              type: 'success',
-            });
-          });
+          applyCustomization(config, startupCheckInfo.ccInstInfo).then(
+            newConfig => {
+              setConfig(newConfig);
+              setNotification({
+                message: 'Customization patches applied successfully!',
+                type: 'success',
+              });
+            }
+          );
         }
         break;
       case MainMenuItem.RESTORE_ORIGINAL:
-        if (ccInstInfo) {
-          restoreClijsFromBackup(ccInstInfo).then(() => {
+        if (startupCheckInfo.ccInstInfo) {
+          restoreClijsFromBackup(startupCheckInfo.ccInstInfo).then(() => {
             setNotification({
               message: 'Original Claude Code restored successfully!',
               type: 'success',
@@ -137,8 +134,8 @@ Please reapply your changes below.`,
         revealFileInExplorer(CONFIG_FILE);
         break;
       case MainMenuItem.OPEN_CLI:
-        if (ccInstInfo) {
-          revealFileInExplorer(ccInstInfo.cliPath);
+        if (startupCheckInfo.ccInstInfo) {
+          revealFileInExplorer(startupCheckInfo.ccInstInfo.cliPath);
         }
         break;
       case MainMenuItem.EXIT:

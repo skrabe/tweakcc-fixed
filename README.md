@@ -11,6 +11,7 @@
 - (WIP) Apply **custom styling** to the markdown elements in Claude's responses like code, bold, headers, etc
 - Style the **user messages in the chat history** beyond the default plain gray text
 - Change the "CLAUDE CODE" banner text to your own text with your own [figlet](http://www.figlet.org/) fonts
+- Supports Claude Code installed on **Windows, macOS, and Linux**, using npm, yarn, pnpm, bun, Homebrew, nvm, fnm, n, volta, nvs, and nodenv, or a custom location
 
 Run without installation:
 

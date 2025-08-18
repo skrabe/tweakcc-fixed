@@ -7,6 +7,7 @@ import {
   CONFIG_DIR,
   CONFIG_FILE,
   DEFAULT_SETTINGS,
+  StartupCheckInfo,
   TweakccConfig,
 } from './types.js';
 
@@ -82,7 +83,7 @@ export const restoreClijsFromBackup = async (
  */
 export const findClaudeCodeInstallation = async (
   config: TweakccConfig
-): Promise<ClaudeCodeInstallationInfo> => {
+): Promise<ClaudeCodeInstallationInfo | null> => {
   if (config.ccInstallationDir) {
     CLIJS_SEARCH_PATHS.unshift(config.ccInstallationDir);
   }
@@ -105,26 +106,7 @@ export const findClaudeCodeInstallation = async (
     }
   }
 
-  console.clear();
-  console.error(`\x1b[31mCannot find Claude Code's cli.js -- do you have Claude Code installed?
-
-Searched at the following locations:
-${CLIJS_SEARCH_PATHS.map(p => '- ' + p).join('\n')}
-
-If you have it installed but it's in a location not listed above, please open an issue at
-https://github.com/piebald-ai/tweakcc/issues and tell us where you have it--we'll add that
-location to our search list and release an update today!  Or you can specify the path to its
-\`cli.js\` file in ${CONFIG_FILE}:
-{
-  "ccInstallationDir": "${
-    process.platform == 'win32'
-      ? 'C:\\absolute\\path\\to\\@anthropic-ai\\claude-code'
-      : '/absolute/path/to/@anthropic-ai/claude-code'
-  }"
-}
-(Note: don't include cli.js in the path.)\x1b[0m
-`);
-  process.exit(1);
+  return null;
 };
 
 const backupClijs = async (ccInstInfo: ClaudeCodeInstallationInfo) => {
@@ -152,15 +134,13 @@ async function doesFileExist(filePath: string): Promise<boolean> {
  * Performs startup checking: finding Claude Code, creating a backup if necessary, checking if
  * it's been updated.  If true, an update is required.
  */
-export async function startupCheck(): Promise<{
-  wasUpdated: boolean;
-  oldVersion: string | null;
-  newVersion: string | null;
-  ccInstInfo: ClaudeCodeInstallationInfo;
-}> {
+export async function startupCheck(): Promise<StartupCheckInfo | null> {
   const config = await readConfigFile();
 
   const ccInstInfo = await findClaudeCodeInstallation(config);
+  if (!ccInstInfo) {
+    return null;
+  }
 
   const realVersion = ccInstInfo.version;
   const backedUpVersion = config.ccVersion;

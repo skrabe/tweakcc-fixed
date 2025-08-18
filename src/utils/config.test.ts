@@ -141,7 +141,7 @@ describe('config.ts', () => {
       });
     });
 
-    it('should exit if the installation is not found', async () => {
+    it('should return null if the installation is not found', async () => {
       const mockConfig = {
         ccInstallationDir: null,
         changesApplied: false,
@@ -151,13 +151,10 @@ describe('config.ts', () => {
       };
 
       vi.spyOn(fs, 'readFile').mockRejectedValue(new Error('File not found'));
-      const processExitSpy = vi
-        .spyOn(process, 'exit')
-        .mockImplementation(() => undefined as never);
 
-      await config.findClaudeCodeInstallation(mockConfig);
+      const result = await config.findClaudeCodeInstallation(mockConfig);
 
-      expect(processExitSpy).toHaveBeenCalledWith(1);
+      expect(result).toBe(null);
     });
   });
 
@@ -204,7 +201,8 @@ describe('config.ts', () => {
 
       expect(unlinkSpy).toHaveBeenCalled();
       expect(copyFileSpy).toHaveBeenCalled();
-      expect(result.wasUpdated).toBe(true);
+      expect(result).not.toBe(null);
+      expect(result!.wasUpdated).toBe(true);
     });
   });
 });
