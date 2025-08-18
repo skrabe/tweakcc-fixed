@@ -296,7 +296,7 @@ export function ThinkingStyleView({ onBack }: ThinkingStyleViewProps) {
             {' '}
             Thinking style{' '}
           </Text>
-          <Box>
+          <Box flexDirection="column">
             <Text dimColor>
               enter to{' '}
               {selectedOption === 'updateInterval'
@@ -305,9 +305,8 @@ export function ThinkingStyleView({ onBack }: ThinkingStyleViewProps) {
                   ? 'apply preset'
                   : 'save'}
             </Text>
-          </Box>
-          <Box>
             <Text dimColor>esc to go back</Text>
+            <Text dimColor>tab to switch sections</Text>
           </Box>
         </Box>
 

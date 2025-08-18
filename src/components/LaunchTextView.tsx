@@ -302,14 +302,12 @@ export function LaunchTextView({ onBack }: LaunchTextViewProps) {
             {' '}
             Setup banner{' '}
           </Text>
-          <Box>
+          <Box flexDirection="column">
             <Text dimColor>
               enter to {selectedOption === 'text' ? 'edit text' : 'save'}
             </Text>
-          </Box>
-
-          <Box>
             <Text dimColor>esc to go back</Text>
+            <Text dimColor>tab to switch sections</Text>
           </Box>
         </Box>
 

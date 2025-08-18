@@ -153,9 +153,8 @@ export function ThinkingVerbsView({ onBack }: ThinkingVerbsViewProps) {
                 ? 'enter to edit punctuation'
                 : 'changes auto-saved'}
             </Text>
-          </Box>
-          <Box>
             <Text dimColor>esc to go back</Text>
+            <Text dimColor>tab to switch sections</Text>
           </Box>
         </Box>
 
