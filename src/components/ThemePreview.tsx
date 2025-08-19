@@ -11,7 +11,7 @@ export function ThemePreview({ theme }: ThemePreviewProps) {
       <Box marginBottom={1}>
         <Text bold>Preview: {theme.name}</Text>
       </Box>
-      <Box borderStyle="single" borderColor="gray" padding={1}>
+      <Box borderStyle="single" borderColor="gray" paddingX={1}>
         <Box flexDirection="column">
           <Text>╭─────────────────────────────────────────────╮</Text>
           <Text>
@@ -187,7 +187,9 @@ export function ThemePreview({ theme }: ThemePreviewProps) {
             <Text> contains **123** files.</Text>
           </Text>
           <Text>
-            <Text color={theme.colors.claude}>✻ Thinking… </Text>
+            <Text color={theme.colors.claude}>
+              ✻ Th<Text color={theme.colors.claudeShimmer}>ink</Text>ing…{' '}
+            </Text>
             <Text color={theme.colors.secondaryText}>
               (10s · ↑ 456 tokens · esc to interrupt)
             </Text>
@@ -205,6 +207,90 @@ export function ThemePreview({ theme }: ThemePreviewProps) {
             <Text color={theme.colors.secondaryText} dimColor>
               (shift+tab to cycle)
             </Text>
+          </Text>
+          <Text>
+            <Text color={theme.colors.ide}>◯ IDE connected  ⧉ 44 lines selected</Text>
+          </Text>
+          <Text>
+            <Text bold color={theme.colors.secondaryText}>
+              ●
+            </Text>{' '}
+            <Text backgroundColor={theme.colors.red_FOR_SUBAGENTS_ONLY}>
+              code-reviewer
+            </Text>
+            <Text>(Reviewing unstaged changes)</Text>
+          </Text>
+          <Text>
+            <Text bold color={theme.colors.secondaryText}>
+              ●
+            </Text>{' '}
+            <Text backgroundColor={theme.colors.orange_FOR_SUBAGENTS_ONLY}>
+              performance
+            </Text>
+            <Text>(Optimizing hot loop performance)</Text>
+          </Text>
+          <Text>
+            <Text bold color={theme.colors.secondaryText}>
+              ●
+            </Text>{' '}
+            <Text backgroundColor={theme.colors.yellow_FOR_SUBAGENTS_ONLY}>
+              security-auditor
+            </Text>
+            <Text>(Auditing codebase)</Text>
+          </Text>
+          <Text>
+            <Text bold color={theme.colors.secondaryText}>
+              ●
+            </Text>{' '}
+            <Text backgroundColor={theme.colors.green_FOR_SUBAGENTS_ONLY}>
+              test-runner
+            </Text>
+            <Text>(Running integration tests)</Text>
+          </Text>
+          <Text>
+            <Text bold color={theme.colors.secondaryText}>
+              ●
+            </Text>{' '}
+            <Text backgroundColor={theme.colors.blue_FOR_SUBAGENTS_ONLY}>
+              tech-lead
+            </Text>
+            <Text>(Planning next steps)</Text>
+          </Text>
+          <Text>
+            <Text bold color={theme.colors.secondaryText}>
+              ●
+            </Text>{' '}
+            <Text backgroundColor={theme.colors.cyan_FOR_SUBAGENTS_ONLY}>
+              database-admin
+            </Text>
+            <Text>(Running DB migrations)</Text>
+          </Text>
+          <Text>
+            <Text bold color={theme.colors.secondaryText}>
+              ●
+            </Text>{' '}
+            <Text backgroundColor={theme.colors.purple_FOR_SUBAGENTS_ONLY}>
+              documentation
+            </Text>
+            <Text>(Generating docs)</Text>
+          </Text>
+          <Text>
+            <Text bold color={theme.colors.secondaryText}>
+              ●
+            </Text>{' '}
+            <Text backgroundColor={theme.colors.pink_FOR_SUBAGENTS_ONLY}>
+              ui-designer
+            </Text>
+            <Text>(Designing new preview panel)</Text>
+          </Text>
+          <Text>
+            <Text bold color={theme.colors.secondaryText}>
+              ●
+            </Text>{' '}
+            <Text bold inverse>
+              general
+            </Text>
+            <Text>(Reviewing architecture)</Text>
           </Text>
         </Box>
       </Box>

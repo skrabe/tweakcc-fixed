@@ -9,8 +9,10 @@ export interface Theme {
     autoAccept: string;
     bashBorder: string;
     claude: string;
+    claudeShimmer: string;
     permission: string;
     planMode: string;
+    ide: string;
     secondaryBorder: string;
     text: string;
     inverseText: string;
@@ -28,6 +30,14 @@ export interface Theme {
     diffRemovedWord: string;
     diffAddedWordDimmed: string;
     diffRemovedWordDimmed: string;
+    red_FOR_SUBAGENTS_ONLY: string;
+    blue_FOR_SUBAGENTS_ONLY: string;
+    green_FOR_SUBAGENTS_ONLY: string;
+    yellow_FOR_SUBAGENTS_ONLY: string;
+    purple_FOR_SUBAGENTS_ONLY: string;
+    orange_FOR_SUBAGENTS_ONLY: string;
+    pink_FOR_SUBAGENTS_ONLY: string;
+    cyan_FOR_SUBAGENTS_ONLY: string;
   };
 }
 
@@ -39,7 +49,7 @@ export interface LaunchTextConfig {
 }
 
 export interface ThinkingVerbsConfig {
-  punctuation: string;
+  format: string;
   verbs: string[];
 }
 
@@ -98,8 +108,10 @@ export const DEFAULT_SETTINGS: Settings = {
         autoAccept: 'rgb(175,135,255)',
         bashBorder: 'rgb(253,93,177)',
         claude: 'rgb(215,119,87)',
+        claudeShimmer: 'rgb(235,159,127)',
         permission: 'rgb(177,185,249)',
         planMode: 'rgb(72,150,140)',
+        ide: 'rgb(71,130,200)',
         secondaryBorder: 'rgb(136,136,136)',
         text: 'rgb(255,255,255)',
         inverseText: 'rgb(0,0,0)',
@@ -117,6 +129,14 @@ export const DEFAULT_SETTINGS: Settings = {
         diffRemovedWord: 'rgb(179,89,107)',
         diffAddedWordDimmed: 'rgb(46,107,58)',
         diffRemovedWordDimmed: 'rgb(139,57,69)',
+        red_FOR_SUBAGENTS_ONLY: 'rgb(220,38,38)',
+        blue_FOR_SUBAGENTS_ONLY: 'rgb(37,99,235)',
+        green_FOR_SUBAGENTS_ONLY: 'rgb(22,163,74)',
+        yellow_FOR_SUBAGENTS_ONLY: 'rgb(202,138,4)',
+        purple_FOR_SUBAGENTS_ONLY: 'rgb(147,51,234)',
+        orange_FOR_SUBAGENTS_ONLY: 'rgb(234,88,12)',
+        pink_FOR_SUBAGENTS_ONLY: 'rgb(219,39,119)',
+        cyan_FOR_SUBAGENTS_ONLY: 'rgb(8,145,178)',
       },
     },
     {
@@ -126,8 +146,10 @@ export const DEFAULT_SETTINGS: Settings = {
         autoAccept: 'rgb(135,0,255)',
         bashBorder: 'rgb(255,0,135)',
         claude: 'rgb(215,119,87)',
+        claudeShimmer: 'rgb(245,149,117)',
         permission: 'rgb(87,105,247)',
         planMode: 'rgb(0,102,102)',
+        ide: 'rgb(71,130,200)',
         secondaryBorder: 'rgb(153,153,153)',
         text: 'rgb(0,0,0)',
         inverseText: 'rgb(255,255,255)',
@@ -145,6 +167,14 @@ export const DEFAULT_SETTINGS: Settings = {
         diffRemovedWord: 'rgb(209,69,75)',
         diffAddedWordDimmed: 'rgb(144,194,156)',
         diffRemovedWordDimmed: 'rgb(232,165,173)',
+        red_FOR_SUBAGENTS_ONLY: 'rgb(220,38,38)',
+        blue_FOR_SUBAGENTS_ONLY: 'rgb(37,99,235)',
+        green_FOR_SUBAGENTS_ONLY: 'rgb(22,163,74)',
+        yellow_FOR_SUBAGENTS_ONLY: 'rgb(202,138,4)',
+        purple_FOR_SUBAGENTS_ONLY: 'rgb(147,51,234)',
+        orange_FOR_SUBAGENTS_ONLY: 'rgb(234,88,12)',
+        pink_FOR_SUBAGENTS_ONLY: 'rgb(219,39,119)',
+        cyan_FOR_SUBAGENTS_ONLY: 'rgb(8,145,178)',
       },
     },
     {
@@ -154,8 +184,10 @@ export const DEFAULT_SETTINGS: Settings = {
         autoAccept: '#cd00cd',
         bashBorder: '#cd00cd',
         claude: '#cdcd00',
+        claudeShimmer: '#ffff00',
         permission: '#0000ee',
         planMode: '#00cdcd',
+        ide: '#4782C8',
         secondaryBorder: '#e5e5e5',
         text: '#000000',
         inverseText: '#ffffff',
@@ -173,6 +205,14 @@ export const DEFAULT_SETTINGS: Settings = {
         diffRemovedWord: '#ff0000',
         diffAddedWordDimmed: '#00cd00',
         diffRemovedWordDimmed: '#cd0000',
+        red_FOR_SUBAGENTS_ONLY: '#cd0000',
+        blue_FOR_SUBAGENTS_ONLY: '#0000cd',
+        green_FOR_SUBAGENTS_ONLY: '#00cd00',
+        yellow_FOR_SUBAGENTS_ONLY: '#cdcd00',
+        purple_FOR_SUBAGENTS_ONLY: '#cd00cd',
+        orange_FOR_SUBAGENTS_ONLY: '#cd8500',
+        pink_FOR_SUBAGENTS_ONLY: '#ff1493',
+        cyan_FOR_SUBAGENTS_ONLY: '#00cdcd',
       },
     },
     {
@@ -182,8 +222,10 @@ export const DEFAULT_SETTINGS: Settings = {
         autoAccept: '#ff00ff',
         bashBorder: '#ff00ff',
         claude: '#cdcd00',
+        claudeShimmer: '#ffff00',
         permission: '#5c5cff',
         planMode: '#00ffff',
+        ide: '#4782c8',
         secondaryBorder: '#e5e5e5',
         text: '#ffffff',
         inverseText: '#000000',
@@ -201,6 +243,14 @@ export const DEFAULT_SETTINGS: Settings = {
         diffRemovedWord: '#ff0000',
         diffAddedWordDimmed: '#00cd00',
         diffRemovedWordDimmed: '#cd0000',
+        red_FOR_SUBAGENTS_ONLY: '#ff0000',
+        blue_FOR_SUBAGENTS_ONLY: '#0000ff',
+        green_FOR_SUBAGENTS_ONLY: '#00ff00',
+        yellow_FOR_SUBAGENTS_ONLY: '#ffff00',
+        purple_FOR_SUBAGENTS_ONLY: '#ff00ff',
+        orange_FOR_SUBAGENTS_ONLY: '#ff8700',
+        pink_FOR_SUBAGENTS_ONLY: '#ff69b4',
+        cyan_FOR_SUBAGENTS_ONLY: '#00ffff',
       },
     },
     {
@@ -210,8 +260,10 @@ export const DEFAULT_SETTINGS: Settings = {
         autoAccept: 'rgb(135,0,255)',
         bashBorder: 'rgb(0,102,204)',
         claude: 'rgb(255,153,51)',
+        claudeShimmer: 'rgb(255,183,101)',
         permission: 'rgb(51,102,255)',
         planMode: 'rgb(51,102,102)',
+        ide: 'rgb(71,130,200)',
         secondaryBorder: 'rgb(153,153,153)',
         text: 'rgb(0,0,0)',
         inverseText: 'rgb(255,255,255)',
@@ -229,6 +281,14 @@ export const DEFAULT_SETTINGS: Settings = {
         diffRemovedWord: 'rgb(153,51,51)',
         diffAddedWordDimmed: 'rgb(102,153,204)',
         diffRemovedWordDimmed: 'rgb(204,153,153)',
+        red_FOR_SUBAGENTS_ONLY: 'rgb(204,0,0)',
+        blue_FOR_SUBAGENTS_ONLY: 'rgb(0,102,204)',
+        green_FOR_SUBAGENTS_ONLY: 'rgb(0,204,0)',
+        yellow_FOR_SUBAGENTS_ONLY: 'rgb(255,204,0)',
+        purple_FOR_SUBAGENTS_ONLY: 'rgb(128,0,128)',
+        orange_FOR_SUBAGENTS_ONLY: 'rgb(255,128,0)',
+        pink_FOR_SUBAGENTS_ONLY: 'rgb(255,102,178)',
+        cyan_FOR_SUBAGENTS_ONLY: 'rgb(0,178,178)',
       },
     },
     {
@@ -238,8 +298,10 @@ export const DEFAULT_SETTINGS: Settings = {
         autoAccept: 'rgb(175,135,255)',
         bashBorder: 'rgb(51,153,255)',
         claude: 'rgb(255,153,51)',
+        claudeShimmer: 'rgb(255,183,101)',
         permission: 'rgb(153,204,255)',
         planMode: 'rgb(102,153,153)',
+        ide: 'rgb(71,130,200)',
         secondaryBorder: 'rgb(136,136,136)',
         text: 'rgb(255,255,255)',
         inverseText: 'rgb(0,0,0)',
@@ -257,6 +319,14 @@ export const DEFAULT_SETTINGS: Settings = {
         diffRemovedWord: 'rgb(179,0,0)',
         diffAddedWordDimmed: 'rgb(26,99,128)',
         diffRemovedWordDimmed: 'rgb(128,21,21)',
+        red_FOR_SUBAGENTS_ONLY: 'rgb(255,102,102)',
+        blue_FOR_SUBAGENTS_ONLY: 'rgb(102,178,255)',
+        green_FOR_SUBAGENTS_ONLY: 'rgb(102,255,102)',
+        yellow_FOR_SUBAGENTS_ONLY: 'rgb(255,255,102)',
+        purple_FOR_SUBAGENTS_ONLY: 'rgb(178,102,255)',
+        orange_FOR_SUBAGENTS_ONLY: 'rgb(255,178,102)',
+        pink_FOR_SUBAGENTS_ONLY: 'rgb(255,153,204)',
+        cyan_FOR_SUBAGENTS_ONLY: 'rgb(102,204,204)',
       },
     },
   ],

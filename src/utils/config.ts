@@ -40,6 +40,22 @@ export const readConfigFile = async (): Promise<TweakccConfig> => {
       delete tmpThinkingVerbs.punctuation;
     }
 
+    // Add any colors that the user doesn't have to any built-in themes.
+    for (const defaultTheme of DEFAULT_SETTINGS.themes) {
+      // Find this theme in the user's settings.
+      const readTheme = readConfig?.settings?.themes.find(
+        t => t.id === defaultTheme.id || t.name === defaultTheme.name
+      );
+      if (readTheme) {
+        // Add any missing colors.
+        for (const [key, value] of Object.entries(defaultTheme)) {
+          if (!readTheme.hasOwnProperty(key)) {
+            (readTheme as unknown as Record<string, string>)[key] = value;
+          }
+        }
+      }
+    }
+
     return readConfig;
   } catch (error) {
     if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
