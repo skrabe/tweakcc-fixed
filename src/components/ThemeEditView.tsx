@@ -6,6 +6,7 @@ import { ColorPicker } from './ColorPicker.js';
 import { Theme } from '../utils/types.js';
 import { SettingsContext } from '../App.js';
 import { isValidColorFormat, normalizeColorToRgb } from '../utils/misc.js';
+import Header from './Header.js';
 
 interface ThemeEditViewProps {
   onBack: () => void;
@@ -250,11 +251,9 @@ export function ThemeEditView({ onBack, themeId }: ThemeEditViewProps) {
     <Box>
       <Box flexDirection="column" width="50%">
         <Box>
-          <Text backgroundColor="#ffd500" color="black" bold>
-            {' '}
-            Editing theme &ldquo;{currentTheme.name}&rdquo; ({currentTheme.id}
-            ){' '}
-          </Text>
+          <Header>
+            Editing theme &ldquo;{currentTheme.name}&rdquo; ({currentTheme.id})
+          </Header>
         </Box>
 
         {editingColorIndex === null && editingNameId === null ? (

@@ -3,6 +3,7 @@ import { Box, Text, useInput } from 'ink';
 import { getCurrentClaudeCodeTheme } from '../utils/misc.js';
 import { DEFAULT_SETTINGS } from '../utils/types.js';
 import { SettingsContext } from '../App.js';
+import Header from './Header.js';
 
 interface ThinkingVerbsViewProps {
   onBack: () => void;
@@ -143,11 +144,8 @@ export function ThinkingVerbsView({ onBack }: ThinkingVerbsViewProps) {
     <Box>
       <Box flexDirection="column" width={`${100 - previewWidth}%`}>
         <Box marginBottom={1} flexDirection="column">
-          <Text bold backgroundColor="#ffd500" color="black">
-            {' '}
-            Thinking verbs{' '}
-          </Text>
-          <Box>
+          <Header>Thinking verbs</Header>
+          <Box flexDirection="column">
             <Text dimColor>
               {selectedOption === 'punctuation'
                 ? 'enter to edit punctuation'

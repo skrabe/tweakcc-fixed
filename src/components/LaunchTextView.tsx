@@ -3,6 +3,7 @@ import { Box, Text, useInput, useStdout } from 'ink';
 import figlet from 'figlet';
 import { getCurrentClaudeCodeTheme } from '../utils/misc.js';
 import { SettingsContext } from '../App.js';
+import Header from './Header.js';
 
 interface LaunchTextViewProps {
   onBack: () => void;
@@ -298,10 +299,7 @@ export function LaunchTextView({ onBack }: LaunchTextViewProps) {
     <Box>
       <Box flexDirection="column" width={`${100 - previewWidth}%`}>
         <Box marginBottom={1} flexDirection="column">
-          <Text bold backgroundColor="#ffd500" color="black">
-            {' '}
-            Setup banner{' '}
-          </Text>
+          <Header>Setup banner</Header>
           <Box flexDirection="column">
             <Text dimColor>
               enter to {selectedOption === 'text' ? 'edit text' : 'save'}

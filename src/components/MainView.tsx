@@ -3,6 +3,7 @@ import { SelectInput, SelectItem } from './SelectInput.js';
 import { useContext, useState } from 'react';
 import { SettingsContext } from '../App.js';
 import { CONFIG_FILE, MainMenuItem } from '../utils/types.js';
+import Header from './Header.js';
 
 interface MainViewProps {
   onSubmit: (item: MainMenuItem) => void;
@@ -74,10 +75,7 @@ export function MainView({ onSubmit, notification }: MainViewProps) {
   return (
     <Box flexDirection="column">
       <Box marginBottom={1}>
-        <Text bold backgroundColor="#ffd500" color="black">
-          {' '}
-          Tweak Claude Code{' '}
-        </Text>
+        <Header>Tweak Claude Code</Header>
       </Box>
       <Box marginBottom={1}>
         <Text color="gray">

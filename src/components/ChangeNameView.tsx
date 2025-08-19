@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Box, Text, useInput } from 'ink';
+import Header from './Header.js';
 
 interface ChangeNameViewProps {
   onBack: () => void;
@@ -34,10 +35,7 @@ export function ChangeNameView({ onBack }: ChangeNameViewProps) {
   return (
     <Box flexDirection="column">
       <Box marginBottom={1} flexDirection="column">
-        <Text bold backgroundColor="#ffd500" color="black">
-          {' '}
-          Change name{' '}
-        </Text>
+        <Header>Change name</Header>
         <Box>
           <Text dimColor>enter to {isEditing ? 'save' : 'edit'}</Text>
         </Box>

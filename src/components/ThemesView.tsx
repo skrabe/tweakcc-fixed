@@ -5,6 +5,7 @@ import { ThemeEditView } from './ThemeEditView.js';
 import { Theme } from '../utils/types.js';
 import { SettingsContext } from '../App.js';
 import { DEFAULT_SETTINGS } from '../utils/types.js';
+import Header from './Header.js';
 
 function generateThemeItems(themes: Theme[]): string[] {
   return themes.map(theme => `${theme.name} (${theme.id})`);
@@ -110,10 +111,9 @@ export function ThemesView({ onBack }: ThemesViewProps) {
     return (
       <Box>
         <Box flexDirection="column" width="100%">
-          <Text bold backgroundColor="#ffd500" color="black">
-            {' '}
-            Themes{' '}
-          </Text>
+          <Header>
+            Themes
+          </Header>
           <Box marginBottom={1} flexDirection="column">
             <Text dimColor>n to create a new theme</Text>
             <Text dimColor>esc to go back</Text>
@@ -127,10 +127,9 @@ export function ThemesView({ onBack }: ThemesViewProps) {
   return (
     <Box>
       <Box flexDirection="column" width="50%">
-        <Text bold backgroundColor="#ffd500" color="black">
-          {' '}
-          Themes{' '}
-        </Text>
+        <Header>
+          Themes
+        </Header>
         <Box marginBottom={1} flexDirection="column">
           <Text dimColor>n to create a new theme</Text>
           <Text dimColor>d to delete a theme</Text>
