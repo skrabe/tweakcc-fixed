@@ -299,7 +299,19 @@ export const writeThinkerSymbolSpeed = (
 const getThinkerVerbsLocation = (
   oldFile: string
 ): { verbsLocation: LocationResult; varName: string } | null => {
-  const verbsPattern = /\b(\w+)\s*=\[\s*(?:"[A-Z][a-z]+ing",?\s*)+\]/s;
+  // This finds the folowing pattern:
+  // ```js
+  // kW8 = {
+  //   words: [
+  //     "Actualizing",
+  //     "Baking"
+  //   ]
+  // }
+  // ```
+  // To write, we just do `{varname} = {JSON.stringify({words: verbs})}`.
+  const verbsPattern =
+    /\b([$\w]+)=\{words:\[(?:"[^"{}()]+ing",)+"[^"{}()]+ing"\]\}/s;
+
   const verbsMatch = oldFile.match(verbsPattern);
   if (!verbsMatch || verbsMatch.index == undefined) {
     console.error('patch: thinker verbs: failed to find verbsMatch');
@@ -315,8 +327,14 @@ const getThinkerVerbsLocation = (
   };
 };
 
-const getThinkerVerbsUseLocation = (oldFile: string): LocationResult | null => {
-  const pattern = /createElement\(\w+,\{[\w:]+,spinnerVerbs:[$\w]+,/;
+const getThinkerVerbsUseLocation = (
+  oldFile: string
+): { useLocation: LocationResult; funcName: string } | null => {
+  // This is brittle but it's easy.
+  // It's a function that returns either new verbs from Statsig (a/b testing) or the default verbs.
+  // When we write the file we'll just write a new function.
+  const pattern =
+    /function (\w+)\(\)\{return \w+\("tengu_spinner_words",\w+\)\.words\}/;
   const match = oldFile.match(pattern);
 
   if (!match || match.index == undefined) {
@@ -324,10 +342,12 @@ const getThinkerVerbsUseLocation = (oldFile: string): LocationResult | null => {
     return null;
   }
 
-  const startIndex = match[0].indexOf('spinnerVerbs');
   return {
-    startIndex: match.index + startIndex,
-    endIndex: match.index + startIndex + match[0].substring(startIndex).length,
+    useLocation: {
+      startIndex: match.index,
+      endIndex: match.index + match[0].length,
+    },
+    funcName: match[1],
   };
 };
 
@@ -335,13 +355,13 @@ export const writeThinkerVerbs = (
   oldFile: string,
   verbs: string[]
 ): string | null => {
-  const location = getThinkerVerbsLocation(oldFile);
-  if (!location) {
+  const location1 = getThinkerVerbsLocation(oldFile);
+  if (!location1) {
     return null;
   }
-  const { verbsLocation, varName } = location;
+  const { verbsLocation, varName } = location1;
 
-  const verbsJson = `${varName}=${JSON.stringify(verbs)}`;
+  const verbsJson = `${varName}=${JSON.stringify({ words: verbs })}`;
   const newFile1 =
     oldFile.slice(0, verbsLocation.startIndex) +
     verbsJson +
@@ -355,22 +375,24 @@ export const writeThinkerVerbs = (
     verbsLocation.endIndex
   );
 
-  // Update the spinnerVerbs use
-  const useLocation = getThinkerVerbsUseLocation(newFile1);
-  if (!useLocation) {
+  // Update the the function that returns the spinner verbs to always return the hard-coded verbs
+  // and not use any Statsig ones.  That also prevents `undefined...` from showing up in the UI.
+  const location2 = getThinkerVerbsUseLocation(newFile1);
+  if (!location2) {
     return null;
   }
+  const { useLocation, funcName } = location2;
 
-  const spinnerVerbsKey = `spinnerVerbs:${varName},`;
+  const newFn = `function ${funcName}(){return ${varName}.words}`;
   const newFile2 =
     newFile1.slice(0, useLocation.startIndex) +
-    spinnerVerbsKey +
+    newFn +
     newFile1.slice(useLocation.endIndex);
 
   showDiff(
     newFile1,
     newFile2,
-    spinnerVerbsKey,
+    newFn,
     useLocation.startIndex,
     useLocation.endIndex
   );
@@ -384,7 +406,7 @@ const getThinkerFormatLocation = (
   fmtLocation: LocationResult;
   curVerb: string;
 } | null => {
-  const approxAreaPattern = /function \w+\(\{[\w:,]+spinnerVerbs:[$\w]+,/;
+  const approxAreaPattern = /spinnerTip:\w+,(?:\w+:\w+,)*overrideMessage:\w+,.{300}/;
   const approxAreaMatch = oldFile.match(approxAreaPattern);
 
   if (!approxAreaMatch || approxAreaMatch.index == undefined) {
