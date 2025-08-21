@@ -11,6 +11,7 @@ import {
   ThinkingVerbsConfig,
   TweakccConfig,
 } from './types.js';
+import { hashFileInChunks, isDebug } from './misc.js';
 
 export const ensureConfigDir = async (): Promise<void> => {
   await fs.mkdir(CONFIG_DIR, { recursive: true });
@@ -28,6 +29,10 @@ export const readConfigFile = async (): Promise<TweakccConfig> => {
     settings: DEFAULT_SETTINGS,
   };
   try {
+    if (isDebug()) {
+      console.log(`Reading config at ${CONFIG_FILE}`);
+    }
+
     const content = await fs.readFile(CONFIG_FILE, 'utf8');
     const readConfig: TweakccConfig = { ...config, ...JSON.parse(content) };
 
@@ -79,6 +84,9 @@ const LAST_CONFIG: TweakccConfig = {
 export const updateConfigFile = async (
   updateFn: (config: TweakccConfig) => void
 ): Promise<TweakccConfig> => {
+  if (isDebug()) {
+    console.log(`Updating config at ${CONFIG_FILE}`);
+  }
   updateFn(LAST_CONFIG);
   LAST_CONFIG.lastModified = new Date().toISOString();
   await saveConfig(LAST_CONFIG);
@@ -105,6 +113,9 @@ const saveConfig = async (config: TweakccConfig): Promise<void> => {
 export const restoreClijsFromBackup = async (
   ccInstInfo: ClaudeCodeInstallationInfo
 ): Promise<boolean> => {
+  if (isDebug()) {
+    console.log(`Restoring cli.js from backup to ${ccInstInfo.cliPath}`);
+  }
   await fs.copyFile(CLIJS_BACKUP_FILE, ccInstInfo.cliPath);
   await updateConfigFile(config => {
     config.changesApplied = false;
@@ -125,11 +136,20 @@ export const findClaudeCodeInstallation = async (
 
   for (const searchPath of CLIJS_SEARCH_PATHS) {
     try {
+      if (isDebug()) {
+        console.log(`Searching for Claude Code cli.js file at ${searchPath}`);
+      }
       const cliPath = path.join(searchPath, 'cli.js');
       const packageJsonPath = path.join(searchPath, 'package.json');
       const packageJson = JSON.parse(
         await fs.readFile(packageJsonPath, 'utf8')
       );
+      if (isDebug()) {
+        console.log(
+          `Found Claude Code cli.js file at ${searchPath}; checking hash...`
+        );
+        console.log(`SHA256 hash: ${await hashFileInChunks(cliPath)}`);
+      }
       return {
         cliPath: cliPath,
         packageJsonPath,
@@ -146,6 +166,9 @@ export const findClaudeCodeInstallation = async (
 
 const backupClijs = async (ccInstInfo: ClaudeCodeInstallationInfo) => {
   await ensureConfigDir();
+  if (isDebug()) {
+    console.log(`Backing up cli.js to ${CLIJS_BACKUP_FILE}`);
+  }
   await fs.copyFile(ccInstInfo.cliPath, CLIJS_BACKUP_FILE);
   await updateConfigFile(config => {
     config.changesApplied = false;

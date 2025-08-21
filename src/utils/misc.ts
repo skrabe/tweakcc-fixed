@@ -2,6 +2,15 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import * as child_process from 'child_process';
+import * as crypto from 'crypto';
+
+let isDebugModeOn = false;
+export const isDebug = (): boolean => {
+  return isDebugModeOn;
+};
+export const enableDebug = (): void => {
+  isDebugModeOn = true;
+};
 
 export function getCurrentClaudeCodeTheme(): string {
   try {
@@ -136,4 +145,28 @@ export function normalizeColorToRgb(color: string): string {
   }
 
   return color;
+}
+
+// Hashes a file in chunks efficiently.
+export async function hashFileInChunks(
+  filePath: string,
+  algorithm: string = 'sha256',
+  chunkSize: number = 64 * 1024
+) {
+  return new Promise((resolve, reject) => {
+    const hash = crypto.createHash(algorithm);
+    const stream = fs.createReadStream(filePath, { highWaterMark: chunkSize });
+
+    stream.on('data', chunk => {
+      hash.update(chunk);
+    });
+
+    stream.on('end', () => {
+      resolve(hash.digest('hex'));
+    });
+
+    stream.on('error', error => {
+      reject(error);
+    });
+  });
 }

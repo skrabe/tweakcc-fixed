@@ -2,6 +2,7 @@ import figlet from 'figlet';
 import * as fs from 'node:fs/promises';
 import { restoreClijsFromBackup, updateConfigFile } from './config.js';
 import { ClaudeCodeInstallationInfo, Theme, TweakccConfig } from './types.js';
+import { isDebug } from './misc.js';
 
 export interface LocationResult {
   startIndex: number;
@@ -544,10 +545,12 @@ function showDiff(
     contextEndNew
   );
 
-  // console.log("\n--- Diff ---");
-  // console.log("OLD:", oldBefore + `\x1b[31m${oldChanged}\x1b[0m` + oldAfter);
-  // console.log("NEW:", newBefore + `\x1b[32m${newChanged}\x1b[0m` + newAfter);
-  // console.log("--- End Diff ---\n");
+  if (isDebug()) {
+    console.log("\n--- Diff ---");
+    console.log("OLD:", oldBefore + `\x1b[31m${oldChanged}\x1b[0m` + oldAfter);
+    console.log("NEW:", newBefore + `\x1b[32m${newChanged}\x1b[0m` + newAfter);
+    console.log("--- End Diff ---\n");
+  }
 }
 /* eslint-enable @typescript-eslint/no-unused-vars */
 

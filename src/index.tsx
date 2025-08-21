@@ -1,10 +1,30 @@
 #!/usr/bin/env node
 import { render } from 'ink';
+import { Command } from 'commander';
 import App from './App.js';
 import { CLIJS_SEARCH_PATHS, CONFIG_FILE } from './utils/types.js';
 import { startupCheck } from './utils/config.js';
+import { enableDebug } from './utils/misc.js';
 
 const main = async () => {
+  const program = new Command();
+
+  program
+    .name('tweakcc')
+    .description(
+      'Command-line tool to customize your Claude Code theme colors, thinking verbs and more.'
+    )
+    .version('1.1.1')
+    .option('-d, --debug', 'enable debug mode');
+
+  program.parse();
+
+  const options = program.opts();
+
+  if (options.debug) {
+    enableDebug();
+  }
+
   const startupCheckInfo = await startupCheck();
 
   if (startupCheckInfo) {
