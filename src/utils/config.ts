@@ -17,6 +17,14 @@ export const ensureConfigDir = async (): Promise<void> => {
   await fs.mkdir(CONFIG_DIR, { recursive: true });
 };
 
+let lastConfig: TweakccConfig = {
+  settings: DEFAULT_SETTINGS,
+  changesApplied: false,
+  ccVersion: '',
+  lastModified: '',
+  ccInstallationDir: null,
+};
+
 /**
  * Loads the contents of the config file, or default values if it doesn't exist yet.
  */
@@ -61,6 +69,7 @@ export const readConfigFile = async (): Promise<TweakccConfig> => {
       }
     }
 
+    lastConfig = readConfig;
     return readConfig;
   } catch (error) {
     if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
@@ -68,14 +77,6 @@ export const readConfigFile = async (): Promise<TweakccConfig> => {
     }
     throw error;
   }
-};
-
-const LAST_CONFIG: TweakccConfig = {
-  settings: DEFAULT_SETTINGS,
-  changesApplied: false,
-  ccVersion: '',
-  lastModified: '',
-  ccInstallationDir: null,
 };
 
 /**
@@ -87,10 +88,10 @@ export const updateConfigFile = async (
   if (isDebug()) {
     console.log(`Updating config at ${CONFIG_FILE}`);
   }
-  updateFn(LAST_CONFIG);
-  LAST_CONFIG.lastModified = new Date().toISOString();
-  await saveConfig(LAST_CONFIG);
-  return LAST_CONFIG;
+  updateFn(lastConfig);
+  lastConfig.lastModified = new Date().toISOString();
+  await saveConfig(lastConfig);
+  return lastConfig;
 };
 
 /**
@@ -204,15 +205,33 @@ export async function startupCheck(): Promise<StartupCheckInfo | null> {
   const backedUpVersion = config.ccVersion;
 
   // Backup cli.js if we don't have any backup yet.
+  let hasBackedUp = false;
   if (!(await doesFileExist(CLIJS_BACKUP_FILE))) {
+    if (isDebug()) {
+      console.log(
+        `startupCheck: ${CLIJS_BACKUP_FILE} not found; backing up cli.js`
+      );
+    }
     await backupClijs(ccInstInfo);
+    hasBackedUp = true;
   }
 
   // If the installed CC version is different from what we have backed up, clear out our backup
   // and make a new one.
   if (realVersion !== backedUpVersion) {
-    await fs.unlink(CLIJS_BACKUP_FILE);
-    await backupClijs(ccInstInfo);
+    // The version we have backed up is different than what's installed.  Mostly likely the user
+    // updated CC, so we should back up the new version.  If the backup didn't even exist until we
+    // copied in there above, though, we shouldn't back it up twice.
+    if (!hasBackedUp) {
+      if (isDebug()) {
+        console.log(
+          `startupCheck: real version (${realVersion}) != backed up version (${backedUpVersion}); backing up cli.js`
+        );
+      }
+      await fs.unlink(CLIJS_BACKUP_FILE);
+      await backupClijs(ccInstInfo);
+    }
+
     return {
       wasUpdated: true,
       oldVersion: backedUpVersion,
