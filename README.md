@@ -2,6 +2,7 @@
 
 [![tweakcc on npm](https://img.shields.io/npm/v/tweakcc?color=yellow")](https://www.npmjs.com/package/tweakcc)
 [![Mentioned in Awesome Claude Code](https://awesome.re/mentioned-badge.svg)](https://github.com/hesreallyhim/awesome-claude-code)
+[![ClaudeLog - A comprehensive knowledge base for Claude.](https://claudelog.com/img/claude_log_badge.svg)](https://claudelog.com/)
 
 `tweakcc` is a lightweight, interactive CLI tool that lets you personalize your Claude Code interface.
 
