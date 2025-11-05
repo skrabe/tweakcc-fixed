@@ -105,6 +105,11 @@ export interface InputBoxConfig {
   removeBorder: boolean;
 }
 
+export interface MiscConfig {
+  showTweakccVersion: boolean;
+  showPatchesApplied: boolean;
+}
+
 export interface Toolset {
   name: string;
   allowedTools: string[] | '*';
@@ -117,6 +122,7 @@ export interface Settings {
   thinkingStyle: ThinkingStyleConfig;
   userMessageDisplay: UserMessageDisplayConfig;
   inputBox: InputBoxConfig;
+  misc: MiscConfig;
   toolsets: Toolset[];
 }
 
@@ -148,7 +154,7 @@ export enum MainMenuItem {
   THINKING_VERBS = 'Thinking verbs',
   THINKING_STYLE = 'Thinking style',
   USER_MESSAGE_DISPLAY = 'User message display',
-  INPUT_BOX = 'Input box',
+  MISC = 'Misc',
   TOOLSETS = 'Toolsets',
   VIEW_SYSTEM_PROMPTS = 'View system prompts',
   RESTORE_ORIGINAL = 'Restore original Claude Code (preserves tweakcc.json)',
@@ -909,6 +915,10 @@ export const DEFAULT_SETTINGS: Settings = {
   },
   inputBox: {
     removeBorder: false,
+  },
+  misc: {
+    showTweakccVersion: true,
+    showPatchesApplied: true,
   },
   toolsets: [],
 };
