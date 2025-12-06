@@ -8,6 +8,7 @@ import {
   CLIJS_SEARCH_PATH_INFO,
   CONFIG_FILE,
   CONFIG_DIR,
+  PATH_CHECK_TEXT,
 } from './utils/types.js';
 import { startupCheck, readConfigFile } from './utils/config.js';
 import { enableDebug } from './utils/misc.js';
@@ -96,9 +97,9 @@ const main = async () => {
           console.error(`  - ${info.pattern}`);
         }
       });
-      console.error(
-        `\nAlso checked for 'claude' executable on PATH using '${process.platform === 'win32' ? 'where claude.exe' : 'which claude'}'.`
-      );
+      if (PATH_CHECK_TEXT) {
+        console.error(`\n${PATH_CHECK_TEXT}`);
+      }
       process.exit(1);
     }
 
@@ -185,7 +186,7 @@ const main = async () => {
 Searched for cli.js at the following locations:
 ${formatSearchPaths()}
 
-Also checked for 'claude' executable on PATH using '${process.platform === 'win32' ? 'where claude.exe' : 'which claude'}'.
+${PATH_CHECK_TEXT ? `${PATH_CHECK_TEXT}\n` : ''}
 
 If you have it installed but it's in a location not listed above, please open an issue at
 https://github.com/piebald-ai/tweakcc/issues and tell us where you have it--we'll add that location
