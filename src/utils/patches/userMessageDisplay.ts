@@ -1,191 +1,191 @@
 // Please see the note about writing patches in ./index.js.
-
-import { buildChalkChain } from '../misc.js';
 import {
+  findBoxComponent,
   findChalkVar,
   LocationResult,
-  ModificationEdit,
   showDiff,
 } from './index.js';
 
 const getUserMessageDisplayLocation = (
   oldFile: string
-): {
-  prefixLocation: LocationResult | null;
-  messageLocation: LocationResult | null;
-} | null => {
+): LocationResult | null => {
   // Search for the exact error message to find the component
-  const searchStart =
-    oldFile.indexOf('No content found in user prompt message') - 700;
-  if (searchStart === -1) {
-    console.error('patch: userMessageDisplay: failed to find error message');
+  const messageDisplayPattern =
+    /return ([$\w]+)\.createElement\(([$\w]+),\{backgroundColor:"userMessageBackground",color:"text"\},"> ",([$\w]+)\+" "\);/;
+  const messageDisplayMatch = oldFile.match(messageDisplayPattern);
+  if (!messageDisplayMatch || messageDisplayMatch.index == undefined) {
+    console.error('patch: messageDisplayMatch: failed to find error message');
     return null;
   }
 
-  const searchEnd = Math.min(oldFile.length, searchStart + 700);
-  const searchSection = oldFile.slice(searchStart, searchEnd);
-
-  // `return cD.createElement(M,{dimColor:!0,backgroundColor:void 0},"> ",A);`
-  //                                                                 ^^^^ ^
-  //                                                                 1    2
-  const prefixAndTextPattern = /("> "),([$\w]+)/;
-  const prefixAndTextMatch = searchSection.match(prefixAndTextPattern);
-
-  if (!prefixAndTextMatch) {
-    return {
-      prefixLocation: null,
-      messageLocation: null,
-    };
-  }
-  const prefixStart =
-    searchStart + searchSection.indexOf(prefixAndTextMatch[1]);
-  const prefixEnd = prefixStart + prefixAndTextMatch[1].length;
-  const messageStart = prefixEnd + 1; // +1 for the comma
-  const messageEnd = messageStart + prefixAndTextMatch[2].length;
-
   return {
-    prefixLocation: {
-      startIndex: prefixStart,
-      endIndex: prefixEnd,
-    },
-    messageLocation: {
-      startIndex: messageStart,
-      endIndex: messageEnd,
-    },
+    startIndex: messageDisplayMatch.index,
+    endIndex: messageDisplayMatch.index + messageDisplayMatch[0].length,
+    identifiers: [
+      messageDisplayMatch[1],
+      messageDisplayMatch[2],
+      messageDisplayMatch[3],
+    ],
   };
 };
 
 export const writeUserMessageDisplay = (
   oldFile: string,
-  prefix: string,
-  prefixColor: string,
-  prefixBackgroundColor: string,
-  prefixBold: boolean = false,
-  prefixItalic: boolean = false,
-  prefixUnderline: boolean = false,
-  prefixStrikethrough: boolean = false,
-  prefixInverse: boolean = false,
-  messageColor: string,
-  messageBackgroundColor: string,
-  messageBold: boolean = false,
-  messageItalic: boolean = false,
-  messageUnderline: boolean = false,
-  messageStrikethrough: boolean = false,
-  messageInverse: boolean = false
+  format: string,
+  foregroundColor: string | 'default',
+  backgroundColor: string | 'default' | null,
+  bold: boolean = false,
+  italic: boolean = false,
+  underline: boolean = false,
+  strikethrough: boolean = false,
+  inverse: boolean = false,
+  borderStyle: string = 'none',
+  borderColor: string = 'rgb(255,255,255)',
+  paddingX: number = 0,
+  paddingY: number = 0,
+  fitBoxToContent: boolean = false
 ): string | null => {
   const location = getUserMessageDisplayLocation(oldFile);
   if (!location) {
     console.error(
-      'patch: userMessageDisplay: getUserMessageDisplayLocation returned null'
+      '^ patch: userMessageDisplay: getUserMessageDisplayLocation returned null'
     );
-    return null;
-  }
-
-  if (!location.prefixLocation) {
-    console.error('patch: userMessageDisplay: failed to find prefix location');
-    return null;
-  }
-  if (!location.messageLocation) {
-    console.error('patch: userMessageDisplay: failed to find message location');
     return null;
   }
 
   const chalkVar = findChalkVar(oldFile);
   if (!chalkVar) {
-    console.error('patch: userMessageDisplay: failed to find chalk variable');
+    console.error('^ patch: userMessageDisplay: failed to find chalk variable');
     return null;
   }
 
-  const modifications: ModificationEdit[] = [];
-
-  // Check if we should apply customization for prefix
-  const isPrefixBlack =
-    prefixColor === 'rgb(0,0,0)' && prefixBackgroundColor === 'rgb(0,0,0)';
-  const hasPrefixStyling =
-    prefixBold ||
-    prefixItalic ||
-    prefixUnderline ||
-    prefixStrikethrough ||
-    prefixInverse;
-  const shouldCustomizePrefix = !isPrefixBlack || hasPrefixStyling;
-
-  // Check if we should apply customization for message
-  const isMessageBlack =
-    messageColor === 'rgb(0,0,0)' && messageBackgroundColor === 'rgb(0,0,0)';
-  const hasMessageStyling =
-    messageBold ||
-    messageItalic ||
-    messageUnderline ||
-    messageStrikethrough ||
-    messageInverse;
-  const shouldCustomizeMessage = !isMessageBlack || hasMessageStyling;
-
-  // 1. Update prefix
-  if (shouldCustomizePrefix) {
-    // Build chalk chain for prefix
-    const prefixChalkChain = buildChalkChain(
-      chalkVar,
-      isPrefixBlack ? null : prefixColor.match(/\d+/g)?.join(',') || null,
-      isPrefixBlack
-        ? null
-        : prefixBackgroundColor.match(/\d+/g)?.join(',') || null,
-      prefixBold,
-      prefixItalic,
-      prefixUnderline,
-      prefixStrikethrough,
-      prefixInverse
-    );
-
-    modifications.push({
-      startIndex: location.prefixLocation.startIndex,
-      endIndex: location.prefixLocation.endIndex,
-      newContent: `${prefixChalkChain}("${prefix}")+" "`,
-    });
+  const boxComponent = findBoxComponent(oldFile);
+  if (!boxComponent) {
+    console.error('^ patch: userMessageDisplay: failed to find box component');
+    return null;
   }
 
-  // 2. Update message
-  if (shouldCustomizeMessage) {
-    // Build chalk chain for message
-    const messageChalkChain = buildChalkChain(
-      chalkVar,
-      isMessageBlack ? null : messageColor.match(/\d+/g)?.join(',') || null,
-      isMessageBlack
-        ? null
-        : messageBackgroundColor.match(/\d+/g)?.join(',') || null,
-      messageBold,
-      messageItalic,
-      messageUnderline,
-      messageStrikethrough,
-      messageInverse
-    );
+  let chalkChain: string = '';
 
-    modifications.push({
-      startIndex: location.messageLocation.startIndex,
-      endIndex: location.messageLocation.endIndex,
-      newContent: oldFile
-        .slice(
-          location.messageLocation.startIndex,
-          location.messageLocation.endIndex
-        )
-        .replace(/([$\w]+)/, `${messageChalkChain}($1)`),
-    });
+  // Build Ink attributes for default theme colors (do this ALWAYS, not conditionally)
+  const textAttrs: string[] = [];
+  if (foregroundColor === 'default') {
+    textAttrs.push('color:"text"');
   }
-  // If not customizing message, we don't need to modify it at all since we're not changing the text
-
-  // Sort modifications by startIndex in descending order to avoid index shifting issues
-  modifications.sort((a, b) => b.startIndex - a.startIndex);
-
-  // Apply modifications
-  let newFile = oldFile;
-  for (const mod of modifications) {
-    const before = newFile;
-    newFile =
-      newFile.slice(0, mod.startIndex) +
-      mod.newContent +
-      newFile.slice(mod.endIndex);
-
-    showDiff(before, newFile, mod.newContent, mod.startIndex, mod.endIndex);
+  if (backgroundColor === 'default') {
+    textAttrs.push('backgroundColor:"userMessageBackground"');
   }
+  const textAttrsObjStr =
+    textAttrs.length > 0 ? `{${textAttrs.join(',')}}` : '{}';
+
+  // Build box attributes (border and padding)
+  const boxAttrs: string[] = [];
+  const isCustomBorder = borderStyle.startsWith('topBottom');
+
+  if (borderStyle !== 'none') {
+    if (isCustomBorder) {
+      // Custom topBottom borders - only show top and bottom
+      let customBorder = '';
+
+      if (borderStyle === 'topBottomSingle') {
+        customBorder =
+          '{top:"─",bottom:"─",left:" ",right:" ",topLeft:" ",topRight:" ",bottomLeft:" ",bottomRight:" "}';
+      } else if (borderStyle === 'topBottomDouble') {
+        customBorder =
+          '{top:"═",bottom:"═",left:" ",right:" ",topLeft:" ",topRight:" ",bottomLeft:" ",bottomRight:" "}';
+      } else if (borderStyle === 'topBottomBold') {
+        customBorder =
+          '{top:"━",bottom:"━",left:" ",right:" ",topLeft:" ",topRight:" ",bottomLeft:" ",bottomRight:" "}';
+      }
+
+      boxAttrs.push(`borderStyle:${customBorder}`);
+    } else {
+      // Standard Ink border styles
+      boxAttrs.push(`borderStyle:"${borderStyle}"`);
+    }
+
+    const borderMatch = borderColor.match(/\d+/g);
+    if (borderMatch) {
+      boxAttrs.push(`borderColor:"rgb(${borderMatch.join(',')})"`);
+    }
+  }
+  if (paddingX > 0) {
+    boxAttrs.push(`paddingX:${paddingX}`);
+  }
+  if (paddingY > 0) {
+    boxAttrs.push(`paddingY:${paddingY}`);
+  }
+  if (fitBoxToContent) {
+    boxAttrs.push(`alignSelf:"flex-start"`);
+  }
+  const boxAttrsObjStr = boxAttrs.length > 0 ? `{${boxAttrs.join(',')}}` : '{}';
+
+  // Determine if we need chalk styling (custom RGB colors or text styling)
+  const needsChalk =
+    foregroundColor !== 'default' ||
+    (backgroundColor !== 'default' && backgroundColor !== null) ||
+    bold ||
+    italic ||
+    underline ||
+    strikethrough ||
+    inverse;
+
+  if (needsChalk) {
+    // Build chalk chain for custom colors and/or styling
+    chalkChain = chalkVar;
+
+    // Only add color methods for custom (non-default, non-null) colors
+    if (foregroundColor !== 'default') {
+      const fgMatch = foregroundColor.match(/\d+/g);
+      if (fgMatch) {
+        chalkChain += `.rgb(${fgMatch.join(',')})`;
+      }
+    }
+
+    if (backgroundColor !== 'default' && backgroundColor !== null) {
+      const bgMatch = backgroundColor.match(/\d+/g);
+      if (bgMatch) {
+        chalkChain += `.bgRgb(${bgMatch.join(',')})`;
+      }
+    }
+
+    // Apply styling
+    if (bold) chalkChain += '.bold';
+    if (italic) chalkChain += '.italic';
+    if (underline) chalkChain += '.underline';
+    if (strikethrough) chalkChain += '.strikethrough';
+    if (inverse) chalkChain += '.inverse';
+  }
+
+  const [reactVar, textComponent, messageVar] = location.identifiers!;
+  // Replace {} in format string with the message variable
+  const formattedMessage =
+    '"' + format.replace(/\{\}/g, `"+${messageVar}+"`) + '"';
+
+  const newContent = `
+return ${reactVar}.createElement(
+  ${boxComponent},
+  ${boxAttrsObjStr},
+  ${reactVar}.createElement(
+    ${textComponent},
+    ${textAttrsObjStr},
+    ${needsChalk ? chalkChain + '(' : ''}${formattedMessage}${needsChalk ? ')' : ''}
+  )
+);`;
+
+  // Apply modification
+  const newFile =
+    oldFile.slice(0, location.startIndex) +
+    newContent +
+    oldFile.slice(location.endIndex);
+
+  showDiff(
+    oldFile,
+    newFile,
+    newContent,
+    location.startIndex,
+    location.endIndex
+  );
 
   return newFile;
 };

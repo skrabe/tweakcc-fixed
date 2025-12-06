@@ -73,6 +73,88 @@ export const warnAboutMultipleConfigs = (): void => {
   }
 };
 
+/**
+ * In v3.2.0 we changed the user message display config.  This function migrates the old config.
+ * @param readConfig The config that was read.
+ */
+const migrateUserMessageDisplayToV320 = (readConfig: TweakccConfig) => {
+  // In v3.2.0 userMessageDisplay was restructured from prefix/message to a single format string.
+  const tmpPreV320UserMessageDisplay = readConfig?.settings
+    ?.userMessageDisplay as unknown as {
+    prefix?: {
+      format: string;
+      styling: string[];
+      foregroundColor: string;
+      backgroundColor: string;
+    };
+    message?: {
+      format: string;
+      styling: string[];
+      foregroundColor: string;
+      backgroundColor: string;
+    };
+    padding?: number;
+  };
+
+  if (tmpPreV320UserMessageDisplay?.prefix) {
+    const old = tmpPreV320UserMessageDisplay;
+    readConfig.settings.userMessageDisplay = {
+      format: (old.prefix?.format || '') + (old.message?.format || '{}'),
+      styling: [
+        ...(old.prefix?.styling || []),
+        ...(old.message?.styling || []),
+      ],
+      foregroundColor:
+        old.message?.foregroundColor === 'rgb(0,0,0)'
+          ? 'default'
+          : old.message?.foregroundColor ||
+            old.prefix?.foregroundColor ||
+            'default',
+      backgroundColor:
+        old.message?.backgroundColor === 'rgb(0,0,0)'
+          ? null
+          : old.message?.backgroundColor || old.prefix?.backgroundColor || null,
+      borderStyle: 'none',
+      borderColor: 'rgb(255,255,255)',
+      paddingX: 0,
+      paddingY: 0,
+      fitBoxToContent: false,
+    };
+  }
+
+  // In v3.2.0 border properties were added to userMessageDisplay.
+  if (
+    tmpPreV320UserMessageDisplay &&
+    !('borderStyle' in tmpPreV320UserMessageDisplay)
+  ) {
+    readConfig.settings.userMessageDisplay.borderStyle = 'none';
+    readConfig.settings.userMessageDisplay.borderColor = 'rgb(255,255,255)';
+    readConfig.settings.userMessageDisplay.paddingX = 0;
+    readConfig.settings.userMessageDisplay.paddingY = 0;
+    readConfig.settings.userMessageDisplay.fitBoxToContent = false;
+  }
+
+  // In v3.2.0 padding was split into paddingX and paddingY.
+  if (
+    tmpPreV320UserMessageDisplay &&
+    'padding' in tmpPreV320UserMessageDisplay &&
+    !('paddingX' in tmpPreV320UserMessageDisplay)
+  ) {
+    readConfig.settings.userMessageDisplay.paddingX =
+      tmpPreV320UserMessageDisplay.padding || 0;
+    readConfig.settings.userMessageDisplay.paddingY = 0;
+    delete tmpPreV320UserMessageDisplay.padding; // This will delete it from the readConfig but with type safety.
+  }
+
+  // In v3.2.x fitBoxToContent was added to userMessageDisplay.
+  if (
+    tmpPreV320UserMessageDisplay &&
+    !('fitBoxToContent' in tmpPreV320UserMessageDisplay)
+  ) {
+    readConfig.settings.userMessageDisplay.fitBoxToContent = false;
+  }
+};
+
 export const ensureConfigDir = async (): Promise<void> => {
   await fs.mkdir(CONFIG_DIR, { recursive: true });
   await fs.mkdir(SYSTEM_PROMPTS_DIR, { recursive: true });
@@ -207,6 +289,9 @@ export const readConfigFile = async (): Promise<TweakccConfig> => {
       readConfig.settings.userMessageDisplay =
         DEFAULT_SETTINGS.userMessageDisplay;
     }
+
+    // In v3.2.0 userMessageDisplay was restructured from prefix/message to a single format string.
+    migrateUserMessageDisplayToV320(readConfig);
 
     // Remove launchText if it exists in the config; it was removed in v3.0.0.
     delete (readConfig.settings as Settings & { launchText: unknown })

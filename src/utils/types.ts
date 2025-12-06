@@ -83,16 +83,27 @@ export interface ThinkingStyleConfig {
   phases: string[];
 }
 
-export interface UserMessageDisplayElementConfig {
+export interface UserMessageDisplayConfig {
   format: string;
   styling: string[];
-  foreground_color: string;
-  background_color: string;
-}
-
-export interface UserMessageDisplayConfig {
-  prefix: UserMessageDisplayElementConfig;
-  message: UserMessageDisplayElementConfig;
+  foregroundColor: string | 'default';
+  backgroundColor: string | 'default' | null;
+  borderStyle:
+    | 'none'
+    | 'single'
+    | 'double'
+    | 'round'
+    | 'bold'
+    | 'singleDouble'
+    | 'doubleSingle'
+    | 'classic'
+    | 'topBottomSingle'
+    | 'topBottomDouble'
+    | 'topBottomBold';
+  borderColor: string;
+  paddingX: number;
+  paddingY: number;
+  fitBoxToContent: boolean;
 }
 
 export interface InputBoxConfig {
@@ -890,18 +901,15 @@ export const DEFAULT_SETTINGS: Settings = {
     reverseMirror: true,
   },
   userMessageDisplay: {
-    prefix: {
-      format: '>',
-      styling: [],
-      foreground_color: 'rgb(0,0,0)',
-      background_color: 'rgb(0,0,0)',
-    },
-    message: {
-      format: '{}',
-      styling: [],
-      foreground_color: 'rgb(0,0,0)',
-      background_color: 'rgb(0,0,0)',
-    },
+    format: ' > {} ',
+    styling: [],
+    foregroundColor: 'default',
+    backgroundColor: null,
+    borderStyle: 'none',
+    borderColor: 'rgb(255,255,255)',
+    paddingX: 0,
+    paddingY: 0,
+    fitBoxToContent: false,
   },
   inputBox: {
     removeBorder: false,
