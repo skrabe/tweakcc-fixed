@@ -4,7 +4,12 @@ import path from 'path';
 
 import { WASMagic } from 'wasmagic';
 
-import { debug, hashFileInChunks, isDebug } from './utils.js';
+import {
+  compareSemverVersions,
+  debug,
+  hashFileInChunks,
+  isDebug,
+} from './utils.js';
 import { extractClaudeJsFromNativeInstallation } from './nativeInstallationLoader.js';
 import fs from 'node:fs/promises';
 import { ClaudeCodeInstallationInfo, TweakccConfig } from './types.js';
@@ -239,6 +244,27 @@ async function findClijsFromExecutablePath(
 }
 
 /**
+ * Extracts version from a bunx cache path string.
+ * Bunx cache paths follow the pattern: .../@anthropic-ai/claude-code@VERSION@@@HASH
+ * Returns [major, minor, patch] as numbers or null if pattern not found.
+ */
+export function extractVersionFromPath(
+  pathStr: string
+): [number, number, number] | null {
+  const match = pathStr.match(
+    /@anthropic-ai[\\/]claude-code@(\d+)\.(\d+)\.(\d+)/
+  );
+  if (match) {
+    return [
+      parseInt(match[1], 10),
+      parseInt(match[2], 10),
+      parseInt(match[3], 10),
+    ];
+  }
+  return null;
+}
+
+/**
  * Searches for the Claude Code installation in the default locations.
  */
 export const findClaudeCodeInstallation = async (
@@ -380,7 +406,26 @@ export const findClaudeCodeInstallation = async (
   }
 
   // Fall back to the hard-coded cli.js detection paths.
-  for (const searchPath of CLIJS_SEARCH_PATHS) {
+  // Sort paths so bunx cache entries are checked in descending version order.
+  // This ensures that if multiple bunx cache versions exist, the latest is patched.
+  const sortedSearchPaths = [...CLIJS_SEARCH_PATHS].sort((a, b) => {
+    const versionA = extractVersionFromPath(a);
+    const versionB = extractVersionFromPath(b);
+
+    // If both are versioned paths (bunx cache), sort descending (newest first)
+    if (versionA && versionB) {
+      return compareSemverVersions(versionB, versionA);
+    }
+
+    // Unversioned paths (non-bunx) come after versioned paths
+    if (versionA) return -1;
+    if (versionB) return 1;
+
+    // Maintain original order for non-versioned paths
+    return 0;
+  });
+
+  for (const searchPath of sortedSearchPaths) {
     try {
       debug(`Searching for Claude Code cli.js file at ${searchPath}`);
 
