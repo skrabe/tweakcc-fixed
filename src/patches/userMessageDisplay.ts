@@ -1,10 +1,10 @@
-// Please see the note about writing patches in ./index.js.
+// Please see the note about writing patches in ./index
 import {
   findBoxComponent,
   findChalkVar,
   LocationResult,
   showDiff,
-} from './index.js';
+} from './index';
 
 const getUserMessageDisplayLocation = (
   oldFile: string
