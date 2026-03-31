@@ -104,6 +104,7 @@ function getThemesLocation(oldFile: string): {
     obj: {
       startIndex: objMatch.index,
       endIndex: objMatch.index + objMatch[0].length,
+      identifiers: [objMatch[1]],
     },
   };
 }
@@ -126,8 +127,10 @@ export const writeThemes = (
   // Process in reverse order to avoid index shifting
 
   // Update theme mapping object (obj)
+  // Preserve the original prefix (either "return" or a variable assignment like "Lr9=")
+  const objPrefix = locations.obj.identifiers?.[0] ?? 'return';
   const obj =
-    'return' +
+    objPrefix +
     JSON.stringify(
       Object.fromEntries(themes.map(theme => [theme.id, theme.name]))
     );
