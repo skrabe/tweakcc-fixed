@@ -49,6 +49,14 @@ export const writeAgentsMd = (
   file: string,
   altNames: string[]
 ): string | null => {
+  // CC >= 2.1.87 ships alternative MD file support natively — detect and skip.
+  if (/CLAUDE\.md.{0,100}for\(let \w+ of \["AGENTS\.md"/.test(file)) {
+    console.log(
+      'patch: agentsMd: alternative MD file support already present natively - skipping'
+    );
+    return file;
+  }
+
   // Try the new async pattern first (CC >=2.1.83)
   const asyncResult = writeAgentsMdAsync(file, altNames);
   if (asyncResult) return asyncResult;
