@@ -181,10 +181,22 @@ export function UserMessageDisplayView({
   const restoreToOriginal = () => {
     setFormatInput(DEFAULT_SETTINGS.userMessageDisplay.format);
     setActiveStylings([...DEFAULT_SETTINGS.userMessageDisplay.styling]);
-    setForegroundMode('default');
-    setForegroundColor('rgb(255,255,255)');
-    setBackgroundMode('none');
-    setBackgroundColor('rgb(0,0,0)');
+    const defaultFg = DEFAULT_SETTINGS.userMessageDisplay.foregroundColor;
+    setForegroundMode(defaultFg === 'default' ? 'default' : 'custom');
+    setForegroundColor(
+      defaultFg === 'default' ? 'rgb(255,255,255)' : defaultFg
+    );
+    const defaultBg = DEFAULT_SETTINGS.userMessageDisplay.backgroundColor;
+    setBackgroundMode(
+      defaultBg === null
+        ? 'none'
+        : defaultBg === 'default'
+          ? 'default'
+          : 'custom'
+    );
+    setBackgroundColor(
+      defaultBg === null || defaultBg === 'default' ? 'rgb(0,0,0)' : defaultBg
+    );
     setBorderStyleIndex(
       BORDER_STYLE_OPTIONS.findIndex(
         opt => opt.value === DEFAULT_SETTINGS.userMessageDisplay.borderStyle
