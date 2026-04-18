@@ -273,7 +273,14 @@ describe('systemPrompts.ts', () => {
       );
     });
 
-    it('should escape backslashes before backticks to preserve literal backslash-backticks (#660)', async () => {
+    it('should preserve already-escaped backticks in template literal context (#660)', async () => {
+      // tweakcc's markdown files store prompt content in JS-source-escaped form
+      // (they are extracted from cli.js template literals, where each `\\`` is
+      // already an escape sequence). When re-embedded into a template literal,
+      // the content must NOT be re-escaped — escapeDepthZeroBackticks leaves
+      // already-escaped backticks alone. Backslash-doubling is intentionally
+      // scoped to `"` / `'` delimiters only; doubling here would break valid
+      // cli.js template literals.
       const mockPromptData = buildMockPromptData({
         content: 'Use \\`foo\\` for config',
         regex: 'Use \\\\`foo\\\\` for config',
@@ -287,7 +294,7 @@ describe('systemPrompts.ts', () => {
 
       const result = await applySystemPrompts(cliContent, '1.0.0', false);
 
-      expect(result.newContent).toBe('desc:`Use \\\\\\`foo\\\\\\` for config`');
+      expect(result.newContent).toBe('desc:`Use \\`foo\\` for config`');
     });
 
     it('should auto-escape backticks adjacent to template expressions', async () => {
@@ -307,7 +314,11 @@ describe('systemPrompts.ts', () => {
       expect(result.newContent).toBe('desc:`Value: \\`${x}\\``');
     });
 
-    it('should escape backslashes in already-escaped backticks and also escape bare backticks (#660)', async () => {
+    it('should auto-escape bare backticks while preserving already-escaped backticks (#660)', async () => {
+      // Mixed content: `\\`foo\\`` is already in JS-source-escaped form and
+      // must pass through unchanged; bare `bar` has unescaped backticks that
+      // escapeDepthZeroBackticks must escape to keep the surrounding template
+      // literal parseable.
       const mockPromptData = buildMockPromptData({
         content: 'Use \\`foo\\` and `bar` for config',
         regex: 'Use \\\\`foo\\\\` and `bar` for config',
@@ -322,7 +333,7 @@ describe('systemPrompts.ts', () => {
       const result = await applySystemPrompts(cliContent, '1.0.0', false);
 
       expect(result.newContent).toBe(
-        'desc:`Use \\\\\\`foo\\\\\\` and \\`bar\\` for config`'
+        'desc:`Use \\`foo\\` and \\`bar\\` for config`'
       );
     });
 
