@@ -146,13 +146,22 @@ import { UserMessageDisplayConfig } from '../types';
  *
  * The new approach is ATTRIBUTE-PRESERVING: we keep the outer
  *   createElement(Box, ORIGINAL_ATTRS, INNER)
- * call and only MUTATE its attrs dict (replace/strip `backgroundColor`,
- * append border/padding/alignSelf). We replace the inner EjK call with our
- * own Text element so we can apply the format string and per-text styling —
- * and we use Ink's Text props for bg/color/bold/etc. rather than chalk ANSI
- * inside the text content, because chalk's bg escape codes don't reliably
- * re-open on line 2 after Ink word-wraps (whereas Ink's Text/Box bg props
- * are painted per-line by the layout pass).
+ * call and only MUTATE its attrs dict — specifically, we STRIP CC's
+ * `backgroundColor` attr when the user picks "none" (null) or a custom rgb,
+ * and leave it alone for "default" (so CC's native theme-token /
+ * messageActionsBackground ternary keeps working). We never replace the Box
+ * bg with a custom rgb literal: Ink paints Box `backgroundColor` across the
+ * full Box width (which, with preserved flexDirection:"column", is the full
+ * parent width), so putting the user's color there floods the ENTIRE
+ * user-message rectangle — the "bg fills the whole message display" symptom.
+ * Instead, the custom bg rides on the INNER Text's `backgroundColor` prop,
+ * which Ink re-applies per character — including on every wrapped line,
+ * which is the wrap-line-bg fix 9ef9328 was originally about. Border,
+ * padding, and alignSelf overrides still append to the Box attrs CSV.
+ * We also replace the inner EjK call with our own Text element so we can
+ * apply the format string and per-text styling using Ink props rather than
+ * chalk ANSI inside the text content (chalk's bg escape codes don't reliably
+ * re-open on line 2 after Ink word-wraps; Ink's Text bg prop does).
  */
 
 export const writeUserMessageDisplay = (
@@ -252,34 +261,27 @@ export const writeUserMessageDisplay = (
     // `void 0` only), so a non-greedy `[^,]+` run walks the whole value.
     const bgAttrRegex = /backgroundColor:[^,}]+(?:\?[^,}:]+:[^,}:]+)*/;
 
-    if (config.backgroundColor === null) {
-      // Fully suppress bg (user picked "none" — no highlight at all).
+    if (config.backgroundColor !== 'default') {
+      // null ("none") or custom rgb: strip CC's Box backgroundColor attr
+      // entirely. Ink paints Box `backgroundColor` across the full Box width
+      // (which, on this Box, is the full parent width inherited from the
+      // row-flex message-list parent via the preserved flexDirection:"column"
+      // + paddingRight attrs). Leaving a custom rgb on the Box would fill the
+      // ENTIRE user-message rectangle with the user's color — the symptom
+      // users report as "the bg fills the whole message display instead of
+      // just the text." The inner Text's backgroundColor prop (set below)
+      // handles per-character bg, and Ink's layout pass re-applies the bg
+      // ANSI on every wrapped line, so we don't need Box bg to cover line 2+
+      // after word-wrap. (That per-wrapped-line Text bg was the whole reason
+      // 9ef9328 switched this path from chalk-ANSI-in-string to Ink Text
+      // props in the first place.)
       mutableBoxAttrs = mutableBoxAttrs
         .replace(new RegExp(`,?${bgAttrRegex.source}`), '')
         .replace(/^,|,$/g, '');
-    } else if (
-      config.backgroundColor !== 'default' &&
-      config.backgroundColor !== null
-    ) {
-      // Custom rgb bg — replace CC's ternary with a static rgb literal so
-      // message-actions-mode no longer switches bg (tweakcc's user wants
-      // their chosen color unconditionally).
-      const bgDigits = config.backgroundColor.match(/\d+/g);
-      if (bgDigits) {
-        const rgbLiteral = `"rgb(${bgDigits.join(',')})"`;
-        if (bgAttrRegex.test(mutableBoxAttrs)) {
-          mutableBoxAttrs = mutableBoxAttrs.replace(
-            bgAttrRegex,
-            `backgroundColor:${rgbLiteral}`
-          );
-        } else {
-          mutableBoxAttrs += `,backgroundColor:${rgbLiteral}`;
-        }
-      }
     }
     // 'default' case: leave CC's backgroundColor attr untouched so the
     // theme's userMessageBackground + messageActionsBackground ternary keeps
-    // working in all contexts.
+    // working in all contexts — this matches CC's native full-Box-fill look.
 
     // Append tweakcc's extras (border, extra padding, fit-to-content). Any
     // pre-existing paddingRight stays as-is unless the user explicitly sets
