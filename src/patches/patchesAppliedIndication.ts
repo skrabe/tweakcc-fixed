@@ -553,8 +553,11 @@ export const writePatchesAppliedIndication = (
   if (showPatchesApplied) {
     const patchesListLoc = findPatchesListLocation(content);
     if (!patchesListLoc) {
-      console.error(
-        'patch: patchesAppliedIndication: patch 3 skipped (version display pattern changed by PATCH 2)'
+      // findPatchesListLocation already logged the specific cause (e.g. header
+      // component function not found on CC >= 2.1.86). Don't duplicate as an
+      // error — this is a cascade from the underlying shape change.
+      console.log(
+        'patch: patchesAppliedIndication: patch 3 skipped (see prior message)'
       );
     } else {
       const lines = [];

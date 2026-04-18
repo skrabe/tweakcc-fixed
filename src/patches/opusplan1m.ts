@@ -109,9 +109,11 @@ const patchModelAliasesList = (oldFile: string): string | null => {
  *   if (A === "opusplan[1m]") return "Opus 4.6 in plan mode, else Sonnet 4.6 (1M context)";
  */
 const patchDescriptionFunction = (oldFile: string): string | null => {
-  // Pattern matches: if (VAR === "opusplan") return "Opus 4.6 in plan mode, else Sonnet 4.6";
+  // Pattern matches: if (VAR === "opusplan") return "Opus[ 4.6] in plan mode, else Sonnet[ 4.6]";
+  // CC >= 2.1.113 dropped the model version numbers from this string, so the
+  // " 4.6" fragments must be optional.
   const pattern =
-    /(if\s*\(\s*([$\w]+)\s*===\s*"opusplan"\s*\)\s*return\s*"Opus .{0,20} in plan mode, else Sonnet .{0,20}";)/;
+    /(if\s*\(\s*([$\w]+)\s*===\s*"opusplan"\s*\)\s*return\s*"Opus(?: .{0,20})? in plan mode, else Sonnet(?: .{0,20})?";)/;
 
   const match = oldFile.match(pattern);
   if (!match || match.index === undefined) {
