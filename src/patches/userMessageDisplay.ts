@@ -146,22 +146,37 @@ import { UserMessageDisplayConfig } from '../types';
  *
  * The new approach is ATTRIBUTE-PRESERVING: we keep the outer
  *   createElement(Box, ORIGINAL_ATTRS, INNER)
- * call and only MUTATE its attrs dict — specifically, we STRIP CC's
- * `backgroundColor` attr when the user picks "none" (null) or a custom rgb,
- * and leave it alone for "default" (so CC's native theme-token /
- * messageActionsBackground ternary keeps working). We never replace the Box
- * bg with a custom rgb literal: Ink paints Box `backgroundColor` across the
- * full Box width (which, with preserved flexDirection:"column", is the full
- * parent width), so putting the user's color there floods the ENTIRE
- * user-message rectangle — the "bg fills the whole message display" symptom.
- * Instead, the custom bg rides on the INNER Text's `backgroundColor` prop,
- * which Ink re-applies per character — including on every wrapped line,
- * which is the wrap-line-bg fix 9ef9328 was originally about. Border,
- * padding, and alignSelf overrides still append to the Box attrs CSV.
- * We also replace the inner EjK call with our own Text element so we can
- * apply the format string and per-text styling using Ink props rather than
- * chalk ANSI inside the text content (chalk's bg escape codes don't reliably
- * re-open on line 2 after Ink word-wraps; Ink's Text bg prop does).
+ * call and only MUTATE the attrs we need. Specifically, for `backgroundColor`
+ * we do the MINIMAL swap that matches what users want:
+ *   - `'default'`: leave CC's ternary untouched — native behavior in every
+ *     mode (normal / message-actions / brief-layout).
+ *   - custom rgb: inside the ternary, swap ONLY the `"userMessageBackground"`
+ *     string literal for the user's `"rgb(r,g,b)"`. `"messageActionsBackground"`
+ *     and `void 0` stay intact, so the user's color only tints the normal
+ *     user-message case (matching CC native's extent — a full-row rectangle
+ *     — just re-tinted).
+ *   - `null` ("none"): strip the whole backgroundColor attr so no rectangle
+ *     paints.
+ *
+ * Why not "just put bg on the inner Text and strip the Box bg"? Ink has two
+ * bg mechanisms with very different semantics:
+ *   - Box bg is painted by renderBackground.js as bg-colored spaces across
+ *     the FULL Box rectangle (contentWidth × contentHeight). This is the
+ *     "highlight rectangle" users see on CC native.
+ *   - Text bg rides on the chalk-wrapped content and ends up as styles on
+ *     the individual char cells via output.js's styled-char grid.
+ * If Box bg is set and Text bg is NOT, Ink's renderBackground paints the
+ * row first and then the child text-write OVERWRITES those cells with
+ * bg-less chars (see output.js cell-overwrite semantics) — you get a row
+ * rectangle with "holes" where the text is. And if only Text bg is set, you
+ * get ANSI bg only behind rendered glyphs — no full-row highlight at all.
+ * So for a continuous highlight matching CC's native extent, BOTH Box bg
+ * AND Text bg must carry the same color. That's what this patch does.
+ *
+ * The inner EjK call is replaced with our own Text element so we can apply
+ * the format string and per-text styling using Ink props.
+ *
+ * Border, padding, and alignSelf overrides append to the Box attrs CSV.
  */
 
 export const writeUserMessageDisplay = (
@@ -261,23 +276,38 @@ export const writeUserMessageDisplay = (
     // `void 0` only), so a non-greedy `[^,]+` run walks the whole value.
     const bgAttrRegex = /backgroundColor:[^,}]+(?:\?[^,}:]+:[^,}:]+)*/;
 
-    if (config.backgroundColor !== 'default') {
-      // null ("none") or custom rgb: strip CC's Box backgroundColor attr
-      // entirely. Ink paints Box `backgroundColor` across the full Box width
-      // (which, on this Box, is the full parent width inherited from the
-      // row-flex message-list parent via the preserved flexDirection:"column"
-      // + paddingRight attrs). Leaving a custom rgb on the Box would fill the
-      // ENTIRE user-message rectangle with the user's color — the symptom
-      // users report as "the bg fills the whole message display instead of
-      // just the text." The inner Text's backgroundColor prop (set below)
-      // handles per-character bg, and Ink's layout pass re-applies the bg
-      // ANSI on every wrapped line, so we don't need Box bg to cover line 2+
-      // after word-wrap. (That per-wrapped-line Text bg was the whole reason
-      // 9ef9328 switched this path from chalk-ANSI-in-string to Ink Text
-      // props in the first place.)
+    if (config.backgroundColor === null) {
+      // "none": fully strip the Box backgroundColor attr so no rectangle
+      // paints behind the message at all. Text bg is also omitted below, so
+      // the row just renders against the terminal default bg.
       mutableBoxAttrs = mutableBoxAttrs
         .replace(new RegExp(`,?${bgAttrRegex.source}`), '')
         .replace(/^,|,$/g, '');
+    } else if (config.backgroundColor !== 'default') {
+      // Custom rgb: MINIMAL swap — replace only the "userMessageBackground"
+      // string literal inside CC's native ternary with the user's rgb
+      // literal. The `j` (message-actions mode) and `w` (brief-layout)
+      // branches stay untouched, so CC's native behavior is preserved
+      // byte-for-byte in those modes. In the normal user-message case the
+      // Box paints a full-row rectangle with the user's color (same extent
+      // as native), and the Text bg below carries the same rgb so glyph
+      // cells don't punch holes in the rectangle (Ink's render pipeline
+      // writes Box bg first then overwrites text cells — if Text has no bg,
+      // text cells appear bg-less against an otherwise-filled row).
+      //
+      // This approach was chosen over "strip Box bg, Text-bg only" because
+      // Text bg alone only paints behind rendered glyphs (Ink's Text bg
+      // lives in chalk-wrapped content, not in renderBackground's
+      // full-rectangle paint). That produced "no visible highlight" for
+      // users who expected CC's native extent — which is a full row.
+      const bgDigits = config.backgroundColor.match(/\d+/g);
+      if (bgDigits) {
+        const rgbLiteral = `"rgb(${bgDigits.join(',')})"`;
+        mutableBoxAttrs = mutableBoxAttrs.replace(
+          /"userMessageBackground"/g,
+          rgbLiteral
+        );
+      }
     }
     // 'default' case: leave CC's backgroundColor attr untouched so the
     // theme's userMessageBackground + messageActionsBackground ternary keeps
