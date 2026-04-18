@@ -225,8 +225,11 @@ export const writeUserMessageDisplay = (
   const boxAttrsObjStr =
     boxAttrs.length > 0 ? `{${boxAttrs.join(',')}}` : 'null';
 
-  // Build chalk chain for custom colors and styling
+  // Build chalk chain for custom colors and styling, plus any Text-level
+  // theme tokens for 'default' fg/bg (ink Text props apply theme colors
+  // that chalk can't name).
   let chalkChain = chalkVar;
+  const textAttrs: string[] = [];
 
   // Only add color methods for custom (non-default, non-null) colors
   if (config.foregroundColor !== 'default') {
@@ -234,6 +237,11 @@ export const writeUserMessageDisplay = (
     if (fgMatch) {
       chalkChain += `.rgb(${fgMatch.join(',')})`;
     }
+  } else {
+    // Stock CC renders the inner Text with color:"text" (the theme's text
+    // token). Without this, terminal default fg shows through, which looks
+    // off against the themed bg.
+    textAttrs.push('color:"text"');
   }
 
   if (config.backgroundColor !== 'default' && config.backgroundColor !== null) {
@@ -248,8 +256,10 @@ export const writeUserMessageDisplay = (
     // carries that attribute, so dropping it without a replacement would
     // strip the theme's user-message background entirely. Re-apply it at the
     // Ink level so 'default' means "the theme's default bg" instead of
-    // "no bg".
+    // "no bg". Push it to the inner Text too so it fills the full cell even
+    // where padding/bg might not otherwise reach.
     boxAttrs.push('backgroundColor:"userMessageBackground"');
+    textAttrs.push('backgroundColor:"userMessageBackground"');
   }
 
   // Apply styling
@@ -265,10 +275,13 @@ export const writeUserMessageDisplay = (
 
   const chalkFormattedString = `${chalkChain}(${formattedMessage})`;
 
-  // Build replacement: match[1] + createElement(Box, boxProps, createElement(Text, null, chalkFormattedString))
+  const textAttrsObjStr =
+    textAttrs.length > 0 ? `{${textAttrs.join(',')}}` : 'null';
+
+  // Build replacement: match[1] + createElement(Box, boxProps, createElement(Text, textProps, chalkFormattedString))
   const replacement =
     match[1] +
-    `${createElementFn}(${boxComponent},${boxAttrsObjStr},${createElementFn}(${textComponent},null,${chalkFormattedString}))`;
+    `${createElementFn}(${boxComponent},${boxAttrsObjStr},${createElementFn}(${textComponent},${textAttrsObjStr},${chalkFormattedString}))`;
 
   const startIndex = match.index;
   const endIndex = startIndex + match[0].length;
