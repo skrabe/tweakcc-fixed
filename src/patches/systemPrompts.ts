@@ -152,7 +152,11 @@ export const applySystemPrompts = async (
       // Escape literal backslashes FIRST so they survive JS string
       // embedding. Without this, a markdown `\"user\"` ends up as `"user"`
       // because the backslash is consumed as an escape character. (#660)
-      if (delimiter === '"' || delimiter === "'" || delimiter === '`') {
+      // Backticks are excluded: escapeDepthZeroBackticks already uses a
+      // parity-aware algorithm that treats preceding backslashes correctly,
+      // so pre-doubling breaks `\`` sequences (which become `\\` + closing
+      // backtick in a template literal, terminating the template early).
+      if (delimiter === '"' || delimiter === "'") {
         replacementContent = replacementContent.replace(/\\/g, '\\\\');
       }
 
