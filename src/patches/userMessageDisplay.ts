@@ -207,10 +207,15 @@ export const writeUserMessageDisplay = (
     }
   }
 
-  if (config.paddingX > 0) {
+  // 'default' paddings preserve CC's native Box padding: it wraps user
+  // messages with paddingRight:1 (and no paddingY) so the theme bg hugs
+  // the text. A numeric 0 is an explicit override — no padding at all.
+  if (config.paddingX === 'default') {
+    boxAttrs.push('paddingRight:1');
+  } else if (config.paddingX > 0) {
     boxAttrs.push(`paddingX:${config.paddingX}`);
   }
-  if (config.paddingY > 0) {
+  if (config.paddingY !== 'default' && config.paddingY > 0) {
     boxAttrs.push(`paddingY:${config.paddingY}`);
   }
   if (config.fitBoxToContent) {
@@ -236,6 +241,15 @@ export const writeUserMessageDisplay = (
     if (bgMatch) {
       chalkChain += `.bgRgb(${bgMatch.join(',')})`;
     }
+  } else if (config.backgroundColor === 'default') {
+    // Stock CC 2.1.79+ renders user messages inside a Box with
+    //   backgroundColor: "userMessageBackground"
+    // (an Ink theme token). The outer createElement this patch replaces
+    // carries that attribute, so dropping it without a replacement would
+    // strip the theme's user-message background entirely. Re-apply it at the
+    // Ink level so 'default' means "the theme's default bg" instead of
+    // "no bg".
+    boxAttrs.push('backgroundColor:"userMessageBackground"');
   }
 
   // Apply styling

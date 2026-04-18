@@ -95,8 +95,11 @@ export interface UserMessageDisplayConfig {
     | 'topBottomDouble'
     | 'topBottomBold';
   borderColor: string;
-  paddingX: number;
-  paddingY: number;
+  // 'default' means "leave CC's native padding alone" (which gives user messages
+  // a paddingRight of 1 so the theme background hugs the text). A number is an
+  // explicit override.
+  paddingX: number | 'default';
+  paddingY: number | 'default';
   fitBoxToContent: boolean;
 }
 
