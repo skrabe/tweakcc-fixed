@@ -222,8 +222,9 @@ export const writeUserMessageDisplay = (
     boxAttrs.push(`alignSelf:"flex-start"`);
   }
 
-  const boxAttrsObjStr =
-    boxAttrs.length > 0 ? `{${boxAttrs.join(',')}}` : 'null';
+  // Note: boxAttrsObjStr is finalized further below, after the bg block. The
+  // bg handling pushes onto boxAttrs so the Box fills wrapped lines across
+  // the full width — finalizing here would silently drop those pushes.
 
   // Build chalk chain for custom colors and styling, plus any Text-level
   // theme tokens for 'default' fg/bg (ink Text props apply theme colors
@@ -248,6 +249,17 @@ export const writeUserMessageDisplay = (
     const bgMatch = config.backgroundColor.match(/\d+/g);
     if (bgMatch) {
       chalkChain += `.bgRgb(${bgMatch.join(',')})`;
+      // Also apply the bg at the Ink level. chalk's ANSI bg codes live inside
+      // the text content, and when Ink word-wraps the message the escape on
+      // line 1 doesn't reliably re-open on line 2 — so a message that wraps
+      // renders with a highlighted first line and a bare (terminal-default)
+      // second line. Pushing the color onto the Box (fills the padded width
+      // across every wrapped line) and onto the inner Text (covers the text
+      // cells themselves where chalk's state may have been reset) keeps the
+      // highlight consistent across the whole wrapped block.
+      const inkBg = `"rgb(${bgMatch.join(',')})"`;
+      boxAttrs.push(`backgroundColor:${inkBg}`);
+      textAttrs.push(`backgroundColor:${inkBg}`);
     }
   } else if (config.backgroundColor === 'default') {
     // Stock CC 2.1.79+ renders user messages inside a Box with
@@ -297,6 +309,12 @@ export const writeUserMessageDisplay = (
 
   const chalkFormattedString = `${chalkChain}(${formattedMessage})`;
 
+  // Finalize the Box/Text attrs AFTER the bg block above has had a chance
+  // to push onto them. Doing this earlier (e.g. right after the padding
+  // block) would silently drop every bg push — which is what caused
+  // wrapped user messages to lose their highlight on line 2+.
+  const boxAttrsObjStr =
+    boxAttrs.length > 0 ? `{${boxAttrs.join(',')}}` : 'null';
   const textAttrsObjStr =
     textAttrs.length > 0 ? `{${textAttrs.join(',')}}` : 'null';
 
