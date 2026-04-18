@@ -59,11 +59,17 @@ const patchPresentTenseVerbs = (
 };
 
 const patchPastTenseVerbs = (file: string, verbs: string[]): string | null => {
-  // CC ≥ 2.1.87 includes non-"ed" words like "Beboppin'" in the past-tense
-  // array, so we can't require every entry to end in "ed".  Match any
-  // capitalised word (same character class as the present-tense pattern) and
-  // rely on the {50,} minimum count to avoid false positives.
-  const pattern = /\[("[A-Z][a-z'é\-\\xA-F0-9]+",?){50,}\]/;
+  // Recent CC builds (observed on 2.1.70 through 2.1.113) ship a short
+  // ~8-entry past-tense array of cooking/thought "-ed" words — e.g.
+  // ["Baked","Brewed","Churned","Cogitated","Cooked","Crunched","Sautéed","Worked"].
+  // Requiring every entry to end in "ed" lets us match the short list while
+  // ignoring the far-larger present-tense "-ing" array (handled separately)
+  // and the user's substituted "-ing" verbs left behind by the earlier patch
+  // pass.  2.1.113's native-binary build encodes "Sautéed" as "Saut\xE9ed"
+  // (literal \xNN escape rather than raw é UTF-8); the existing character
+  // class already covers backslash/x/hex-digit/é, so both forms match.
+  // Minimum count of 6 gives headroom for minor churn in the list.
+  const pattern = /\[("[A-Z][a-z'é\-\\xA-F0-9]+ed",?){6,}\]/;
 
   const match = file.match(pattern);
 
