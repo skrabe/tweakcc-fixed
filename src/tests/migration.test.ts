@@ -1,11 +1,34 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { describe, it, vi, expect } from 'vitest';
+import { describe, it, vi, expect, beforeEach } from 'vitest';
 import { DEFAULT_SETTINGS } from '../defaultSettings';
 import { readConfigFile } from '../config';
 import { migrateConfigIfNeeded } from '../migration';
+import * as systemPromptHashIndex from '../systemPromptHashIndex';
 import { createEnoent } from './testHelpers';
+
+// Replace every fs method with a vi.fn() no-op by default. Tests opt in to
+// specific behaviour via vi.spyOn(fs, 'readFile').mockResolvedValue(...) etc.
+// Without this, readConfigFile's saveConfig path (triggered whenever
+// normalizeConfig produces a diff — which the migration tests intentionally
+// do) would call the real fs.writeFile and clobber the developer's real
+// ~/.tweakcc/config.json. config.test.ts already mocks these; this file was
+// split out from the monolithic test file in PR #280 without carrying the
+// mock declarations across.
+vi.mock('node:fs/promises');
+vi.mock('node:fs');
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  // readConfigFile also calls hasUnappliedSystemPromptChanges, which reads
+  // SYSTEM_PROMPTS_DIR via fs.readdir. Short-circuit it so tests don't have
+  // to care. Mirrors config.test.ts beforeEach.
+  vi.spyOn(
+    systemPromptHashIndex,
+    'hasUnappliedSystemPromptChanges'
+  ).mockResolvedValue(false);
+});
 
 describe('userMessageDisplay migration', () => {
   it('should migrate old prefix/message structure to new format string', async () => {
