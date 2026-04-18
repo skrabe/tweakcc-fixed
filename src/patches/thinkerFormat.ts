@@ -3,9 +3,15 @@
 import { LocationResult, showDiff } from './index';
 
 const getThinkerFormatLocation = (oldFile: string): LocationResult | null => {
-  const approxAreaPattern =
+  // Older CC shape: spinnerTip + overrideMessage adjacent in one destructure.
+  const approxAreaPatternOld =
     /spinnerTip:[$\w]+,(?:[$\w]+:[$\w]+,)*overrideMessage:[$\w]+,.{300}/;
-  const approxAreaMatch = oldFile.match(approxAreaPattern);
+  // CC >= 2.1.113: spinnerTip moved out; anchor on the spinner's destructured
+  // signature containing overrideMessage, spinnerSuffix, and verbose.
+  const approxAreaPatternNew =
+    /overrideMessage:[$\w]+,spinnerSuffix:[$\w]+,verbose:[$\w]+,.{300}/;
+  const approxAreaMatch =
+    oldFile.match(approxAreaPatternOld) || oldFile.match(approxAreaPatternNew);
 
   if (!approxAreaMatch || approxAreaMatch.index == undefined) {
     console.error('patch: thinker format: failed to find approxAreaMatch');
