@@ -269,9 +269,31 @@ export const writeUserMessageDisplay = (
   if (config.styling.includes('strikethrough')) chalkChain += '.strikethrough';
   if (config.styling.includes('inverse')) chalkChain += '.inverse';
 
-  // Replace {} in format string with the message variable
+  // CC ≥2.1.79 hoists the long-message collapse from the inner subcomponent
+  // into the caller via useMemo — when the original text exceeds ~10,000 chars
+  // (common for pasted blocks), the "text" prop becomes
+  //   { head: string, hiddenLines: number, tail: string }
+  // instead of a string. Naively interpolating it with `${var}` in a template
+  // literal produces "[object Object]", wiping out the whole user message.
+  // Detect and flatten to `head + "(N lines hidden)" + tail` so large pastes
+  // render their original content and mirror CC's native collapse output. For
+  // a plain string (older CC versions, or short messages on new CC), the else
+  // branch uses the variable as-is so behavior is unchanged.
+  const unwrappedMessageExpr =
+    `(${messageVar}&&typeof ${messageVar}==="object"?` +
+    `${messageVar}.head+"\\n("+${messageVar}.hiddenLines+" line"+` +
+    `(${messageVar}.hiddenLines===1?"":"s")+" hidden)\\n"+${messageVar}.tail:` +
+    `${messageVar})`;
+
+  // Replace {} in format string with the unwrapped message expression.
+  // A function replacer is required here because the expression contains a
+  // "$&&" sequence — String.prototype.replace treats "$&" in a string
+  // replacement as the matched substring, which would corrupt the emitted JS.
+  // Passing a function returns the replacement verbatim.
   const formattedMessage =
-    '`' + config.format.replace(/\{\}/g, '${' + messageVar + '}') + '`';
+    '`' +
+    config.format.replace(/\{\}/g, () => '${' + unwrappedMessageExpr + '}') +
+    '`';
 
   const chalkFormattedString = `${chalkChain}(${formattedMessage})`;
 
