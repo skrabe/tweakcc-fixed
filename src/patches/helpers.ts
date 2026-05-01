@@ -344,6 +344,16 @@ export const findBoxComponent = (fileContents: string): string | undefined => {
     return memoBoxMatch[1];
   }
 
+  // Method 5: Find Box by destructured signature with children, ref, tabIndex, autoFocus
+  // (CC 2.1.126+). The 2.1.126 wrapper destructures focus/mouse handlers explicitly
+  // before forwarding ...rest to createElement("ink-box", ...).
+  const destructuredBoxPattern =
+    /function ([$\w]+)\(\{children:[$\w]+,ref:[$\w]+,tabIndex:[$\w]+,autoFocus:[$\w]+/;
+  const destructuredBoxMatch = fileContents.match(destructuredBoxPattern);
+  if (destructuredBoxMatch) {
+    return destructuredBoxMatch[1];
+  }
+
   console.error(
     'patch: findBoxComponent: failed to find Box component (neither ink-box createElement nor displayName found)'
   );

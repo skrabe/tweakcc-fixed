@@ -10,18 +10,25 @@ const getThinkerFormatLocation = (oldFile: string): LocationResult | null => {
   // signature containing overrideMessage, spinnerSuffix, and verbose.
   const approxAreaPatternNew =
     /overrideMessage:[$\w]+,spinnerSuffix:[$\w]+,verbose:[$\w]+,.{300}/;
+  // CC >= 2.1.126: overrideMessage moved out of the destructure entirely.
+  // Anchor on the still-unique pauseStartTimeRef -> spinnerSuffix -> verbose run.
+  const approxAreaPatternLatest =
+    /pauseStartTimeRef:[$\w]+,spinnerSuffix:[$\w]+,verbose:[$\w]+,.{300}/;
   const approxAreaMatch =
-    oldFile.match(approxAreaPatternOld) || oldFile.match(approxAreaPatternNew);
+    oldFile.match(approxAreaPatternOld) ||
+    oldFile.match(approxAreaPatternNew) ||
+    oldFile.match(approxAreaPatternLatest);
 
   if (!approxAreaMatch || approxAreaMatch.index == undefined) {
     console.error('patch: thinker format: failed to find approxAreaMatch');
     return null;
   }
 
-  // Search within a range of 1000 characters to support CC 2.0.76+
+  // Search forward from the anchor far enough to reach the format declaration
+  // (~14KB after the destructure on CC 2.1.126).
   const searchSection = oldFile.slice(
     approxAreaMatch.index,
-    approxAreaMatch.index + 10000
+    approxAreaMatch.index + 20000
   );
 
   // New nullish format: N=(Y??C?.activeForm??L)+"…"

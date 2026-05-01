@@ -335,15 +335,18 @@ const findPatchesListLocation = (
   }
   const matchResult = { index: versionDisplayMatch.index };
 
-  // 2. Go back 1500 chars from the match start
-  const lookbackStart = Math.max(0, matchResult.index - 1500);
+  // 2. Go back 3000 chars from the match start (CC ≥2.1.126 has more body
+  // before the version display than older versions).
+  const lookbackStart = Math.max(0, matchResult.index - 3000);
   const lookbackSubstring = fileContents.slice(
     lookbackStart,
     matchResult.index
   );
 
-  // 3. Take the last `}function ([$\w]+)\(`
-  const functionPattern = /\}function ([$\w]+)\(/g;
+  // 3. Take the last `function NAME(` preceded by any non-identifier char.
+  // CC ≥2.1.126 wraps with React Compiler so the prefix is `;function` rather
+  // than `}function`; allow either.
+  const functionPattern = /[^$\w]function ([$\w]+)\(/g;
   const functionMatches = Array.from(
     lookbackSubstring.matchAll(functionPattern)
   );
