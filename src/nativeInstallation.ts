@@ -200,6 +200,12 @@ interface BunData {
   moduleStructSize: number;
 }
 
+interface LocatedBundle extends BunData {
+  offset: number;
+  length: number;
+  write(newBunBuffer: Buffer, outputPath: string): void;
+}
+
 /**
  * Read a StringPointer slice from given buffer.
  */
@@ -664,27 +670,112 @@ function extractBunDataFromPE(peBinary: LIEF.PE.Binary): BunData {
   return extractBunDataFromSection(bunSection.content);
 }
 
-function getBunData(
+function getExpectedFormatForPlatform(): 'MachO' | 'ELF' | 'PE' | null {
+  switch (process.platform) {
+    case 'darwin':
+      return 'MachO';
+    case 'linux':
+      return 'ELF';
+    case 'win32':
+      return 'PE';
+    default:
+      return null;
+  }
+}
+
+function assertPlatformFormat(
   binary: LIEF.ELF.Binary | LIEF.PE.Binary | LIEF.MachO.Binary
-): BunData {
-  debug(`getBunData: Binary format detected as ${binary.format}`);
+): void {
+  const expectedFormat = getExpectedFormatForPlatform();
+  if (expectedFormat && binary.format !== expectedFormat) {
+    throw new Error(
+      `Native binary format ${binary.format} does not match ${process.platform} (${expectedFormat})`
+    );
+  }
+}
+
+function locateBundle(
+  binary: LIEF.ELF.Binary | LIEF.PE.Binary | LIEF.MachO.Binary,
+  binPath: string
+): LocatedBundle {
+  debug(`locateBundle: Binary format detected as ${binary.format}`);
+  assertPlatformFormat(binary);
 
   switch (binary.format) {
-    case 'MachO':
-      return extractBunDataFromMachO(binary as LIEF.MachO.Binary);
-    case 'PE':
-      return extractBunDataFromPE(binary as LIEF.PE.Binary);
+    case 'MachO': {
+      const machoBinary = binary as LIEF.MachO.Binary;
+      const data = extractBunDataFromMachO(machoBinary);
+      if (!data.sectionHeaderSize) {
+        throw new Error('sectionHeaderSize is required for Mach-O binaries');
+      }
+      const bunSection = machoBinary.getSegment('__BUN')!.getSection('__bun')!;
+      return {
+        ...data,
+        offset: Number(bunSection.fileOffset),
+        length: bunSection.content.length,
+        write: (newBunBuffer, outputPath) =>
+          repackMachO(
+            machoBinary,
+            binPath,
+            newBunBuffer,
+            outputPath,
+            data.sectionHeaderSize!
+          ),
+      };
+    }
+    case 'PE': {
+      const peBinary = binary as LIEF.PE.Binary;
+      const data = extractBunDataFromPE(peBinary);
+      if (!data.sectionHeaderSize) {
+        throw new Error('sectionHeaderSize is required for PE binaries');
+      }
+      const bunSection = peBinary.sections().find(s => s.name === '.bun')!;
+      return {
+        ...data,
+        offset: Number(bunSection.fileOffset),
+        length: bunSection.content.length,
+        write: (newBunBuffer, outputPath) =>
+          repackPE(
+            peBinary,
+            binPath,
+            newBunBuffer,
+            outputPath,
+            data.sectionHeaderSize!
+          ),
+      };
+    }
     case 'ELF': {
-      // Try new .bun ELF section format first (Bun >= 1.3.x, post-PR#26923)
       const elfBinary = binary as LIEF.ELF.Binary;
       const sectionResult = extractBunDataFromELFSection(elfBinary);
       if (sectionResult) {
-        debug('getBunData: Using new ELF .bun section format');
-        return sectionResult;
+        debug('locateBundle: Using new ELF .bun section format');
+        if (!sectionResult.sectionHeaderSize) {
+          throw new Error('sectionHeaderSize is required for ELF .bun section');
+        }
+        return {
+          ...sectionResult,
+          offset: Number(elfBinary.getSection('.bun')!.fileOffset),
+          length: elfBinary.getSection('.bun')!.content.length,
+          write: (newBunBuffer, outputPath) =>
+            repackELFSection(
+              elfBinary,
+              binPath,
+              newBunBuffer,
+              outputPath,
+              sectionResult.sectionHeaderSize!
+            ),
+        };
       }
-      // Fall back to legacy overlay format
-      debug('getBunData: Falling back to legacy ELF overlay format');
-      return extractBunDataFromELFOverlay(elfBinary);
+      debug('locateBundle: Falling back to legacy ELF overlay format');
+      const data = extractBunDataFromELFOverlay(elfBinary);
+      const stat = fs.statSync(binPath);
+      return {
+        ...data,
+        offset: stat.size - elfBinary.overlay.length,
+        length: elfBinary.overlay.length,
+        write: (newBunBuffer, outputPath) =>
+          repackELFOverlay(elfBinary, binPath, newBunBuffer, outputPath),
+      };
     }
     default: {
       const _exhaustive: never = binary;
@@ -760,7 +851,10 @@ export function extractClaudeJsFromNativeInstallation(
   try {
     LIEF.logging.disable();
     const binary = LIEF.parse(nativeInstallationPath);
-    const { bunOffsets, bunData, moduleStructSize } = getBunData(binary);
+    const { bunOffsets, bunData, moduleStructSize } = locateBundle(
+      binary,
+      nativeInstallationPath
+    );
 
     debug(
       `extractClaudeJsFromNativeInstallation: Got bunData, size=${bunData.length} bytes, moduleStructSize=${moduleStructSize}`
@@ -1477,66 +1571,14 @@ export function repackNativeInstallation(
   LIEF.logging.disable();
   const binary = LIEF.parse(binPath);
 
-  const { bunOffsets, bunData, sectionHeaderSize, moduleStructSize } =
-    getBunData(binary);
+  const bundle = locateBundle(binary, binPath);
   const newBuffer = rebuildBunData(
-    bunData,
-    bunOffsets,
+    bundle.bunData,
+    bundle.bunOffsets,
     modifiedClaudeJs,
-    moduleStructSize,
+    bundle.moduleStructSize,
     clearBytecode
   );
 
-  switch (binary.format) {
-    case 'MachO':
-      if (!sectionHeaderSize) {
-        throw new Error('sectionHeaderSize is required for Mach-O binaries');
-      }
-      repackMachO(
-        binary as LIEF.MachO.Binary,
-        binPath,
-        newBuffer,
-        outputPath,
-        sectionHeaderSize
-      );
-      break;
-    case 'PE':
-      if (!sectionHeaderSize) {
-        throw new Error('sectionHeaderSize is required for PE binaries');
-      }
-      repackPE(
-        binary as LIEF.PE.Binary,
-        binPath,
-        newBuffer,
-        outputPath,
-        sectionHeaderSize
-      );
-      break;
-    case 'ELF':
-      if (sectionHeaderSize) {
-        // New .bun section format (post-PR#26923)
-        repackELFSection(
-          binary as LIEF.ELF.Binary,
-          binPath,
-          newBuffer,
-          outputPath,
-          sectionHeaderSize
-        );
-      } else {
-        // Legacy overlay format
-        repackELFOverlay(
-          binary as LIEF.ELF.Binary,
-          binPath,
-          newBuffer,
-          outputPath
-        );
-      }
-      break;
-    default: {
-      const _exhaustive: never = binary;
-      throw new Error(
-        `Unsupported binary format: ${(_exhaustive as LIEF.ELF.Binary | LIEF.PE.Binary | LIEF.MachO.Binary).format}`
-      );
-    }
-  }
+  bundle.write(newBuffer, outputPath);
 }
