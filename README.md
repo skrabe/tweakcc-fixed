@@ -1,3 +1,71 @@
+# tweakcc-fixed (skrabe fork)
+
+Direct fork of [Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc) carrying fixes that aren't merged upstream yet, plus features specific to this user's workflow. Maintained while upstream catches up; intended to merge back when fixes land there.
+
+|                                 |                                                                                                                     |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **Upstream**                    | [Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc) — actively maintained                                   |
+| **This fork**                   | [skrabe/tweakcc-fixed](https://github.com/skrabe/tweakcc-fixed) — base + cherry-picked fixes + skrabe-only features |
+| **Target Claude Code versions** | 2.0.98 through **2.1.128**                                                                                          |
+| **npm package name**            | `tweakcc-fixed` (separate from upstream's `tweakcc`)                                                                |
+
+## Cherry-picked from open upstream PRs (not yet merged)
+
+| PR                                                     | Author                                         | What it fixes                                                                                                                                                                  |
+| ------------------------------------------------------ | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [#601](https://github.com/Piebald-AI/tweakcc/pull/601) | [@signadou](https://github.com/signadou)       | Handle `WASMagic` import errors gracefully during native installation detection                                                                                                |
+| [#646](https://github.com/Piebald-AI/tweakcc/pull/646) | [@sla-te](https://github.com/sla-te)           | Support React Compiler output and async refactoring introduced in CC 2.1.85–2.1.88                                                                                             |
+| [#655](https://github.com/Piebald-AI/tweakcc/pull/655) | [@LeonFedotov](https://github.com/LeonFedotov) | Fall back to npm source when Bun bytecode extraction produces non-patchable JS, and thread a `clearBytecode` flag through the content API so repack clears stale compiled code |
+| [#664](https://github.com/Piebald-AI/tweakcc/pull/664) | [@mike1858](https://github.com/mike1858)       | Fix two patches that broke `cli.js` due to literal `\"` sequences in prompt content (issue #660)                                                                               |
+
+## Additional fork-only fixes
+
+These aren't in any upstream PR. Most originate from BenIsLegit's `tweakcc-fixed` (now unmaintained) and were cherry-picked here.
+
+- **Scope #664's backslash-doubling to quote contexts** — #664's pre-processing ran before every delimiter branch, including backticks. Pre-doubling backslashes inside template literals prematurely terminated the template and caused `cli.js` to fail to load with _"Expected CommonJS module to have a function wrapper"_. Now scoped to `"` and `'` contexts only.
+- **Adapt patch regexes to CC 2.1.113 minified shapes** — `opusplan1m`, `patchesAppliedIndication`, `thinkerFormat`, and `verboseProperty` matchers updated for the new minifier output.
+- **Adapt Box, thinker format, indicator anchors to CC 2.1.126 minified shapes** — same shape-tracking work for the next round of minifier changes.
+- **Don't replace `verbose:X` inside destructure patterns** — the `verboseProperty` patch was greedy enough to match `{ verbose: localName }` in destructure targets and replace it with `verbose: true`, a syntax error. Scoped to property-value positions only.
+- **`userMessageDisplay` rewrite (8 commits)** — preserve CC's theme background and default padding, restore on ctrl+R, forward theme tokens to the inner Text so wrapping doesn't strip color, paint wrapped lines with the configured bg, flatten the `{head, tail}` object variant so long pastes don't render as `[object Object]`, attribute-preserving surgery so `flexDirection: "column"` is preserved, minimal recolor of CC's native bg.
+- **Match the shrunken past-tense thinking-verb array** — past-tense regex required ≥50 capitalised entries; current CC ships 8. Anchored on `-ed` suffix with a `{6,}` minimum.
+- **Migration test fix** — `migration.test.ts` was missing `vi.mock('node:fs/promises')` after a Dec-2025 file split, which silently overwrote the developer's real `~/.tweakcc/config.json` on every `pnpm test` run.
+- **TS7 build + Linux native patching** — fixes that surfaced specifically on Linux native binaries.
+- **`feat(maxEffortDefault)`** — new toggle in Misc Configurable: defaults Opus 4.7 to `"max"` reasoning effort instead of `"xhigh"`. Override at runtime with `/effort` or `CLAUDE_CODE_EFFORT_LEVEL`.
+
+For a full agent-readable rundown of what each fix does and how to extend the fork, see [`AGENTS.md`](./AGENTS.md).
+
+## Install
+
+Published to npm as [`tweakcc-fixed`](https://www.npmjs.com/package/tweakcc-fixed). Run without installation:
+
+```bash
+npx tweakcc-fixed@latest              # interactive UI
+npx tweakcc-fixed@latest --apply      # apply customizations from ~/.tweakcc/config.json
+```
+
+> [!TIP]
+> **Always use `@latest`.** This fork iterates as new Claude Code versions ship and as more upstream PRs land. Without `@latest`, `npx` may reuse a cached copy and miss newly-published fixes.
+
+Or install globally (re-run to upgrade):
+
+```bash
+npm install -g tweakcc-fixed@latest
+```
+
+For local development with unpublished patches, build and run directly:
+
+```bash
+git clone https://github.com/skrabe/tweakcc-fixed ~/dev/tweakcc-fixed
+cd ~/dev/tweakcc-fixed && pnpm install && pnpm build
+node dist/index.mjs --apply
+```
+
+---
+
+# Upstream tweakcc README
+
+The rest of this file is the upstream README from Piebald-AI/tweakcc, preserved verbatim for reference.
+
 <div>
 <div align="right">
 <a href="https://piebald.ai"><img width="200" top="20" align="right" src="https://github.com/Piebald-AI/.github/raw/main/Wordmark.svg"></a>
@@ -759,10 +827,10 @@ Here's the schema:
 
 | Animation       | Phases                                               | Description                  |
 | --------------- | ---------------------------------------------------- | ---------------------------- |
-| Default stars   | `['·', '✢', '✳', '✶', '✻', '✽']`                    | Classic star burst animation |
+| Default stars   | `['·', '✢', '✳', '✶', '✻', '✽']`                     | Classic star burst animation |
 | Simple dots     | `['.', '..', '...']`                                 | Classic loading dots         |
 | Braille spinner | `['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']` | Braille-style spinner        |
-| Arrow spinner   | `['←', '↖', '↑', '↗', '→', '↘', '↓', '↙']`       | Rotating arrow               |
+| Arrow spinner   | `['←', '↖', '↑', '↗', '→', '↘', '↓', '↙']`           | Rotating arrow               |
 | Minimal         | `['○', '◐', '◑', '●']`                               | Minimal circle animation     |
 
 **Speed customization:**
