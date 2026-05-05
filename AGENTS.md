@@ -11,65 +11,30 @@ You're an agent working on `tweakcc-fixed`. This file explains the bigger pictur
 
 Native installations use `node-lief` to extract JS from the Bun bundle, patch, then repack. NPM installations write `cli.js` directly. Logic gated behind `nativeInstallationLoader.ts` so non-Linux/macOS systems without C++ libs degrade gracefully.
 
-## Fork lineage and the friction problem
+## Fork lineage
 
 Current setup (verify with `git remote -v`):
 
 ```
-origin    https://github.com/skrabe/tweakcc-fixed       (user's push target)
-ben       https://github.com/BenIsLegit/tweakcc-fixed   (fork-of-upstream Ben publishes as `tweakcc-fixed` on npm)
-upstream  https://github.com/Piebald-AI/tweakcc         (Piebald — the actively-maintained source)
+origin    https://github.com/skrabe/tweakcc-fixed       (user's fork — push target)
+upstream  https://github.com/Piebald-AI/tweakcc         (Piebald — actively maintained source)
 ```
 
-`Piebald-AI/tweakcc` is the upstream repo. `BenIsLegit/tweakcc-fixed` is Ben's fork carrying ~30 fix commits Ben hadn't gotten merged upstream — including the critical Bun-wrapper crash fix (see below). `skrabe/tweakcc-fixed` is the user's fork, currently downstream of Ben.
+`skrabe/tweakcc-fixed` is a **direct fork of `Piebald-AI/tweakcc`** carrying cherry-picked fixes from open upstream PRs (#601, #646, #655, #664) plus fork-only patches that aren't upstreamed yet (Bun wrapper crash scoping, CC 2.1.113/2.1.126 regex shape adapts, the userMessageDisplay rewrite arc, thinkingVerbs past-tense, max-effort default, sessionMemory graceful no-op, TS7/Linux native patching).
 
-**Ben's last push: 2026-04-22.** Upstream has shipped 10 prompt-version drops since (`prompts-2.1.117` through `prompts-2.1.128`). Ben isn't following upstream prompts — that's why this repo's `data/prompts/` was missing 2.1.117–2.1.128 until manually pulled in. Ben is effectively unmaintained.
+**Historical note for context:** the fork used to be `skrabe/tweakcc-fixed → BenIsLegit/tweakcc-fixed → Piebald-AI/tweakcc` (2-hop fork chain). Ben's fork went unmaintained at 2026-04-22, so on 2026-05-05 we deleted the GH fork, re-forked directly off Piebald, and cherry-picked Ben's still-useful commits onto the new branch. There is no longer a `ben` remote and no longer a fork-of-fork relationship. If you find documentation referring to one, it's stale.
 
-### The simplification the user wants
-
-**Re-fork directly off `Piebald-AI/tweakcc`, cherry-pick only the surviving useful commits from Ben + skrabe, then maintain that fork directly.** Removes the dead-intermediary friction.
-
-The 36 commits ahead of `upstream/main` on `ben/main` break down as:
-
-| Bucket                                                                                     | Commits                                                                                           | Cherry-pick?                         |
-| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| **Bun wrapper / bytecode handling** (the crash fix)                                        | `bcce70a`, `207b57c`, `3dd347d`, `ab0bea8`, `9ec4d9f`, `96891e0`, `a19c488`                       | **YES — critical**                   |
-| **Patch-shape regex updates** for newer CC (2.1.85+ React Compiler, 2.1.113+ minification) | `ae1b189`, `77536eb`, `e137169`, `3c08e0c`                                                        | YES — verify each still applies      |
-| **userMessageDisplay fixes** (Box bg, wrapped lines, [object Object], theme tokens, etc.)  | `dc84a6c`, `89555eb`, `3114c5b`, `cc12f96`, `c66f604`, `9ef9328`, `b963ebf`, `f89a998`            | YES — these recur across CC versions |
-| **Other fixes**                                                                            | `c87898c` (verbose destructure), `1e28b59` (thinkingVerbs past-tense), `f6ac8f3` (migration test) | YES                                  |
-| **Branding** (rebrand to `tweakcc-fixed` for npm)                                          | `e3862ee`, `df583ec`, `0811395`, `9a40ff0`, `84da331`, `ef63856`, `1f74ca7`, `2c7775a`            | NO — replace with skrabe's branding  |
-| **Ben's docs**                                                                             | `c88cb09`, `9255ffe`, `88533c3`, `5f4c442`, `036b21d`, `d879dd1`, `6eca749`                       | NO — write your own                  |
-
-Plus the commits already on `skrabe/tweakcc-fixed` ahead of Ben (`bbb124c` patch shape adapts for 2.1.126, `12078d6` TS7 + Linux fixes, `e191665` 2.1.128 sync, `25faca8` max-effort default, etc.) which carry forward as-is.
-
-### Migration mechanics (when the user gives the go-ahead)
+### Syncing with upstream
 
 ```bash
-cd ~/dev/tweakcc-fixed
-git checkout -b clean-fork upstream/main
-
-# Cherry-pick the keepers, in chronological order (earliest first to minimize conflicts).
-# Adjust this list against `git log upstream/main..ben/main --reverse --oneline` at the time of migration.
-for sha in 3dd347d ab0bea8 a19c488 9ec4d9f 96891e0 ae1b189 77536eb e137169 \
-           bcce70a 207b57c 3c08e0c c87898c \
-           dc84a6c 89555eb 3114c5b cc12f96 c66f604 9ef9328 b963ebf f89a998 \
-           1e28b59 f6ac8f3; do
-  git cherry-pick "$sha" || break
-  # resolve conflicts, then `git cherry-pick --continue`
-done
-
-# Then re-apply skrabe-only commits (max-effort patch, 2.1.126+ shape adapts, TS7/Linux fixes,
-# 2.1.128 prompt sync, etc.). Easiest: cherry-pick from current origin/main on top.
-
-# When happy, replace main:
-git branch -m main main-old
-git branch -m clean-fork main
-git push -f origin main         # destructive — confirm before running
+git -C ~/dev/tweakcc-fixed fetch upstream
+git -C ~/dev/tweakcc-fixed merge upstream/main         # most upstream pushes are pure prompt drops, conflict-free
+# Resolve conflicts only when our fork-only commits touch the same files
+pnpm build && pnpm test
+git push origin main
 ```
 
-This rewrites `skrabe/tweakcc-fixed`'s history. Confirm with the user before force-pushing — anyone who already cloned the repo will need to re-clone or hard-reset.
-
-After migration, drop the `ben` remote (`git remote remove ben`) and update the README to describe the lineage as a direct fork of `Piebald-AI/tweakcc`. The reason for keeping the package name `tweakcc-fixed`: there's an npm package under that name; renaming forces all consumers to migrate. If npm presence isn't important, renaming is fine.
+When one of our cherry-picked open upstream PRs eventually gets merged upstream, the next `git merge upstream/main` will recognize the same change is on both sides and the duplicate disappears cleanly — no manual intervention needed.
 
 ## Bug classes — diagnostics, not recipes
 
@@ -100,7 +65,21 @@ or a syntax error inside `cli.js` if the install is NPM-style.
 
 ### "patch: <name>: failed to find <pattern>"
 
-**Class.** A regex anchored on minified-but-stable identifiers no longer matches. CC's bundler renamed something, or Anthropic refactored the surrounding code shape.
+**Class.** A regex anchored on minified-but-stable identifiers no longer matches. CC's bundler renamed something, OR Anthropic refactored the surrounding code shape, OR the feature was promoted past the gate the patch was bypassing.
+
+**First decide which case you're in:**
+
+1. **Feature still gated, shape changed** → add a new match method for the new shape (see "How to find the new shape" below).
+2. **Feature promoted past the gate** → the flag literal / format marker the patch anchored on is gone from `cli.js` entirely because Anthropic took over the gating. The right fix is a graceful no-op, not a regex hunt. Pattern from `src/patches/sessionMemory.ts`:
+   ```typescript
+   if (!file.includes('"the_anchor_literal"')) {
+     console.log(
+       'patch: <name>: feature already promoted in this CC build — no-op'
+     );
+     return file;
+   }
+   ```
+   Decide by grepping for the anchor literal in the extracted `cli.js`. Zero matches → it's case 2 (no-op). Matches present but regex doesn't → case 1 (new shape).
 
 **Where to look.** Each patch in `src/patches/*.ts` typically has multiple match methods stacked in priority order — the latest method handles the latest CC shape, older methods handle older versions. Pattern: open the patch source, find the match function (often `findX`), and add a new `// Method N: <description>` block.
 
