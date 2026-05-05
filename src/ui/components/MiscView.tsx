@@ -85,6 +85,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     enableVoiceMode: false,
     enableVoiceConciseOutput: true,
     enableChannelsMode: false,
+    maxEffortDefault: false,
   };
 
   const ensureMisc = () => {
@@ -654,6 +655,19 @@ export function MiscView({ onSubmit }: MiscViewProps) {
             ensureMisc();
             settings.misc!.allowCustomAgentModels =
               !settings.misc!.allowCustomAgentModels;
+          });
+        },
+      },
+      {
+        id: 'maxEffortDefault',
+        title: 'Default Opus 4.7 to max effort',
+        description:
+          'Patches CC so Opus 4.7 sessions default to "max" reasoning effort instead of "xhigh". /effort and CLAUDE_CODE_EFFORT_LEVEL still override at runtime.',
+        getValue: () => settings.misc?.maxEffortDefault ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.maxEffortDefault = !settings.misc!.maxEffortDefault;
           });
         },
       },

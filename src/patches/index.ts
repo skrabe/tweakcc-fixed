@@ -71,6 +71,7 @@ import { writeSuppressNativeInstallerWarning } from './suppressNativeInstallerWa
 import { writeScrollEscapeSequenceFilter } from './scrollEscapeSequenceFilter';
 import { writeWorktreeMode } from './worktreeMode';
 import { writeAllowCustomAgentModels } from './allowCustomAgentModels';
+import { writeMaxEffortDefault } from './maxEffortDefault';
 import { writeVoiceMode } from './voiceMode';
 import { writeChannelsMode } from './channelsMode';
 import {
@@ -357,6 +358,13 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
       'Filter out terminal escape sequences that cause unwanted scrolling',
+  },
+  {
+    id: 'max-effort-default',
+    name: 'Default Opus 4.7 to max effort',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'Opus 4.7 sessions default to "max" reasoning effort instead of "xhigh" (override with /effort or CLAUDE_CODE_EFFORT_LEVEL)',
   },
   // Features
   {
@@ -820,6 +828,10 @@ export const applyCustomization = async (
     'filter-scroll-escape-sequences': {
       fn: c => writeScrollEscapeSequenceFilter(c),
       condition: !!config.settings.misc?.filterScrollEscapeSequences,
+    },
+    'max-effort-default': {
+      fn: c => writeMaxEffortDefault(c),
+      condition: !!config.settings.misc?.maxEffortDefault,
     },
     // Features
     'allow-custom-agent-models': {
