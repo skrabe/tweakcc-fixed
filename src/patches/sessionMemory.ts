@@ -34,8 +34,20 @@ import { showDiff, globalReplace } from './index';
 
 /**
  * Patch 1: Bypass tengu_session_memory flag check for extraction
+ *
+ * CC ≥ 2.1.128 promoted session memory past this gate — the flag
+ * literal "tengu_session_memory" no longer appears in cli.js. When that
+ * happens, treat the patch as a no-op (extraction is already always-on).
+ * Only fail loud when the flag exists but the surrounding shape is new.
  */
 const patchExtraction = (file: string): string | null => {
+  if (!file.includes('"tengu_session_memory"')) {
+    console.log(
+      'patch: sessionMemory: extraction gate already removed in this CC build — no-op'
+    );
+    return file;
+  }
+
   const pattern = /function [$\w]+\(\)\{return [$\w]+\("tengu_session_memory"/;
   const match = file.match(pattern);
 
@@ -111,8 +123,19 @@ const patchPastSessions = (file: string): string | null => {
 
 /**
  * Patch 3: Make per-section and total file token limits configurable via env vars
+ *
+ * Anchored on the "# Session Title" marker that used to appear next to
+ * the constants. CC ≥ 2.1.128 refactored the session memory format and
+ * the marker is gone — when that happens, skip the configurability tweak.
  */
 const patchTokenLimits = (file: string): string | null => {
+  if (!file.includes('# Session Title')) {
+    console.log(
+      'patch: sessionMemory: token-limit anchor removed in this CC build — no-op'
+    );
+    return file;
+  }
+
   // Pattern matches: =2000 ... =12000 ... # Session Title
   const pattern =
     /(=)2000((?:.|\n){0,15}?=)12000((?:.|\n){0,20}# Session Title)/;
@@ -140,8 +163,24 @@ const patchTokenLimits = (file: string): string | null => {
 
 /**
  * Patch 4: Make session memory update thresholds configurable via env vars
+ *
+ * The threshold property names disappeared in CC ≥ 2.1.128 (likely
+ * renamed or moved to a different config object). Skip as no-op when
+ * none of the property names appear; fail only when one matches but
+ * the regex doesn't catch it.
  */
 const patchUpdateThresholds = (file: string): string | null => {
+  const anyPropPresent =
+    file.includes('minimumMessageTokensToInit') ||
+    file.includes('minimumTokensBetweenUpdate') ||
+    file.includes('toolCallsBetweenUpdates');
+  if (!anyPropPresent) {
+    console.log(
+      'patch: sessionMemory: update threshold props removed in this CC build — no-op'
+    );
+    return file;
+  }
+
   let newFile = file;
 
   // Replace minimumMessageTokensToInit
