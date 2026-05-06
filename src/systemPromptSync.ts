@@ -1039,18 +1039,32 @@ export const getSystemPromptDefinitions = ():
  *
  * We only capture the bare identifier, not the surrounding ${} or any method calls.
  */
+const hexAlt = (hex: string): string =>
+  hex
+    .split('')
+    .map(c => (/[a-f]/i.test(c) ? `[${c.toLowerCase()}${c.toUpperCase()}]` : c))
+    .join('');
+
 /**
- * Converts non-ASCII characters to regex alternation patterns that match both
- * literal and Unicode-escaped forms (e.g., … matches both "…" and "\u2026").
- * This handles cases where cli.js has escaped Unicode characters.
+ * Converts non-ASCII characters to regex alternations that match every JS
+ * source-escape form a bundler may emit for that codepoint:
+ *   - literal character    (e.g. ×)
+ *   - \uXXXX               (any codepoint)
+ *   - \xHH                 (codepoints <= 0xff only)
+ * Hex letters match case-insensitively because Anthropic's bundler is
+ * inconsistent across forms (\xD7 uppercase, — lowercase).
  */
 const escapeNonAsciiForRegex = (text: string): string => {
   // eslint-disable-next-line no-control-regex
   return text.replace(/[^\x00-\x7F]/g, char => {
     const codePoint = char.charCodeAt(0);
-    const escaped = `\\\\u${codePoint.toString(16).padStart(4, '0')}`;
-    // Match either the literal character OR the escaped version
-    return `(?:${char.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}|${escaped})`;
+    const literal = char.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const uForm = `\\\\u${hexAlt(codePoint.toString(16).padStart(4, '0'))}`;
+    const alts = [literal, uForm];
+    if (codePoint <= 0xff) {
+      alts.push(`\\\\x${hexAlt(codePoint.toString(16).padStart(2, '0'))}`);
+    }
+    return `(?:${alts.join('|')})`;
   });
 };
 
