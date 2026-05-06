@@ -123,8 +123,40 @@ export const applySystemPrompts = async (
     }
 
     debug(`Applying system prompt: ${prompt.name}`);
-    const pattern = new RegExp(regex, 'si'); // 's' flag for dotAll mode, 'i' because of casing inconsistencies in unicode escape sequences (e.g. `\u201c` in the regex vs `\u201C` in the file)
-    const match = content.match(pattern);
+    const pattern = new RegExp(regex, 'si'); // 's' flag for dotAll mode, 'i' because of casing inconsistencies in unicode escape sequences (e.g. `\u201C` in the regex vs `\u201C` in the file)
+
+    // Some short prompts (e.g. tool-description-bash-git-never-skip-hooks) hold
+    // text that Anthropic also inlines verbatim into a longer prompt
+    // (PowerShell tool description). The first occurrence in cli.js is the
+    // inlined one; the standalone variable lives later. Pick the match that
+    // looks like a complete string-literal value (surrounded by matching
+    // " ' or ` delimiters) when more than one occurrence exists.
+    const globalPattern = new RegExp(regex, 'sig');
+    const allMatches: RegExpExecArray[] = [];
+    let mm: RegExpExecArray | null;
+    while ((mm = globalPattern.exec(content)) !== null) {
+      allMatches.push(mm);
+      if (mm[0].length === 0) globalPattern.lastIndex++;
+    }
+    let match: RegExpMatchArray | RegExpExecArray | null = null;
+    if (allMatches.length === 1) {
+      match = allMatches[0];
+    } else if (allMatches.length > 1) {
+      const isDelim = (c: string) => c === '"' || c === "'" || c === '`';
+      const standalone = allMatches.filter(m => {
+        const before = m.index > 0 ? content[m.index - 1] : '';
+        const after = content[m.index + m[0].length] ?? '';
+        return isDelim(before) && before === after;
+      });
+      if (standalone.length === 1) {
+        match = standalone[0];
+        debug(
+          `Disambiguated ${allMatches.length} matches \u2192 1 standalone for "${prompt.name}"`
+        );
+      } else {
+        match = allMatches[0];
+      }
+    }
 
     if (match && match.index !== undefined) {
       // Generate the interpolated content using the actual variables from the match
@@ -192,9 +224,14 @@ export const applySystemPrompts = async (
         replacementContent = escaped;
       }
 
-      // Replace the matched content with the interpolated content from the markdown file
-      // Use a replacer function to avoid special replacement pattern interpretation (e.g., $$ -> $), see #237
-      content = content.replace(pattern, () => replacementContent);
+      // Replace the matched content with the interpolated content from the markdown file.
+      // Splice at the match offset (rather than `content.replace(pattern, fn)`)
+      // so the disambiguation above isn't undone by replace() always matching
+      // the first hit.
+      content =
+        content.slice(0, matchIndex) +
+        replacementContent +
+        content.slice(matchIndex + matchLength);
 
       // Store the hash of the applied prompt content
       const appliedHash = computeMD5Hash(prompt.content);
