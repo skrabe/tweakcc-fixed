@@ -111,14 +111,23 @@ function extractStrings(filepath, minLength = 500) {
   const traverse = node => {
     if (!node || typeof node !== 'object') return;
 
-    // Extract string literals
+    // Extract string literals.
+    // Use the raw source-byte content (between the quote delimiters), not
+    // node.value. The decoded value loses escape information — `\\(` and
+    // `\(` both decode to `\(`, but only the first form actually appears in
+    // the bundled binary. The downstream regex builder wraps the raw bytes
+    // and adds delimiter-aware alternations, so it needs the source-byte
+    // form to round-trip cleanly.
     if (node.type === 'StringLiteral') {
-      if (validateInput(node.value, minLength)) {
+      const contentStart = node.start + 1; // skip opening quote
+      const contentEnd = node.end - 1;     // skip closing quote
+      const rawContent = code.substring(contentStart, contentEnd);
+      if (validateInput(rawContent, minLength)) {
         stringData.push({
           name: '',
           id: '',
           description: '',
-          pieces: [node.value],
+          pieces: [rawContent],
           identifiers: [],
           identifierMap: {},
           start: node.start,
