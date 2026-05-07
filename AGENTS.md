@@ -121,15 +121,54 @@ or a syntax error inside `cli.js` if the install is NPM-style.
 
 ## When CC ships a new version (the recurring task)
 
-1. `git -C ~/dev/tweakcc-fixed fetch upstream`. Cherry-pick or rebase upstream's prompt JSON additions (`data/prompts/prompts-X.Y.Z.json`) — these are pure data, no `src/` changes.
-2. Bump README version line.
-3. Run `pnpm test`. Run `pnpm lint`. Both green before going further.
-4. `pnpm build`.
-5. Run `dist/index.mjs --apply` against your own CC install.
-6. Watch for any "patch: X: failed to find …" errors and fix per the diagnostic above.
-7. Run the orphan-variable validator from the lobotomized CLAUDE.md.
-8. Test `claude` actually starts. If it crashes with the wrapper error, diff the patched JS against the backup.
-9. Commit each logical change separately (prompt sync, max-effort, regex update, etc.) with detailed messages — Ben's commit style is the example to follow.
+The key insight: Piebald has an extraction pipeline that produces canonical, fully-named `prompts-X.Y.Z.json` files. **Always pull from their pipeline before considering anything else.** The naive `tools/promptExtractor.js` in this repo produces a strict subset of what Piebald publishes (the user pushed back hard the one time we tried it as a substitute — see `memory/feedback_prompt_jsons_pull_from_upstream_pr.md`).
+
+1. `git -C ~/dev/tweakcc-fixed fetch upstream` and `git merge upstream/main`. If the merge brought a `prompts-X.Y.Z.json` for the new CC version, you're done with step 1 — skip to 4.
+2. **If the merge didn't bring one,** Piebald often opens the PR before merging. Check:
+   ```bash
+   gh pr list --repo Piebald-AI/tweakcc --state all --search "prompts/X.Y.Z" \
+     --json number,title,state,headRefName
+   ```
+   If a `prompts/X.Y.Z` branch exists (open or merged), pull the JSON from it directly:
+   ```bash
+   gh pr checkout <num> --repo Piebald-AI/tweakcc --detach
+   cp data/prompts/prompts-X.Y.Z.json /tmp/                # snapshot
+   git checkout main
+   cp /tmp/prompts-X.Y.Z.json data/prompts/
+   git add data/prompts/prompts-X.Y.Z.json
+   ```
+   Commit referencing their PR number; when they merge it the next `git merge upstream/main` will recognize identical content on both sides and dedupe automatically.
+3. **Only if Piebald has no PR open** (genuinely faster than them — extremely rare), fall back to running `tools/promptExtractor.js` against an extracted `cli.js` of the new version. Mark the commit clearly as `data: prompts for X.Y.Z (auto-extracted, replace when upstream publishes)` so a later automatic dedupe doesn't surprise anyone.
+4. Bump the README version line.
+5. `pnpm lint` and `pnpm test` — both green before going further.
+6. `pnpm build`.
+7. Run `dist/index.mjs --apply` against your own CC install.
+8. Watch for any "patch: X: failed to find …" errors (regex-anchor drift in non-prompt patches) and fix per the diagnostic above.
+9. Watch for any "Could not find system prompt" warnings. These usually mean a user override needs realignment — Anthropic renamed or removed the underlying prompt. See **Realigning user overrides after a sync** below.
+10. Run the orphan-variable validator from the lobotomized CLAUDE.md.
+11. Test `claude` actually starts (e.g. `claude --print "say hello"`). If it crashes with the wrapper error or `ReferenceError: VAR is not defined`, diff the patched JS against the backup.
+12. Commit each logical change separately (prompt sync, max-effort, regex update, etc.) with detailed messages.
+
+### Realigning user overrides after a sync
+
+After the new prompts JSON lands, run a coverage check from the lobotomized side:
+
+```python
+# scan: which user-override .md files have no matching id in the new JSON?
+import os, json
+USER_DIR = os.path.expanduser('~/.tweakcc/lobotomized-claude-code/system-prompts')
+new_ids = {p['id'] for p in json.load(open('data/prompts/prompts-X.Y.Z.json'))['prompts']}
+user_ids = {f[:-3] for f in os.listdir(USER_DIR) if f.endswith('.md')}
+print(sorted(user_ids - new_ids))
+```
+
+For each missing override, decide one of three things by grepping the new JSON for distinctive content from the override's body:
+
+1. **Renamed** — the prompt's content survives under a new id (e.g. `system-prompt-proactive-schedule-offer-after-follow-up-work` → `…-after-natural-future-follow-up`). `git mv` the override to the new id and bump its `ccVersion:` frontmatter. **Caveat for cross-version installs:** if any of your machines is on the OLD CC version, that machine's `--apply` sync step will auto-recreate the OLD-id `.md` from pristine. The recreation is harmless (matches pristine, applies as `unchanged`) but shows up as `??` in `git status`. Just `rm` it; it'll go away once everywhere upgrades to the new CC.
+2. **Inlined** — the prompt's content was merged into a larger prompt (e.g. `data-background-agent-state-classification-examples` got inlined into `agent-prompt-background-agent-state-classifier`). Archive the override; the parent prompt's override likely already carries the inlined content if it was rewritten recently.
+3. **Removed entirely** — the feature is gone; distinctive strings from the override don't appear anywhere in the new JSON. Archive: `mv ~/.tweakcc/lobotomized-claude-code/system-prompts/<id>.md ~/.tweakcc/orphans-removed-for-X.Y.Z/`. Recoverable from there or from git history if Anthropic ever brings the feature back.
+
+Commit message should name the rename and list the archives — your future self trying to recover an archived override will grep git log for the id.
 
 ## Patches: how to add a new one
 
