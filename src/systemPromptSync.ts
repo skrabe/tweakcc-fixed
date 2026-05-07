@@ -833,8 +833,21 @@ export const syncPrompt = async (
 
   const fileExists = await promptFileExists(prompt.id);
 
-  // File doesn't exist - create it
+  // File doesn't exist - create it.
+  // Skip prompts with an empty name or unresolved identifierMap values.
+  // Both indicate a partially-extracted entry (e.g. the upstream extractor
+  // hadn't seen this prompt yet, or a fork's auto-extraction couldn't bind
+  // a name): generating an override here would produce content with
+  // UNKNOWN_<labelIndex> placeholders that, on a later --apply, would land
+  // back in cli.js as undefined identifier references and crash CC startup.
   if (!fileExists) {
+    const hasIncompleteMap = Object.values(prompt.identifierMap || {}).some(
+      v => !v
+    );
+    if (!prompt.name || hasIncompleteMap) {
+      result.action = 'skipped';
+      return result;
+    }
     const markdown = generateMarkdownFromPrompt(prompt);
     await writePromptFile(prompt.id, markdown);
     result.action = 'created';
