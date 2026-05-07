@@ -1102,9 +1102,19 @@ const buildSearchRegexFromPieces = (
     // Handle non-ASCII characters by creating alternation patterns
     const withNonAsciiHandling = escapeNonAsciiForRegex(escapedPiece);
 
+    // Handle ASCII delimiter chars that the bundler escapes inside string
+    // literals. A piece extracted from a "..."-string holds a literal ", but
+    // the cli.js source has \". Same for '...' / `...`. Match either form so
+    // the search regex works regardless of which delimiter Anthropic chose
+    // for that prompt this build.
+    const withDelimHandling = withNonAsciiHandling
+      .replace(/"/g, '(?:"|\\\\")')
+      .replace(/'/g, "(?:'|\\\\')")
+      .replace(/`/g, '(?:`|\\\\`)');
+
     // Handle newlines: match both actual newlines (template literals) and literal \n (string literals)
     // In regex pattern: \n matches newline, \\n matches literal backslash-n
-    const withNewlineHandling = withNonAsciiHandling.replace(
+    const withNewlineHandling = withDelimHandling.replace(
       /\n/g,
       '(?:\n|\\\\n)'
     );
