@@ -1,11 +1,41 @@
 import * as fs from 'node:fs/promises';
+import * as fsSync from 'node:fs';
 import * as path from 'path';
+import { fileURLToPath } from 'node:url';
 import type { StringsFile } from './systemPromptSync';
 import { PROMPT_CACHE_DIR } from './config';
 
+// Resolve the repo-local data/prompts/ directory by walking up from this
+// module's location. Lets a fork that ships its own prompt JSONs (e.g.
+// tweakcc-fixed shipping a same-day prompts-X.Y.Z.json before upstream
+// publishes one) skip the network fetch when run via `node dist/index.mjs`.
+// Published npm builds strip data/ via .npmignore, so this returns null
+// for those installs and the network path takes over.
+function findRepoPromptsDir(): string | null {
+  try {
+    const here = fileURLToPath(import.meta.url);
+    let dir = path.dirname(here);
+    for (let i = 0; i < 5; i++) {
+      const candidate = path.join(dir, 'data', 'prompts');
+      const pkg = path.join(dir, 'package.json');
+      if (fsSync.existsSync(pkg) && fsSync.existsSync(candidate)) {
+        return candidate;
+      }
+      const parent = path.dirname(dir);
+      if (parent === dir) break;
+      dir = parent;
+    }
+  } catch {
+    // import.meta.url unavailable in unusual runtimes
+  }
+  return null;
+}
+
 /**
  * Downloads the strings file for a given CC version from GitHub
- * Checks cache first before downloading
+ * Checks cache first, then any repo-local data/prompts/ shipped alongside
+ * this dist (forks may carry same-day JSONs upstream hasn't published yet),
+ * then the upstream URL.
  * @param version - Version string in format "X.Y.Z" (e.g., "2.0.30")
  * @returns Promise that resolves to the parsed JSON content
  */
@@ -19,7 +49,20 @@ export async function downloadStringsFile(
     const cached = JSON.parse(cachedContent) as StringsFile;
     return cached;
   } catch {
-    // Cache miss or invalid - proceed to download
+    // Cache miss or invalid - try repo-local fallback before hitting network.
+  }
+
+  // Repo-local data/prompts fallback (only resolves for `node dist/...`
+  // invocations against a checked-out repo).
+  const repoDir = findRepoPromptsDir();
+  if (repoDir) {
+    const localPath = path.join(repoDir, `prompts-${version}.json`);
+    try {
+      const localContent = await fs.readFile(localPath, 'utf-8');
+      return JSON.parse(localContent) as StringsFile;
+    } catch {
+      // Repo doesn't have this version either - fall through to network.
+    }
   }
 
   // Construct the GitHub raw URL
