@@ -100,8 +100,19 @@ const patchCommandsVisibleCount = (file: string): string | null => {
  * Patched:  Math.max(1, rows - 3)
  *
  * The Math.min(6,...) hardcaps visible suggestions to 6.
+ *
+ * CC ≥ 2.1.133 removed this hardcap — the literal `Math.min(6,Math.max(1,`
+ * no longer appears in cli.js. When that happens, treat the patch as a
+ * no-op. Only fail loud when the anchor exists but the surrounding shape is new.
  */
 const patchSuggestionsCap = (file: string): string | null => {
+  if (!file.includes('Math.min(6,Math.max(1,')) {
+    console.log(
+      'patch: showMoreItemsInSelectMenus: suggestions cap already removed in this CC build — no-op'
+    );
+    return file;
+  }
+
   const pattern = /Math\.min\(6,Math\.max\(1,([\w$]+)-3\)\)/;
   const match = file.match(pattern);
 
