@@ -1410,25 +1410,50 @@ function repackELFSection(
     debug(`repackELFSection: Original section size: ${bunSection.size}`);
     debug(`repackELFSection: New section data size: ${newSectionData.length}`);
 
-    // Find the .bun PT_LOAD segment (read-only, vaddr matches .bun section)
+    // Find the .bun PT_LOAD segment.
+    // Older format (post-PR#26923): a dedicated read-only LOAD segment whose
+    // vaddr matches the .bun section's vaddr exactly.
+    // Newer format (CC 2.1.133+ Linux): no dedicated segment — the .bun section
+    // sits at the end of the existing RW data LOAD segment. In that case the
+    // section content can be updated in place without resizing any segment;
+    // LIEF's ELF Builder rewrites the file layout from the section change.
     const bunSectionVaddr = bunSection.virtualAddress;
     const segments = elfBinary.segments();
-    const bunSegment = segments.find(
+
+    // Helper: does a segment cover the .bun section's vaddr range?
+    const containsBunSection = (s: LIEF.ELF.Segment): boolean => {
+      const segStart = s.virtualAddress;
+      const segEnd = segStart + s.virtualSize;
+      const secEnd = bunSectionVaddr + bunSection.size;
+      return (
+        s.type === 'LOAD' && segStart <= bunSectionVaddr && segEnd >= secEnd
+      );
+    };
+
+    let bunSegment = segments.find(
       s =>
         s.type === 'LOAD' &&
         s.flags === 4 && // PF_R
         s.virtualAddress === bunSectionVaddr
     );
 
+    const dedicatedSegment = bunSegment !== undefined;
+
+    if (!bunSegment) {
+      bunSegment = segments.find(containsBunSection);
+    }
+
     if (!bunSegment) {
       throw new Error(
-        `.bun PT_LOAD segment not found (looking for LOAD with vaddr=0x${bunSectionVaddr.toString(16)})`
+        `.bun PT_LOAD segment not found (looking for LOAD with vaddr=0x${bunSectionVaddr.toString(16)} or any LOAD segment containing it)`
       );
     }
 
     debug(
-      `repackELFSection: Found .bun segment: vaddr=0x${bunSegment.virtualAddress.toString(16)}, ` +
-        `filesz=0x${bunSegment.fileSize.toString(16)}, memsz=0x${bunSegment.virtualSize.toString(16)}`
+      `repackELFSection: ${dedicatedSegment ? 'Dedicated' : 'Containing'} .bun segment: ` +
+        `vaddr=0x${bunSegment.virtualAddress.toString(16)}, ` +
+        `filesz=0x${bunSegment.fileSize.toString(16)}, memsz=0x${bunSegment.virtualSize.toString(16)}, ` +
+        `flags=${bunSegment.flags}`
     );
 
     // Find the original BUN_COMPILED location by searching for the .bun section's
@@ -1480,20 +1505,31 @@ function repackELFSection(
     // Set the new section content
     bunSection.content = newSectionData;
 
-    // Update the PT_LOAD segment sizes to cover the new content.
-    // LIEF's ELF Builder handles the actual file layout, but we need to tell
-    // the segment how big the mapped region should be.
-    const pageSize = Number(bunSegment.alignment);
-    const alignedSize = BigInt(
-      Math.ceil(newSectionData.length / pageSize) * pageSize
-    );
-    bunSegment.fileSize = alignedSize;
-    bunSegment.virtualSize = alignedSize;
+    if (dedicatedSegment) {
+      // Update the dedicated PT_LOAD segment sizes to cover the new content.
+      // LIEF's ELF Builder handles the actual file layout, but we need to tell
+      // the segment how big the mapped region should be.
+      const pageSize = Number(bunSegment.alignment);
+      const alignedSize = BigInt(
+        Math.ceil(newSectionData.length / pageSize) * pageSize
+      );
+      bunSegment.fileSize = alignedSize;
+      bunSegment.virtualSize = alignedSize;
 
-    debug(
-      `repackELFSection: Updated segment: filesz=0x${bunSegment.fileSize.toString(16)}, ` +
-        `memsz=0x${bunSegment.virtualSize.toString(16)}`
-    );
+      debug(
+        `repackELFSection: Updated dedicated segment: filesz=0x${bunSegment.fileSize.toString(16)}, ` +
+          `memsz=0x${bunSegment.virtualSize.toString(16)}`
+      );
+    } else {
+      // The .bun section sits inside a larger LOAD segment (e.g. the RW data
+      // segment in CC 2.1.133+ Linux builds). The section change resizes the
+      // containing segment by the same delta — LIEF's ELF Builder rewrites
+      // the segment headers from section sizes, so nothing to do here.
+      debug(
+        `repackELFSection: .bun section is inside a multi-purpose segment; ` +
+          `letting LIEF rewrite segment headers from section sizes`
+      );
+    }
 
     // Patch BUN_COMPILED.size to point to the .bun section vaddr.
     // The vaddr doesn't change (LIEF keeps the section at the same virtual address),
