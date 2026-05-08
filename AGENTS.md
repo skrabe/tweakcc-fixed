@@ -2,6 +2,11 @@
 
 You're an agent working on `tweakcc-fixed`. This file explains the bigger picture — what the tool does, the fork situation, and the bug classes you'll run into. The companion file [`~/.tweakcc/lobotomized-claude-code/CLAUDE.md`](../../.tweakcc/lobotomized-claude-code/CLAUDE.md) covers the prompt-overrides side; read that too if you're touching `data/prompts/` or anything related to `--apply` correctness.
 
+## Scope of this file vs. the lobotomized side
+
+- **Mechanical work in this repo (`tweakcc-fixed`)** — extracting/syncing prompt JSONs from upstream, regex-anchored patches, version bumps, build/lint/test. Read this file. The Anthropic prompting guide is **not required** for this work.
+- **Editing prompt content in `~/.tweakcc/lobotomized-claude-code/system-prompts/*.md`** — read [`~/.tweakcc/lobotomized-claude-code/CLAUDE.md`](../../.tweakcc/lobotomized-claude-code/CLAUDE.md) AND fetch [Anthropic's prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) fresh first. The 11-point Opus 4.7 checklist there is the standard for every prompt edit. Just bumping `ccVersion:` without reading the diff and applying the checklist is the lazy path; don't take it.
+
 ## What this tool does
 
 `tweakcc-fixed` patches an installed Claude Code's `cli.js` (or the JS embedded in a Bun-compiled native binary) in place. It applies two kinds of changes:
