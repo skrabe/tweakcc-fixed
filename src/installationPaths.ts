@@ -247,9 +247,12 @@ const getNativeSearchPathsWithInfo = (): SearchPathInfo[] => {
 
   // Direct binary path
   addPath(`${home}/.local/bin/claude`);
-  addPath(
-    `${home}/.nvm/versions/node/v22.21.1/lib/node_modules/@anthropic-ai/claude-code/bin/claude.exe`
-  );
+  if (process.platform === 'win32') {
+    addPath(
+      `${home}/.nvm/versions/node/v22.21.1/lib/node_modules/@anthropic-ai/claude-code/bin/claude.exe`
+    );
+    addPath(`${home}/.local/bin/claude.exe`);
+  }
 
   // Versioned binaries (filenames are versions like 2.0.65)
   addPath(`${home}/.local/share/claude/versions/*`, true);
