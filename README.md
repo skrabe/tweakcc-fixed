@@ -6,7 +6,7 @@ Direct fork of [Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc) carry
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | **Upstream**                    | [Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc) — actively maintained                                   |
 | **This fork**                   | [skrabe/tweakcc-fixed](https://github.com/skrabe/tweakcc-fixed) — base + cherry-picked fixes + skrabe-only features |
-| **Target Claude Code versions** | 2.0.98 through **2.1.133**                                                                                          |
+| **Target Claude Code versions** | 2.0.98 through **2.1.138**                                                                                          |
 | **npm package name**            | `tweakcc-fixed` (separate from upstream's `tweakcc`)                                                                |
 
 ## Cherry-picked from open upstream PRs (not yet merged)
@@ -1347,7 +1347,7 @@ For detailed guidelines on development setup, code style, testing, and submittin
 
 ## Related projects
 
-- [**lobotomized-claude-code**](https://github.com/skrabe/lobotomized-claude-code) - System-prompt overrides for Claude Code, tuned for **Claude Opus 4.7**.  CC ships every model the same prompt-by-volume Opus 4.5 needed. 4.7 follows instructions literally, gets jumpier on CAPS, and doesn't need the anti-laziness scaffolding. This repo cuts the bulk and rewrites the load-bearing fragments in a register the model actually behaves better under.
+- [**lobotomized-claude-code**](https://github.com/skrabe/lobotomized-claude-code) - System-prompt overrides for Claude Code, tuned for **Claude Opus 4.7**. CC ships every model the same prompt-by-volume Opus 4.5 needed. 4.7 follows instructions literally, gets jumpier on CAPS, and doesn't need the anti-laziness scaffolding. This repo cuts the bulk and rewrites the load-bearing fragments in a register the model actually behaves better under.
 - [**tweakcc-system-prompts-unnerfed**](https://github.com/BenIsLegit/tweakcc-system-prompts-unnerfed) - Modified Claude Code system prompts that remove the "be brief, be minimal" directives and replace them with instructions to be thorough.
 - [**cc-mirror**](https://github.com/numman-ali/cc-mirror) - Create multiple isolated Claude Code variants with custom providers (Z.ai, MiniMax, OpenRouter, LiteLLM). Uses tweakcc to customize system prompts, themes, thinking styles, and toolsets.
 
