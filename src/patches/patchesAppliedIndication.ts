@@ -478,14 +478,6 @@ export const writePatchesAppliedIndication = (
     return null;
   }
 
-  const boxComponent = findBoxComponent(fileContents);
-  if (!boxComponent) {
-    console.error(
-      'patch: patchesAppliedIndication: failed to find Box component'
-    );
-    return null;
-  }
-
   // PATCH 2: Add tweakcc version to all header paths.
   // Path A: SyK banner borderText (chalk template literal)
   // Path B: SyK compact borderText (chalk call)
@@ -554,6 +546,13 @@ export const writePatchesAppliedIndication = (
 
   // PATCH 3: Add patches applied list (if enabled)
   if (showPatchesApplied) {
+    const boxComponent = findBoxComponent(content);
+    if (!boxComponent) {
+      console.error(
+        'patch: patchesAppliedIndication: PATCH 3 skipped (Box component not located on this CC version)'
+      );
+      return content;
+    }
     const patchesListLoc = findPatchesListLocation(content);
     if (!patchesListLoc) {
       // findPatchesListLocation already logged the specific cause (e.g. header
