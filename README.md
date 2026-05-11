@@ -6,7 +6,7 @@ Direct fork of [Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc) carry
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | **Upstream**                    | [Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc) — actively maintained                                   |
 | **This fork**                   | [skrabe/tweakcc-fixed](https://github.com/skrabe/tweakcc-fixed) — base + cherry-picked fixes + skrabe-only features |
-| **Target Claude Code versions** | 2.0.98 through **2.1.138**                                                                                          |
+| **Target Claude Code versions** | 2.0.98 through **2.1.139**                                                                                          |
 | **npm package name**            | `tweakcc-fixed` (separate from upstream's `tweakcc`)                                                                |
 
 ## Cherry-picked from open upstream PRs (not yet merged)
@@ -827,10 +827,10 @@ Here's the schema:
 
 | Animation       | Phases                                               | Description                  |
 | --------------- | ---------------------------------------------------- | ---------------------------- |
-| Default stars   | `['·', '✢', '✳', '✶', '✻', '✽']`                     | Classic star burst animation |
+| Default stars   | `['·', '✢', '✳', '✶', '✻', '✽']`                    | Classic star burst animation |
 | Simple dots     | `['.', '..', '...']`                                 | Classic loading dots         |
 | Braille spinner | `['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']` | Braille-style spinner        |
-| Arrow spinner   | `['←', '↖', '↑', '↗', '→', '↘', '↓', '↙']`           | Rotating arrow               |
+| Arrow spinner   | `['←', '↖', '↑', '↗', '→', '↘', '↓', '↙']`       | Rotating arrow               |
 | Minimal         | `['○', '◐', '◑', '●']`                               | Minimal circle animation     |
 
 **Speed customization:**
