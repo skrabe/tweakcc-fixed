@@ -255,6 +255,123 @@ const encodeAsDoubleQuotedString = (
 // Escape body text for embedding as a template-literal value.  Backticks and
 // $ must be escaped only when they'd cause syntax errors; preserve ${...}
 // interpolations verbatim.
+/**
+ * Extract the top-level `${...}` interpolation expressions (verbatim, without
+ * the surrounding `${ }`) from a template-literal body, in order.
+ *
+ * The minified-name inside a `${...}` differs between Mac and Linux native
+ * builds of CC. Capturing them from the pristine template lets the patch
+ * rewrite the override's own `${...}` placeholders to whatever names the
+ * binary actually carries — preserving dynamic behavior across platforms.
+ */
+const extractTemplateInterpolations = (text: string): string[] => {
+  const out: string[] = [];
+  let i = 0;
+  while (i < text.length) {
+    if (
+      text[i] === '$' &&
+      i + 1 < text.length &&
+      text[i + 1] === '{' &&
+      (i === 0 || text[i - 1] !== '\\')
+    ) {
+      let bd = 1;
+      let j = i + 2;
+      let inS = false;
+      let q: string | null = null;
+      const start = j;
+      while (j < text.length && bd > 0) {
+        const cj = text[j];
+        if (inS) {
+          if (cj === '\\' && j + 1 < text.length) {
+            j += 2;
+            continue;
+          }
+          if (cj === q) inS = false;
+        } else {
+          if (cj === '"' || cj === "'" || cj === '`') {
+            inS = true;
+            q = cj;
+          } else if (cj === '{') bd++;
+          else if (cj === '}') {
+            bd--;
+            if (bd === 0) break;
+          }
+        }
+        j++;
+      }
+      out.push(text.slice(start, j));
+      i = j + 1;
+      continue;
+    }
+    i++;
+  }
+  return out;
+};
+
+/**
+ * Rewrite the top-level `${...}` interpolations in `body` by replacing the
+ * Nth one with `pristineExprs[N]`. The override body keeps its surrounding
+ * literal text exactly; only the inside of each `${...}` is swapped to match
+ * what the current binary's pristine template carries.
+ *
+ * If the override has more interpolations than the pristine, the extras are
+ * left untouched (and will likely fail at runtime — the override author
+ * needs to align). If pristine has more, the remainder is unused; the
+ * override may have intentionally dropped some interpolations.
+ */
+const remapTemplateInterpolations = (
+  body: string,
+  pristineExprs: string[]
+): string => {
+  let out = '';
+  let i = 0;
+  let idx = 0;
+  while (i < body.length) {
+    if (
+      body[i] === '$' &&
+      i + 1 < body.length &&
+      body[i + 1] === '{' &&
+      (i === 0 || body[i - 1] !== '\\')
+    ) {
+      let bd = 1;
+      let j = i + 2;
+      let inS = false;
+      let q: string | null = null;
+      while (j < body.length && bd > 0) {
+        const cj = body[j];
+        if (inS) {
+          if (cj === '\\' && j + 1 < body.length) {
+            j += 2;
+            continue;
+          }
+          if (cj === q) inS = false;
+        } else {
+          if (cj === '"' || cj === "'" || cj === '`') {
+            inS = true;
+            q = cj;
+          } else if (cj === '{') bd++;
+          else if (cj === '}') {
+            bd--;
+            if (bd === 0) break;
+          }
+        }
+        j++;
+      }
+      if (idx < pristineExprs.length) {
+        out += '${' + pristineExprs[idx] + '}';
+      } else {
+        out += body.slice(i, j + 1);
+      }
+      idx++;
+      i = j + 1;
+      continue;
+    }
+    out += body[i];
+    i++;
+  }
+  return out;
+};
+
 const encodeAsTemplateLiteral = (
   text: string,
   escapeNonAscii: boolean
@@ -471,7 +588,12 @@ export const applyInlineBlobOverrides = async (
       }
       startOfBlob = startTick;
       endOfBlob = end;
-      replacement = encodeAsTemplateLiteral(body, escapeNonAscii);
+
+      const pristineBody = content.slice(startTick + 1, end - 1);
+      const pristineExprs = extractTemplateInterpolations(pristineBody);
+      const remappedBody = remapTemplateInterpolations(body, pristineExprs);
+
+      replacement = encodeAsTemplateLiteral(remappedBody, escapeNonAscii);
     } else {
       results.push({
         filename,
