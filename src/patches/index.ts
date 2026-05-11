@@ -619,24 +619,15 @@ export const applyCustomization = async (
   const allResults: PatchResult[] = [];
 
   // ==========================================================================
-  // Apply system prompt customizations (has its own result format)
-  // ==========================================================================
-  const systemPromptsResult = await applySystemPrompts(
-    content,
-    ccInstInfo.version,
-    undefined, // escapeNonAscii - auto-detect
-    patchFilter
-  );
-  content = systemPromptsResult.newContent;
-
-  // Sort system prompt results alphabetically by name before adding
-  const sortedSystemPromptResults = [...systemPromptsResult.results].sort(
-    (a, b) => a.name.localeCompare(b.name)
-  );
-  allResults.push(...sortedSystemPromptResults);
-
-  // ==========================================================================
-  // Apply inline-blob overrides (prompts not extracted into prompts JSON)
+  // Apply inline-blob overrides FIRST (prompts not extracted into prompts JSON)
+  // Inline-blob overrides replace whole template-literal arrays / template
+  // strings. Some named system prompts in prompts-X.Y.Z.json wipe a single
+  // <description>...</description> element that lives INSIDE one of those
+  // arrays. If the named-prompt wipe ran first, the inline-blob anchor
+  // (which uses the original <description> text to disambiguate which of
+  // the 4 "## Types of memory" arrays to target) would no longer match.
+  // Running inline-blob overrides first means the named-prompt wipes
+  // for content already inside an inline-blob target simply no-op.
   // ==========================================================================
   const inlineResult = await applyInlineBlobOverrides(content);
   content = inlineResult.content;
@@ -663,6 +654,23 @@ export const applyCustomization = async (
       details: r.details,
     });
   }
+
+  // ==========================================================================
+  // Apply named system prompt customizations AFTER inline-blob overrides.
+  // ==========================================================================
+  const systemPromptsResult = await applySystemPrompts(
+    content,
+    ccInstInfo.version,
+    undefined, // escapeNonAscii - auto-detect
+    patchFilter
+  );
+  content = systemPromptsResult.newContent;
+
+  // Sort system prompt results alphabetically by name before adding
+  const sortedSystemPromptResults = [...systemPromptsResult.results].sort(
+    (a, b) => a.name.localeCompare(b.name)
+  );
+  allResults.push(...sortedSystemPromptResults);
 
   // Legacy items array for patchesAppliedIndication (backward compatibility)
   // Escape ANSI codes so they render properly when injected into cli.js
