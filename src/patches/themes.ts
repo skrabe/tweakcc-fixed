@@ -5,8 +5,8 @@ import { LocationResult, showDiff } from './index';
 
 function getThemesLocation(oldFile: string): {
   switchStatement: LocationResult;
-  objArr: LocationResult;
-  obj: LocationResult;
+  objArr: LocationResult | null;
+  obj: LocationResult | null;
 } | null {
   // === Switch Statement ===
   // CC >=2.1.83: switch(A){case"light":return LX9;...default:return CX9}
@@ -75,9 +75,14 @@ function getThemesLocation(oldFile: string): {
     /\[(?:\.\.\.\[\],)?(?:\{"?label"?:"(?:Dark|Light|Auto|Monochrome)[^"]*","?value"?:"[^"]+"\},?)+\]/;
   const objArrMatch = oldFile.match(objArrPat);
 
+  // CC >=2.1.138 builds the picker array from per-theme React-memoized vars
+  // instead of one literal array, so this match is best-effort. Color rewrites
+  // (the switch statement) still work without it; the picker UI just keeps
+  // its built-in labels.
   if (!objArrMatch || objArrMatch.index == undefined) {
-    console.error('patch: themes: failed to find objArrMatch');
-    return null;
+    console.warn(
+      'patch: themes: objArrMatch not found — colors will still apply, picker labels unchanged'
+    );
   }
 
   // === Theme Name Mapping Object ===
@@ -87,8 +92,9 @@ function getThemesLocation(oldFile: string): {
   const objMatch = oldFile.match(objPat);
 
   if (!objMatch || objMatch.index == undefined) {
-    console.error('patch: themes: failed to find objMatch');
-    return null;
+    console.warn(
+      'patch: themes: objMatch not found — colors will still apply, theme name map unchanged'
+    );
   }
 
   return {
@@ -97,15 +103,21 @@ function getThemesLocation(oldFile: string): {
       endIndex: switchEnd,
       identifiers: [switchIdent],
     },
-    objArr: {
-      startIndex: objArrMatch.index,
-      endIndex: objArrMatch.index + objArrMatch[0].length,
-    },
-    obj: {
-      startIndex: objMatch.index,
-      endIndex: objMatch.index + objMatch[0].length,
-      identifiers: [objMatch[1]],
-    },
+    objArr:
+      objArrMatch && objArrMatch.index !== undefined
+        ? {
+            startIndex: objArrMatch.index,
+            endIndex: objArrMatch.index + objArrMatch[0].length,
+          }
+        : null,
+    obj:
+      objMatch && objMatch.index !== undefined
+        ? {
+            startIndex: objMatch.index,
+            endIndex: objMatch.index + objMatch[0].length,
+            identifiers: [objMatch[1]],
+          }
+        : null,
   };
 }
 
@@ -126,43 +138,46 @@ export const writeThemes = (
 
   // Process in reverse order to avoid index shifting
 
-  // Update theme mapping object (obj)
-  // Preserve the original prefix (either "return" or a variable assignment like "Lr9=")
-  const objPrefix = locations.obj.identifiers?.[0] ?? 'return';
-  const obj =
-    objPrefix +
-    JSON.stringify(
-      Object.fromEntries(themes.map(theme => [theme.id, theme.name]))
+  // Update theme mapping object (obj) — skip if not present (newer CC builds)
+  if (locations.obj) {
+    const objPrefix = locations.obj.identifiers?.[0] ?? 'return';
+    const obj =
+      objPrefix +
+      JSON.stringify(
+        Object.fromEntries(themes.map(theme => [theme.id, theme.name]))
+      );
+    newFile =
+      newFile.slice(0, locations.obj.startIndex) +
+      obj +
+      newFile.slice(locations.obj.endIndex);
+    showDiff(
+      oldFile,
+      newFile,
+      obj,
+      locations.obj.startIndex,
+      locations.obj.endIndex
     );
-  newFile =
-    newFile.slice(0, locations.obj.startIndex) +
-    obj +
-    newFile.slice(locations.obj.endIndex);
-  showDiff(
-    oldFile,
-    newFile,
-    obj,
-    locations.obj.startIndex,
-    locations.obj.endIndex
-  );
-  oldFile = newFile;
+    oldFile = newFile;
+  }
 
-  // Update theme options array (objArr)
-  const objArr = JSON.stringify(
-    themes.map(theme => ({ label: theme.name, value: theme.id }))
-  );
-  newFile =
-    newFile.slice(0, locations.objArr.startIndex) +
-    objArr +
-    newFile.slice(locations.objArr.endIndex);
-  showDiff(
-    oldFile,
-    newFile,
-    objArr,
-    locations.objArr.startIndex,
-    locations.objArr.endIndex
-  );
-  oldFile = newFile;
+  // Update theme options array (objArr) — skip if not present (newer CC builds)
+  if (locations.objArr) {
+    const objArr = JSON.stringify(
+      themes.map(theme => ({ label: theme.name, value: theme.id }))
+    );
+    newFile =
+      newFile.slice(0, locations.objArr.startIndex) +
+      objArr +
+      newFile.slice(locations.objArr.endIndex);
+    showDiff(
+      oldFile,
+      newFile,
+      objArr,
+      locations.objArr.startIndex,
+      locations.objArr.endIndex
+    );
+    oldFile = newFile;
+  }
 
   // Update switch statement
   let switchStatement = `switch(${locations.switchStatement.identifiers?.[0]}){\n`;
