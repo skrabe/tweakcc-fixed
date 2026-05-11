@@ -109,6 +109,8 @@ export interface InputBoxConfig {
 
 export type TableFormat = 'default' | 'ascii' | 'clean' | 'clean-top-bottom';
 
+export type AutoModeClassifierModel = 'default' | 'sonnet' | 'haiku';
+
 export interface MiscConfig {
   showTweakccVersion: boolean;
   showPatchesApplied: boolean;
@@ -141,6 +143,7 @@ export interface MiscConfig {
   enableVoiceConciseOutput: boolean;
   enableChannelsMode: boolean;
   maxEffortDefault: boolean;
+  autoModeClassifierModel: AutoModeClassifierModel;
 }
 
 export interface InputPatternHighlighter {

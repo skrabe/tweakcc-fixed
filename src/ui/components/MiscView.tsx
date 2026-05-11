@@ -2,7 +2,7 @@ import { Box, Text, useInput } from 'ink';
 import { useContext, useState, useMemo } from 'react';
 import { SettingsContext } from '../App';
 import Header from './Header';
-import { TableFormat } from '../../types';
+import { TableFormat, AutoModeClassifierModel } from '../../types';
 
 interface MiscViewProps {
   onSubmit: () => void;
@@ -86,11 +86,34 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     enableVoiceConciseOutput: true,
     enableChannelsMode: false,
     maxEffortDefault: false,
+    autoModeClassifierModel: 'default' as AutoModeClassifierModel,
   };
 
   const ensureMisc = () => {
     if (!settings.misc) {
       settings.misc = { ...defaultMisc };
+    }
+  };
+
+  const cycleAutoModeClassifierModel = (
+    current: AutoModeClassifierModel
+  ): AutoModeClassifierModel => {
+    const options: AutoModeClassifierModel[] = ['default', 'sonnet', 'haiku'];
+    const currentIndex = options.indexOf(current);
+    return options[(currentIndex + 1) % options.length];
+  };
+
+  const getAutoModeClassifierModelDisplay = (
+    choice: AutoModeClassifierModel
+  ): string => {
+    switch (choice) {
+      case 'sonnet':
+        return 'Sonnet 4.6';
+      case 'haiku':
+        return 'Haiku 4.5';
+      case 'default':
+      default:
+        return 'Default (main-loop model)';
     }
   };
 
@@ -668,6 +691,26 @@ export function MiscView({ onSubmit }: MiscViewProps) {
           updateSettings(settings => {
             ensureMisc();
             settings.misc!.maxEffortDefault = !settings.misc!.maxEffortDefault;
+          });
+        },
+      },
+      {
+        id: 'autoModeClassifierModel',
+        title: 'Auto-mode classifier model',
+        description:
+          'Pin auto-mode bash safety classifier to a fixed model. Default routes to your main-loop model (e.g. Opus 4.7), which gets denied as "temporarily unavailable" when that model is congested. Sonnet/Haiku have more headroom and the binary XML classifier task fits either.',
+        getValue: () => settings.misc?.autoModeClassifierModel ?? 'default',
+        getDisplayValue: () =>
+          getAutoModeClassifierModelDisplay(
+            settings.misc?.autoModeClassifierModel ?? 'default'
+          ),
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.autoModeClassifierModel =
+              cycleAutoModeClassifierModel(
+                settings.misc!.autoModeClassifierModel ?? 'default'
+              );
           });
         },
       },
