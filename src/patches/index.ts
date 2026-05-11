@@ -48,6 +48,7 @@ import { writeThinkingVisibility } from './thinkingVisibility';
 import { writeSubagentModels } from './subagentModels';
 import { writePatchesAppliedIndication } from './patchesAppliedIndication';
 import { applySystemPrompts } from './systemPrompts';
+import { applyInlineBlobOverrides } from './inlineBlobOverrides';
 import { writeFixLspSupport } from './fixLspSupport';
 import { writeToolsets } from './toolsets';
 import { writeTableFormat } from './tableFormat';
@@ -633,6 +634,35 @@ export const applyCustomization = async (
     (a, b) => a.name.localeCompare(b.name)
   );
   allResults.push(...sortedSystemPromptResults);
+
+  // ==========================================================================
+  // Apply inline-blob overrides (prompts not extracted into prompts JSON)
+  // ==========================================================================
+  const inlineResult = await applyInlineBlobOverrides(content);
+  content = inlineResult.content;
+  const appliedInline = inlineResult.results.filter(r => r.applied);
+  const failedInline = inlineResult.results.filter(r => r.failed);
+  if (inlineResult.results.length > 0) {
+    debug(
+      `inlineBlobOverrides: ${appliedInline.length} applied, ${failedInline.length} failed`
+    );
+    for (const r of failedInline) {
+      console.log(
+        `inline-blob: failed "${r.name}" (${r.filename}): ${r.details}`
+      );
+    }
+  }
+  for (const r of inlineResult.results) {
+    allResults.push({
+      id: `inline-blob:${r.filename}`,
+      name: r.name,
+      group: PatchGroup.SYSTEM_PROMPTS,
+      applied: r.applied,
+      failed: r.failed,
+      skipped: r.skipped,
+      details: r.details,
+    });
+  }
 
   // Legacy items array for patchesAppliedIndication (backward compatibility)
   // Escape ANSI codes so they render properly when injected into cli.js
