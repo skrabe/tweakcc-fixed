@@ -372,6 +372,116 @@ const remapTemplateInterpolations = (
   return out;
 };
 
+/**
+ * Walk a JS array body (text between `[` and `]`, exclusive), collecting
+ * free identifier references in order. Skips identifiers inside string
+ * literals and property-access positions (after `.` or `?.`).
+ *
+ * Used for array-kind raw-passthrough overrides whose bodies contain
+ * spread (`...VAR`) or function-call (`VAR(...)`) references to
+ * minified names that differ between platforms.
+ */
+const extractArrayIdentifiers = (
+  text: string
+): Array<{ name: string; start: number; end: number }> => {
+  const out: Array<{ name: string; start: number; end: number }> = [];
+  let i = 0;
+  let inStr = false;
+  let quote: string | null = null;
+  const isIdStart = (c: string) => /[A-Za-z_$]/.test(c);
+  const isIdCont = (c: string) => /[A-Za-z0-9_$]/.test(c);
+  while (i < text.length) {
+    const c = text[i];
+    if (inStr) {
+      if (c === '\\' && i + 1 < text.length) {
+        i += 2;
+        continue;
+      }
+      if (c === quote) {
+        inStr = false;
+        i++;
+        continue;
+      }
+      if (
+        quote === '`' &&
+        c === '$' &&
+        i + 1 < text.length &&
+        text[i + 1] === '{'
+      ) {
+        let bd = 1;
+        let j = i + 2;
+        while (j < text.length && bd > 0) {
+          const cj = text[j];
+          if (cj === '{') bd++;
+          else if (cj === '}') bd--;
+          j++;
+        }
+        i = j;
+        continue;
+      }
+      i++;
+      continue;
+    }
+    if (c === '"' || c === "'" || c === '`') {
+      inStr = true;
+      quote = c;
+      i++;
+      continue;
+    }
+    if (isIdStart(c)) {
+      const prev = i > 0 ? text[i - 1] : '';
+      const prev2 = i > 1 ? text[i - 2] : '';
+      const prev3 = i > 2 ? text[i - 3] : '';
+      // Property access: `.x` or `?.x` — but NOT the spread `...x`.
+      const isSpread = prev === '.' && prev2 === '.' && prev3 === '.';
+      const propAccess =
+        !isSpread && (prev === '.' || (prev === '?' && prev2 === '?'));
+      const start = i;
+      while (i < text.length && isIdCont(text[i])) i++;
+      const name = text.slice(start, i);
+      if (
+        !propAccess &&
+        !['true', 'false', 'null', 'undefined', 'this', 'void', 'new'].includes(
+          name
+        )
+      ) {
+        out.push({ name, start, end: i });
+      }
+      continue;
+    }
+    i++;
+  }
+  return out;
+};
+
+/**
+ * Rewrite free identifier references in the override array body by
+ * substituting the Nth identifier with the Nth name from `pristineIds`
+ * (positional). Used for raw-passthrough array-kind overrides whose
+ * bodies reference platform-specific minified names — the pristine
+ * array carries the names the binary actually has, so positional
+ * substitution keeps the override portable across Mac/Linux builds.
+ */
+const remapArrayIdentifiers = (body: string, pristineIds: string[]): string => {
+  const refs = extractArrayIdentifiers(body);
+  if (refs.length === 0) return body;
+  let out = '';
+  let i = 0;
+  let idx = 0;
+  for (const r of refs) {
+    out += body.slice(i, r.start);
+    if (idx < pristineIds.length) {
+      out += pristineIds[idx];
+    } else {
+      out += r.name;
+    }
+    i = r.end;
+    idx++;
+  }
+  out += body.slice(i);
+  return out;
+};
+
 const encodeAsTemplateLiteral = (
   text: string,
   escapeNonAscii: boolean
@@ -552,8 +662,16 @@ export const applyInlineBlobOverrides = async (
       startOfBlob = lb;
       endOfBlob = end;
       if (frontmatter.inlineBlobRawPassthrough === 'true') {
-        // Body holds the raw array contents (between [ and ]) verbatim
-        replacement = '[' + body + ']';
+        // Body holds the raw array contents (between [ and ]) verbatim.
+        // Remap bare identifiers to whatever names the binary's pristine
+        // array carries — these names are minifier output and differ
+        // between Mac and Linux native builds.
+        const pristineArrayBody = content.slice(lb + 1, end - 1);
+        const pristineIds = extractArrayIdentifiers(pristineArrayBody).map(
+          r => r.name
+        );
+        const remappedBody = remapArrayIdentifiers(body, pristineIds);
+        replacement = '[' + remappedBody + ']';
       } else {
         // Treat each line of the body as one quoted string element
         const lines = body.split('\n');
