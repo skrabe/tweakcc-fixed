@@ -1100,6 +1100,14 @@ const buildSearchRegexFromPieces = (
 ): string => {
   let pattern = '';
 
+  // Sentinel used to placeholder ${...} interpolations that remain INLINE in
+  // a piece. These are complex JS expressions (method calls, ternaries, etc.)
+  // that the extractor couldn't represent as simple identifier captures. They
+  // carry minified-name content that differs between Mac and Linux native
+  // builds of CC. Substitute them with a regex pattern that matches ANY
+  // single-level interpolation, keeping the surrounding literal text exact.
+  const INTERP_SENTINEL = '\x00INTERP\x00';
+
   for (let i = 0; i < pieces.length; i++) {
     // Replace <<CCVERSION>> with actual version before escaping
     let piece = pieces[i].replace(/<<CCVERSION>>/g, ccVersion);
@@ -1108,6 +1116,9 @@ const buildSearchRegexFromPieces = (
     if (buildTime) {
       piece = piece.replace(/<<BUILD_TIME>>/g, buildTime);
     }
+
+    // Stash inline ${...} interpolations behind a sentinel before regex-escape.
+    piece = piece.replace(/\$\{[^{}]*\}/g, INTERP_SENTINEL);
 
     // Escape special regex characters in the text piece
     const escapedPiece = piece.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -1131,7 +1142,16 @@ const buildSearchRegexFromPieces = (
       /\n/g,
       '(?:\n|\\\\n)'
     );
-    pattern += withNewlineHandling;
+
+    // Now restore the sentinel as an "any interpolation" wildcard. Use
+    // \$\{[^{}]*\} which matches one level of ${...} with no nested braces;
+    // works for the property-access / function-call / ternary expressions
+    // Anthropic embeds inline.
+    const withInterpHandling = withNewlineHandling.replace(
+      new RegExp(INTERP_SENTINEL, 'g'),
+      '\\$\\{[^{}]*\\}'
+    );
+    pattern += withInterpHandling;
 
     // Add capture group for the variable if this isn't the last piece
     if (i < pieces.length - 1) {
