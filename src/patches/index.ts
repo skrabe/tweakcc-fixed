@@ -72,6 +72,7 @@ import { writeScrollEscapeSequenceFilter } from './scrollEscapeSequenceFilter';
 import { writeWorktreeMode } from './worktreeMode';
 import { writeAllowCustomAgentModels } from './allowCustomAgentModels';
 import { writeMaxEffortDefault } from './maxEffortDefault';
+import { writeAutoModeClassifierModel } from './autoModeClassifierModel';
 import { writeVoiceMode } from './voiceMode';
 import { writeChannelsMode } from './channelsMode';
 import {
@@ -365,6 +366,13 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
       'Opus 4.7 sessions default to "max" reasoning effort instead of "xhigh" (override with /effort or CLAUDE_CODE_EFFORT_LEVEL)',
+  },
+  {
+    id: 'auto-mode-classifier-model',
+    name: 'Auto-mode classifier model',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'Pin auto-mode bash safety classifier to Sonnet 4.6 or Haiku 4.5 instead of the user main-loop model (avoids Opus 4.7 congestion denying tool calls)',
   },
   // Features
   {
@@ -832,6 +840,16 @@ export const applyCustomization = async (
     'max-effort-default': {
       fn: c => writeMaxEffortDefault(c),
       condition: !!config.settings.misc?.maxEffortDefault,
+    },
+    'auto-mode-classifier-model': {
+      fn: c =>
+        writeAutoModeClassifierModel(
+          c,
+          config.settings.misc?.autoModeClassifierModel ?? 'default'
+        ),
+      condition:
+        (config.settings.misc?.autoModeClassifierModel ?? 'default') !==
+        'default',
     },
     // Features
     'allow-custom-agent-models': {

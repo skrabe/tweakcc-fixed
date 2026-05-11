@@ -720,6 +720,7 @@ export const DEFAULT_SETTINGS: Settings = {
     enableVoiceConciseOutput: true,
     enableChannelsMode: false,
     maxEffortDefault: false,
+    autoModeClassifierModel: 'default',
   },
   toolsets: [],
   defaultToolset: null,
