@@ -40,7 +40,7 @@ const findCustomModelListInsertionPoint = (
 
   // The declaration/function head can move farther from the push site across CC builds
   // and when other patches expand this block, so keep a wider lookback window.
-  const searchStart = Math.max(0, pushMatch.index - 1500);
+  const searchStart = Math.max(0, pushMatch.index - 4000);
   const chunk = fileContents.slice(searchStart, pushMatch.index);
 
   // Declaration can be emitted as let/var/const depending on minifier output.
