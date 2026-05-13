@@ -76,6 +76,7 @@ import { writeMaxEffortDefault } from './maxEffortDefault';
 import { writeAutoModeClassifierModel } from './autoModeClassifierModel';
 import { writeVoiceMode } from './voiceMode';
 import { writeChannelsMode } from './channelsMode';
+import { writeReadDefaultLines } from './readDefaultLines';
 import {
   restoreNativeBinaryFromBackup,
   restoreClijsFromBackup,
@@ -151,6 +152,13 @@ const PATCH_DEFINITIONS = [
     name: 'Verbose property',
     group: PatchGroup.ALWAYS_APPLIED,
     description: 'Token counter will show (2s · ↓ 169 tokens · thinking)',
+  },
+  {
+    id: 'read-default-lines',
+    name: 'Read default lines (env-gated)',
+    group: PatchGroup.ALWAYS_APPLIED,
+    description:
+      'Read tool default line cap becomes CLAUDE_CODE_READ_DEFAULT_LINES env var (falls back to 2000 if unset)',
   },
   {
     id: 'opusplan1m',
@@ -696,6 +704,9 @@ export const applyCustomization = async (
     // Always Applied
     'verbose-property': {
       fn: c => writeVerboseProperty(c),
+    },
+    'read-default-lines': {
+      fn: c => writeReadDefaultLines(c),
     },
     'context-limit': {
       fn: c => writeContextLimit(c),
