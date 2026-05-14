@@ -125,6 +125,29 @@ const findCaseBody = (
   return null;
 };
 
+// Pull the array-wrapper / message-constructor minified identifiers from an
+// existing case body. Pattern: `return X([Y({content:` — Mac builds give o5/j6,
+// Linux builds give o_/M8. Prefer the last match (case bodies sometimes call
+// the wrappers earlier with different ids for unrelated subcases).
+const discoverWrappers = (
+  caseBody: string
+): { arrayWrap: string; msgCtor: string } => {
+  const re = /return\s+([$\w]+)\(\[([$\w]+)\(\{content:/g;
+  let last: RegExpExecArray | null = null;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(caseBody)) !== null) last = m;
+  return last
+    ? { arrayWrap: last[1], msgCtor: last[2] }
+    : { arrayWrap: 'o5', msgCtor: 'j6' };
+};
+
+// Pull the `if(!FOO())return[];` feature-gate identifier from the start of a
+// case body. Mac: GX, Linux: ZL.
+const discoverFeatureCheck = (caseBody: string): string => {
+  const m = caseBody.match(/^\s*if\(!([$\w]+)\(\)\)return\s*\[\]/);
+  return m ? m[1] : 'GX';
+};
+
 const CLAUDEMD_INJECTION: ReminderInjection = {
   id: 'claudemd-context',
   name: 'claudeMd context wrapper',
@@ -260,9 +283,12 @@ The following MCP servers have provided instructions for how to use their tools 
       return null;
     }
     const { bodyStart, bodyEnd } = found;
+    const { arrayWrap, msgCtor } = discoverWrappers(
+      content.slice(bodyStart, bodyEnd)
+    );
     const newBody = isSuppressed
       ? 'return [];'
-      : `if(H.addedBlocks.length===0&&H.removedNames.length===0)return [];return o5([j6({content:\`${body}\`,isMeta:!0})])`;
+      : `if(H.addedBlocks.length===0&&H.removedNames.length===0)return [];return ${arrayWrap}([${msgCtor}({content:\`${body}\`,isMeta:!0})])`;
     const newContent =
       content.slice(0, bodyStart) + newBody + content.slice(bodyEnd);
     showDiff(content, newContent, newBody, bodyStart, bodyEnd);
@@ -292,9 +318,12 @@ const AGENT_LISTING_INJECTION: ReminderInjection = {
       return null;
     }
     const { bodyStart, bodyEnd } = found;
+    const { arrayWrap, msgCtor } = discoverWrappers(
+      content.slice(bodyStart, bodyEnd)
+    );
     const newBody = isSuppressed
       ? 'return [];'
-      : `if(H.addedLines.length===0&&H.removedTypes.length===0)return [];return o5([j6({content:\`${body}\`,isMeta:!0})])`;
+      : `if(H.addedLines.length===0&&H.removedTypes.length===0)return [];return ${arrayWrap}([${msgCtor}({content:\`${body}\`,isMeta:!0})])`;
     const newContent =
       content.slice(0, bodyStart) + newBody + content.slice(bodyEnd);
     showDiff(content, newContent, newBody, bodyStart, bodyEnd);
@@ -958,9 +987,12 @@ const MEMORY_UPDATE_INJECTION: ReminderInjection = {
       return null;
     }
     const { bodyStart, bodyEnd } = found;
+    const { arrayWrap, msgCtor } = discoverWrappers(
+      content.slice(bodyStart, bodyEnd)
+    );
     const newBody = isSuppressed
       ? 'return [];'
-      : `return o5([j6({content:\`${body}\`,isMeta:!0})])`;
+      : `return ${arrayWrap}([${msgCtor}({content:\`${body}\`,isMeta:!0})])`;
     const newContent =
       content.slice(0, bodyStart) + newBody + content.slice(bodyEnd);
     showDiff(content, newContent, newBody, bodyStart, bodyEnd);
@@ -991,9 +1023,12 @@ const VERIFY_PLAN_INJECTION: ReminderInjection = {
       return null;
     }
     const { bodyStart, bodyEnd } = found;
+    const { arrayWrap, msgCtor } = discoverWrappers(
+      content.slice(bodyStart, bodyEnd)
+    );
     const newBody = isSuppressed
       ? 'return [];'
-      : `let K=\`${body}\`;return o5([j6({content:K,isMeta:!0})])`;
+      : `let K=\`${body}\`;return ${arrayWrap}([${msgCtor}({content:K,isMeta:!0})])`;
     const newContent =
       content.slice(0, bodyStart) + newBody + content.slice(bodyEnd);
     showDiff(content, newContent, newBody, bodyStart, bodyEnd);
@@ -1089,9 +1124,12 @@ Here are the existing tasks:
       return null;
     }
     const { bodyStart, bodyEnd } = found;
+    const caseBodyText = content.slice(bodyStart, bodyEnd);
+    const { arrayWrap, msgCtor } = discoverWrappers(caseBodyText);
+    const featureCheck = discoverFeatureCheck(caseBodyText);
     const newBody = isSuppressed
       ? 'return [];'
-      : `if(!GX())return[];let q=H.content.map((O)=>\`#\${O.id}. [\${O.status}] \${O.subject}\`).join(\`\\n\`);return o5([j6({content:\`${body}\`,isMeta:!0})])`;
+      : `if(!${featureCheck}())return[];let q=H.content.map((O)=>\`#\${O.id}. [\${O.status}] \${O.subject}\`).join(\`\\n\`);return ${arrayWrap}([${msgCtor}({content:\`${body}\`,isMeta:!0})])`;
     const newContent =
       content.slice(0, bodyStart) + newBody + content.slice(bodyEnd);
     showDiff(content, newContent, newBody, bodyStart, bodyEnd);
