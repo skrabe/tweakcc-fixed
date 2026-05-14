@@ -833,18 +833,15 @@ export const syncPrompt = async (
 
   const fileExists = await promptFileExists(prompt.id);
 
-  // File doesn't exist - create it.
-  // Skip prompts with an empty name or unresolved identifierMap values.
-  // Both indicate a partially-extracted entry (e.g. the upstream extractor
-  // hadn't seen this prompt yet, or a fork's auto-extraction couldn't bind
-  // a name): generating an override here would produce content with
-  // UNKNOWN_<labelIndex> placeholders that, on a later --apply, would land
-  // back in cli.js as undefined identifier references and crash CC startup.
+  // File doesn't exist - create it. Skip only when name is empty (the
+  // patcher reads markdown by id and needs the prompt itself to be
+  // identifiable). Partially-extracted prompts with empty identifierMap
+  // values are now safe to auto-create: reconstructContentFromPieces emits
+  // `${UNKNOWN_<idx>}` placeholders and applyIdentifierMapping back-
+  // substitutes them with the captured cli.js vars, so the override round-
+  // trips cleanly as passthrough.
   if (!fileExists) {
-    const hasIncompleteMap = Object.values(prompt.identifierMap || {}).some(
-      v => !v
-    );
-    if (!prompt.name || hasIncompleteMap) {
+    if (!prompt.name) {
       result.action = 'skipped';
       return result;
     }
@@ -1108,6 +1105,12 @@ const buildSearchRegexFromPieces = (
   // single-level interpolation, keeping the surrounding literal text exact.
   const INTERP_SENTINEL = '\x00INTERP\x00';
 
+  // Sentinel for backslashes — placeholdered before regex-escape so the final
+  // alternation step can swap each one for `(?:\\|\\\\)` (match a single or
+  // double backslash). This handles StringLiteral pieces whose cooked value
+  // has one `\` per source `\\` while cli.js retains the two-char source form.
+  const BS_SENTINEL = '\x00BS\x00';
+
   for (let i = 0; i < pieces.length; i++) {
     // Replace <<CCVERSION>> with actual version before escaping
     let piece = pieces[i].replace(/<<CCVERSION>>/g, ccVersion);
@@ -1119,6 +1122,10 @@ const buildSearchRegexFromPieces = (
 
     // Stash inline ${...} interpolations behind a sentinel before regex-escape.
     piece = piece.replace(/\$\{[^{}]*\}/g, INTERP_SENTINEL);
+
+    // Stash backslashes behind a sentinel before regex-escape so the
+    // alternation step at the end can match either the cooked or raw form.
+    piece = piece.replace(/\\/g, BS_SENTINEL);
 
     // Escape special regex characters in the text piece
     const escapedPiece = piece.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -1151,7 +1158,15 @@ const buildSearchRegexFromPieces = (
       new RegExp(INTERP_SENTINEL, 'g'),
       '\\$\\{[^{}]*\\}'
     );
-    pattern += withInterpHandling;
+
+    // Restore each backslash sentinel as an alternation matching either the
+    // cooked form (one `\` — from StringLiteral.value) or the raw source form
+    // (two `\\` — from TemplateLiteral substring or single-quoted source).
+    const withBackslashHandling = withInterpHandling.replace(
+      new RegExp(BS_SENTINEL, 'g'),
+      '(?:\\\\|\\\\\\\\)'
+    );
+    pattern += withBackslashHandling;
 
     // Add capture group for the variable if this isn't the last piece
     if (i < pieces.length - 1) {
@@ -1319,16 +1334,15 @@ const applyIdentifierMapping = (
   // Build reverse map: HUMAN_NAME -> actual minified var from cli.js
   const reverseMap: Record<string, string> = {};
 
-  // Use identifiers array to map in correct order
+  // Use identifiers array to map in correct order. Fall back to UNKNOWN_<idx>
+  // when identifierMap has no entry — keeps the substitution working for
+  // overrides generated against partially-extracted prompts (matches the
+  // `UNKNOWN_<labelIndex>` fallback in reconstructContentFromPieces).
   for (let i = 0; i < extractedVars.length; i++) {
     const capturedVar = extractedVars[i];
     const labelIndex = String(identifiers[i]);
-    const humanName = identifierMap[labelIndex];
-
-    if (humanName) {
-      // Skip empty mappings
-      reverseMap[humanName] = capturedVar;
-    }
+    const humanName = identifierMap[labelIndex] || `UNKNOWN_${labelIndex}`;
+    reverseMap[humanName] = capturedVar;
   }
 
   // Replace ${HUMAN_NAME} with ${actualVar} - sort by length descending to avoid partial replacements
