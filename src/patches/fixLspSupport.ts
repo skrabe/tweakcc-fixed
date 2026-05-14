@@ -95,19 +95,9 @@ const getOpenDocumentLocation = (oldFile: string): LocationResult | null => {
 };
 
 export const writeFixLspSupport = (oldFile: string): string | null => {
-  // CC ≥ 2.1.87 ships with native LSP didOpen support and removed the
-  // validation throws — skip if the feature is already present.
-  if (
-    oldFile.includes('textDocument/didOpen') &&
-    !oldFile.includes('restartOnCrash is not yet implemented')
-  ) {
-    console.log(
-      'patch: fixLspSupport: LSP fixes already present natively — skipping'
-    );
-    return oldFile;
-  }
-
-  // Patch 1: Comment out the validation by replacing with nothing
+  // Patch 1: Remove unimplemented-field validation throws.
+  // Anthropic removes these incrementally as features land natively;
+  // globalReplace is silent on no-match so any subset still works.
   const validationPattern1 =
     /if\([$\w]+\.restartOnCrash!==void 0\)throw Error\(`LSP server '\$\{[$\w]+\}': restartOnCrash is not yet implemented\. Remove this field from the configuration\.`\);/g;
   const validationPattern2 =
@@ -116,15 +106,20 @@ export const writeFixLspSupport = (oldFile: string): string | null => {
     /if\([$\w]+\.shutdownTimeout!==void 0\)throw Error\(`LSP server '\$\{[$\w]+\}': shutdownTimeout is not yet implemented\. Remove this field from the configuration\.`\);/g;
 
   let content = oldFile;
-
-  // Replace first validation
   content = globalReplace(content, validationPattern1, '');
-
-  // Replace second validation
   content = globalReplace(content, validationPattern2, '');
-
-  // Replace third validation
   content = globalReplace(content, validationPattern3, '');
+
+  // Patch 2: Inject textDocument/didOpen notification when CC lacks it.
+  // CC ≥ 2.1.87 ships didOpen natively; CC ≥ 2.1.141 exposes the full
+  // openFile/changeFile/saveFile/closeFile LSP API. If didOpen is already
+  // in the binary, our injection is redundant — skip it cleanly.
+  if (content.includes('textDocument/didOpen')) {
+    console.log(
+      'patch: fixLspSupport: native LSP didOpen detected — skipping injection'
+    );
+    return content;
+  }
 
   // Patch 2: Add the openDocument patch
   const location = getOpenDocumentLocation(content);
