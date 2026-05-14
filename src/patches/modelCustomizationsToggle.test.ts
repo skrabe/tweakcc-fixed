@@ -21,6 +21,7 @@ vi.mock('node:fs/promises', () => ({
 vi.mock('../config', () => ({
   CONFIG_DIR: '/tmp/tweakcc-test-config',
   NATIVE_BINARY_BACKUP_FILE: '/tmp/tweakcc-test-config/native.backup',
+  SYSTEM_REMINDERS_DIR: '/tmp/tweakcc-test-config/system-reminders',
   updateConfigFile: vi.fn(async updateFn => {
     const config = { changesApplied: false } as TweakccConfig;
     updateFn(config);
@@ -56,6 +57,13 @@ vi.mock('./showMoreItemsInSelectMenus', () => ({
 vi.mock('./systemPrompts', () => ({
   applySystemPrompts: vi.fn(async (content: string) => ({
     newContent: content,
+    results: [],
+  })),
+}));
+
+vi.mock('./systemReminderOverrides', () => ({
+  applySystemReminderOverrides: vi.fn(async (content: string) => ({
+    content,
     results: [],
   })),
 }));

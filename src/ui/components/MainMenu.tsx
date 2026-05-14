@@ -41,6 +41,14 @@ const baseMenuItems: SelectItem[] = [
     desc: 'Configure alternative filenames for CLAUDE.md (e.g., AGENTS.md)',
   },
   {
+    name: MainMenuItem.SYSTEM_REMINDERS,
+    desc: 'Suppress per-turn <system-reminder> injections (skills list, MCP instructions, claudeMd wrapper, etc.)',
+  },
+  {
+    name: MainMenuItem.SKILLS,
+    desc: 'Per-skill listing control (writes settings.json skillOverrides — no patch needed)',
+  },
+  {
     name: MainMenuItem.VIEW_SYSTEM_PROMPTS,
     desc: "Opens the system prompts directory where you can customize Claude Code's system prompts",
   },

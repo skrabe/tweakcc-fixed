@@ -87,6 +87,8 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     enableChannelsMode: false,
     maxEffortDefault: false,
     autoModeClassifierModel: 'default' as AutoModeClassifierModel,
+    suppressDeferredTools: false,
+    claudemdContextOncePerConversation: true,
   };
 
   const ensureMisc = () => {

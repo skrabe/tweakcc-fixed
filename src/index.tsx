@@ -99,6 +99,7 @@ function printPatchResults(
     PatchGroup.ALWAYS_APPLIED,
     PatchGroup.MISC_CONFIGURABLE,
     PatchGroup.FEATURES,
+    PatchGroup.SYSTEM_REMINDERS,
   ];
 
   // Group results by PatchGroup
@@ -544,6 +545,7 @@ function handleListPatches(): void {
     PatchGroup.ALWAYS_APPLIED,
     PatchGroup.MISC_CONFIGURABLE,
     PatchGroup.FEATURES,
+    PatchGroup.SYSTEM_REMINDERS,
   ];
 
   // Group patches by PatchGroup

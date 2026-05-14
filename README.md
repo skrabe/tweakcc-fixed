@@ -34,6 +34,44 @@ These aren't in any upstream PR. Most originate from BenIsLegit's `tweakcc-fixed
 
 For a full agent-readable rundown of what each fix does and how to extend the fork, see [`AGENTS.md`](./AGENTS.md).
 
+## Major fork-only features (skrabe additions)
+
+These are features built on top of upstream tweakcc. They extend what's reachable for lobotomization beyond what the existing named-prompt + inline-blob mechanisms cover.
+
+### System-reminder override mechanism
+
+New directory `~/.tweakcc/system-reminders/` with `.md` files for each editable dynamic injection. Targets the per-turn / event-driven `<system-reminder>` wrappers that don't appear as named prompts in `prompts-X.Y.Z.json` and therefore bypass the existing override pipelines.
+
+Empty body = injection suppressed. Custom body = pristine content replaced. Body with `{{placeholder}}` tokens = whitelisted JS expressions substituted at apply time. Files seeded automatically on first `--apply`.
+
+~30 registry entries covering: claudeMd context wrapper (now once-per-conversation), thinking-reminder F97 (the anti-thinking nudge), MCP per-server overrides, token/budget telemetry, plan-mode reminders, hook wrappers, tool-call wrappers, task-list reminder, ultrathink booster, user-sent-new-message wrap, stop-hook session-goal, and more.
+
+UI: `tweakcc` → **System reminders (injection lobotomy)** for a file browser view with status (default / customized / suppressed) per entry.
+
+### MCP per-server instruction routing
+
+Auto-generates `~/.tweakcc/system-reminders/mcp-<server-name>.md` for each connected MCP server (from `~/.claude.json` `mcpServers`). Patches cli.js so MCP-instructions assembly consults these files at runtime — empty body drops the server's block from the model's context, custom body replaces it, `{{server_instructions}}` resolves to the server's pristine instructions.
+
+### `string` kind in `inlineBlobOverrides`
+
+Extends the existing inline-blob mechanism to support double-quoted JS string literals (was previously array/template only). Reaches blobs like `function xu3(){return"Users may configure 'hooks'..."}` that previous tweakcc couldn't override.
+
+### Skills view
+
+New UI surface for managing `~/.claude/settings.json` `skillOverrides`. Per-skill cycle through `on / name-only / user-invocable-only / off`. Writes settings.json natively — CC honors immediately, no patch required.
+
+### Always-applied bug fix: strip empty system-reminders
+
+Short-circuits CC's universal `LW(H)` wrapper so empty / `"(no content)"` text produces no `<system-reminder>` block. Kills the drift-inducing `<system-reminder>(no content)</system-reminder>` that gets appended after empty tool outputs. Cache_control-safe (returns the unwrapped placeholder, not an empty text block, so Anthropic's API doesn't reject prompt-cached message blocks).
+
+### claudeMd context once-per-conversation
+
+Patches the `kY6` wrapper function so the `claudeMd`/`userEmail`/`currentDate` system-reminder injects only on the first API call per conversation (re-fires after `/clear` since message array empties). CC's default is to re-prepend every call. Trade-off: in very long sessions, claudeMd content moves further back in history; for shorter coding sessions and `/compact`-backed long ones the once-only behavior reads more naturally.
+
+### Recommended pairing
+
+Use this fork's extraction surface with [skrabe/lobotomized-claude-code](https://github.com/skrabe/lobotomized-claude-code) — that repo's overrides are tuned against this fork's extraction (the named-prompt JSON we produce has ~41 net-new entries vs Piebald's published extract for CC 2.1.141, and the additional system-reminder / `string`-kind reach lets the lobotomization cover content the older mechanism couldn't).
+
 ## Install
 
 Published to npm as [`tweakcc-fixed`](https://www.npmjs.com/package/tweakcc-fixed). Run without installation:
