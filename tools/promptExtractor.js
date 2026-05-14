@@ -29,6 +29,136 @@ function validateInput(text, minLength = 500) {
   if (text.includes('IMPORTANT: Assist with authorized security testing'))
     return true;
 
+  // Markdown skill / data-doc / section-headed prompt: any text 300+
+  // chars starting with `# Header`, `## Header`, or `### Header` is a real
+  // prompt regardless of the English-keyword heuristic below. Catches
+  // skills (`# Anthropic CLI`), section-prefixed system prompts
+  // (`\n## Insights\n...`), and shorter section fragments like
+  // `# Focus mode`, `# Language`, `# Autonomous loop tick`.
+  if (text.length >= 300 && /^\s*#{1,3} [A-Z]/.test(text)) return true;
+
+  // Tool / agent / skill descriptions that open with a directive verb and
+  // are bullet-heavy markdown (fail the sentence-pattern check below).
+  // Catches TaskUpdate / TaskList / TaskGet / Agent / claude-code-guide
+  // descriptions, schedule skill, settings-locations skill, etc.
+  if (text.length >= 400 && /^\s*(Use this (?:tool|skill|agent)|Your strengths:|Your version of Claude Code|<system-reminder>)/.test(text)) return true;
+
+  // Specific medium-length prompts (400–500c) that open with directive
+  // patterns. Each entry is anchored to text confirmed unique in 2.1.141
+  // cli.js. `trimStart` lets us catch leading-whitespace variants (some
+  // cli.js templates open with `\n` before the directive verb).
+  const ts = text.trimStart();
+  if (text.includes('Provide a concise response based only on the content above')) return true;
+  if (ts.startsWith('Find elements on the page using natural language')) return true;
+  if (ts.startsWith('Your plan has been submitted to the team lead for approval')) return true;
+  if (ts.startsWith("I'm sending this plan to Ultraplan to be refined remotely")) return true;
+  if (text.includes('If the user asks about "ultrareview" or how to run it')) return true;
+  if (text.includes('If they want a one-time run (e.g., "once at 3pm"')) return true;
+  if (ts.startsWith('You are an interactive agent that helps users')) return true;
+  if (ts.startsWith("You are an agent for Claude Code, Anthropic's official CLI")) return true;
+
+  // Very short interpolated fragments (under 100 chars) that ship in
+  // cli.js. Bash-alt-* tool sub-descriptions and subagent-guidance.
+  if (ts.startsWith('Edit files: Use ${')) return true;
+  if (ts.startsWith('Read files: Use ${')) return true;
+  if (ts.startsWith('Write files: Use ${')) return true;
+  if (ts.startsWith('File search: Use ${')) return true;
+  if (ts.startsWith('Content search: Use ${')) return true;
+  if (ts.startsWith('Use the ${') && ts.includes('tool with specialized agents')) return true;
+  if (ts.startsWith('Contents of ${') && ts.includes(':')) return true;
+
+  // ////////////////
+  // Short-prompt allow-list: distinctive substrings of prompts under 500
+  // chars that the length check below would otherwise drop. Compiled by
+  // cross-referencing Piebald's published 2.1.140 JSON against the cli.js
+  // for 2.1.141 — each entry is a substring confirmed unique enough not to
+  // false-positive within the prompts set.
+  //
+  // Mirrors PR #731 (Add include rules for short system prompt fragments)
+  // from the upstream Piebald repo plus an additional batch we compiled
+  // here. If PR #731 merges upstream, the overlapping entries will be
+  // deduped on the next `git merge upstream/main`.
+  // ////////////////
+
+  // PR #731 — short fragments from the doing-tasks / tone-and-style / memory sections.
+  if (text.includes('exploratory questions')) return true;
+  if (text.includes('well-named identifiers already do that')) return true;
+  if (text.includes('golden path and edge cases')) return true;
+  if (text.includes('Prefer editing existing files')) return true;
+  if (text.includes('Default to writing no comments')) return true;
+  if (text.startsWith("Don't add features, refactor")) return true;
+  if (text.includes('Only use emojis if the user explicitly')) return true;
+  if (text === 'Your responses should be short and concise.') return true;
+  if (text.includes('Do not use a colon before tool calls')) return true;
+  if (text.includes('What NOT to save in memory')) return true;
+
+  // Agent / skill / system / tool short prompts that ship in 2.1.141 and earlier.
+  if (text.includes('Generate a short kebab-case name (2-4 wo')) return true;
+  if (text.includes('The user just ran /insights to generate')) return true;
+  if (text.includes('You are highly capable and often allow u')) return true;
+  if (text.includes('The user will primarily request you to p')) return true;
+  if (text.includes('If the user asks for help or wants to gi')) return true;
+  if (text.includes('Avoid backwards-compatibility hacks like')) return true;
+  if (text.includes("Don't add error handling, fallbacks, or")) return true;
+  if (text.includes('Be careful not to introduce security vul')) return true;
+  if (text.includes('Do not retry failing commands ')) return true;
+  if (text.includes('When referencing specific functions or p')) return true;
+  if (text.includes('You have exited plan mode. You can now')) return true;
+  if (text.includes('minder>Warning: the file exists but the')) return true;
+  if (text.includes('minder>Warning: the file exists but is s')) return true;
+  if (text.includes('hook stopped continuation:')) return true;
+  if (text.includes('<new-diagnostics>The following new diagn')) return true;
+  if (text.includes('This session is being continued from ano')) return true;
+  if (text.includes("The task tools haven't been used recentl")) return true;
+  if (text.includes("The TodoWrite tool hasn't been used rece")) return true;
+  if (text.includes('You have completed implementing the plan')) return true;
+  if (text.includes('ion: Output text directly (NOT echo/prin')) return true;
+  if (text.includes('Before running destructive ope')) return true;
+  if (text.includes('Never skip hooks (--no-verify)')) return true;
+  if (text.includes('Prefer to create a new commit ')) return true;
+  if (text.includes('Try to maintain your current working dir')) return true;
+  if (text.includes('DO NOT use newlines to separat')) return true;
+  if (text.includes('Executes a given bash command and return')) return true;
+  if (text.includes('If the commands are independen')) return true;
+  if (text.includes('Always quote file paths that c')) return true;
+  if (text.includes('If a command fails due to sandbox restri')) return true;
+  if (text.includes('You should always default to running com')) return true;
+  if (text.includes('Access denied to specific paths outside')) return true;
+  if (text.includes('Evidence of sandbox-caused failures incl')) return true;
+  if (text.includes('Network connection failures to non-white')) return true;
+  if (text.includes('"Operation not permitted" errors for fil')) return true;
+  if (text.includes('Unix socket connection er')) return true;
+  if (text.includes('Briefly explain what sandbox restriction')) return true;
+  if (text.includes('A specific command just failed and you s')) return true;
+  if (text.includes('All commands MUST run in sandbox mode -')) return true;
+  if (text.includes('Commands cannot run outside the sandbox')) return true;
+  if (text.includes('Do not suggest adding sensitive paths li')) return true;
+  if (text.includes('Treat each command you execute with `dan')) return true;
+  if (text.includes('This will prompt the user for permission')) return true;
+  if (text.includes('When you see evidence of sandbox-caused')) return true;
+  if (text.includes('Immediately retry with `dangerouslyDisab')) return true;
+  if (text.includes('For temporary files, always use the `$TM')) return true;
+  if (text.includes("Use ';' only when you need to run comman")) return true;
+  if (text.includes('If the commands depend on each')) return true;
+  if (text.includes('If you must sleep, keep the du')) return true;
+  if (text.includes('If waiting for a background ta')) return true;
+  if (text.includes('Do not sleep between commands ')) return true;
+  if (text.includes('external process, use a check command (e')) return true;
+  if (text.includes('You may specify an optional timeout in m')) return true;
+  if (text.includes('If your command will create new director')) return true;
+  if (text.includes('The working directory persists between c')) return true;
+  if (text.includes('Writes a file to the local filesystem, o')) return true;
+
+  // System-reminder short fragments and a few specific tool-description /
+  // system-prompt fragments shipped under 500 chars in 2.1.141.
+  if (text.startsWith('Stop hook blocking error from command')) return true;
+  if (text.startsWith('The user opened the file ') && text.includes('in the IDE')) return true;
+  if (text.includes('The user selected the lines ')) return true;
+  if (text.includes('The user has expressed a desire to invoke the agent')) return true;
+  if (text.startsWith('A plan file exists from plan mode at:')) return true;
+  if (text.includes('IMPORTANT: Avoid using this tool to run')) return true;
+  if (text.startsWith('Break down and manage your work with the')) return true;
+
   // ////////////////
   // What to exclude.
   // ////////////////
@@ -41,6 +171,24 @@ function validateInput(text, minLength = 500) {
 
   // Skip the warning about keybindings when connecting to a remote server.
   if (text.includes('Cannot install keybindings from a remote')) return false;
+
+  // HTML output from the /insights report (and similar). Not a prompt.
+  if (text.startsWith('<!DOCTYPE html>') || text.startsWith('<html')) return false;
+  if (/^\s*<h\d[\s>]/.test(text)) return false;
+
+  // `claude` CLI help screens (Remote Control feature et al). Not prompts.
+  if (text.includes('Remote Control - Control local sessions from claude.ai/code'))
+    return false;
+
+  // JSON-schema-style config option descriptions (not prompts). Pattern:
+  // `When true, ...` followed by `Equivalent to setting <flag>: false on
+  // the API.` These appear as tool/server config docstrings.
+  if (
+    text.startsWith('When true, ') &&
+    text.includes('Equivalent to setting ') &&
+    text.includes(' on the API')
+  )
+    return false;
 
   if (text.length < minLength) return false;
 
@@ -96,6 +244,57 @@ function validateInput(text, minLength = 500) {
   }
 
   return true;
+}
+
+// Decode JS unicode/hex escape sequences in template-literal raw source.
+// Surgical: only handles \uHHHH, \u{X+}, \xHH. Preserves `\\` so literal
+// `\\uHHHH` source (= backslash + u + four hex chars at runtime) isn't
+// accidentally interpreted as an escape. Other escapes (\n, \t, \", \`)
+// are kept raw to match the storage format Piebald's published JSONs use.
+function decodeUnicodeEscapesInPiece(s) {
+  let out = '';
+  let i = 0;
+  while (i < s.length) {
+    if (s[i] === '\\' && i + 1 < s.length) {
+      // Double-backslash: copy both literally so the next char isn't read as an escape.
+      if (s[i + 1] === '\\') {
+        out += '\\\\';
+        i += 2;
+        continue;
+      }
+      if (s[i + 1] === 'u') {
+        if (s[i + 2] === '{') {
+          const close = s.indexOf('}', i + 3);
+          if (close > -1) {
+            const hex = s.substring(i + 3, close);
+            if (/^[0-9a-fA-F]+$/.test(hex)) {
+              out += String.fromCodePoint(parseInt(hex, 16));
+              i = close + 1;
+              continue;
+            }
+          }
+        } else if (i + 6 <= s.length) {
+          const hex = s.substring(i + 2, i + 6);
+          if (/^[0-9a-fA-F]{4}$/.test(hex)) {
+            out += String.fromCharCode(parseInt(hex, 16));
+            i += 6;
+            continue;
+          }
+        }
+      }
+      if (s[i + 1] === 'x' && i + 4 <= s.length) {
+        const hex = s.substring(i + 2, i + 4);
+        if (/^[0-9a-fA-F]{2}$/.test(hex)) {
+          out += String.fromCharCode(parseInt(hex, 16));
+          i += 4;
+          continue;
+        }
+      }
+    }
+    out += s[i];
+    i++;
+  }
+  return out;
 }
 
 function extractStrings(filepath, minLength = 500) {
@@ -240,6 +439,15 @@ function extractStrings(filepath, minLength = 500) {
       // Add the final piece after the last identifier
       pieces.push(fullContent.substring(lastPos));
 
+      // Decode unicode/hex escapes in each piece. Template-literal raw source
+      // stores `—` as 6 literal chars; the cooked runtime value is the
+      // em-dash. Decoding here keeps our pieces[] byte-aligned with the
+      // pristine prompt content in cli.js's parse tree — same format Piebald's
+      // pipeline produces, so merge name-carryover works across versions.
+      for (let pi = 0; pi < pieces.length; pi++) {
+        pieces[pi] = decodeUnicodeEscapesInPiece(pieces[pi]);
+      }
+
       // Label encode the identifiers
       const uniqueVars = [...new Set(identifierList)];
       const varToLabel = {};
@@ -292,14 +500,24 @@ function extractStrings(filepath, minLength = 500) {
     return b.end - a.end;
   });
 
-  // Step 2: Track seen ranges and filter out subsets
+  // Step 2: Track seen ranges and filter out subsets.
+  // Exception: items starting immediately after `${` are interpolated
+  // values inside a larger template — semantically distinct prompts that
+  // happen to be nested. Don't drop them as subsets of the outer.
   const seenRanges = [];
   const filteredData = [];
 
   for (const item of stringData) {
-    const isSubset = seenRanges.some(
-      range => item.start >= range.start && item.end <= range.end
-    );
+    const isInterpolated =
+      item.start >= 2 &&
+      code[item.start - 2] === '$' &&
+      code[item.start - 1] === '{';
+
+    const isSubset =
+      !isInterpolated &&
+      seenRanges.some(
+        range => item.start >= range.start && item.end <= range.end
+      );
 
     if (!isSubset) {
       filteredData.push(item);
@@ -325,6 +543,30 @@ function mergeWithExisting(newData, oldData, currentVersion) {
   const reconstructContent = item => {
     return item.pieces.join(''); // Don't actually insert the vairables.
   };
+
+  // Fingerprint normalization: Piebald's pipeline stores source-form escapes
+  // (`\'`, `\"`, `` \` ``) in StringLiteral pieces, while our extractor uses
+  // babel's cooked node.value (escapes decoded). Strip these escape forms
+  // before fingerprinting so the prefix compares equal across pipelines.
+  const fpNormalize = s => s.replace(/\\(['"`\\])/g, '$1');
+
+  // Fuzzy-fingerprint index: prompts whose content shifted slightly between
+  // versions still have an unchanged opening. We index old prompts by their
+  // normalized first 100 chars and drop collisions so we never carry over
+  // the wrong name. Built once per merge — O(n) — and consulted only when
+  // the strict content+identifier match fails.
+  const FUZZY_PREFIX = 100;
+  const FUZZY_MIN = 60;
+  const fpCounts = new Map();
+  const fpToOld = new Map();
+  for (const oldItem of oldData.prompts) {
+    if (!oldItem.id) continue; // no carryover value without a name
+    const fp = fpNormalize(reconstructContent(oldItem)).slice(0, FUZZY_PREFIX);
+    if (fp.length < FUZZY_MIN) continue;
+    fpCounts.set(fp, (fpCounts.get(fp) || 0) + 1);
+    fpToOld.set(fp, oldItem);
+  }
+  for (const [fp, count] of fpCounts) if (count > 1) fpToOld.delete(fp);
 
   const newPrompts = newData.prompts.map((newItem, idx) => {
     const newContent = reconstructContent(newItem);
@@ -354,6 +596,26 @@ function mergeWithExisting(newData, oldData, currentVersion) {
         description: matchingOld.description,
         identifierMap: matchingOld.identifierMap,
         version: matchingOld.version || currentVersion,
+      };
+    }
+
+    // Fuzzy match: same prompt across versions, content shifted by a few
+    // chars. Carry over the identity (name/id/description/identifierMap)
+    // and bump version since pieces changed.
+    const fp = fpNormalize(newContent).slice(0, FUZZY_PREFIX);
+    const fuzzyOld = fp.length >= FUZZY_MIN ? fpToOld.get(fp) : undefined;
+    if (fuzzyOld) {
+      const oldLen = reconstructContent(fuzzyOld).length;
+      console.log(
+        `Fuzzy-matched item ${idx} to "${fuzzyOld.name || fuzzyOld.id}" (${oldLen} → ${newContent.length} chars)`
+      );
+      return {
+        ...newItem,
+        name: fuzzyOld.name,
+        id: fuzzyOld.id || slugify(fuzzyOld.name),
+        description: fuzzyOld.description,
+        identifierMap: fuzzyOld.identifierMap,
+        version: currentVersion,
       };
     }
 
