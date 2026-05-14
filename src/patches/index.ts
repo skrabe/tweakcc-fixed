@@ -78,6 +78,12 @@ import { writeVoiceMode } from './voiceMode';
 import { writeChannelsMode } from './channelsMode';
 import { writeReadDefaultLines } from './readDefaultLines';
 import {
+  writeSuppressDeferredTools,
+  writeStripEmptySystemReminders,
+  writeClaudemdContextOncePerConversation,
+} from './systemReminders';
+import { applySystemReminderOverrides } from './systemReminderOverrides';
+import {
   restoreNativeBinaryFromBackup,
   restoreClijsFromBackup,
 } from '../installationBackup';
@@ -119,6 +125,7 @@ export enum PatchGroup {
   ALWAYS_APPLIED = 'Always Applied',
   MISC_CONFIGURABLE = 'Misc Configurable',
   FEATURES = 'Features',
+  SYSTEM_REMINDERS = 'System Reminders',
 }
 
 export interface PatchResult {
@@ -184,6 +191,13 @@ const PATCH_DEFINITIONS = [
     name: `Statusline update throttling correction`,
     group: PatchGroup.ALWAYS_APPLIED,
     description: `Statusline updates will be properly throttled instead of queued (or debounced)`,
+  },
+  {
+    id: 'strip-empty-system-reminders',
+    name: 'Strip empty <system-reminder> wrappers',
+    group: PatchGroup.ALWAYS_APPLIED,
+    description:
+      'Short-circuits CC\'s universal system-reminder wrapper so empty / "(no content)" inputs produce no reminder. Kills the drift-inducing "<system-reminder>(no content)</system-reminder>" blocks that get appended to roughly every other tool call.',
   },
   // Misc Configurable
   {
@@ -455,6 +469,20 @@ const PATCH_DEFINITIONS = [
     description:
       'Enable MCP channel notifications (--channels without allowlist or dev flag)',
   },
+  {
+    id: 'suppress-deferred-tools',
+    name: 'Suppress deferred tools list (DANGEROUS)',
+    group: PatchGroup.SYSTEM_REMINDERS,
+    description:
+      'Kill the "deferred tools are now available via ToolSearch" announcement. WARNING: MCP/Cron/EnterPlanMode/WebFetch/Monitor become invisible to the model unless explicitly named.',
+  },
+  {
+    id: 'claudemd-context-once-per-conversation',
+    name: 'claudeMd context: once per conversation',
+    group: PatchGroup.SYSTEM_REMINDERS,
+    description:
+      'Inject the claudeMd / userEmail / currentDate <system-reminder> only on the first API call per conversation (re-fires after /clear). Default: ON. Toggle OFF for vanilla CC per-turn injection.',
+  },
 ] as const;
 
 /** Union type of all valid patch IDs */
@@ -666,15 +694,32 @@ export const applyCustomization = async (
   // ==========================================================================
   // Apply named system prompt customizations AFTER inline-blob overrides.
   // ==========================================================================
+  const reminderResult = await applySystemReminderOverrides(
+    content,
+    ccInstInfo.version ?? ''
+  );
+  content = reminderResult.content;
+  for (const r of reminderResult.results) {
+    allResults.push({
+      id: `reminder:${r.id}`,
+      name: `Reminder: ${r.name} (${r.state})`,
+      group: PatchGroup.SYSTEM_REMINDERS,
+      applied: r.applied,
+      failed: r.failed,
+      skipped: r.skipped,
+      details: r.details,
+      description: r.description,
+    });
+  }
+
   const systemPromptsResult = await applySystemPrompts(
     content,
     ccInstInfo.version,
-    undefined, // escapeNonAscii - auto-detect
+    undefined,
     patchFilter
   );
   content = systemPromptsResult.newContent;
 
-  // Sort system prompt results alphabetically by name before adding
   const sortedSystemPromptResults = [...systemPromptsResult.results].sort(
     (a, b) => a.name.localeCompare(b.name)
   );
@@ -732,6 +777,9 @@ export const applyCustomization = async (
           config.settings.misc?.statuslineUseFixedInterval ?? false
         ),
       condition: config.settings.misc?.statuslineThrottleMs != null,
+    },
+    'strip-empty-system-reminders': {
+      fn: c => writeStripEmptySystemReminders(c),
     },
     // Misc Configurable
     'patches-applied-indication': {
@@ -974,6 +1022,15 @@ export const applyCustomization = async (
     'channels-mode': {
       fn: c => writeChannelsMode(c),
       condition: !!config.settings.misc?.enableChannelsMode,
+    },
+    'suppress-deferred-tools': {
+      fn: c => writeSuppressDeferredTools(c),
+      condition: !!config.settings.misc?.suppressDeferredTools,
+    },
+    'claudemd-context-once-per-conversation': {
+      fn: c => writeClaudemdContextOncePerConversation(c),
+      condition:
+        config.settings.misc?.claudemdContextOncePerConversation ?? true,
     },
   };
 

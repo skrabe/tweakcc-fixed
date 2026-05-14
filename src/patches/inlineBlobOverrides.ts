@@ -712,6 +712,51 @@ export const applyInlineBlobOverrides = async (
       const remappedBody = remapTemplateInterpolations(body, pristineExprs);
 
       replacement = encodeAsTemplateLiteral(remappedBody, escapeNonAscii);
+    } else if (frontmatter.inlineBlobKind === 'string') {
+      // Walk a single- or double-quoted string starting at/after the anchor.
+      let quotePos = m.index;
+      while (
+        quotePos < content.length &&
+        content[quotePos] !== '"' &&
+        content[quotePos] !== "'"
+      ) {
+        quotePos++;
+      }
+      if (quotePos >= content.length) {
+        results.push({
+          filename,
+          name: frontmatter.name,
+          applied: false,
+          failed: true,
+          details: 'no quote at/after anchor',
+        });
+        continue;
+      }
+      const quote = content[quotePos];
+      let j = quotePos + 1;
+      while (j < content.length) {
+        if (content[j] === '\\') {
+          j += 2;
+          continue;
+        }
+        if (content[j] === quote) {
+          break;
+        }
+        j++;
+      }
+      if (j >= content.length) {
+        results.push({
+          filename,
+          name: frontmatter.name,
+          applied: false,
+          failed: true,
+          details: 'unterminated string',
+        });
+        continue;
+      }
+      startOfBlob = quotePos;
+      endOfBlob = j + 1;
+      replacement = encodeAsDoubleQuotedString(body, escapeNonAscii);
     } else {
       results.push({
         filename,

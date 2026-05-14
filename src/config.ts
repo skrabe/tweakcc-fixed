@@ -81,6 +81,7 @@ export const NATIVE_BINARY_BACKUP_FILE = path.join(
   'native-binary.backup'
 );
 export const SYSTEM_PROMPTS_DIR = path.join(CONFIG_DIR, 'system-prompts');
+export const SYSTEM_REMINDERS_DIR = path.join(CONFIG_DIR, 'system-reminders');
 export const PROMPT_CACHE_DIR = path.join(CONFIG_DIR, 'prompt-data-cache');
 
 /**
@@ -126,6 +127,7 @@ export const warnAboutMultipleConfigs = (): void => {
 export const ensureConfigDir = async (): Promise<void> => {
   await fs.mkdir(CONFIG_DIR, { recursive: true });
   await fs.mkdir(SYSTEM_PROMPTS_DIR, { recursive: true });
+  await fs.mkdir(SYSTEM_REMINDERS_DIR, { recursive: true });
 
   // Generate a .gitignore file in case the user wants to version control their config directory
   // with config.json and the system prompts.

@@ -10,6 +10,8 @@ import { MiscView } from './components/MiscView';
 import { ToolsetsView } from './components/ToolsetsView';
 import { SubagentModelsView } from './components/SubagentModelsView';
 import { ClaudeMdAltNamesView } from './components/ClaudeMdAltNamesView';
+import { SystemRemindersView } from './components/SystemRemindersView';
+import { SkillsView } from './components/SkillsView';
 import {
   MainMenuItem,
   Settings,
@@ -126,6 +128,8 @@ Please reapply your changes by running \`${invocationCommand} --apply\`.`,
       case MainMenuItem.TOOLSETS:
       case MainMenuItem.SUBAGENT_MODELS:
       case MainMenuItem.CLAUDE_MD_ALT_NAMES:
+      case MainMenuItem.SYSTEM_REMINDERS:
+      case MainMenuItem.SKILLS:
         setCurrentView(item);
         break;
       case MainMenuItem.VIEW_SYSTEM_PROMPTS:
@@ -202,6 +206,10 @@ Please reapply your changes by running \`${invocationCommand} --apply\`.`,
           <SubagentModelsView onBack={handleBack} />
         ) : currentView === MainMenuItem.CLAUDE_MD_ALT_NAMES ? (
           <ClaudeMdAltNamesView onBack={handleBack} />
+        ) : currentView === MainMenuItem.SYSTEM_REMINDERS ? (
+          <SystemRemindersView onSubmit={handleBack} />
+        ) : currentView === MainMenuItem.SKILLS ? (
+          <SkillsView onSubmit={handleBack} />
         ) : null}
       </Box>
     </SettingsContext.Provider>

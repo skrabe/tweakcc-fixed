@@ -144,6 +144,8 @@ export interface MiscConfig {
   enableChannelsMode: boolean;
   maxEffortDefault: boolean;
   autoModeClassifierModel: AutoModeClassifierModel;
+  suppressDeferredTools: boolean;
+  claudemdContextOncePerConversation: boolean;
 }
 
 export interface InputPatternHighlighter {
@@ -243,6 +245,8 @@ export enum MainMenuItem {
   TOOLSETS = 'Toolsets',
   SUBAGENT_MODELS = 'Subagent models',
   CLAUDE_MD_ALT_NAMES = 'CLAUDE.md alternative names',
+  SYSTEM_REMINDERS = 'System reminders (injection lobotomy)',
+  SKILLS = 'Skills (per-skill on/name-only/user-invocable/off)',
   VIEW_SYSTEM_PROMPTS = 'View system prompts',
   RESTORE_ORIGINAL = 'Restore original Claude Code (preserves config.json)',
   OPEN_CONFIG = 'Open config.json',
