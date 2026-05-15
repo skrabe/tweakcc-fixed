@@ -32,28 +32,23 @@ function findRepoPromptsDir(): string | null {
 }
 
 /**
- * Downloads the strings file for a given CC version from GitHub
- * Checks cache first, then any repo-local data/prompts/ shipped alongside
- * this dist (forks may carry same-day JSONs upstream hasn't published yet),
- * then the upstream URL.
+ * Downloads the strings file for a given CC version from GitHub.
+ *
+ * Resolution order: repo-local data/prompts/ (when running from a checkout)
+ * → user cache → network. Repo-local wins because a fork's locally-extracted
+ * JSON is more authoritative than whatever was network-fetched into cache on
+ * a previous run (which may be upstream's published version, not the fork's).
+ * For npm-installed runs (no repo dir), order is cache → network.
+ *
  * @param version - Version string in format "X.Y.Z" (e.g., "2.0.30")
  * @returns Promise that resolves to the parsed JSON content
  */
 export async function downloadStringsFile(
   version: string
 ): Promise<StringsFile> {
-  // Check cache first
-  const cacheFilePath = path.join(PROMPT_CACHE_DIR, `prompts-${version}.json`);
-  try {
-    const cachedContent = await fs.readFile(cacheFilePath, 'utf-8');
-    const cached = JSON.parse(cachedContent) as StringsFile;
-    return cached;
-  } catch {
-    // Cache miss or invalid - try repo-local fallback before hitting network.
-  }
-
-  // Repo-local data/prompts fallback (only resolves for `node dist/...`
-  // invocations against a checked-out repo).
+  // Repo-local data/prompts wins when present (checked-out fork running
+  // `node dist/...` should always use its own JSON, not whatever the user
+  // happened to have cached from a prior network fetch).
   const repoDir = findRepoPromptsDir();
   if (repoDir) {
     const localPath = path.join(repoDir, `prompts-${version}.json`);
@@ -61,8 +56,19 @@ export async function downloadStringsFile(
       const localContent = await fs.readFile(localPath, 'utf-8');
       return JSON.parse(localContent) as StringsFile;
     } catch {
-      // Repo doesn't have this version either - fall through to network.
+      // Repo doesn't have this version - fall through to cache/network.
     }
+  }
+
+  // User cache (populated from prior network fetches). Mainly useful for
+  // npm-installed runs that have no repo dir.
+  const cacheFilePath = path.join(PROMPT_CACHE_DIR, `prompts-${version}.json`);
+  try {
+    const cachedContent = await fs.readFile(cacheFilePath, 'utf-8');
+    const cached = JSON.parse(cachedContent) as StringsFile;
+    return cached;
+  } catch {
+    // Cache miss or invalid - fall through to network.
   }
 
   // Construct the GitHub raw URL
