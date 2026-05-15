@@ -12,6 +12,103 @@ function slugify(text) {
     .replace(/^-+|-+$/g, '');
 }
 
+// Manual ID/name assignments for prompts that are NEW in a CC version (not
+// in the seed JSON, so the fuzzy matcher can't carry over a name from the
+// previous version). Each entry's `matcher` runs against the reconstructed
+// content; first match wins. Used for both inclusion (validateInput) and
+// naming (mergeWithExisting fallback).
+const NEW_PROMPT_ASSIGNMENTS = [
+  // 2.1.142
+  {
+    matcher: t => t.includes('Generate a short kebab-case name (2-4 words)'),
+    name: 'Agent Prompt: /rename auto-generate session name',
+    id: 'agent-prompt-rename-auto-generate-session-name',
+  },
+  {
+    matcher: t => t.includes('Send files to the user. Use this when the file *is* the deliverable'),
+    name: 'Tool Description: SendUserFile',
+    id: 'tool-description-senduserfile',
+  },
+  {
+    matcher: t => t.includes('verifier skills that can be used by the Verify agent'),
+    name: 'Skill: Create verifier skills',
+    id: 'skill-create-verifier-skills',
+  },
+  {
+    matcher: t => t.includes('was read before the last conversation was summarized'),
+    name: 'System Reminder: Compact file reference',
+    id: 'system-reminder-compact-file-reference',
+  },
+  {
+    matcher: t => t.includes('other modified files in this turn already exceeded the snippet budget'),
+    name: 'System Reminder: File modification detected (budget exceeded)',
+    id: 'system-reminder-file-modification-detected-budget-exceeded',
+  },
+  {
+    matcher: t => t.includes('Here are the relevant changes (shown with line numbers):'),
+    name: 'System Reminder: File modified by user or linter',
+    id: 'system-reminder-file-modified-externally',
+  },
+  {
+    matcher: t => t.includes('was too large and has been truncated to the first'),
+    name: 'System Reminder: File truncated',
+    id: 'system-reminder-file-truncated',
+  },
+  {
+    matcher: t => /^\$\{[^}]+\} hook additional context: /.test(t),
+    name: 'System Reminder: Hook additional context',
+    id: 'system-reminder-hook-additional-context',
+  },
+  {
+    matcher: t => /^\$\{[^}]+\} hook blocking error from command:/.test(t),
+    name: 'System Reminder: Hook blocking error',
+    id: 'system-reminder-hook-blocking-error',
+  },
+  {
+    matcher: t => /^\$\{[^}]+\} hook success: \$\{/.test(t),
+    name: 'System Reminder: Hook success',
+    id: 'system-reminder-hook-success',
+  },
+  {
+    matcher: t => t.includes('(No content)</mcp-resource>'),
+    name: 'System Reminder: MCP resource no content',
+    id: 'system-reminder-mcp-resource-no-content',
+  },
+  {
+    matcher: t => t.includes('(No displayable content)</mcp-resource>'),
+    name: 'System Reminder: MCP resource no displayable content',
+    id: 'system-reminder-mcp-resource-no-displayable-content',
+  },
+  {
+    matcher: t => t.includes('output style is active'),
+    name: 'System Reminder: Output style active',
+    id: 'system-reminder-output-style-active',
+  },
+  {
+    matcher: t => t.startsWith('Token usage: ${'),
+    name: 'System Reminder: Token usage',
+    id: 'system-reminder-token-usage',
+  },
+  {
+    matcher: t => t.startsWith('USD budget: $${'),
+    name: 'System Reminder: USD budget',
+    id: 'system-reminder-usd-budget',
+  },
+  {
+    // cli.js has `it’s` (curly apostrophe escape) so match what's stable.
+    matcher: t => t.includes('better to use the built-in tools as they provide a better'),
+    name: 'Tool Description: Bash (built-in tools note)',
+    id: 'tool-description-bash-built-in-tools-note',
+  },
+];
+
+function lookupNewPromptAssignment(content) {
+  for (const a of NEW_PROMPT_ASSIGNMENTS) {
+    if (a.matcher(content)) return { name: a.name, id: a.id };
+  }
+  return null;
+}
+
 function validateInput(text, minLength = 500) {
   if (!text || typeof text !== 'string') return false;
 
@@ -148,6 +245,10 @@ function validateInput(text, minLength = 500) {
   if (text.includes('If your command will create new director')) return true;
   if (text.includes('The working directory persists between c')) return true;
   if (text.includes('Writes a file to the local filesystem, o')) return true;
+
+  // Short prompts new in a CC version: NEW_PROMPT_ASSIGNMENTS doubles as
+  // an inclusion gate (here) and a naming source (mergeWithExisting fallback).
+  if (lookupNewPromptAssignment(text)) return true;
 
   // System-reminder short fragments and a few specific tool-description /
   // system-prompt fragments shipped under 500 chars in 2.1.141.
@@ -639,6 +740,20 @@ function mergeWithExisting(newData, oldData, currentVersion) {
 
     // Check if there's any old prompt without a version (we should add current version)
     const oldWithoutVersion = oldData.prompts.find(oldItem => !oldItem.version);
+
+    // Hand-curated assignment for prompts new in this CC version.
+    const assigned = lookupNewPromptAssignment(newContent);
+    if (assigned) {
+      console.log(
+        `Assigned new prompt item ${idx} via NEW_PROMPT_ASSIGNMENTS → "${assigned.id}"`
+      );
+      return {
+        ...newItem,
+        name: assigned.name,
+        id: assigned.id,
+        version: currentVersion,
+      };
+    }
 
     // New prompt or old prompt didn't have version - add current version
     console.log(
