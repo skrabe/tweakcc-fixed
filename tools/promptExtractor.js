@@ -16,95 +16,134 @@ function slugify(text) {
 // in the seed JSON, so the fuzzy matcher can't carry over a name from the
 // previous version). Each entry's `matcher` runs against the reconstructed
 // content; first match wins. Used for both inclusion (validateInput) and
-// naming (mergeWithExisting fallback).
+// naming (mergeWithExisting fallback). The optional `identifierMap` provides
+// semantic names for the prompt's interpolated identifiers — required when
+// override .md files reference those names (`${ATTACHMENT_OBJECT.filename}`).
 const NEW_PROMPT_ASSIGNMENTS = [
   // 2.1.142
   {
     matcher: t => t.includes('Generate a short kebab-case name (2-4 words)'),
     name: 'Agent Prompt: /rename auto-generate session name',
     id: 'agent-prompt-rename-auto-generate-session-name',
+    description: 'Prompt used by /rename (no args) to auto-generate a kebab-case session name from conversation context',
   },
   {
     matcher: t => t.includes('Send files to the user. Use this when the file *is* the deliverable'),
     name: 'Tool Description: SendUserFile',
     id: 'tool-description-senduserfile',
+    description: 'Describes the SendUserFile tool for surfacing generated deliverable files to the user, with optional captions and normal or proactive status',
   },
   {
     matcher: t => t.includes('verifier skills that can be used by the Verify agent'),
     name: 'Skill: Create verifier skills',
     id: 'skill-create-verifier-skills',
+    description: 'Prompt for creating verifier skills for the Verify agent to automatically verify code changes',
+    identifierMap: { '0': 'ENABLE_TASKS_FEATURE', '1': 'TASKCREATE_TOOL_NAME', '2': 'TODOWRITE_TOOL_NAME' },
   },
   {
     matcher: t => t.includes('was read before the last conversation was summarized'),
     name: 'System Reminder: Compact file reference',
     id: 'system-reminder-compact-file-reference',
+    description: 'Reference to file read before conversation summarization',
+    identifierMap: { '0': 'ATTACHMENT_OBJECT', '1': 'READ_TOOL_OBJECT' },
   },
   {
     matcher: t => t.includes('other modified files in this turn already exceeded the snippet budget'),
     name: 'System Reminder: File modification detected (budget exceeded)',
     id: 'system-reminder-file-modification-detected-budget-exceeded',
+    description: 'System reminder for when a file modification is detected - specifically when other modified files in the turn already exceeded the budget.',
+    identifierMap: { '0': 'FILE_OBJECT' },
   },
   {
     matcher: t => t.includes('Here are the relevant changes (shown with line numbers):'),
     name: 'System Reminder: File modified by user or linter',
     id: 'system-reminder-file-modified-externally',
+    description: 'Notification that a file was modified externally',
+    identifierMap: { '0': 'ATTACHMENT_OBJECT' },
   },
   {
     matcher: t => t.includes('was too large and has been truncated to the first'),
     name: 'System Reminder: File truncated',
     id: 'system-reminder-file-truncated',
+    description: 'Notification that file was truncated due to size',
+    identifierMap: { '0': 'ATTACHMENT_OBJECT', '1': 'MAX_LINES_CONSTANT', '2': 'READ_TOOL_OBJECT' },
   },
   {
     matcher: t => /^\$\{[^}]+\} hook additional context: /.test(t),
     name: 'System Reminder: Hook additional context',
     id: 'system-reminder-hook-additional-context',
+    description: 'Additional context from a hook',
+    identifierMap: { '0': 'ATTACHMENT_OBJECT' },
   },
   {
     matcher: t => /^\$\{[^}]+\} hook blocking error from command:/.test(t),
     name: 'System Reminder: Hook blocking error',
     id: 'system-reminder-hook-blocking-error',
+    description: 'Error from a blocking hook command',
+    identifierMap: { '0': 'ATTACHMENT_OBJECT' },
   },
   {
     matcher: t => /^\$\{[^}]+\} hook success: \$\{/.test(t),
     name: 'System Reminder: Hook success',
     id: 'system-reminder-hook-success',
+    description: 'Success message from a hook',
+    identifierMap: { '0': 'ATTACHMENT_OBJECT' },
   },
   {
     matcher: t => t.includes('(No content)</mcp-resource>'),
     name: 'System Reminder: MCP resource no content',
     id: 'system-reminder-mcp-resource-no-content',
+    description: 'Shown when MCP resource has no content',
+    identifierMap: { '0': 'ATTACHMENT_OBJECT' },
   },
   {
     matcher: t => t.includes('(No displayable content)</mcp-resource>'),
     name: 'System Reminder: MCP resource no displayable content',
     id: 'system-reminder-mcp-resource-no-displayable-content',
+    description: 'Shown when MCP resource has no displayable content',
+    identifierMap: { '0': 'ATTACHMENT_OBJECT' },
   },
   {
     matcher: t => t.includes('output style is active'),
     name: 'System Reminder: Output style active',
     id: 'system-reminder-output-style-active',
+    description: 'Notification that an output style is active',
+    identifierMap: { '0': 'OUTPUT_STYLE_CONFIG', '1': 'OUTPUT_STYLE_TURN_REMINDER' },
   },
   {
     matcher: t => t.startsWith('Token usage: ${'),
     name: 'System Reminder: Token usage',
     id: 'system-reminder-token-usage',
+    description: 'Current token usage statistics',
+    identifierMap: { '0': 'ATTACHMENT_OBJECT' },
   },
   {
     matcher: t => t.startsWith('USD budget: $${'),
     name: 'System Reminder: USD budget',
     id: 'system-reminder-usd-budget',
+    description: 'Current USD budget statistics',
+    identifierMap: { '0': 'ATTACHMENT_OBJECT' },
   },
   {
     // cli.js has `it’s` (curly apostrophe escape) so match what's stable.
     matcher: t => t.includes('better to use the built-in tools as they provide a better'),
     name: 'Tool Description: Bash (built-in tools note)',
     id: 'tool-description-bash-built-in-tools-note',
+    description: 'Note that built-in tools provide better UX than Bash equivalents',
+    identifierMap: { '0': 'BASH_TOOL_NAME' },
   },
 ];
 
 function lookupNewPromptAssignment(content) {
   for (const a of NEW_PROMPT_ASSIGNMENTS) {
-    if (a.matcher(content)) return { name: a.name, id: a.id };
+    if (a.matcher(content)) {
+      return {
+        name: a.name,
+        id: a.id,
+        description: a.description,
+        identifierMap: a.identifierMap,
+      };
+    }
   }
   return null;
 }
@@ -747,10 +786,18 @@ function mergeWithExisting(newData, oldData, currentVersion) {
       console.log(
         `Assigned new prompt item ${idx} via NEW_PROMPT_ASSIGNMENTS → "${assigned.id}"`
       );
+      // If the assignment provides identifierMap (semantic names for the
+      // ${var.field} interpolations), use it. Override files reference these
+      // semantic names — without them, syncPrompt falls back to UNKNOWN_<idx>.
+      const finalIdentifierMap = assigned.identifierMap
+        ? { ...newItem.identifierMap, ...assigned.identifierMap }
+        : newItem.identifierMap;
       return {
         ...newItem,
         name: assigned.name,
         id: assigned.id,
+        description: assigned.description || newItem.description || '',
+        identifierMap: finalIdentifierMap,
         version: currentVersion,
       };
     }
