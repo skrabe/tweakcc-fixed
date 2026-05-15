@@ -722,7 +722,7 @@ export const DEFAULT_SETTINGS: Settings = {
     maxEffortDefault: false,
     autoModeClassifierModel: 'default',
     suppressDeferredTools: false,
-    claudemdContextOncePerConversation: true,
+    claudemdContextOncePerConversation: false,
   },
   toolsets: [],
   defaultToolset: null,

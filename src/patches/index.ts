@@ -481,7 +481,7 @@ const PATCH_DEFINITIONS = [
     name: 'claudeMd context: once per conversation',
     group: PatchGroup.SYSTEM_REMINDERS,
     description:
-      'Inject the claudeMd / userEmail / currentDate <system-reminder> only on the first API call per conversation (re-fires after /clear). Default: ON. Toggle OFF for vanilla CC per-turn injection.',
+      'Inject the claudeMd / userEmail / currentDate <system-reminder> only on the first API call per conversation (re-fires after /clear). Default: OFF — the synthesized reminder is not persisted to the conversation log, so suppressing re-injection drops CLAUDE.md from the model context on every turn >= 2. Toggle ON only if the persistence side is also fixed.',
   },
 ] as const;
 
@@ -1030,7 +1030,7 @@ export const applyCustomization = async (
     'claudemd-context-once-per-conversation': {
       fn: c => writeClaudemdContextOncePerConversation(c),
       condition:
-        config.settings.misc?.claudemdContextOncePerConversation ?? true,
+        config.settings.misc?.claudemdContextOncePerConversation ?? false,
     },
   };
 
