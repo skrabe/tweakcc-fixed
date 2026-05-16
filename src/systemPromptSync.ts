@@ -1426,6 +1426,10 @@ export const loadSystemPromptsWithRegex = async (
 
   // For each prompt in strings.json
   for (const jsonPrompt of stringsJson.prompts) {
+    if (!jsonPrompt.id) {
+      continue;
+    }
+
     // Build the search regex from pieces array
     const regex = buildSearchRegexFromPieces(
       jsonPrompt.pieces,
