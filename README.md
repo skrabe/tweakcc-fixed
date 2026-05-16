@@ -6,7 +6,7 @@ Direct fork of [Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc) carry
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | **Upstream**                    | [Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc) — actively maintained                                   |
 | **This fork**                   | [skrabe/tweakcc-fixed](https://github.com/skrabe/tweakcc-fixed) — base + cherry-picked fixes + skrabe-only features |
-| **Target Claude Code versions** | 2.0.98 through **2.1.142**                                                                                          |
+| **Target Claude Code versions** | 2.0.98 through **2.1.143**                                                                                          |
 | **npm package name**            | `tweakcc-fixed` (separate from upstream's `tweakcc`)                                                                |
 
 ## Cherry-picked from open upstream PRs (not yet merged)
