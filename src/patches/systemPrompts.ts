@@ -72,8 +72,7 @@ export const applySystemPrompts = async (
   content: string,
   version: string,
   escapeNonAscii?: boolean,
-  patchFilter?: string[] | null,
-  originalContent?: string
+  patchFilter?: string[] | null
 ): Promise<SystemPromptsResult> => {
   // Auto-detect if we should escape non-ASCII characters based on cli.js content
   const shouldEscapeNonAscii = escapeNonAscii ?? detectUnicodeEscaping(content);
@@ -279,16 +278,12 @@ export const applySystemPrompts = async (
         details,
       });
     } else {
-      // A regex miss can be a real drift OR a shadow — inline-blob or
-      // system-reminders overrides ran earlier in this apply and consumed
-      // the cli.js region the named-prompt regex targets. We pass through
-      // the pre-patch cli.js as originalContent: if the regex matches there
-      // but not in the post-patch content, the miss is a shadow and silent.
-      const isShadow = originalContent ? pattern.test(originalContent) : false;
-
-      // Temporarily skip patching these prompts because they're markdown in the npm install but HTML in the native.
+      // Shadowed prompts (owned by inline-blob, system-reminders, or a wider
+      // named-prompt) are filtered upstream in loadSystemPromptsWithRegex via
+      // the `shadows:` frontmatter on the owning override. Anything reaching
+      // this branch is genuine drift — a regex anchor that no longer matches
+      // the binary shape. Surface it so the owning override can be fixed.
       if (
-        !isShadow &&
         !prompt.name.startsWith('Data:') &&
         prompt.name !== 'Skill: Build with Claude API'
       ) {

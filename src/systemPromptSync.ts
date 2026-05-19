@@ -8,8 +8,57 @@ import {
   computeMD5Hash,
 } from './systemPromptHashIndex';
 import chalk from 'chalk';
-import { SYSTEM_PROMPTS_DIR } from './config';
+import { SYSTEM_PROMPTS_DIR, SYSTEM_REMINDERS_DIR } from './config';
 import { debug } from './utils';
+
+/**
+ * Scan every override .md in system-prompts/ and system-reminders/ for a
+ * `shadows:` frontmatter list. An override declares the prompt ids it owns
+ * via another mechanism (inline-blob region, system-reminders runtime
+ * injection, or a wider named-prompt that overlaps the shadowed one).
+ * Shadowed ids are skipped by syncPrompt (no auto-create) and by
+ * applySystemPrompts (no iteration, no warning).
+ *
+ * Cached after first call within an apply; reset by clearShadowSetCache.
+ */
+let shadowSetCache: Set<string> | null = null;
+export const loadShadowSet = async (): Promise<Set<string>> => {
+  if (shadowSetCache) return shadowSetCache;
+  const set = new Set<string>();
+  const dirs = [SYSTEM_PROMPTS_DIR, SYSTEM_REMINDERS_DIR];
+  for (const dir of dirs) {
+    let files: string[];
+    try {
+      files = await fs.readdir(dir);
+    } catch {
+      continue;
+    }
+    if (!Array.isArray(files)) continue;
+    for (const name of files) {
+      if (!name.endsWith('.md')) continue;
+      let text: string;
+      try {
+        text = await fs.readFile(path.join(dir, name), 'utf8');
+      } catch {
+        continue;
+      }
+      const parsed = matter(text, {
+        delimiters: ['<!--', '-->'],
+      });
+      const shadows = parsed.data?.shadows;
+      if (Array.isArray(shadows)) {
+        for (const id of shadows) {
+          if (typeof id === 'string' && id) set.add(id);
+        }
+      }
+    }
+  }
+  shadowSetCache = set;
+  return set;
+};
+export const clearShadowSetCache = (): void => {
+  shadowSetCache = null;
+};
 
 /**
  * Prompt structure from strings-X.Y.Z.json files
@@ -109,7 +158,8 @@ export const parseMarkdownPrompt = (markdown: string): MarkdownPrompt => {
  */
 export const generateMarkdownFromPrompt = (
   prompt: StringsPrompt,
-  customContent?: string
+  customContent?: string,
+  extraFrontmatter?: Record<string, unknown>
 ): string => {
   // Reconstruct content from pieces or use custom content
   const content =
@@ -126,8 +176,9 @@ export const generateMarkdownFromPrompt = (
       ? [...new Set(Object.values(prompt.identifierMap))]
       : undefined;
 
-  // Build frontmatter data
-  const frontmatterData: Record<string, string | string[]> = {
+  // Build frontmatter data. Canonical fields always come first; extra
+  // fields (shadows, etc.) are preserved verbatim from the existing file.
+  const frontmatterData: Record<string, unknown> = {
     name: prompt.name,
     description: prompt.description,
     ccVersion: prompt.version,
@@ -137,9 +188,45 @@ export const generateMarkdownFromPrompt = (
     frontmatterData.variables = variables;
   }
 
+  if (extraFrontmatter) {
+    for (const [k, v] of Object.entries(extraFrontmatter)) {
+      if (k in frontmatterData) continue;
+      frontmatterData[k] = v;
+    }
+  }
+
   return matter.stringify(content, frontmatterData, {
     delimiters: ['<!--', '-->'],
   });
+};
+
+/**
+ * Reads an existing override .md and returns any frontmatter fields that
+ * aren't part of the canonical generated set (name, description, ccVersion,
+ * variables). Used by syncPrompt to round-trip custom fields like `shadows:`
+ * through the regenerate-on-version-bump path.
+ */
+const readCustomFrontmatter = async (
+  promptId: string
+): Promise<Record<string, unknown>> => {
+  const out: Record<string, unknown> = {};
+  try {
+    const filePath = getPromptFilePath(promptId);
+    const text = await fs.readFile(filePath, 'utf8');
+    const parsed = matter(text, { delimiters: ['<!--', '-->'] });
+    const canonical = new Set([
+      'name',
+      'description',
+      'ccVersion',
+      'variables',
+    ]);
+    for (const [k, v] of Object.entries(parsed.data)) {
+      if (!canonical.has(k)) out[k] = v;
+    }
+  } catch {
+    // No existing file or unreadable — nothing to preserve.
+  }
+  return out;
 };
 
 /**
@@ -352,8 +439,15 @@ export const updateVariables = async (
       ? [...new Set(Object.values(newIdentifierMap))]
       : undefined;
 
-  // Update frontmatter with new variables
-  const updatedData: Record<string, string | string[]> = {
+  // Update frontmatter with new variables. Preserve any custom fields
+  // (shadows, inlineBlobAnchor, etc.) that aren't part of the canonical set.
+  const canonicalKeys = new Set([
+    'name',
+    'description',
+    'ccVersion',
+    'variables',
+  ]);
+  const updatedData: Record<string, unknown> = {
     name: parsed.data.name,
     description: parsed.data.description,
     ccVersion: parsed.data.ccVersion,
@@ -361,6 +455,10 @@ export const updateVariables = async (
 
   if (variables && variables.length > 0) {
     updatedData.variables = variables;
+  }
+
+  for (const [k, v] of Object.entries(parsed.data)) {
+    if (!canonicalKeys.has(k)) updatedData[k] = v;
   }
 
   const updatedMarkdown = matter.stringify(parsed.content, updatedData, {
@@ -831,6 +929,16 @@ export const syncPrompt = async (
     newVersion: prompt.version,
   };
 
+  // Skip prompts another override declares as shadowed — those ids are
+  // delivered to the binary by inline-blob, system-reminders, or a wider
+  // named-prompt that consumes the same region. Auto-creating them here
+  // would just resurrect the dead duplicate every apply.
+  const shadowSet = await loadShadowSet();
+  if (shadowSet.has(prompt.id)) {
+    result.action = 'skipped';
+    return result;
+  }
+
   const fileExists = await promptFileExists(prompt.id);
 
   // File doesn't exist - create it. Skip only when name is empty (the
@@ -931,7 +1039,12 @@ export const syncPrompt = async (
         result.diffHtmlPath = diffPath;
       } else {
         // User has NOT modified the file - automatically upgrade it
-        const newMarkdown = generateMarkdownFromPrompt(prompt);
+        const customFm = await readCustomFrontmatter(prompt.id);
+        const newMarkdown = generateMarkdownFromPrompt(
+          prompt,
+          undefined,
+          customFm
+        );
         await writePromptFile(prompt.id, newMarkdown);
         result.action = 'updated';
       }
@@ -1424,9 +1537,12 @@ export const loadSystemPromptsWithRegex = async (
     identifierMap: Record<string, string>;
   }> = [];
 
+  const shadowSet = await loadShadowSet();
+
   // For each prompt in strings.json
   for (const jsonPrompt of stringsJson.prompts) {
     if (!jsonPrompt.id) continue;
+    if (shadowSet.has(jsonPrompt.id)) continue;
 
     // Build the search regex from pieces array
     const regex = buildSearchRegexFromPieces(
