@@ -1,5 +1,6 @@
 // Please see the note about writing patches in ./index
 
+import { debug } from '../utils';
 import { escapeIdent, globalReplace, LocationResult, showDiff } from './index';
 
 const getOpenDocumentLocation = (oldFile: string): LocationResult | null => {
@@ -115,7 +116,7 @@ export const writeFixLspSupport = (oldFile: string): string | null => {
   // openFile/changeFile/saveFile/closeFile LSP API. If didOpen is already
   // in the binary, our injection is redundant — skip it cleanly.
   if (content.includes('textDocument/didOpen')) {
-    console.log(
+    debug(
       'patch: fixLspSupport: native LSP didOpen detected — skipping injection'
     );
     return content;

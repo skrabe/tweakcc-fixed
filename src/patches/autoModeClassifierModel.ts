@@ -20,6 +20,7 @@
 // excerpt — well within Haiku 4.5 or Sonnet 4.6 capability. Both model IDs
 // are already known to the binary (no extra registration needed).
 
+import { debug } from '../utils';
 import { showDiff } from './index';
 
 export type AutoModeClassifierModel = 'default' | 'sonnet' | 'haiku';
@@ -67,7 +68,7 @@ export const writeAutoModeClassifierModel = (
       oldFile
     )
   ) {
-    console.log(
+    debug(
       'patch: autoModeClassifierModel: classifier-model resolver already patched — skipping'
     );
     return oldFile;
@@ -75,7 +76,7 @@ export const writeAutoModeClassifierModel = (
 
   // Feature-gone fallback: the dynamic-config key is absent.
   if (!oldFile.includes('"tengu_auto_mode_config"')) {
-    console.log(
+    debug(
       'patch: autoModeClassifierModel: tengu_auto_mode_config not present in this CC build — no-op'
     );
     return oldFile;

@@ -1799,30 +1799,6 @@
       "version": "2.1.94"
     },
     {
-      "name": "",
-      "id": "",
-      "description": "",
-      "pieces": [
-        "#!/usr/bin/env bun\n/**\n * ${",
-        "} channel server — stdio MCP server implementing the channel contract.\n * See https://docs.claude.com/en/docs/claude-code/channels-reference.\n */\nimport { Server } from '@modelcontextprotocol/sdk/server/index.js'\nimport { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'\nimport {\n  CallToolRequestSchema,\n  ListToolsRequestSchema,\n} from '@modelcontextprotocol/sdk/types.js'\n\nconst mcp = new Server(\n  { name: '${",
-        "}', version: '0.1.0' },\n  {\n    capabilities: {\n      tools: {},\n      // Required: presence of this key registers the channel notification\n      // listener on Claude's side.\n      experimental: { 'claude/channel': {} },\n    },\n    instructions:\n      \"Events from ${",
-        "} arrive as <channel source=\\\\\"${",
-        "}\\\\\" ...>. Anything \" +\n      \"you want the sender to see must go through the reply tool — your \" +\n      \"transcript output never reaches the channel.\",\n  },\n)\n\nmcp.setRequestHandler(ListToolsRequestSchema, async () => ({\n  tools: [\n    {\n      name: 'reply',\n      description: 'Send a message back to the ${",
-        "} channel.',\n      inputSchema: {\n        type: 'object',\n        properties: { text: { type: 'string' } },\n        required: ['text'],\n      },\n    },\n  ],\n}))\n\nmcp.setRequestHandler(CallToolRequestSchema, async req => {\n  const args = (req.params.arguments ?? {}) as Record<string, unknown>\n  if (req.params.name === 'reply') {\n    // TODO: deliver args.text to the external service.\n    return { content: [{ type: 'text', text: 'sent' }] }\n  }\n  return { content: [{ type: 'text', text: 'unknown tool' }], isError: true }\n})\n\n// TODO: when the external service has an inbound event, push it to Claude:\n//\n//   await mcp.notification({\n//     method: 'notifications/claude/channel',\n//     params: {\n//       content: 'the event body',\n//       meta: { chat_id: '...', sender: '...' },\n//     },\n//   })\n//\n// Each meta key becomes an attribute on the <channel> tag. Keys must be\n// identifiers (letters/digits/underscores) — others are silently dropped.\n\nawait mcp.connect(new StdioServerTransport())\n"
-      ],
-      "identifiers": [
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "identifierMap": {
-        "0": ""
-      },
-      "version": "2.1.143"
-    },
-    {
       "name": "Data: GitHub App installation PR description",
       "id": "data-github-app-installation-pr-description",
       "description": "Template for PR description when installing Claude Code GitHub App integration",
@@ -5378,38 +5354,6 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.139"
-    },
-    {
-      "name": "",
-      "id": "",
-      "description": "",
-      "pieces": [
-        "Your version of Claude Code (${{ISSUES_EXPLAINER:\"report the issue at https://github.com/anthropics/claude-code/issues\",PACKAGE_URL:\"@anthropic-ai/claude-code\",README_URL:\"https://code.claude.com/docs/en/overview\",VERSION:\"<<CCVERSION>>\",FEEDBACK_CHANNEL:\"https://github.com/anthropics/claude-code/issues\",BUILD_TIME:\"<<BUILD_TIME>>\",GIT_SHA:\"32281b6b930f7e2ab4f0b5e2494e263b9c1ffb7e\"}.VERSION}) is too old for Remote Control.\nVersion ${",
-        ".min_version} or higher is required. Run \\`claude update\\` to update."
-      ],
-      "identifiers": [
-        0
-      ],
-      "identifierMap": {
-        "0": ""
-      },
-      "version": "2.1.144"
-    },
-    {
-      "name": "",
-      "id": "",
-      "description": "",
-      "pieces": [
-        "Your version of Claude Code (${{ISSUES_EXPLAINER:\"report the issue at https://github.com/anthropics/claude-code/issues\",PACKAGE_URL:\"@anthropic-ai/claude-code\",README_URL:\"https://code.claude.com/docs/en/overview\",VERSION:\"<<CCVERSION>>\",FEEDBACK_CHANNEL:\"https://github.com/anthropics/claude-code/issues\",BUILD_TIME:\"<<BUILD_TIME>>\",GIT_SHA:\"32281b6b930f7e2ab4f0b5e2494e263b9c1ffb7e\"}.VERSION}) is too old for Remote Control.\nVersion ${",
-        ".minVersion} or higher is required. Run \\`claude update\\` to update."
-      ],
-      "identifiers": [
-        0
-      ],
-      "identifierMap": {
-        "0": ""
-      },
-      "version": "2.1.144"
     }
   ]
 }

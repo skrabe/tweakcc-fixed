@@ -30,6 +30,7 @@
 //  }
 // ```
 
+import { debug } from '../utils';
 import { showDiff, globalReplace } from './index';
 
 /**
@@ -42,7 +43,7 @@ import { showDiff, globalReplace } from './index';
  */
 const patchExtraction = (file: string): string | null => {
   if (!file.includes('"tengu_session_memory"')) {
-    console.log(
+    debug(
       'patch: sessionMemory: extraction gate already removed in this CC build — no-op'
     );
     return file;
@@ -130,7 +131,7 @@ const patchPastSessions = (file: string): string | null => {
  */
 const patchTokenLimits = (file: string): string | null => {
   if (!file.includes('# Session Title')) {
-    console.log(
+    debug(
       'patch: sessionMemory: token-limit anchor removed in this CC build — no-op'
     );
     return file;
@@ -175,7 +176,7 @@ const patchUpdateThresholds = (file: string): string | null => {
     file.includes('minimumTokensBetweenUpdate') ||
     file.includes('toolCallsBetweenUpdates');
   if (!anyPropPresent) {
-    console.log(
+    debug(
       'patch: sessionMemory: update threshold props removed in this CC build — no-op'
     );
     return file;

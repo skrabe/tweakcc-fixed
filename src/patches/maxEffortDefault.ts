@@ -25,6 +25,7 @@
 // CC has a guard `if(T==="max"&&!V3_(H))return"high"` that downgrades "max"
 // for models that don't support it, so site (1) is safe across model switches.
 
+import { debug } from '../utils';
 import { showDiff } from './index';
 
 export const writeMaxEffortDefault = (oldFile: string): string | null => {
@@ -55,7 +56,7 @@ export const writeMaxEffortDefault = (oldFile: string): string | null => {
       workingFile
     )
   ) {
-    console.log(
+    debug(
       'patch: maxEffortDefault: site 1 (per-model default) already "max" — skipping'
     );
   } else {
@@ -90,11 +91,11 @@ export const writeMaxEffortDefault = (oldFile: string): string | null => {
       workingFile
     )
   ) {
-    console.log(
+    debug(
       'patch: maxEffortDefault: site 2 (launch-effort gate) already free of unpin clause — skipping'
     );
   } else if (!workingFile.includes('unpinOpus47LaunchEffort')) {
-    console.log(
+    debug(
       'patch: maxEffortDefault: site 2 not present in this CC build — no-op'
     );
   } else {

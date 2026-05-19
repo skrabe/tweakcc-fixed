@@ -327,6 +327,12 @@ function validateInput(text, minLength = 500) {
   if (text.includes('Remote Control - Control local sessions from claude.ai/code'))
     return false;
 
+  // CC version-update banner shown to users when their install is outdated.
+  if (text.startsWith('Your version of Claude Code (')) return false;
+
+  // Bun-compiled script template embedded in cli.js for spawned subprocesses.
+  if (text.startsWith('#!/usr/bin/env bun')) return false;
+
   // JSON-schema-style config option descriptions (not prompts). Pattern:
   // `When true, ...` followed by `Equivalent to setting <flag>: false on
   // the API.` These appear as tool/server config docstrings.

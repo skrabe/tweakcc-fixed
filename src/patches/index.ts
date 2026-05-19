@@ -651,6 +651,11 @@ export const applyCustomization = async (
     content = await fs.readFile(ccInstInfo.cliPath, { encoding: 'utf8' });
   }
 
+  // Snapshot the pre-patch cli.js so applySystemPrompts can distinguish a
+  // genuine regex-shape drift from a shadow (inline-blob or system-reminder
+  // consumed the region first this same run).
+  const originalContent = content;
+
   // Collect all patch results
   const allResults: PatchResult[] = [];
 
@@ -716,7 +721,8 @@ export const applyCustomization = async (
     content,
     ccInstInfo.version,
     undefined,
-    patchFilter
+    patchFilter,
+    originalContent
   );
   content = systemPromptsResult.newContent;
 

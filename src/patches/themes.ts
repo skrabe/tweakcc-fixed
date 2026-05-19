@@ -1,6 +1,7 @@
 // Please see the note about writing patches in ./index
 
 import { Theme } from '../types';
+import { debug } from '../utils';
 import { LocationResult, showDiff } from './index';
 
 function getThemesLocation(oldFile: string): {
@@ -80,7 +81,7 @@ function getThemesLocation(oldFile: string): {
   // (the switch statement) still work without it; the picker UI just keeps
   // its built-in labels.
   if (!objArrMatch || objArrMatch.index == undefined) {
-    console.warn(
+    debug(
       'patch: themes: objArrMatch not found — colors will still apply, picker labels unchanged'
     );
   }
@@ -92,7 +93,7 @@ function getThemesLocation(oldFile: string): {
   const objMatch = oldFile.match(objPat);
 
   if (!objMatch || objMatch.index == undefined) {
-    console.warn(
+    debug(
       'patch: themes: objMatch not found — colors will still apply, theme name map unchanged'
     );
   }

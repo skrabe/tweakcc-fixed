@@ -1,5 +1,6 @@
 // Please see the note about writing patches in ./index
 
+import { debug } from '../utils';
 import { LocationResult, showDiff } from './index';
 
 const getShowMoreItemsInSelectMenusLocation = (
@@ -107,7 +108,7 @@ const patchCommandsVisibleCount = (file: string): string | null => {
  */
 const patchSuggestionsCap = (file: string): string | null => {
   if (!file.includes('Math.min(6,Math.max(1,')) {
-    console.log(
+    debug(
       'patch: showMoreItemsInSelectMenus: suggestions cap already removed in this CC build — no-op'
     );
     return file;
