@@ -132,6 +132,13 @@ const NEW_PROMPT_ASSIGNMENTS = [
     description: 'Note that built-in tools provide better UX than Bash equivalents',
     identifierMap: { '0': 'BASH_TOOL_NAME' },
   },
+  // 2.1.144
+  {
+    matcher: t => t.startsWith('## Durability\n\nBy default (durable: false) the job lives only in this Claude session'),
+    name: 'Tool Description: CronCreate (durability note)',
+    id: 'tool-description-croncreate-durability',
+    description: 'Sub-prompt explaining the durable: true / false trade-off, inserted into CronCreate when the durable-cron feature flag is on',
+  },
 ];
 
 function lookupNewPromptAssignment(content) {
