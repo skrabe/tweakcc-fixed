@@ -368,15 +368,33 @@ describe('getNativeSearchPathsWithInfo', () => {
   );
 
   it.skipIf(process.platform === 'win32')(
-    'should not include claude.exe on non-Windows platforms',
+    'should not include bare (non-glob) claude.exe paths on non-Windows platforms',
     async () => {
       const { NATIVE_SEARCH_PATH_INFO } = await import('../installationPaths');
 
+      // The win32-only bare claude.exe entries must not leak to other
+      // platforms. The mise glob below is a separate, intentional case.
       const match = NATIVE_SEARCH_PATH_INFO.find(
         info => !info.isGlob && info.pattern.endsWith('claude.exe')
       );
 
       expect(match).toBeUndefined();
+    }
+  );
+
+  it.skipIf(process.platform === 'win32')(
+    'should include the mise node-install claude.exe glob on non-Windows',
+    async () => {
+      const { NATIVE_SEARCH_PATH_INFO } = await import('../installationPaths');
+
+      const match = NATIVE_SEARCH_PATH_INFO.find(
+        info =>
+          info.isGlob &&
+          info.pattern.includes('/mise/installs/node/') &&
+          info.pattern.endsWith('claude.exe')
+      );
+
+      expect(match).toBeDefined();
     }
   );
 

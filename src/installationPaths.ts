@@ -257,6 +257,21 @@ const getNativeSearchPathsWithInfo = (): SearchPathInfo[] => {
   // Versioned binaries (filenames are versions like 2.0.65)
   addPath(`${home}/.local/share/claude/versions/*`, true);
 
+  // mise (https://github.com/jdx/mise) — the @anthropic-ai/claude-code npm
+  // package ships a native `claude.exe` binary. Under mise it lands inside
+  // mise's node tree (or the npm backend), neither of which is covered by
+  // the search paths above. Without this a mise-managed install is missed
+  // and detection falls back to whatever stale install happens to be found.
+  if (process.platform !== 'win32') {
+    const ccExe = 'lib/node_modules/@anthropic-ai/claude-code/bin/claude.exe';
+    const miseDir = process.env.MISE_DATA_DIR || `${home}/.local/share/mise`;
+    addPath(`${miseDir}/installs/node/*/${ccExe}`, true);
+    addPath(
+      `${miseDir}/installs/npm-anthropic-ai-claude-code/*/${ccExe}`,
+      true
+    );
+  }
+
   // Convert to backslashes on Windows
   if (process.platform === 'win32') {
     pathInfos.forEach(info => {

@@ -469,19 +469,23 @@ export async function collectCandidates(): Promise<InstallationCandidate[]> {
   // Collect cli.js candidates
   for (const searchPath of CLIJS_SEARCH_PATHS) {
     const cliPath = path.join(searchPath, 'cli.js');
-    if (seenPaths.has(cliPath)) {
-      continue;
-    }
     try {
       if (await doesFileExist(cliPath)) {
-        debug(`collectCandidates: Found cli.js at ${cliPath}`);
-        const version = await extractVersionFromJsFile(cliPath);
+        // Dedup by canonical path: symlink aliases (mise's node-version
+        // aliases, nvm's `default`/`lts/*`, …) point many search paths at
+        // one binary — that is a single installation, not several.
+        const canonical = await fs.realpath(cliPath).catch(() => cliPath);
+        if (seenPaths.has(canonical)) {
+          continue;
+        }
+        seenPaths.add(canonical);
+        debug(`collectCandidates: Found cli.js at ${canonical}`);
+        const version = await extractVersionFromJsFile(canonical);
         candidates.push({
-          path: cliPath,
+          path: canonical,
           kind: 'npm-based',
           version,
         });
-        seenPaths.add(cliPath);
       }
     } catch (error) {
       debug(`collectCandidates: Error checking ${cliPath}:`, error);
@@ -490,15 +494,20 @@ export async function collectCandidates(): Promise<InstallationCandidate[]> {
 
   // Collect native binary candidates
   for (const nativePath of NATIVE_SEARCH_PATHS) {
-    if (seenPaths.has(nativePath)) {
-      continue;
-    }
     try {
       if (await doesFileExist(nativePath)) {
+        // Dedup by canonical path (see cli.js loop above): mise symlinks
+        // every node alias to one real version dir, so a single install
+        // would otherwise be counted as several "installations".
+        const canonical = await fs.realpath(nativePath).catch(() => nativePath);
+        if (seenPaths.has(canonical)) {
+          continue;
+        }
+        seenPaths.add(canonical);
         // Resolve through Nix wrapper if applicable
-        const resolvedNativePath = await maybeResolveNixWrapper(nativePath);
+        const resolvedNativePath = await maybeResolveNixWrapper(canonical);
         debug(
-          `collectCandidates: Found native binary at ${nativePath}${resolvedNativePath !== nativePath ? ` (resolved -> ${resolvedNativePath})` : ''}`
+          `collectCandidates: Found native binary at ${canonical}${resolvedNativePath !== canonical ? ` (resolved -> ${resolvedNativePath})` : ''}`
         );
         const version = await extractVersion(
           resolvedNativePath,
@@ -509,7 +518,6 @@ export async function collectCandidates(): Promise<InstallationCandidate[]> {
           kind: 'native-binary',
           version,
         });
-        seenPaths.add(nativePath);
       }
     } catch (error) {
       debug(`collectCandidates: Error checking ${nativePath}:`, error);

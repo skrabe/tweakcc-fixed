@@ -86,6 +86,11 @@ describe('config.ts', () => {
     // By default, pretend there is no `claude` executable on PATH.
     vi.mocked(whichMock).mockRejectedValue(new Error('not found'));
 
+    // collectCandidates() canonicalizes candidate paths via fs.realpath;
+    // default to identity (the test mock-FS has no symlinks). Tests that
+    // exercise symlink resolution override this.
+    vi.spyOn(fs, 'realpath').mockImplementation(async p => p.toString());
+
     mockMagicInstance.detect.mockReset();
     (WASMagic.create as unknown as ReturnType<typeof vi.fn>).mockResolvedValue(
       mockMagicInstance
