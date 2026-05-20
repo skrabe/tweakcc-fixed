@@ -139,6 +139,82 @@ const NEW_PROMPT_ASSIGNMENTS = [
     id: 'tool-description-croncreate-durability',
     description: 'Sub-prompt explaining the durable: true / false trade-off, inserted into CronCreate when the durable-cron feature flag is on',
   },
+  // 2.1.145 — the "run" skill family (launch and drive a project's app):
+  // /run + /run-skill-generator bundled skills plus their 6 shared example
+  // docs and the run-<unit-name> template. Plus a new Managed Agents doc.
+  // All registered unconditionally in the bundled-skills init; the skills
+  // are conditional injections (only when the command fires).
+  {
+    matcher: t => t.startsWith('---\nname: run\n'),
+    name: 'Skill: run',
+    id: 'skill-run',
+    description:
+      "Bundled /run skill — launches and drives a project's actual app (CLI, server, TUI, Electron, browser, or library) to confirm a change works; prefers a project run skill, else falls back to built-in per-project-type patterns",
+  },
+  {
+    matcher: t => t.startsWith('---\nname: run-<unit-name>\n'),
+    name: 'Skill: run-<unit-name> (template)',
+    id: 'skill-run-unit-name-template',
+    description:
+      'Template skeleton for a per-project run-<unit-name> skill, bundled as template.md inside run-skill-generator — prerequisites, setup, build, agent/human run paths, test, and gotchas sections',
+  },
+  {
+    matcher: t => t.startsWith('---\nname: run-skill-generator\n'),
+    name: 'Skill: run-skill-generator',
+    id: 'skill-run-skill-generator',
+    description:
+      "Bundled /run-skill-generator skill (user-invocable only) — authors or improves a project's run-<unit> skill telling agents how to build, launch, and drive the app from a clean environment",
+  },
+  {
+    matcher: t => t.startsWith('# Example: Browser-driven web app'),
+    name: 'Skill: run example — Browser-driven web app',
+    id: 'skill-run-example-browser-driven-web-app',
+    description:
+      'Bundled example doc (examples/playwright.md) for the run skill: driving a browser-based web app via a background dev server plus headless chromium-cli',
+  },
+  {
+    matcher: t => t.startsWith('# Example: CLI tool'),
+    name: 'Skill: run example — CLI tool',
+    id: 'skill-run-example-cli-tool',
+    description:
+      'Bundled example doc (examples/cli.md) for the run skill: installing, invoking, and testing a command-line tool',
+  },
+  {
+    matcher: t => t.startsWith('# Example: Electron / desktop GUI app'),
+    name: 'Skill: run example — Electron / desktop GUI app',
+    id: 'skill-run-example-electron',
+    description:
+      'Bundled example doc (examples/electron.md) for the run skill: launching an Electron desktop app under xvfb and driving it with a Playwright _electron REPL driver',
+  },
+  {
+    matcher: t => t.startsWith('# Example: Library / SDK'),
+    name: 'Skill: run example — Library / SDK',
+    id: 'skill-run-example-library-sdk',
+    description:
+      'Bundled example doc (examples/library.md) for the run skill: building a library or SDK from source, running its test suite, and writing an import-and-call smoke script',
+  },
+  {
+    matcher: t => t.startsWith('# Example: TUI / interactive terminal app'),
+    name: 'Skill: run example — TUI / interactive terminal app',
+    id: 'skill-run-example-tui',
+    description:
+      'Bundled example doc (examples/tui.md) for the run skill: driving an interactive terminal app by wrapping it in tmux send-keys / capture-pane',
+  },
+  {
+    matcher: t => t.startsWith('# Example: Web server / API'),
+    name: 'Skill: run example — Web server / API',
+    id: 'skill-run-example-web-server-api',
+    description:
+      'Bundled example doc (examples/server.md) for the run skill: background-launching a web server or API, polling for readiness, smoke-testing with curl, and shutting it down cleanly',
+  },
+  {
+    matcher: t =>
+      t.startsWith('# Managed Agents') && t.includes('Self-Hosted Sandboxes'),
+    name: 'Data: Managed Agents self-hosted sandboxes',
+    id: 'data-managed-agents-self-hosted-sandboxes',
+    description:
+      'Managed Agents reference for self-hosted sandboxes (config.type: self_hosted) — running an EnvironmentWorker that keeps tool execution on infrastructure you control',
+  },
 ];
 
 function lookupNewPromptAssignment(content) {
@@ -184,7 +260,11 @@ function validateInput(text, minLength = 500) {
   // are bullet-heavy markdown (fail the sentence-pattern check below).
   // Catches TaskUpdate / TaskList / TaskGet / Agent / claude-code-guide
   // descriptions, schedule skill, settings-locations skill, etc.
-  if (text.length >= 400 && /^\s*(Use this (?:tool|skill|agent)|Your strengths:|Your version of Claude Code|<system-reminder>)/.test(text)) return true;
+  // NOTE: do NOT add `Your version of Claude Code` here — that is the
+  // outdated-version banner, excluded below. As of 2.1.145 its interpolated
+  // ${{ISSUES_EXPLAINER,PACKAGE_URL,...}} object pushes it past 400 chars, so
+  // an include rule here would shadow the exclude and leak 2 junk entries.
+  if (text.length >= 400 && /^\s*(Use this (?:tool|skill|agent)|Your strengths:|<system-reminder>)/.test(text)) return true;
 
   // Specific medium-length prompts (400–500c) that open with directive
   // patterns. Each entry is anchored to text confirmed unique in 2.1.141
