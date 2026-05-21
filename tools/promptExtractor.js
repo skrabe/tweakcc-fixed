@@ -12,6 +12,17 @@ function slugify(text) {
     .replace(/^-+|-+$/g, '');
 }
 
+// Shared identifierMap for the 10 bundled workflow scripts (2.1.146). Every
+// `export const meta = {...}` block interpolates the same 5 slots in order:
+// name, description, whenToUse, then the `${JSON.stringify(phases)}` pair.
+const WORKFLOW_SCRIPT_IDENTIFIER_MAP = {
+  0: 'WORKFLOW_NAME',
+  1: 'WORKFLOW_DESCRIPTION',
+  2: 'WORKFLOW_WHEN_TO_USE',
+  3: 'JSON',
+  4: 'WORKFLOW_PHASES',
+};
+
 // Manual ID/name assignments for prompts that are NEW in a CC version (not
 // in the seed JSON, so the fuzzy matcher can't carry over a name from the
 // previous version). Each entry's `matcher` runs against the reconstructed
@@ -214,6 +225,167 @@ const NEW_PROMPT_ASSIGNMENTS = [
     id: 'data-managed-agents-self-hosted-sandboxes',
     description:
       'Managed Agents reference for self-hosted sandboxes (config.type: self_hosted) — running an EnvironmentWorker that keeps tool execution on infrastructure you control',
+  },
+  // 2.1.146 — the Workflow feature (WorkflowTool, env-gated behind
+  // CLAUDE_CODE_WORKFLOWS). The tool runs a deterministic JS script that
+  // orchestrates subagents; 10 bundled workflow scripts ship with it, plus
+  // two subagent prompts. Items below for skill-code-review and
+  // system-prompt-worker-instructions are existing prompts whose fuzzy
+  // carryover broke when Anthropic renamed the `simplify` skill to
+  // `code-review` (the first-100-char fingerprint prefix changed).
+  {
+    matcher: t => t.startsWith('# Code Review and Cleanup'),
+    name: 'Skill: Code Review',
+    id: 'skill-code-review',
+    description:
+      'Bundled /code-review skill (renamed from /simplify in 2.1.146) — reviews all changed files for reuse, quality, and efficiency across three parallel review agents and fixes issues found',
+    identifierMap: { '0': 'AGENT_TOOL_NAME' },
+  },
+  {
+    matcher: t => t.startsWith('After you finish implementing the change:'),
+    name: 'System Prompt: Worker instructions',
+    id: 'system-prompt-worker-instructions',
+    description:
+      'Post-implementation checklist injected for worker/subagent turns — run the code-review skill, run unit tests, test end-to-end',
+    identifierMap: { '0': 'SKILL_TOOL_NAME' },
+  },
+  {
+    matcher: t =>
+      t.startsWith(
+        'Execute a workflow script that orchestrates multiple subagents deterministically'
+      ),
+    name: 'Tool Description: Workflow',
+    id: 'tool-description-workflow',
+    description:
+      'Describes the Workflow tool (alias RunWorkflow) — runs a deterministic JavaScript workflow script that orchestrates subagents via agent()/parallel()/pipeline()/phase(); env-gated behind CLAUDE_CODE_WORKFLOWS',
+    // 5 interpolation slots, named by their role in the prompt text: three
+    // are currently empty-string conditional notes, one is the 'worktree'
+    // isolation literal, one is the ▸ glyph prefixing the /workflows group.
+    identifierMap: {
+      0: 'WORKFLOW_INVOCATION_QUALIFIER',
+      1: 'WORKFLOW_RESEND_NOTE',
+      2: 'WORKFLOW_ISOLATION_TYPE',
+      3: 'WORKFLOW_WORKTREE_NOTE',
+      4: 'WORKFLOW_GROUP_GLYPH',
+    },
+  },
+  {
+    matcher: t =>
+      t.startsWith('You are a subagent spawned by a workflow orchestration script') &&
+      t.includes('You MUST call the'),
+    name: 'Agent Prompt: Workflow subagent structured output',
+    id: 'agent-prompt-workflow-subagent-structured-output',
+    description:
+      'Prompt for a workflow-spawned subagent that must return its answer by calling a structured-output tool exactly once',
+    identifierMap: { '0': 'STRUCTURED_OUTPUT_TOOL_NAME' },
+  },
+  {
+    matcher: t =>
+      t.startsWith('You are a subagent spawned by a workflow orchestration script') &&
+      t.includes('returned **verbatim**'),
+    name: 'Agent Prompt: Workflow subagent plain text output',
+    id: 'agent-prompt-workflow-subagent-plain-text-output',
+    description:
+      'Prompt for a workflow-spawned subagent whose final text response is returned verbatim as a string to the calling script',
+  },
+  // 10 bundled workflow scripts (export const meta = {...} JS source).
+  // Registered via initBundledWorkflows; matched on distinctive literal body
+  // text since the name field is an interpolated ${...}. Every meta block has
+  // the same 5 interpolation slots — name/description/whenToUse, then the
+  // `${JSON.stringify(phases)}` pair — so they share one identifierMap.
+  {
+    matcher: t =>
+      t.includes('export const meta') && t.includes('// ===== Phase 0: Scope ====='),
+    name: 'Workflow Script: review-branch',
+    id: 'workflow-script-review-branch',
+    description:
+      'Bundled review-branch workflow — scopes branch changes then runs multi-dimension review and verification',
+    identifierMap: WORKFLOW_SCRIPT_IDENTIFIER_MAP,
+  },
+  {
+    matcher: t =>
+      t.includes('export const meta') && t.includes('const FLEET_SIZE = 5'),
+    name: 'Workflow Script: bughunt',
+    id: 'workflow-script-bughunt',
+    description:
+      'Bundled bughunt workflow — a fleet of finders plus pigeonhole adversarial verification to surface real bugs',
+    identifierMap: WORKFLOW_SCRIPT_IDENTIFIER_MAP,
+  },
+  {
+    matcher: t =>
+      t.includes('export const meta') && t.includes('const RAPID_PROMPT = idx =>'),
+    name: 'Workflow Script: bughunt-lite',
+    id: 'workflow-script-bughunt-lite',
+    description:
+      'Bundled bughunt-lite workflow — a lighter bug hunt with rapid surface scanners and deep analysts',
+    identifierMap: WORKFLOW_SCRIPT_IDENTIFIER_MAP,
+  },
+  {
+    matcher: t =>
+      t.includes('export const meta') && t.includes("key: 'mvp',"),
+    name: 'Workflow Script: plan-hunter',
+    id: 'workflow-script-plan-hunter',
+    description:
+      'Bundled plan-hunter workflow — drafts and judges implementation plans across multiple lenses',
+    identifierMap: WORKFLOW_SCRIPT_IDENTIFIER_MAP,
+  },
+  {
+    matcher: t =>
+      t.includes('export const meta') && t.includes('// deep-research: Scope'),
+    name: 'Workflow Script: deep-research',
+    id: 'workflow-script-deep-research',
+    description:
+      'Bundled deep-research workflow — a scoped search pipeline with URL dedup, fetch/extract, and vote-based verification',
+    identifierMap: WORKFLOW_SCRIPT_IDENTIFIER_MAP,
+  },
+  {
+    matcher: t =>
+      t.includes('export const meta') &&
+      t.includes('Command that runs the repro and fails'),
+    name: 'Workflow Script: bugfix',
+    id: 'workflow-script-bugfix',
+    description:
+      'Bundled bugfix workflow — reproduces a reported bug, implements a fix, and verifies it',
+    identifierMap: WORKFLOW_SCRIPT_IDENTIFIER_MAP,
+  },
+  {
+    matcher: t =>
+      t.includes('export const meta') &&
+      t.includes('Path to an existing dashboard to pattern'),
+    name: 'Workflow Script: dashboard',
+    id: 'workflow-script-dashboard',
+    description:
+      'Bundled dashboard workflow — builds a dashboard, optionally patterned after an existing one',
+    identifierMap: WORKFLOW_SCRIPT_IDENTIFIER_MAP,
+  },
+  {
+    matcher: t =>
+      t.includes('export const meta') &&
+      t.includes("['hypothesis', 'mechanism', 'predicts']"),
+    name: 'Workflow Script: investigate',
+    id: 'workflow-script-investigate',
+    description:
+      'Bundled investigate workflow — forms and tests hypotheses about a problem mechanism',
+    identifierMap: WORKFLOW_SCRIPT_IDENTIFIER_MAP,
+  },
+  {
+    matcher: t =>
+      t.includes('export const meta') &&
+      t.includes('Where the new/updated doc should live'),
+    name: 'Workflow Script: docs',
+    id: 'workflow-script-docs',
+    description:
+      'Bundled docs workflow — writes or updates documentation for a target audience and conventions',
+    identifierMap: WORKFLOW_SCRIPT_IDENTIFIER_MAP,
+  },
+  {
+    matcher: t =>
+      t.includes('export const meta') && t.includes('const COMPLETENESS_SCHEMA = {'),
+    name: 'Workflow Script: autopilot',
+    id: 'workflow-script-autopilot',
+    description:
+      'Bundled autopilot workflow — plans a task, implements it, and judges completeness across blocker/major/minor holes',
+    identifierMap: WORKFLOW_SCRIPT_IDENTIFIER_MAP,
   },
 ];
 
