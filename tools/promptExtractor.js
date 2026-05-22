@@ -150,6 +150,78 @@ const NEW_PROMPT_ASSIGNMENTS = [
     id: 'tool-description-croncreate-durability',
     description: 'Sub-prompt explaining the durable: true / false trade-off, inserted into CronCreate when the durable-cron feature flag is on',
   },
+  // 2.1.148 — the /code-review skill was restructured from one prompt
+  // (skill-code-review) into 11 composable fragments. The skill (tK4)
+  // assembles the prompt at invocation time: xYO={low,medium,high,xhigh,max}
+  // selects an effort-tier prompt, which interpolates the shared phase /
+  // angle / output sub-fragments; the --comment GitHub section is appended
+  // when the flag is passed.
+  {
+    matcher: t => t.includes('## Posting to GitHub (--comment)'),
+    name: 'Skill: Code Review (--comment GitHub posting)',
+    id: 'skill-code-review-posting-to-github',
+    description: 'Appended to the code-review prompt when --comment is passed; instructs posting each finding as an inline PR comment',
+  },
+  {
+    matcher: t => t.includes('"maximum":"extra-high"} effort: catch'),
+    name: 'Skill: Code Review (max / xhigh effort)',
+    id: 'skill-code-review-effort-max',
+    description: 'Effort-tier prompt for max and xhigh code review — 5 angles, up to 8 candidates, recall-biased, up to 15 findings',
+  },
+  {
+    matcher: t => t.includes('catch every real bug a careful'),
+    name: 'Skill: Code Review (high effort)',
+    id: 'skill-code-review-effort-high',
+    description: 'Effort-tier prompt for high code review — 3 angles, up to 6 candidates, recall-biased, up to 10 findings',
+  },
+  {
+    matcher: t => t.includes('at medium effort: every finding you surface'),
+    name: 'Skill: Code Review (medium effort)',
+    id: 'skill-code-review-effort-medium',
+    description: 'Effort-tier prompt for medium code review — 3 angles, up to 6 candidates, precision-biased, up to 8 findings',
+  },
+  {
+    matcher: t => t.includes('1 diff pass '),
+    name: 'Skill: Code Review (low effort)',
+    id: 'skill-code-review-effort-low',
+    description: 'Effort-tier prompt for low code review — single diff pass, no verify, up to 4 findings',
+  },
+  {
+    matcher: t => t.includes('Return findings as a JSON array of at most'),
+    name: 'Skill: Code Review (findings JSON output)',
+    id: 'skill-code-review-output-format',
+    description: 'Shared output spec for the code-review skill — findings as a JSON array with file/line/summary/failure_scenario',
+  },
+  {
+    matcher: t => t.includes('Gather the diff'),
+    name: 'Skill: Code Review (Phase 0 — gather the diff)',
+    id: 'skill-code-review-phase-0-gather-diff',
+    description: 'Shared Phase 0 of the code-review skill — gather the unified diff under review via git diff',
+  },
+  {
+    matcher: t => t.includes('Verify (1-vote, 3-state)'),
+    name: 'Skill: Code Review (Phase 2 — verify, 3-state)',
+    id: 'skill-code-review-phase-2-verify-3-state',
+    description: 'Phase 2 of the code-review skill for precision tiers — one verifier per candidate, 3-state CONFIRMED/PLAUSIBLE/REFUTED vote',
+  },
+  {
+    matcher: t => t.includes('Verify (1-vote, recall-biased)'),
+    name: 'Skill: Code Review (Phase 2 — verify, recall-biased)',
+    id: 'skill-code-review-phase-2-verify-recall-biased',
+    description: 'Phase 2 of the code-review skill for recall tiers — one verifier per candidate, recall-biased keep rule',
+  },
+  {
+    matcher: t => t.includes('Sweep for gaps'),
+    name: 'Skill: Code Review (Phase 3 — sweep for gaps)',
+    id: 'skill-code-review-phase-3-sweep',
+    description: 'Shared Phase 3 of the code-review skill — a fresh finder re-reads the diff for defects not already listed',
+  },
+  {
+    matcher: t => t.includes('line-by-line diff scan'),
+    name: 'Skill: Code Review (Angle A — line-by-line diff scan)',
+    id: 'skill-code-review-angle-line-by-line',
+    description: 'The line-by-line diff-scan finder angle of the code-review skill — read every hunk plus the enclosing function',
+  },
   // 2.1.145 — the "run" skill family (launch and drive a project's app):
   // /run + /run-skill-generator bundled skills plus their 6 shared example
   // docs and the run-<unit-name> template. Plus a new Managed Agents doc.
