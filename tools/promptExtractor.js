@@ -167,18 +167,41 @@ const NEW_PROMPT_ASSIGNMENTS = [
     name: 'Skill: Code Review (max / xhigh effort)',
     id: 'skill-code-review-effort-max',
     description: 'Effort-tier prompt for max and xhigh code review — 5 angles, up to 8 candidates, recall-biased, up to 15 findings',
+    identifierMap: {
+      0: 'EFFORT_LEVEL',
+      1: 'PHASE_0_GATHER_DIFF',
+      2: 'AGENT_TOOL_NAME',
+      3: 'HIGH_EFFORT_ANGLES',
+      4: 'PHASE_2_VERIFY_3_STATE',
+      5: 'PHASE_3_SWEEP',
+      6: 'OUTPUT_FORMAT_FN',
+    },
   },
   {
     matcher: t => t.includes('catch every real bug a careful'),
     name: 'Skill: Code Review (high effort)',
     id: 'skill-code-review-effort-high',
     description: 'Effort-tier prompt for high code review — 3 angles, up to 6 candidates, recall-biased, up to 10 findings',
+    identifierMap: {
+      0: 'PHASE_0_GATHER_DIFF',
+      1: 'AGENT_TOOL_NAME',
+      2: 'ANGLES_LINE_BY_LINE',
+      3: 'PHASE_2_VERIFY_RECALL_BIASED',
+      4: 'OUTPUT_FORMAT_FN',
+    },
   },
   {
     matcher: t => t.includes('at medium effort: every finding you surface'),
     name: 'Skill: Code Review (medium effort)',
     id: 'skill-code-review-effort-medium',
     description: 'Effort-tier prompt for medium code review — 3 angles, up to 6 candidates, precision-biased, up to 8 findings',
+    identifierMap: {
+      0: 'PHASE_0_GATHER_DIFF',
+      1: 'AGENT_TOOL_NAME',
+      2: 'ANGLES_LINE_BY_LINE',
+      3: 'PHASE_2_VERIFY_3_STATE',
+      4: 'OUTPUT_FORMAT_FN',
+    },
   },
   {
     matcher: t => t.includes('1 diff pass '),
@@ -191,6 +214,7 @@ const NEW_PROMPT_ASSIGNMENTS = [
     name: 'Skill: Code Review (findings JSON output)',
     id: 'skill-code-review-output-format',
     description: 'Shared output spec for the code-review skill — findings as a JSON array with file/line/summary/failure_scenario',
+    identifierMap: { 0: 'MAX_FINDINGS' },
   },
   {
     matcher: t => t.includes('Gather the diff'),
@@ -203,12 +227,14 @@ const NEW_PROMPT_ASSIGNMENTS = [
     name: 'Skill: Code Review (Phase 2 — verify, 3-state)',
     id: 'skill-code-review-phase-2-verify-3-state',
     description: 'Phase 2 of the code-review skill for precision tiers — one verifier per candidate, 3-state CONFIRMED/PLAUSIBLE/REFUTED vote',
+    identifierMap: { 0: 'AGENT_TOOL_NAME' },
   },
   {
     matcher: t => t.includes('Verify (1-vote, recall-biased)'),
     name: 'Skill: Code Review (Phase 2 — verify, recall-biased)',
     id: 'skill-code-review-phase-2-verify-recall-biased',
     description: 'Phase 2 of the code-review skill for recall tiers — one verifier per candidate, recall-biased keep rule',
+    identifierMap: { 0: 'AGENT_TOOL_NAME' },
   },
   {
     matcher: t => t.includes('Sweep for gaps'),
@@ -221,6 +247,20 @@ const NEW_PROMPT_ASSIGNMENTS = [
     name: 'Skill: Code Review (Angle A — line-by-line diff scan)',
     id: 'skill-code-review-angle-line-by-line',
     description: 'The line-by-line diff-scan finder angle of the code-review skill — read every hunk plus the enclosing function',
+  },
+  {
+    // The memory-synthesis subagent has a single trailing ${...} interpolation
+    // that resolves to "" in 2.1.150 — an inert hook for future conditional
+    // notes. Naming it here so the override doesn't reference UNKNOWN_0.
+    matcher: t =>
+      t.startsWith(
+        'You read persistent memory files for an AI coding assistant'
+      ),
+    name: 'Agent Prompt: Memory synthesis',
+    id: 'agent-prompt-memory-synthesis',
+    description:
+      'Subagent that reads persistent memory files and returns a JSON synthesis of only the information relevant to each query, with cited filenames',
+    identifierMap: { 0: 'OPTIONAL_TAIL_NOTE' },
   },
   // 2.1.145 — the "run" skill family (launch and drive a project's app):
   // /run + /run-skill-generator bundled skills plus their 6 shared example
@@ -1066,12 +1106,19 @@ function mergeWithExisting(newData, oldData, currentVersion) {
     if (matchingOld) {
       // Prompt matches exactly
       // If old prompt has no version, use current version; otherwise use old version
+      // Overlay NEW_PROMPT_ASSIGNMENTS.identifierMap when it provides one — lets us
+      // backfill semantic names onto prompts whose carried-over identifierMap was
+      // empty (originated from a version before we knew the slot semantics).
+      const assignedFromMap = lookupNewPromptAssignment(newContent);
+      const overlaidIdentifierMap = assignedFromMap && assignedFromMap.identifierMap
+        ? { ...matchingOld.identifierMap, ...assignedFromMap.identifierMap }
+        : matchingOld.identifierMap;
       return {
         ...newItem,
         name: matchingOld.name,
         id: matchingOld.id || slugify(matchingOld.name),
         description: matchingOld.description,
-        identifierMap: matchingOld.identifierMap,
+        identifierMap: overlaidIdentifierMap,
         version: matchingOld.version || currentVersion,
       };
     }
@@ -1086,12 +1133,16 @@ function mergeWithExisting(newData, oldData, currentVersion) {
       console.log(
         `Fuzzy-matched item ${idx} to "${fuzzyOld.name || fuzzyOld.id}" (${oldLen} → ${newContent.length} chars)`
       );
+      const assignedFromMap = lookupNewPromptAssignment(newContent);
+      const overlaidIdentifierMap = assignedFromMap && assignedFromMap.identifierMap
+        ? { ...fuzzyOld.identifierMap, ...assignedFromMap.identifierMap }
+        : fuzzyOld.identifierMap;
       return {
         ...newItem,
         name: fuzzyOld.name,
         id: fuzzyOld.id || slugify(fuzzyOld.name),
         description: fuzzyOld.description,
-        identifierMap: fuzzyOld.identifierMap,
+        identifierMap: overlaidIdentifierMap,
         version: currentVersion,
       };
     }
