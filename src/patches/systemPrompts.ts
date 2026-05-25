@@ -6,7 +6,7 @@ import {
   reconstructContentFromPieces,
   escapeDepthZeroBackticks,
 } from '../systemPromptSync';
-import { setAppliedHash, computeMD5Hash } from '../systemPromptHashIndex';
+import { setAppliedHashes, computeMD5Hash } from '../systemPromptHashIndex';
 
 /**
  * Result of applying system prompts
@@ -99,6 +99,8 @@ export const applySystemPrompts = async (
 
   // Track per-prompt results
   const results: PatchResult[] = [];
+  const appliedHashUpdates: Record<string, string> = {};
+  const hashResultIndexes: number[] = [];
 
   // Search for and replace each prompt in cli.js
   for (const {
@@ -235,13 +237,7 @@ export const applySystemPrompts = async (
 
       // Store the hash of the applied prompt content
       const appliedHash = computeMD5Hash(prompt.content);
-      let hashFailed = false;
-      try {
-        await setAppliedHash(promptId, appliedHash);
-      } catch (error) {
-        debug(`Failed to store hash for "${prompt.name}": ${error}`);
-        hashFailed = true;
-      }
+      appliedHashUpdates[promptId] = appliedHash;
 
       // Show diff in debug mode
       showDiff(
@@ -265,18 +261,15 @@ export const applySystemPrompts = async (
         details = 'unchanged';
       }
 
-      if (hashFailed) {
-        details += ' (hash storage failed)';
-      }
-
+      const resultIndex = results.length;
       results.push({
         id: promptId,
         name: prompt.name,
         group: PatchGroup.SYSTEM_PROMPTS,
         applied,
-        ...(hashFailed && { failed: true }),
         details,
       });
+      hashResultIndexes.push(resultIndex);
     } else {
       // Shadowed prompts (owned by inline-blob, system-reminders, or a wider
       // named-prompt) are filtered upstream in loadSystemPromptsWithRegex via
@@ -307,6 +300,20 @@ export const applySystemPrompts = async (
       } catch {
         verbose(`  Partial match failed (regex truncation issue)`);
       }
+    }
+  }
+
+  try {
+    await setAppliedHashes(appliedHashUpdates);
+  } catch (error) {
+    debug(`Failed to store applied prompt hashes: ${error}`);
+    for (const index of hashResultIndexes) {
+      const result = results[index];
+      if (!result) continue;
+      result.failed = true;
+      result.details = result.details
+        ? `${result.details} (hash storage failed)`
+        : 'hash storage failed';
     }
   }
 

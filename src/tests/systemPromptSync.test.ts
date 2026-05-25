@@ -570,6 +570,29 @@ Content`;
       expect(writtenContent).not.toContain('variables:');
       expect(writtenContent).not.toContain('OLD_VAR');
     });
+
+    it('should skip writing when variables are already current', async () => {
+      const prompt: StringsPrompt = {
+        id: 'test-prompt',
+        name: 'Test',
+        description: 'Test',
+        ccVersion: '1.0.0',
+        version: '1.0.0',
+        pieces: ['Content ${', '}'],
+        identifiers: [1],
+        identifierMap: { '1': 'SETTINGS' },
+      } as StringsPrompt;
+      const mockContent = promptSync.generateMarkdownFromPrompt(prompt);
+
+      vi.spyOn(fs, 'readFile').mockResolvedValue(mockContent);
+      const writeFileSpy = vi
+        .spyOn(fs, 'writeFile')
+        .mockResolvedValue(undefined);
+
+      await promptSync.updateVariables('test-prompt', { '1': 'SETTINGS' });
+
+      expect(writeFileSpy).not.toHaveBeenCalled();
+    });
   });
 
   describe('generateDiffHtml', () => {

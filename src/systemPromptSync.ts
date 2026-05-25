@@ -464,6 +464,7 @@ export const updateVariables = async (
   const updatedMarkdown = matter.stringify(parsed.content, updatedData, {
     delimiters: ['<!--', '-->'],
   });
+  if (updatedMarkdown === markdown) return;
   await writePromptFile(promptId, updatedMarkdown);
 };
 

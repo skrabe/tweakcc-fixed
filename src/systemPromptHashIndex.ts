@@ -209,8 +209,17 @@ export const setAppliedHash = async (
   promptId: string,
   hash: string
 ): Promise<void> => {
+  await setAppliedHashes({ [promptId]: hash });
+};
+
+export const setAppliedHashes = async (
+  updates: Record<string, string>
+): Promise<void> => {
+  if (Object.keys(updates).length === 0) return;
   const index = await readAppliedHashIndex();
-  index[promptId] = hash;
+  for (const [promptId, hash] of Object.entries(updates)) {
+    index[promptId] = hash;
+  }
   await writeAppliedHashIndex(index);
 };
 

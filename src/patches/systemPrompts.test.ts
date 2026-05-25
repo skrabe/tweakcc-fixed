@@ -15,7 +15,7 @@ vi.mock('../systemPromptHashIndex', async () => {
   const actual = await vi.importActual('../systemPromptHashIndex');
   return {
     ...actual,
-    setAppliedHash: vi.fn(),
+    setAppliedHashes: vi.fn(),
   };
 });
 
@@ -81,11 +81,11 @@ function setupMocks(
     promptData,
   ]);
   if (hashBehavior instanceof Error) {
-    vi.mocked(systemPromptHashIndex.setAppliedHash).mockRejectedValue(
+    vi.mocked(systemPromptHashIndex.setAppliedHashes).mockRejectedValue(
       hashBehavior
     );
   } else {
-    vi.mocked(systemPromptHashIndex.setAppliedHash).mockResolvedValue();
+    vi.mocked(systemPromptHashIndex.setAppliedHashes).mockResolvedValue();
   }
 }
 
@@ -466,6 +466,43 @@ describe('systemPrompts.ts', () => {
       expect(result.newContent).toContain('New longer content here');
       expect(result.results[0].failed).toBe(true);
       expect(result.results[0].details).toContain('hash storage failed');
+    });
+
+    it('should persist applied hashes in one batch', async () => {
+      const firstPrompt = buildMockPromptData({
+        promptId: 'first-prompt',
+        prompt: { content: 'First replacement' },
+        regex: 'First original',
+        getInterpolatedContent: () => 'First replacement',
+        pieces: ['First original'],
+      });
+      const secondPrompt = buildMockPromptData({
+        promptId: 'second-prompt',
+        prompt: { content: 'Second replacement' },
+        regex: 'Second original',
+        getInterpolatedContent: () => 'Second replacement',
+        pieces: ['Second original'],
+      });
+
+      vi.mocked(promptSync.loadSystemPromptsWithRegex).mockResolvedValue([
+        firstPrompt,
+        secondPrompt,
+      ]);
+      vi.mocked(systemPromptHashIndex.setAppliedHashes).mockResolvedValue();
+
+      await applySystemPrompts(
+        'one:"First original";two:"Second original"',
+        '1.0.0',
+        false
+      );
+
+      expect(systemPromptHashIndex.setAppliedHashes).toHaveBeenCalledTimes(1);
+      expect(systemPromptHashIndex.setAppliedHashes).toHaveBeenCalledWith({
+        'first-prompt':
+          systemPromptHashIndex.computeMD5Hash('First replacement'),
+        'second-prompt':
+          systemPromptHashIndex.computeMD5Hash('Second replacement'),
+      });
     });
 
     it('should skip prompts not in patchFilter', async () => {

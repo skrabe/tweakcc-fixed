@@ -515,6 +515,49 @@ function lookupNewPromptAssignment(content) {
   return null;
 }
 
+function parseMarkdownFrontmatter(content) {
+  if (!content.startsWith('---\n')) return null;
+  const end = content.indexOf('\n---', 4);
+  if (end === -1) return null;
+  const data = {};
+  for (const line of content.slice(4, end).split('\n')) {
+    const match = line.match(/^([A-Za-z][A-Za-z0-9_-]*):\s*(.*)$/);
+    if (!match) continue;
+    data[match[1]] = match[2].trim().replace(/^['"]|['"]$/g, '');
+  }
+  return data;
+}
+
+function inferPromptIdentity(content) {
+  const frontmatter = parseMarkdownFrontmatter(content);
+  if (
+    frontmatter &&
+    typeof frontmatter.name === 'string' &&
+    frontmatter.name.trim()
+  ) {
+    const skillName = frontmatter.name.trim();
+    if (
+      !/^[A-Za-z0-9][A-Za-z0-9_-]{1,80}$/.test(skillName) ||
+      content.includes('TODO')
+    ) {
+      return null;
+    }
+    const description =
+      typeof frontmatter.description === 'string'
+        ? frontmatter.description.trim()
+        : '';
+    return {
+      name: `Skill: ${skillName}`,
+      id: `skill-${slugify(skillName)}`,
+      description: description
+        ? `Bundled ${skillName} skill — ${description}`
+        : `Bundled ${skillName} skill`,
+    };
+  }
+
+  return null;
+}
+
 function validateInput(text, minLength = 500) {
   if (!text || typeof text !== 'string') return false;
 
@@ -659,6 +702,7 @@ function validateInput(text, minLength = 500) {
   // Short prompts new in a CC version: NEW_PROMPT_ASSIGNMENTS doubles as
   // an inclusion gate (here) and a naming source (mergeWithExisting fallback).
   if (lookupNewPromptAssignment(text)) return true;
+  if (inferPromptIdentity(text)) return true;
 
   // System-reminder short fragments and a few specific tool-description /
   // system-prompt fragments shipped under 500 chars in 2.1.141.
@@ -1168,11 +1212,12 @@ function mergeWithExisting(newData, oldData, currentVersion) {
     // Check if there's any old prompt without a version (we should add current version)
     const oldWithoutVersion = oldData.prompts.find(oldItem => !oldItem.version);
 
-    // Hand-curated assignment for prompts new in this CC version.
-    const assigned = lookupNewPromptAssignment(newContent);
+    // Hand-curated or high-confidence inferred assignment for prompts new in this CC version.
+    const assigned =
+      lookupNewPromptAssignment(newContent) || inferPromptIdentity(newContent);
     if (assigned) {
       console.log(
-        `Assigned new prompt item ${idx} via NEW_PROMPT_ASSIGNMENTS → "${assigned.id}"`
+        `Assigned new prompt item ${idx} → "${assigned.id}"`
       );
       // If the assignment provides identifierMap (semantic names for the
       // ${var.field} interpolations), use it. Override files reference these
