@@ -499,6 +499,84 @@ const NEW_PROMPT_ASSIGNMENTS = [
       'Bundled autopilot workflow — plans a task, implements it, and judges completeness across blocker/major/minor holes',
     identifierMap: WORKFLOW_SCRIPT_IDENTIFIER_MAP,
   },
+
+  // 2.1.151/2.1.152 — coordinator mode (multi-worker orchestration). CC ships
+  // a new top-level system-prompt path: iG5() emits the coordinator prompt
+  // when coordinator mode is active (SH("coordinator_mode_start")); workers
+  // launched via the Agent tool receive Qw7() (getWorkerSystemPrompt).
+  {
+    matcher: t =>
+      t.includes(
+        'You are Claude Code, an AI assistant that orchestrates software engineering tasks across multiple workers'
+      ),
+    name: 'System Prompt: Coordinator mode',
+    id: 'system-prompt-coordinator-mode',
+    description:
+      'Top-level CC system prompt when coordinator mode is active — orchestrates worker subagents through Agent/SendMessage/TaskStop, with optional cross-session peer discovery and workflow tool guidance',
+    identifierMap: {
+      0: 'AGENT_TOOL_NAME',
+      1: 'SENDMESSAGE_TOOL_NAME',
+      2: 'TASKSTOP_TOOL_NAME',
+      3: 'WORKFLOW_CONDITIONAL_TOOL_NOTE',
+      4: 'LISTAGENTS_TOOL_NAME',
+      5: 'WORKER_TOOLS_INTRO_TEXT',
+    },
+  },
+  {
+    matcher: t =>
+      t.includes('You are a worker agent executing a task assigned by the coordinator'),
+    name: 'System Prompt: Worker agent',
+    id: 'system-prompt-worker-agent',
+    description:
+      'System prompt for a worker subagent in coordinator mode — scoped execution, reports back to the coordinator (not the user) via task-note output',
+    identifierMap: { 0: 'AGENT_TOOL_NAME' },
+  },
+
+  // 2.1.151/2.1.152 — /code-review --fix extension. The --fix flag appends
+  // OEO to the assembled code-review prompt; tells the model to apply the
+  // findings to the working tree instead of stopping at the report.
+  {
+    matcher: t => t.includes('## Applying fixes (--fix)'),
+    name: 'Skill: Code Review (--fix applying fixes)',
+    id: 'skill-code-review-applying-fixes',
+    description:
+      'Appended to the code-review prompt when --fix is passed; instructs applying each finding to the working tree, skipping behavior-changing or out-of-scope fixes',
+  },
+
+  // 2.1.151/2.1.152 — leading ${""} prefix shifted the tool-description-bash
+  // commit/PR template; fuzzy carryover misses it. Same prompt as the
+  // tool-description-bash-git-commit-and-pr-creation-instructions in 2.1.150,
+  // with one extra identifier slot (T = future PR preamble stub, currently "").
+  // Note: TASK_TOOL_NAME slot was renamed to AGENT_TOOL_NAME in 2.1.151+.
+  {
+    matcher: t => t.startsWith('${""}# Committing changes with git'),
+    name: 'Tool Description: Bash (Git commit and PR creation instructions)',
+    id: 'tool-description-bash-git-commit-and-pr-creation-instructions',
+    description:
+      'Embedded in the Bash tool description: end-to-end guidance for git commit and gh pr create workflows with safety protocol, staging rules, and HEREDOC formatting',
+    identifierMap: {
+      0: 'BASH_TOOL_NAME',
+      1: 'COMMIT_CO_AUTHORED_BY_CLAUDE_CODE',
+      2: 'TODO_TOOL_OBJECT',
+      3: 'AGENT_TOOL_NAME',
+      4: 'PR_PREAMBLE_STUB',
+      5: 'PR_GENERATED_WITH_CLAUDE_CODE',
+    },
+  },
+
+  // 2.1.151/2.1.152 — ultrareview help wording extended (was just /ultrareview;
+  // now /code-review ultra with /ultrareview noted as deprecated alias).
+  // Fuzzy carryover misses because the leading phrase changed.
+  {
+    matcher: t =>
+      t.includes(
+        '/code-review ultra launches a multi-agent cloud review of the current branch'
+      ),
+    name: 'System Prompt: Ultrareview help',
+    id: 'system-prompt-ultrareview-help',
+    description:
+      "Session-specific guidance line surfaced when the user asks about 'ultrareview' — explains the /code-review ultra command (with /ultrareview as a deprecated alias) and that the agent cannot launch it itself",
+  },
 ];
 
 function lookupNewPromptAssignment(content) {
