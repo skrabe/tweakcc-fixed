@@ -392,6 +392,9 @@ const THINKING_REMINDER_INJECTION: ReminderInjection = {
   defaultBody:
     'Respond with just the action or changes and without a thinking block, unless this is a redesign or requires fresh reasoning.',
   apply(content, body, isSuppressed) {
+    if (!/thinking_reminder:\(/.test(content)) {
+      return content;
+    }
     return findAndReplace(
       content,
       /thinking_reminder:\(\)=>\[([$\w]+)\(\{content:([$\w]+)\(([$\w]+)\),isMeta:!0\}\)\]/,
