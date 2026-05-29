@@ -166,6 +166,60 @@ describe('systemPrompts.ts', () => {
       expect(result.newContent).toBe('description:"Hello\\nWorld"');
     });
 
+    it('should convert CRLF line endings to \\n for double-quoted string literals (Windows)', async () => {
+      const mockPromptData = buildMockPromptData({
+        prompt: { content: 'Hello\r\nWorld' },
+        regex: 'Hello(?:\n|\\\\n)World',
+        getInterpolatedContent: () => 'Hello\r\nWorld',
+        pieces: ['Hello\r\nWorld'],
+      });
+
+      setupMocks(mockPromptData);
+
+      const cliContent = 'description:"Hello\\nWorld"';
+
+      const result = await applySystemPrompts(cliContent, '1.0.0', false);
+
+      expect(result.newContent).toBe('description:"Hello\\nWorld"');
+      expect(result.newContent).not.toMatch(/\r/);
+    });
+
+    it('should convert CRLF line endings to \\n for single-quoted string literals (Windows)', async () => {
+      const mockPromptData = buildMockPromptData({
+        prompt: { content: 'Hello\r\nWorld' },
+        regex: 'Hello(?:\n|\\\\n)World',
+        getInterpolatedContent: () => 'Hello\r\nWorld',
+        pieces: ['Hello\r\nWorld'],
+      });
+
+      setupMocks(mockPromptData);
+
+      const cliContent = "msg:'Hello\\nWorld'";
+
+      const result = await applySystemPrompts(cliContent, '1.0.0', false);
+
+      expect(result.newContent).toBe("msg:'Hello\\nWorld'");
+      expect(result.newContent).not.toMatch(/\r/);
+    });
+
+    it('should normalize CRLF to LF for backtick template literals (Windows)', async () => {
+      const mockPromptData = buildMockPromptData({
+        prompt: { content: 'Hello\r\nWorld' },
+        regex: 'Hello(?:\n|\\\\n)World',
+        getInterpolatedContent: () => 'Hello\r\nWorld',
+        pieces: ['Hello\r\nWorld'],
+      });
+
+      setupMocks(mockPromptData);
+
+      const cliContent = 'description:`Hello\nWorld`';
+
+      const result = await applySystemPrompts(cliContent, '1.0.0', false);
+
+      expect(result.newContent).toBe('description:`Hello\nWorld`');
+      expect(result.newContent).not.toMatch(/\r/);
+    });
+
     it('should keep actual newlines for backtick template literals', async () => {
       const mockPromptData = buildMockPromptData({
         prompt: { content: 'Hello\nWorld' },
