@@ -1489,6 +1489,28 @@ if (require.main === module) {
     version
   );
 
+  // Normalize empty identifierMap names to stable synthetic names. An empty
+  // name forces applyIdentifierMapping's `UNKNOWN_<slot>` fallback, which ships
+  // a latent ReferenceError risk and unreadable overrides; it happens for
+  // prompts whose interpolations are complex expressions (ternaries, `??`,
+  // method/function calls) the curated NEW_PROMPT_ASSIGNMENTS table doesn't
+  // name. Synthetic name = <ID_SLUG>_VAR_<slot>: unique per prompt+slot and
+  // stable across re-extraction, so overrides referencing it keep binding.
+  // Curated/real names always win (this only fills blanks).
+  for (const p of mergedResult.prompts) {
+    if (!p.identifierMap) continue;
+    const slug =
+      String(p.id || 'prompt')
+        .replace(/[^A-Za-z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '')
+        .toUpperCase() || 'PROMPT';
+    for (const k of Object.keys(p.identifierMap)) {
+      if (!p.identifierMap[k]) {
+        p.identifierMap[k] = `${slug}_VAR_${k}`;
+      }
+    }
+  }
+
   // Sort prompts by lexicographic order of pieces joined together (without interpolated vars)
   mergedResult.prompts.sort((a, b) => {
     const contentA = a.pieces.join('');
