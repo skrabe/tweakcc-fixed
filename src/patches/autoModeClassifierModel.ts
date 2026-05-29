@@ -41,8 +41,14 @@ export const writeAutoModeClassifierModel = (
   // function NAME(){let VAR=READER("tengu_auto_mode_config",{});if(VAR?.model)return VAR.model;return DEFAULT_FN()}
   const pattern =
     /function\s+([$\w]+)\s*\(\s*\)\s*\{\s*let\s+([$\w]+)\s*=\s*([$\w]+)\s*\(\s*"tengu_auto_mode_config"\s*,\s*\{\s*\}\s*\)\s*;\s*if\s*\(\s*\2\s*\?\.\s*model\s*\)\s*return\s+\2\s*\.\s*model\s*;\s*return\s+([$\w]+)\s*\(\s*\)\s*\}/;
+  // CC 2.1.156 shape: arg-less resolver that first checks Opus-4.8's
+  // tengu_cedar_hollow_7m config, then tengu_auto_mode_config, then falls back
+  // to the main-loop model:
+  // function NAME(){let H=FN();if(MODEL(H)==="claude-opus-4-8"){let q=R("tengu_cedar_hollow_7m",{});if(q?.model)return q.model}let _=R("tengu_auto_mode_config",{});if(_?.model)return _.model;return H}
+  const pattern156 =
+    /function\s+([$\w]+)\s*\(\s*\)\s*\{\s*let\s+([$\w]+)\s*=\s*([$\w]+)\s*\(\s*\)\s*;\s*if\s*\(\s*([$\w]+)\s*\(\s*\2\s*\)\s*===\s*"claude-opus-4-8"\s*\)\s*\{\s*let\s+([$\w]+)\s*=\s*([$\w]+)\s*\(\s*"tengu_cedar_hollow_7m"\s*,\s*\{\s*\}\s*\)\s*;\s*if\s*\(\s*\5\s*\?\.\s*model\s*\)\s*return\s+\5\s*\.\s*model\s*\}\s*let\s+([$\w]+)\s*=\s*([$\w]+)\s*\(\s*"tengu_auto_mode_config"\s*,\s*\{\s*\}\s*\)\s*;\s*if\s*\(\s*\7\s*\?\.\s*model\s*\)\s*return\s+\7\s*\.\s*model\s*;\s*return\s+\2\s*\}/;
 
-  const match = oldFile.match(pattern);
+  const match = oldFile.match(pattern156) || oldFile.match(pattern);
   if (match && match.index !== undefined) {
     const [fullMatch, fnName] = match;
     const replacement = `function ${fnName}(){return "${modelId}"}`;

@@ -35,10 +35,17 @@ export const writeMaxEffortDefault = (oldFile: string): string | null => {
   // function NAME(ARG){if(FUNC(ARG)==="claude-opus-4-7")return"xhigh";return"high"}
   const defaultPattern =
     /function\s+([$\w]+)\s*\(\s*([$\w]+)\s*\)\s*\{\s*if\s*\(\s*([$\w]+)\s*\(\s*\2\s*\)\s*===\s*"claude-opus-4-7"\s*\)\s*return\s*"xhigh"\s*;\s*return\s*"high"\s*\}/;
-  const defaultMatch = workingFile.match(defaultPattern);
+  // CC 2.1.156 shape — two model conditions (Opus 4.8 added, defaults to "high"):
+  // function NAME(ARG){if(FUNC(ARG)==="claude-opus-4-8")return"high";if(FUNC(ARG)==="claude-opus-4-7")return"xhigh";return"high"}
+  const default156Pattern =
+    /function\s+([$\w]+)\s*\(\s*([$\w]+)\s*\)\s*\{\s*if\s*\(\s*([$\w]+)\s*\(\s*\2\s*\)\s*===\s*"claude-opus-4-8"\s*\)\s*return\s*"high"\s*;\s*if\s*\(\s*\3\s*\(\s*\2\s*\)\s*===\s*"claude-opus-4-7"\s*\)\s*return\s*"xhigh"\s*;\s*return\s*"high"\s*\}/;
+  const m156 = workingFile.match(default156Pattern);
+  const defaultMatch = m156 || workingFile.match(defaultPattern);
   if (defaultMatch && defaultMatch.index !== undefined) {
     const [fullMatch, fnName, argName, innerFnName] = defaultMatch;
-    const replacement = `function ${fnName}(${argName}){if(${innerFnName}(${argName})==="claude-opus-4-7")return"max";return"high"}`;
+    const replacement = m156
+      ? `function ${fnName}(${argName}){if(${innerFnName}(${argName})==="claude-opus-4-8")return"max";if(${innerFnName}(${argName})==="claude-opus-4-7")return"max";return"high"}`
+      : `function ${fnName}(${argName}){if(${innerFnName}(${argName})==="claude-opus-4-7")return"max";return"high"}`;
     const newFile =
       workingFile.slice(0, defaultMatch.index) +
       replacement +
@@ -52,6 +59,7 @@ export const writeMaxEffortDefault = (oldFile: string): string | null => {
     );
     workingFile = newFile;
   } else if (
+    /===\s*"claude-opus-4-8"\s*\)\s*return\s*"max"/.test(workingFile) ||
     /function\s+[$\w]+\s*\(\s*[$\w]+\s*\)\s*\{\s*if\s*\(\s*[$\w]+\s*\(\s*[$\w]+\s*\)\s*===\s*"claude-opus-4-7"\s*\)\s*return\s*"max"\s*;\s*return\s*"high"\s*\}/.test(
       workingFile
     )
@@ -70,10 +78,23 @@ export const writeMaxEffortDefault = (oldFile: string): string | null => {
   // function NAME(ARG){return INNER(ARG).includes("opus-4-7")&&!STATE().unpinOpus47LaunchEffort}
   const gatePattern =
     /function\s+([$\w]+)\s*\(\s*([$\w]+)\s*\)\s*\{\s*return\s+([$\w]+)\s*\(\s*\2\s*\)\s*\.\s*includes\s*\(\s*"opus-4-7"\s*\)\s*&&\s*!\s*[$\w]+\s*\(\s*\)\s*\.\s*unpinOpus47LaunchEffort\s*\}/;
-  const gateMatch = workingFile.match(gatePattern);
+  // CC 2.1.156 shape — per-model gate with an added Opus-4.8 branch:
+  // function NAME(ARG){let M=INNER(ARG);if(M.includes("opus-4-7"))return!STATE().unpinOpus47LaunchEffort;if(M.includes("opus-4-8"))return!STATE().unpinOpus48LaunchEffort;return!1}
+  const gate156Pattern =
+    /function\s+([$\w]+)\s*\(\s*([$\w]+)\s*\)\s*\{\s*let\s+([$\w]+)\s*=\s*([$\w]+)\s*\(\s*\2\s*\)\s*;\s*if\s*\(\s*\3\s*\.\s*includes\s*\(\s*"opus-4-7"\s*\)\s*\)\s*return\s*!\s*([$\w]+)\s*\(\s*\)\s*\.\s*unpinOpus47LaunchEffort\s*;\s*if\s*\(\s*\3\s*\.\s*includes\s*\(\s*"opus-4-8"\s*\)\s*\)\s*return\s*!\s*\5\s*\(\s*\)\s*\.\s*unpinOpus48LaunchEffort\s*;\s*return\s*!\s*1\s*\}/;
+  const g156 = workingFile.match(gate156Pattern);
+  const gateMatch = g156 || workingFile.match(gatePattern);
   if (gateMatch && gateMatch.index !== undefined) {
-    const [fullMatch, fnName, argName, innerFnName] = gateMatch;
-    const replacement = `function ${fnName}(${argName}){return ${innerFnName}(${argName}).includes("opus-4-7")}`;
+    const fullMatch = gateMatch[0];
+    let replacement: string;
+    if (g156) {
+      const [, fnName, argName, modelVar, innerFnName] = gateMatch;
+      // Force the Opus per-model default (max) to stand regardless of unpin.
+      replacement = `function ${fnName}(${argName}){let ${modelVar}=${innerFnName}(${argName});if(${modelVar}.includes("opus-4-7"))return!0;if(${modelVar}.includes("opus-4-8"))return!0;return!1}`;
+    } else {
+      const [, fnName, argName, innerFnName] = gateMatch;
+      replacement = `function ${fnName}(${argName}){return ${innerFnName}(${argName}).includes("opus-4-7")}`;
+    }
     const newFile =
       workingFile.slice(0, gateMatch.index) +
       replacement +
@@ -87,6 +108,7 @@ export const writeMaxEffortDefault = (oldFile: string): string | null => {
     );
     workingFile = newFile;
   } else if (
+    /includes\s*\(\s*"opus-4-8"\s*\)\s*\)\s*return\s*!\s*0/.test(workingFile) ||
     /function\s+[$\w]+\s*\(\s*[$\w]+\s*\)\s*\{\s*return\s+[$\w]+\s*\(\s*[$\w]+\s*\)\s*\.\s*includes\s*\(\s*"opus-4-7"\s*\)\s*\}/.test(
       workingFile
     )
