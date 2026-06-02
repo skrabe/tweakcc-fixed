@@ -315,6 +315,80 @@ const NEW_PROMPT_ASSIGNMENTS = [
     id: 'skill-code-review-angle-line-by-line',
     description: 'The line-by-line diff-scan finder angle of the code-review skill — read every hunk plus the enclosing function',
   },
+
+  // 2.1.160 — the code-review skill's finder angles B–E and the recall-biased
+  // verify rubric ship as standalone string constants (shared between the
+  // inline /code-review cells and the new bundled workflow script). Each is
+  // pure markdown with no interpolation, so no identifierMap is needed.
+  {
+    matcher: t => t.includes('removed-behavior auditor'),
+    name: 'Skill: Code Review (Angle B — removed-behavior auditor)',
+    id: 'skill-code-review-angle-removed-behavior-auditor',
+    description: 'The removed-behavior finder angle of the code-review skill — for every deleted/replaced line, name the invariant it enforced and check it is re-established',
+  },
+  {
+    matcher: t => t.includes('cross-file tracer'),
+    name: 'Skill: Code Review (Angle C — cross-file tracer)',
+    id: 'skill-code-review-angle-cross-file-tracer',
+    description: 'The cross-file finder angle of the code-review skill — for each changed function, trace its callers to flag broken contracts',
+  },
+  {
+    matcher: t => t.includes('language-pitfall specialist'),
+    name: 'Skill: Code Review (Angle D — language-pitfall specialist)',
+    id: 'skill-code-review-angle-language-pitfall-specialist',
+    description: "The language-pitfall finder angle of the code-review skill — scan for the classic pitfalls of the diff's language/framework",
+  },
+  {
+    matcher: t => t.includes('wrapper/proxy correctness'),
+    name: 'Skill: Code Review (Angle E — wrapper/proxy correctness)',
+    id: 'skill-code-review-angle-wrapper-proxy-correctness',
+    description: 'The wrapper/proxy finder angle of the code-review skill — when a type wraps another (cache, proxy, decorator), check the forwarding is faithful',
+  },
+  {
+    matcher: t => t.includes('**PLAUSIBLE by default**'),
+    name: 'Skill: Code Review (verify — PLAUSIBLE/REFUTED rubric)',
+    id: 'skill-code-review-verify-plausible-refuted-rubric',
+    description: 'The keep/kill rubric for the code-review verify phase — PLAUSIBLE by default, REFUTED only when constructible from the code',
+  },
+
+  // 2.1.160 — DesignSync tool, paired with the new design-sync skill. Reads and
+  // updates the user's claude.ai/design design-system projects via their
+  // claude.ai login; dispatches on a `method` field.
+  {
+    matcher: t =>
+      t.includes(
+        "Read and update the user's claude.ai/design design-system projects"
+      ),
+    name: 'Tool Description: DesignSync',
+    id: 'tool-description-designsync',
+    description: "Describes the DesignSync tool — reads/updates the user's claude.ai/design design-system projects through their claude.ai login, dispatching on a method field, paired with the /design-sync skill",
+  },
+
+  // 2.1.160 — bundled /code-review workflow script (export const meta = {...}
+  // JS source, like the other workflow-script-* entries). Embeds the angle and
+  // verdict-ladder fragments via ${JSON.stringify(...)} so they stay one source
+  // of truth with the inline cells. Slot 0 is the repeated JSON global; slots
+  // 1–4 are the standard meta fields; 5–10 are the embedded prompt fragments.
+  {
+    matcher: t =>
+      t.includes('export const meta') && t.includes('// code-review: Scope'),
+    name: 'Workflow Script: /code-review',
+    id: 'workflow-script-code-review',
+    description: 'Bundled /code-review workflow — scopes the diff, fans out per-angle finders, dedups, verifies, sweeps for gaps (xhigh/max), and synthesizes; effort-parameterized via LEVEL_PARAMS',
+    identifierMap: {
+      0: 'JSON',
+      1: 'WORKFLOW_NAME',
+      2: 'WORKFLOW_DESCRIPTION',
+      3: 'WORKFLOW_WHEN_TO_USE',
+      4: 'WORKFLOW_PHASES',
+      5: 'CORRECTNESS_ANGLES',
+      6: 'CLEANUP_ANGLES',
+      7: 'VERDICT_LADDER',
+      8: 'VERDICT_LADDER_RECALL',
+      9: 'CLEANUP_PRECEDENCE',
+      10: 'SWEEP_GAP_FOCUS',
+    },
+  },
   {
     // The memory-synthesis subagent has a single trailing ${...} interpolation
     // that resolves to "" in 2.1.150 — an inert hook for future conditional
@@ -709,6 +783,21 @@ function validateInput(text, minLength = 500) {
   // ////////////////
   // What to exclude.
   // ////////////////
+
+  // Bundled skill build-tooling — executable JS/MJS source shipped inside a
+  // skill, not model-facing prompt text. The design-sync skill (new in 2.1.160)
+  // ships package-build.mjs and a validation script (#!/usr/bin/env node) plus
+  // lib/*.mjs modules (ts-morph .d.ts extraction, esbuild bundling, storybook
+  // adapters). Piebald excludes these too. Mirror the `#!/usr/bin/env bun` rule.
+  if (text.startsWith('#!/usr/bin/env node')) return false;
+  // The lib/*.mjs ESM modules open with a `// ` banner comment and carry both an
+  // `import ... from '...'` line and a top-level `export` — a shape no prompt has.
+  if (
+    /^\/\/ /.test(text) &&
+    /\nimport\s.+\sfrom\s['"]/.test(text) &&
+    /\nexport\s+(function|const|default|\{)/.test(text)
+  )
+    return false;
 
   // Two general-purpose-agent fragments the current extractor surfaces that
   // have no working override target, so cataloging either only produces a
