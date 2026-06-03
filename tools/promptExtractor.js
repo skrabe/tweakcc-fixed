@@ -718,6 +718,22 @@ const NEW_PROMPT_ASSIGNMENTS = [
     description:
       "Session-specific guidance line surfaced when the user asks about 'ultrareview' — explains the /code-review ultra command (with /ultrareview as a deprecated alias) and that the agent cannot launch it itself",
   },
+
+  // 2.1.161 — the action-safety prompt gained a `${k5q()?A:B}` conditional
+  // opening (k5q is a memoized CLAUDE_CODE_OWNERSHIP_FRAME / tengu_walnut_prism
+  // flag that appends "; approval in one context doesn't extend to the next.").
+  // The new leading `${...}` changes the first 100 chars, so fuzzy carryover
+  // dropped the name; the prompt itself is unchanged otherwise. Restore it.
+  {
+    matcher: t =>
+      t.includes(
+        'hard to reverse or outward-facing, confirm first unless durably authorized'
+      ),
+    name: 'System Prompt: Action safety and truthful reporting',
+    id: 'system-prompt-action-safety-and-truthful-reporting',
+    description:
+      'Requires confirmation for irreversible or outward-facing actions, checking targets before destructive edits, and truthful reporting of outcomes',
+  },
 ];
 
 function lookupNewPromptAssignment(content) {
