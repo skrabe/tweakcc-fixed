@@ -29,17 +29,22 @@ upstream  https://github.com/Piebald-AI/tweakcc         (Piebald — actively ma
 
 **Historical note for context:** the fork used to be `skrabe/tweakcc-fixed → BenIsLegit/tweakcc-fixed → Piebald-AI/tweakcc` (2-hop fork chain). Ben's fork went unmaintained at 2026-04-22, so on 2026-05-05 we deleted the GH fork, re-forked directly off Piebald, and cherry-picked Ben's still-useful commits onto the new branch. There is no longer a `ben` remote and no longer a fork-of-fork relationship. If you find documentation referring to one, it's stale.
 
-### Syncing with upstream
+### Syncing with upstream — DON'T MERGE (deviated 2026-06-04)
+
+**We no longer merge `upstream/main`.** Piebald rewrote `tweakcc` into **v4.0.14**, which sits on the exact commit we last merged (`bc41a43`) but strips everything the fork exists for: it gates system-prompt overrides OFF for native installs, deletes the inline-blob + system-reminder mechanisms, the fork-only patches, the bytecode `clearBytecode` robustness, and guts the extractor. Upstream's `src/` is now a strict subset of ours; merging would drag in the deletion set (including deleting the `/showtime` skill) and conflict across every fork-only file. See memory `feedback_stop_merging_upstream_v4_divergence`.
+
+`upstream` stays as a **fetch-only comparison remote** — never merged into our tree:
 
 ```bash
 git -C ~/dev/tweakcc-fixed fetch upstream
-git -C ~/dev/tweakcc-fixed merge upstream/main         # most upstream pushes are pure prompt drops, conflict-free
-# Resolve conflicts only when our fork-only commits touch the same files
+# Comparison signal ONLY (count named, diff id-sets, confirm we stay ahead):
+git -C ~/dev/tweakcc-fixed show upstream/main:data/prompts/prompts-X.Y.Z.json > /tmp/piebald-X.Y.Z.json
+# Produce prompts JSON with OUR extractor (canonical); never `git merge upstream/main`.
 pnpm build && pnpm test
 git push origin main
 ```
 
-When one of our cherry-picked open upstream PRs eventually gets merged upstream, the next `git merge upstream/main` will recognize the same change is on both sides and the duplicate disappears cleanly — no manual intervention needed.
+Our extractor stays canonical and ahead of Piebald (e.g. 374 detected vs their 260 on 2.1.162). Cherry-pick a single upstream data file or one-off fix only if it materially beats ours — which, per the divergence analysis, it won't.
 
 ## Bug classes — diagnostics, not recipes
 
@@ -133,29 +138,18 @@ or a syntax error inside `cli.js` if the install is NPM-style.
 > VPS sync, and the full gotcha catalog (stale-backup downgrade, VPS Tailscale
 > auth, commit-message bad-substitution, etc.). On "it's showtime", use the skill.
 > The notes below are background; where they disagree with the skill, the skill
-> wins (e.g. the source-of-truth policy **flipped** — our extractor is now
-> canonical and Piebald is the comparison signal, per
-> `memory/feedback_prompts_jsons_pull_from_upstream_pr.md`; the paragraph just
-> below predates that flip).
+> wins. Two policies have since changed and the steps below reflect them:
+> (a) the source-of-truth **flipped** — our extractor is canonical, Piebald is a
+> comparison signal (`memory/feedback_prompts_jsons_pull_from_upstream_pr.md`);
+> (b) we **stopped merging upstream entirely** as of 2026-06-04 — Piebald
+> diverged at v4.0.14 and merging would self-destruct the fork
+> (`memory/feedback_stop_merging_upstream_v4_divergence.md`).
 
-The key insight: Piebald has an extraction pipeline that produces canonical, fully-named `prompts-X.Y.Z.json` files. **Always pull from their pipeline before considering anything else.** The naive `tools/promptExtractor.js` in this repo produces a strict subset of what Piebald publishes (the user pushed back hard the one time we tried it as a substitute — see `memory/feedback_prompt_jsons_pull_from_upstream_pr.md`).
+The key insight: **our `tools/promptExtractor.js` is the canonical source** and stays ahead of Piebald (374 detected vs their 260 on 2.1.162). We do NOT merge upstream and do NOT pull their prompts JSON into our tree — we extract our own and use Piebald's published JSON only for comparison.
 
-1. `git -C ~/dev/tweakcc-fixed fetch upstream` and `git merge upstream/main`. If the merge brought a `prompts-X.Y.Z.json` for the new CC version, you're done with step 1 — skip to 4.
-2. **If the merge didn't bring one,** Piebald often opens the PR before merging. Check:
-   ```bash
-   gh pr list --repo Piebald-AI/tweakcc --state all --search "prompts/X.Y.Z" \
-     --json number,title,state,headRefName
-   ```
-   If a `prompts/X.Y.Z` branch exists (open or merged), pull the JSON from it directly:
-   ```bash
-   gh pr checkout <num> --repo Piebald-AI/tweakcc --detach
-   cp data/prompts/prompts-X.Y.Z.json /tmp/                # snapshot
-   git checkout main
-   cp /tmp/prompts-X.Y.Z.json data/prompts/
-   git add data/prompts/prompts-X.Y.Z.json
-   ```
-   Commit referencing their PR number; when they merge it the next `git merge upstream/main` will recognize identical content on both sides and dedupe automatically.
-3. **Only if Piebald has no PR open** (genuinely faster than them — extremely rare), fall back to running `tools/promptExtractor.js` against an extracted `cli.js` of the new version. Mark the commit clearly as `data: prompts for X.Y.Z (auto-extracted, replace when upstream publishes)` so a later automatic dedupe doesn't surprise anyone.
+1. `git -C ~/dev/tweakcc-fixed fetch upstream` — **fetch only, NEVER `git merge upstream/main`** (it drags in the v4.0.14 deletion set and conflicts across every fork-only file). Read Piebald's published JSON for comparison only: `git show upstream/main:data/prompts/prompts-X.Y.Z.json > /tmp/piebald-X.Y.Z.json`.
+2. Extract `cli.js` from the new native binary and run OUR extractor, seeded from our own previous `prompts-<prev>.json` (see the skill §6 / `memory/feedback_prompts_jsons_pull_from_upstream_pr.md`). High-confidence naming of new prompts goes in `tools/promptExtractor.js → NEW_PROMPT_ASSIGNMENTS`.
+3. Compare named-count + id-set against `/tmp/piebald-X.Y.Z.json`; confirm ours ≥ previous and ours > Piebald (`memory/feedback_prompt_count_no_regressions`). Cherry-pick a single upstream data file only if it materially beats ours — it won't.
 4. Bump the README version line.
 5. `pnpm lint` and `pnpm test` — both green before going further.
 6. `pnpm build`.
