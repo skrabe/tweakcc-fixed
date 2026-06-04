@@ -31,6 +31,57 @@ const WORKFLOW_SCRIPT_IDENTIFIER_MAP = {
 // semantic names for the prompt's interpolated identifiers — required when
 // override .md files reference those names (`${ATTACHMENT_OBJECT.filename}`).
 const NEW_PROMPT_ASSIGNMENTS = [
+  // 2.1.162
+  {
+    // NotebookEdit description rewritten in 2.1.162 (was "Completely replaces
+    // the contents of a specific cell..."; now supports insert/delete and
+    // gained a ${Read} tool-name slot). Same tool/prompt -> same id; the
+    // rewrite changed the fuzzy fingerprint so carryover dropped the name.
+    matcher: t =>
+      t.includes(
+        'Replaces, inserts, or deletes a single cell in a Jupyter notebook'
+      ),
+    name: 'Tool Description: NotebookEdit',
+    id: 'tool-description-notebookedit',
+    description:
+      'Describes the NotebookEdit tool for replacing, inserting, or deleting a single cell in a Jupyter notebook (.ipynb)',
+    identifierMap: { '0': 'READ_TOOL_NAME' },
+  },
+  {
+    matcher: t =>
+      t.includes('# Package source shape\n\nNo Storybook — the component list'),
+    name: 'Skill: /design-sync package source shape',
+    id: 'skill-design-sync-package-source-shape',
+    description:
+      'design-sync skill reference shown when no Storybook is present: the component list comes from the package’s shipped .d.ts exports and previews are generated from .d.ts prop types',
+  },
+  {
+    matcher: t => t.includes('# Storybook source shape\n\n'),
+    name: 'Skill: /design-sync Storybook source shape',
+    id: 'skill-design-sync-storybook-source-shape',
+    description:
+      'design-sync skill reference shown when .storybook/ is found: the component list and story args come from storybook-static/index.json',
+  },
+  {
+    // Bundled .mjs adapter source (lib/source-kit.mjs) — net-new vs Piebald,
+    // analogous to the workflow-script-* bundled-code prompts.
+    matcher: t => t.includes('Always bundles dist/ (the authoritative'),
+    name: 'Skill: /design-sync package source adapter',
+    id: 'skill-design-sync-package-source-adapter',
+    description:
+      'Bundled lib/source-kit.mjs adapter for the design-sync skill: the non-Storybook package source adapter that bundles dist/ and enriches components from shipped .d.ts',
+  },
+  {
+    // Bundled .mjs adapter source (lib/source-storybook.mjs).
+    matcher: t =>
+      t.includes(
+        '// Storybook source adapter. Builds (or copies) storybook-static'
+      ),
+    name: 'Skill: /design-sync Storybook source adapter',
+    id: 'skill-design-sync-storybook-source-adapter',
+    description:
+      'Bundled lib/source-storybook.mjs adapter for the design-sync skill: builds storybook-static, parses index.json, and runs composeStories to extract story args',
+  },
   // 2.1.142
   {
     matcher: t => t.includes('Generate a short kebab-case name (2-4 words)'),
