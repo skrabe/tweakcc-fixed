@@ -29,9 +29,9 @@ upstream  https://github.com/Piebald-AI/tweakcc         (Piebald — actively ma
 
 **Historical note for context:** the fork used to be `skrabe/tweakcc-fixed → BenIsLegit/tweakcc-fixed → Piebald-AI/tweakcc` (2-hop fork chain). Ben's fork went unmaintained at 2026-04-22, so on 2026-05-05 we deleted the GH fork, re-forked directly off Piebald, and cherry-picked Ben's still-useful commits onto the new branch. There is no longer a `ben` remote and no longer a fork-of-fork relationship. If you find documentation referring to one, it's stale.
 
-### Syncing with upstream — DON'T MERGE (deviated 2026-06-04)
+### Syncing with upstream — DON'T MERGE (decided 2026-06-04)
 
-**We no longer merge `upstream/main`.** Piebald rewrote `tweakcc` into **v4.0.14**, which sits on the exact commit we last merged (`bc41a43`) but strips everything the fork exists for: it gates system-prompt overrides OFF for native installs, deletes the inline-blob + system-reminder mechanisms, the fork-only patches, the bytecode `clearBytecode` robustness, and guts the extractor. Upstream's `src/` is now a strict subset of ours; merging would drag in the deletion set (including deleting the `/showtime` skill) and conflict across every fork-only file. See memory `feedback_stop_merging_upstream_v4_divergence`.
+**We no longer merge `upstream/main`** — not because it's dangerous, but because it gains nothing. Our fork is a **strict superset** of upstream's code. Upstream is essentially static: since our fork base (`bc41a43`), its only code change is a version-string bump (`4.0.13`→`4.0.14`); releases are version bumps + prompt-JSON drops we supersede. A real test-merge is just 3 keep-ours conflicts (`README.md` + the two prompt JSONs) and deletes nothing — it would only pull a version label that's theirs and prompt data we replace. (Upstream's tree _does_ gate system-prompt overrides off native installs — but that gate predates our fork, it's already in `bc41a43`; our fork overrides it to apply prompts to native, which is the point.) See memory `feedback_stop_merging_upstream_v4_divergence`.
 
 `upstream` stays as a **fetch-only comparison remote** — never merged into our tree:
 
@@ -141,13 +141,13 @@ or a syntax error inside `cli.js` if the install is NPM-style.
 > wins. Two policies have since changed and the steps below reflect them:
 > (a) the source-of-truth **flipped** — our extractor is canonical, Piebald is a
 > comparison signal (`memory/feedback_prompts_jsons_pull_from_upstream_pr.md`);
-> (b) we **stopped merging upstream entirely** as of 2026-06-04 — Piebald
-> diverged at v4.0.14 and merging would self-destruct the fork
+> (b) we **stopped merging upstream** as of 2026-06-04 — upstream is essentially
+> static and our fork is a superset, so merging gains nothing
 > (`memory/feedback_stop_merging_upstream_v4_divergence.md`).
 
 The key insight: **our `tools/promptExtractor.js` is the canonical source** and stays ahead of Piebald (374 detected vs their 260 on 2.1.162). We do NOT merge upstream and do NOT pull their prompts JSON into our tree — we extract our own and use Piebald's published JSON only for comparison.
 
-1. `git -C ~/dev/tweakcc-fixed fetch upstream` — **fetch only, NEVER `git merge upstream/main`** (it drags in the v4.0.14 deletion set and conflicts across every fork-only file). Read Piebald's published JSON for comparison only: `git show upstream/main:data/prompts/prompts-X.Y.Z.json > /tmp/piebald-X.Y.Z.json`.
+1. `git -C ~/dev/tweakcc-fixed fetch upstream` — **fetch only, NEVER `git merge upstream/main`** (merging gains nothing: upstream is static, we're a superset, and it only brings a version label that's theirs + prompt JSONs we supersede). Read Piebald's published JSON for comparison only: `git show upstream/main:data/prompts/prompts-X.Y.Z.json > /tmp/piebald-X.Y.Z.json`.
 2. Extract `cli.js` from the new native binary and run OUR extractor, seeded from our own previous `prompts-<prev>.json` (see the skill §6 / `memory/feedback_prompts_jsons_pull_from_upstream_pr.md`). High-confidence naming of new prompts goes in `tools/promptExtractor.js → NEW_PROMPT_ASSIGNMENTS`.
 3. Compare named-count + id-set against `/tmp/piebald-X.Y.Z.json`; confirm ours ≥ previous and ours > Piebald (`memory/feedback_prompt_count_no_regressions`). Cherry-pick a single upstream data file only if it materially beats ours — it won't.
 4. Bump the README version line.
