@@ -148,6 +148,18 @@ const discoverFeatureCheck = (caseBody: string): string => {
   return m ? m[1] : 'GX';
 };
 
+// Pull the case-handler's delta-parameter name — the object each reminder reads
+// its fields off, written as `${H.x}` in our override placeholders — from a
+// pristine case body via a known field access. Mac and linux-x64 builds name it
+// `H`, but linux-arm64 names it differently (e.g. `q`), so findCaseBody-based
+// injections must discover it rather than hardcode `H` (which otherwise emits a
+// runtime `H is not defined` on linux-arm64). Same platform-minified-name
+// hazard the discoverWrappers / discoverFeatureCheck helpers above guard against.
+const discoverDeltaParam = (caseBody: string, sampleProp: string): string => {
+  const m = caseBody.match(new RegExp(`([$\\w]+)\\.${sampleProp}\\b`));
+  return m ? m[1] : 'H';
+};
+
 const CLAUDEMD_INJECTION: ReminderInjection = {
   id: 'claudemd-context',
   name: 'claudeMd context wrapper',
@@ -236,10 +248,11 @@ const SKILLS_INJECTION: ReminderInjection = {
     if (isSuppressed) {
       replacement = `skill_listing:(${argParam})=>{return [];}`;
     } else {
+      const bodyForBuild = body.replace(/\$\{H\./g, `\${${argParam}.`);
       replacement =
         `skill_listing:(${argParam})=>{` +
         `if(!${argParam}.content)return[];` +
-        `return ${o5Name}([${j6Name}({content:\`${body}\`,isMeta:!0})])}`;
+        `return ${o5Name}([${j6Name}({content:\`${bodyForBuild}\`,isMeta:!0})])}`;
     }
     const newContent =
       content.slice(0, match.index) +
@@ -283,12 +296,13 @@ The following MCP servers have provided instructions for how to use their tools 
       return null;
     }
     const { bodyStart, bodyEnd } = found;
-    const { arrayWrap, msgCtor } = discoverWrappers(
-      content.slice(bodyStart, bodyEnd)
-    );
+    const caseBody = content.slice(bodyStart, bodyEnd);
+    const { arrayWrap, msgCtor } = discoverWrappers(caseBody);
+    const p = discoverDeltaParam(caseBody, 'addedBlocks');
+    const bodyForBuild = body.replace(/\$\{H\./g, `\${${p}.`);
     const newBody = isSuppressed
       ? 'return [];'
-      : `if(H.addedBlocks.length===0&&H.removedNames.length===0)return [];return ${arrayWrap}([${msgCtor}({content:\`${body}\`,isMeta:!0})])`;
+      : `if(${p}.addedBlocks.length===0&&${p}.removedNames.length===0)return [];return ${arrayWrap}([${msgCtor}({content:\`${bodyForBuild}\`,isMeta:!0})])`;
     const newContent =
       content.slice(0, bodyStart) + newBody + content.slice(bodyEnd);
     showDiff(content, newContent, newBody, bodyStart, bodyEnd);
@@ -318,12 +332,13 @@ const AGENT_LISTING_INJECTION: ReminderInjection = {
       return null;
     }
     const { bodyStart, bodyEnd } = found;
-    const { arrayWrap, msgCtor } = discoverWrappers(
-      content.slice(bodyStart, bodyEnd)
-    );
+    const caseBody = content.slice(bodyStart, bodyEnd);
+    const { arrayWrap, msgCtor } = discoverWrappers(caseBody);
+    const p = discoverDeltaParam(caseBody, 'addedLines');
+    const bodyForBuild = body.replace(/\$\{H\./g, `\${${p}.`);
     const newBody = isSuppressed
       ? 'return [];'
-      : `if(H.addedLines.length===0&&H.removedTypes.length===0)return [];return ${arrayWrap}([${msgCtor}({content:\`${body}\`,isMeta:!0})])`;
+      : `if(${p}.addedLines.length===0&&${p}.removedTypes.length===0)return [];return ${arrayWrap}([${msgCtor}({content:\`${bodyForBuild}\`,isMeta:!0})])`;
     const newContent =
       content.slice(0, bodyStart) + newBody + content.slice(bodyEnd);
     showDiff(content, newContent, newBody, bodyStart, bodyEnd);
@@ -990,12 +1005,18 @@ const MEMORY_UPDATE_INJECTION: ReminderInjection = {
       return null;
     }
     const { bodyStart, bodyEnd } = found;
-    const { arrayWrap, msgCtor } = discoverWrappers(
-      content.slice(bodyStart, bodyEnd)
-    );
+    const caseBody = content.slice(bodyStart, bodyEnd);
+    const { arrayWrap, msgCtor } = discoverWrappers(caseBody);
+    const p = discoverDeltaParam(caseBody, 'summary');
+    // The `${YT3[H.source]}` placeholder hardcodes both the delta param and the
+    // source-label map var; discover the map var (Mac: YT3, linux-arm64: Xj3).
+    const sourceMap = caseBody.match(/\$\{([$\w]+)\[/)?.[1] ?? 'YT3';
+    const bodyForBuild = body
+      .replace(/\$\{YT3\[H\.source\]\}/g, `\${${sourceMap}[${p}.source]}`)
+      .replace(/\$\{H\./g, `\${${p}.`);
     const newBody = isSuppressed
       ? 'return [];'
-      : `return ${arrayWrap}([${msgCtor}({content:\`${body}\`,isMeta:!0})])`;
+      : `return ${arrayWrap}([${msgCtor}({content:\`${bodyForBuild}\`,isMeta:!0})])`;
     const newContent =
       content.slice(0, bodyStart) + newBody + content.slice(bodyEnd);
     showDiff(content, newContent, newBody, bodyStart, bodyEnd);
@@ -1026,12 +1047,16 @@ const VERIFY_PLAN_INJECTION: ReminderInjection = {
       return null;
     }
     const { bodyStart, bodyEnd } = found;
-    const { arrayWrap, msgCtor } = discoverWrappers(
-      content.slice(bodyStart, bodyEnd)
-    );
+    const caseBody = content.slice(bodyStart, bodyEnd);
+    const { arrayWrap, msgCtor } = discoverWrappers(caseBody);
+    // `${J7}` placeholder hardcodes the plan-verifier tool var (Mac: J7,
+    // linux-arm64: J_); discover it from the pristine "NOT the X tool" phrase.
+    const verifierTool =
+      caseBody.match(/\(NOT the \$\{([$\w]+)\} tool/)?.[1] ?? 'J7';
+    const bodyForBuild = body.replace(/\$\{J7\}/g, `\${${verifierTool}}`);
     const newBody = isSuppressed
       ? 'return [];'
-      : `let K=\`${body}\`;return ${arrayWrap}([${msgCtor}({content:K,isMeta:!0})])`;
+      : `let K=\`${bodyForBuild}\`;return ${arrayWrap}([${msgCtor}({content:K,isMeta:!0})])`;
     const newContent =
       content.slice(0, bodyStart) + newBody + content.slice(bodyEnd);
     showDiff(content, newContent, newBody, bodyStart, bodyEnd);
@@ -1130,9 +1155,10 @@ Here are the existing tasks:
     const caseBodyText = content.slice(bodyStart, bodyEnd);
     const { arrayWrap, msgCtor } = discoverWrappers(caseBodyText);
     const featureCheck = discoverFeatureCheck(caseBodyText);
+    const p = discoverDeltaParam(caseBodyText, 'content');
     const newBody = isSuppressed
       ? 'return [];'
-      : `if(!${featureCheck}())return[];let q=H.content.map((O)=>\`#\${O.id}. [\${O.status}] \${O.subject}\`).join(\`\\n\`);return ${arrayWrap}([${msgCtor}({content:\`${body}\`,isMeta:!0})])`;
+      : `if(!${featureCheck}())return[];let q=${p}.content.map((O)=>\`#\${O.id}. [\${O.status}] \${O.subject}\`).join(\`\\n\`);return ${arrayWrap}([${msgCtor}({content:\`${body}\`,isMeta:!0})])`;
     const newContent =
       content.slice(0, bodyStart) + newBody + content.slice(bodyEnd);
     showDiff(content, newContent, newBody, bodyStart, bodyEnd);
