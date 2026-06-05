@@ -1022,11 +1022,15 @@ export const applyCustomization = async (
     },
     'user-message-display': {
       fn: c => writeUserMessageDisplay(c, config.settings.userMessageDisplay!),
+      // Runs on native installs too: the memoized-child pattern matches the
+      // Bun-bundled cli.js (verified on CC 2.1.165 darwin-arm64), and the
+      // replacement is a self-contained, balanced createElement expression, so
+      // it survives native repack. (Was NPM-only — that gate silently disabled
+      // the border when the install moved nvm/NPM → mise/native.)
       condition: !!(
         config.settings.userMessageDisplay &&
         JSON.stringify(config.settings.userMessageDisplay) !==
-          JSON.stringify(DEFAULT_SETTINGS.userMessageDisplay) &&
-        !ccInstInfo.nativeInstallationPath
+          JSON.stringify(DEFAULT_SETTINGS.userMessageDisplay)
       ),
     },
     'input-pattern-highlighters': {
