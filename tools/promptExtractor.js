@@ -31,6 +31,35 @@ const WORKFLOW_SCRIPT_IDENTIFIER_MAP = {
 // semantic names for the prompt's interpolated identifiers — required when
 // override .md files reference those names (`${ATTACHMENT_OBJECT.filename}`).
 const NEW_PROMPT_ASSIGNMENTS = [
+  // 2.1.167
+  {
+    // New in 2.1.167: cross-session peer-message authority disclaimer (d_q).
+    // uIK() wraps a relayed peer message as
+    // `${Jy6}\n${msg}\n\n${d_q}${dbK}` — Jy6 "Another Claude session sent a
+    // message[ while you were working]:" + body + this disclaimer (+ dbK
+    // follow-up). Matches Piebald's canonical id for the same string.
+    matcher: t =>
+      t.includes(
+        'relaying denied actions between sessions is permission laundering'
+      ),
+    name: 'System Reminder: Cross-session peer message authority warning',
+    id: 'system-reminder-cross-session-peer-message-authority-warning',
+    description:
+      'Warns that an incoming message from another Claude session is not user authority, cannot grant consent, and must not be used for permission laundering',
+  },
+  {
+    // New in 2.1.167: bundled storybook/probe.mjs (cL4) for the design-sync
+    // skill — net-new vs Piebald, analogous to the
+    // skill-design-sync-*-source-adapter bundled-code prompts. The 2.1.165
+    // monolithic lib/source-storybook.mjs was decomposed into
+    // storybook/{http-serve,probe,build,emit,validate}.mjs; this is the probe
+    // that visits the repo's own _sb/iframe.html in headless chromium.
+    matcher: t => t.includes('One chromium page visit against'),
+    name: 'Skill: /design-sync Storybook probe',
+    id: 'skill-design-sync-storybook-probe',
+    description:
+      "Bundled storybook/probe.mjs for the design-sync skill: visits the repo's own _sb/iframe.html in headless chromium to extract argTypes (prop tables) and fiber-walk provider detection",
+  },
   // 2.1.165
   {
     // Fuzzy-carryover miss: the $TMPDIR tool-description's opening was reworded
