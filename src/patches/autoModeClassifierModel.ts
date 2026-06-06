@@ -48,7 +48,18 @@ export const writeAutoModeClassifierModel = (
   const pattern156 =
     /function\s+([$\w]+)\s*\(\s*\)\s*\{\s*let\s+([$\w]+)\s*=\s*([$\w]+)\s*\(\s*\)\s*;\s*if\s*\(\s*([$\w]+)\s*\(\s*\2\s*\)\s*===\s*"claude-opus-4-8"\s*\)\s*\{\s*let\s+([$\w]+)\s*=\s*([$\w]+)\s*\(\s*"tengu_cedar_hollow_7m"\s*,\s*\{\s*\}\s*\)\s*;\s*if\s*\(\s*\5\s*\?\.\s*model\s*\)\s*return\s+\5\s*\.\s*model\s*\}\s*let\s+([$\w]+)\s*=\s*([$\w]+)\s*\(\s*"tengu_auto_mode_config"\s*,\s*\{\s*\}\s*\)\s*;\s*if\s*\(\s*\7\s*\?\.\s*model\s*\)\s*return\s+\7\s*\.\s*model\s*;\s*return\s+\2\s*\}/;
 
-  const match = oldFile.match(pattern156) || oldFile.match(pattern);
+  // CC 2.1.167 shape: the resolver now keys off a `modelByMainModel` map on the
+  // dynamic config (per-main-model classifier override), preferring a `[1m]`
+  // variant, then the bare key, then the legacy `model` field, then the
+  // main-loop model:
+  // function NAME(){let H=MAIN(),_=R("tengu_auto_mode_config",{}),q=_?.modelByMainModel;if(q){let K=STRIP(H).replace(/\[1m\]$/,"");if(IS1M(H)){let T=q[`${K}[1m]`];if(T)return T}let O=q[K];if(O)return O}if(_?.model)return _.model;return H}
+  const pattern167 =
+    /function\s+([$\w]+)\s*\(\s*\)\s*\{\s*let\s+([$\w]+)\s*=\s*[$\w]+\s*\(\s*\)\s*,\s*([$\w]+)\s*=\s*[$\w]+\s*\(\s*"tengu_auto_mode_config"\s*,\s*\{\s*\}\s*\)\s*,\s*([$\w]+)\s*=\s*\3\s*\?\.\s*modelByMainModel\s*;\s*if\s*\(\s*\4\s*\)\s*\{\s*let\s+([$\w]+)\s*=\s*[$\w]+\s*\(\s*\2\s*\)\s*\.\s*replace\([^)]*\)\s*;\s*if\s*\(\s*[$\w]+\s*\(\s*\2\s*\)\s*\)\s*\{\s*let\s+([$\w]+)\s*=\s*\4\s*\[\s*`[^`]*`\s*\]\s*;\s*if\s*\(\s*\6\s*\)\s*return\s+\6\s*\}\s*let\s+([$\w]+)\s*=\s*\4\s*\[\s*\5\s*\]\s*;\s*if\s*\(\s*\7\s*\)\s*return\s+\7\s*\}\s*if\s*\(\s*\3\s*\?\.\s*model\s*\)\s*return\s+\3\s*\.\s*model\s*;\s*return\s+\2\s*\}/;
+
+  const match =
+    oldFile.match(pattern167) ||
+    oldFile.match(pattern156) ||
+    oldFile.match(pattern);
   if (match && match.index !== undefined) {
     const [fullMatch, fnName] = match;
     const replacement = `function ${fnName}(){return "${modelId}"}`;
