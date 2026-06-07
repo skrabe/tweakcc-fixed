@@ -167,6 +167,45 @@ export const applySystemPrompts = async (
       const matchIndex = match.index;
       const delimiter = matchIndex > 0 ? content[matchIndex - 1] : '';
 
+      // Guard: a tweakcc human-name placeholder that survives interpolation into
+      // a `${...}` template-literal slot is invalid JS and ReferenceErrors at
+      // launch (or when the prompt's code path first runs). This happens when the
+      // prompt-data identifierMap vocabulary changed between CC versions (e.g.
+      // PROMPT_VAR_N -> *_TOOL_NAME at 2.1.168, or a renamed semantic name like
+      // OPTIONAL_TAIL_NOTE) while the markdown still references the old name, so
+      // applyIdentifierMapping finds nothing to substitute and leaves the
+      // placeholder verbatim. Detect any ALL_CAPS_WITH_UNDERSCORE token
+      // (tweakcc's human-name grammar -- excludes real minified vars like `HL7`)
+      // that appears unchanged in BOTH the markdown source and the interpolated
+      // output. Only dangerous inside backtick template literals; the same token
+      // in a plain '...'/"..." string (e.g. a documented `${VERSION}`) is inert.
+      // Skip the prompt and keep CC's original blob rather than shipping a binary
+      // that won't boot.
+      if (delimiter === '`') {
+        const placeholderRe = /\$\{([A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+)\}/g;
+        const inOutput = new Set(
+          [...interpolatedContent.matchAll(placeholderRe)].map(m => m[1])
+        );
+        const leaked = [...inOutput].find(name =>
+          prompt.content.includes('${' + name + '}')
+        );
+        if (leaked) {
+          console.log(
+            chalk.red(
+              `Unresolved placeholder \${${leaked}} in "${prompt.name}" (markdown vocabulary out of sync with CC ${version} prompt data) - skipping`
+            )
+          );
+          results.push({
+            id: promptId,
+            name: prompt.name,
+            group: PatchGroup.SYSTEM_PROMPTS,
+            applied: false,
+            details: `unresolved placeholder \${${leaked}} - markdown out of sync with prompt data`,
+          });
+          continue;
+        }
+      }
+
       // Calculate character counts for this prompt (both with human-readable placeholders)
       // Note: trim() to match how markdown files are parsed and how whitespace is applied
       const originalBaselineContent = reconstructContentFromPieces(
