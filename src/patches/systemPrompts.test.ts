@@ -311,6 +311,56 @@ describe('systemPrompts.ts', () => {
       spy.mockRestore();
     });
 
+    it('should skip prompt when an unescaped human-name placeholder leaks into a backtick literal', async () => {
+      // The markdown references ${STALE_VAR_NAME}, which has no entry in the
+      // current CC prompt data, so getInterpolatedContent leaves it verbatim.
+      // Embedding it into a `${...}` template-literal slot would ReferenceError
+      // at launch, so the guard skips the prompt and keeps CC's original blob.
+      const mockPromptData = buildMockPromptData({
+        prompt: { content: 'before ${STALE_VAR_NAME} after' },
+        regex: 'before \\$\\{STALE_VAR_NAME\\} after',
+        getInterpolatedContent: () => 'before ${STALE_VAR_NAME} after',
+        pieces: ['before ${STALE_VAR_NAME} after'],
+      });
+
+      setupMocks(mockPromptData);
+
+      const cliContent = 'desc:`before ${STALE_VAR_NAME} after`';
+
+      const result = await applySystemPrompts(cliContent, '1.0.0', false);
+
+      expect(result.newContent).toBe(cliContent);
+      expect(result.results[0].applied).toBe(false);
+      expect(result.results[0].details).toContain('unresolved placeholder');
+    });
+
+    it('should NOT skip when an ALL_CAPS placeholder is backslash-escaped (literal env-var docs)', async () => {
+      // `\${CLAUDE_PLUGIN_ROOT}`-style tokens (empty identifierMap, e.g. the
+      // cowork plugin prompts) are intentional literal text, not interpolation
+      // slots. The guard must not false-flag them just because the bare
+      // `${NAME}` substring appears in the markdown.
+      const mockPromptData = buildMockPromptData({
+        prompt: { content: 'use \\${CLAUDE_PLUGIN_ROOT} now' },
+        regex: 'use \\\\\\$\\{CLAUDE_PLUGIN_ROOT\\} here',
+        getInterpolatedContent: () => 'use \\${CLAUDE_PLUGIN_ROOT} now',
+        pieces: ['use \\${CLAUDE_PLUGIN_ROOT} here'],
+      });
+
+      setupMocks(mockPromptData);
+
+      const cliContent = 'desc:`use \\${CLAUDE_PLUGIN_ROOT} here`';
+
+      const result = await applySystemPrompts(cliContent, '1.0.0', false);
+
+      // Guard did NOT skip it: the escaped token is treated as literal text and
+      // the override is applied (here, swapping "here" -> "now").
+      expect(result.results[0].applied).toBe(true);
+      expect(result.results[0].details ?? '').not.toContain(
+        'unresolved placeholder'
+      );
+      expect(result.newContent).toBe('desc:`use \\${CLAUDE_PLUGIN_ROOT} now`');
+    });
+
     it('should auto-escape multiple backticks in template literal context', async () => {
       const mockPromptData = buildMockPromptData({
         content: 'Use `foo` and `bar` for config',

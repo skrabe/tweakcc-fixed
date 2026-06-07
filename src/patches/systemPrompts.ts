@@ -182,12 +182,17 @@ export const applySystemPrompts = async (
       // Skip the prompt and keep CC's original blob rather than shipping a binary
       // that won't boot.
       if (delimiter === '`') {
-        const placeholderRe = /\$\{([A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+)\}/g;
+        // Only UNescaped `${NAME}` is dangerous: a backslash-escaped
+        // `\${NAME}` is intentional literal text (e.g. the env-var docs
+        // `\${CLAUDE_PLUGIN_ROOT}` in the cowork plugin prompts, which have an
+        // empty identifierMap) and survives into the template literal verbatim.
+        // The negative lookbehind excludes those so they aren't false-flagged.
+        const placeholderRe = /(?<!\\)\$\{([A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+)\}/g;
         const inOutput = new Set(
           [...interpolatedContent.matchAll(placeholderRe)].map(m => m[1])
         );
         const leaked = [...inOutput].find(name =>
-          prompt.content.includes('${' + name + '}')
+          new RegExp('(?<!\\\\)\\$\\{' + name + '\\}').test(prompt.content)
         );
         if (leaked) {
           console.log(
