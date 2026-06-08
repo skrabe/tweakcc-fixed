@@ -122,8 +122,14 @@ function getThemesLocation(oldFile: string): {
 
   // === Theme Name Mapping Object ===
   // {dark:"Dark mode",...} or {"dark":"Dark mode",...}
+  // The prefix group MUST be capturing: the writer reads objMatch[1] as the
+  // assignment prefix (`hM3=` on var-collected builds, `return` on the old
+  // switch form) and reuses it. If it were non-capturing, objMatch[1] is
+  // undefined, objPrefix defaults to `return`, and `hM3={...}` gets rewritten to
+  // `return{...}` — destroying the binding and crashing /config with
+  // "undefined is not an object (evaluating 'hM3[...]')".
   const objPat =
-    /(?:return|[$\w]+=)\{(?:"?(?:[$\w-]+)"?:"(?:Auto |Dark|Light|Monochrome)[^"]*",?)+\}/;
+    /(return|[$\w]+=)\{(?:"?(?:[$\w-]+)"?:"(?:Auto |Dark|Light|Monochrome)[^"]*",?)+\}/;
   const objMatch = oldFile.match(objPat);
 
   if (!objMatch || objMatch.index == undefined) {
