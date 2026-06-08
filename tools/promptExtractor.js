@@ -1834,6 +1834,42 @@ if (require.main === module) {
     version
   );
 
+  // For every prompt upstream also ships whose `identifiers` array matches ours,
+  // take upstream's identifierMap. Upstream labels every slot, so it is the
+  // authoritative placeholder<->slot binding for shared prompts; only net-new
+  // prompts (upstream lacks them) keep our carried/curated names. This is what
+  // keeps an override's `${NAME}` landing on the slot it means. Point
+  // TWEAKCC_UPSTREAM_JSON at upstream's prompts-<ver>.json.
+  if (
+    process.env.TWEAKCC_UPSTREAM_JSON &&
+    fs.existsSync(process.env.TWEAKCC_UPSTREAM_JSON)
+  ) {
+    try {
+      const up = JSON.parse(
+        fs.readFileSync(process.env.TWEAKCC_UPSTREAM_JSON, 'utf-8')
+      );
+      const upById = new Map();
+      for (const p of up.prompts || []) if (p.id) upById.set(p.id, p);
+      let adopted = 0;
+      for (const p of mergedResult.prompts) {
+        const u = p.id && upById.get(p.id);
+        if (
+          u &&
+          u.identifierMap &&
+          JSON.stringify(u.identifiers) === JSON.stringify(p.identifiers)
+        ) {
+          p.identifierMap = { ...u.identifierMap };
+          adopted++;
+        }
+      }
+      console.log(`Adopted upstream identifierMap for ${adopted} shared prompt(s)`);
+    } catch (err) {
+      console.warn(
+        `Warning: could not apply upstream identifierMaps: ${err.message}`
+      );
+    }
+  }
+
   // Normalize empty identifierMap names to stable synthetic names. An empty
   // name forces applyIdentifierMapping's `UNKNOWN_<slot>` fallback, which ships
   // a latent ReferenceError risk and unreadable overrides; it happens for
