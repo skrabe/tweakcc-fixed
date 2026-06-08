@@ -11,7 +11,7 @@ import { PROMPT_CACHE_DIR } from './config';
 // publishes one) skip the network fetch when run via `node dist/index.mjs`.
 // Published npm builds strip data/ via .npmignore, so this returns null
 // for those installs and the network path takes over.
-function findRepoPromptsDir(): string | null {
+export function findRepoPromptsDir(): string | null {
   try {
     const here = fileURLToPath(import.meta.url);
     let dir = path.dirname(here);

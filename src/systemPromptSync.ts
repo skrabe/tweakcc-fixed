@@ -1,7 +1,10 @@
 import * as fs from 'node:fs/promises';
 import * as path from 'path';
 import matter from 'gray-matter';
-import { downloadStringsFile } from './systemPromptDownload';
+import {
+  downloadStringsFile,
+  findRepoPromptsDir,
+} from './systemPromptDownload';
 import {
   storeHashes,
   getPromptHash,
@@ -58,6 +61,61 @@ export const loadShadowSet = async (): Promise<Set<string>> => {
 };
 export const clearShadowSetCache = (): void => {
   shadowSetCache = null;
+};
+
+/**
+ * Union of every identifierMap value across the leaf's bundled
+ * data/prompts/prompts-*.json — the complete set of tweakcc human-names the
+ * fork has ever used as placeholders. The apply-time unresolved-placeholder
+ * guard (applySystemPrompts) uses this as its detector: a `${TOKEN}` that
+ * survives interpolation into a backtick template literal is a leaked
+ * human-name (skip the prompt, keep CC's blob) iff TOKEN is a member of this
+ * union. A leaked name is stale precisely because it is absent from the
+ * CURRENT version's identifierMap, so the guard must validate against the
+ * cross-version union — not just the version being patched. Membership also
+ * makes the detector immune to real minified vars (e.g. `HL7`), which are
+ * never human-names and so never appear in the union.
+ *
+ * Empty when the bundled dir is absent (npm-installed builds strip data/ via
+ * .npmignore): the guard then degrades to never skipping, matching pre-guard
+ * behavior for those installs.
+ *
+ * Cached after first call; reset by clearIdentifierMapUnionCache.
+ */
+let identifierMapUnionCache: Set<string> | null = null;
+export const loadIdentifierMapUnion = async (): Promise<Set<string>> => {
+  if (identifierMapUnionCache) return identifierMapUnionCache;
+  const union = new Set<string>();
+  const dir = findRepoPromptsDir();
+  if (dir) {
+    let files: string[];
+    try {
+      files = await fs.readdir(dir);
+    } catch {
+      files = [];
+    }
+    for (const name of files) {
+      if (!name.startsWith('prompts-') || !name.endsWith('.json')) continue;
+      try {
+        const text = await fs.readFile(path.join(dir, name), 'utf8');
+        const parsed = JSON.parse(text) as StringsFile;
+        for (const prompt of parsed.prompts ?? []) {
+          for (const value of Object.values(prompt.identifierMap ?? {})) {
+            if (value) union.add(value);
+          }
+        }
+      } catch {
+        // Skip unreadable/malformed files — a partial union still guards the
+        // names it could load.
+        continue;
+      }
+    }
+  }
+  identifierMapUnionCache = union;
+  return union;
+};
+export const clearIdentifierMapUnionCache = (): void => {
+  identifierMapUnionCache = null;
 };
 
 /**
