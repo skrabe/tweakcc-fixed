@@ -5,6 +5,7 @@ import {
   loadSystemPromptsWithRegex,
   reconstructContentFromPieces,
   escapeDepthZeroBackticks,
+  loadIdentifierMapUnion,
 } from '../systemPromptSync';
 import { setAppliedHashes, computeMD5Hash } from '../systemPromptHashIndex';
 import { findAllMatchesWithStackFallback } from '../safeRegexMatch';
@@ -98,6 +99,12 @@ export const applySystemPrompts = async (
   );
   debug(`Loaded ${systemPrompts.length} system prompts with regexes`);
 
+  // The set of every tweakcc human-name the leaf has ever used as a
+  // placeholder, unioned across all bundled prompt JSONs. Used below to detect
+  // a leaked (unsubstituted) human-name surviving into a backtick template
+  // literal. Loaded once per apply.
+  const identifierMapUnion = await loadIdentifierMapUnion();
+
   // Track per-prompt results
   const results: PatchResult[] = [];
   const appliedHashUpdates: Record<string, string> = {};
@@ -166,6 +173,55 @@ export const applySystemPrompts = async (
       // Check the delimiter character before the match to determine string type
       const matchIndex = match.index;
       const delimiter = matchIndex > 0 ? content[matchIndex - 1] : '';
+
+      // Guard: a tweakcc human-name placeholder that survives interpolation into
+      // a `${...}` template-literal slot is invalid JS and ReferenceErrors at
+      // launch (or when the prompt's code path first runs). This happens when the
+      // prompt-data identifierMap vocabulary changed between CC versions (e.g.
+      // PROMPT_VAR_N -> *_TOOL_NAME at 2.1.168, or a renamed semantic name like
+      // OPTIONAL_TAIL_NOTE) while the markdown still references the old name, so
+      // applyIdentifierMapping finds nothing to substitute and leaves the
+      // placeholder verbatim. Detect a surviving `${NAME}` whose NAME is a member
+      // of the identifierMap union (the set of every human-name the leaf has ever
+      // used as a placeholder) and that appears unchanged in BOTH the markdown
+      // source and the interpolated output. Validating against the union -- rather
+      // than guessing an ALL_CAPS_WITH_UNDERSCORE grammar -- catches single-word
+      // names like ${VERSION} the grammar missed and never false-positives on real
+      // minified vars (e.g. `${HL7}`), which are never human-names. Only dangerous
+      // inside backtick template literals; the same token in a plain '...'/"..."
+      // string is inert. Skip the prompt and keep CC's original blob rather than
+      // shipping a binary that won't boot.
+      if (delimiter === '`') {
+        // Only UNescaped `${NAME}` is dangerous: a backslash-escaped
+        // `\${NAME}` is intentional literal text (e.g. the env-var docs
+        // `\${CLAUDE_PLUGIN_ROOT}` in the cowork plugin prompts, which have an
+        // empty identifierMap) and survives into the template literal verbatim.
+        // The negative lookbehind excludes those so they aren't false-flagged.
+        const placeholderRe = /(?<!\\)\$\{([A-Za-z_][A-Za-z0-9_]*)\}/g;
+        const inOutput = new Set(
+          [...interpolatedContent.matchAll(placeholderRe)].map(m => m[1])
+        );
+        const leaked = [...inOutput].find(
+          name =>
+            identifierMapUnion.has(name) &&
+            new RegExp('(?<!\\\\)\\$\\{' + name + '\\}').test(prompt.content)
+        );
+        if (leaked) {
+          console.log(
+            chalk.red(
+              `Unresolved placeholder \${${leaked}} in "${prompt.name}" (markdown vocabulary out of sync with CC ${version} prompt data) - skipping`
+            )
+          );
+          results.push({
+            id: promptId,
+            name: prompt.name,
+            group: PatchGroup.SYSTEM_PROMPTS,
+            applied: false,
+            details: `unresolved placeholder \${${leaked}} - markdown out of sync with prompt data`,
+          });
+          continue;
+        }
+      }
 
       // Calculate character counts for this prompt (both with human-readable placeholders)
       // Note: trim() to match how markdown files are parsed and how whitespace is applied
