@@ -31,6 +31,46 @@ const WORKFLOW_SCRIPT_IDENTIFIER_MAP = {
 // semantic names for the prompt's interpolated identifiers — required when
 // override .md files reference those names (`${ATTACHMENT_OBJECT.filename}`).
 const NEW_PROMPT_ASSIGNMENTS = [
+  // 2.1.170 — four-zeros fix: three code-review prompts carried partial
+  // identifierMaps (slot named only where the 4.8 overrides used it), so their
+  // pristine stubs rendered ${UNKNOWN_N}. Surfaced when the Fable-5 pass left
+  // these files pristine. Piebald doesn't catalogue these fragments, so the
+  // names are ours: P6q = the 3-state vote definitions block, W6q = the
+  // PLAUSIBLE-by-default recall rubric, Z6q = the commonly-missed-defects list.
+  {
+    matcher: t => t.includes('and have it return exactly one of:'),
+    name: 'Skill: Code Review (Phase 2 — verify, 3-state)',
+    id: 'skill-code-review-phase-2-verify-3-state',
+    description:
+      'Phase 2 of the code-review skill for precision tiers — one verifier per candidate, 3-state CONFIRMED/PLAUSIBLE/REFUTED vote',
+    identifierMap: {
+      '0': 'AGENT_TOOL_NAME',
+      '1': 'VERIFY_VOTE_DEFINITIONS',
+    },
+  },
+  {
+    matcher: t =>
+      t.includes('it returns exactly') &&
+      t.includes('one of **CONFIRMED / PLAUSIBLE / REFUTED**'),
+    name: 'Skill: Code Review (Phase 2 — verify, recall-biased)',
+    id: 'skill-code-review-phase-2-verify-recall-biased',
+    description:
+      'Phase 2 of the code-review skill for recall tiers — one verifier per candidate, recall-biased keep rule',
+    identifierMap: {
+      '0': 'AGENT_TOOL_NAME',
+      '1': 'RECALL_BIASED_RUBRIC',
+    },
+  },
+  {
+    matcher: t => t.includes('what the first pass tends to miss:'),
+    name: 'Skill: Code Review (Phase 3 — sweep for gaps)',
+    id: 'skill-code-review-phase-3-sweep',
+    description:
+      'Shared Phase 3 of the code-review skill — a fresh finder re-reads the diff for defects not already listed',
+    identifierMap: {
+      '0': 'SWEEP_MISS_CATEGORIES',
+    },
+  },
   // 2.1.169
   {
     // 2.1.169 grew the /schedule prompt from 15 interpolation sites to 34, which
