@@ -1209,18 +1209,26 @@ const USER_NEW_MSG_INJECTION: ReminderInjection = {
 
 IMPORTANT: After completing your current task, you MUST address the user's message above. Do not ignore it.`,
   apply(content, body, isSuppressed) {
+    // 2.1.169 prepended `case"auto-continuation":` and split `default:` into its
+    // own `[MESSAGE FROM NON-USER SOURCE]` case, so the user-message return now
+    // reads `case"auto-continuation":case"human":case void 0:return`. Capture the
+    // case-label prefix and reuse it verbatim so both the <=2.1.168 shape
+    // (`case"human":case void 0:default:`) and the 2.1.169+ shape are preserved
+    // (never hardcode the prefix — that would corrupt whichever shape didn't match).
     return findAndReplace(
       content,
-      /case"human":case void 0:default:return`The user sent a new message while you were working:\n\$\{([$\w]+)\}\n\nIMPORTANT: After completing your current task, you MUST address the user's message above\. Do not ignore it\.`/,
+      /((?:case"auto-continuation":)?case"human":case void 0:(?:default:)?)return`The user sent a new message while you were working:\n\$\{([$\w]+)\}\n\nIMPORTANT: After completing your current task, you MUST address the user's message above\. Do not ignore it\.`/,
       m => {
-        const [, hParam] = m;
-        if (isSuppressed)
-          return `case"human":case void 0:default:return\`\${${hParam}}\``;
+        const [, prefix, hParam] = m;
+        if (isSuppressed) return `${prefix}return\`\${${hParam}}\``;
         const bodyForBuild = body.replace(/\$\{H\}/g, `\${${hParam}}`);
-        return `case"human":case void 0:default:return\`${bodyForBuild}\``;
+        return `${prefix}return\`${bodyForBuild}\``;
       },
       'user-sent-new-message',
-      c => /case"human":case void 0:default:return`\$\{[$\w]+\}`/.test(c)
+      c =>
+        /(?:case"auto-continuation":)?case"human":case void 0:(?:default:)?return`\$\{[$\w]+\}`/.test(
+          c
+        )
     );
   },
 };
