@@ -100,6 +100,18 @@ node dist/index.mjs --apply
 
 tweakcc-fixed patches Claude Code's minified `cli.js`, reading customizations from `~/.tweakcc/config.json`. For npm installs `cli.js` is patched directly; for native installs the JS is extracted from the Bun binary with [node-lief](https://github.com/Piebald-AI/node-lief), patched, and repacked (with stale Bun bytecode cleared). Updating Claude Code overwrites the patches, but they live in your config, so reapply with `--apply`. Revert with `--restore`.
 
+## The `showtime` skill (CC version-bump pipeline)
+
+When Claude Code ships a new version, [`skills/showtime/`](./skills/showtime/) is a [Claude Code skill](https://docs.claude.com/en/docs/claude-code/skills) that drives the whole bump end-to-end on your local machine — extract the new `cli.js`, run the prompt extractor, drive the version-bump report to zero, realign drifted overrides, and prove it landed clean against a **four-zeros** bar (smoke + apply-hygiene + no-orphan-overrides + no-latent-var-breakage). It ships three files:
+
+| File           | Role                                                                                                                   |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `SKILL.md`     | the runbook — the phases, the gates, when to ask vs act                                                                |
+| `REFERENCE.md` | the self-contained "why" — the bug-class catalog, the quote-context rule, the realignment recipe, the gotchas          |
+| `driver.mjs`   | the mechanical harness — `versions` / `extract` / `report` / `check` (resolves the repo itself; honors `TWEAKCC_REPO`) |
+
+**Install:** copy `skills/showtime/` into your skills dir — `cp -R skills/showtime ~/.claude/skills/` (global) or `.claude/skills/` in a project — then say _"it's showtime"_ when a new CC version drops, or run the driver directly: `node ~/.claude/skills/showtime/driver.mjs check`. Pair it with an overrides repo ([lobotomized-claude-code](https://github.com/skrabe/lobotomized-claude-code) by default) as described above.
+
 ## License
 
 [MIT](https://github.com/Piebald-AI/tweakcc/blob/main/LICENSE). Fork of [Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc); upstream © [Piebald LLC](https://piebald.ai).
