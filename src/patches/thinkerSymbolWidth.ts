@@ -4,8 +4,11 @@ import { LocationResult, showDiff } from './index';
 
 const getThinkerSymbolWidthLocation = (
   oldFile: string
-): LocationResult | null => {
-  const widthPattern = /\{flexWrap:"wrap",height:1,width:2\}/;
+): (LocationResult & { prefix: string }) | null => {
+  // 2.1.172 added an "aria-hidden":!0 property before flexWrap; keep the
+  // bare shape as a fallback for older CC versions.
+  const widthPattern =
+    /\{("aria-hidden":!0,)?flexWrap:"wrap",height:1,width:2\}/;
   const match = oldFile.match(widthPattern);
 
   if (!match || match.index == undefined) {
@@ -16,6 +19,7 @@ const getThinkerSymbolWidthLocation = (
   return {
     startIndex: match.index,
     endIndex: match.index + match[0].length,
+    prefix: match[1] ?? '',
   };
 };
 
@@ -28,7 +32,7 @@ export const writeThinkerSymbolWidthLocation = (
     return null;
   }
 
-  const newCss = `{flexWrap:"wrap",height:1,width:${width}}`;
+  const newCss = `{${location.prefix}flexWrap:"wrap",height:1,width:${width}}`;
   const newFile =
     oldFile.slice(0, location.startIndex) +
     newCss +
