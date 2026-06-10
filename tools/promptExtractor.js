@@ -31,6 +31,70 @@ const WORKFLOW_SCRIPT_IDENTIFIER_MAP = {
 // semantic names for the prompt's interpolated identifiers — required when
 // override .md files reference those names (`${ATTACHMENT_OBJECT.filename}`).
 const NEW_PROMPT_ASSIGNMENTS = [
+  // 2.1.172 — fuzzy-miss restore: the prompt's opening changed
+  // ("Before using any chrome browser tools, you MUST first load them" →
+  // "If the Chrome browser tools are deferred"), breaking the 100-char
+  // fingerprint carryover.
+  {
+    matcher: t =>
+      t.startsWith('**IMPORTANT: If the Chrome browser tools are deferred'),
+    name: 'System Prompt: Chrome browser MCP tools',
+    id: 'system-prompt-chrome-browser-mcp-tools',
+    description:
+      'MCP-server instructions telling the agent to batch-load deferred claude-in-chrome tool schemas in a single ToolSearch call',
+  },
+  // 2.1.172 — fuzzy-miss restore: 2.1.170 carried this prompt at two
+  // identical sites, so its fingerprint was a collision and got dropped from
+  // the fuzzy index; 2.1.172 is back to one (grown) site.
+  {
+    matcher: t => t.startsWith('# Claude in Chrome browser automation'),
+    name: 'System Prompt: Claude in Chrome browser automation',
+    id: 'system-prompt-claude-in-chrome-browser-automation',
+    description:
+      'Browser-automation guidance for the claude-in-chrome MCP tools: deferred-tool loading, GIF recording, console debugging, dialog avoidance, tab-context startup, and rabbit-hole limits',
+  },
+  // 2.1.172 — new: ArtifactTool (renders HTML/Markdown to a claude.ai
+  // Artifact). Registered as M_(EbK,{ArtifactTool:()=>vbK}).
+  {
+    matcher: t =>
+      t.startsWith('Render an HTML or Markdown file to an Artifact'),
+    name: 'Tool Description: ArtifactTool',
+    id: 'tool-description-artifacttool',
+    description:
+      'Tool description for ArtifactTool — renders an HTML or Markdown file to a default-private hosted web page on claude.ai',
+  },
+  // 2.1.172 — new: ShowOnboardingRolePicker (Cowork onboarding chip row).
+  // Tool name literal: var $S6="ShowOnboardingRolePicker".
+  {
+    matcher: t =>
+      t.startsWith('Render a clickable role-picker chip row'),
+    name: 'Tool Description: ShowOnboardingRolePicker',
+    id: 'tool-description-showonboardingrolepicker',
+    description:
+      'Tool description for ShowOnboardingRolePicker — renders a clickable role-picker chip row during Cowork onboarding',
+  },
+  // 2.1.172 — new: Managed Agents scheduled-deployments doc, sibling of the
+  // other data-managed-agents-* reference docs.
+  {
+    matcher: t =>
+      t.includes(
+        'A **scheduled deployment** runs an agent on a recurring cron schedule'
+      ),
+    name: 'Data: Managed Agents scheduled deployments',
+    id: 'data-managed-agents-scheduled-deployments',
+    description:
+      'Managed Agents reference doc for scheduled deployments — cron-scheduled autonomous agent sessions',
+  },
+  // 2.1.172 — new: the Fable 5 / Mythos 5 model-identity paragraph appended
+  // to the system prompt (standalone double-quoted var, single site).
+  {
+    matcher: t =>
+      t.startsWith('This iteration of Claude is Claude Fable 5'),
+    name: 'System Prompt: Fable 5 model identity',
+    id: 'system-prompt-fable-5-model-identity',
+    description:
+      'Model-identity paragraph introducing Claude Fable 5 and the Mythos-class tier, with the announcement URL for the Fable/Mythos distinction',
+  },
   // 2.1.169/170 — the cross-session peer reminder exists at multiple sites:
   // standalone plain strings plus one template wrapper that inlines the same
   // text via ${"…"} around three dynamic slots. Following Piebald, the wrapper
@@ -181,8 +245,10 @@ const NEW_PROMPT_ASSIGNMENTS = [
     // New in 2.1.169: "operating autonomously" directive — the AFK-mode guidance
     // that suppresses permission-seeking and requires finishing promised work
     // before ending the turn. Distinct from the autonomous-loop-tick prompts.
+    // startsWith, not includes: the 2.1.172 model-migration-guide doc quotes
+    // this sentence mid-body, and an includes matcher steals its id.
     matcher: t =>
-      t.includes(
+      t.startsWith(
         'You are operating autonomously. The user is not watching in real time'
       ),
     name: 'System Prompt: Operating autonomously',
