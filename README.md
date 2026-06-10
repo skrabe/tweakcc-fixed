@@ -73,28 +73,23 @@ For detailed docs on these shared features, see the [upstream tweakcc README](ht
 
 ## Pairing with lobotomized-claude-code
 
-Use this fork's extraction surface with [skrabe/lobotomized-claude-code](https://github.com/skrabe/lobotomized-claude-code) — overrides tuned for **Claude Opus 4.8** against this fork's extraction. Our named-prompt JSON catches prompts Piebald's published extract doesn't (389 named for CC 2.1.170 vs their 346 for 2.1.170), and the system-reminder + `string`-kind reach lets the overrides cover content the base mechanisms can't.
+Use this fork's extraction surface with [skrabe/lobotomized-claude-code](https://github.com/skrabe/lobotomized-claude-code) — per-model override sets (**Claude Fable 5**, Claude Opus 4.8) tuned against this fork's extraction. Our named-prompt JSON catches prompts Piebald's published extract doesn't (389 named for CC 2.1.170 vs their 346 for 2.1.170), and the system-reminder + `string`-kind reach lets the overrides cover content the base mechanisms can't.
 
 ## Install
 
-Published to npm as [`tweakcc-fixed`](https://www.npmjs.com/package/tweakcc-fixed):
-
-```bash
-npx tweakcc-fixed@latest              # interactive UI
-npx tweakcc-fixed@latest --apply      # apply customizations from ~/.tweakcc/config.json
-npm install -g tweakcc-fixed@latest   # or install globally (re-run to upgrade)
-```
-
-> [!TIP]
-> **Use `@latest`** — this fork iterates as new Claude Code versions ship; without it, `npx` may reuse a cached copy and miss newly-published fixes.
-
-For development, or to run patches that aren't published to npm yet, build and run from source:
+This fork is **not published to npm** — build and run from source:
 
 ```bash
 git clone https://github.com/skrabe/tweakcc-fixed ~/dev/tweakcc-fixed
 cd ~/dev/tweakcc-fixed && pnpm install && pnpm build
-node dist/index.mjs --apply
+node dist/index.mjs            # interactive UI
+node dist/index.mjs --apply    # apply customizations from ~/.tweakcc/config.json
 ```
+
+To update, `git pull && pnpm install && pnpm build` and re-run `--apply`.
+
+> [!WARNING]
+> Do **not** `npx tweakcc-fixed` — the [`tweakcc-fixed`](https://www.npmjs.com/package/tweakcc-fixed) npm package is a different, unmaintained fork that predates this repo and lacks all of its patches. (`npx tweakcc` is upstream Piebald, which doesn't apply system-prompt overrides to native installs.)
 
 ## How it works
 
