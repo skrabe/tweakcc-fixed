@@ -141,6 +141,7 @@ repeatedly. It also flags the **stale-backup** condition before it can bite (§1
 6. Stale-backup check + --apply + smoke             ← driver check
 7. LCC override realignment (the conflicts)         ← grounded workflow + the decision rule (§7)
 8. Commit each repo + push                          ← git commit -F (avoid the bad-substitution trap)
+9. Publish to npm (if you distribute via npm)       ← bump package.json version, tag vX.Y.Z, push --tags → release CI; consumers npx the new version
 ```
 
 > **Major-change gate — deem and stop, don't blindly apply.** "Applied cleanly /
@@ -292,8 +293,10 @@ no `WARNING`, no `Could not find`, no `ENOENT`, no patch `no-op` lines. The driv
 `check` parses for ✗ / "failed to find" / "Could not find" / "Conflicts detected"
 and the success line. See `REFERENCE.md → The four zeros (the completion bar)`.
 
-> **Never `npx tweakcc-fixed@latest`** — that pulls the published npm build and
-> skips your unpublished local patches. Always `node dist/index.mjs` from the checkout.
+> **During the bump, always `node dist/index.mjs` from the checkout** — the
+> published npm build lags your working tree until the publish phase (§9) ships
+> it. This local apply is the pre-publish gate. `npx <package>@<exact-version>`
+> is the consume path for other machines, only after the publish lands.
 
 ---
 
@@ -413,6 +416,23 @@ git push origin main
 # LCC (your overrides repo): the realignment
 git -C <overrides-repo> add system-prompts-<model>/ && git -C <overrides-repo> commit -F /tmp/lcc-msg.txt && git -C <overrides-repo> push origin main
 ```
+
+### Phase 9: publish to npm (if your fork is distributed as an npm package)
+
+The local `--apply` in Phase 6 is the pre-publish gate — publish only after the
+four zeros. Push main FIRST: npm installs of the package ship no `data/`, they
+fetch `prompts-X.Y.Z.json` from your repo's `main` branch at runtime, so an
+unpushed JSON 404s for every consumer.
+
+```bash
+# bump "version" in package.json (its own commit), push main, then:
+git tag vX.Y.Z && git push origin main --tags   # tag push triggers the release workflow (npm publish + GH release)
+npm view <your-package> version                  # wait until the registry serves X.Y.Z
+```
+
+Other machines then consume with `npx -y <your-package>@X.Y.Z --apply` — no
+checkout or build needed on those boxes (pin the exact version, not `@latest`,
+so a mid-bump box can't race the registry).
 
 ---
 
