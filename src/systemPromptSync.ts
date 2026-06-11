@@ -12,6 +12,7 @@ import {
 } from './systemPromptHashIndex';
 import chalk from 'chalk';
 import { SYSTEM_PROMPTS_DIR, SYSTEM_REMINDERS_DIR } from './config';
+import { REMINDER_REGISTRY } from './patches/systemReminderOverrides';
 import { debug } from './utils';
 
 /**
@@ -53,6 +54,16 @@ export const loadShadowSet = async (): Promise<Set<string>> => {
         for (const id of shadows) {
           if (typeof id === 'string' && id) set.add(id);
         }
+      }
+    }
+  }
+  // Built-in reminder overrides declare their named-prompt collisions inline
+  // (ReminderInjection.shadows): they splice a shared cli.js region a later
+  // named prompt anchors on, so the named-prompt pass cannot match again.
+  for (const injection of REMINDER_REGISTRY) {
+    if (Array.isArray(injection.shadows)) {
+      for (const id of injection.shadows) {
+        if (typeof id === 'string' && id) set.add(id);
       }
     }
   }
