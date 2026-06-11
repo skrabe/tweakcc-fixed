@@ -63,6 +63,7 @@ import { writeSuppressLineNumbers } from './suppressLineNumbers';
 import { writeSuppressRateLimitOptions } from './suppressRateLimitOptions';
 import { writeSessionMemory } from './sessionMemory';
 import { writeDreamMode } from './dreamMode';
+import { writeLeanMemoryTypes } from './leanMemoryTypes';
 import { writeRememberSkill } from './rememberSkill';
 import { writeThinkingBlockStyling } from './thinkingBlockStyling';
 import { writeMcpNonBlocking, writeMcpBatchSize } from './mcpStartup';
@@ -428,6 +429,13 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.FEATURES,
     description:
       'Enable dream (/dream + auto-dream background memory consolidation)',
+  },
+  {
+    id: 'lean-memory-types',
+    name: 'Lean memory types',
+    group: PatchGroup.FEATURES,
+    description:
+      'Compact "Types of memory" prompt block + on-demand memory-types skill',
   },
   {
     id: 'toolsets',
@@ -1008,6 +1016,10 @@ export const applyCustomization = async (
     'dream-mode': {
       fn: c => writeDreamMode(c),
       condition: !!config.settings.misc?.enableDreamMode,
+    },
+    'lean-memory-types': {
+      fn: c => writeLeanMemoryTypes(c),
+      condition: !!config.settings.misc?.enableLeanMemoryTypes,
     },
     toolsets: {
       fn: c =>

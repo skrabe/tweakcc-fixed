@@ -73,6 +73,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     enableSwarmMode: true,
     enableSessionMemory: true,
     enableDreamMode: true,
+    enableLeanMemoryTypes: false,
     enableRememberSkill: false,
     tokenCountRounding: null as number | null,
     autoAcceptPlanMode: false,
@@ -571,6 +572,20 @@ export function MiscView({ onSubmit }: MiscViewProps) {
           updateSettings(settings => {
             ensureMisc();
             settings.misc!.enableDreamMode = !settings.misc!.enableDreamMode;
+          });
+        },
+      },
+      {
+        id: 'enableLeanMemoryTypes',
+        title: 'Enable lean memory types',
+        description:
+          'Force the tengu_ochre_finch statsig gate: memory prompts carry a compact "Types of memory" list and the full taxonomy moves to the on-demand memory-types skill.',
+        getValue: () => settings.misc?.enableLeanMemoryTypes ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.enableLeanMemoryTypes =
+              !settings.misc!.enableLeanMemoryTypes;
           });
         },
       },

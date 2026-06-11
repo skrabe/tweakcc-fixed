@@ -130,6 +130,7 @@ export interface MiscConfig {
   enableSwarmMode: boolean;
   enableSessionMemory: boolean;
   enableDreamMode: boolean;
+  enableLeanMemoryTypes: boolean;
   enableRememberSkill: boolean;
   tokenCountRounding: number | null;
   autoAcceptPlanMode: boolean;
