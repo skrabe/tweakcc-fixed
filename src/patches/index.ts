@@ -52,6 +52,7 @@ import { writePatchesAppliedIndication } from './patchesAppliedIndication';
 import { applySystemPrompts } from './systemPrompts';
 import { applyInlineBlobOverrides } from './inlineBlobOverrides';
 import { writeFixLspSupport } from './fixLspSupport';
+import { writeFixSummarizeFromHere } from './fixSummarizeFromHere';
 import { writeToolsets } from './toolsets';
 import { writeTableFormat } from './tableFormat';
 import { writeConversationTitle } from './conversationTitle';
@@ -189,6 +190,13 @@ const PATCH_DEFINITIONS = [
     name: 'Fix LSP support',
     group: PatchGroup.ALWAYS_APPLIED,
     description: 'Enable/fix nascent LSP support',
+  },
+  {
+    id: 'fix-summarize-from-here',
+    name: 'Fix "Summarize from here"',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'Make "Summarize from here" summarize only the messages after the rewind point (feed the slice, not the whole conversation)',
   },
   {
     id: 'statusline-update-throttle',
@@ -813,6 +821,10 @@ export const applyCustomization = async (
     },
     'fix-lsp-support': {
       fn: c => writeFixLspSupport(c),
+    },
+    'fix-summarize-from-here': {
+      fn: c => writeFixSummarizeFromHere(c),
+      condition: config.settings.misc?.fixSummarizeFromHere !== false,
     },
     'statusline-update-throttle': {
       fn: c =>

@@ -131,6 +131,7 @@ export interface MiscConfig {
   enableSessionMemory: boolean;
   enableDreamMode: boolean;
   enableLeanMemoryTypes: boolean;
+  fixSummarizeFromHere: boolean;
   enableRememberSkill: boolean;
   tokenCountRounding: number | null;
   autoAcceptPlanMode: boolean;

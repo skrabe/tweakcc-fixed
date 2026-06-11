@@ -74,6 +74,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     enableSessionMemory: true,
     enableDreamMode: true,
     enableLeanMemoryTypes: false,
+    fixSummarizeFromHere: true,
     enableRememberSkill: false,
     tokenCountRounding: null as number | null,
     autoAcceptPlanMode: false,
@@ -572,6 +573,21 @@ export function MiscView({ onSubmit }: MiscViewProps) {
           updateSettings(settings => {
             ensureMisc();
             settings.misc!.enableDreamMode = !settings.misc!.enableDreamMode;
+          });
+        },
+      },
+      {
+        id: 'fixSummarizeFromHere',
+        title: 'Fix "Summarize from here"',
+        description:
+          'Make "Summarize from here" summarize only the messages after the rewind point instead of the whole conversation.',
+        getValue: () => settings.misc?.fixSummarizeFromHere ?? true,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.fixSummarizeFromHere = !(
+              settings.misc!.fixSummarizeFromHere ?? true
+            );
           });
         },
       },
