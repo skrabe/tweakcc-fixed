@@ -760,9 +760,16 @@ const EDITED_TEXT_FILE_INJECTION: ReminderInjection = {
   name: 'Edited-text-file post-edit note',
   description:
     'Conditional note injected after a file is edited (by user or linter). Empty .md body = silent edits.',
-  // Splices the shared ternary-branch prefix the budget-exceeded named prompt
-  // anchors on, so that named prompt cannot match a second time.
-  shadows: ['system-reminder-file-modification-detected-budget-exceeded'],
+  // Consumes the whole ternary, including the branch the externally-modified
+  // named prompt anchors on. Both named prompts must be shadowed: the
+  // budget-exceeded one matches the spliced prefix a second time, and
+  // file-modified-externally only matches a stock install because this
+  // registry's defaultBody happens to mirror the pristine branch text — once a
+  // user customizes edited-text-file.md, its anchor vanishes too.
+  shadows: [
+    'system-reminder-file-modification-detected-budget-exceeded',
+    'system-reminder-file-modified-externally',
+  ],
   placeholders: {
     filename: '${H.filename}',
     snippet: '${H.snippet}',
