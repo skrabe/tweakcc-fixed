@@ -31,6 +31,18 @@ const WORKFLOW_SCRIPT_IDENTIFIER_MAP = {
 // semantic names for the prompt's interpolated identifiers — required when
 // override .md files reference those names (`${ATTACHMENT_OBJECT.filename}`).
 const NEW_PROMPT_ASSIGNMENTS = [
+  // 2.1.175 — new: Projects (claude.ai Project docs read/write, method
+  // dispatch). Tool name literal: var nxK="Projects",e9q="Read and write…".
+  {
+    matcher: t =>
+      t.startsWith(
+        'Read and write the claude.ai Project attached to this session'
+      ),
+    name: 'Tool Description: Projects',
+    id: 'tool-description-projects',
+    description:
+      'Tool description for Projects — reads and writes docs in the claude.ai Project bound to the session (method-dispatch: list/read/write/delete)',
+  },
   // 2.1.172 — fuzzy-miss restore: the prompt's opening changed
   // ("Before using any chrome browser tools, you MUST first load them" →
   // "If the Chrome browser tools are deferred"), breaking the 100-char
