@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import parser from '@babel/parser';
 import { fileURLToPath } from 'url';
+import { normalizeIdGroups } from './normalizeIdGroups.js';
 
 function slugify(text) {
   return text
@@ -1951,62 +1952,6 @@ function extractStrings(filepath, minLength = 500) {
 //    cross-session reminder override flip-flopping 2.1.167↔2.1.169. The
 //    id-level "content last changed at" is the group's max; stamp every entry
 //    with it.
-function normalizeIdGroups(prompts) {
-  const byId = new Map();
-  for (const p of prompts) {
-    if (!p.id) continue;
-    if (!byId.has(p.id)) byId.set(p.id, []);
-    byId.get(p.id).push(p);
-  }
-
-  const semverNewer = (a, b) => {
-    const pa = String(a).split('.').map(Number);
-    const pb = String(b).split('.').map(Number);
-    for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
-      const d = (pa[i] || 0) - (pb[i] || 0);
-      if (d) return d > 0;
-    }
-    return false;
-  };
-
-  const dropped = new Set();
-  for (const [id, group] of byId) {
-    if (group.length < 2) continue;
-    for (const inner of group) {
-      const outer = group.find(
-        o =>
-          o !== inner &&
-          !dropped.has(o) &&
-          inner.start >= o.start &&
-          inner.end <= o.end
-      );
-      if (outer) {
-        dropped.add(inner);
-        console.log(
-          `Dropped nested same-id duplicate of "${id}" (${inner.start}-${inner.end} inside ${outer.start}-${outer.end})`
-        );
-      }
-    }
-    const kept = group.filter(p => !dropped.has(p));
-    const maxVersion = kept.reduce(
-      (v, p) =>
-        p.version && (!v || semverNewer(p.version, v)) ? p.version : v,
-      ''
-    );
-    if (!maxVersion) continue;
-    for (const p of kept) {
-      if (p.version !== maxVersion) {
-        console.log(
-          `Normalized "${id}" entry version ${p.version} → ${maxVersion} (id-group max)`
-        );
-        p.version = maxVersion;
-      }
-    }
-  }
-
-  return prompts.filter(p => !dropped.has(p));
-}
-
 function mergeWithExisting(newData, oldData, currentVersion) {
   if (!oldData || !oldData.prompts) {
     // No old data, add current version to all new prompts

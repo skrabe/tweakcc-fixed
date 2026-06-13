@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { normalizeIdGroups } from '../../tools/promptExtractor.js';
+import { normalizeIdGroups } from '../../tools/normalizeIdGroups.js';
 
 type Entry = {
   id: string;
