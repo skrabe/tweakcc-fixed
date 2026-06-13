@@ -298,7 +298,7 @@ function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.help) {
     console.log(
-      'Usage: node tools/versionBumpReport.js [oldVersion] [newVersion] [--cli path] [--json] [--strict] [--no-extract]'
+      'Usage: node tools/versionBumpReport.cjs [oldVersion] [newVersion] [--cli path] [--json] [--strict] [--no-extract]'
     );
     process.exit(0);
   }
