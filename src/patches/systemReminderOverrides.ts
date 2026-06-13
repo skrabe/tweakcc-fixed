@@ -25,6 +25,11 @@ export interface ReminderInjection {
   description: string;
   placeholders: Record<string, string>;
   defaultBody: string;
+  // Named-prompt ids this built-in override consumes during --apply: it
+  // splices the shared cli.js region the named prompt would otherwise anchor
+  // on, so the named-prompt pass cannot match a second time. loadShadowSet
+  // unions these into the shadow set (alongside runtime .md `shadows:`).
+  shadows?: string[];
   apply: (
     content: string,
     body: string,
@@ -755,6 +760,16 @@ const EDITED_TEXT_FILE_INJECTION: ReminderInjection = {
   name: 'Edited-text-file post-edit note',
   description:
     'Conditional note injected after a file is edited (by user or linter). Empty .md body = silent edits.',
+  // Consumes the whole ternary, including the branch the externally-modified
+  // named prompt anchors on. Both named prompts must be shadowed: the
+  // budget-exceeded one matches the spliced prefix a second time, and
+  // file-modified-externally only matches a stock install because this
+  // registry's defaultBody happens to mirror the pristine branch text — once a
+  // user customizes edited-text-file.md, its anchor vanishes too.
+  shadows: [
+    'system-reminder-file-modification-detected-budget-exceeded',
+    'system-reminder-file-modified-externally',
+  ],
   placeholders: {
     filename: '${H.filename}',
     snippet: '${H.snippet}',
@@ -1129,6 +1144,9 @@ const TASK_LIST_REMINDER_INJECTION: ReminderInjection = {
   name: 'Task-list status reminder',
   description:
     'Fires every turn while TaskList has entries. Wraps the current task list with reminder text about using TaskCreate. Empty .md = suppress entirely.',
+  // Rewrites the task-reminder region to new phrasing before the named prompt
+  // (anchored on the old phrasing) runs, leaving it unmatchable.
+  shadows: ['system-reminder-task-tools-reminder'],
   placeholders: {
     tasks: '${q}',
   },
