@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const parser = require('@babel/parser');
+import fs from 'fs';
+import path from 'path';
+import parser from '@babel/parser';
+import { fileURLToPath } from 'url';
 
 function slugify(text) {
   return text
@@ -1823,10 +1825,6 @@ function extractStrings(filepath, minLength = 500) {
         // Find the ${ before this identifier (search backwards from id.start)
         let beforeIdentifier = fullContent.substring(lastPos, id.start);
 
-        // Find the } after this identifier (search forwards from id.end)
-        // We need to find the matching closing brace for the interpolation
-        let afterIdentifierStart = id.end;
-
         // Add the piece including everything up to and including just before the identifier
         pieces.push(beforeIdentifier);
 
@@ -2142,9 +2140,6 @@ function mergeWithExisting(newData, oldData, currentVersion) {
       };
     }
 
-    // Check if there's any old prompt without a version (we should add current version)
-    const oldWithoutVersion = oldData.prompts.find(oldItem => !oldItem.version);
-
     // Hand-curated or high-confidence inferred assignment for prompts new in this CC version.
     const assigned =
       lookupNewPromptAssignment(newContent) || inferPromptIdentity(newContent);
@@ -2184,7 +2179,7 @@ function mergeWithExisting(newData, oldData, currentVersion) {
 }
 
 // CLI
-if (require.main === module) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const filepath = process.argv[2];
 
   if (!filepath) {
@@ -2213,7 +2208,6 @@ if (require.main === module) {
   }
 
   // Look for package.json alongside the input file
-  const path = require('path');
   const inputDir = path.dirname(path.resolve(filepath));
   const packageJsonPath = path.join(inputDir, 'package.json');
 
@@ -2358,5 +2352,4 @@ if (require.main === module) {
   console.log(`Written to ${outputFile}`);
 }
 
-module.exports = extractStrings;
-module.exports.normalizeIdGroups = normalizeIdGroups;
+export { extractStrings as default, normalizeIdGroups };

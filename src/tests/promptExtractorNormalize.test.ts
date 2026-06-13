@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const { normalizeIdGroups } = require('../../tools/promptExtractor.js');
+import { normalizeIdGroups } from '../../tools/promptExtractor.js';
 
 type Entry = {
   id: string;
