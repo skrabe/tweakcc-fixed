@@ -31,6 +31,117 @@ const WORKFLOW_SCRIPT_IDENTIFIER_MAP = {
 // semantic names for the prompt's interpolated identifiers — required when
 // override .md files reference those names (`${ATTACHMENT_OBJECT.filename}`).
 const NEW_PROMPT_ASSIGNMENTS = [
+  // 2.1.176 — fork-usage-guidelines refactored: "Fork yourself (omit
+  // subagent_type)" → "Fork yourself (pass subagent_type: "fork")", dropping
+  // below the fuzzy-match threshold. No interpolation slots.
+  {
+    matcher: t =>
+      t.includes('## When to fork') &&
+      t.includes('subagent_type: "fork"') &&
+      t.includes('Forks are cheap because they share your prompt cache'),
+    name: 'System Prompt: Fork usage guidelines',
+    id: 'system-prompt-fork-usage-guidelines',
+    description:
+      'When-to-fork heuristics in the Agent tool section — qualitative criterion, parallel forks, cache sharing, output-file non-peek rule',
+  },
+  // 2.1.176 — writing-subagent-prompts refactored: conditional opener changed
+  // ("When spawning a fresh agent (with a subagent_type)..." → "Any agent
+  // other than a fork starts with zero context."), breaking fuzzy carry-over.
+  // Slot 0 is HAS_SUBAGENT_TYPE (same meaning as 2.1.175).
+  {
+    matcher: t =>
+      t.includes('## Writing the prompt') &&
+      t.includes('Brief the agent like a smart colleague who just walked into the room'),
+    name: 'System Prompt: Writing subagent prompts',
+    id: 'system-prompt-writing-subagent-prompts',
+    description:
+      'How to write a subagent prompt — zero-context rule, briefing format, context/goal/constraints/format guidance',
+    identifierMap: {
+      '0': 'HAS_SUBAGENT_TYPE',
+    },
+  },
+  // 2.1.176 — new: inline fork description injected into the Agent tool
+  // description body. Single slot is the Agent tool name.
+  {
+    matcher: t =>
+      t.startsWith('Calling ') &&
+      t.includes('subagent_type: "fork" creates a fork') &&
+      t.includes('runs in the background'),
+    name: 'System Prompt: Agent fork inline description',
+    id: 'system-prompt-agent-fork-inline-description',
+    description:
+      'Inline description of the fork subagent_type injected into the Agent tool description — fork semantics, background execution, re-delegation prohibition',
+    identifierMap: {
+      '0': 'AGENT_TOOL_NAME',
+    },
+  },
+  // 2.1.176 — subagent-delegation-examples refactored: fork example updated
+  // (added subagent_type: "fork" explicit param). Slot 0 = AGENT_TOOL_NAME.
+  {
+    matcher: t =>
+      t.startsWith('Example usage:') &&
+      t.includes('subagent_type: "fork"') &&
+      t.includes('ship-audit'),
+    name: 'System Prompt: Subagent delegation examples',
+    id: 'system-prompt-subagent-delegation-examples',
+    description:
+      'Example Agent tool invocations illustrating fork-based research delegation and a ship-readiness audit pattern',
+    identifierMap: {
+      '0': 'AGENT_TOOL_NAME',
+    },
+  },
+  // 2.1.176 — new shorter WebFetch tool description variant (replaces the
+  // bullet-list form with a single-sentence summary + 3 concise notes).
+  // Slot 0 is the conditional for the claude.ai artifact URL exception note.
+  {
+    matcher: t =>
+      t.startsWith('Fetches a URL, converts the page to markdown') &&
+      t.includes('Responses are cached for 15 minutes per URL'),
+    name: 'Tool Description: WebFetch (short)',
+    id: 'tool-description-webfetch-short',
+    description:
+      'Short-form WebFetch tool description — single-sentence summary with auth-failure note, HTTP upgrade, and 15-minute cache; conditional artifact-URL exception',
+    identifierMap: {
+      '0': 'HAS_ARTIFACT_URL_EXCEPTION',
+    },
+  },
+  // 2.1.176 — new WebFetch WILL FAIL warning variant using backtick-delimited
+  // conditional (replaces the quote-delimited form). Two slots: slot 0 is the
+  // conditional for the artifact-URL exception text block, slot 1 is additional
+  // usage notes injected after the exception block.
+  {
+    matcher: t =>
+      t.startsWith('IMPORTANT: WebFetch WILL FAIL for authenticated or private URLs') &&
+      t.includes('claude.ai/code/artifact/{uuid} URLs'),
+    name: 'Tool Description: WebFetch (auth warning)',
+    id: 'tool-description-webfetch-auth-warning',
+    description:
+      'WebFetch auth-failure warning variant — IMPORTANT preamble, conditional artifact-URL exception, and injected additional usage notes',
+    identifierMap: {
+      '0': 'HAS_ARTIFACT_URL_EXCEPTION',
+      '1': 'ADDITIONAL_USAGE_NOTES',
+    },
+  },
+  // 2.1.176 — agent tool description refactored: simplified from the full
+  // usage-notes form to a 4-slot shape (base desc + subagent list + fork
+  // conditional + tool-name ×2). Slots match the shortened simple-usage-notes
+  // lineage: 0=TOOL_BASE_DESCRIPTION, 1=SUBAGENT_TYPE_DEFINITIONS,
+  // 2=CAN_FORK_CONTEXT, 3=AGENT_TOOL_NAME.
+  {
+    matcher: t =>
+      t.startsWith('Launch a new agent to handle complex, multi-step tasks') &&
+      t.includes('subagent_type to select an agent'),
+    name: 'Tool Description: Agent (usage notes)',
+    id: 'tool-description-agent-usage-notes',
+    description:
+      'Refactored Agent tool description — base-desc + subagent-type list + fork subagent_type conditional selector',
+    identifierMap: {
+      '0': 'TOOL_BASE_DESCRIPTION',
+      '1': 'SUBAGENT_TYPE_DEFINITIONS',
+      '2': 'CAN_FORK_CONTEXT',
+      '3': 'AGENT_TOOL_NAME',
+    },
+  },
   // 2.1.175 — new: Projects (claude.ai Project docs read/write, method
   // dispatch). Tool name literal: var nxK="Projects",e9q="Read and write…".
   {
