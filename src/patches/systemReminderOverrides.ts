@@ -1217,7 +1217,7 @@ IMPORTANT: After completing your current task, you MUST address the user's messa
     // (never hardcode the prefix — that would corrupt whichever shape didn't match).
     return findAndReplace(
       content,
-      /((?:case"auto-continuation":)?case"human":case void 0:(?:default:)?)return`The user sent a new message while you were working:\n\$\{([$\w]+)\}\n\nIMPORTANT: After completing your current task, you MUST address the user's message above\. Do not ignore it\.`/,
+      /((?:case"auto-continuation":)?case"human":case void 0:(?:default:)?)return`(?:The user sent a new message while you were working:\n|\$\{[$\w]+\})\$\{([$\w]+)\}\n\nIMPORTANT: After completing your current task, you MUST address the user's message above\. Do not ignore it\.`/,
       m => {
         const [, prefix, hParam] = m;
         if (isSuppressed) return `${prefix}return\`\${${hParam}}\``;
