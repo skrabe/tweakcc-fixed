@@ -308,9 +308,22 @@ function main() {
   const cliPath =
     args.cli || path.join(os.homedir(), '.tweakcc', 'native-claudejs-orig.js');
   const versions = listPromptVersions(promptsDir);
+
+  // Explicit target: --new flag or positional arg[1]. When absent the target is
+  // inferred from the cli itself, so binary == target by construction (no check needed).
+  const explicitTarget = args.new || args._[1] || null;
+  if (explicitTarget && fs.existsSync(cliPath)) {
+    const binaryVersion = detectVersionFromCli(cliPath);
+    if (binaryVersion && binaryVersion !== explicitTarget) {
+      throw new Error(
+        `Version mismatch: binary is ${binaryVersion} but --new target is ${explicitTarget}. ` +
+          `Update the cli.js at ${cliPath} to match the target before running the report.`
+      );
+    }
+  }
+
   const newVersion =
-    args.new ||
-    args._[1] ||
+    explicitTarget ||
     (fs.existsSync(cliPath) && detectVersionFromCli(cliPath));
   if (!newVersion) throw new Error('Could not infer new version');
   const oldVersion =
