@@ -31,6 +31,70 @@ const WORKFLOW_SCRIPT_IDENTIFIER_MAP = {
 // semantic names for the prompt's interpolated identifiers — required when
 // override .md files reference those names (`${ATTACHMENT_OBJECT.filename}`).
 const NEW_PROMPT_ASSIGNMENTS = [
+  // 2.1.177 — the fork/subagent prompt cluster was reworded for the new
+  // explicit `subagent_type: "fork"` syntax (2.1.175 said "omit subagent_type"),
+  // which moved three prompts' openings past the 100-char fuzzy fingerprint so
+  // they extract anonymous. Restore their .175 ids; the opus/fable overrides for
+  // these are empty-body suppressions, so only the id (→ search regex) must
+  // rebind — no identifierMap needed (the override references no ${VAR}).
+  {
+    matcher: t =>
+      t.includes('## When to fork') &&
+      t.includes('Forks are cheap because they share your prompt cache'),
+    name: 'System Prompt: Fork usage guidelines',
+    id: 'system-prompt-fork-usage-guidelines',
+    description:
+      'Guidance on when to fork yourself (subagent_type: "fork") instead of spawning a fresh subagent — fork open-ended/survey questions whose intermediate tool output is not worth keeping in context; forks inherit context and share the prompt cache',
+  },
+  {
+    matcher: t =>
+      t.includes('## Writing the prompt') &&
+      t.includes('smart colleague who just walked into the room'),
+    name: 'System Prompt: Writing subagent prompts',
+    id: 'system-prompt-writing-subagent-prompts',
+    description:
+      'How to brief a spawned agent like a smart colleague with zero context: explain the goal, what has been ruled out, and enough surrounding context that the agent can make judgment calls',
+  },
+  {
+    matcher: t =>
+      t.startsWith('Example usage:') &&
+      t.includes('I want the punch list, not the git output in my context'),
+    name: 'System Prompt: Subagent delegation examples',
+    id: 'system-prompt-subagent-delegation-examples',
+    description:
+      'Worked example of forking a survey question (a branch ship-readiness audit) — the assistant thinking plus the Agent-tool call with subagent_type "fork"',
+  },
+  // 2.1.177 — genuinely new alongside the fork feature. No overrides ship for
+  // these (they apply pristine); named for coverage, following upstream's ids.
+  {
+    matcher: t => t.includes('**If you ARE the fork**'),
+    name: 'System Prompt: Forked agent guidance',
+    id: 'system-prompt-forked-agent-guidance',
+    description:
+      'Explains what calling the Agent tool with subagent_type "fork" does — inherits full context, runs in the background, and keeps tool output out of your context — and tells a running fork to execute directly rather than re-delegate',
+  },
+  {
+    matcher: t => t.startsWith('Fetches a URL, converts the page to markdown'),
+    name: 'Tool Description: WebFetch (concise)',
+    id: 'tool-description-webfetch-concise',
+    description:
+      'Concise WebFetch tool description — fetches a URL, converts the page to markdown, and answers a prompt against it via a small fast model; notes auth-URL failure, HTTPS upgrade, cross-host redirect return, and the 15-minute per-URL cache',
+  },
+  {
+    matcher: t => t.startsWith('IMPORTANT: WebFetch WILL FAIL for authenticated'),
+    name: 'Tool Description: WebFetch private URL warning',
+    id: 'tool-description-webfetch-private-url-warning',
+    description:
+      'WebFetch usage warning — the tool fails on authenticated or private URLs; check whether the URL points to an authenticated service and prefer a specialized MCP tool, with the claude.ai artifact-URL exception',
+  },
+  {
+    matcher: t =>
+      t.startsWith('Launch a new agent to handle complex, multi-step tasks'),
+    name: 'Tool Description: Agent (when to launch subagents)',
+    id: 'tool-description-agent-when-to-launch-subagents',
+    description:
+      'Agent tool description — launch a new agent for complex multi-step tasks, with the subagent_type selector (fork yourself vs. start a fresh agent type)',
+  },
   // 2.1.175 — new: Projects (claude.ai Project docs read/write, method
   // dispatch). Tool name literal: var nxK="Projects",e9q="Read and write…".
   {
