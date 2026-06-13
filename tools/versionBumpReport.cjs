@@ -298,7 +298,7 @@ function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.help) {
     console.log(
-      'Usage: node tools/versionBumpReport.js [oldVersion] [newVersion] [--cli path] [--json] [--strict] [--no-extract]'
+      'Usage: node tools/versionBumpReport.cjs [oldVersion] [newVersion] [--cli path] [--json] [--strict] [--no-extract]'
     );
     process.exit(0);
   }
@@ -313,6 +313,16 @@ function main() {
     args._[1] ||
     (fs.existsSync(cliPath) && detectVersionFromCli(cliPath));
   if (!newVersion) throw new Error('Could not infer new version');
+  if (fs.existsSync(cliPath)) {
+    const cliEmbeddedVersion = detectVersionFromCli(cliPath);
+    if (cliEmbeddedVersion !== newVersion) {
+      process.stderr.write(
+        `cli.js version mismatch: binary embeds ${cliEmbeddedVersion ?? '(unknown)'} but target is ${newVersion} — provide the correct cli.js for ${newVersion} (e.g. via --cli)\n`
+      );
+      process.exit(1);
+    }
+  }
+
   const oldVersion =
     args.old ||
     args._[0] ||

@@ -171,7 +171,7 @@ function cmdReport(oldArg) {
   console.log(C.head(`Version-bump report ${old} -> ${cur}`));
   let out;
   try {
-    out = execSync(`node tools/versionBumpReport.js ${old} ${cur}`, { cwd: REPO, encoding: 'utf8' });
+    out = execSync(`node tools/versionBumpReport.cjs ${old} ${cur}`, { cwd: REPO, encoding: 'utf8' });
   } catch (e) {
     out = (e.stdout || '') + (e.stderr || '');
   }
