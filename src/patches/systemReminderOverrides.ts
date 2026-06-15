@@ -131,13 +131,16 @@ const findCaseBody = (
 };
 
 // Pull the array-wrapper / message-constructor minified identifiers from an
-// existing case body. Pattern: `return X([Y({content:` — Mac builds give o5/j6,
-// Linux builds give o_/M8. Prefer the last match (case bodies sometimes call
-// the wrappers earlier with different ids for unrelated subcases).
+// existing case body. Pattern: `return …X([Y({content:` — Mac builds give o5/j6,
+// Linux builds give o_/M8. The wrapper isn't always the first thing after
+// `return`: the memory_update case prepends a comma-expression
+// (`return K.push(rm6),HT([U6({content:`), so skip any non-`;` chars before the
+// match. Prefer the last match (case bodies sometimes call the wrappers earlier
+// with different ids for unrelated subcases).
 const discoverWrappers = (
   caseBody: string
 ): { arrayWrap: string; msgCtor: string } => {
-  const re = /return\s+([$\w]+)\(\[([$\w]+)\(\{content:/g;
+  const re = /return\s+[^;]*?([$\w]+)\(\[([$\w]+)\(\{content:/g;
   let last: RegExpExecArray | null = null;
   let m: RegExpExecArray | null;
   while ((m = re.exec(caseBody)) !== null) last = m;
