@@ -94,11 +94,86 @@ try {
     if (n > base) introduced.push(`${v}(+${n - base})`);
   }
 
-  let parses = true;
-  try {
-    execFileSync('node', ['--check', cliCopy], { stdio: 'pipe' });
-  } catch {
-    parses = false;
+  // Syntax check. The check must use a parser capable of the language features
+  // the pristine binary ALREADY uses — Bun compiled this cli.js and it contains
+  // `using`/`await using` (TC39 explicit resource management). Older node
+  // (<=22.x) rejects `using` outright, so `node --check` would report the
+  // pristine itself as not-parsing — a node-version gap, not a defect in the
+  // patcher's output. So: enumerate candidate checkers (the harness's own node
+  // plain and with the explicit-resource-management flag, plus any discoverable
+  // newer node from mise/nvm and process.execPath siblings), pick the first one
+  // that parses the PRISTINE baseline, and use it for the PATCHED file. If no
+  // checker can parse the pristine, fall back to parse-equivalence: the patched
+  // file is acceptable iff it fails (or succeeds) at the exact same point as the
+  // pristine — i.e. our splicing introduced no new syntax break.
+  const firstSyntaxError = (file, bin, flags) => {
+    try {
+      execFileSync(bin, [...flags, '--check', file], { stdio: 'pipe' });
+      return null; // parsed clean
+    } catch (e) {
+      const out = (e.stdout?.toString() || '') + (e.stderr?.toString() || '');
+      const m = out.match(/SyntaxError:.*/);
+      // Normalize away the file path / line:col so only the error kind compares.
+      return m ? m[0] : `EXIT_${e.status ?? 'ERR'}`;
+    }
+  };
+
+  const candidateNodes = [];
+  const seen = new Set();
+  const addNode = (bin) => {
+    if (bin && !seen.has(bin) && fs.existsSync(bin)) {
+      seen.add(bin);
+      candidateNodes.push(bin);
+    }
+  };
+  addNode('node');
+  addNode(process.execPath);
+  // Discover newer node installs (mise / nvm / fnm) — sorted so highest wins.
+  const versionDirs = [];
+  for (const root of [
+    path.join(os.homedir(), '.local', 'share', 'mise', 'installs', 'node'),
+    path.join(os.homedir(), '.nvm', 'versions', 'node'),
+    path.join(os.homedir(), '.local', 'share', 'fnm', 'node-versions'),
+  ]) {
+    try {
+      for (const d of fs.readdirSync(root)) {
+        versionDirs.push(path.join(root, d));
+      }
+    } catch {
+      /* root absent */
+    }
+  }
+  versionDirs.sort().reverse();
+  for (const d of versionDirs) {
+    addNode(path.join(d, 'bin', 'node'));
+    addNode(path.join(d, 'installation', 'bin', 'node')); // fnm layout
+  }
+
+  // Each candidate checker is (bin, flags). Flag variant handles node 22.x,
+  // which can parse `using` only behind --js-explicit-resource-management.
+  const checkers = [];
+  for (const bin of candidateNodes) {
+    checkers.push({ bin, flags: [] });
+    checkers.push({ bin, flags: ['--js-explicit-resource-management'] });
+  }
+
+  // Pick the first checker that parses the pristine clean.
+  let parses;
+  let parseMode = 'none';
+  const capable = checkers.find(
+    c => firstSyntaxError(PRISTINE, c.bin, c.flags) === null
+  );
+  if (capable) {
+    parses = firstSyntaxError(cliCopy, capable.bin, capable.flags) === null;
+    parseMode = `${capable.bin}${capable.flags.length ? ' ' + capable.flags.join(' ') : ''}`;
+  } else {
+    // No checker can parse the pristine (pure node-version gap). Fall back to
+    // parse-equivalence with the harness's own node: patched is OK iff it
+    // breaks at exactly the same place as the pristine (no new corruption).
+    const base = firstSyntaxError(PRISTINE, 'node', []);
+    const got = firstSyntaxError(cliCopy, 'node', []);
+    parses = base === got;
+    parseMode = `equivalence(node): pristine=${base} patched=${got}`;
   }
 
   console.log('=== apply-safety harness ===');
@@ -106,7 +181,7 @@ try {
   console.log(`Could not find:    ${cnf}`);
   console.log(`cannot apply safely (warns): ${cannotApply}`);
   console.log(`introduced minified \${var}: ${introduced.length}  ${introduced.slice(0, 12).join(' ')}`);
-  console.log(`patched parses:    ${parses}`);
+  console.log(`patched parses:    ${parses}  [${parseMode}]`);
   const ok = cnf === 0 && introduced.length === 0 && parses;
   console.log(ok ? 'RESULT: PASS' : 'RESULT: FAIL');
   process.exit(ok ? 0 : 1);

@@ -75,7 +75,13 @@ export const applySystemPrompts = async (
   content: string,
   version: string,
   escapeNonAscii?: boolean,
-  patchFilter?: string[] | null
+  patchFilter?: string[] | null,
+  // The binary as it was BEFORE any override splicing (inline-blob, reminders).
+  // Lets us distinguish a prompt clobbered by tweakcc's own earlier splice
+  // (matched the pristine binary but not the current one → silent skip) from
+  // genuine anchor drift (never matched the pristine binary → warn). When
+  // omitted, every non-match is treated as drift (pre-existing behavior).
+  pristineContent?: string
 ): Promise<SystemPromptsResult> => {
   // Auto-detect if we should escape non-ASCII characters based on cli.js content
   const shouldEscapeNonAscii = escapeNonAscii ?? detectUnicodeEscaping(content);
@@ -384,9 +390,49 @@ export const applySystemPrompts = async (
     } else {
       // Shadowed prompts (owned by inline-blob, system-reminders, or a wider
       // named-prompt) are filtered upstream in loadSystemPromptsWithRegex via
-      // the `shadows:` frontmatter on the owning override. Anything reaching
-      // this branch is genuine drift — a regex anchor that no longer matches
-      // the binary shape. Surface it so the owning override can be fixed.
+      // the `shadows:` frontmatter on the owning override.
+      //
+      // A prompt can also be shadowed implicitly: its text lives inside a
+      // region an inline-blob/reminder override already replaced this apply
+      // (e.g. a "## Types of memory" array element, a "# System" bullet). The
+      // override author may not have enumerated every named id its region
+      // consumes. Detect this by re-matching against the pristine snapshot:
+      // if the regex matched the binary BEFORE any splicing but not now, our
+      // own earlier override clobbered it — its curated content was
+      // intentionally superseded, so skip silently (no drift warning, no
+      // spurious "Could not find"). Only a prompt that matched neither the
+      // pristine nor the current binary is genuine anchor drift worth
+      // surfacing.
+      let clobberedByEarlierSplice = false;
+      if (pristineContent !== undefined && pristineContent !== content) {
+        try {
+          const matchedPristine = await findAllMatchesWithStackFallback(
+            regex,
+            'sig',
+            pristineContent
+          );
+          clobberedByEarlierSplice = matchedPristine.length > 0;
+        } catch {
+          clobberedByEarlierSplice = false;
+        }
+      }
+
+      if (clobberedByEarlierSplice) {
+        debug(
+          `"${prompt.name}": region consumed by an earlier inline-blob/reminder override — leaving superseded, no warning`
+        );
+        results.push({
+          id: promptId,
+          name: prompt.name,
+          group: PatchGroup.SYSTEM_PROMPTS,
+          applied: false,
+          skipped: true,
+        });
+        continue;
+      }
+
+      // Genuine drift — a regex anchor that no longer matches the binary
+      // shape. Surface it so the owning override can be fixed.
       if (
         !prompt.name.startsWith('Data:') &&
         prompt.name !== 'Skill: Build with Claude API'

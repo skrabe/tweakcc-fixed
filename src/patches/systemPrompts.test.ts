@@ -813,5 +813,68 @@ describe('systemPrompts.ts', () => {
       expect(result.results[0].skipped).toBe(true);
       expect(result.results[0].applied).toBe(false);
     });
+
+    // Root cause B: a named prompt whose region was consumed (replaced) by an
+    // earlier inline-blob/reminder override this apply. Its regex matched the
+    // pristine snapshot but not the current (post-splice) binary → silent skip,
+    // no "Could not find" noise.
+    it('silently skips a prompt clobbered by an earlier splice (matched pristine, not current)', async () => {
+      const mockPromptData = buildMockPromptData({
+        content: 'Tools are executed in a permission mode',
+      });
+      setupMocks(mockPromptData);
+
+      // pristineContent contains the text; current content does NOT (an earlier
+      // inline-blob override already replaced that region).
+      const pristine = 'arr=["Tools are executed in a permission mode","x"]';
+      const current = 'arr=["LOBOTOMIZED bullet","x"]';
+
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+      const result = await applySystemPrompts(
+        current,
+        '1.0.0',
+        false,
+        null,
+        pristine
+      );
+      const warned = logSpy.mock.calls
+        .flat()
+        .some(a => typeof a === 'string' && a.includes('Could not find'));
+      logSpy.mockRestore();
+
+      expect(warned).toBe(false);
+      expect(result.newContent).toBe(current);
+      expect(result.results[0].skipped).toBe(true);
+      expect(result.results[0].applied).toBe(false);
+    });
+
+    // The contrast case: genuine drift (the regex matched NEITHER the pristine
+    // snapshot nor the current binary) still surfaces a "Could not find"
+    // warning so the owning override can be realigned.
+    it('still warns on genuine drift (matched neither pristine nor current)', async () => {
+      const mockPromptData = buildMockPromptData({
+        content: 'This text is nowhere in the binary',
+      });
+      setupMocks(mockPromptData);
+
+      const pristine = 'arr=["something else entirely","x"]';
+      const current = 'arr=["something else entirely","x"]';
+
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+      const result = await applySystemPrompts(
+        current,
+        '1.0.0',
+        false,
+        null,
+        pristine
+      );
+      const warned = logSpy.mock.calls
+        .flat()
+        .some(a => typeof a === 'string' && a.includes('Could not find'));
+      logSpy.mockRestore();
+
+      expect(warned).toBe(true);
+      expect(result.newContent).toBe(current);
+    });
   });
 });

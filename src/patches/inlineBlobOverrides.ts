@@ -25,14 +25,12 @@
 
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
+import matter from 'gray-matter';
 
 import { debug } from '../utils';
 import { SYSTEM_PROMPTS_DIR } from '../config';
 import { showDiff } from './patchDiffing';
 
-// Minimal frontmatter parser — handles the format produced by the Python
-// extractor (HTML-comment delimited, single-quoted or double-quoted values).
-// We don't depend on gray-matter to keep this self-contained.
 interface InlineBlobFrontmatter {
   name: string;
   description: string;
@@ -49,58 +47,47 @@ interface InlineBlobOverride {
   body: string;
 }
 
-const parseYamlValue = (raw: string): string => {
-  raw = raw.trim();
-  if (raw.startsWith('"') && raw.endsWith('"')) {
-    // double-quoted: unescape \\ \" \n
-    const inner = raw.slice(1, -1);
-    let out = '';
-    for (let i = 0; i < inner.length; i++) {
-      const c = inner[i];
-      if (c === '\\' && i + 1 < inner.length) {
-        const n = inner[i + 1];
-        if (n === 'n') out += '\n';
-        else if (n === 't') out += '\t';
-        else if (n === 'r') out += '\r';
-        else if (n === '"') out += '"';
-        else if (n === '\\') out += '\\';
-        else if (n === "'") out += "'";
-        else out += n;
-        i++;
-      } else {
-        out += c;
-      }
-    }
-    return out;
-  }
-  if (raw.startsWith("'") && raw.endsWith("'")) {
-    // single-quoted: only '' (doubled) is an escape; backslashes are literal
-    return raw.slice(1, -1).replace(/''/g, "'");
-  }
-  return raw;
-};
-
-const parseFrontmatter = (
+// Parse an inline-blob override's HTML-comment frontmatter with gray-matter.
+//
+// The anchor is a regex pattern; several overrides store it as a multi-line
+// YAML folded (`>-`) or literal (`|-`) block scalar (the pattern is too long
+// for one line). The previous hand-rolled line-by-line parser captured only
+// the same-line text after the key, so a folded anchor parsed to the bare
+// `>-`/`|-` indicator — a regex that matches near the top of cli.js and made
+// the boundary walker splice the override body into core runtime code
+// (corrupting it / "Expected CommonJS module to have a function wrapper" at
+// boot). gray-matter implements YAML's block-scalar folding correctly, so the
+// anchor resolves to the intended long pattern. The anchor's own
+// inert-`${VAR}`-in-a-string concerns don't apply here: it is consumed as a
+// RegExp, never embedded in the binary.
+export const parseFrontmatter = (
   filename: string,
   text: string
 ): InlineBlobOverride | null => {
-  const m = text.match(/^<!--\s*([\s\S]*?)\s*-->\s*\n?/);
-  if (!m) return null;
-  const fm: Record<string, string> = {};
-  for (const line of m[1].split('\n')) {
-    const kv = line.match(/^\s*([A-Za-z][A-Za-z0-9_-]*)\s*:\s*(.+?)\s*$/);
-    if (kv) fm[kv[1]] = parseYamlValue(kv[2]);
+  if (!/^<!--/.test(text)) return null;
+  let parsed: matter.GrayMatterFile<string>;
+  try {
+    parsed = matter(text, { delimiters: ['<!--', '-->'] });
+  } catch {
+    return null;
   }
-  const fmTyped = fm as unknown as InlineBlobFrontmatter;
+  const data = parsed.data as Partial<InlineBlobFrontmatter>;
   if (
-    !fmTyped.inlineBlobAnchor ||
-    !fmTyped.inlineBlobKind ||
-    !['array', 'template', 'string'].includes(fmTyped.inlineBlobKind)
+    typeof data.inlineBlobAnchor !== 'string' ||
+    !data.inlineBlobAnchor ||
+    typeof data.inlineBlobKind !== 'string' ||
+    !['array', 'template', 'string'].includes(data.inlineBlobKind)
   ) {
     return null;
   }
-  const body = text.slice(m[0].length).replace(/\n+$/, '');
-  return { filename, frontmatter: fmTyped, body };
+  // Match the previous body extraction: drop the leading newline gray-matter
+  // keeps after the closing delimiter and any trailing newlines.
+  const body = parsed.content.replace(/^\n+/, '').replace(/\n+$/, '');
+  return {
+    filename,
+    frontmatter: data as InlineBlobFrontmatter,
+    body,
+  };
 };
 
 // ---------------------------------------------------------------------------
@@ -368,6 +355,45 @@ const remapTemplateInterpolations = (
     }
     out += body[i];
     i++;
+  }
+  return out;
+};
+
+/**
+ * Collect minified `${var}` interpolation names from `text` (any nesting
+ * depth). "Minified" = a short (1-4 char) identifier that is NOT an ALL_CAPS
+ * tweakcc human-name placeholder — the same shape the apply-safety harness
+ * counts. Only bare `${ident}` slots are collected (not `${a.b}` / `${f(x)}`
+ * expressions): those carry no single binding we can round-trip, and the
+ * remap rewrites them from the pristine wholesale.
+ */
+export const minifiedInterpNames = (text: string): Set<string> => {
+  const out = new Set<string>();
+  for (const m of text.matchAll(/(?<!\\)\$\{([A-Za-z$][\w$]*)\}/g)) {
+    const v = m[1];
+    if (v.length > 4) continue; // long => not a minified slot
+    // skip ALL_CAPS_WITH_DIGITS human-name placeholders (e.g. AGENT, VERSION)
+    if (v === v.toUpperCase() && /[A-Z]/.test(v) && v.length > 2) continue;
+    out.add(v);
+  }
+  return out;
+};
+
+/**
+ * Minified `${var}` interpolation names that `replacement` introduces but the
+ * `pristine` literal it replaces does NOT contain. A non-empty result means
+ * the override carries a stale minified name (authored against an older CC
+ * build) the remap couldn't realign — splicing it would reference an
+ * undefined/wrong var at that scope. The caller skips-with-warning.
+ */
+export const introducedMinifiedSlots = (
+  pristine: string,
+  replacement: string
+): string[] => {
+  const had = minifiedInterpNames(pristine);
+  const out: string[] = [];
+  for (const name of minifiedInterpNames(replacement)) {
+    if (!had.has(name)) out.push(name);
   }
   return out;
 };
@@ -764,6 +790,65 @@ export const applyInlineBlobOverrides = async (
         applied: false,
         failed: true,
         details: `kind ${frontmatter.inlineBlobKind} not implemented`,
+      });
+      continue;
+    }
+
+    // Guard 1 — the blob must begin within (or at the head of) the anchor's
+    // matched span. The boundary walkers scan forward from m.index for the
+    // first `[`/backtick/quote, so when the anchor is mis-specified (e.g. a
+    // kind:template anchor that actually matched a "…" string whose first
+    // backtick is an inner literal), the walker skips PAST the anchor into a
+    // different literal and splices the override body there — corrupting
+    // cli.js. A correct anchor either contains the blob's opening delimiter
+    // (string / template) or ends right where it opens (array: `…=[`), i.e.
+    // startOfBlob <= anchorEnd; and the blob must extend past where the anchor
+    // began (endOfBlob > anchorStart). If the blob opens strictly after the
+    // anchor ends, the walker wandered — skip-with-warning rather than corrupt.
+    const anchorStart = m.index;
+    const anchorEnd = m.index + m[0].length;
+    const overlaps = startOfBlob <= anchorEnd && endOfBlob > anchorStart;
+    if (!overlaps) {
+      console.log(
+        `inline-blob: anchor for "${frontmatter.name}" (${filename}) matched outside its target literal — cannot apply safely, skipping`
+      );
+      results.push({
+        filename,
+        name: frontmatter.name,
+        applied: false,
+        failed: false,
+        skipped: true,
+        details: 'anchor matched outside target literal — skipped (unsafe)',
+      });
+      continue;
+    }
+
+    // Guard 2 — round-trip the interpolated variables. An override body may
+    // carry `${MINIFIED}` interpolations (or, in raw-passthrough arrays, bare
+    // identifier refs) that the remap step rewrites to whatever names the
+    // current binary uses. If the override's structure doesn't line up with
+    // the pristine literal (e.g. a nested `${cond?`…${VAR}…`}` the top-level
+    // remap can't reach), a stale minified name authored against an older CC
+    // survives verbatim and references an undefined/wrong var at this scope
+    // (the K9/lL8 mis-bind: ReferenceError, or silently wrong content). Every
+    // minified `${var}` the replacement introduces must already appear in the
+    // pristine literal it replaces; if not, skip-with-warning rather than
+    // splice a name the binary doesn't bind here. Human-name placeholders
+    // (ALL_CAPS) are intentional and handled elsewhere — only short minified
+    // tokens are checked, matching the apply-safety bar.
+    const pristineBlob = content.slice(startOfBlob, endOfBlob);
+    const introduced = introducedMinifiedSlots(pristineBlob, replacement);
+    if (introduced.length > 0) {
+      console.log(
+        `inline-blob: "${frontmatter.name}" (${filename}) would introduce undefined var \${${introduced[0]}} (markdown out of sync with CC prompt data) — cannot apply safely, skipping`
+      );
+      results.push({
+        filename,
+        name: frontmatter.name,
+        applied: false,
+        failed: false,
+        skipped: true,
+        details: `would introduce undefined \${${introduced[0]}} — skipped (unsafe)`,
       });
       continue;
     }

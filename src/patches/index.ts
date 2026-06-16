@@ -722,6 +722,17 @@ export const applyCustomization = async (
   // Collect all patch results
   const allResults: PatchResult[] = [];
 
+  // Snapshot the binary BEFORE any override splicing. A named system prompt
+  // whose text lives inside a region an inline-blob/reminder override consumes
+  // (e.g. the "# System" bullets array, the "## Types of memory" arrays) is
+  // legitimately gone once that override applies — its curated content was
+  // intentionally superseded. applySystemPrompts uses this snapshot to tell
+  // that case (matched the pristine binary, clobbered by our own earlier
+  // splice → silent skip) apart from genuine anchor drift (never matched the
+  // pristine binary → warn), so consumed-region prompts don't raise spurious
+  // "Could not find" noise.
+  const pristineContent = content;
+
   // ==========================================================================
   // Apply inline-blob overrides FIRST (prompts not extracted into prompts JSON)
   // Inline-blob overrides replace whole template-literal arrays / template
@@ -787,7 +798,8 @@ export const applyCustomization = async (
     content,
     ccInstInfo.version,
     undefined, // escapeNonAscii - auto-detect
-    patchFilter
+    patchFilter,
+    pristineContent
   );
   content = systemPromptsResult.newContent;
 
