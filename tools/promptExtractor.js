@@ -31,6 +31,90 @@ const WORKFLOW_SCRIPT_IDENTIFIER_MAP = {
 // semantic names for the prompt's interpolated identifiers — required when
 // override .md files reference those names (`${ATTACHMENT_OBJECT.filename}`).
 const NEW_PROMPT_ASSIGNMENTS = [
+  // 2.1.178 — fuzzy misses from code-review / tool-description reshuffles and
+  // one new worker-teardown event prose block.
+  {
+    matcher: t =>
+      t.includes('This tool takes a query, matches it against the deferred tool list'),
+    name: 'Tool Description: ToolSearch (second part)',
+    id: 'tool-description-toolsearch',
+    description: 'The bulk of the tool description.',
+  },
+  {
+    matcher: t =>
+      t.startsWith('### Conventions (CLAUDE.md)') &&
+      t.includes('Only flag a violation when you can quote the exact rule'),
+    name: 'Skill: Code Review (conventions dimension)',
+    id: 'skill-code-review-conventions',
+    description:
+      'Code-review dimension: flag diff lines that break a rule stated in an applicable CLAUDE.md (user, repo-root, or ancestor-directory), quoting the exact rule and offending line, and emit nothing when no CLAUDE.md governs the change',
+  },
+  {
+    matcher: t =>
+      t.startsWith('<system-reminder>\n# Team Coordination') &&
+      t.includes("The team lead's name is \"team-lead\""),
+    name: 'System Reminder: Team Coordination',
+    id: 'system-reminder-team-coordination',
+    description: 'System reminder for team coordination',
+    identifierMap: {
+      0: 'TEAM_OBJECT',
+    },
+  },
+  {
+    matcher: t =>
+      t.includes('Only create commits when requested by the user') &&
+      t.includes('Creating pull requests') &&
+      t.includes('PR title'),
+    name: 'Tool Description: Bash (Git commit and PR creation instructions)',
+    id: 'tool-description-bash-git-commit-and-pr-creation-instructions',
+    description: 'Instructions for creating git commits and GitHub pull requests',
+    identifierMap: {
+      0: 'LOADED_COMMANDS_CONTEXT',
+      1: 'COMMIT_CO_AUTHORED_BY_CLAUDE_CODE',
+      2: 'BASH_TOOL_NAME',
+      3: 'GET_TODO_TOOL_FN',
+      4: 'TASK_TOOL_NAME',
+      5: 'PR_INSTRUCTIONS_PREFIX',
+      6: 'EMPTY_STRING',
+      7: 'PR_GENERATED_WITH_CLAUDE_CODE',
+      8: 'PR_COMMON_OPERATIONS_NOTE',
+    },
+  },
+  {
+    matcher: t =>
+      t.includes('Always include a short description summarizing what the agent will do') &&
+      t.includes('Trust but verify: an agent') &&
+      t.includes('The result returned by the agent is not visible to the user'),
+    name: 'Tool Description: Agent (usage notes)',
+    id: 'tool-description-agent-usage-notes',
+    description:
+      'Usage notes and instructions for the Task/Agent tool, including guidance on launching subagents, background execution, resumption, and worktree isolation',
+    identifierMap: {
+      0: 'TOOL_BASE_DESCRIPTION',
+      1: 'TOOL_PARAMETERS_DESCRIPTION',
+      2: 'ENVIRONMENT_CONFIG',
+      3: 'IS_SUBAGENT_CONTEXT_FN',
+      4: 'HAS_SUBAGENT_TYPES',
+      5: 'SEND_MESSAGE_TOOL_NAME',
+      6: 'AGENT_TOOL_NAME',
+      7: 'CAN_FORK_CONTEXT',
+      8: 'IS_REMOTE_ISOLATION_AVAILABLE_FN',
+      9: 'IS_TEAMMATE_CONTEXT_FN',
+      10: 'ADDITIONAL_USAGE_NOTES',
+      11: 'EXTRA_USAGE_NOTES',
+      12: 'SUBAGENT_TYPE_DEFINITIONS',
+      13: 'DEFAULT_AGENT_DESCRIPTION',
+    },
+  },
+  {
+    matcher: t =>
+      t.startsWith('Emitted by the bridge on opt-in graceful worker teardown') &&
+      t.includes('CC-2656'),
+    name: 'Data: graceful worker teardown event',
+    id: 'data-graceful-worker-teardown-event',
+    description:
+      'Remote-control event-stream note for opt-in graceful worker teardown events and how clients should interpret them',
+  },
   // 2.1.177 — the fork/subagent prompt cluster was reworded for the new
   // explicit `subagent_type: "fork"` syntax (2.1.175 said "omit subagent_type"),
   // which moved three prompts' openings past the 100-char fuzzy fingerprint so
@@ -760,39 +844,40 @@ const NEW_PROMPT_ASSIGNMENTS = [
     id: 'skill-code-review-posting-to-github',
     description: 'Appended to the code-review prompt when --comment is passed; instructs posting each finding as an inline PR comment',
   },
-  // 2.1.151+ shape: effort-tier prompts gained 5 per-angle fragment slots
-  // (g4q/Q4q/d4q/c4q/l4q = Reuse/Simplification/Efficiency/Altitude/Cleanup-note
-  // plus zD4 or HEO for the verify phase). The header line gained a "+N angles"
-  // suffix that uniquely identifies the new shape: medium/high → "3+4 angles",
-  // max/xhigh → "5+4 angles". These 2.1.151+ entries land first so they win
+  // 2.1.178 shape: effort-tier prompts now include five cleanup/coverage
+  // fragments (Reuse/Simplification/Efficiency/Altitude/Conventions) plus the
+  // cleanup-candidates note before verification. The header line gained the
+  // current "+5 angles" suffix: medium/high → "3+5 angles", max/xhigh →
+  // "5+5 angles". These entries land first so they win
   // over the 2.1.148-shape fallbacks below.
   {
     matcher: t =>
-      t.includes('5+4 angles') && t.includes('"maximum":"extra-high"'),
+      t.includes('5+5 angles') && t.includes('"maximum":"extra-high"'),
     name: 'Skill: Code Review (max / xhigh effort)',
     id: 'skill-code-review-effort-max',
-    description: 'Effort-tier prompt for max and xhigh code review — 5+4 angles, up to 8 candidates, recall-biased, sweep + 3-state verify, up to 15 findings',
+    description: 'Effort-tier prompt for max and xhigh code review — 5+5 angles, up to 8 candidates, recall-biased, sweep + 3-state verify, up to 15 findings',
     identifierMap: {
       0: 'EFFORT_LEVEL',
       1: 'PHASE_0_GATHER_DIFF',
       2: 'AGENT_TOOL_NAME',
-      3: 'HIGH_EFFORT_ANGLES_INTRO',
+      3: 'HIGH_EFFORT_ANGLES',
       4: 'ANGLE_REUSE',
       5: 'ANGLE_SIMPLIFICATION',
       6: 'ANGLE_EFFICIENCY',
       7: 'ANGLE_ALTITUDE',
-      8: 'CLEANUP_CANDIDATES_NOTE',
-      9: 'PHASE_2_VERIFY_3_STATE',
-      10: 'PHASE_3_SWEEP',
-      11: 'OUTPUT_FORMAT_FN',
+      8: 'ANGLE_CONVENTIONS',
+      9: 'CLEANUP_CANDIDATES_NOTE',
+      10: 'PHASE_2_VERIFY_3_STATE',
+      11: 'PHASE_3_SWEEP',
+      12: 'OUTPUT_FORMAT_FN',
     },
   },
   {
     matcher: t =>
-      t.includes('3+4 angles') && t.includes('catch every real bug a careful'),
+      t.includes('3+5 angles') && t.includes('catch every real bug a careful'),
     name: 'Skill: Code Review (high effort)',
     id: 'skill-code-review-effort-high',
-    description: 'Effort-tier prompt for high code review — 3+4 angles, up to 6 candidates, recall-biased verify, up to 10 findings',
+    description: 'Effort-tier prompt for high code review — 3+5 angles, up to 6 candidates, recall-biased verify, up to 10 findings',
     identifierMap: {
       0: 'PHASE_0_GATHER_DIFF',
       1: 'AGENT_TOOL_NAME',
@@ -801,17 +886,18 @@ const NEW_PROMPT_ASSIGNMENTS = [
       4: 'ANGLE_SIMPLIFICATION',
       5: 'ANGLE_EFFICIENCY',
       6: 'ANGLE_ALTITUDE',
-      7: 'CLEANUP_CANDIDATES_NOTE',
-      8: 'PHASE_2_VERIFY_RECALL_BIASED',
-      9: 'OUTPUT_FORMAT_FN',
+      7: 'ANGLE_CONVENTIONS',
+      8: 'CLEANUP_CANDIDATES_NOTE',
+      9: 'PHASE_2_VERIFY_RECALL_BIASED',
+      10: 'OUTPUT_FORMAT_FN',
     },
   },
   {
     matcher: t =>
-      t.includes('3+4 angles') && t.includes('at medium effort: every finding you surface'),
+      t.includes('3+5 angles') && t.includes('at medium effort: every finding you surface'),
     name: 'Skill: Code Review (medium effort)',
     id: 'skill-code-review-effort-medium',
-    description: 'Effort-tier prompt for medium code review — 3+4 angles, up to 6 candidates, precision-biased 3-state verify, up to 8 findings',
+    description: 'Effort-tier prompt for medium code review — 3+5 angles, up to 6 candidates, precision-biased 3-state verify, up to 8 findings',
     identifierMap: {
       0: 'PHASE_0_GATHER_DIFF',
       1: 'AGENT_TOOL_NAME',
@@ -820,9 +906,10 @@ const NEW_PROMPT_ASSIGNMENTS = [
       4: 'ANGLE_SIMPLIFICATION',
       5: 'ANGLE_EFFICIENCY',
       6: 'ANGLE_ALTITUDE',
-      7: 'CLEANUP_CANDIDATES_NOTE',
-      8: 'PHASE_2_VERIFY_3_STATE',
-      9: 'OUTPUT_FORMAT_FN',
+      7: 'ANGLE_CONVENTIONS',
+      8: 'CLEANUP_CANDIDATES_NOTE',
+      9: 'PHASE_2_VERIFY_3_STATE',
+      10: 'OUTPUT_FORMAT_FN',
     },
   },
 
