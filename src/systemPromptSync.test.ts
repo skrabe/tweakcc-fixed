@@ -30,6 +30,6 @@ describe('systemPromptSync.ts', () => {
       const third = await loadIdentifierMapUnion();
       expect(third).not.toBe(first); // fresh instance after clear
       expect(third).toEqual(first); // same contents
-    }, 15000);
+    });
   });
 });
