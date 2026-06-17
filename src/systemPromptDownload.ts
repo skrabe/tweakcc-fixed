@@ -60,16 +60,23 @@ export async function downloadStringsFile(
     }
   }
 
-  // User cache (populated from prior network fetches). Mainly useful for
-  // npm-installed runs that have no repo dir.
+  // User cache (npm-installed runs that have no repo dir). The cache key is
+  // version-only, so a blind cache-first read would mask an in-place correction
+  // to an already-released prompts JSON (the same version is re-published with
+  // fixed maps) — serving a stale map forever. So prefer the network for
+  // freshness below and fall back to this cache only when the network is
+  // unreachable / rate-limited, which keeps offline applies working without
+  // ever serving a known-stale map.
   const cacheFilePath = path.join(PROMPT_CACHE_DIR, `prompts-${version}.json`);
-  try {
-    const cachedContent = await fs.readFile(cacheFilePath, 'utf-8');
-    const cached = JSON.parse(cachedContent) as StringsFile;
-    return cached;
-  } catch {
-    // Cache miss or invalid - fall through to network.
-  }
+  const readCache = async (): Promise<StringsFile | null> => {
+    try {
+      return JSON.parse(
+        await fs.readFile(cacheFilePath, 'utf-8')
+      ) as StringsFile;
+    } catch {
+      return null;
+    }
+  };
 
   // Construct the GitHub raw URL. This MUST point at the fork's own repo: the
   // npm tarball ships no data/, so npx installs resolve prompts JSONs from
@@ -82,6 +89,11 @@ export async function downloadStringsFile(
     const response = await fetch(url);
 
     if (!response.ok) {
+      // Network reachable but no usable body — serve the cache if we have one
+      // (e.g. a transient 429/5xx shouldn't break an apply that has a cache).
+      const cached = await readCache();
+      if (cached) return cached;
+
       // Provide specific error messages for common HTTP errors
       let errorMessage: string;
       if (response.status === 429) {
@@ -118,6 +130,11 @@ export async function downloadStringsFile(
 
     return jsonData;
   } catch (error) {
+    // Network unreachable (DNS / offline / timeout): the cache is the resilient
+    // fallback. (HTTP-status errors already tried the cache above; if we reach
+    // here from one of those, there was no cache and this read returns null.)
+    const cached = await readCache();
+    if (cached) return cached;
     if (error instanceof Error) {
       // If it's already our custom error with the message displayed, re-throw it
       if (
