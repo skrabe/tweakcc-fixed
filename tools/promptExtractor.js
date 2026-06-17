@@ -33,6 +33,77 @@ const WORKFLOW_SCRIPT_IDENTIFIER_MAP = {
 // semantic names for the prompt's interpolated identifiers — required when
 // override .md files reference those names (`${ATTACHMENT_OBJECT.filename}`).
 const NEW_PROMPT_ASSIGNMENTS = [
+  // 2.1.179 — the three code-review effort-tier skills grew 6 angle
+  // interpolations in the MIDDLE of Phase 1 (the angles, previously inlined,
+  // each became its own ${}). Fuzzy carryover kept the old names at their OLD
+  // slot indices, so PHASE_2_VERIFY/OUTPUT shifted off their true source
+  // positions and the 6 new middle slots fell to generic VAR_n names. The
+  // overrides reference ${ANGLE_REUSE..} which then never bound — the unresolved
+  // literals booted on Mac (apply-guard skips them) but crashed CC on
+  // linux-arm64 ("ANGLE_REUSE is not defined"). Overlay the full source-order
+  // map, verified slot-by-slot against the binary `pieces` arrays.
+  {
+    matcher: t => t.includes('reviewing for **recall** at high effort'),
+    name: 'Skill: Code Review (high effort)',
+    id: 'skill-code-review-effort-high',
+    description:
+      'Effort-tier prompt for high code review — 3 angles, up to 6 candidates, recall-biased, up to 10 findings',
+    identifierMap: {
+      '0': 'PHASE_0_GATHER_DIFF',
+      '1': 'AGENT_TOOL_NAME',
+      '2': 'ANGLES_LINE_BY_LINE',
+      '3': 'ANGLE_REUSE',
+      '4': 'ANGLE_SIMPLIFICATION',
+      '5': 'ANGLE_EFFICIENCY',
+      '6': 'ANGLE_ALTITUDE',
+      '7': 'ANGLE_CONVENTIONS',
+      '8': 'CLEANUP_CANDIDATES_NOTE',
+      '9': 'PHASE_2_VERIFY_RECALL_BIASED',
+      '10': 'OUTPUT_FORMAT_FN',
+    },
+  },
+  {
+    matcher: t => t.includes('reviewing for **precision** at medium effort'),
+    name: 'Skill: Code Review (medium effort)',
+    id: 'skill-code-review-effort-medium',
+    description:
+      'Effort-tier prompt for medium code review — 3 angles, up to 6 candidates, precision-biased, up to 8 findings',
+    identifierMap: {
+      '0': 'PHASE_0_GATHER_DIFF',
+      '1': 'AGENT_TOOL_NAME',
+      '2': 'ANGLES_LINE_BY_LINE',
+      '3': 'ANGLE_REUSE',
+      '4': 'ANGLE_SIMPLIFICATION',
+      '5': 'ANGLE_EFFICIENCY',
+      '6': 'ANGLE_ALTITUDE',
+      '7': 'ANGLE_CONVENTIONS',
+      '8': 'CLEANUP_CANDIDATES_NOTE',
+      '9': 'PHASE_2_VERIFY_3_STATE',
+      '10': 'OUTPUT_FORMAT_FN',
+    },
+  },
+  {
+    matcher: t => t.includes('Find candidates (5 correctness angles'),
+    name: 'Skill: Code Review (max / xhigh effort)',
+    id: 'skill-code-review-effort-max',
+    description:
+      'Effort-tier prompt for max and xhigh code review — 5 angles, up to 8 candidates, recall-biased, up to 15 findings',
+    identifierMap: {
+      '0': 'EFFORT_LEVEL',
+      '1': 'PHASE_0_GATHER_DIFF',
+      '2': 'AGENT_TOOL_NAME',
+      '3': 'HIGH_EFFORT_ANGLES',
+      '4': 'ANGLE_REUSE',
+      '5': 'ANGLE_SIMPLIFICATION',
+      '6': 'ANGLE_EFFICIENCY',
+      '7': 'ANGLE_ALTITUDE',
+      '8': 'ANGLE_CONVENTIONS',
+      '9': 'CLEANUP_CANDIDATES_NOTE',
+      '10': 'PHASE_2_VERIFY_3_STATE',
+      '11': 'PHASE_3_SWEEP',
+      '12': 'OUTPUT_FORMAT_FN',
+    },
+  },
   // 2.1.177 — the fork/subagent prompt cluster was reworded for the new
   // explicit `subagent_type: "fork"` syntax (2.1.175 said "omit subagent_type"),
   // which moved three prompts' openings past the 100-char fuzzy fingerprint so
