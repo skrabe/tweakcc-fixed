@@ -15,13 +15,15 @@
     }
   },
   "scripts": {
-    "build": "tsc --noEmit && tsdown --minify --dts src/index.tsx src/lib/index.ts",
-    "build:dev": "tsdown --dts src/index.tsx src/lib/index.ts",
+    "generate:union": "node tools/generateIdentifierUnion.mjs",
+    "build": "node tools/generateIdentifierUnion.mjs && tsc --noEmit && tsdown --minify --dts src/index.tsx src/lib/index.ts",
+    "build:dev": "node tools/generateIdentifierUnion.mjs && tsdown --dts src/index.tsx src/lib/index.ts",
     "watch": "tsdown --watch --dts src/index.tsx src/lib/index.ts",
     "start": "node dist/index.mjs",
     "lint": "tsc --noEmit && eslint src",
     "test": "vitest run",
     "test:dev": "vitest",
+    "pretest": "node tools/generateIdentifierUnion.mjs",
     "format": "prettier --write src",
     "version-bump:report": "node tools/versionBumpReport.js",
     "prepare": "husky",

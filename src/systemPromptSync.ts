@@ -87,9 +87,11 @@ export const clearShadowSetCache = (): void => {
  * makes the detector immune to real minified vars (e.g. `HL7`), which are
  * never human-names and so never appear in the union.
  *
- * Empty when the bundled dir is absent (npm-installed builds strip data/ via
- * .npmignore): the guard then degrades to never skipping, matching pre-guard
- * behavior for those installs.
+ * npm-installed builds strip data/ via .npmignore, so repo-dir resolution
+ * returns null. In that case the function falls back to the baked union in
+ * src/generated/identifierUnion.ts (emitted by tools/generateIdentifierUnion.mjs
+ * at build time). If the generated module is also absent the set stays empty
+ * and the guard degrades to never-skipping (pre-guard behaviour).
  *
  * Cached after first call; reset by clearIdentifierMapUnionCache.
  */
@@ -120,6 +122,18 @@ export const loadIdentifierMapUnion = async (): Promise<Set<string>> => {
         // names it could load.
         continue;
       }
+    }
+  }
+  // npm-installed runs have no repo dir so the loop above produces an empty
+  // union. Fall back to the baked names generated at build time.
+  if (union.size === 0) {
+    try {
+      const mod = await import('./generated/identifierUnion.js');
+      for (const n of mod.IDENTIFIER_UNION) {
+        union.add(n);
+      }
+    } catch {
+      // Generated file absent (e.g. pretest not run yet) — degrade gracefully.
     }
   }
   identifierMapUnionCache = union;
