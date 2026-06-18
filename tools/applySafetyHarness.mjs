@@ -49,6 +49,25 @@ const minifiedSlots = (s) => {
   return out;
 };
 
+// Binding sites of short idents: arrow/function params (incl. destructured) and
+// let/const/var declarations. A `${v}` is only the dangerous K9-class UNRESOLVED
+// binary ident when nothing BINDS `v` in the same emitted code — patches/overrides
+// legitimately carry JS with short locals (e.g.
+// `Object.entries(_).map(([q,K])=>`# ${q}\n${K}`)`), which parse fine and never
+// ReferenceError. Counting bindings lets the introduced check discount them.
+const boundLocals = (s) => {
+  const out = new Map();
+  // `(?<!\$)` keeps a `${v}` interpolation (opener `{` preceded by `$`) from
+  // counting as an object-destructure binding — else every slot self-discounts
+  // and a real unresolved ident slips through.
+  for (const m of s.matchAll(
+    /(?:\b(?:let|const|var)\s+|(?<!\$)[([,{]\s*)([A-Za-z$][\w$]{0,3})(?=\s*(?:[)\]},=:]|=>))/g
+  )) {
+    out.set(m[1], (out.get(m[1]) || 0) + 1);
+  }
+  return out;
+};
+
 const tmpHome = fs.mkdtempSync(path.join(os.tmpdir(), 'applysafe-home-'));
 try {
   // Isolated ~/.tweakcc with a copy of the real override set + config.
@@ -93,10 +112,17 @@ try {
 
   const o = minifiedSlots(orig);
   const p = minifiedSlots(patched);
+  const ob = boundLocals(orig);
+  const pb = boundLocals(patched);
   const introduced = [];
   for (const [v, n] of p) {
-    const base = o.get(v) || 0;
-    if (n > base) introduced.push(`${v}(+${n - base})`);
+    const slotDelta = n - (o.get(v) || 0);
+    if (slotDelta <= 0) continue;
+    // Discount slots matched by a freshly-introduced binding of the same name —
+    // those are bound locals in emitted code, not unresolved binary idents.
+    const bindDelta = (pb.get(v) || 0) - (ob.get(v) || 0);
+    const unresolved = slotDelta - Math.max(0, bindDelta);
+    if (unresolved > 0) introduced.push(`${v}(+${unresolved})`);
   }
 
   // Syntax check. The check must use a parser capable of the language features
