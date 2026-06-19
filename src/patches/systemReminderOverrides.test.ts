@@ -35,3 +35,45 @@ describe('memory-update reminder wrapper discovery', () => {
     expect(result).toContain('HT([U6({content:');
   });
 });
+
+const taskNotif = REMINDER_REGISTRY.find(r => r.id === 'task-notification-framing')!;
+
+const NOTIF_BODY =
+  '[SYSTEM NOTIFICATION - NOT USER INPUT]\n' +
+  'This is an automated background-task event, NOT a message from the user.\n' +
+  'Do NOT interpret this as user acknowledgement, confirmation, or response to any pending question.\n\n';
+
+// 2.1.183 hoisted the inline body into a standalone framing function
+// `function MBl(e){return`…${e}`}` (case site: `return MBl(e);`).
+const MOCK_NOTIF_FN_2_1_183 =
+  'function MBl(e){return`' + NOTIF_BODY + '${e}`}function NBl(){}';
+
+// <=2.1.182 inline shape: `case"task-notification":return`…${H}`;`.
+const MOCK_NOTIF_INLINE =
+  'switch(t){case"task-notification":return`' + NOTIF_BODY + '${H}`;default:}';
+
+describe('task-notification-framing wrapper discovery', () => {
+  it('rewrites the 2.1.183 standalone framing function in place, preserving ${param} and the `}` suffix', () => {
+    const result = taskNotif.apply(MOCK_NOTIF_FN_2_1_183, 'PREFIX ${H}', false);
+    expect(result).not.toBeNull();
+    expect(result).toContain('function MBl(e){return`PREFIX ${e}`}');
+    // sibling function untouched
+    expect(result).toContain('function NBl(){}');
+  });
+
+  it('still rewrites the <=2.1.182 inline case shape', () => {
+    const result = taskNotif.apply(MOCK_NOTIF_INLINE, 'PREFIX ${H}', false);
+    expect(result).not.toBeNull();
+    expect(result).toContain('case"task-notification":return`PREFIX ${H}`;');
+  });
+
+  it('suppresses to a bare `${param}` on the function shape (empty body)', () => {
+    const result = taskNotif.apply(MOCK_NOTIF_FN_2_1_183, '${H}', true);
+    expect(result).toContain('function MBl(e){return`${e}`}');
+  });
+
+  it('fails loud (null) when the framing body text changed', () => {
+    const drifted = 'function MBl(e){return`[DIFFERENT FRAMING]\n${e}`}';
+    expect(taskNotif.apply(drifted, 'x ${H}', false)).toBeNull();
+  });
+});

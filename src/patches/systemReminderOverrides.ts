@@ -1201,17 +1201,29 @@ Do NOT interpret this as user acknowledgement, confirmation, or response to any 
 
 {{content}}`,
   apply(content, body, isSuppressed) {
+    // 2.1.183 hoisted the inline `case"task-notification":return`…${H}`;` body
+    // into a standalone framing function `function MBl(e){return`…${e}`}` (the
+    // case site now reads `case"task-notification":return MBl(e);`). Anchor on the
+    // stable English framing body and capture the wrapper prefix
+    // (`case…:return` for <=2.1.182, or `function NAME(param){return` for
+    // 2.1.183+) plus the content param and the trailing delimiter (`;` or `}`) so
+    // both shapes are rewritten in place — never hardcode the wrapper or the
+    // minified function/param name (both churn per version and platform).
     return findAndReplace(
       content,
-      /case"task-notification":return`\[SYSTEM NOTIFICATION - NOT USER INPUT\]\nThis is an automated background-task event, NOT a message from the user\.\nDo NOT interpret this as user acknowledgement, confirmation, or response to any pending question\.\n\n\$\{([$\w]+)\}`;/,
+      /(case"task-notification":return|function [$\w]+\([$\w]+\)\{return)`\[SYSTEM NOTIFICATION - NOT USER INPUT\]\nThis is an automated background-task event, NOT a message from the user\.\nDo NOT interpret this as user acknowledgement, confirmation, or response to any pending question\.\n\n\$\{([$\w]+)\}`(;|\})/,
       m => {
-        const [, hParam] = m;
-        if (isSuppressed)
-          return `case"task-notification":return\`\${${hParam}}\`;`;
+        const [, prefix, hParam, suffix] = m;
+        if (isSuppressed) return `${prefix}\`\${${hParam}}\`${suffix}`;
         const bodyForBuild = body.replace(/\$\{H\}/g, `\${${hParam}}`);
-        return `case"task-notification":return\`${bodyForBuild}\`;`;
+        return `${prefix}\`${bodyForBuild}\`${suffix}`;
       },
       'task-notification-framing',
+      // Anchored on the case-site shape only (the 2.1.183 function name is
+      // minified/unknowable, and an unanchored `function X(y){return`${z}`}`
+      // check would spuriously match unrelated trivial functions and mask real
+      // drift). Idempotency only matters on a double-apply-without-restore; the
+      // normal native flow restores pristine first, so the main regex always runs.
       c => /case"task-notification":return`\$\{[$\w]+\}`;/.test(c)
     );
   },
