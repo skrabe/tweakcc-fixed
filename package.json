@@ -20,6 +20,7 @@
     "build:dev": "node tools/generateIdentifierUnion.mjs && tsdown --dts src/index.tsx src/lib/index.ts",
     "watch": "tsdown --watch --dts src/index.tsx src/lib/index.ts",
     "start": "node dist/index.mjs",
+    "prelint": "node tools/generateIdentifierUnion.mjs",
     "lint": "tsc --noEmit && eslint src",
     "test": "vitest run",
     "test:dev": "vitest",
