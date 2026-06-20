@@ -36,7 +36,9 @@ describe('memory-update reminder wrapper discovery', () => {
   });
 });
 
-const taskNotif = REMINDER_REGISTRY.find(r => r.id === 'task-notification-framing')!;
+const taskNotif = REMINDER_REGISTRY.find(
+  r => r.id === 'task-notification-framing'
+)!;
 
 const NOTIF_BODY =
   '[SYSTEM NOTIFICATION - NOT USER INPUT]\n' +
