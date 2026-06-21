@@ -1,3 +1,6 @@
+// Integration test (no sibling patch file): verifies the patch-condition/toggle
+// system — disabling model customizations skips the related patches. There is
+// intentionally no src/patches/modelCustomizationsToggle.ts.
 import * as fs from 'node:fs/promises';
 import * as fsSync from 'node:fs';
 
