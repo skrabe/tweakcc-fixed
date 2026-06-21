@@ -24,7 +24,10 @@ const patchPlanAgent = (file: string, model: string): string | null => {
     return null;
   }
 
-  const replacement = match[1] + model + match[2];
+  // JSON.stringify so a quote/backslash in the (possibly remote --config-url)
+  // model value can't break out of the model:"..." literal (F-84/F-88 class).
+  // match[1] ends with the opening quote; drop it and let JSON supply both.
+  const replacement = match[1].slice(0, -1) + JSON.stringify(model);
 
   const startIndex = match.index;
   const endIndex = startIndex + match[0].length;
@@ -60,7 +63,10 @@ const patchExploreAgent = (file: string, model: string): string | null => {
     return null;
   }
 
-  const replacement = match[1] + model + match[2];
+  // JSON.stringify so a quote/backslash in the (possibly remote --config-url)
+  // model value can't break out of the model:"..." literal (F-84/F-88 class).
+  // match[1] ends with the opening quote; drop it and let JSON supply both.
+  const replacement = match[1].slice(0, -1) + JSON.stringify(model);
 
   const startIndex = match.index;
   const endIndex = startIndex + match[0].length;
@@ -116,15 +122,24 @@ const patchGeneralPurposeAgent = (
   let replacement: string;
 
   if (beforeClosingBrace.includes('model:')) {
-    // Model field exists, replace it
+    // Model field exists, replace it. Function replacer (not a $-string) so a
+    // `$` in the config model can't trigger replacement-pattern substitution,
+    // and JSON.stringify so a quote/backslash can't break out of model:"..."
+    // (F-84/F-88 class). The regex captures `model:` without its quote.
     replacement =
-      beforeClosingBrace.replace(/(model\s*:\s*")[^"]+(")/, `$1${model}$2`) +
-      closingBrace;
+      beforeClosingBrace.replace(
+        /(model\s*:\s*)"[^"]+"/,
+        (_m, prefix) => prefix + JSON.stringify(model)
+      ) + closingBrace;
   } else {
-    // Model field doesn't exist, add it
+    // Model field doesn't exist, add it. JSON.stringify supplies the quotes and
+    // escapes any quote/backslash so the config value can't break the literal.
     const separator = beforeClosingBrace.trim().endsWith(',') ? '' : ',';
     replacement =
-      beforeClosingBrace + `${separator}model:"${model}"` + closingBrace;
+      beforeClosingBrace +
+      `${separator}model:` +
+      JSON.stringify(model) +
+      closingBrace;
   }
 
   const startIndex = match.index;

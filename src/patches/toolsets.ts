@@ -716,7 +716,9 @@ export const writeToolsetComponentDefinition = (
   // Handle command-line argument
   if (input !== "" && input != null) {
     if (!${toolsetNames}.includes(input)) {
-      onExit(${chalkVar}.red(\`\${${chalkVar}.bold(input)} is not a valid toolset. Valid toolsets: ${toolsets.map(t => t.name).join(', ')}\`));
+      onExit(${chalkVar}.red(\`\${${chalkVar}.bold(input)} is not a valid toolset. Valid toolsets: \` + ${JSON.stringify(
+        toolsets.map(t => t.name).join(', ')
+      )}));
       return;
     } else {
       setState(prev => ({ ...prev, toolset: input }));

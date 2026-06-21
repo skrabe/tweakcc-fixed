@@ -8,6 +8,19 @@ import {
 import { UserMessageDisplayConfig } from '../types';
 
 /**
+ * Escape a user-supplied string before splicing it into a backtick template
+ * literal in cli.js. A stray backtick would terminate the literal (corrupting
+ * the binary — the "function wrapper" error class), and a `${…}` would inject an
+ * executable expression into Claude Code's runtime. `config.format` can arrive
+ * from an untrusted `--config-url`, so this MUST run before the `{}`→`${msg}`
+ * splice (which adds the one intended interpolation).
+ *
+ * Exported for testing.
+ */
+export const escapeForTemplateLiteral = (s: string): string =>
+  s.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$\{/g, '\\${');
+
+/**
  * CC 0.2.9:
  * ```diff
  *  function Cf2({ addMargin: I, param: { text: d } }) {
@@ -420,7 +433,10 @@ export const writeUserMessageDisplay = (
     const unwrappedMessageExpr = buildUnwrappedMessageExpr(messageVar);
     const formattedMessage =
       '`' +
-      config.format.replace(/\{\}/g, () => '${' + unwrappedMessageExpr + '}') +
+      escapeForTemplateLiteral(config.format).replace(
+        /\{\}/g,
+        () => '${' + unwrappedMessageExpr + '}'
+      ) +
       '`';
 
     const replacement =
@@ -527,7 +543,10 @@ export const writeUserMessageDisplay = (
   const unwrappedMessageExpr = buildUnwrappedMessageExpr(messageVar);
   const formattedMessage =
     '`' +
-    config.format.replace(/\{\}/g, () => '${' + unwrappedMessageExpr + '}') +
+    escapeForTemplateLiteral(config.format).replace(
+      /\{\}/g,
+      () => '${' + unwrappedMessageExpr + '}'
+    ) +
     '`';
   const chalkFormattedString = `${chalkChain}(${formattedMessage})`;
 

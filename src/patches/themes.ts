@@ -225,7 +225,10 @@ export const writeThemes = (
   // Update switch statement
   let switchStatement = `switch(${locations.switchStatement.identifiers?.[0]}){\n`;
   themes.forEach(theme => {
-    switchStatement += `case"${theme.id}":return${JSON.stringify(
+    // JSON.stringify the id (not raw `"${theme.id}"`): a `"` in a user/remote
+    // theme id would otherwise break out of the case-label string and inject
+    // into cli.js. Identical output for normal slug ids.
+    switchStatement += `case${JSON.stringify(theme.id)}:return${JSON.stringify(
       theme.colors
     )};\n`;
   });

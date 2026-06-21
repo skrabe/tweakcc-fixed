@@ -357,8 +357,11 @@ export const writeInputPatternHighlighters = (
 
   const chalkVar = findChalkVar(oldFile);
   if (!chalkVar) {
+    // No `^` chain: findChalkVar returns undefined silently (it can't know the
+    // caller's patch name), so this is the primary error, like the other
+    // chalk-var callers (userMessageDisplay/toolsets/patchesAppliedIndication).
     console.error(
-      '^ patch: inputPatternHighlighters: failed to find chalk variable'
+      'patch: inputPatternHighlighters: failed to find chalk variable'
     );
     return null;
   }

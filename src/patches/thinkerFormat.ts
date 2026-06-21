@@ -141,7 +141,13 @@ export const writeThinkerFormat = (
   const fmtLocation = location;
 
   // See `getThinkerFormatLocation` for an explanation of this.
-  const serializedFormat = format.replace(/\\/g, '\\\\').replace(/`/g, '\\`');
+  // Escape for the backtick template literal below: `\` and backtick prevent
+  // corruption, and `${` prevents a user/remote format from injecting an
+  // executable expression (cf. F-84). The `{}`→`${expr}` splice is added after.
+  const serializedFormat = format
+    .replace(/\\/g, '\\\\')
+    .replace(/`/g, '\\`')
+    .replace(/\$\{/g, '\\${');
   const curExpr = fmtLocation.identifiers?.[0];
   const curFmt =
     '`' + serializedFormat.replace(/\{\}/g, '${' + curExpr + '}') + '`';
