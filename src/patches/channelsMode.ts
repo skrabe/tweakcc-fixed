@@ -155,9 +155,6 @@ const patchChannelsNotice = (file: string): string | null => {
   const match = file.match(pattern);
 
   if (!match || match.index === undefined) {
-    console.error(
-      'patch: channelsMode: failed to find ChannelsNotice warning text'
-    );
     return null;
   }
 
@@ -193,9 +190,6 @@ const patchServerDevWarning = (file: string): string | null => {
   const match = file.match(pattern);
 
   if (!match || match.index === undefined) {
-    console.error(
-      'patch: channelsMode: failed to find server dev-flag warning block'
-    );
     return null;
   }
 
