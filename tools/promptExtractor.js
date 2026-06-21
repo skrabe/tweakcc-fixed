@@ -1462,6 +1462,155 @@ const NEW_PROMPT_ASSIGNMENTS = [
     description:
       'Requires confirmation for irreversible or outward-facing actions, checking targets before destructive edits, and truthful reporting of outcomes',
   },
+  // 2.1.185 — Anthropic split SDK references into per-topic per-language
+  // prompts; the old combined per-language prompts (e.g.
+  // data-claude-api-reference-typescript) were restructured so the fuzzy
+  // fingerprint (first 100 chars) no longer matches.
+  {
+    matcher: t => t.startsWith('# Claude API — TypeScript') && t.includes('User profiles'),
+    name: 'Data: Claude API reference — TypeScript',
+    id: 'data-claude-api-reference-typescript',
+    description: 'Claude API reference for TypeScript SDK',
+  },
+  {
+    matcher: t => t.startsWith('# Files API — C#'),
+    name: 'Data: Files API reference — C#',
+    id: 'data-files-api-reference-csharp',
+    description: 'Files API reference for C# SDK',
+  },
+  {
+    matcher: t => t.startsWith('# Files API — Go'),
+    name: 'Data: Files API reference — Go',
+    id: 'data-files-api-reference-go',
+    description: 'Files API reference for Go SDK',
+  },
+  {
+    matcher: t => t.startsWith('# Files API — Java'),
+    name: 'Data: Files API reference — Java',
+    id: 'data-files-api-reference-java',
+    description: 'Files API reference for Java SDK',
+  },
+  {
+    matcher: t => t.startsWith('# Managed Agents — Go'),
+    name: 'Data: Managed Agents reference — Go',
+    id: 'data-managed-agents-reference-go',
+    description: 'Managed Agents reference for Go SDK',
+  },
+  {
+    matcher: t => t.startsWith('# Managed Agents — Java'),
+    name: 'Data: Managed Agents reference — Java',
+    id: 'data-managed-agents-reference-java',
+    description: 'Managed Agents reference for Java SDK',
+  },
+  {
+    matcher: t => t.startsWith('# Managed Agents — PHP'),
+    name: 'Data: Managed Agents reference — PHP',
+    id: 'data-managed-agents-reference-php',
+    description: 'Managed Agents reference for PHP SDK',
+  },
+  {
+    matcher: t => t.startsWith('# Managed Agents — Ruby'),
+    name: 'Data: Managed Agents reference — Ruby',
+    id: 'data-managed-agents-reference-ruby',
+    description: 'Managed Agents reference for Ruby SDK',
+  },
+  {
+    matcher: t => t.startsWith('# Message Batches — C#'),
+    name: 'Data: Message Batches reference — C#',
+    id: 'data-batches-api-reference-csharp',
+    description: 'Message Batches API reference for C# SDK',
+  },
+  {
+    matcher: t => t.startsWith('# Message Batches — PHP'),
+    name: 'Data: Message Batches reference — PHP',
+    id: 'data-batches-api-reference-php',
+    description: 'Message Batches API reference for PHP SDK',
+  },
+  {
+    matcher: t => t.startsWith('# Platform Availability') && t.includes('provider platform'),
+    name: 'Data: Platform availability matrix',
+    id: 'data-platform-availability',
+    description: 'Feature availability matrix across provider platforms',
+  },
+  {
+    matcher: t => t.startsWith('# Streaming — C#'),
+    name: 'Data: Streaming reference — C#',
+    id: 'data-streaming-reference-csharp',
+    description: 'Streaming reference for C# SDK',
+  },
+  {
+    matcher: t => t.startsWith('# Streaming — Go'),
+    name: 'Data: Streaming reference — Go',
+    id: 'data-streaming-reference-go',
+    description: 'Streaming reference for Go SDK',
+  },
+  {
+    matcher: t => t.startsWith('# Streaming — Java'),
+    name: 'Data: Streaming reference — Java',
+    id: 'data-streaming-reference-java',
+    description: 'Streaming reference for Java SDK',
+  },
+  {
+    matcher: t => t.startsWith('# Streaming — PHP'),
+    name: 'Data: Streaming reference — PHP',
+    id: 'data-streaming-reference-php',
+    description: 'Streaming reference for PHP SDK',
+  },
+  {
+    matcher: t => t.startsWith('# Tool Use — C#') && t.includes('tool-use'),
+    name: 'Data: Tool Use reference — C#',
+    id: 'data-tool-use-reference-csharp',
+    description: 'Tool Use reference for C# SDK',
+  },
+  {
+    matcher: t => t.startsWith('# Tool Use — Go') && t.includes('tool-use'),
+    name: 'Data: Tool Use reference — Go',
+    id: 'data-tool-use-reference-go',
+    description: 'Tool Use reference for Go SDK',
+  },
+  {
+    matcher: t => t.startsWith('# Tool Use — Java') && t.includes('tool-use'),
+    name: 'Data: Tool Use reference — Java',
+    id: 'data-tool-use-reference-java',
+    description: 'Tool Use reference for Java SDK',
+  },
+  {
+    matcher: t => t.startsWith('# Tool Use — PHP') && t.includes('tool-use'),
+    name: 'Data: Tool Use reference — PHP',
+    id: 'data-tool-use-reference-php',
+    description: 'Tool Use reference for PHP SDK',
+  },
+  {
+    matcher: t => t.startsWith('# Tool Use — Ruby') && t.includes('tool-use'),
+    name: 'Data: Tool Use reference — Ruby',
+    id: 'data-tool-use-reference-ruby',
+    description: 'Tool Use reference for Ruby SDK',
+  },
+  // 2.1.185 — non-SDK new/restructured prompts
+  {
+    matcher: t => t.includes('Reads a specific resource from an MCP server, identified by server name and resource URI'),
+    name: 'Tool Description: ReadMCPResource',
+    id: 'tool-description-read-mcp-resource',
+    description: 'Tool description for reading a specific MCP server resource by URI',
+  },
+  {
+    matcher: t => t.includes('[Your previous response had no visible output. Please continue and produce a user-visible response.]'),
+    name: 'System Reminder: No visible output nudge',
+    id: 'system-reminder-no-visible-output-continue',
+    description: 'Nudges the model to produce visible output when previous response was empty',
+  },
+  {
+    matcher: t => t.includes('File paths (absolute or relative to cwd) to send to the user. Always pass an array'),
+    name: 'Tool Parameter: SendUserFile paths',
+    id: 'tool-parameter-senduserfile-file-paths',
+    description: 'Parameter description for file paths in SendUserFile tool',
+  },
+  {
+    matcher: t => t.includes('Whether to append the claude.ai session link to commits and PRs'),
+    name: 'Data: Session link commit setting',
+    id: 'tool-parameter-append-session-link',
+    description: 'Controls whether claude.ai session link is appended to commits and PRs',
+  },
 ];
 
 function lookupNewPromptAssignment(content) {

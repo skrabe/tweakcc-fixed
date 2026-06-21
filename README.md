@@ -9,7 +9,7 @@ A hard fork of [Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc) that 
 | ---------------------- | --------------------------------------------------------------------------------------------------------- |
 | **This fork**          | [skrabe/tweakcc-fixed](https://github.com/skrabe/tweakcc-fixed)                                           |
 | **Base**               | [Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc) @ `bc41a43`, then diverged                    |
-| **Target CC versions** | 2.0.98 through **2.1.181**                                                                                |
+| **Target CC versions** | 2.0.98 through **2.1.185**                                                                                |
 | **Install**            | `npx tweakcc-fixed@latest` — published on npm from this repo ([Install](#install))                        |
 | **Pairs with**         | [skrabe/lobotomized-claude-code](https://github.com/skrabe/lobotomized-claude-code) (per-model overrides) |
 | **Agent guide**        | [`AGENTS.md`](./AGENTS.md) — bug-class diagnostics, patch authoring, the version-bump pipeline            |

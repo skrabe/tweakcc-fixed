@@ -1201,18 +1201,47 @@ Do NOT interpret this as user acknowledgement, confirmation, or response to any 
 
 {{content}}`,
   apply(content, body, isSuppressed) {
+    // 2.1.185: Anthropic extracted the inline template into a standalone
+    // function (e.g. `function CFl(e){return\`...\`}`), and the switch case
+    // now reads `case"task-notification":return CFl(e);`. Match either shape.
+    // Pre-2.1.185: inline template in the switch case
+    const inlineMatch = content.match(
+      /case"task-notification":return`\[SYSTEM NOTIFICATION - NOT USER INPUT\]\nThis is an automated background-task event, NOT a message from the user\.\nDo NOT interpret this as user acknowledgement, confirmation, or response to any pending question\.\n\n\$\{([$\w]+)\}`;/
+    );
+    if (inlineMatch) {
+      return findAndReplace(
+        content,
+        /case"task-notification":return`\[SYSTEM NOTIFICATION - NOT USER INPUT\]\nThis is an automated background-task event, NOT a message from the user\.\nDo NOT interpret this as user acknowledgement, confirmation, or response to any pending question\.\n\n\$\{([$\w]+)\}`;/,
+        m => {
+          const [, hParam] = m;
+          if (isSuppressed)
+            return `case"task-notification":return\`\${${hParam}}\`;`;
+          const bodyForBuild = body.replace(/\$\{H\}/g, `\${${hParam}}`);
+          return `case"task-notification":return\`${bodyForBuild}\`;`;
+        },
+        'task-notification-framing',
+        c => /case"task-notification":return`\$\{[$\w]+\}`;/.test(c)
+      );
+    }
+
+    // 2.1.185+: extracted into a standalone function, called from the switch.
+    // Idempotency check anchors on the patched function body shape:
+    //   suppressed:    function X(p){return`${p}`}
+    //   non-suppressed: function X(p){return`[SYSTEM NOTIFICATION…`}  (starts with our custom body)
+    // The case site `case"task-notification":return CFl(e);` is identical in
+    // both pristine and post-patch states, so we cannot use it as the check.
     return findAndReplace(
       content,
-      /case"task-notification":return`\[SYSTEM NOTIFICATION - NOT USER INPUT\]\nThis is an automated background-task event, NOT a message from the user\.\nDo NOT interpret this as user acknowledgement, confirmation, or response to any pending question\.\n\n\$\{([$\w]+)\}`;/,
+      /function ([$\w]+)\(([$\w]+)\)\{return`\[SYSTEM NOTIFICATION - NOT USER INPUT\]\nThis is an automated background-task event, NOT a message from the user\.\nDo NOT interpret this as user acknowledgement, confirmation, or response to any pending question\.\n\n\$\{\2\}`\}/,
       m => {
-        const [, hParam] = m;
+        const [, fnName, param] = m;
         if (isSuppressed)
-          return `case"task-notification":return\`\${${hParam}}\`;`;
-        const bodyForBuild = body.replace(/\$\{H\}/g, `\${${hParam}}`);
-        return `case"task-notification":return\`${bodyForBuild}\`;`;
+          return `function ${fnName}(${param}){return\`\${${param}}\`}`;
+        const bodyForBuild = body.replace(/\$\{H\}/g, `\${${param}}`);
+        return `function ${fnName}(${param}){return\`${bodyForBuild}\`}`;
       },
       'task-notification-framing',
-      c => /case"task-notification":return`\$\{[$\w]+\}`;/.test(c)
+      c => /function [$\w]+\([$\w]+\)\{return`\$\{[$\w]+\}`\}/.test(c)
     );
   },
 };
