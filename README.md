@@ -3,7 +3,7 @@
 A hard fork of [Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc) that patches an installed Claude Code in place — both npm `cli.js` and the JavaScript embedded in a native Bun binary — to apply **curated system-prompt overrides** and a set of **fork-only patches**. It is purpose-built to pair with [skrabe/lobotomized-claude-code](https://github.com/skrabe/lobotomized-claude-code), and it stays current with every Claude Code release through its own prompt-extraction pipeline.
 
 > [!IMPORTANT]
-> **This fork is a superset of upstream and no longer merges from it (2026-06-04).** Upstream's `tweakcc` gates system-prompt overrides **off** for native installs and doesn't have this fork's override mechanisms (inline-blob, system-reminders) or extended extractor; we add those and apply system prompts to native installs too. Upstream is essentially static — recent releases are version bumps plus prompt-data drops we supersede (our extractor names 1018 prompts for CC 2.1.185 under our own per-model override conventions (capturing every model-facing string below the old 500-char floor), including 565 ids absent from Piebald's published extract) — so there's nothing to gain by merging. We keep the `upstream` remote only as a **fetch-only comparison signal** and extract our own prompts.
+> **This fork is a superset of upstream and no longer merges from it (2026-06-04).** Upstream's `tweakcc` gates system-prompt overrides **off** for native installs and doesn't have this fork's override mechanisms (inline-blob, system-reminders) or extended extractor; we add those and apply system prompts to native installs too. Our extractor names 1018 prompts for CC 2.1.185 under our own per-model override conventions, capturing every model-facing string below the old 500-char floor — including 565 ids absent from Piebald's published extract. A merge would only bring a version label and prompt data we already supersede, so we keep the `upstream` remote as a **fetch-only comparison signal** and extract our own prompts.
 
 |                        |                                                                                                           |
 | ---------------------- | --------------------------------------------------------------------------------------------------------- |
@@ -12,7 +12,7 @@ A hard fork of [Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc) that 
 | **Target CC versions** | 2.0.98 through **2.1.185**                                                                                |
 | **Install**            | `npx tweakcc-fixed@latest` — published on npm from this repo ([Install](#install))                        |
 | **Pairs with**         | [skrabe/lobotomized-claude-code](https://github.com/skrabe/lobotomized-claude-code) (per-model overrides) |
-| **Agent guide**        | [`AGENTS.md`](./AGENTS.md) — bug-class diagnostics, patch authoring, the version-bump pipeline            |
+| **Agent guide**        | [`skills/showtime/`](./skills/showtime/) — bug-class diagnostics, patch authoring, the version-bump pipeline |
 
 ## What this fork adds over the base
 
@@ -63,7 +63,7 @@ Beyond the fork-only features above, this fork carries correctness fixes that or
 | [#655](https://github.com/Piebald-AI/tweakcc/pull/655) | [@LeonFedotov](https://github.com/LeonFedotov) | Fall back to npm source when Bun-bytecode extraction yields non-patchable JS; thread `clearBytecode` through repack |
 | [#664](https://github.com/Piebald-AI/tweakcc/pull/664) | [@mike1858](https://github.com/mike1858)       | Fix two patches that broke `cli.js` on literal `\"` sequences in prompt content (#660)                              |
 
-Fork-only patch work: scoping #664's backslash-doubling to quote contexts only (template literals already get a parity-aware backtick pass); adapting `opusplan1m` / `patchesAppliedIndication` / `thinkerFormat` / `verboseProperty` / `userMessageDisplay` matchers across successive CC minified shapes; the past-tense thinking-verb array fix; the `migration.test.ts` `vi.mock` fix; and TS7 build + Linux native-binary patching. See [`AGENTS.md`](./AGENTS.md) for the full rundown and how to extend the fork.
+Fork-only patch work: scoping #664's backslash-doubling to quote contexts only (template literals already get a parity-aware backtick pass); adapting `opusplan1m` / `patchesAppliedIndication` / `thinkerFormat` / `verboseProperty` / `userMessageDisplay` matchers across successive CC minified shapes; the past-tense thinking-verb array fix; the `migration.test.ts` `vi.mock` fix; and TS7 build + Linux native-binary patching. See the [`showtime` skill](./skills/showtime/) for the bug-class catalog, realignment recipes, and the version-bump pipeline.
 
 ## Inherited base features
 
