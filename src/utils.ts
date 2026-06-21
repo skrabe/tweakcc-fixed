@@ -454,7 +454,17 @@ export function deepMergeWithDefaults(
     return Array.isArray(partial) ? partial : defaults;
   }
 
-  // For objects, recursively merge
+  // For objects, recursively merge.
+  //
+  // SECURITY: safe against prototype pollution even though `partial` can be
+  // untrusted (remote config via --config-url). Two invariants make it so:
+  //   1. The loop below iterates the DEFAULTS' keys, never `partial`'s, so a
+  //      `__proto__`/`constructor` key in `partial` is never an assignment
+  //      target (`result[key] = …` only runs for keys that exist in defaults).
+  //   2. `{ ...partial }` uses CreateDataProperty semantics, so a JSON-parsed
+  //      `__proto__` becomes a harmless own-property, not a prototype write.
+  // Preserve both if refactoring — e.g. don't switch to iterating `partial`'s
+  // keys without first skipping `__proto__`/`constructor`/`prototype`.
   const result = { ...partial } as Record<string, unknown>;
 
   for (const key of Object.keys(defaults as Record<string, unknown>)) {
@@ -476,3 +486,64 @@ export function deepMergeWithDefaults(
 
   return result;
 }
+
+/**
+ * Generous default cap for reading a fetch Response body. The request timeout
+ * bounds time, not size, so without a cap a malicious or misbehaving endpoint
+ * could stream a multi-GB body and OOM the process. 32 MB is far above every
+ * body tweakcc fetches (the largest, a prompts JSON, is ~2 MB) while still
+ * preventing a runaway download.
+ */
+export const MAX_FETCH_BYTES = 32 * 1024 * 1024;
+
+/**
+ * Read a fetch `Response` body as UTF-8 text with a hard byte cap. Fast-rejects
+ * on an oversized `Content-Length`, then streams the body and aborts the moment
+ * the running total exceeds `maxBytes`. Falls back to `response.text()` (still
+ * capped) when the body is not a readable stream.
+ *
+ * Use this instead of `response.text()` / `response.json()` for any remote
+ * fetch — especially attacker-influenced ones like `--config-url`.
+ */
+export const readResponseTextCapped = async (
+  response: Response,
+  maxBytes: number = MAX_FETCH_BYTES
+): Promise<string> => {
+  const declared = Number(response.headers.get('content-length'));
+  if (Number.isFinite(declared) && declared > maxBytes) {
+    throw new Error(
+      `Response body too large: ${declared} bytes exceeds the ${maxBytes}-byte limit.`
+    );
+  }
+
+  const body = response.body;
+  if (!body) {
+    // No readable stream (some runtimes/mocks) — read fully, then enforce the cap.
+    const text = await response.text();
+    if (Buffer.byteLength(text, 'utf8') > maxBytes) {
+      throw new Error(
+        `Response body exceeds the ${maxBytes}-byte limit.`
+      );
+    }
+    return text;
+  }
+
+  const reader = body.getReader();
+  const chunks: Buffer[] = [];
+  let total = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    if (value) {
+      total += value.byteLength;
+      if (total > maxBytes) {
+        await reader.cancel().catch(() => {});
+        throw new Error(
+          `Response body exceeds the ${maxBytes}-byte limit — aborting download.`
+        );
+      }
+      chunks.push(Buffer.from(value));
+    }
+  }
+  return Buffer.concat(chunks).toString('utf8');
+};

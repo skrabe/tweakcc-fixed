@@ -1,5 +1,5 @@
 import { Theme } from './types';
-import { debug } from './utils';
+import { debug, readResponseTextCapped } from './utils';
 
 export interface CommunityTheme extends Theme {
   author: string;
@@ -11,6 +11,10 @@ const GITHUB_RAW_BASE =
   'https://raw.githubusercontent.com/Piebald-AI/claude-code-themes/main';
 
 const INDEX_URL = `${GITHUB_RAW_BASE}/index.json`;
+
+// Cap theme-browser fetches so a hung connection surfaces an error instead of
+// hanging the UI indefinitely.
+const FETCH_TIMEOUT_MS = 20_000;
 
 // ======================================================================
 
@@ -28,13 +32,16 @@ export async function fetchCommunityThemeIndex(): Promise<
   debug(`Fetching community theme index from ${INDEX_URL}`);
   const response = await fetch(INDEX_URL, {
     headers: { Accept: 'application/json' },
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
   });
   if (!response.ok) {
     throw new Error(
       `Failed to fetch community theme index: ${response.status} ${response.statusText}`
     );
   }
-  return (await response.json()) as CommunityThemeIndexEntry[];
+  return JSON.parse(
+    await readResponseTextCapped(response)
+  ) as CommunityThemeIndexEntry[];
 }
 
 export async function fetchCommunityTheme(id: string): Promise<CommunityTheme> {
@@ -42,11 +49,12 @@ export async function fetchCommunityTheme(id: string): Promise<CommunityTheme> {
   debug(`Fetching community theme from ${url}`);
   const response = await fetch(url, {
     headers: { Accept: 'application/json' },
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
   });
   if (!response.ok) {
     throw new Error(
       `Failed to fetch community theme "${id}": ${response.status} ${response.statusText}`
     );
   }
-  return (await response.json()) as CommunityTheme;
+  return JSON.parse(await readResponseTextCapped(response)) as CommunityTheme;
 }

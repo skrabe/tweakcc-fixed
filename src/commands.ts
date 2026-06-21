@@ -11,6 +11,7 @@ import { spawn, execSync } from 'node:child_process';
 import chalk from 'chalk';
 
 import { formatAndDiff } from './formatAndDiff';
+import { readResponseTextCapped } from './utils';
 
 import { tryDetectInstallation } from './lib/detection';
 import { readContent, writeContent } from './lib/content';
@@ -29,7 +30,7 @@ import {
 // Diff Approval
 // =============================================================================
 
-function askYesNo(prompt: string): Promise<boolean> {
+function askYesNo(prompt: string, defaultYes = true): Promise<boolean> {
   return new Promise(resolve => {
     let settled = false;
     const settle = (value: boolean) => {
@@ -49,7 +50,8 @@ function askYesNo(prompt: string): Promise<boolean> {
 
     rl.question(prompt, answer => {
       const trimmed = answer.trim().toLowerCase();
-      settle(trimmed === '' || trimmed === 'y' || trimmed === 'yes');
+      if (trimmed === '') return settle(defaultYes);
+      settle(trimmed === 'y' || trimmed === 'yes');
     });
   });
 }
@@ -85,12 +87,31 @@ export async function promptUserForDiffApproval(
     contextLines: 10,
   });
 
-  if (!result) {
-    console.log(
-      chalk.yellow(
-        'Could not generate formatted diff (oxfmt unavailable or parse error).'
-      )
-    );
+  if ('reason' in result) {
+    if (
+      result.reason === 'format-error' &&
+      result.modifiedFailed &&
+      !result.originalFailed
+    ) {
+      // The patched JS failed to parse while the original parsed cleanly — a
+      // strong signal the patch corrupted the code. Warn loudly, default to NO.
+      console.log(
+        chalk.red(
+          '\n⚠  The patched code failed to parse, but the original parsed cleanly —\n' +
+            '   this can mean the patch corrupted the JavaScript. Proceed with caution.'
+        )
+      );
+      return askYesNo(
+        chalk.bold('\nApply anyway, despite the parse failure? [y/N] '),
+        false
+      );
+    }
+
+    const why =
+      result.reason === 'oxfmt-unavailable'
+        ? 'oxfmt unavailable'
+        : 'the JS could not be formatted';
+    console.log(chalk.yellow(`Could not generate formatted diff (${why}).`));
     return askYesNo(chalk.bold('\nApply changes without diff preview? [Y/n] '));
   }
 
@@ -173,8 +194,14 @@ function resolveVars(content: string): ResolvedVars {
  *
  * The script must return the modified JavaScript content.
  *
- * The sandbox uses Node's permission model with no grants, meaning the script
- * cannot read/write files, make network calls, or spawn child processes.
+ * The sandbox uses Node's permission model with no grants, so the script cannot
+ * read/write files, spawn child processes, or start worker threads.
+ *
+ * SECURITY CAVEAT: Node's permission model does NOT govern network access, so a
+ * script CAN still open network connections (verified: `--permission` blocks fs
+ * and child_process but allows `net`/`http`/`fetch`). A malicious script could
+ * therefore exfiltrate the `js` (cli.js) content it receives. There is no Node
+ * flag to fully block network here, so only run scripts you trust.
  *
  * Compatibility: tries `--permission` first (Node 24+), falls back to
  * `--experimental-permission` (Node 20–23). If neither is recognised the
@@ -332,13 +359,18 @@ async function resolveScriptSource(scriptArg: string): Promise<string> {
 
   if (ref.startsWith('http://') || ref.startsWith('https://')) {
     console.log(`Fetching script from ${ref}...`);
-    const response = await fetch(ref);
+    // Cap the fetch so a hung URL surfaces an error instead of blocking the CLI.
+    const response = await fetch(ref, {
+      signal: AbortSignal.timeout(20_000),
+    });
     if (!response.ok) {
       throw new Error(
         `Failed to fetch script from ${ref}: HTTP ${response.status} ${response.statusText}`
       );
     }
-    return response.text();
+    // Cap the body — a remote `@url` script is user-supplied; 16 MB is far
+    // above any real script while preventing a runaway download.
+    return readResponseTextCapped(response, 16 * 1024 * 1024);
   }
 
   console.log(`Reading script from ${ref}...`);

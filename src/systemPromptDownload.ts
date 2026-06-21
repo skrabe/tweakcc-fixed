@@ -4,6 +4,13 @@ import * as path from 'path';
 import { fileURLToPath } from 'node:url';
 import type { StringsFile } from './systemPromptSync';
 import { PROMPT_CACHE_DIR } from './config';
+import { readResponseTextCapped } from './utils';
+
+// Cap the prompts-JSON fetch so a hung / blackholed connection (captive portal,
+// firewall sinkhole) falls back to the cache below instead of stalling --apply
+// forever. The catch block already treats a timeout as a network failure and
+// serves the cache, but without this cap that path was unreachable.
+const PROMPTS_FETCH_TIMEOUT_MS = 20_000;
 
 // Resolve the repo-local data/prompts/ directory by walking up from this
 // module's location. Lets a fork that ships its own prompt JSONs (e.g.
@@ -86,7 +93,9 @@ export async function downloadStringsFile(
 
   try {
     // Fetch the file from GitHub
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      signal: AbortSignal.timeout(PROMPTS_FETCH_TIMEOUT_MS),
+    });
 
     if (!response.ok) {
       // Network reachable but no usable body — serve the cache if we have one
@@ -111,8 +120,11 @@ export async function downloadStringsFile(
       throw new Error(errorMessage);
     }
 
-    // Parse JSON directly
-    const jsonData = (await response.json()) as StringsFile;
+    // Parse JSON (capped read — the prompts JSON is ~2 MB; the 32 MB default is
+    // generous while preventing a runaway body from a compromised/transient host).
+    const jsonData = JSON.parse(
+      await readResponseTextCapped(response)
+    ) as StringsFile;
 
     // Save to cache
     try {
