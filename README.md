@@ -69,7 +69,7 @@ Fork-only patch work: scoping #664's backslash-doubling to quote contexts only (
 
 These come from the tweakcc base and work unchanged in this fork: system-prompt customization, custom themes, thinking-verb and spinner customization, toolsets (`/toolset`), input-pattern highlighters, `opusplan[1m]`, MCP startup optimization, table-format options, token-count rounding, statusline throttling, `AGENTS.md`/`CLAUDE.md` alternate names, session naming (`/title`, `/rename`), subagent model selection, and the `unpack` / `repack` CLI commands.
 
-For detailed docs on these shared features, see the [upstream tweakcc README](https://github.com/Piebald-AI/tweakcc#readme) — with the caveat that upstream is now v4 and has diverged, so its API / `adhoc-patch` / remote-config sections and native-install behavior describe upstream's build, not this fork.
+For detailed docs on these shared features, see the [upstream tweakcc README](https://github.com/Piebald-AI/tweakcc#readme) — with the caveat that upstream is now v4 and has diverged, so its `adhoc-patch` / remote-config sections and native-install behavior describe upstream's build, not this fork. For this fork's programmatic surface, see [Library API](#library-api) below rather than upstream's API docs.
 
 ## Pairing with lobotomized-claude-code
 
@@ -106,6 +106,47 @@ node dist/index.mjs --apply
 ## How it works
 
 tweakcc-fixed patches Claude Code's minified `cli.js`, reading customizations from `~/.tweakcc/config.json`. For npm installs `cli.js` is patched directly; for native installs the JS is extracted from the Bun binary with [node-lief](https://github.com/Piebald-AI/node-lief), patched, and repacked (with stale Bun bytecode cleared). Updating Claude Code overwrites the patches, but they live in your config, so reapply with `--apply`. Revert with `--restore`.
+
+## Library API
+
+Besides the CLI, `tweakcc-fixed` is published as a library — the building blocks
+the tool uses, exposed for writing your own Claude Code patching scripts. Every
+export is documented inline (JSDoc, shipped in the `.d.ts`).
+
+```ts
+import {
+  tryDetectInstallation,
+  readContent,
+  writeContent,
+  backupFile,
+  helpers,
+} from 'tweakcc-fixed';
+
+// Find Claude Code (npm or native Bun install)
+const installation = await tryDetectInstallation();
+
+// Back up before touching anything
+await backupFile(installation.path, './cli.js.bak');
+
+// Read the JS (extracted from the native binary when needed)
+const { content, clearBytecode } = await readContent(installation);
+
+// Patch it — `helpers` finds minified identifiers in the bundle
+const reactVar = helpers.getReactVar(content);
+const patched = content.replace(/…/, '…');
+
+// Write it back. For native installs this repacks the binary; `clearBytecode`
+// MUST be threaded through from readContent so a stale Bun bytecode cache
+// doesn't keep running the old code.
+await writeContent(installation, patched, clearBytecode);
+```
+
+Main exports: `findAllInstallations` / `tryDetectInstallation` /
+`showInteractiveInstallationPicker` (detection), `readContent` / `writeContent`
+(JS I/O across npm + native), `backupFile` / `restoreBackup`, `readTweakccConfig`
+plus the config-path helpers, the `helpers` toolkit (minified-identifier finders
++ diff utilities), and the `Installation` / `TweakccConfig` / `Settings` /
+`DetectInstallationOptions` types.
 
 ## The `showtime` skill (CC version-bump pipeline)
 

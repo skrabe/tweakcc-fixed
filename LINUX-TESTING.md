@@ -9,6 +9,12 @@ claude --version
 npx -y tweakcc-fixed@latest --restore
 ```
 
+> **Prompt changes must be on `main` first.** The npm package ships no `data/`;
+> at apply time it fetches `prompts-<version>.json` from this repo's `main`
+> (`raw.githubusercontent.com/skrabe/tweakcc-fixed/.../main/data/prompts/`). So
+> when you're testing a prompt-override change via `npx`, push it to `main`
+> before running — bumping or pinning the package version alone won't carry it.
+
 Success looks like:
 
 - `--apply` detects the Linux ELF `claude` binary, applies the saved

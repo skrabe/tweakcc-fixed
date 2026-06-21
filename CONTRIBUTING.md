@@ -6,7 +6,7 @@ Thank you for your interest in contributing to tweakcc! This document provides g
 
 ### Prerequisites
 
-- **Node.js**: 24.x (20.0.0 or higher required)
+- **Node.js**: 20.0.0 or higher (development currently uses 24.x)
 - **pnpm**: 11.0.9 or higher
 
 ```bash
@@ -89,7 +89,7 @@ pnpm prettier --check src
 2. Run linting and tests locally:
    ```bash
    pnpm lint
-   pnpm run test
+   pnpm test
    ```
 3. Build your changes:
    ```bash
@@ -100,16 +100,40 @@ pnpm prettier --check src
    pnpm start
    ```
 
+### Commit Messages
+
+This project uses [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
+<type>(<scope>): <short summary>
+```
+
+- **type**: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `style`, `perf`
+- **scope** (optional but encouraged): the area touched — e.g. `cli`, `patches`,
+  `ui`, `config`, `net`
+- **summary**: imperative mood, lower-case, no trailing period
+
+Examples:
+
+```
+fix(toolsets): JSON-escape toolset names in the /toolset error
+feat(cli): add --json to --list-patches for machine-readable output
+docs(readme): bump target CC version
+```
+
+For anything non-trivial, add a body that explains the **why** (not a play-by-play
+of the work) and a one-line note on how you verified it.
+
 ### Testing
 
 Run tests before submitting:
 
 ```bash
 # Run all tests once
-pnpm run test
+pnpm test
 
 # Run tests in watch mode for development
-pnpm run test:dev
+pnpm test:dev
 ```
 
 Test files are located in:
@@ -153,7 +177,7 @@ Follow these conventions for clear, meaningful commit messages:
 
 ### Before Submitting
 
-1. Ensure all tests pass: `pnpm run test`
+1. Ensure all tests pass: `pnpm test`
 2. Ensure linting passes: `pnpm lint`
 3. Ensure formatting is correct: `pnpm format`
 4. Rebuild the project: `pnpm build:dev`
@@ -218,8 +242,8 @@ When reporting bugs, please include:
 
 ## Getting Help
 
-- Check existing [Issues](https://github.com/Piebald-AI/tweakcc/issues) for similar problems
-- Read the [README](https://github.com/Piebald-AI/tweakcc#readme) for usage documentation
+- Check existing [Issues](https://github.com/skrabe/tweakcc-fixed/issues) for similar problems
+- Read the [README](https://github.com/skrabe/tweakcc-fixed#readme) for usage documentation
 - Ask questions in a new issue with the `question` label
 
 Thank you for contributing! 🙌
