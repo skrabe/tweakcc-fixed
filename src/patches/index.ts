@@ -597,6 +597,7 @@ const applyPatchImplementations = (
         group: def.group,
         applied: false,
         skipped: true,
+        details: 'not in --patches filter',
         description: def.description,
       });
       continue;
@@ -610,6 +611,7 @@ const applyPatchImplementations = (
         group: def.group,
         applied: false,
         skipped: true,
+        details: 'not enabled',
         description: def.description,
       });
       continue;
@@ -691,14 +693,21 @@ export const applyCustomization = async (
       `Extracting claude.js from ${backupExists ? 'backup' : 'native installation'}: ${pathToExtractFrom}`
     );
 
-    const { data: claudeJsBuffer, clearBytecode: needsClearBytecode } =
-      await extractClaudeJsFromNativeInstallation(
-        pathToExtractFrom,
-        ccInstInfo.version
-      );
+    const {
+      data: claudeJsBuffer,
+      clearBytecode: needsClearBytecode,
+      error: extractError,
+    } = await extractClaudeJsFromNativeInstallation(
+      pathToExtractFrom,
+      ccInstInfo.version
+    );
 
     if (!claudeJsBuffer) {
-      throw new Error('Failed to extract claude.js from native installation');
+      throw new Error(
+        `Failed to extract claude.js from native installation${
+          extractError ? `: ${extractError}` : ''
+        }`
+      );
     }
 
     clearBytecode = needsClearBytecode;
@@ -1157,8 +1166,16 @@ export const applyCustomization = async (
   const failedBinaryPatches = patchResults.filter(r => r.failed);
   if (ccInstInfo.nativeInstallationPath && failedBinaryPatches.length > 0) {
     const error = new Error(
-      'Refusing to repack native binary because one or more binary patches failed: ' +
-        failedBinaryPatches.map(r => r.id).join(', ')
+      `Refusing to repack the native binary: ${failedBinaryPatches.length} ` +
+        `binary patch(es) failed (${failedBinaryPatches
+          .map(r => r.id)
+          .join(', ')}) on Claude Code ${ccInstInfo.version}. The binary was ` +
+        'left unchanged — your Claude Code still works. Each failure’s cause ' +
+        'is in the "patch: … failed to …" line(s) above; this usually means ' +
+        `Anthropic changed the code shape in CC ${ccInstInfo.version}, so a ` +
+        'patch’s pattern no longer matches. Update tweakcc-fixed, or disable ' +
+        'the failing optional patch(es) in ~/.tweakcc/config.json, then ' +
+        're-run --apply.'
     );
     error.stack = error.message;
     throw error;
@@ -1223,6 +1240,22 @@ export const applyCustomization = async (
     // For NPM installations: replace the cli.js file
     if (!ccInstInfo.cliPath) {
       throw new Error('cliPath is required for NPM installations');
+    }
+
+    // Unlike native (which refuses to repack on any failure above), the npm
+    // path writes a partially-patched cli.js. Recap which patches were skipped
+    // so the agent/user isn't left guessing why a feature didn't take.
+    if (failedBinaryPatches.length > 0) {
+      console.warn(
+        `tweakcc: ${failedBinaryPatches.length} patch(es) did not apply on ` +
+          `Claude Code ${ccInstInfo.version}: ${failedBinaryPatches
+            .map(r => r.id)
+            .join(', ')}. Those feature(s) are skipped; everything else was ` +
+          'applied. Each cause is in the "patch: … failed to …" line(s) ' +
+          'above — usually a CC version whose code shape a patch does not ' +
+          'match yet. Update tweakcc-fixed, or disable the failing optional ' +
+          'patch(es) in ~/.tweakcc/config.json.'
+      );
     }
 
     await replaceFileBreakingHardLinks(ccInstInfo.cliPath, content, 'patch');

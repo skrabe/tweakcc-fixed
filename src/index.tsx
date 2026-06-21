@@ -41,6 +41,7 @@ import {
   TweakccConfig,
 } from './types';
 import { handleUnpack, handleRepack, handleAdhocPatch } from './commands';
+import { resolvePatchFilter } from './patchFilter';
 import {
   restoreClijsFromBackup,
   restoreNativeBinaryFromBackup,
@@ -176,6 +177,10 @@ const main = async () => {
     )
     .option('--list-patches', 'list all available patches with their IDs')
     .option(
+      '--json',
+      'with --list-patches: output machine-readable JSON (id, name, group, description)'
+    )
+    .option(
       '--list-system-prompts [version]',
       'list all available system prompts for a CC version'
     )
@@ -214,7 +219,7 @@ const main = async () => {
 
       // Handle --list-patches flag
       if (options.listPatches) {
-        handleListPatches();
+        handleListPatches(Boolean(options.json));
         return;
       }
 
@@ -228,13 +233,22 @@ const main = async () => {
 
       // Handle --apply flag for non-interactive mode
       if (options.apply) {
-        // Parse patch filter if provided
-        const patchFilter = options.patches
-          ? (options.patches as string)
-              .split(',')
-              .map((id: string) => id.trim())
-          : null;
-        await handleApplyMode(patchFilter, options.configUrl);
+        // Parse + validate the patch filter up-front so a typo'd ID fails fast
+        // instead of silently matching nothing (the apply path filters by
+        // inclusion, so an unknown ID would just skip the patch it meant).
+        const filterResult = resolvePatchFilter(
+          options.patches as string | undefined
+        );
+        if (!filterResult.ok) {
+          console.error(chalk.red(`Error: ${filterResult.error}`));
+          console.error(
+            chalk.gray(
+              `Run "${getInvocationCommand()} --list-patches" to see valid IDs.`
+            )
+          );
+          process.exit(1);
+        }
+        await handleApplyMode(filterResult.filter, options.configUrl);
         return;
       }
 
@@ -538,8 +552,25 @@ async function handleRestoreMode(): Promise<void> {
  * Handles the --list-patches flag.
  * Lists all available patches with their IDs, names, and descriptions.
  */
-function handleListPatches(): void {
+function handleListPatches(asJson = false): void {
   const patches = getAllPatchDefinitions();
+
+  // Machine-readable output for agents/tooling (the documented --json form).
+  if (asJson) {
+    console.log(
+      JSON.stringify(
+        patches.map(p => ({
+          id: p.id,
+          name: p.name,
+          group: p.group,
+          description: p.description,
+        })),
+        null,
+        2
+      )
+    );
+    return;
+  }
 
   // Define group order for display
   const groupOrder = [
