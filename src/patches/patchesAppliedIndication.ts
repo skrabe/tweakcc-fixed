@@ -287,12 +287,12 @@ const applyIndicatorPatchesListPatch = (
     `,${reactVar}.createElement(${boxComponent}, { flexDirection: "column" },`
   );
   lines.push(
-    `${reactVar}.createElement(${boxComponent}, null, ${reactVar}.createElement(${textComponent}, {color: "success", bold: true}, "┃ "), ${reactVar}.createElement(${textComponent}, {color: "success", bold: true}, "✓ tweakcc-fixed patches are applied")),`
+    `${reactVar}.createElement(${boxComponent}, null, ${reactVar}.createElement(${textComponent}, {color: "success", bold: true}, "\\u2503 "), ${reactVar}.createElement(${textComponent}, {color: "success", bold: true}, "\\u2713 tweakcc-fixed patches are applied")),`
   );
   for (let item of patchesApplies) {
     item = item.replace('CHALK_VAR', chalkVar);
     lines.push(
-      `${reactVar}.createElement(${boxComponent}, null, ${reactVar}.createElement(${textComponent}, {color: "success", bold: true}, "┃ "), ${reactVar}.createElement(${textComponent}, {dimColor: true}, \`  * ${item}\`)),`
+      `${reactVar}.createElement(${boxComponent}, null, ${reactVar}.createElement(${textComponent}, {color: "success", bold: true}, "\\u2503 "), ${reactVar}.createElement(${textComponent}, {dimColor: true}, \`  * ${item}\`)),`
     );
   }
   lines.push('),');
@@ -572,12 +572,12 @@ export const writePatchesAppliedIndication = (
         `,${reactVar}.createElement(${boxComponent}, { flexDirection: "column" },`
       );
       lines.push(
-        `${reactVar}.createElement(${boxComponent}, null, ${reactVar}.createElement(${textComponent}, {color: "success", bold: true}, "┃ "), ${reactVar}.createElement(${textComponent}, {color: "success", bold: true}, "✓ tweakcc-fixed patches are applied")),`
+        `${reactVar}.createElement(${boxComponent}, null, ${reactVar}.createElement(${textComponent}, {color: "success", bold: true}, "\\u2503 "), ${reactVar}.createElement(${textComponent}, {color: "success", bold: true}, "\\u2713 tweakcc-fixed patches are applied")),`
       );
       for (let item of patchesApplies) {
         item = item.replace('CHALK_VAR', chalkVar);
         lines.push(
-          `${reactVar}.createElement(${boxComponent}, null, ${reactVar}.createElement(${textComponent}, {color: "success", bold: true}, "┃ "), ${reactVar}.createElement(${textComponent}, {dimColor: true}, \`  * ${item}\`)),`
+          `${reactVar}.createElement(${boxComponent}, null, ${reactVar}.createElement(${textComponent}, {color: "success", bold: true}, "\\u2503 "), ${reactVar}.createElement(${textComponent}, {dimColor: true}, \`  * ${item}\`)),`
         );
       }
       lines.push('),');

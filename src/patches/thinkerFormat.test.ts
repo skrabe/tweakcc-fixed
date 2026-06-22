@@ -39,7 +39,7 @@ describe('writeThinkerFormat', () => {
 
   it('keeps surrounding format text and substitutes the verb expr in the middle', () => {
     const out = writeThinkerFormat(FIXTURE_LATEST, '✻ {} now…')!;
-    expect(out).toContain('N7=`✻ ${Q9??C2?.activeForm??L4} now…`');
+    expect(out).toContain('N7=`\\u273b ${Q9??C2?.activeForm??L4} now\\u2026`');
   });
 
   it('handles the isIdle/spinnerVerb conditional shape via the NEW anchor', () => {

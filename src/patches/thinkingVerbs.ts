@@ -1,6 +1,7 @@
 // Please see the note about writing patches in ./index
 
 import { showDiff } from './index';
+import { escapeNonAscii } from '../utils';
 
 /**
  * Replaces the thinker verbs array (e.g., ["Accomplishing","Actioning",...])
@@ -45,7 +46,9 @@ const patchPresentTenseVerbs = (
     return null;
   }
 
-  const replacement = JSON.stringify(verbs);
+  // `\uXXXX`-escape non-ASCII (e.g. "Flambéing") so it survives CC's Latin-1
+  // module storage instead of mojibaking at runtime. See escapeNonAscii.
+  const replacement = escapeNonAscii(JSON.stringify(verbs));
 
   const startIndex = match.index;
   const endIndex = startIndex + match[0].length;
@@ -82,7 +85,7 @@ const patchPastTenseVerbs = (file: string, verbs: string[]): string | null => {
 
   // Convert verbs from "ing" to "ed"
   const pastTenseVerbs = verbs.map(verb => verb.replace(/ing$/, 'ed'));
-  const replacement = JSON.stringify(pastTenseVerbs);
+  const replacement = escapeNonAscii(JSON.stringify(pastTenseVerbs));
 
   const startIndex = match.index;
   const endIndex = startIndex + match[0].length;
