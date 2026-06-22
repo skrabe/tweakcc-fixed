@@ -812,6 +812,33 @@ const SELECTED_LINES_INJECTION: ReminderInjection = {
   defaultBody:
     'The user selected the lines {{line_start}} to {{line_end}} from {{filename}}:\n{{selected_text}}\n\nThis may or may not be related to the current task.',
   apply(content, body, isSuppressed) {
+    // Method 1 (2.1.186+): the `{let q=…substring(0,2000)…truncate…}` wrapper was
+    // removed; the handler is now a direct arrow and the selected-text slot is
+    // inlined as a function call (`${k6l(e.content)}`) rather than a local var.
+    // Capture that whole content expression and map the override's `${q}`
+    // (selected_text) placeholder onto it.
+    const newShape =
+      /selected_lines_in_ide:\(([$\w]+)\)=>([$\w]+)\(\[([$\w]+)\(\{content:`The user selected the lines \$\{\1\.lineStart\} to \$\{\1\.lineEnd\} from \$\{\1\.filename\}:\n\$\{([^`]*?)\}\n\nThis may or may not be related to the current task\.`,isMeta:!0\}\)\]\)/;
+    if (newShape.test(content)) {
+      return findAndReplace(
+        content,
+        newShape,
+        m => {
+          const [, hParam, o5Name, j6Name, contentExpr] = m;
+          if (isSuppressed) return `selected_lines_in_ide:(${hParam})=>[]`;
+          const bodyForBuild = body
+            .replace(/\$\{H\.lineStart\}/g, `\${${hParam}.lineStart}`)
+            .replace(/\$\{H\.lineEnd\}/g, `\${${hParam}.lineEnd}`)
+            .replace(/\$\{H\.filename\}/g, `\${${hParam}.filename}`)
+            .replace(/\$\{q\}/g, `\${${contentExpr}}`);
+          return `selected_lines_in_ide:(${hParam})=>${o5Name}([${j6Name}({content:\`${bodyForBuild}\`,isMeta:!0})])`;
+        },
+        'selected-lines-in-ide',
+        c => /selected_lines_in_ide:\([$\w]+\)=>\[\]/.test(c)
+      );
+    }
+    // Method 2 (<=2.1.185): older shape that truncated content >2000 chars into a
+    // local `q` before emitting. Kept as a fallback for installs on prior builds.
     return findAndReplace(
       content,
       /selected_lines_in_ide:\(([$\w]+)\)=>\{let ([$\w]+)=\1\.content\.length>2000\?\1\.content\.substring\(0,2000\)\+`\n\.\.\. \(truncated\)`:\1\.content;return ([$\w]+)\(\[([$\w]+)\(\{content:`The user selected the lines \$\{\1\.lineStart\} to \$\{\1\.lineEnd\} from \$\{\1\.filename\}:\n\$\{\2\}\n\nThis may or may not be related to the current task\.`,isMeta:!0\}\)\]\)\}/,

@@ -79,3 +79,92 @@ describe('task-notification-framing wrapper discovery', () => {
     expect(taskNotif.apply(drifted, 'x ${H}', false)).toBeNull();
   });
 });
+
+const selectedLines = REMINDER_REGISTRY.find(
+  r => r.id === 'selected-lines-in-ide'
+)!;
+
+// Body the runtime hands `apply`: the defaultBody with placeholders already
+// substituted to their `${H.x}` / `${q}` expressions by substitutePlaceholders.
+const SELECTED_LINES_BODY =
+  'The user selected the lines ${H.lineStart} to ${H.lineEnd} from ' +
+  '${H.filename}:\n${q}\n\nThis may or may not be related to the current task.';
+
+// 2.1.186+ direct-arrow shape: the truncation `{let q=…substring(0,2000)…}`
+// wrapper is gone and the selected-text slot is an inlined function call
+// (`${k6l(e.content)}`) rather than a local var.
+const MOCK_SELECTED_NEW_2_1_186 =
+  'selected_lines_in_ide:(e)=>sp([Ln({content:`The user selected the lines ' +
+  '${e.lineStart} to ${e.lineEnd} from ${e.filename}:\n${k6l(e.content)}\n\n' +
+  'This may or may not be related to the current task.`,isMeta:!0})])';
+
+// <=2.1.185 shape: truncated content >2000 chars into a local `q` before emit.
+const MOCK_SELECTED_OLD_2_1_185 =
+  'selected_lines_in_ide:(H)=>{let q=H.content.length>2000?' +
+  'H.content.substring(0,2000)+`\n... (truncated)`:H.content;' +
+  'return o5([j6({content:`The user selected the lines ${H.lineStart} to ' +
+  '${H.lineEnd} from ${H.filename}:\n${q}\n\nThis may or may not be related ' +
+  'to the current task.`,isMeta:!0})])}';
+
+// The sibling diff handler shares the trailing English; the patch must not
+// rewrite it (anchored on `selected_lines_in_ide:` + the distinct phrasing).
+const MOCK_SELECTED_DIFF_SIBLING =
+  'selected_lines_in_diff:(e)=>sp([Ln({content:`The user selected the ' +
+  'following ${e.lineCount} ${e.lineCount===1?"line":"lines"} from the diff ' +
+  'view:\n${k6l(e.content)}\n\nThis may or may not be related to the current ' +
+  'task.`,isMeta:!0})])';
+
+describe('selected-lines-in-ide reminder shape handling', () => {
+  it('rewrites the 2.1.186 direct-arrow shape, inlining the captured content expression for ${q}', () => {
+    const result = selectedLines.apply(
+      MOCK_SELECTED_NEW_2_1_186,
+      SELECTED_LINES_BODY,
+      false
+    );
+    expect(result).not.toBeNull();
+    // Default body round-trips to the exact pristine code.
+    expect(result).toBe(MOCK_SELECTED_NEW_2_1_186);
+    // No stale `{let q=…}` wrapper or substring(0,2000) reintroduced.
+    expect(result).not.toContain('substring(0,2000)');
+    expect(result).toContain('${k6l(e.content)}');
+  });
+
+  it('maps a customized body onto the new shape, preserving the inlined content expression', () => {
+    const custom =
+      'SELECTED ${H.lineStart}-${H.lineEnd} in ${H.filename}:\n${q}';
+    const result = selectedLines.apply(
+      MOCK_SELECTED_NEW_2_1_186,
+      custom,
+      false
+    );
+    expect(result).not.toBeNull();
+    expect(result).toContain(
+      'selected_lines_in_ide:(e)=>sp([Ln({content:`SELECTED ' +
+        '${e.lineStart}-${e.lineEnd} in ${e.filename}:\n${k6l(e.content)}`'
+    );
+  });
+
+  it('suppresses the new shape to a bare empty-array arrow', () => {
+    const result = selectedLines.apply(
+      MOCK_SELECTED_NEW_2_1_186,
+      SELECTED_LINES_BODY,
+      true
+    );
+    expect(result).toContain('selected_lines_in_ide:(e)=>[]');
+  });
+
+  it('still rewrites the <=2.1.185 truncating shape via the fallback', () => {
+    const result = selectedLines.apply(
+      MOCK_SELECTED_OLD_2_1_185,
+      SELECTED_LINES_BODY,
+      false
+    );
+    expect(result).not.toBeNull();
+    // Round-trips to pristine, keeping the truncation wrapper + local `q`.
+    expect(result).toBe(MOCK_SELECTED_OLD_2_1_185);
+  });
+
+  it('does not touch the selected_lines_in_diff sibling', () => {
+    expect(selectedLines.apply(MOCK_SELECTED_DIFF_SIBLING, SELECTED_LINES_BODY, false)).toBeNull();
+  });
+});

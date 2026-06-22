@@ -47,18 +47,61 @@ export const findVersionOutputLocation = (
 };
 
 /**
- * PATCH 2: Finds the VyK compact header and returns locations for:
- *   1. Where to insert the tweakcc variable declaration (before the I= assignment)
- *   2. Where to insert the variable reference (before the closing paren of I's createElement)
+ * PATCH 2: Finds the header version display and returns the location(s) to splice
+ * the "+ tweakcc vX.Y.Z" marker in.
+ *
+ * Two shapes:
+ *   - JSX runtime (CC ≥2.1.186): the header is emitted as `HELPER.jsxs(TEXT,
+ *     {children:[<title>," ",HELPER.jsxs(TEXT,{dimColor:!0,children:["v",VER]})]})`.
+ *     We splice one more child element inline, so the result carries a `jsxInline`
+ *     descriptor and no `let _tw=` declaration is needed.
+ *   - React.createElement (CC ≤2.1.185): the older two-step shape — insert a `let
+ *     _tw=React.createElement(...)` after the bold "Claude Code" element, then a
+ *     `," ",_tw` sibling reference. Returns `varInsertIndex`/`refInsertIndex`.
  */
+type TweakccVersionLocations =
+  | {
+      // CC ≥2.1.186 JSX runtime: splice a single inline child.
+      jsxInline: { insertIndex: number; helper: string; textComponent: string };
+    }
+  | {
+      // CC ≤2.1.185 React.createElement two-step splice.
+      varInsertIndex: number;
+      refInsertIndex: number;
+      reactVar: string;
+      textComponent: string;
+    };
+
 const findTweakccVersionLocations = (
   fileContents: string
-): {
-  varInsertIndex: number;
-  refInsertIndex: number;
-  reactVar: string;
-  textComponent: string;
-} | null => {
+): TweakccVersionLocations | null => {
+  // Method 0 (CC ≥2.1.186): JSX runtime header. The startup header renders the
+  // title + version as
+  //   HELPER.jsxs(TEXT,{children:[<title>," ",HELPER.jsxs(TEXT,{dimColor:!0,children:["v",VER]})]})
+  // where <title> is either a memoized var (React-compiler path) or an inline
+  // `HELPER.jsx(TEXT,{bold:!0,children:"Claude Code"})`. The inner version group
+  // (dimColor + "v") is the stable anchor; we append one more child element right
+  // before the outer children array's closing `]})`.
+  //
+  // [^[\]]{0,200} for the <title> deliberately forbids nested brackets so this
+  // matches the primary startup header (title is a var or a bracket-free jsx)
+  // and skips the compact `M=…` header whose title is itself a bracketed array
+  // (`children:["Claude Code"," "]`) — that path already gets the marker via the
+  // chalk Path A/B replacements below.
+  const jsxVersionPattern =
+    /([$\w]+)\.jsxs\(([$\w]+),\{children:\[(?:[^[\]]{0,200})," ",([$\w]+)\.jsxs\(([$\w]+),\{dimColor:!0,children:\["v",[$\w]+\]\}\)\]\}\)/;
+  const jsxMatch = fileContents.match(jsxVersionPattern);
+  if (jsxMatch && jsxMatch.index !== undefined) {
+    return {
+      jsxInline: {
+        // Insert before the `]})` that closes the outer children array.
+        insertIndex: jsxMatch.index + jsxMatch[0].length - 3,
+        helper: jsxMatch[1],
+        textComponent: jsxMatch[2],
+      },
+    };
+  }
+
   // Find: createElement(TEXT,{bold:!0},"Claude Code"),CACHE[N]=x;else x=CACHE[N];
   // This gives us the position right after the x assignment block — where we insert our var
   const boldPattern =
@@ -333,11 +376,92 @@ const applyIndicatorPatchesListPatch = (
 };
 
 /**
+ * PATCH 3 (CC ≥2.1.186): JSX-runtime header. Find the version row's assigned var,
+ * then the `flexDirection:"column"` Box that lists it as a child, and return the
+ * end of that column's children array so the patches list slots in as the last
+ * child. Returns null (no logging) so the caller can fall through to the older
+ * `createElement`-based location finder for CC ≤2.1.185.
+ */
+const findPatchesListLocationJsx = (
+  fileContents: string
+): LocationResult | null => {
+  // Match the header version row and capture its assigned var. CC emits this as a
+  // memoized assignment `VAR=HELPER.jsxs(TEXT,{children:[<title>," ",HELPER.jsxs(
+  // TEXT,{dimColor:!0,children:["v",VER]})...` — note we stop at the inner version
+  // group's close and do NOT require the outer array's `]})`, because PATCH 2 may
+  // have already appended a `," ",<marker>` sibling after that inner group.
+  // Boundary class includes `)` and `]` because the memoized assignment is
+  // commonly preceded by `if(e[N]!==d)VAR=…` (close-paren) on the React-compiler
+  // path; a bare `{`/`;`/`,` class would miss it.
+  const verAssignPattern =
+    /[,;){}\]]([$\w]+)=([$\w]+)\.jsxs\(([$\w]+),\{children:\[(?:[^[\]]{0,200})," ",[$\w]+\.jsxs\([$\w]+,\{dimColor:!0,children:\["v",[$\w]+\]\}\)/;
+  const verAssign = fileContents.match(verAssignPattern);
+  if (!verAssign || verAssign.index === undefined) {
+    return null;
+  }
+  const verVar = verAssign[1];
+
+  // Find the column Box that holds verVar as a child: ,verVar, or [verVar inside a
+  // `flexDirection:"column",children:[...verVar...]`. The var is referenced as a
+  // child of its column container a few hundred bytes AFTER the assignment in
+  // React-compiler output, so scope the search to a window starting at the
+  // assignment. A whole-file search would risk binding to an unrelated component
+  // that happens to reuse the same minified var (e.g. a `.map((y)=>…)` list).
+  const searchStart = verAssign.index;
+  const searchRegion = fileContents.slice(searchStart, searchStart + 4000);
+  // verVar is either the first child (`children:[verVar,…`) or a later one
+  // (`children:[…,verVar,…`); the optional `(?:[^[\]]*?,)?` prefix covers both
+  // without letting the array contain a nested bracket before verVar.
+  const columnPattern = new RegExp(
+    `[$\\w]+\\.jsxs\\([$\\w]+,\\{flexDirection:"column",children:\\[(?:[^[\\]]*?,)?${escapeIdent(verVar)}[,\\]]`
+  );
+  const columnMatch = searchRegion.match(columnPattern);
+  if (!columnMatch || columnMatch.index === undefined) {
+    return null;
+  }
+  const columnAbsIndex = searchStart + columnMatch.index;
+
+  // Bracket-walk from this container's `children:[` to its matching `]`; insert
+  // right before that `]` so the patches list becomes the last child.
+  const childrenToken = 'children:[';
+  const childrenOpen =
+    fileContents.indexOf(childrenToken, columnAbsIndex) + childrenToken.length;
+  if (childrenOpen < childrenToken.length) {
+    return null;
+  }
+  let depth = 1;
+  let closeIndex = -1;
+  for (let i = childrenOpen; i < fileContents.length; i++) {
+    const ch = fileContents[i];
+    if (ch === '[') depth++;
+    else if (ch === ']') {
+      depth--;
+      if (depth === 0) {
+        closeIndex = i;
+        break;
+      }
+    }
+  }
+  if (closeIndex === -1) {
+    return null;
+  }
+
+  return { startIndex: closeIndex, endIndex: closeIndex };
+};
+
+/**
  * PATCH 3: Finds the location to insert the patches applied list
  */
 const findPatchesListLocation = (
   fileContents: string
 ): LocationResult | null => {
+  // Method 0 (CC ≥2.1.186): JSX-runtime header. Try the JSX shape first; the
+  // older createElement-based methods below remain as fallbacks for CC ≤2.1.185.
+  const jsxLoc = findPatchesListLocationJsx(fileContents);
+  if (jsxLoc) {
+    return jsxLoc;
+  }
+
   // 1. Find the version display area (may already be modified by PATCH 2)
   // Find the "Claude Code" that's near dimColor:!0},"v" (the header version display)
   const versionDisplayPattern =
@@ -525,6 +649,20 @@ export const writePatchesAppliedIndication = (
       console.error(
         'patch: patchesAppliedIndication: patch 2 skipped (header version pattern changed)'
       );
+    } else if ('jsxInline' in locs) {
+      // CC ≥2.1.186 JSX runtime: append one inline child element to the header
+      // version row's children array. No separate `let _tw=` declaration —
+      // the title row is a JSX element, so we splice a sibling jsx() call.
+      const { insertIndex, helper, textComponent } = locs.jsxInline;
+      const refCode = `," ",${helper}.jsx(${textComponent},{children:${chalkVar}.hex("#FF8400").bold("+ tweakcc v${tweakccVersion}")})`;
+
+      const oldContent2 = content;
+      content =
+        content.slice(0, insertIndex) +
+        refCode +
+        content.slice(insertIndex);
+
+      showDiff(oldContent2, content, refCode, insertIndex, insertIndex);
     } else {
       // Step 1: Insert variable declaration after the "Claude Code" bold element
       const varName = '_tw';

@@ -9,6 +9,12 @@ const FIXTURE_ARIA =
   'a=1,$.createElement($k,{"aria-hidden":!0,flexWrap:"wrap",height:1,width:2},z);rest';
 const FIXTURE_BARE =
   'a=1,$.createElement($k,{flexWrap:"wrap",height:1,width:2},z);rest';
+// 2.1.186: the spinner box moved to the jsx transform — children inline as a
+// prop and a `ref` added. The component emits two such boxes (static-motion
+// fallback + animated frame); both must be widened, the no-ref status-dot box
+// must NOT be.
+const FIXTURE_JSX =
+  'x=ym.jsx($,{ref:r,"aria-hidden":!0,flexWrap:"wrap",height:1,width:2,children:c});y=ym.jsx($,{ref:r,"aria-hidden":!0,flexWrap:"wrap",height:1,width:2,children:a});dot=ym.jsx($,{"aria-hidden":!0,flexWrap:"wrap",height:1,width:2,children:d})';
 
 describe('writeThinkerSymbolWidthLocation', () => {
   it('rewrites width while preserving the 2.1.172 aria-hidden prefix', () => {
@@ -40,6 +46,24 @@ describe('writeThinkerSymbolWidthLocation', () => {
   it('honors an arbitrary configured width', () => {
     const out = writeThinkerSymbolWidthLocation(FIXTURE_BARE, 10);
     expect(out).toContain('{flexWrap:"wrap",height:1,width:10}');
+  });
+
+  it('widens both 2.1.186 jsx spinner boxes and preserves ref/children', () => {
+    const out = writeThinkerSymbolWidthLocation(FIXTURE_JSX, 6);
+    expect(out).not.toBeNull();
+    expect(out).toContain(
+      '{ref:r,"aria-hidden":!0,flexWrap:"wrap",height:1,width:6,children:c}'
+    );
+    expect(out).toContain(
+      '{ref:r,"aria-hidden":!0,flexWrap:"wrap",height:1,width:6,children:a}'
+    );
+    // No width:2 spinner box left.
+    expect(out).not.toContain(',width:2,children:c}');
+    expect(out).not.toContain(',width:2,children:a}');
+    // The unrelated no-ref status-dot box is untouched.
+    expect(out).toContain(
+      '{"aria-hidden":!0,flexWrap:"wrap",height:1,width:2,children:d}'
+    );
   });
 
   it('returns null (logging) when the width shape is absent', () => {

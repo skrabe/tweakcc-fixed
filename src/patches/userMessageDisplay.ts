@@ -230,10 +230,44 @@ export const writeUserMessageDisplay = (
   const modernPattern =
     /(No content found in user prompt message[\s\S]{0,100}?;return )([$\w]+(?:\.default)?)\.createElement\(([$\w]+),(\{flexDirection:"column"[^{}]*\}),([$\w]+(?:\.default)?)\.createElement\(([$\w]+),\{text:([$\w]+)[^{}]*\}\)\)/;
 
-  // Try the modern (attribute-preserving) pattern first — the legacy
+  // ────────────────────────────────────────────────────────────────────────
+  // JSX-runtime pattern (CC ≥2.1.186): CC's UI bundle switched from
+  // `React.createElement(...)` to the automatic JSX runtime (`MOD.jsx(comp,
+  // {…,children:…})` / `.jsxs`). `MOD` here is `react/jsx-runtime`'s interop
+  // object, which exposes `.jsx`/`.jsxs` but NOT `.createElement` — so the
+  // rewrite below MUST emit `.jsx(...)` (an emitted `.createElement` would be
+  // `undefined` at runtime and crash the user-message render).
+  //
+  // The render is split across two React-compiler memo blocks: the child
+  //   `T=MOD.jsx(child,{text:MSG,useBriefLayout:…,timestamp:…})`
+  // and the parent Box
+  //   `…;return …)y=MOD.jsx(BOX,{flexDirection:"column",marginTop:…,
+  //                             backgroundColor:BGVAR,paddingRight:…,children:T})`
+  // where the bg ternary is now hoisted into a local var (`BGVAR`, e.g.
+  // `d?void 0:"userMessageBackground"`) instead of being inline in the attrs.
+  //
+  // We take the documented attribute-preserving approach on the PARENT Box —
+  // capture its attrs CSV (keeping flexDirection/marginTop so wrap-width and
+  // layout are preserved), surgically mutate only the bg attr, append our
+  // extras, and swap `children:T` for our own styled Text element. The leftover
+  // `T=` child memo assignment becomes an unused (but harmless) computation.
+  //
+  // Captures: 1=prefix through `…MOD.jsx(BOX,`, 2=message var (from the child's
+  // `text:MSG`), 3=Box attrs (leading `{`, no trailing `}`), 4=`,children:`,
+  // 5=child var (discarded), 6=`})`.
+  // ────────────────────────────────────────────────────────────────────────
+  const jsxRuntimePattern =
+    /(No content found in user prompt message[\s\S]{0,400}?\.jsx\([$\w]+,\{text:([$\w]+),useBriefLayout:[$\w]+,timestamp:[$\w]+\}\)[\s\S]{0,200}?([$\w]+)\.jsx\([$\w]+,)(\{flexDirection:"column"[^{}]*?)(,children:)([$\w]+)(\}\))/;
+
+  // The JSX-runtime shape wins when present; it never matches createElement-era
+  // binaries (it requires `.jsx(…)` and a `children:` prop), so older versions
+  // fall through to the patterns below at zero cost.
+  const jsxRuntimeMatch = oldFile.match(jsxRuntimePattern);
+
+  // Try the modern (attribute-preserving) pattern next — the legacy
   // pattern's `{text:VAR}` alternative ALSO matches CC 2.1.79+ shapes, so if
   // we checked legacy first the modern path would never run.
-  const modernMatch = oldFile.match(modernPattern);
+  const modernMatch = jsxRuntimeMatch ? null : oldFile.match(modernPattern);
 
   // CC ≥2.1.138: the child display is memoized (`VAR=createElement(child,{text,
   // useBriefLayout,timestamp})`) before the parent Box call. Rewrite only that
@@ -242,15 +276,17 @@ export const writeUserMessageDisplay = (
   // matches this shape) when present.
   const memoizedChildPattern =
     /(No content found in user prompt message.{0,1200}?)([$\w]+)=([$\w]+(?:\.default)?\.createElement)\([$\w]+,\{text:([$\w]+),useBriefLayout:[$\w]+,timestamp:[$\w]+\}\)/;
-  const memoizedChildMatch = modernMatch
-    ? null
-    : oldFile.match(memoizedChildPattern);
+  const memoizedChildMatch =
+    jsxRuntimeMatch || modernMatch ? null : oldFile.match(memoizedChildPattern);
 
-  // Fall back to legacy only when neither modern nor memoized shapes apply.
+  // Fall back to legacy only when no newer shape applies.
   const legacyMatch =
-    modernMatch || memoizedChildMatch ? null : oldFile.match(legacyPattern);
+    jsxRuntimeMatch || modernMatch || memoizedChildMatch
+      ? null
+      : oldFile.match(legacyPattern);
 
   if (
+    !jsxRuntimeMatch &&
     !modernMatch &&
     (!memoizedChildMatch || memoizedChildMatch.index === undefined) &&
     (!legacyMatch || legacyMatch.index === undefined)
@@ -279,6 +315,160 @@ export const writeUserMessageDisplay = (
     `${messageVar}.head+"\\n("+${messageVar}.hiddenLines+" line"+` +
     `(${messageVar}.hiddenLines===1?"":"s")+" hidden)\\n"+${messageVar}.tail:` +
     `${messageVar})`;
+
+  if (jsxRuntimeMatch) {
+    // ──────────────────────────────────────────────────────────────────────
+    // JSX-runtime path (CC ≥2.1.186): attribute-preserving rewrite of the
+    // PARENT Box's `MOD.jsx(BOX,{…,children:CHILD})` call, mirroring the
+    // modern path's semantics but emitting `.jsx(...)` (the runtime module
+    // has no `.createElement`) and passing children as a `children:` prop.
+    // ──────────────────────────────────────────────────────────────────────
+    const prefix = jsxRuntimeMatch[1]; // …;return …)y=MOD.jsx(BOX,
+    const messageVar = jsxRuntimeMatch[2]; // the child's text prop var (m)
+    const jsxModule = jsxRuntimeMatch[3]; // react/jsx-runtime interop (Jpo)
+    const originalBoxAttrs = jsxRuntimeMatch[4]; // {flexDirection:"column",…
+    const childrenKeyword = jsxRuntimeMatch[5]; // ,children:
+    // jsxRuntimeMatch[6] is the original child var (e.g. T) — discarded; we
+    // splice our own Text element in its place.
+
+    // The captured Box attrs have a leading `{` but NO trailing `}` (the
+    // closing brace lives in capture group 6, `})`, which we re-emit at the
+    // end after appending `children:`). Peel the leading `{` to edit the CSV.
+    let mutableBoxAttrs = originalBoxAttrs.slice(1);
+
+    // Unlike the 2.1.79 modern shape, the bg ternary is hoisted into a local
+    // var, so the native attr is `backgroundColor:IDENT` (a bare identifier
+    // value) rather than an inline `j?…:…` ternary.
+    const bgAttrRegex = /backgroundColor:[$\w]+/;
+
+    if (config.backgroundColor === null) {
+      // "none": drop the whole backgroundColor attr (and its leading comma)
+      // so no rectangle paints; the Text bg is also omitted below.
+      mutableBoxAttrs = mutableBoxAttrs
+        .replace(new RegExp(`,?${bgAttrRegex.source}`), '')
+        .replace(/^,|,$/g, '');
+    } else if (config.backgroundColor !== 'default') {
+      // Custom rgb: replace `backgroundColor:IDENT` with the user's rgb
+      // literal. (The hoisted var folded CC's mode ternary, so this tints
+      // every mode — matching the legacy path's flat-bg behavior.)
+      const bgDigits = config.backgroundColor.match(/\d+/g);
+      if (bgDigits) {
+        const bgLiteral = `backgroundColor:"rgb(${bgDigits.join(',')})"`;
+        mutableBoxAttrs = bgAttrRegex.test(mutableBoxAttrs)
+          ? mutableBoxAttrs.replace(bgAttrRegex, bgLiteral)
+          : mutableBoxAttrs
+            ? `${mutableBoxAttrs},${bgLiteral}`
+            : bgLiteral;
+      }
+    }
+    // 'default': leave `backgroundColor:IDENT` untouched (native theme).
+
+    // Append tweakcc's extras (border, extra padding, fit-to-content) — same
+    // logic and ordering as the modern path.
+    const extraBoxAttrs: string[] = [];
+
+    if (config.borderStyle !== 'none') {
+      const isCustomBorder = config.borderStyle.startsWith('topBottom');
+      if (isCustomBorder) {
+        let customBorder = '';
+        if (config.borderStyle === 'topBottomSingle') {
+          customBorder =
+            '{top:"─",bottom:"─",left:" ",right:" ",topLeft:" ",topRight:" ",bottomLeft:" ",bottomRight:" "}';
+        } else if (config.borderStyle === 'topBottomDouble') {
+          customBorder =
+            '{top:"═",bottom:"═",left:" ",right:" ",topLeft:" ",topRight:" ",bottomLeft:" ",bottomRight:" "}';
+        } else if (config.borderStyle === 'topBottomBold') {
+          customBorder =
+            '{top:"━",bottom:"━",left:" ",right:" ",topLeft:" ",topRight:" ",bottomLeft:" ",bottomRight:" "}';
+        }
+        extraBoxAttrs.push(`borderStyle:${escapeNonAscii(customBorder)}`);
+      } else {
+        extraBoxAttrs.push(`borderStyle:"${config.borderStyle}"`);
+      }
+      const borderDigits = config.borderColor.match(/\d+/g);
+      if (borderDigits) {
+        extraBoxAttrs.push(`borderColor:"rgb(${borderDigits.join(',')})"`);
+      }
+    }
+
+    if (config.paddingX !== 'default' && config.paddingX > 0) {
+      extraBoxAttrs.push(`paddingX:${config.paddingX}`);
+    }
+    if (config.paddingY !== 'default' && config.paddingY > 0) {
+      extraBoxAttrs.push(`paddingY:${config.paddingY}`);
+    }
+    if (config.fitBoxToContent) {
+      extraBoxAttrs.push(`alignSelf:"flex-start"`);
+    }
+
+    if (extraBoxAttrs.length > 0) {
+      mutableBoxAttrs = mutableBoxAttrs
+        ? `${mutableBoxAttrs},${extraBoxAttrs.join(',')}`
+        : extraBoxAttrs.join(',');
+    }
+
+    // Build the inner Text attrs (Ink native props — same as the modern path).
+    const textAttrs: string[] = [];
+
+    if (config.foregroundColor === 'default') {
+      textAttrs.push('color:"text"');
+    } else {
+      const fgDigits = config.foregroundColor.match(/\d+/g);
+      if (fgDigits) {
+        textAttrs.push(`color:"rgb(${fgDigits.join(',')})"`);
+      }
+    }
+
+    if (
+      config.backgroundColor !== 'default' &&
+      config.backgroundColor !== null
+    ) {
+      const bgDigits = config.backgroundColor.match(/\d+/g);
+      if (bgDigits) {
+        textAttrs.push(`backgroundColor:"rgb(${bgDigits.join(',')})"`);
+      }
+    } else if (config.backgroundColor === 'default') {
+      textAttrs.push('backgroundColor:"userMessageBackground"');
+    }
+
+    if (config.styling.includes('bold')) textAttrs.push('bold:!0');
+    if (config.styling.includes('italic')) textAttrs.push('italic:!0');
+    if (config.styling.includes('underline')) textAttrs.push('underline:!0');
+    if (config.styling.includes('strikethrough'))
+      textAttrs.push('strikethrough:!0');
+    if (config.styling.includes('inverse')) textAttrs.push('inverse:!0');
+
+    // JSX runtime passes children as a prop, so the Text element is one object
+    // literal: `{<textAttrs>,children:<formatted>}` (or just `{children:…}`).
+    const textAttrsPrefix =
+      textAttrs.length > 0 ? `${textAttrs.join(',')},` : '';
+
+    const unwrappedMessageExpr = buildUnwrappedMessageExpr(messageVar);
+    const formattedMessage =
+      '`' +
+      escapeForTemplateLiteral(config.format).replace(
+        /\{\}/g,
+        () => '${' + unwrappedMessageExpr + '}'
+      ) +
+      '`';
+
+    const innerText =
+      `${jsxModule}.jsx(${textComponent},` +
+      `{${textAttrsPrefix}children:${formattedMessage}})`;
+
+    // prefix already ends at `…MOD.jsx(BOX,`; mutableBoxAttrs still carries the
+    // leading `{` and no closing brace, so we re-emit `children:` then the
+    // child, then the captured `})` that closes the props object + jsx call.
+    const replacement =
+      prefix + `{${mutableBoxAttrs}` + childrenKeyword + innerText + '})';
+
+    const startIndex = jsxRuntimeMatch.index!;
+    const endIndex = startIndex + jsxRuntimeMatch[0].length;
+    const newFile =
+      oldFile.slice(0, startIndex) + replacement + oldFile.slice(endIndex);
+    showDiff(oldFile, newFile, replacement, startIndex, endIndex);
+    return newFile;
+  }
 
   if (modernMatch) {
     // ──────────────────────────────────────────────────────────────────────

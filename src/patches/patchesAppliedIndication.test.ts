@@ -48,6 +48,20 @@ const VERSION_OUTPUT = 'help(`${pkg}.VERSION} (Claude Code)`);';
 // PATCH 2 Path B anchor: SyK compact borderText chalk call.
 const PATCH2_PATH_B = 'K6=N7("claude",e)(" Claude Code ");';
 
+// CC ≥2.1.186 JSX-runtime header (Method 0 for PATCH 2 + PATCH 3). Mirrors the
+// real shape: a memoized version row assigned to a var, then a
+// flexDirection:"column" Box that lists that var as its first child. The version
+// row is `HELPER.jsxs(TEXT,{children:[<bold title>," ",HELPER.jsxs(TEXT,
+// {dimColor:!0,children:["v",VER]})]})`. The assignment is preceded by `)` (an
+// `if(e[N]!==d)` guard) to exercise the close-paren boundary in the matcher.
+const JSX_HEADER =
+  'function Hdr(e){' +
+  'let Wy;if(e[1]!==d)' +
+  'Wy=RC.jsxs(TX,{children:[RC.jsx(TX,{bold:!0,children:"Claude Code"})," ",' +
+  'RC.jsxs(TX,{dimColor:!0,children:["v",vv]})]}),e[1]=d,e[2]=Wy;else Wy=e[2];' +
+  'let Sy=RC.jsx(TX,{dimColor:!0,children:"sub"}),Ey=null;' +
+  'return RC.jsxs(BX,{flexDirection:"column",children:[Wy,Sy,Ey]})}';
+
 // A complete, well-formed fixture that every helper + PATCH 1 + PATCH 2/B can
 // match. PATCH 3/4/5 may no-op on this synthetic shape; that's fine — they are
 // designed to skip gracefully and still return the PATCH-1/2-modified content.
@@ -61,6 +75,23 @@ const FIXTURE =
   TEXT_COMPONENT +
   ';' +
   PATCH2_PATH_B +
+  VERSION_OUTPUT +
+  'var post=2;';
+
+// Fixture that additionally carries the JSX-runtime header so PATCH 2 Method 0
+// and PATCH 3 Method 0 (CC ≥2.1.186) actually match and inject.
+const JSX_FIXTURE =
+  'var pre=1;' +
+  MODULE_LOADER +
+  REACT_MODULE +
+  CHALK +
+  BOX_COMPONENT +
+  ';' +
+  TEXT_COMPONENT +
+  ';' +
+  PATCH2_PATH_B +
+  JSX_HEADER +
+  ';' +
   VERSION_OUTPUT +
   'var post=2;';
 
@@ -148,6 +179,93 @@ describe('writePatchesAppliedIndication', () => {
       writePatchesAppliedIndication('var x=1;function y(){}', '1.0.0', [])
     ).toBeNull();
     expect(errSpy).toHaveBeenCalled();
+  });
+
+  // ── CC ≥2.1.186 JSX-runtime header (PATCH 2 / PATCH 3 Method 0) ──────────────
+  // CC 2.1.186 moved its header from React.createElement(...) to the JSX runtime
+  // (HELPER.jsx / HELPER.jsxs). The createElement-anchored methods no longer
+  // match, so each patch grew a JSX method that runs first.
+
+  it('injects the tweakcc marker into the JSX header version row (PATCH 2 Method 0)', () => {
+    const out = writePatchesAppliedIndication(JSX_FIXTURE, '3.2.1', []);
+    expect(out).not.toBeNull();
+    // The marker is appended as one more inline child of the version row's
+    // children array, built with the same JSX helper + Text component captured
+    // from the header (RC.jsx(TX,{children:CHALK.hex(...).bold("+ tweakcc v…")})).
+    expect(out).toContain(
+      'RC.jsx(TX,{children:Qc.hex("#FF8400").bold("+ tweakcc v3.2.1")})'
+    );
+    // It lands inside the version row (right after the inner "v" version group),
+    // not as a stray sibling elsewhere.
+    expect(out).toContain(
+      'RC.jsxs(TX,{dimColor:!0,children:["v",vv]})," ",' +
+        'RC.jsx(TX,{children:Qc.hex("#FF8400").bold("+ tweakcc v3.2.1")})]})'
+    );
+  });
+
+  it('does NOT inject the JSX header marker when showTweakccVersion is false', () => {
+    const out = writePatchesAppliedIndication(JSX_FIXTURE, '3.2.1', [], false);
+    expect(out).not.toBeNull();
+    expect(out).not.toContain('+ tweakcc v3.2.1');
+  });
+
+  it('appends the patches list to the JSX header column (PATCH 3 Method 0)', () => {
+    const out = writePatchesAppliedIndication(JSX_FIXTURE, '3.2.1', [
+      'shrink: 12 fewer chars',
+    ]);
+    expect(out).not.toBeNull();
+    // The list header element is spliced in as the last child of the column Box
+    // (flexDirection:"column"), built from the resolved React var + Box + Text.
+    expect(out).toContain(
+      '\\u2713 tweakcc-fixed patches are applied'
+    );
+    // The list is inserted as the last child of the [Wy,Sy,Ey] column array,
+    // immediately before that array's closing `]` — i.e. after `Ey`.
+    expect(out).toContain('children:[Wy,Sy,Ey,');
+    // And the per-patch row content rendered through renderPatchListItemRow.
+    expect(out).toContain('* shrink: 12 fewer chars');
+  });
+
+  it('produces a balanced JSX header after PATCH 2 + PATCH 3 both inject', () => {
+    const out = writePatchesAppliedIndication(JSX_FIXTURE, '3.2.1', [
+      'demo: 5 fewer chars',
+    ]);
+    expect(out).not.toBeNull();
+
+    // String-aware bracket/brace/paren balance over the whole patched output.
+    // If either injection broke template/quote parity or left an unbalanced
+    // delimiter, this nets non-zero and CC's cli.js would fail to parse.
+    const balance = (s: string) => {
+      let p = 0;
+      let b = 0;
+      let c = 0;
+      let inStr: string | null = null;
+      let esc = false;
+      for (const ch of s) {
+        if (esc) {
+          esc = false;
+          continue;
+        }
+        if (inStr) {
+          if (ch === '\\') esc = true;
+          else if (ch === inStr) inStr = null;
+          continue;
+        }
+        if (ch === '"' || ch === "'" || ch === '`') {
+          inStr = ch;
+          continue;
+        }
+        if (ch === '(') p++;
+        else if (ch === ')') p--;
+        else if (ch === '[') b++;
+        else if (ch === ']') b--;
+        else if (ch === '{') c++;
+        else if (ch === '}') c--;
+      }
+      return { p, b, c, inStr };
+    };
+
+    expect(balance(out!)).toEqual({ p: 0, b: 0, c: 0, inStr: null });
   });
 });
 
