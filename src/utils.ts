@@ -43,6 +43,28 @@ export const verbose = (message: any, ...optionalParams: any[]) => {
   }
 };
 
+/**
+ * Rewrite every non-ASCII (>= U+0080) code unit as a `\uXXXX` escape so the
+ * result is pure ASCII while parsing back to the identical JS string.
+ *
+ * Claude Code ships as a Bun standalone binary whose `cli.js` module is stored
+ * with esbuild's `charset=ascii` output — i.e. all non-ASCII is already emitted
+ * as `\uXXXX` escapes, so the module's source bytes are pure ASCII and Bun keeps
+ * them as a Latin-1 (1 byte/char) string. Any *raw* multibyte UTF-8 we splice
+ * into that source is therefore read back one byte per char at runtime, turning
+ * e.g. `┃` (E2 94 83) into `â` + two control chars (classic mojibake).
+ *
+ * Apply this to any non-ASCII string value — or to `JSON.stringify(...)` output
+ * — before embedding it into the patched source. It is safe to run over
+ * JSON.stringify output and over freshly-built string/template-literal contents
+ * because a raw non-ASCII char is never preceded there by a lone backslash.
+ */
+export const escapeNonAscii = (s: string): string =>
+  s.replace(
+    /[\u0080-\uffff]/g,
+    c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0')
+  );
+
 export function getCurrentClaudeCodeTheme(): string {
   try {
     const ccConfigPath = path.join(os.homedir(), '.claude.json');

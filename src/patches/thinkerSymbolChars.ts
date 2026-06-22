@@ -1,6 +1,7 @@
 // Please see the note about writing patches in ./index
 
 import { LocationResult, showDiff } from './index';
+import { escapeNonAscii } from '../utils';
 
 export const writeThinkerSymbolChars = (
   oldFile: string,
@@ -25,7 +26,10 @@ export const writeThinkerSymbolChars = (
     return null;
   }
 
-  const symbolsJson = JSON.stringify(symbols);
+  // Emit the symbols as `\uXXXX`-escaped ASCII: CC's cli.js module is stored in
+  // the Bun binary as Latin-1, so raw multibyte UTF-8 spliced in here would be
+  // read back byte-per-char at runtime (mojibake). See escapeNonAscii.
+  const symbolsJson = escapeNonAscii(JSON.stringify(symbols));
 
   // Sort locations by start index in descending order to apply from end to beginning.
   const sortedLocations = locations.sort((a, b) => b.startIndex - a.startIndex);

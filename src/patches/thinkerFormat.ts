@@ -1,6 +1,7 @@
 // Please see the note about writing patches in ./index
 
 import { LocationResult, showDiff } from './index';
+import { escapeNonAscii } from '../utils';
 
 const getThinkerFormatLocation = (oldFile: string): LocationResult | null => {
   // Older CC shape: spinnerTip + overrideMessage adjacent in one destructure.
@@ -144,10 +145,15 @@ export const writeThinkerFormat = (
   // Escape for the backtick template literal below: `\` and backtick prevent
   // corruption, and `${` prevents a user/remote format from injecting an
   // executable expression (cf. F-84). The `{}`→`${expr}` splice is added after.
-  const serializedFormat = format
-    .replace(/\\/g, '\\\\')
-    .replace(/`/g, '\\`')
-    .replace(/\$\{/g, '\\${');
+  // Run escapeNonAscii LAST: it only introduces `\uXXXX` (single-backslash)
+  // sequences, which the backslash-doubling above must not touch. Without it a
+  // raw "…" in the format mojibakes against CC's Latin-1 module storage.
+  const serializedFormat = escapeNonAscii(
+    format
+      .replace(/\\/g, '\\\\')
+      .replace(/`/g, '\\`')
+      .replace(/\$\{/g, '\\${')
+  );
   const curExpr = fmtLocation.identifiers?.[0];
   const curFmt =
     '`' + serializedFormat.replace(/\{\}/g, '${' + curExpr + '}') + '`';
