@@ -113,7 +113,7 @@ impl Opts {
 /// The minimal, serializable request shared by the cold path and the daemon.
 pub struct SearchReq {
     pub pattern: String,
-    pub dir: Option<String>,
+    pub dir_prefixes: Vec<String>, // canonical "app/","lib/" scopes; empty = cwd
     pub line_numbers: bool,
     pub files_only: bool,
     pub count: bool,
@@ -430,21 +430,18 @@ fn search_mode(o: &Opts) -> Option<Mode> {
     if !o.fuzzy && o.tool == Tool::Ugrep && !o.recursive {
         return None;
     }
-    // path target: cwd (no path) or a single relative directory. A file, multi-
-    // path, or absolute dir defers (grep echoes the path arg verbatim — fff is
-    // cwd-relative, so an absolute arg would format differently).
-    let path_ok = match o.paths.len() {
-        0 => true,
-        1 => {
-            let p = &o.paths[0];
-            // Bare "." is fine; "./..." and absolute args are deferred (their
-            // path echoing is tool-specific/uncertain).
+    // path target: cwd (no path), or one-or-more RELATIVE DIRECTORIES under cwd
+    // (e.g. `app lib scripts`). A file arg, an absolute arg, or a `./…` arg
+    // defers (their path echoing is tool-specific/uncertain), as does mixing "."
+    // with other dirs in a multi-path search (overlap -> possible double-report).
+    let all_rel_dirs = !o.paths.is_empty()
+        && o.paths.iter().all(|p| {
             Path::new(p).is_dir()
                 && !p.starts_with('/')
                 && (p == "." || !p.starts_with("./"))
-        }
-        _ => false,
-    };
+        });
+    let dot_overlap = o.paths.len() > 1 && o.paths.iter().any(|p| p == ".");
+    let path_ok = o.paths.is_empty() || (all_rel_dirs && !dot_overlap);
     if !path_ok || dir_has_dsl_operator(o) {
         return None;
     }
@@ -527,11 +524,11 @@ fn has_dsl_operator(s: &str) -> bool {
 }
 fn dir_has_dsl_operator(o: &Opts) -> bool {
     // The dir is a path, so '/' is fine; whitespace/':'/'!' would misparse (DSL)
-    // or are pathological for the post-filter.
+    // or are pathological for the post-filter. Check every path (multi-path).
+    // ',' is also excluded: dir prefixes are comma-joined on the daemon wire.
     o.paths
-        .first()
-        .map(|p| p.chars().any(|c| matches!(c, ' ' | '\t' | ':' | '!')))
-        .unwrap_or(false)
+        .iter()
+        .any(|p| p.chars().any(|c| matches!(c, ' ' | '\t' | ':' | '!' | ',')))
 }
 
 /// Does `t` contain a regex metacharacter for the active dialect?
@@ -623,9 +620,23 @@ impl Opts {
         let ctx = !self.files_only
             && !self.count
             && !matches!(mode, Mode::Fuzzy);
+        // Canonical "dir/" scope prefixes. "." / "" -> none (whole cwd). Multiple
+        // relative dirs ("app","lib") -> multiple prefixes; keep iff under any.
+        let dir_prefixes: Vec<String> = self
+            .paths
+            .iter()
+            .filter_map(|p| {
+                let c = p.trim_end_matches('/');
+                if c == "." || c.is_empty() {
+                    None
+                } else {
+                    Some(format!("{c}/"))
+                }
+            })
+            .collect();
         SearchReq {
             pattern: effective_pattern(self, mode),
-            dir: self.paths.first().cloned(),
+            dir_prefixes,
             line_numbers: self.line_numbers,
             files_only: self.files_only,
             count: self.count,
@@ -765,26 +776,14 @@ pub fn format_results(
     // Canonical dir for scoping ("." and trailing "/" -> ""); "./..."/absolute
     // args never reach here (deferred in search_mode). out_prefix is precomputed
     // per-tool in to_req (rg echoes "./" for a "." arg; ugrep does not).
-    let arg = req.dir.as_deref().unwrap_or("");
-    let canonical = {
-        let c = arg.trim_end_matches('/');
-        if c == "." {
-            ""
-        } else {
-            c
-        }
-    };
     let out_prefix = req.path_prefix.as_str();
-    let dir_constraint: Option<String> = if canonical.is_empty() {
-        None
-    } else {
-        Some(format!("{canonical}/"))
-    };
-    // Dir scoping is ALWAYS the anchored post-filter (relative_path starts_with
-    // "canonical/"), never fff's DSL "dir/" constraint — that matches the segment
+    // Dir scoping is ALWAYS the anchored post-filter (relative_path starts_with a
+    // "dir/" prefix), never fff's DSL "dir/" constraint — that matches the segment
     // (e.g. "src") ANYWHERE in a path (tools/x/src/…), diverging from grep's
-    // root-anchored path arg. So the query carries only the pattern.
-    let post_filter: Option<&str> = dir_constraint.as_deref();
+    // root-anchored path arg. `req.dir_prefixes` holds the canonical "app/","lib/"
+    // prefixes (empty = whole cwd / "." arg); multi-path keeps a result iff it's
+    // under ANY prefix. So the query carries only the pattern.
+    let dir_prefixes = &req.dir_prefixes;
 
     let parser = QueryParser::new(AiGrepConfig);
     let dsl_query: String = req.pattern.clone();
@@ -809,21 +808,21 @@ pub fn format_results(
         {
             return false;
         }
-        // regex dir-scoping (plain/fuzzy already scope via the DSL constraint)
-        if let Some(p) = post_filter {
-            if !path.starts_with(p) {
-                return false;
-            }
+        // dir scoping: keep iff under ANY requested dir prefix (empty = whole cwd)
+        if !dir_prefixes.is_empty()
+            && !dir_prefixes.iter().any(|p| path.starts_with(p.as_str()))
+        {
+            return false;
         }
         // hidden-file handling: unless --hidden, skip dotfiles like the tool does
-        // — but only relative to the search root, so an explicit hidden dir arg
-        // (e.g. `grep X .github`) is still searched.
+        // — but only relative to the matching search root, so an explicit hidden
+        // dir arg (e.g. `grep X .github`) is still searched.
         if req.hidden {
             return true;
         }
-        let rel = dir_constraint
-            .as_deref()
-            .and_then(|c| path.strip_prefix(c))
+        let rel = dir_prefixes
+            .iter()
+            .find_map(|p| path.strip_prefix(p.as_str()))
             .unwrap_or(path);
         !rel.split('/').any(|s| s.starts_with('.'))
     };
@@ -1181,6 +1180,12 @@ mod tests {
         // a literal PHRASE (DSL operators) routes to Regex as an escaped literal
         assert!(matches!(search_mode(&opts(Tool::Ugrep, "export const", &["src"])), Some(Regex)));
         assert!(matches!(search_mode(&opts(Tool::Ugrep, "key: value", &["src"])), Some(Regex)));
+        // MULTI-PATH: several relative dirs serve; to_req builds the prefixes.
+        assert!(search_mode(&opts(Tool::Ugrep, "showDiff", &["src", "target"])).is_some());
+        let mp = opts(Tool::Ugrep, "showDiff", &["src", "target"]).to_req(Plain);
+        assert_eq!(mp.dir_prefixes, vec!["src/", "target/"]);
+        // single "." -> no prefixes (whole cwd)
+        assert!(opts(Tool::Rg, "showDiff", &["."]).to_req(Plain).dir_prefixes.is_empty());
         // -i (any case) routes to Regex (served via a (?i) prefix)
         let mut lo = opts(Tool::Ugrep, "showdiff", &["src"]);
         lo.ignore_case = true;
@@ -1345,10 +1350,12 @@ mod tests {
         let mut nr = opts(Tool::Ugrep, "showDiff", &["src"]);
         nr.recursive = false;
         assert!(search_mode(&nr).is_none());
-        // multiple paths / ./ arg / absolute arg -> defer
-        assert!(search_mode(&opts(Tool::Ugrep, "showDiff", &["src", "tools"])).is_none());
+        // a non-existent / non-dir path, ./ arg, or absolute arg -> defer
+        assert!(search_mode(&opts(Tool::Ugrep, "showDiff", &["src", "nope_xyz"])).is_none());
         assert!(search_mode(&opts(Tool::Ugrep, "showDiff", &["./src"])).is_none());
         assert!(search_mode(&opts(Tool::Ugrep, "showDiff", &["/tmp"])).is_none());
+        // "." mixed into a multi-path search -> defer (overlap/double-report)
+        assert!(search_mode(&opts(Tool::Ugrep, "showDiff", &[".", "src"])).is_none());
         // force_fallback / short literal -> defer
         let mut ff = opts(Tool::Ugrep, "showDiff", &["src"]);
         ff.force_fallback = true;

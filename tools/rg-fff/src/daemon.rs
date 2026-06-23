@@ -8,11 +8,11 @@
 //! time). Correctness never depends on the daemon — only latency.
 //!
 //! Protocol (client -> daemon), 9 newline-terminated lines:
-//!   v3
+//!   v4
 //!   plain|regex|fuzzy
 //!   flags: files_only(l) line_numbers(n) count(c) ignore_case(i) hidden(h)
 //!          sep_between_files(s) — each char or '-'    e.g. "-n--hs"
-//!   <dir or empty>
+//!   <dir_prefixes comma-joined, e.g. "app/,lib/" or empty=cwd>
 //!   <pattern>
 //!   <path_prefix>
 //!   <before_context>
@@ -66,7 +66,7 @@ pub fn socket_path(root: &Path) -> Option<PathBuf> {
 fn encode_req(req: &SearchReq) -> String {
     use crate::Mode;
     format!(
-        "v3\n{}\n{}{}{}{}{}{}\n{}\n{}\n{}\n{}\n{}\n{}\n",
+        "v4\n{}\n{}{}{}{}{}{}\n{}\n{}\n{}\n{}\n{}\n{}\n",
         match req.mode {
             Mode::Plain => "plain",
             Mode::Regex => "regex",
@@ -78,7 +78,7 @@ fn encode_req(req: &SearchReq) -> String {
         if req.ignore_case { "i" } else { "-" },
         if req.hidden { "h" } else { "-" },
         if req.sep_between_files { "s" } else { "-" },
-        req.dir.as_deref().unwrap_or(""),
+        req.dir_prefixes.join(","),
         req.pattern,
         req.path_prefix,
         req.before_context,
@@ -92,7 +92,9 @@ fn encode_req(req: &SearchReq) -> String {
 pub fn query(root: &Path, req: &SearchReq) -> Option<(String, i32)> {
     // A pattern with an embedded newline can't survive the line protocol; let
     // the cold path (which never serializes it) handle that rare case.
-    if req.pattern.contains('\n') || req.dir.as_deref().is_some_and(|d| d.contains('\n')) {
+    if req.pattern.contains('\n')
+        || req.dir_prefixes.iter().any(|d| d.contains('\n'))
+    {
         return None;
     }
     let sock = socket_path(root)?;
@@ -234,7 +236,7 @@ fn handle(stream: UnixStream, shared: &SharedFilePicker) {
         }
     }
     let mut out = stream;
-    if lines.len() < 9 || lines[0] != "v3" {
+    if lines.len() < 9 || lines[0] != "v4" {
         let _ = out.write_all(b"FALLBACK\n");
         return;
     }
@@ -251,10 +253,10 @@ fn handle(stream: UnixStream, shared: &SharedFilePicker) {
         ignore_case: flags.get(3) == Some(&b'i'),
         hidden: flags.get(4) == Some(&b'h'),
         sep_between_files: flags.get(5) == Some(&b's'),
-        dir: if lines[3].is_empty() {
-            None
+        dir_prefixes: if lines[3].is_empty() {
+            Vec::new()
         } else {
-            Some(lines[3].clone())
+            lines[3].split(',').map(String::from).collect()
         },
         pattern: lines[4].clone(),
         path_prefix: lines[5].clone(),
