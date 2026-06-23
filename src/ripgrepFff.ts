@@ -55,10 +55,23 @@ async function isExecutable(p: string): Promise<boolean> {
   }
 }
 
+/** Atomic install: copy to a sibling temp then rename, so dest always gets a
+ *  fresh inode (sidesteps the macOS code-signature vnode cache that SIGKILLs an
+ *  in-place-overwritten Mach-O — see reference_apply_sigkill_codesign_vnode). */
 async function install(src: string, dest: string): Promise<void> {
   await fs.mkdir(path.dirname(dest), { recursive: true });
-  await fs.copyFile(src, dest);
-  await fs.chmod(dest, 0o755);
+  const tmp = `${dest}.tmp-${process.pid}`;
+  await fs.copyFile(src, tmp);
+  await fs.chmod(tmp, 0o755);
+  await fs.rename(tmp, dest);
+}
+
+async function mtimeMs(p: string): Promise<number> {
+  try {
+    return (await fs.stat(p)).mtimeMs;
+  } catch {
+    return -1;
+  }
 }
 
 /**
@@ -77,10 +90,12 @@ export async function ensureRgFffWrapper(): Promise<string | null> {
   // Computed lazily (not at module top-level) so test files that vi.mock
   // './config' don't trip over an undefined CONFIG_DIR during mock hoisting.
   const dest = path.join(CONFIG_DIR, 'fff', triple, 'rg-fff');
-  if (await isExecutable(dest)) return dest;
-
-  // 2. Repo-local build (developing from the checkout).
+  const stamp = path.join(path.dirname(dest), '.version');
   const repo = findRepoRoot();
+
+  // 1. Repo-local build (dev checkout) is canonical — and REFRESH dest whenever
+  //    the build is newer, so a rebuilt wrapper actually redeploys (otherwise a
+  //    stale binary lingers and the patch points at old behavior).
   if (repo) {
     for (const profile of ['release', 'debug']) {
       const local = path.join(
@@ -92,14 +107,26 @@ export async function ensureRgFffWrapper(): Promise<string | null> {
         'rg-fff'
       );
       if (fsSync.existsSync(local)) {
-        await install(local, dest);
+        if ((await mtimeMs(local)) > (await mtimeMs(dest))) {
+          await install(local, dest);
+        }
         return dest;
       }
     }
   }
 
-  // 3. GitHub release asset (published builds).
+  // 2. Published/npx: keep the installed binary, but re-fetch when the tweakcc
+  //    version changed (the wrapper is rebuilt per release).
   const version = repo?.version;
+  const installedVer = await fs
+    .readFile(stamp, 'utf-8')
+    .then(s => s.trim())
+    .catch(() => null);
+  if ((await isExecutable(dest)) && (!version || installedVer === version)) {
+    return dest;
+  }
+
+  // 3. GitHub release asset (published builds).
   if (!version) return null;
   const base = `https://github.com/skrabe/tweakcc-fixed/releases/download/v${version}`;
   try {
@@ -125,8 +152,11 @@ export async function ensureRgFffWrapper(): Promise<string | null> {
     }
 
     await fs.mkdir(path.dirname(dest), { recursive: true });
-    await fs.writeFile(dest, bin);
-    await fs.chmod(dest, 0o755);
+    const tmp = `${dest}.tmp-${process.pid}`;
+    await fs.writeFile(tmp, bin);
+    await fs.chmod(tmp, 0o755);
+    await fs.rename(tmp, dest);
+    await fs.writeFile(stamp, version).catch(() => {});
     return dest;
   } catch {
     return null;
