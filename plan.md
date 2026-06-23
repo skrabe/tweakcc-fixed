@@ -160,7 +160,21 @@ Durable sites found (avoid the FRAGILE `data-tool-references-removed-search-disa
 - [x] **Deterministic end-to-end shadow proof** (exact patched grep function): literal→fff, regex→fallback, `-l`→fff, all set-identical to embedded ugrep; unsupported→real grep. 4/4.
 - [x] **LIVE interactive proof** (real CC session via tmux): fresh snapshot `…1782222415720…` routes grep→wrapper (`ARGV0=ugrep "…/rg-fff" -G … ${1+"$@"}`, 7 refs); model ran `grep -rn ensureRgFffWrapper src` → results BYTE-IDENTICAL to embedded ugrep, transparently. **NOTE: drive a live CC TUI with `tmux` (full term emulation answers kitty/DA capability queries), NOT `expect` (dumb pty → claude hangs at term init, 136-byte log). Bracketed-paste means send the prompt text and `Enter` as SEPARATE `send-keys` calls.**
 - [x] **CI cross-build verified**: `.github/workflows/rg-fff.yml` (3-triple matrix, zigbuild musl + native darwin, attaches `rg-fff-<triple>`+`.sha256`). Locally cross-built x86_64-musl (4.1MB) + aarch64-musl (3.6MB) — statically-linked ELF, libgit2-sys/git2 compile clean via zigbuild. VPS legs viable.
-- [ ] (roadmap, don't skip) `--fuzzy` model-facing exposure (wrapper already has `--fuzzy`; needs a way for the model to request it); warm-index daemon behind the same wrapper.
-- [ ] (optional polish) instruction-append at durable LCC sites to bias the model toward literal identifiers (transparency already does the work; this just raises fff's share vs fallback).
+- [x] **`--fuzzy` model-facing exposure** (DONE): wrapper routes `--fuzzy` → fff Fuzzy, labeled `# fff: approximate …` so the model never mistakes it for exact; patch appends fff-backed/`--fuzzy` guidance to BOTH Bash description variants (the main agent's only search surface), backtick-free + a parity guard. Verified live: model ran `grep --fuzzy PatchGrop src` (typo) → found PatchGroup.
+- [x] **Warm-index daemon** (DONE, `daemon.rs`): per-root long-lived fff FilePicker behind a UDS, kept fresh by fff's background watcher (`wait_for_watcher` ⇒ never staler than a cold scan). Lazy auto-spawn (setsid, null stdio), single-per-root, idle self-shutdown (30m), stale-socket cleanup. Failure ⇒ client cold-scans (pure latency optimization). 7/7 daemon tests + live (socket spawned in a real session).
+- [ ] (optional polish) richer instruction at durable LCC sites (the patch's Bash-desc append already covers the main agent; LCC-body edits need the prompting guide + sign-off).
 
-**FEATURE STATUS: core complete + verified end-to-end (wrapper, patch, wiring, install, apply, live interactive turn, cross-builds). Off by default; currently ENABLED+APPLIED in this machine's CC for testing. Roadmap items remain.**
+**FEATURE STATUS: COMPLETE + verified end-to-end — wrapper (multicall + fuzzy), shadow-repoint patch, rg-resolver, Bash/Grep guidance, install/refresh, warm-index daemon, cross-builds, CI. Off by default; currently ENABLED+APPLIED on this machine for testing. Live-verified: transparent grep→fff (byte-identical to ugrep), daemon spawn+serve, typo-tolerant `grep --fuzzy`. Drive live CC TUI tests with tmux (two standalone Enters to submit), never expect/--print.**
+
+## 12. Roadmap build — verification matrix (this session)
+
+| Layer                                                                 | How verified                           | Result                          |
+| --------------------------------------------------------------------- | -------------------------------------- | ------------------------------- |
+| Wrapper cold equivalence                                              | wrap-test.mjs vs embedded ugrep/bfs/rg | 13/13                           |
+| Daemon (warm/fallback/auto-spawn/freshness/fuzzy)                     | daemon-test.mjs                        | 7/7                             |
+| Patch transforms (shadow/rg/grep-desc/bash-desc + idempotency + null) | swapRipgrepForFff.test.ts              | 7/7                             |
+| Full TS suite                                                         | pnpm test                              | 731 pass                        |
+| musl cross-build (tencent x64 + hermes arm64)                         | cargo zigbuild                         | both static ELF                 |
+| Apply safety                                                          | boot check after apply                 | BOOTOK                          |
+| Live transparent grep→fff                                             | tmux real session                      | byte-identical to ugrep         |
+| Live daemon spawn + `grep --fuzzy`                                    | tmux real session                      | socket spawned; typo→PatchGroup |
