@@ -1,19 +1,18 @@
-//! rg-fff — a ripgrep-compatible front end backed by `fff` (fast file finder),
-//! with transparent fallback to Claude Code's own embedded ripgrep.
+//! rg-fff — a multicall search front end backed by `fff` (fast file finder),
+//! transparently replacing Claude Code's embedded `ugrep`/`bfs`/ripgrep for
+//! content/file search, with a re-exec fallback to the real embedded tool.
 //!
-//! Claude Code spawns this binary believing it is ripgrep. We classify each
-//! invocation:
-//!   * fff-eligible exact content search  -> fff `GrepMode::PlainText` (ranked,
-//!     warm-indexable, set-equivalent to rg — verified 205/205 on tweakcc-fixed)
-//!   * `--fff-fuzzy` sentinel             -> fff `GrepMode::Fuzzy` (typo-tolerant
-//!     discovery; the new capability ripgrep lacks)
-//!   * everything else (regex, multiline, -c/count, -o, context, --type, --files
-//!     enumeration, single-file/out-of-root, non-ASCII, complex globs, short
-//!     patterns) -> re-exec CC's embedded ripgrep unchanged.
+//! Claude Code shadows the shell `grep`/`find` with its embedded `ugrep`/`bfs`
+//! (and offers `rg` separately). We get installed in their place and dispatch on
+//! argv0:
+//!   * argv0 = ugrep | grep   -> fff content search (literal), else embedded ugrep
+//!   * argv0 = rg             -> fff content search (literal), else embedded rg
+//!   * argv0 = bfs  | find    -> embedded bfs (fff find_files is a roadmap item)
+//!   * argv0 = fff            -> explicit fff content search (+ --fuzzy)
 //!
-//! The fff path emits ONLY ripgrep's plain colon-delimited records
-//! (`PATH:LINENO:TEXT` / bare `PATH`) so CC's parser is satisfied. Exit codes
-//! follow ripgrep: 0 = matches, 1 = no matches, >=2 = error.
+//! Output impersonates the tool the model invoked (grep/rg-style PATH:LINE:TEXT),
+//! ranked by fff. Fallback re-execs the real embedded tool via the claude binary
+//! (argv0 multicall), so nothing is ever silently lost.
 
 use std::path::Path;
 use std::process::Command;
@@ -25,246 +24,250 @@ use fff_search::{
     QueryParser, SharedFilePicker, SharedFrecency,
 };
 
-/// VCS dirs CC always excludes via `--glob !X`; fff already honors ignores, so
-/// these are dropped rather than translated (and don't force an rg fallback).
-const VCS_EXCLUDES: &[&str] = &[".git", ".svn", ".hg", ".bzr", ".jj", ".sl"];
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Tool {
+    Ugrep, // grep shadow
+    Rg,    // ripgrep
+    Bfs,   // find shadow
+    Fff,   // explicit
+}
 
-/// ripgrep version we impersonate. CC's self-test requires stdout to start with
-/// "ripgrep " or it disables the Grep tool. We mirror the embedded rg version.
-const RG_VERSION_BANNER: &str = "ripgrep 14.1.1 (rev 324c5f012a) [fff-wrapped]";
+impl Tool {
+    fn from_argv0(a0: &str) -> Tool {
+        let base = Path::new(a0)
+            .file_name()
+            .and_then(|s| s.to_str())
+            .unwrap_or(a0);
+        match base {
+            "ugrep" | "grep" => Tool::Ugrep,
+            "rg" => Tool::Rg,
+            "bfs" | "find" => Tool::Bfs,
+            _ => Tool::Fff, // "fff", "rg-fff", anything else
+        }
+    }
+    /// The argv0 to use when re-execing the real embedded tool.
+    fn embedded_argv0(self) -> &'static str {
+        match self {
+            Tool::Ugrep => "ugrep",
+            Tool::Rg => "rg",
+            Tool::Bfs => "bfs",
+            Tool::Fff => "rg",
+        }
+    }
+}
 
-#[derive(Default)]
-struct Parsed {
-    /// All args to forward to real rg on fallback (excludes our --fff-* flags).
-    passthrough: Vec<String>,
-    claude_bin: Option<String>,
-    fuzzy: bool,
-    version: bool,
-    // output mode
-    files_with_matches: bool, // -l
-    count: bool,              // -c
-    line_numbers: bool,       // -n (default true for content)
-    // flags that force an rg fallback
-    ignore_case: bool,        // -i
-    multiline: bool,          // -U / --multiline*
-    only_matching: bool,      // -o
-    has_context: bool,        // -A/-B/-C/--context/...
-    has_type: bool,           // --type / -t
-    files_enumeration: bool,  // --files (Glob/enumeration)
-    // collected globs (non-VCS) and search inputs
-    user_globs: Vec<String>,
-    glob_untranslatable: bool,
+struct Opts {
+    tool: Tool,
+    raw: Vec<String>, // every arg after argv0 (for verbatim fallback)
     pattern: Option<String>,
     paths: Vec<String>,
+    ignore_case: bool,
+    line_numbers: bool, // emit PATH:LINE:TEXT vs PATH:TEXT
+    files_only: bool,   // -l
+    count: bool,        // -c
+    recursive: bool,    // -r / -R (grep)
+    fuzzy: bool,        // --fuzzy (fff explicit)
+    // any flag that means "fff cannot fof-this faithfully" -> fall back
+    force_fallback: bool,
 }
 
 fn main() {
-    let raw: Vec<String> = std::env::args().skip(1).collect();
-    let p = parse_args(&raw);
+    let argv: Vec<String> = std::env::args().collect();
+    let a0 = argv.first().cloned().unwrap_or_default();
+    let tool = Tool::from_argv0(&a0);
+    let raw: Vec<String> = argv[1..].to_vec();
 
-    if p.version {
-        println!("{RG_VERSION_BANNER}");
-        std::process::exit(0);
+    // --version / -V: impersonate the real tool exactly (re-exec embedded).
+    if raw.iter().any(|a| a == "--version" || a == "-V") {
+        fallback(tool, &raw); // never returns
     }
 
-    // Decide route. fff handles: fuzzy (always), or eligible exact content.
-    let route_fff = if p.fuzzy {
-        // Fuzzy is only meaningful for content search in a directory.
-        eligible_for_fff(&p, /*allow_fuzzy=*/ true)
-    } else {
-        eligible_for_fff(&p, /*allow_fuzzy=*/ false)
-    };
+    // find/bfs: fff find_files is a roadmap item; for now route to embedded bfs.
+    if tool == Tool::Bfs {
+        fallback(tool, &raw);
+    }
 
-    if route_fff {
-        let code = run_fff(&p);
+    let opts = parse(tool, raw);
+    if eligible(&opts) {
+        let code = run_fff(&opts);
         std::process::exit(code);
     }
-    fallback_to_rg(&p);
+    fallback(opts.tool, &opts.raw);
 }
 
-/// Parse a ripgrep-style argv into our decision struct.
-fn parse_args(raw: &[String]) -> Parsed {
-    let mut p = Parsed {
-        line_numbers: false,
-        ..Default::default()
+/// Parse grep/ugrep/rg/fff argv into our decision struct. Conservative: anything
+/// we don't confidently understand sets force_fallback so we defer to the real
+/// tool rather than return a wrong result.
+fn parse(tool: Tool, raw: Vec<String>) -> Opts {
+    let mut o = Opts {
+        tool,
+        raw: raw.clone(),
+        pattern: None,
+        paths: Vec::new(),
+        ignore_case: false,
+        // grep emits PATH:LINE:TEXT only with -n; rg/fff default to line numbers.
+        line_numbers: !matches!(tool, Tool::Ugrep),
+        files_only: false,
+        count: false,
+        recursive: false,
+        fuzzy: false,
+        force_fallback: false,
     };
-    let mut i = 0;
-    let mut positional: Vec<String> = Vec::new();
     let mut explicit_pattern: Option<String> = None;
+    let mut positionals: Vec<String> = Vec::new();
+    let mut i = 0;
     while i < raw.len() {
         let a = &raw[i];
-        // Our injected flags — consumed, never forwarded.
-        if let Some(rest) = a.strip_prefix("--fff-claude-bin=") {
-            p.claude_bin = Some(rest.to_string());
-            i += 1;
-            continue;
-        }
-        if a == "--fff-fuzzy" {
-            p.fuzzy = true;
-            i += 1;
-            continue;
-        }
-
-        // Everything else is forwarded to rg on fallback.
-        p.passthrough.push(a.clone());
-
         match a.as_str() {
-            "--version" | "-V" => p.version = true,
-            "-l" | "--files-with-matches" => p.files_with_matches = true,
-            "-c" | "--count" | "--count-matches" => p.count = true,
-            "-n" | "--line-number" => p.line_numbers = true,
-            "--no-line-number" => p.line_numbers = false,
-            "-i" | "--ignore-case" | "-S" | "--smart-case" => p.ignore_case = true,
-            "-U" | "--multiline" | "--multiline-dotall" => p.multiline = true,
-            "-o" | "--only-matching" => p.only_matching = true,
-            "--files" => p.files_enumeration = true,
-            "-H" | "--with-filename" | "--no-heading" | "--hidden"
-            | "--no-config" | "--no-ignore" | "--no-ignore-vcs" | "--follow"
-            | "--color=never" => {}
-            "--color" => {
-                // consumes a value (e.g. "never")
-                if i + 1 < raw.len() {
-                    p.passthrough.push(raw[i + 1].clone());
+            "--fuzzy" => o.fuzzy = true,
+            "-i" | "--ignore-case" => o.ignore_case = true,
+            "-l" | "--files-with-matches" | "-L" | "--files-without-match" => {
+                o.files_only = true;
+                if a == "-L" || a == "--files-without-match" {
+                    o.force_fallback = true; // inverse — fff can't do
+                }
+            }
+            "-c" | "--count" => o.count = true,
+            "-n" | "--line-number" => o.line_numbers = true,
+            "-h" | "--no-filename" | "-H" | "--with-filename" | "--color"
+            | "--color=never" | "--color=always" | "--color=auto" => {}
+            "-r" | "-R" | "--recursive" | "--dereference-recursive" => {
+                o.recursive = true
+            }
+            // CC-injected ugrep flags — fff already honors ignores/hidden/binary.
+            "-G" | "--basic-regexp" | "--ignore-files" | "--hidden" | "-I"
+            | "--no-ignore" | "--include-dir" => {}
+            // capability gaps fff can't faithfully serve -> defer to real tool.
+            "-P" | "--perl-regexp" | "-E" | "--extended-regexp" | "-o"
+            | "--only-matching" | "-v" | "--invert-match" | "-x"
+            | "--line-regexp" | "-w" | "--word-regexp" | "-z" | "--null-data"
+            | "-U" | "--multiline" | "--multiline-dotall" | "-f" | "--file"
+            | "-A" | "--after-context" | "-B" | "--before-context" | "-C"
+            | "--context" | "-m" | "--max-count" | "-t" | "--type" => {
+                o.force_fallback = true;
+                // value-taking ones: skip their value too
+                if matches!(
+                    a.as_str(),
+                    "-f" | "--file"
+                        | "-A"
+                        | "--after-context"
+                        | "-B"
+                        | "--before-context"
+                        | "-C"
+                        | "--context"
+                        | "-m"
+                        | "--max-count"
+                        | "-t"
+                        | "--type"
+                ) {
                     i += 1;
                 }
             }
-            "-A" | "-B" | "-C" | "--context" | "--after-context"
-            | "--before-context" => {
-                p.has_context = true;
-                if i + 1 < raw.len() {
-                    p.passthrough.push(raw[i + 1].clone());
-                    i += 1;
-                }
-            }
-            "-t" | "--type" => {
-                p.has_type = true;
-                if i + 1 < raw.len() {
-                    p.passthrough.push(raw[i + 1].clone());
-                    i += 1;
-                }
-            }
-            "-j" | "--threads" | "--max-columns" | "--max-depth" | "--sort"
-            | "--sortr" => {
-                // flag + value; value is irrelevant to routing
-                if i + 1 < raw.len() {
-                    p.passthrough.push(raw[i + 1].clone());
-                    i += 1;
-                }
-            }
-            "-g" | "--glob" => {
-                if i + 1 < raw.len() {
-                    let g = raw[i + 1].clone();
-                    p.passthrough.push(g.clone());
-                    classify_glob(&mut p, &g);
-                    i += 1;
-                }
-            }
-            "-e" | "--regexp" => {
+            "-e" | "--regexp" | "--pattern" => {
                 if i + 1 < raw.len() {
                     explicit_pattern = Some(raw[i + 1].clone());
-                    p.passthrough.push(raw[i + 1].clone());
+                    i += 1;
+                }
+            }
+            "--exclude-dir" | "--exclude" | "--include" | "-g" | "--glob" => {
+                // value-taking; skip value. (exclude-dir is CC's VCS list, fine.)
+                if i + 1 < raw.len() {
                     i += 1;
                 }
             }
             other => {
-                if let Some(g) = other.strip_prefix("--glob=") {
-                    classify_glob(&mut p, g);
-                } else if let Some(g) = other.strip_prefix("-g=") {
-                    classify_glob(&mut p, g);
-                } else if other.starts_with('-') && other.len() > 1 {
-                    // Unknown flag — tolerate, never crash. (Protects against CC
-                    // version bumps adding flags.) It stays in passthrough.
+                if let Some(rest) = other.strip_prefix("--exclude-dir=") {
+                    let _ = rest; // CC VCS excludes — fff handles ignores
+                } else if other.starts_with("--exclude=")
+                    || other.starts_with("--include=")
+                    || other.starts_with("--color=")
+                {
+                    // glob filters -> defer (fff constraint translation is lossy)
+                    if other.starts_with("--exclude=")
+                        || other.starts_with("--include=")
+                    {
+                        o.force_fallback = true;
+                    }
+                } else if let Some(combined) = other.strip_prefix('-') {
+                    if combined.is_empty() {
+                        positionals.push(other.to_string()); // lone "-" (stdin)
+                        o.force_fallback = true;
+                    } else if combined.starts_with('-') {
+                        // unknown long flag -> tolerate (don't crash), but if it
+                        // could change semantics, be safe: defer.
+                        o.force_fallback = true;
+                    } else {
+                        // bundled short flags like -rn, -ri, -rln
+                        for ch in combined.chars() {
+                            match ch {
+                                'i' => o.ignore_case = true,
+                                'n' => o.line_numbers = true,
+                                'l' => o.files_only = true,
+                                'c' => o.count = true,
+                                'r' | 'R' => o.recursive = true,
+                                'H' | 'h' | 'I' | 'G' => {}
+                                'w' | 'o' | 'v' | 'x' | 'E' | 'P' | 'F'
+                                | 'z' | 'U' => o.force_fallback = true,
+                                _ => o.force_fallback = true,
+                            }
+                        }
+                    }
                 } else {
-                    positional.push(other.to_string());
+                    positionals.push(other.to_string());
                 }
             }
         }
         i += 1;
     }
 
-    // First positional is the pattern (unless -e given); the rest are paths.
-    if let Some(pat) = explicit_pattern {
-        p.pattern = Some(pat);
-        p.paths = positional;
-    } else if !positional.is_empty() {
-        p.pattern = Some(positional.remove(0));
-        p.paths = positional;
+    if let Some(p) = explicit_pattern {
+        o.pattern = Some(p);
+        o.paths = positionals;
+    } else if !positionals.is_empty() {
+        o.pattern = Some(positionals.remove(0));
+        o.paths = positionals;
     }
-    p
+    o
 }
 
-/// Sort a `--glob` value into: dropped (VCS), translatable fff constraint, or
-/// untranslatable (forces rg fallback).
-fn classify_glob(p: &mut Parsed, g: &str) {
-    let body = g.strip_prefix('!').unwrap_or(g);
-    let bare = body.trim_start_matches("**/");
-    // VCS excludes that fff already handles via ignore logic — drop.
-    if VCS_EXCLUDES.iter().any(|v| body == *v || body == format!("{v}/")) {
-        return;
-    }
-    // Safe shapes: extension globs, directory prefixes, simple names, brace
-    // alternation. Anything with char classes / single-char wildcards is risky.
-    let safe = !bare.is_empty()
-        && bare
-            .chars()
-            .all(|c| c.is_ascii_alphanumeric() || "._*{},/-+".contains(c));
-    if safe {
-        // Re-emit in fff's inline constraint DSL (it understands *.ts, src/,
-        // !test/, *.{ts,tsx}). Strip a leading **/ which fff doesn't need.
-        let neg = if g.starts_with('!') { "!" } else { "" };
-        p.user_globs.push(format!("{neg}{bare}"));
-    } else {
-        p.glob_untranslatable = true;
-    }
-}
-
-/// fff handles a search only when its result is provably rg-equivalent.
-fn eligible_for_fff(p: &Parsed, allow_fuzzy: bool) -> bool {
-    // Hard exclusions — these have no faithful fff plain-mode equivalent.
-    if p.files_enumeration || p.count || p.ignore_case || p.multiline
-        || p.only_matching || p.has_context || p.has_type
-        || p.glob_untranslatable
-    {
+/// fff serves a query only when its result is faithfully tool-equivalent.
+fn eligible(o: &Opts) -> bool {
+    if o.force_fallback {
         return false;
     }
-    let pattern = match &p.pattern {
-        Some(s) if !s.is_empty() => s,
+    let pat = match &o.pattern {
+        Some(p) if !p.is_empty() => p,
         _ => return false,
     };
-    // Fuzzy is deliberate discovery; for exact, route real regex to rg.
-    if !allow_fuzzy {
-        if has_regex_meta(pattern) {
-            return false;
+    // Explicit fff/fuzzy always serves; otherwise require plain literal ASCII.
+    if !o.fuzzy {
+        if has_regex_meta(pat) {
+            return false; // regex -> the real tool does it right
         }
-        // Bigram prefilter is unreliable for sub-bigram patterns.
-        if pattern.chars().count() < 3 {
-            return false;
+        if pat.chars().count() < 3 {
+            return false; // bigram prefilter unreliable on sub-3-char
         }
     }
-    if !pattern.is_ascii() {
+    if !pat.is_ascii() {
         return false;
     }
-    // Exactly one directory search root (or default cwd). Single files and
-    // out-of-tree paths go to rg.
-    let base = search_base(p);
-    match base {
-        Some(b) => Path::new(&b).is_dir(),
-        None => true, // default cwd
+    if o.ignore_case {
+        return false; // case-insensitive -> defer (preserve exact semantics)
+    }
+    // path target: default cwd, or a single dir. A single file or multiple
+    // paths -> defer (grep/ugrep handle those precisely; fff is tree-oriented).
+    match o.paths.len() {
+        0 => true,
+        1 => {
+            let p = &o.paths[0];
+            // grep without -r on a dir errors; with -r or a dir, fff is right.
+            Path::new(p).is_dir()
+        }
+        _ => false,
     }
 }
 
-/// The directory fff indexes: the sole path arg if it is a dir, else cwd.
-fn search_base(p: &Parsed) -> Option<String> {
-    match p.paths.len() {
-        0 => None,
-        1 => Some(p.paths[0].clone()),
-        _ => Some("\0multi".to_string()), // sentinel: multiple paths -> not a dir
-    }
-}
-
-/// Regex-metacharacter test mirroring fff's own `has_regex_metacharacters`
-/// (`regex::escape(t) != t`) without pulling the regex crate: any char that
-/// `regex::escape` would escape.
+/// Regex-metacharacter test mirroring fff's `regex::escape(t) != t`.
 fn has_regex_meta(t: &str) -> bool {
     t.chars().any(|c| {
         matches!(
@@ -275,10 +278,10 @@ fn has_regex_meta(t: &str) -> bool {
     })
 }
 
-/// Run the fff backend. Returns the process exit code (0 = matches, 1 = none).
-fn run_fff(p: &Parsed) -> i32 {
-    let base = search_base(p).unwrap_or_else(|| ".".to_string());
-    let mode = if p.fuzzy {
+/// Run fff and emit tool-compatible output. Returns process exit code.
+fn run_fff(o: &Opts) -> i32 {
+    let base = ".".to_string();
+    let mode = if o.fuzzy {
         GrepMode::Fuzzy
     } else {
         GrepMode::PlainText
@@ -297,58 +300,72 @@ fn run_fff(p: &Parsed) -> i32 {
     )
     .is_err()
     {
-        // Could not index — fail safe to rg rather than report a broken search.
-        fallback_to_rg(p);
+        fallback(o.tool, &o.raw);
     }
     shared_picker.wait_for_scan(Duration::from_secs(15));
     let guard = match shared_picker.read() {
         Ok(g) => g,
-        Err(_) => fallback_to_rg(p),
+        Err(_) => fallback(o.tool, &o.raw),
     };
     let picker = match guard.as_ref() {
-        Some(pk) => pk,
-        None => fallback_to_rg(p),
+        Some(p) => p,
+        None => fallback(o.tool, &o.raw),
     };
 
-    // Build the fff query: constraint tokens (translated globs) + the pattern.
-    let pattern = p.pattern.clone().unwrap_or_default();
+    // Build the fff query: a dir path becomes a constraint so emitted paths stay
+    // cwd-relative (matching grep -r <dir> output).
+    let pattern = o.pattern.clone().unwrap_or_default();
     let mut query = String::new();
-    for g in &p.user_globs {
-        query.push_str(g);
-        query.push(' ');
+    if let Some(dir) = o.paths.first() {
+        let d = dir.trim_end_matches('/');
+        if !d.is_empty() && d != "." {
+            query.push_str(d);
+            query.push('/');
+            query.push(' ');
+        }
     }
     query.push_str(&pattern);
 
     let parser = QueryParser::new(AiGrepConfig);
     let parsed = parser.parse(&query);
 
+    use std::io::Write;
     let out = std::io::stdout();
     let mut w = std::io::BufWriter::new(out.lock());
-    use std::io::Write;
+
+    // count mode: per-file match counts (file:count)
+    if o.count {
+        let mut any = false;
+        let mut file_offset = 0usize;
+        let mut counts: std::collections::BTreeMap<String, usize> =
+            std::collections::BTreeMap::new();
+        loop {
+            let opts = grep_opts(mode, file_offset, false);
+            let r = picker.grep(&parsed, &opts);
+            for m in &r.matches {
+                let f = r.files[m.file_index];
+                *counts.entry(f.relative_path(picker)).or_insert(0) += 1;
+            }
+            if r.next_file_offset == 0 {
+                break;
+            }
+            file_offset = r.next_file_offset;
+        }
+        for (f, c) in &counts {
+            let _ = writeln!(w, "{f}:{c}");
+            any = true;
+        }
+        let _ = w.flush();
+        return if any { 0 } else { 1 };
+    }
 
     let mut any = false;
     let mut file_offset = 0usize;
-    // Exhaustive pagination so the fff set matches rg's set (not a top-N).
     loop {
-        let opts = GrepSearchOptions {
-            max_file_size: 10 * 1024 * 1024,
-            max_matches_per_file: if p.fuzzy { 50 } else { 1_000_000 },
-            // Default exact search is case-sensitive (rg's default). -i routes
-            // to rg, so fff never needs case-insensitive here.
-            smart_case: false,
-            file_offset,
-            page_limit: if p.fuzzy { 200 } else { 1_000_000 },
-            mode,
-            time_budget_ms: 0,
-            before_context: 0,
-            after_context: 0,
-            classify_definitions: false,
-            trim_whitespace: false,
-            abort_signal: None,
-        };
+        let opts = grep_opts(mode, file_offset, o.files_only);
         let result = picker.grep(&parsed, &opts);
 
-        if p.files_with_matches {
+        if o.files_only {
             for f in &result.files {
                 let _ = writeln!(w, "{}", f.relative_path(picker));
                 any = true;
@@ -356,7 +373,7 @@ fn run_fff(p: &Parsed) -> i32 {
         } else {
             for m in &result.matches {
                 let f = result.files[m.file_index];
-                if p.line_numbers {
+                if o.line_numbers {
                     let _ = writeln!(
                         w,
                         "{}:{}:{}",
@@ -375,8 +392,7 @@ fn run_fff(p: &Parsed) -> i32 {
                 any = true;
             }
         }
-
-        if p.fuzzy || result.next_file_offset == 0 {
+        if o.fuzzy || result.next_file_offset == 0 {
             break;
         }
         file_offset = result.next_file_offset;
@@ -389,31 +405,60 @@ fn run_fff(p: &Parsed) -> i32 {
     }
 }
 
-/// Re-exec Claude Code's embedded ripgrep (the claude binary with argv0="rg"),
-/// or a system `rg`, forwarding all original rg args. Never returns.
-fn fallback_to_rg(p: &Parsed) -> ! {
+fn grep_opts(mode: GrepMode, file_offset: usize, files_only: bool) -> GrepSearchOptions {
+    GrepSearchOptions {
+        max_file_size: 10 * 1024 * 1024,
+        max_matches_per_file: if files_only { 1 } else { 1_000_000 },
+        smart_case: false,
+        file_offset,
+        page_limit: 1_000_000,
+        mode,
+        time_budget_ms: 0,
+        before_context: 0,
+        after_context: 0,
+        classify_definitions: false,
+        trim_whitespace: false,
+        abort_signal: None,
+    }
+}
+
+/// Re-exec the real embedded tool via the claude binary (argv0 multicall).
+/// Never returns.
+fn fallback(tool: Tool, args: &[String]) -> ! {
     use std::os::unix::process::CommandExt;
 
-    let mut args: Vec<String> = Vec::with_capacity(p.passthrough.len() + 1);
-    // CC's embedded rg expects --no-config (ignore user rg config); add if absent.
-    if !p.passthrough.iter().any(|a| a == "--no-config") {
-        args.push("--no-config".to_string());
-    }
-    args.extend(p.passthrough.iter().cloned());
+    let claude = std::env::var("CLAUDE_CODE_EXECPATH")
+        .ok()
+        .filter(|p| Path::new(p).exists())
+        .or_else(|| {
+            let h = std::env::var("HOME").ok()?;
+            let p = format!("{h}/.local/bin/claude");
+            if Path::new(&p).exists() {
+                Some(p)
+            } else {
+                None
+            }
+        });
 
-    let (program, set_argv0) = match &p.claude_bin {
-        Some(bin) => (bin.clone(), true),
-        None => ("rg".to_string(), false), // last resort: system rg on PATH
+    let a0 = tool.embedded_argv0();
+    if let Some(bin) = claude {
+        let mut cmd = Command::new(&bin);
+        // embedded ripgrep expects --no-config; ugrep/bfs take args as-is.
+        if tool == Tool::Rg && !args.iter().any(|a| a == "--no-config") {
+            cmd.arg("--no-config");
+        }
+        cmd.args(args);
+        cmd.arg0(a0);
+        let err = cmd.exec();
+        eprintln!("rg-fff: failed to exec embedded {a0}: {err}");
+    }
+    // last resort: the system tool on PATH
+    let sys = match tool {
+        Tool::Bfs => "find",
+        Tool::Ugrep => "grep",
+        _ => "rg",
     };
-
-    let mut cmd = Command::new(&program);
-    cmd.args(&args);
-    if set_argv0 {
-        cmd.arg0("rg"); // dispatch the embedded ripgrep multicall
-    }
-    // Inherit stdio so rg streams straight through to CC.
-    let err = cmd.exec(); // replaces this process on success
-    // exec only returns on failure:
-    eprintln!("rg-fff: failed to exec ripgrep ({program}): {err}");
+    let err = Command::new(sys).args(args).exec();
+    eprintln!("rg-fff: failed to exec {sys}: {err}");
     std::process::exit(2);
 }
