@@ -732,6 +732,18 @@ pub fn format_results(
                 if !keep(&path) {
                     continue;
                 }
+                // fff truncates line_content to 512 bytes (MAX_LINE_DISPLAY_LEN,
+                // backed up to a char boundary -> [509,512]) and lossily replaces
+                // invalid UTF-8 with U+FFFD. grep/rg print the raw, full line. For
+                // exact (non-fuzzy) modes, a possibly-truncated or lossy line can't
+                // be reproduced byte-for-byte -> defer the whole query so the model
+                // gets the complete line from the real tool, never a 512B stub.
+                if !is_fuzzy
+                    && (m.line_content.len() >= 509
+                        || m.line_content.contains('\u{FFFD}'))
+                {
+                    return None;
+                }
                 if req.line_numbers {
                     let _ = writeln!(
                         out,
