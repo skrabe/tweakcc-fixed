@@ -88,9 +88,22 @@ struct Opts {
     hidden: bool,          // --hidden — search dotfiles (rg skips by default)
     before_context: usize, // -B / -C
     after_context: usize,  // -A / -C
+    fff_first: bool,       // RG_FFF_FIRST: serve fff RE2 (the model's intended
+    // dialect) instead of mirroring CC's shell ugrep -G BRE — captures the
+    // \w/\d/+/(/| regexes the model writes. Correctness gates (servable/newline/
+    // non-ascii/long-line/path/pipe) still apply; only the dialect gate relaxes.
     no_fallback: bool,
     claude_bin: Option<String>,
     force_fallback: bool,
+}
+
+impl Opts {
+    /// The regex dialect to interpret the pattern in. fff-first treats every
+    /// tool's pattern as ERE/RE2 (what the model intends + the Grep tool
+    /// advertises); byte-equiv mode honors the tool's real dialect.
+    fn eff_ere(&self) -> bool {
+        self.ere || self.fff_first
+    }
 }
 
 /// The minimal, serializable request shared by the cold path and the daemon.
@@ -209,6 +222,9 @@ fn parse(tool: Tool, raw: Vec<String>) -> Opts {
         hidden: false,
         before_context: 0,
         after_context: 0,
+        fff_first: std::env::var("RG_FFF_FIRST")
+            .map(|v| v == "1")
+            .unwrap_or(false),
         no_fallback: false,
         claude_bin: None,
         force_fallback: false,
@@ -396,13 +412,17 @@ fn search_mode(o: &Opts) -> Option<Mode> {
         }
         return Some(Mode::Fuzzy);
     }
-    let is_regex_orig = has_regex_meta(pat, o.ere);
+    let is_regex_orig = has_regex_meta(pat, o.eff_ere());
     if o.ignore_case || is_regex_orig {
         // Regex mode bypasses the DSL (raw pattern as the needle), so DSL operators
         // in the pattern are fine. -i is served here via a (?i) prefix built in
         // effective_pattern. The dialect gate applies only to a genuine regex
-        // original — an escaped -i literal carries no dialect risk.
-        if is_regex_orig && !regex_dialect_ok(pat, o) {
+        // original — an escaped -i literal carries no dialect risk. fff-first
+        // skips the dialect gate entirely: it serves fff's RE2 (the dialect the
+        // model intends + the Grep tool advertises), so the \w/\d/+/(/| regexes
+        // ugrep -G would treat as BRE-literal are served as real regex. The
+        // regex_servable gate below still guarantees RE2-faithfulness.
+        if is_regex_orig && !o.fff_first && !regex_dialect_ok(pat, o) {
             return None;
         }
         // An escaped -i literal still wants the bigram floor for a sound prefilter.
@@ -430,7 +450,7 @@ fn search_mode(o: &Opts) -> Option<Mode> {
 /// metacharacters escaped when the original was a literal, so it stays literal).
 fn ci_regex_pattern(o: &Opts) -> String {
     let pat = o.pattern.clone().unwrap_or_default();
-    let body = if has_regex_meta(&pat, o.ere) {
+    let body = if has_regex_meta(&pat, o.eff_ere()) {
         pat
     } else {
         regex::escape(&pat)
@@ -753,6 +773,13 @@ pub fn format_results(
         // constraint-escape; if that (or anything) would alter our exact regex,
         // the search would diverge — defer precisely, only when it actually does.
         if parsed.grep_text() != req.pattern {
+            if std::env::var_os("RG_FFF_DEBUG").is_some() {
+                eprintln!(
+                    "rg-fff: regex defer: grep_text {:?} != pattern {:?}",
+                    parsed.grep_text(),
+                    req.pattern
+                );
+            }
             return None;
         }
         // Preflight: if fff's engine can't compile the pattern it SILENTLY falls
@@ -761,7 +788,10 @@ pub fn format_results(
             &parsed,
             &grep_opts(gmode, 0, req.files_only, smart),
         );
-        if probe.regex_fallback_error.is_some() {
+        if let Some(e) = &probe.regex_fallback_error {
+            if std::env::var_os("RG_FFF_DEBUG").is_some() {
+                eprintln!("rg-fff: regex defer: regex_fallback_error: {e}");
+            }
             return None;
         }
     }
@@ -1017,6 +1047,7 @@ mod tests {
             hidden: false,
             before_context: 0,
             after_context: 0,
+            fff_first: false,
             no_fallback: false,
             claude_bin: None,
             force_fallback: false,
@@ -1144,6 +1175,39 @@ mod tests {
         let mut r = opts(Tool::Rg, "showDiff", &["src"]);
         r.after_context = 1;
         assert!(r.to_req(Mode::Regex).sep_between_files);
+    }
+
+    #[test]
+    fn fff_first_serves_re2_for_ugrep_but_keeps_correctness_gates() {
+        use Mode::*;
+        // "fn_a+b": byte-equiv ugrep sees no BRE meta -> literal Plain; fff-first
+        // sees ERE '+' -> RE2 Regex (the model's intent).
+        let mut p = opts(Tool::Ugrep, "fn_a+b", &["src"]);
+        assert!(matches!(search_mode(&p), Some(Plain)));
+        p.fff_first = true;
+        assert!(matches!(search_mode(&p), Some(Regex)));
+        // alternation/groups: literal in BRE, regex in fff-first
+        let mut alt = opts(Tool::Ugrep, "Grep(Match|Result)", &["src"]);
+        assert!(matches!(search_mode(&alt), Some(Plain)));
+        alt.fff_first = true;
+        assert!(matches!(search_mode(&alt), Some(Regex)));
+        // CORRECTNESS GATES STILL APPLY in fff-first:
+        // \s can match the newline -> defer
+        let mut ws = opts(Tool::Ugrep, "fn\\s+x", &["src"]);
+        ws.fff_first = true;
+        assert!(search_mode(&ws).is_none());
+        // empty-matching (a* matches the empty string) -> defer
+        let mut em = opts(Tool::Ugrep, "a*", &["src"]);
+        em.fff_first = true;
+        assert!(search_mode(&em).is_none());
+        // non-ascii -> defer; ugrep without -r -> defer (unchanged by fff-first)
+        let mut na = opts(Tool::Ugrep, "café+", &["src"]);
+        na.fff_first = true;
+        assert!(search_mode(&na).is_none());
+        let mut nr = opts(Tool::Ugrep, "a+b", &["src"]);
+        nr.fff_first = true;
+        nr.recursive = false;
+        assert!(search_mode(&nr).is_none());
     }
 
     #[test]
