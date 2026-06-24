@@ -49,8 +49,12 @@ debug.log
 
 *.tsbuildinfo
 
+# rg-fff wrapper build output (binaries ship as GH release assets, not in git)
+/tools/rg-fff/target/
+
 # Personal Claude Code config + skills — never publish to the public fork
 .claude/
 # Agent instructions: local/per-machine (durable record lives in memory)
 /CLAUDE.md
 /AGENTS.md
+findings.md

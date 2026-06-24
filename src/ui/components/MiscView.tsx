@@ -83,6 +83,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     suppressNativeInstallerWarning: false,
     filterScrollEscapeSequences: false,
     enableWorktreeMode: true,
+    swapRipgrepForFff: false,
     allowCustomAgentModels: false,
     enableContextLimitOverride: false,
     enableModelCustomizations: true,
@@ -435,6 +436,20 @@ export function MiscView({ onSubmit }: MiscViewProps) {
             ensureMisc();
             settings.misc!.enableWorktreeMode =
               !settings.misc!.enableWorktreeMode;
+          });
+        },
+      },
+      {
+        id: 'swapRipgrepForFff',
+        title: '[EXPERIMENTAL] fff for Bash search (grep/find/rg -> fff)',
+        description:
+          "Route Claude Code's Bash search through fff. CC shadows the shell grep->embedded ugrep and find->embedded bfs (and offers rg); the agent uses grep far more than rg. This repoints all three at a per-platform fff wrapper that serves (relevance-ranked, warm-index daemon): literal, regex (RE2, the dialect the model writes), -i, multi-word phrases, context (-A/-B/-C), extension globs (-g/--include '*.ts'), and multi-path (app lib scripts). Anything fff can't serve faithfully (PCRE, multiline/newline/empty regex, -o, single-file, non-recursive grep, --no-ignore, find, non-ASCII, lines over 512 bytes, piped stdin) -> re-exec the real embedded ugrep/bfs/ripgrep. Every engine still ships; any uncertainty falls back, so results never diverge from intent. Transparent (no prompt-compliance reliance), CC-scoped (your own terminal grep/find/rg are untouched). Installs the wrapper into ~/.tweakcc/fff.",
+        getValue: () => settings.misc?.swapRipgrepForFff ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.swapRipgrepForFff =
+              !settings.misc!.swapRipgrepForFff;
           });
         },
       },

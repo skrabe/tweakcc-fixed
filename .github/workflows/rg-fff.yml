@@ -1,0 +1,76 @@
+name: Build rg-fff wrapper
+
+# Cross-builds the rg-fff wrapper (the fff-backed ripgrep front end used by the
+# "Swap ripgrep for fff" feature) for every platform tweakcc supports, and
+# attaches each binary + its SHA256 to the GitHub release for the tag. The
+# `swap-ripgrep-for-fff` patch downloads these at `--apply` time and verifies
+# the checksum (see src/ripgrepFff.ts). Runs on the same v* tag as release.yml;
+# softprops appends assets to the same release.
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-musl
+            os: ubuntu-latest
+            zig: true
+          - target: aarch64-unknown-linux-musl
+            os: ubuntu-latest
+            zig: true
+          - target: aarch64-apple-darwin
+            os: macos-14
+            zig: false
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Setup Zig (Linux cross-compile)
+        if: matrix.zig
+        uses: mlugg/setup-zig@v2
+
+      - name: Install cargo-zigbuild
+        if: matrix.zig
+        run: cargo install cargo-zigbuild
+
+      - name: Build (zigbuild)
+        if: matrix.zig
+        working-directory: tools/rg-fff
+        run: cargo zigbuild --release --target ${{ matrix.target }}
+
+      - name: Build (native)
+        if: ${{ !matrix.zig }}
+        working-directory: tools/rg-fff
+        run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Package binary + checksum
+        working-directory: tools/rg-fff
+        run: |
+          set -euo pipefail
+          src="target/${{ matrix.target }}/release/rg-fff"
+          out="rg-fff-${{ matrix.target }}"
+          cp "$src" "$out"
+          shasum -a 256 "$out" | awk '{print $1}' > "$out.sha256"
+          ls -la "$out" "$out.sha256"
+
+      - name: Attach to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            tools/rg-fff/rg-fff-${{ matrix.target }}
+            tools/rg-fff/rg-fff-${{ matrix.target }}.sha256

@@ -98,6 +98,8 @@ import { writeVoiceMode } from './voiceMode';
 import { writeChannelsMode } from './channelsMode';
 import { writeClearScreen } from './clearScreen';
 import { writeReadDefaultLines } from './readDefaultLines';
+import { writeSwapRipgrepForFff } from './swapRipgrepForFff';
+import { ensureRgFffWrapper } from '../ripgrepFff';
 import {
   writeSuppressDeferredTools,
   writeStripEmptySystemReminders,
@@ -467,6 +469,13 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.FEATURES,
     description:
       'Enable session memory (auto-extraction + past session search)',
+  },
+  {
+    id: 'swap-ripgrep-for-fff',
+    name: '[EXPERIMENTAL] fff for Bash search (grep/find/rg → fff)',
+    group: PatchGroup.FEATURES,
+    description:
+      "[EXPERIMENTAL] Route Claude Code's Bash search through fff (fast file finder). CC 2.1.186 shadows the shell `grep`→embedded ugrep and `find`→embedded bfs (and offers `rg`); the agent uses grep ~136x more than rg. This repoints all three at a per-platform fff wrapper that serves, relevance-ranked from a warm-index daemon: literal, regex (RE2 — the dialect the model writes), case-insensitive (-i), multi-word phrases, context (-A/-B/-C), extension globs (-g/--include '*.ts'), and multi-path (app lib scripts) searches. Anything fff can't serve faithfully — PCRE, multiline/newline- or empty-matching regex, only-matching (-o), single-file, non-recursive grep, --no-ignore, find, non-ASCII, lines over 512 bytes, piped stdin → re-exec the real embedded ugrep/bfs/ripgrep. Every engine still ships; any uncertainty falls back, so results never diverge from the model's intent. Transparent (no prompt-compliance reliance) and CC-scoped (the user's own terminal grep/find/rg are untouched). Installs the wrapper into ~/.tweakcc/fff.",
   },
   {
     id: 'dream-mode',
@@ -853,6 +862,21 @@ export const applyCustomization = async (
   // Disabling model customizations should restore both selectors to vanilla CC behavior.
   const modelCustomizationsEnabled =
     config.settings.misc?.enableModelCustomizations ?? true;
+
+  // fff swap: install the per-platform wrapper BEFORE patching the resolver. If
+  // it can't be obtained for this platform, keep ripgrep — never point the
+  // resolver at a missing binary (that would silently disable Grep).
+  const swapRipgrepEnabled = !!config.settings.misc?.swapRipgrepForFff;
+  let rgFffWrapperPath: string | null = null;
+  if (swapRipgrepEnabled) {
+    rgFffWrapperPath = await ensureRgFffWrapper();
+    if (!rgFffWrapperPath) {
+      console.log(
+        'patch: swapRipgrepForFff: no fff wrapper available for this platform — keeping ripgrep'
+      );
+    }
+  }
+
   const patchImplementations: Record<PatchId, PatchImplementation> = {
     // Always Applied
     'verbose-property': {
@@ -1093,6 +1117,12 @@ export const applyCustomization = async (
     'session-memory': {
       fn: c => writeSessionMemory(c),
       condition: !!config.settings.misc?.enableSessionMemory,
+    },
+    'swap-ripgrep-for-fff': {
+      // condition gates non-null, so the assertion is honest (vs `as string`,
+      // which would also silently accept null).
+      fn: c => writeSwapRipgrepForFff(c, rgFffWrapperPath!),
+      condition: swapRipgrepEnabled && !!rgFffWrapperPath,
     },
     'dream-mode': {
       fn: c => writeDreamMode(c),

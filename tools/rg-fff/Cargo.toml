@@ -1,0 +1,21 @@
+[package]
+name = "rg-fff"
+version = "0.1.0"
+edition = "2021"
+description = "ripgrep-compatible front end backed by fff (fast file finder) with real-ripgrep fallback"
+license = "MIT"
+
+[[bin]]
+name = "rg-fff"
+path = "src/main.rs"
+
+[dependencies]
+fff-search = "0.9.6"
+libc = "0.2"
+regex = "1"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+strip = true
