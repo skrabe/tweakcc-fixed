@@ -204,9 +204,21 @@ describe('writeComplexityRouter', () => {
   describe('heuristic scorer (real injected logic)', () => {
     const score = extractScorer(writeComplexityRouter(FILE, cfg()) as string);
 
-    it('defaults plain requests to Standard (level 1)', () => {
-      expect(score('rename this variable to userCount', 3)).toBe(1);
-      expect(score('add a comment to this function', 3)).toBe(1);
+    it('routes confidently-trivial work down to Routine (level 0)', () => {
+      expect(score('rename this variable to userCount', 3)).toBe(0);
+      expect(score('fix the typo in the readme', 3)).toBe(0);
+      expect(score('add a comment to this function', 3)).toBe(0);
+      expect(score('bump the version to 2.0.1', 3)).toBe(0);
+    });
+
+    it('keeps genuinely-ambiguous work at the Standard default (level 1)', () => {
+      expect(score('update the user profile page', 3)).toBe(1);
+      expect(score('change the button color to blue', 3)).toBe(1);
+    });
+
+    it('does not route to low once any hard signal is present', () => {
+      // a trivial verb + a hard signal must NOT drop to low
+      expect(score('rename things while fixing the race condition', 3)).toBe(2);
     });
 
     it('escalates one strong signal to Hard (level 2)', () => {
@@ -229,7 +241,7 @@ describe('writeComplexityRouter', () => {
       expect(score(heavy, 3)).toBe(3);
     });
 
-    it('never routes below the base level on short/empty input', () => {
+    it('keeps empty/contentless input at the Standard default (no trivial verb)', () => {
       expect(score('', 3)).toBe(1);
       expect(score('hi', 3)).toBe(1);
     });
@@ -266,11 +278,11 @@ describe('writeComplexityRouter', () => {
       const classify = extractClassify(
         writeComplexityRouter(FILE, cfg()) as string
       );
-      await classify('rename the variable', 'prompt'); // level 1 -> medium
-      expect(routerState().effort).toBe('medium');
+      await classify('rename the variable', 'prompt'); // trivial -> low
+      expect(routerState().effort).toBe('low');
       await classify('fix the race condition', 'prompt'); // level 2 -> high
       expect(routerState().effort).toBe('high');
-      await classify('just rename this thing', 'prompt'); // level 1, pinned -> stays high
+      await classify('just rename this thing', 'prompt'); // trivial, pinned -> stays high
       expect(routerState().effort).toBe('high');
     });
 
@@ -280,8 +292,8 @@ describe('writeComplexityRouter', () => {
       );
       await classify('fix the race condition', 'prompt'); // high
       expect(routerState().effort).toBe('high');
-      await classify('rename this thing', 'prompt'); // level 1 -> medium (down allowed)
-      expect(routerState().effort).toBe('medium');
+      await classify('rename this thing', 'prompt'); // trivial -> low (down allowed)
+      expect(routerState().effort).toBe('low');
     });
 
     it('resets the pin on /clear (incl. trailing whitespace)', async () => {
@@ -362,8 +374,8 @@ describe('writeComplexityRouter', () => {
       const p = patched();
       const classify = extractClassify(p);
       const XQ = extractWrappedResolver(p); // shares globalThis.__tweakccRouter
-      await classify('rename the variable', 'prompt'); // level 1 -> medium
-      expect(XQ('m', 'xhigh')).toBe('medium'); // persisted xhigh overridden by the router
+      await classify('rename the variable', 'prompt'); // trivial -> low
+      expect(XQ('m', 'xhigh')).toBe('low'); // persisted xhigh overridden, routed all the way down
     });
   });
 

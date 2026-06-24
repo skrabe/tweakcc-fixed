@@ -158,11 +158,13 @@ const buildRuntime = (
 
   return (
     `function __tweakccRouterState(){return globalThis.__tweakccRouter||(globalThis.__tweakccRouter={level:void 0,effort:void 0,baseline:void 0})}` +
-    // Synchronous heuristic difficulty scorer. Base level 1 (Standard); hard
-    // signals only ever RAISE the level, never lower it. Bias-to-escalate the
-    // ambiguous middle: the error cost is asymmetric (under-thinking a hard task
-    // is the dominant failure). Input is capped and every keyword regex uses
-    // bounded quantifiers, so it stays linear on adversarial single-line pastes.
+    // Synchronous heuristic difficulty scorer. Default level 1 (Standard);
+    // confident-trivial work routes DOWN to 0 (low) - the cost win - while
+    // accumulated hard signals escalate UP. Bias-to-escalate the ambiguous middle:
+    // the error cost is asymmetric (under-thinking a hard task is the dominant
+    // failure), so only an explicit mechanical verb with ZERO hard signals earns
+    // low; everything uncertain stays at medium. Input is capped and every keyword
+    // regex uses bounded quantifiers, so it stays linear on adversarial pastes.
     `function __tweakccRouterScore(__t,__max){` +
     `if(typeof __t!=="string"||!__t)return 1;` +
     `if(__t.length>16000)__t=__t.slice(0,16000);` +
@@ -179,11 +181,18 @@ const buildRuntime = (
     `if(__t.length>1800)__n+=1;` +
     `if((__t.match(/[\\w./-]{1,80}\\.[a-z]{1,5}\\b/gi)||[]).length>=3)__n+=1;` +
     `if((__t.match(/\`\`\`/g)||[]).length>=4)__n+=1;` +
-    // explicit max-escalation phrases jump straight to the top tier
-    `var __l=1;` +
+    // Decide the level: confident-trivial work (an explicit mechanical verb with
+    // ZERO hard signals) routes DOWN to low (0); ambiguous work stays at the
+    // medium default (1); accumulated signals escalate up; explicit max-effort
+    // phrases jump straight to the top tier.
+    `var __triv=__n===0&&/\\b(rename|fix (?:the |a )?typos?|typos?|reformat|run (?:the )?prettier|prettier|gofmt|sort (?:the )?imports|bump (?:the )?version|add (?:a )?(?:comment|docstring|jsdoc)|remove (?:the |a )?(?:comment|console\\.log|unused import|debug (?:log|statement)))\\b/.test(__s);` +
+    `var __l;` +
     `if(/\\b(ultrathink|think as hard as|maximum effort|hardest possible|frontier model)/.test(__s))__l=__max;` +
-    `else{if(__n>=2)__l=2;if(__n>=5)__l=3}` +
-    `if(__l>__max)__l=__max;` +
+    `else if(__n>=5)__l=3;` +
+    `else if(__n>=2)__l=2;` +
+    `else if(__triv)__l=0;` +
+    `else __l=1;` +
+    `if(__l<0)__l=0;if(__l>__max)__l=__max;` +
     `if(process.env.TWEAKCC_ROUTER_DEBUG)try{process.stderr.write("[tweakcc-router] heuristic signals="+__n+" -> level="+__l+"\\n")}catch(__e){}` +
     `return __l}` +
     llmFn +
