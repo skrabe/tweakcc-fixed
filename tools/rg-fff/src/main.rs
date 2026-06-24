@@ -846,6 +846,65 @@ const FUZZY_FALLBACK_HDR: &str =
 /// of context still reads as approximate. Parser-safe trailing text like TRUNC_MARK.
 const APPROX_MARK: &str = " [~approx]";
 
+/// Advisory trailing tag on a match line that looks like where a symbol is DEFINED
+/// (fff-mcp ships "definition-first hinting"; this is the same idea, surfaced as a
+/// navigation hint). Parser-safe trailing text. Never authoritative.
+const DEF_MARK: &str = " [def]";
+
+/// High-precision heuristic for "this line introduces a definition". Refines fff's
+/// own leading-keyword check (grep.rs is_definition_line) in two ways: (1) require
+/// the keyword be followed by WHITESPACE then an identifier — which kills fff's
+/// false-positives `class="..."` (JSX) and `type:` (object key); (2) include
+/// const/let/var so the dominant TS/JS `export const NAME = () =>` def style (which
+/// fff misses) is caught. Advisory only — a hint, not a guarantee.
+fn looks_like_definition(line: &str) -> bool {
+    const MODS: &[&str] = &[
+        "export", "default", "pub", "public", "private", "protected", "async",
+        "abstract", "unsafe", "static",
+    ];
+    const KW: &[&str] = &[
+        "fn", "func", "function", "def", "struct", "enum", "trait", "impl",
+        "class", "interface", "type", "module", "object", "const", "let", "var",
+    ];
+    let mut s = line.trim_start();
+    // Strip leading visibility/modifier keywords (each must be followed by space),
+    // including Rust `pub(crate)` / `pub(super)` forms.
+    loop {
+        if let Some(rest) = s.strip_prefix("pub(") {
+            if let Some(i) = rest.find(')') {
+                s = rest[i + 1..].trim_start();
+                continue;
+            }
+        }
+        let mut advanced = false;
+        for m in MODS {
+            if let Some(rest) = s.strip_prefix(m) {
+                if rest.starts_with(char::is_whitespace) {
+                    s = rest.trim_start();
+                    advanced = true;
+                    break;
+                }
+            }
+        }
+        if !advanced {
+            break;
+        }
+    }
+    // keyword + whitespace + identifier-start (the whitespace kills class=/type:).
+    for kw in KW {
+        if let Some(rest) = s.strip_prefix(kw) {
+            if rest.starts_with(char::is_whitespace)
+                && rest
+                    .trim_start()
+                    .starts_with(|c: char| c.is_alphabetic() || c == '_')
+            {
+                return true;
+            }
+        }
+    }
+    false
+}
+
 /// Grep `picker` per `req` and render tool-compatible output. Shared verbatim by
 /// the cold path and the daemon. Returns None when fff can't serve faithfully.
 pub fn format_results(
@@ -1061,11 +1120,20 @@ pub fn format_results(
                     }
                 }
                 let sep = if *is_match { ':' } else { '-' };
-                if req.line_numbers {
-                    let _ =
-                        writeln!(out, "{out_prefix}{path}{sep}{ln}{sep}{content}");
+                // Advisory def hint on MATCH lines only (never context lines).
+                let def = if *is_match && looks_like_definition(content) {
+                    DEF_MARK
                 } else {
-                    let _ = writeln!(out, "{out_prefix}{path}{sep}{content}");
+                    ""
+                };
+                if req.line_numbers {
+                    let _ = writeln!(
+                        out,
+                        "{out_prefix}{path}{sep}{ln}{sep}{content}{def}"
+                    );
+                } else {
+                    let _ =
+                        writeln!(out, "{out_prefix}{path}{sep}{content}{def}");
                 }
                 prev = Some(ln);
                 first_group = false;
@@ -1113,17 +1181,29 @@ pub fn format_results(
                 // Fuzzy matches are approximate — tag every line so a copied line
                 // still reads as approximate (reinforces the header).
                 let approx = if is_fuzzy { APPROX_MARK } else { "" };
+                // Advisory definition hint (navigation), like fff-mcp's def hinting.
+                let def = if looks_like_definition(&m.line_content) {
+                    DEF_MARK
+                } else {
+                    ""
+                };
                 if req.line_numbers {
                     let _ = writeln!(
                         out,
-                        "{}{}:{}:{}{}{}",
-                        out_prefix, path, m.line_number, m.line_content, mark, approx
+                        "{}{}:{}:{}{}{}{}",
+                        out_prefix,
+                        path,
+                        m.line_number,
+                        m.line_content,
+                        mark,
+                        def,
+                        approx
                     );
                 } else {
                     let _ = writeln!(
                         out,
-                        "{}{}:{}{}{}",
-                        out_prefix, path, m.line_content, mark, approx
+                        "{}{}:{}{}{}{}",
+                        out_prefix, path, m.line_content, mark, def, approx
                     );
                 }
                 any = true;
@@ -1263,6 +1343,31 @@ mod tests {
             &opts(Tool::Ugrep, "foo", &[]),
             Mode::Fuzzy
         ));
+    }
+
+    #[test]
+    fn definition_detector_high_precision() {
+        // real definitions across languages (incl. the TS const-arrow fff misses)
+        assert!(looks_like_definition("function getUserData() {"));
+        assert!(looks_like_definition("  export const getUserData = () => {"));
+        assert!(looks_like_definition("export default class Foo {"));
+        assert!(looks_like_definition("pub fn run_search(o: &Opts) -> i32 {"));
+        assert!(looks_like_definition("pub(crate) struct GrepMatch {"));
+        assert!(looks_like_definition("interface Props {"));
+        assert!(looks_like_definition("type FFFQuery = Bar;"));
+        assert!(looks_like_definition("async function handler() {"));
+        assert!(looks_like_definition("def process(self):"));
+        assert!(looks_like_definition("  let total = compute();"));
+        // false-positives fff's word-boundary heuristic flags that we must NOT:
+        assert!(!looks_like_definition("class=\"foo\"")); // JSX/HTML attr
+        assert!(!looks_like_definition("  <div class=\"foo\">")); // mid-line
+        assert!(!looks_like_definition("  type: 'string',")); // object key
+        assert!(!looks_like_definition("const")); // bare keyword, no ident
+        assert!(!looks_like_definition("constant = 5")); // not the const keyword
+        assert!(!looks_like_definition("typeof x === 'string'"));
+        assert!(!looks_like_definition("// fn does the thing")); // comment
+        assert!(!looks_like_definition("  return getUserData();")); // call site
+        assert!(!looks_like_definition("module.exports = {}")); // assignment
     }
 
     #[test]
