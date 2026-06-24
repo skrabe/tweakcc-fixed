@@ -26,8 +26,18 @@
 //      variants (full + concise/velvet) — only seen by subagents that have the
 //      Grep tool; harmless otherwise. Append-only, on top of edited prompts.
 
-import { debug } from '../utils';
+import { debug, escapeNonAscii } from '../utils';
 import { showDiff } from './index';
+
+/** Make a wrapper path safe to splice into the backtick-template shell shadow:
+ *  (1) escapeNonAscii so non-ASCII survives Bun's Latin-1 cli.js store as \uXXXX
+ *  (not mojibake); (2) escape backtick and ${ so a path containing either can't
+ *  terminate the template / trigger interpolation (the "function wrapper" crash
+ *  class). The double-quoted JS string contexts (rg descriptor) need only (1). */
+const shadowSafePath = (wrapperPath: string): string =>
+  escapeNonAscii(JSON.stringify(wrapperPath))
+    .replace(/`/g, '\\`')
+    .replace(/\$\{/g, '\\${');
 
 // ── 1. Bash-search shadow (ugrep/bfs) — CRITICAL ──────────────────────────────
 const SHADOW_TOKEN = '"$_cc_bin"';
@@ -55,7 +65,11 @@ const FFF_GUIDANCE =
 // ── 4. Bash-description guidance — best-effort (the MAIN agent's only search
 //      surface; it has no Grep tool, so this is where the --fuzzy lever lives).
 //      Inserted at the end of the "Prefer the dedicated tool" bullet. ──────────
-const BASH_GUIDANCE_ANCHOR = 'Prefer the dedicated tool';
+// Anchor on the PRISTINE phrasing (verified in the cli.js backup: "Prefer dedicated
+// tools over ${o} ..."). The earlier "Prefer the dedicated tool" exists only in the
+// maintainer's LCC overrides, so public/default installs silently never got this
+// main-agent guidance.
+const BASH_GUIDANCE_ANCHOR = 'Prefer dedicated tools over';
 const BASH_GUIDANCE_MARKER = 'most-relevant-first';
 const BASH_GUIDANCE =
   ' grep/find results are ranked ' +
@@ -67,7 +81,7 @@ const repointBashSearchShadow = (
   file: string,
   wrapperPath: string
 ): string | null => {
-  const wp = JSON.stringify(wrapperPath); // a shell-quoted "absolute/path"
+  const wp = shadowSafePath(wrapperPath); // shell-quoted + template/Latin-1 safe
   // Idempotent: already repointed (wrapper sits where $_cc_bin was).
   if (
     file.includes(`ARGV0=\${t} ${wp}`) ||
@@ -82,7 +96,16 @@ const repointBashSearchShadow = (
     );
     return null;
   }
-  const newFile = file.split(SHADOW_TOKEN).join(wp);
+  let newFile = file.split(SHADOW_TOKEN).join(wp);
+  // Defense-in-depth: the snapshot's guard `if [[ ! -x $_cc_bin ]]; then command
+  // ${e} ...; return; fi` checks only the claude binary — but the ARGV0 line now
+  // runs the WRAPPER, not $_cc_bin. Also gate on the wrapper being executable, so a
+  // missing/non-exec wrapper degrades to the real system tool instead of
+  // hard-failing every grep/find. (Best-effort: skipped cleanly if the shape drifts.)
+  const GUARD = '[[ ! -x $_cc_bin ]]';
+  if (newFile.includes(GUARD)) {
+    newFile = newFile.split(GUARD).join(`[[ ! -x $_cc_bin || ! -x ${wp} ]]`);
+  }
   showDiff(
     file,
     newFile,
@@ -110,7 +133,9 @@ const repointRgResolver = (file: string, wrapperPath: string): string => {
     end = m.index + m[0].length;
   }
   const replacement =
-    `{mode:"system",command:${JSON.stringify(wrapperPath)},` +
+    // Double-quoted JS string context: ${/backtick are inert, but non-ASCII still
+    // mojibakes in Bun's Latin-1 store -> escapeNonAscii.
+    `{mode:"system",command:${escapeNonAscii(JSON.stringify(wrapperPath))},` +
     `args:["--fff-claude-bin="+process.execPath]}`;
   const newFile = file.slice(0, start) + replacement + file.slice(end);
   showDiff(file, newFile, replacement, start, end);

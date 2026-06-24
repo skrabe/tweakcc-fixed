@@ -26,12 +26,15 @@ const BT = '`';
 const GREP_DESC = `;function gVr(e){if(xh(e))return${BT}Content search built on ripgrep. Bare identifiers.${BT};return${BT}A powerful search tool built on ripgrep. Full regex syntax.${BT}}`;
 
 // Two Bash-description variants (concise + full), each ending the dedicated-tool
-// bullet with "Prefer the dedicated tool." — the append target for the main agent.
+// bullet with the PRISTINE phrasing "Prefer dedicated tools over ${o} ..." (verified
+// in the real cli.js backup) — the append target for the main agent. (The earlier
+// fixture used "Prefer the dedicated tool.", which only exists in LCC overrides, so
+// it gave false green while the public/default anchor matched nothing.)
 const BASH_DESC =
   `;var bashHelp=[${BT}- Use Read to read files, not cat.${BT},` +
-  `${BT}- Avoid search commands; prefer dedicated tools after verifying. Prefer the dedicated tool.${BT},` +
+  `${BT}- Avoid search commands; prefer dedicated tools after verifying. Prefer dedicated tools over \${o} when one fits.${BT},` +
   `${BT}- \\\`timeout\\\` is in ms.${BT}];` +
-  `var bashHelp2=[${BT}- Avoid cat/head/tail. Prefer the dedicated tool.${BT}];`;
+  `var bashHelp2=[${BT}- Avoid cat/head/tail. Prefer dedicated tools over \${o} when one fits.${BT}];`;
 
 const COMBINED = SHADOW + RESOLVER + GREP_DESC + BASH_DESC;
 
@@ -59,10 +62,9 @@ describe('swapRipgrepForFff', () => {
     const out = writeSwapRipgrepForFff(COMBINED, WRAPPER)!;
     expect(countOf(out, 'most-relevant-first')).toBe(2); // both bash variants
     expect(out).toContain('grep --fuzzy SomeName');
-    // inserted inside the bullet, before its closing backtick (no raw backticks)
-    expect(out).toContain(
-      'Prefer the dedicated tool. grep/find results are ranked'
-    );
+    // inserted inside the bullet (after the pristine phrasing), before its closing
+    // backtick (no raw backticks)
+    expect(out).toContain('when one fits. grep/find results are ranked');
     // the structured Grep tool has no --fuzzy flag, so its desc must NOT mention it
     const grepNote = out.slice(out.indexOf('Search backend note (fff):'));
     expect(grepNote.slice(0, 120)).not.toContain('--fuzzy');
@@ -78,7 +80,9 @@ describe('swapRipgrepForFff', () => {
     const out = writeSwapRipgrepForFff(SHADOW, WRAPPER);
     expect(out).not.toBeNull();
     expect(out).not.toContain('"$_cc_bin"');
-    expect(countOf(out!, WRAPPER)).toBe(3);
+    // 3 repointed invocations (2 ARGV0 + 1 exec-a) + 1 in the -x guard = 4
+    expect(countOf(out!, WRAPPER)).toBe(4);
+    expect(out).toContain('|| ! -x ' + WQ); // wrapper-executable guard
   });
 
   it('returns null (critical) when the shadow anchor is absent', () => {
@@ -99,5 +103,20 @@ describe('swapRipgrepForFff', () => {
     // each repointed invocation is ARGV0=${t} "<path>" ${o} or exec -a ${t} "<path>" ${o}
     expect(out).toContain('ARGV0=${t} ' + WQ + ' ${o}');
     expect(out).toContain('(exec -a ${t} ' + WQ + ' ${o})');
+  });
+
+  it('escapes non-ASCII / backtick / ${} in the wrapper path for the backtick shadow', () => {
+    // A path with a non-ASCII char, a backtick, and a ${} — all hazards in the
+    // backtick-template shadow (Bun Latin-1 mojibake / template-termination /
+    // interpolation → the "function wrapper" boot crash).
+    const tricky = '/Users/José/`x${HOME}/rg-fff';
+    const out = writeSwapRipgrepForFff(SHADOW, tricky)!;
+    expect(out).not.toBeNull();
+    expect(out).not.toContain('José'); // no RAW non-ASCII byte in cli.js
+    expect(out).toContain('Jos\\u00e9'); // escaped to \uXXXX
+    expect(out).toContain('\\`'); // backtick escaped, can't terminate the template
+    expect(out).toContain('\\${HOME}'); // ${ escaped, no live interpolation
+    // the guard now also gates on the wrapper being executable
+    expect(out).toContain('|| ! -x ');
   });
 });
