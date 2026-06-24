@@ -1086,6 +1086,15 @@ const VERIFY_PLAN_INJECTION: ReminderInjection = {
       'You have completed implementing the plan'
     );
     if (!found) {
+      // CC 2.1.187 gutted the verify-plan reminder: `verify_plan_reminder`
+      // survives only as a type label with no case body / no injected text.
+      // No-op gracefully for builds past the removal; older supported CC
+      // (< 2.1.187) still carries the case body and patches normally. If the
+      // anchor text is still present but unmatched, it's a real shape drift —
+      // surface that as a failure.
+      if (!content.includes('You have completed implementing the plan')) {
+        return content;
+      }
       console.error(
         'patch: reminder verify-plan-reminder: failed to find case body'
       );

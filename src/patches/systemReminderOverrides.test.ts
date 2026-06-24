@@ -165,6 +165,38 @@ describe('selected-lines-in-ide reminder shape handling', () => {
   });
 
   it('does not touch the selected_lines_in_diff sibling', () => {
-    expect(selectedLines.apply(MOCK_SELECTED_DIFF_SIBLING, SELECTED_LINES_BODY, false)).toBeNull();
+    expect(
+      selectedLines.apply(
+        MOCK_SELECTED_DIFF_SIBLING,
+        SELECTED_LINES_BODY,
+        false
+      )
+    ).toBeNull();
+  });
+});
+
+describe('verify-plan reminder removed-feature handling', () => {
+  const verifyPlan = REMINDER_REGISTRY.find(
+    r => r.id === 'verify-plan-reminder'
+  )!;
+
+  // CC 2.1.187 gutted the verify-plan reminder: `verify_plan_reminder` survives
+  // only as a type label with no case body / no injected text. The patch must
+  // no-op (return content unchanged) instead of failing, so the apply log stays
+  // clean on current CC while older supported CC (< 2.1.187) still patches.
+  it('no-ops when the verify-plan case body was removed (CC 2.1.187)', () => {
+    const removed =
+      'function r(){return["plan_mode_enter","plan_mode_exit","verify_plan_reminder"]}';
+    expect(verifyPlan.apply(removed, 'body', false)).toBe(removed);
+    // Suppression path also no-ops rather than failing.
+    expect(verifyPlan.apply(removed, '', true)).toBe(removed);
+  });
+
+  // But if the anchor text is still present and the case shape is unmatched,
+  // that's a real shape drift on a build that still has the feature — surface it.
+  it('still fails (null) on real drift when the anchor text is present', () => {
+    const drifted =
+      'case"other":You have completed implementing the plan but the shape changed';
+    expect(verifyPlan.apply(drifted, 'body', false)).toBeNull();
   });
 });
