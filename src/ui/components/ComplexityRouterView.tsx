@@ -226,6 +226,11 @@ export function ComplexityRouterView({ onBack }: ComplexityRouterViewProps) {
           CLAUDE_CODE_EFFORT_LEVEL always wins.
         </Text>
         <Text dimColor>
+          See it: the routed effort rides into the JSON CC pipes to a custom
+          statusline as .effort.level - read that in your statusline command to
+          show a badge (e.g. ◈ max). TWEAKCC_ROUTER_DEBUG=1 also logs decisions.
+        </Text>
+        <Text dimColor>
           ↑↓ navigate · enter/space change · x reset level · esc back
         </Text>
       </Box>
