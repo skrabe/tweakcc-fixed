@@ -20,7 +20,7 @@
 //!   <include_exts comma-joined, e.g. ".ts,.tsx" or empty>
 //! Response (daemon -> client): first line is the exit code, or the literal
 //! "FALLBACK" (daemon can't serve -> client cold-scans); the rest is the output.
-//! The version tag ("v3") makes an older daemon reject a newer client cleanly.
+//! The version tag ("v4") makes an older daemon reject a newer client cleanly.
 
 use std::io::{BufRead, BufReader, Read, Write};
 use std::net::Shutdown;
@@ -205,7 +205,9 @@ pub fn serve(root_arg: &str) {
             }
         });
     }
-    let _ = &frecency; // kept alive for the picker's lifetime
+    // (No frecency keep-alive needed: new_with_shared_state cloned the Arc into the
+    // background scan thread, which owns its own refcount — the local binding is not
+    // load-bearing, matching the two main.rs picker sites that just drop it.)
 
     for conn in listener.incoming() {
         let stream = match conn {
