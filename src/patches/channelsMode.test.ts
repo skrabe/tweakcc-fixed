@@ -11,8 +11,7 @@ import { writeChannelsMode } from './channelsMode';
 //  4. ChannelsNotice banner:  "Experimental \xB7 inbound messages will be pushed...Restart Claude Code without "
 //  5. server dev-flag warning: if(!E.dev)Q.push({entry:E,why:"server: entries need --dangerously-load-development-channels"})
 const GATE_ENABLED = 'function qX_(){return A9("tengu_harbor",!1)}';
-const GATE_RELAY =
-  'function pQ7(){return A9("tengu_harbor_permissions",!1)}';
+const GATE_RELAY = 'function pQ7(){return A9("tengu_harbor_permissions",!1)}';
 const GATE_SERVER =
   '{ok:!1,reason:"server did not declare claude/channel capability"};if(!isChannelsEnabled())return{action:"skip"};';
 const NOTICE_BANNER =
@@ -61,8 +60,7 @@ describe('writeChannelsMode', () => {
     // The bundler may emit the U+00B7 dot as a \xB7 escape rather than literally.
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     const escapedNotice = NOTICE_BANNER.replace('\xB7', '\\xB7');
-    const input =
-      `${GATE_ENABLED};${GATE_SERVER}${GATE_RELAY};${escapedNotice};`;
+    const input = `${GATE_ENABLED};${GATE_SERVER}${GATE_RELAY};${escapedNotice};`;
     const out = writeChannelsMode(input);
     errSpy.mockRestore();
     expect(out).not.toBeNull();

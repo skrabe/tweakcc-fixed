@@ -47,9 +47,7 @@ describe('writeSessionMemory', () => {
     expect(out).toContain(
       '=Number(process.env.CC_SM_PER_SECTION_TOKENS??2000)'
     );
-    expect(out).toContain(
-      '=Number(process.env.CM_SM_TOTAL_FILE_LIMIT??12000)'
-    );
+    expect(out).toContain('=Number(process.env.CM_SM_TOTAL_FILE_LIMIT??12000)');
     // bare numeric constants for these slots are gone
     expect(out).not.toContain('perSection=2000');
     expect(out).not.toContain('total=12000');
@@ -78,8 +76,7 @@ describe('writeSessionMemory', () => {
     // CC >= ~2.1.152: none of the flag literals / anchors are present, but the
     // session-search UI event path exists, so every sub-patch no-ops and the
     // file is returned unchanged.
-    const modern =
-      'var a=1;sendEvent("tengu_session_search_toggled");var b=2;';
+    const modern = 'var a=1;sendEvent("tengu_session_search_toggled");var b=2;';
     const out = writeSessionMemory(modern);
     expect(out).toBe(modern);
   });

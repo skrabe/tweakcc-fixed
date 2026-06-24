@@ -26,8 +26,8 @@ describe('writeHideCtrlGToEdit', () => {
   it('produces parseable JS (the if statement stays well-formed)', () => {
     const out = writeHideCtrlGToEdit(FIXTURE)!;
     // Strip the call to an undefined helper but keep the if-shape valid.
-    expect(() =>
-      new Function('return 1;' + out.replace(/q1\([^)]*\)/, 'undefined'))
+    expect(
+      () => new Function('return 1;' + out.replace(/q1\([^)]*\)/, 'undefined'))
     ).not.toThrow();
   });
 

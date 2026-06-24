@@ -70,7 +70,9 @@ describe('writeSuppressLineNumbers', () => {
 
   it('returns null (without throwing) when no formatter shape is present', () => {
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    expect(writeSuppressLineNumbers('x=1;function unrelated(){return 1}')).toBeNull();
+    expect(
+      writeSuppressLineNumbers('x=1;function unrelated(){return 1}')
+    ).toBeNull();
     errSpy.mockRestore();
   });
 });

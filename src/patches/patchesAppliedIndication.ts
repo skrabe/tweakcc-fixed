@@ -658,9 +658,7 @@ export const writePatchesAppliedIndication = (
 
       const oldContent2 = content;
       content =
-        content.slice(0, insertIndex) +
-        refCode +
-        content.slice(insertIndex);
+        content.slice(0, insertIndex) + refCode + content.slice(insertIndex);
 
       showDiff(oldContent2, content, refCode, insertIndex, insertIndex);
     } else {

@@ -18,13 +18,20 @@ describe('writeSubagentModels', () => {
       cfg({ plan: 'my-model', explore: 'x-model', generalPurpose: 'g-model' })
     );
     expect(out).toContain('agentType:"Plan",description:"d",model:"my-model"');
-    expect(out).toContain('agentType:"Explore",description:"d",model:"x-model"');
-    expect(out).toContain('agentType:"general-purpose",description:"d",model:"g-model"');
+    expect(out).toContain(
+      'agentType:"Explore",description:"d",model:"x-model"'
+    );
+    expect(out).toContain(
+      'agentType:"general-purpose",description:"d",model:"g-model"'
+    );
   });
 
   it('adds a model field to general-purpose when absent', () => {
     const noModel = 'a=1;G={agentType:"general-purpose",description:"d"};';
-    const out = writeSubagentModels(noModel, cfg({ generalPurpose: 'g-model' }));
+    const out = writeSubagentModels(
+      noModel,
+      cfg({ generalPurpose: 'g-model' })
+    );
     expect(out).toContain('model:"g-model"');
   });
 
@@ -54,8 +61,6 @@ describe('writeSubagentModels', () => {
 
   it('returns null when a configured agent shape is absent', () => {
     // plan configured but the Plan shape isn't present -> patchPlanAgent null.
-    expect(
-      writeSubagentModels('nothing here', cfg({ plan: 'm' }))
-    ).toBeNull();
+    expect(writeSubagentModels('nothing here', cfg({ plan: 'm' }))).toBeNull();
   });
 });

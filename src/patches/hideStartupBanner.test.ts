@@ -35,9 +35,7 @@ describe('writeHideStartupBanner', () => {
     // the whole createElement(..,{isBeforeFirstMessage:!1}).. call is gone
     expect(out).not.toContain('isBeforeFirstMessage');
     // the surrounding siblings collapse onto a single joining comma
-    expect(out).toBe(
-      'a.createElement(b,null),c.createElement(d,null)'
-    );
+    expect(out).toBe('a.createElement(b,null),c.createElement(d,null)');
   });
 
   it('injects `return null;` into the modern startup-card component (CC >=2.1.156)', () => {
@@ -55,7 +53,9 @@ describe('writeHideStartupBanner', () => {
   it('injects `return null;` into the standalone banner component (CC >=2.1.83)', () => {
     const out = writeHideStartupBanner(STANDALONE_FIXTURE);
     expect(out).not.toBeNull();
-    expect(out).toContain('function Yb(){return null;let t=T==="Apple_Terminal"');
+    expect(out).toContain(
+      'function Yb(){return null;let t=T==="Apple_Terminal"'
+    );
     // original body still present after the early return
     expect(out).toContain('Welcome to Claude Code');
   });
@@ -63,8 +63,7 @@ describe('writeHideStartupBanner', () => {
   it('does NOT match a zero-arg fn with Apple_Terminal but no welcome string', () => {
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     // has Apple_Terminal but lacks "Welcome to Claude Code" -> method 3 skips it
-    const noWelcome =
-      'function Zz(){let t=T==="Apple_Terminal"?1:2;return t}';
+    const noWelcome = 'function Zz(){let t=T==="Apple_Terminal"?1:2;return t}';
     expect(writeHideStartupBanner(noWelcome)).toBeNull();
     errSpy.mockRestore();
   });

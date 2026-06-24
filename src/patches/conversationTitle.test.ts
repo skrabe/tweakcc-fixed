@@ -48,7 +48,9 @@ describe('writeConversationTitle (modern path)', () => {
     expect(cmdIdx).toBeGreaterThan(-1);
     expect(cmdIdx).toBeLessThan(tailIdx);
     // And the command sits right after the opening bracket of `xK=L8(()=>[`.
-    expect(out).toContain('xK=L8(()=>[tweakccTitleCommand={type:"local",name:"title"');
+    expect(out).toContain(
+      'xK=L8(()=>[tweakccTitleCommand={type:"local",name:"title"'
+    );
   });
 
   it('emits a terminal-title escape sequence that survives the JS string literal', () => {

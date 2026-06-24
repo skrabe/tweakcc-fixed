@@ -45,12 +45,8 @@ describe('writeThinkerFormat', () => {
   it('handles the isIdle/spinnerVerb conditional shape via the NEW anchor', () => {
     const out = writeThinkerFormat(FIXTURE_NEW, '{}');
     expect(out).not.toBeNull();
-    expect(out).toContain(
-      'M8=`${$w&&!$i.isIdle?$s.spinnerVerb??$f:$e}`'
-    );
-    expect(out).not.toContain(
-      '=($w&&!$i.isIdle?$s.spinnerVerb??$f:$e)+"…"'
-    );
+    expect(out).toContain('M8=`${$w&&!$i.isIdle?$s.spinnerVerb??$f:$e}`');
+    expect(out).not.toContain('=($w&&!$i.isIdle?$s.spinnerVerb??$f:$e)+"…"');
   });
 
   it('escapes backticks, backslashes and ${ in the user format (F-84 injection guard)', () => {
@@ -67,12 +63,16 @@ describe('writeThinkerFormat', () => {
     expect(out).toContain('}${Q9??C2?.activeForm??L4}`');
     // The patched format declaration is valid JS (template literal parses).
     const decl = out.slice(out.indexOf('N7=`'), out.indexOf('`;tail()') + 1);
-    expect(() => new Function('Q9,C2,L4,globalThis', `return ${decl}`)).not.toThrow();
+    expect(
+      () => new Function('Q9,C2,L4,globalThis', `return ${decl}`)
+    ).not.toThrow();
   });
 
   it('returns null (logging) when no anchor/format shape is present', () => {
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    expect(writeThinkerFormat('function unrelated(){return 1}', '{}')).toBeNull();
+    expect(
+      writeThinkerFormat('function unrelated(){return 1}', '{}')
+    ).toBeNull();
     errSpy.mockRestore();
   });
 

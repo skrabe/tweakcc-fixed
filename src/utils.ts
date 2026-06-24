@@ -543,9 +543,7 @@ export const readResponseTextCapped = async (
     // No readable stream (some runtimes/mocks) — read fully, then enforce the cap.
     const text = await response.text();
     if (Buffer.byteLength(text, 'utf8') > maxBytes) {
-      throw new Error(
-        `Response body exceeds the ${maxBytes}-byte limit.`
-      );
+      throw new Error(`Response body exceeds the ${maxBytes}-byte limit.`);
     }
     return text;
   }

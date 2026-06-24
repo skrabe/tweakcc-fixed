@@ -28,8 +28,7 @@ const REACT_MODULE =
   ';RC=J(rM(),1);';
 
 // chalk used >1 time so the counting method picks Qc
-const CHALK =
-  'Qc.hex("#FF8400").bold("a");Qc.blue.bold("b");Qc.green("c");';
+const CHALK = 'Qc.hex("#FF8400").bold("a");Qc.blue.bold("b");Qc.green("c");';
 
 const TEXT_COMPONENT =
   'function TX({color:a,backgroundColor:b,dimColor:c=!1,bold:d=!1,children:e}){return e}';
@@ -143,7 +142,9 @@ describe('findVersionOutputLocation', () => {
 
   it('returns null (logging) when the version literal is absent', () => {
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    expect(findVersionOutputLocation('function unrelated(){return 1}')).toBeNull();
+    expect(
+      findVersionOutputLocation('function unrelated(){return 1}')
+    ).toBeNull();
     errSpy.mockRestore();
   });
 });
@@ -246,9 +247,7 @@ describe('writePatchesAppliedIndication', () => {
     expect(out).not.toBeNull();
     // The list header element is spliced in as the last child of the column Box
     // (flexDirection:"column"), built from the resolved React var + Box + Text.
-    expect(out).toContain(
-      '\\u2713 tweakcc-fixed patches are applied'
-    );
+    expect(out).toContain('\\u2713 tweakcc-fixed patches are applied');
     // The list is inserted as the last child of the [Wy,Sy,Ey] column array,
     // immediately before that array's closing `]` — i.e. after `Ey`.
     expect(out).toContain('children:[Wy,Sy,Ey,');
@@ -362,7 +361,12 @@ describe('renderPatchListItemRow', () => {
   });
 
   it('leaves a fully-ASCII item untouched', () => {
-    const row = renderPatchListItemRow('R', 'BOX', 'TXT', 'plain: 3 fewer chars');
+    const row = renderPatchListItemRow(
+      'R',
+      'BOX',
+      'TXT',
+      'plain: 3 fewer chars'
+    );
     expect(row).toContain('`  * plain: 3 fewer chars`');
   });
 });

@@ -149,10 +149,7 @@ export const writeThinkerFormat = (
   // sequences, which the backslash-doubling above must not touch. Without it a
   // raw "…" in the format mojibakes against CC's Latin-1 module storage.
   const serializedFormat = escapeNonAscii(
-    format
-      .replace(/\\/g, '\\\\')
-      .replace(/`/g, '\\`')
-      .replace(/\$\{/g, '\\${')
+    format.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$\{/g, '\\${')
   );
   const curExpr = fmtLocation.identifiers?.[0];
   const curFmt =

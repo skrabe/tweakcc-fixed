@@ -7,7 +7,8 @@ import { writeSuppressNativeInstallerWarning } from './suppressNativeInstallerWa
 // bundle (inside double/single-quoted string literals).
 const SWITCHED_MSG =
   'Claude Code has switched from npm to native installer. Run `claude install` or see https://docs.anthropic.com/en/docs/claude-code/getting-started for more options.';
-const DIR_MSG = 'installMethod is native, but directory /home/u/.local/share/claude';
+const DIR_MSG =
+  'installMethod is native, but directory /home/u/.local/share/claude';
 const MISSING_CMD_MSG =
   'installMethod is native, but claude command is missing or invalid at /home/u/.local/bin/claude';
 const PATH_MSG =

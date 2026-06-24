@@ -6,8 +6,7 @@ import { writeThinkerSymbolChars } from './thinkerSymbolChars';
 // a JS array literal of single-glyph strings, e.g. `["·","✢","✳","✶","✻","✽"]`
 // (some CC builds emit \uXXXX/\xXX escapes instead of the raw glyph). The patch
 // regex matches such arrays (2+ elements) and swaps each for JSON.stringify(symbols).
-const FIXTURE =
-  'var SP=["·","✢","✳","✶","✻","✽"],after=1;';
+const FIXTURE = 'var SP=["·","✢","✳","✶","✻","✽"],after=1;';
 
 describe('writeThinkerSymbolChars', () => {
   it('replaces the raw-glyph symbol array with the configured symbols (JSON-encoded)', () => {
@@ -23,7 +22,8 @@ describe('writeThinkerSymbolChars', () => {
 
   it('also matches arrays that use \\uXXXX / \\xXX escape sequences', () => {
     // Some CC builds emit the glyphs as escapes inside the source literal.
-    const escaped = 'q=["\\u00b7","\\u2722","\\u2733","\\u2736","\\u273b","\\u273d"];z=2;';
+    const escaped =
+      'q=["\\u00b7","\\u2722","\\u2733","\\u2736","\\u273b","\\u273d"];z=2;';
     const out = writeThinkerSymbolChars(escaped, ['x', 'y']);
 
     expect(out).not.toBeNull();
@@ -32,8 +32,7 @@ describe('writeThinkerSymbolChars', () => {
   });
 
   it('replaces EVERY symbol array when the file contains several', () => {
-    const multi =
-      'a=["·","✢","✳"];mid=0;b=["✶","✻","✽"];end=9;';
+    const multi = 'a=["·","✢","✳"];mid=0;b=["✶","✻","✽"];end=9;';
     const out = writeThinkerSymbolChars(multi, ['p', 'q']);
 
     expect(out).not.toBeNull();
@@ -50,16 +49,21 @@ describe('writeThinkerSymbolChars', () => {
     // JSON.stringify escapes the quote and backslash.
     expect(out).toContain('["\\"","\\\\","ok"]');
     // The injected array declaration must parse as valid JS.
-    expect(() => new Function('return ' + out!.slice(7, out!.indexOf('],') + 1)))
-      .not.toThrow();
+    expect(
+      () => new Function('return ' + out!.slice(7, out!.indexOf('],') + 1))
+    ).not.toThrow();
   });
 
   it('returns null (logging) when no symbol array is present', () => {
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     // A single-element array does NOT match (regex requires 2+ elements), and
     // unrelated code has no glyphs at all.
-    expect(writeThinkerSymbolChars('var x=["·"];function y(){}', ['a', 'b'])).toBeNull();
-    expect(writeThinkerSymbolChars('function unrelated(){return 1}', ['a'])).toBeNull();
+    expect(
+      writeThinkerSymbolChars('var x=["·"];function y(){}', ['a', 'b'])
+    ).toBeNull();
+    expect(
+      writeThinkerSymbolChars('function unrelated(){return 1}', ['a'])
+    ).toBeNull();
     errSpy.mockRestore();
   });
 });

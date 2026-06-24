@@ -41,7 +41,9 @@ describe('writeThinkingBlockStyling', () => {
     expect(out).toContain('var tail=3;');
     expect(out).toContain('"∴ Thinking"');
     // The "… label" sibling createElement(f8,{dimColor:!0,...},D,"…") is left alone.
-    expect(out).toContain('z3A.default.createElement(f8,{dimColor:!0,italic:!0},D,"…")');
+    expect(out).toContain(
+      'z3A.default.createElement(f8,{dimColor:!0,italic:!0},D,"…")'
+    );
   });
 
   it('matches the \\u2234 / \\u2026 escaped-literal variant of the label and ellipsis', () => {

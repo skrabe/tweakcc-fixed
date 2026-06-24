@@ -36,7 +36,9 @@ export const writeAutonomousOperationAllModels = (
   if (!match || match.index === undefined) {
     // Already flipped (fallback is now !0).
     if (
-      /"claude-mythos-5"\s*\)\s*return\s*!0\s*;\s*return\s*!0\s*\}/.test(oldFile)
+      /"claude-mythos-5"\s*\)\s*return\s*!0\s*;\s*return\s*!0\s*\}/.test(
+        oldFile
+      )
     ) {
       debug(
         'patch: autonomousOperationAllModels: model-family gate already flipped — skipping'

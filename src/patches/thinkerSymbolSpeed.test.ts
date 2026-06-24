@@ -25,9 +25,10 @@ describe('writeThinkerSymbolSpeed', () => {
     expect(out).toBe('WV(()=>{Z((q)=>q+1)},123456),rest=2;');
   });
 
-  it("matches the React-Compiler shape with $-bearing minified names (CC 2.1.15)", () => {
+  it('matches the React-Compiler shape with $-bearing minified names (CC 2.1.15)', () => {
     // `l2(CA,120)` form: identifier is `V`, callee is `D`, with a $-name nearby.
-    const input = 'if(!V){D(4);return}D(E$cY)}),(K[17]=V),(K[18]=CA));else CA=K[18];l2(CA,120);';
+    const input =
+      'if(!V){D(4);return}D(E$cY)}),(K[17]=V),(K[18]=CA));else CA=K[18];l2(CA,120);';
     const out = writeThinkerSymbolSpeed(input, 999);
 
     expect(out).not.toBeNull();
@@ -44,7 +45,9 @@ describe('writeThinkerSymbolSpeed', () => {
 
   it('returns null (without throwing) when the pattern is absent', () => {
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    expect(writeThinkerSymbolSpeed('x=1;function y(){return 120}', 123456)).toBeNull();
+    expect(
+      writeThinkerSymbolSpeed('x=1;function y(){return 120}', 123456)
+    ).toBeNull();
     errSpy.mockRestore();
   });
 

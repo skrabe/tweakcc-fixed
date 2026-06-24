@@ -15,7 +15,9 @@ describe('writeWorktreeMode', () => {
     expect(out).not.toBeNull();
     // The bypass is spliced in right after the opening brace, before the
     // original GrowthBook lookup (which is preserved as dead code).
-    expect(out).toContain('function ef6(){return !0;return r8("tengu_worktree_mode",!1)}');
+    expect(out).toContain(
+      'function ef6(){return !0;return r8("tengu_worktree_mode",!1)}'
+    );
     // Nothing outside the gate function is disturbed.
     expect(out).toContain('a=1;');
     expect(out).toContain('var z$x=2;');

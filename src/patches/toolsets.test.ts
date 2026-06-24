@@ -107,7 +107,9 @@ describe('writeToolFetchingUseMemo', () => {
       'let currentToolset = D8(state => state.toolset) ?? "readonly";'
     );
     // The toolsets map is emitted as JSON and consulted with hasOwnProperty.
-    expect(out).toContain('const toolsets = {"readonly":["Read","Grep"],"all":"*"};');
+    expect(out).toContain(
+      'const toolsets = {"readonly":["Read","Grep"],"all":"*"};'
+    );
     expect(out).toContain('if (toolsets.hasOwnProperty(currentToolset))');
     // The '*' branch keeps the full aggregation; the else filters by name.
     expect(out).toContain('$tp = Gm($a,$b.tools,$c);');
@@ -196,7 +198,9 @@ describe('findModeChange / writeModeChangeUpdateToolset', () => {
         'else{$s((prev)=>({...prev,toolset:"readonly"}));}'
     );
     // The injection sits before the original mode-change expression.
-    expect(out.indexOf('toolset:"plan-only"')).toBeLessThan(out.indexOf('if($s('));
+    expect(out.indexOf('toolset:"plan-only"')).toBeLessThan(
+      out.indexOf('if($s(')
+    );
   });
 
   it('JSON-escapes plan/default toolset names with quotes', () => {

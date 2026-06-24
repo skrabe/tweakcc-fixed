@@ -740,7 +740,9 @@ export const applyInlineBlobOverrides = async (
         // prompt the model reads.
         replacement =
           '[' +
-          (escapeNonAscii ? escapeNonAsciiUnicode(remappedBody) : remappedBody) +
+          (escapeNonAscii
+            ? escapeNonAsciiUnicode(remappedBody)
+            : remappedBody) +
           ']';
       } else {
         // Treat each line of the body as one quoted string element

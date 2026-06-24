@@ -102,7 +102,9 @@ describe('writeTableFormat', () => {
 
   it('returns null when no table-rendering patterns are present', () => {
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    expect(writeTableFormat('var x=1;function y(){return 2}', 'ascii')).toBeNull();
+    expect(
+      writeTableFormat('var x=1;function y(){return 2}', 'ascii')
+    ).toBeNull();
     errSpy.mockRestore();
   });
 

@@ -34,7 +34,9 @@ describe('writeModelCustomizations', () => {
     expect(out).toContain('"value":"claude-opus-4-6"');
     // Injection sits right after the declaration's `;` and before the original
     // custom push (so the injected models are in the list when it's returned).
-    const declEnd = out!.indexOf('description:"Built in"}];') + 'description:"Built in"}];'.length;
+    const declEnd =
+      out!.indexOf('description:"Built in"}];') +
+      'description:"Built in"}];'.length;
     const injectAt = out!.indexOf('nQ.push({"value":"claude-opus-4-6"');
     const origPush = out!.indexOf('description:"Custom model"');
     expect(injectAt).toBe(declEnd); // spliced immediately after the declaration
@@ -74,14 +76,17 @@ describe('writeModelCustomizations', () => {
 
   it('is idempotent: returns the file unchanged when custom models already present', () => {
     const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-    const already = 'x=1;nQ.push({"value":"claude-opus-4-6","label":"Opus 4.6","description":"d"});y=2;';
+    const already =
+      'x=1;nQ.push({"value":"claude-opus-4-6","label":"Opus 4.6","description":"d"});y=2;';
     expect(writeModelCustomizations(already)).toBe(already);
     logSpy.mockRestore();
   });
 
   it('returns null when the custom-model push site is absent', () => {
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    expect(writeModelCustomizations('function f(){let nQ=[];return nQ}')).toBeNull();
+    expect(
+      writeModelCustomizations('function f(){let nQ=[];return nQ}')
+    ).toBeNull();
     errSpy.mockRestore();
   });
 
@@ -89,7 +94,8 @@ describe('writeModelCustomizations', () => {
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     // Push present (with the required leading space), but `nQ` is never declared
     // inside a function within lookback -> the second null branch.
-    const noDecl = 'x=1; nQ.push({value:x,label:y,description:"Custom model"});';
+    const noDecl =
+      'x=1; nQ.push({value:x,label:y,description:"Custom model"});';
     expect(writeModelCustomizations(noDecl)).toBeNull();
     errSpy.mockRestore();
   });

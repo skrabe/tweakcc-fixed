@@ -65,7 +65,9 @@ describe('writeIncreaseFileReadLimit', () => {
 
   it('returns null when neither 25000 nor an anchor is present', () => {
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    expect(writeIncreaseFileReadLimit('function unrelated(){return 1}')).toBeNull();
+    expect(
+      writeIncreaseFileReadLimit('function unrelated(){return 1}')
+    ).toBeNull();
     errSpy.mockRestore();
   });
 });

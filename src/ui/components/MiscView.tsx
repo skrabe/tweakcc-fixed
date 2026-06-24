@@ -763,8 +763,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
         title: 'Fable/Mythos prompt set (all models)',
         description:
           'Treats your selected model as Fable/Mythos everywhere CC branches on model family (flips the zQ gate). You get: the autonomous-operation prompt ("proceed without asking for reversible in-scope work, finish the job before ending your turn"); the "# Communicating with the user" comms block in place of "# Text output"; /loop dynamic-pacing turn behavior; and brief-mode comms shaping. Per-model feature-flag routing follows fable too, but is inert on a local install (those flags default off without a live gate service).',
-        getValue: () =>
-          settings.misc?.autonomousOperationAllModels ?? false,
+        getValue: () => settings.misc?.autonomousOperationAllModels ?? false,
         toggle: () => {
           updateSettings(settings => {
             ensureMisc();

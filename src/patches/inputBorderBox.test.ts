@@ -69,7 +69,9 @@ describe('writeInputBoxBorder', () => {
 
   it('returns null (logging) when no border pattern is present', () => {
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    expect(writeInputBoxBorder('function unrelated(){return 1}', true)).toBeNull();
+    expect(
+      writeInputBoxBorder('function unrelated(){return 1}', true)
+    ).toBeNull();
     errSpy.mockRestore();
   });
 });
