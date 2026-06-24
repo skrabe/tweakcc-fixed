@@ -7,6 +7,8 @@ import chalk from 'chalk';
 
 import {
   RemoteConfig,
+  RouterEffort,
+  RouterLevel,
   Settings,
   Theme,
   ThinkingVerbsConfig,
@@ -238,6 +240,40 @@ const normalizeConfig = (config: TweakccConfig): void => {
     config.settings.themes = config.settings.themes.map(
       theme => deepMergeWithDefaults(theme, DEFAULT_THEME) as Theme
     );
+  }
+
+  // Harden complexityRouter.levels against hand-edited / remote (--config-url)
+  // configs. An empty array, a non-array value, or absent levels all fall back
+  // to the defaults (matching the TUI's `length > 0` guard) so an ENABLED router
+  // never silently no-ops or crashes on `.map`. Each level is merged against the
+  // default at its index, its effort coerced to a valid RouterEffort (deepMerge
+  // only fills ABSENT keys, so a garbage or null effort would otherwise survive
+  // and either no-op the router or ship an invalid value to the wire), and a
+  // unique id synthesized for overflow levels so React list keys can't collide.
+  {
+    const cr = config.settings.complexityRouter;
+    const defaultLevels = DEFAULT_SETTINGS.complexityRouter.levels;
+    const validEfforts: RouterEffort[] = [
+      'low',
+      'medium',
+      'high',
+      'xhigh',
+      'max',
+    ];
+    cr.levels =
+      Array.isArray(cr.levels) && cr.levels.length > 0
+        ? cr.levels.map((level, i) => {
+            const def = defaultLevels[Math.min(i, defaultLevels.length - 1)];
+            const merged = deepMergeWithDefaults(level, def) as RouterLevel;
+            if (!(validEfforts as string[]).includes(merged.effort)) {
+              merged.effort = def.effort;
+            }
+            if (i >= defaultLevels.length) {
+              merged.id = `level-${i}`;
+            }
+            return merged;
+          })
+        : defaultLevels.map(l => ({ ...l }));
   }
 
   // In 3.2.6 hideCtrlGToEditPrompt was renamed to hideCtrlGToEdit.

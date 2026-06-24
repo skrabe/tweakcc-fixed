@@ -176,6 +176,34 @@ export interface SubagentModelsConfig {
   generalPurpose: string | null;
 }
 
+// [EXPERIMENTAL] Complexity effort router.
+//
+// Classifies how hard a task is into an ordinal level and pins the session's
+// reasoning-effort (thinking) level accordingly: trivial work runs at low
+// effort (fast, cheap), the hardest work runs at max effort. It rides on
+// whatever model the user is already on (Opus 4.8 by default), so it is a pure
+// thinking-depth dial - no model switch, no prompt-cache churn. Off by default.
+export type RouterClassifierMode = 'heuristic' | 'llm';
+
+// Claude Code's reasoning-effort levels (the `effort` API param / `/effort`).
+// Opus 4.8 supports all five; the per-level support guard downgrades an
+// unsupported level to 'high' at resolve time.
+export type RouterEffort = 'low' | 'medium' | 'high' | 'xhigh' | 'max';
+
+export interface RouterLevel {
+  id: string; // stable key (e.g. 'routine'); used as the React list key in the TUI
+  label: string; // short display name (e.g. 'Standard')
+  help: string; // one-line description of when this level applies
+  effort: RouterEffort; // the reasoning-effort level this complexity tier maps to
+}
+
+export interface ComplexityRouterConfig {
+  enabled: boolean;
+  mode: RouterClassifierMode; // default 'heuristic'
+  pinPerTask: boolean; // default TRUE - classify once per task, keep for the session (stable, only escalates)
+  levels: RouterLevel[]; // ordinal complexity level -> effort map (index 0 = easiest)
+}
+
 export interface Settings {
   themes: Theme[];
   thinkingVerbs: ThinkingVerbsConfig;
@@ -187,6 +215,9 @@ export interface Settings {
   defaultToolset: string | null;
   planModeToolset: string | null;
   subagentModels: SubagentModelsConfig;
+  // Non-optional like subagentModels (its analog): DEFAULT_SETTINGS always
+  // provides it and normalizeConfig backfills it via deepMergeWithDefaults.
+  complexityRouter: ComplexityRouterConfig;
   inputPatternHighlighters: InputPatternHighlighter[];
   inputPatternHighlightersTestText: string; // Global test text for previewing highlighters
   claudeMdAltNames: string[] | null;
@@ -250,6 +281,7 @@ export enum MainMenuItem {
   MISC = 'Misc',
   TOOLSETS = 'Toolsets',
   SUBAGENT_MODELS = 'Subagent models',
+  COMPLEXITY_ROUTER = 'Complexity effort router [experimental]',
   CLAUDE_MD_ALT_NAMES = 'CLAUDE.md alternative names',
   SYSTEM_REMINDERS = 'System reminders (injection lobotomy)',
   SKILLS = 'Skills (per-skill on/name-only/user-invocable/off)',

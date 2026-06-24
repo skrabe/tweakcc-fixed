@@ -738,6 +738,37 @@ export const DEFAULT_SETTINGS: Settings = {
     explore: null,
     generalPurpose: null,
   },
+  complexityRouter: {
+    enabled: false,
+    mode: 'heuristic',
+    pinPerTask: true,
+    levels: [
+      {
+        id: 'routine',
+        label: 'Routine',
+        help: 'Mechanical edits, renames, search/grep summarization, boilerplate',
+        effort: 'low',
+      },
+      {
+        id: 'standard',
+        label: 'Standard',
+        help: 'The workhorse - standard coding/tool work; most traffic',
+        effort: 'medium',
+      },
+      {
+        id: 'hard',
+        label: 'Hard',
+        help: 'Architecture, cross-file refactor, deep debug/review',
+        effort: 'high',
+      },
+      {
+        id: 'frontier',
+        label: 'Frontier',
+        help: "Only the hardest; reached on explicit max-effort phrases (e.g. 'ultrathink') or when many hard signals stack up",
+        effort: 'max',
+      },
+    ],
+  },
   inputPatternHighlighters: [],
   inputPatternHighlightersTestText: 'Type test text here to see highlighting',
   claudeMdAltNames: [

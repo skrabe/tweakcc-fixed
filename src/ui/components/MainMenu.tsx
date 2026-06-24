@@ -37,6 +37,10 @@ const baseMenuItems: SelectItem[] = [
     desc: 'Configure which Claude model each subagent uses (Plan, Explore, etc.)',
   },
   {
+    name: MainMenuItem.COMPLEXITY_ROUTER,
+    desc: '[EXPERIMENTAL] Auto-route reasoning effort by task complexity (routine=low ... hardest=max)',
+  },
+  {
     name: MainMenuItem.CLAUDE_MD_ALT_NAMES,
     desc: 'Configure alternative filenames for CLAUDE.md (e.g., AGENTS.md)',
   },

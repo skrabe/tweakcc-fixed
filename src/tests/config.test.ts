@@ -227,6 +227,80 @@ describe('config.ts', () => {
         expect.stringMatching(/config\.json\.corrupt-/)
       );
     });
+
+    describe('complexityRouter.levels normalization', () => {
+      const mkConfig = (complexityRouter: unknown) =>
+        JSON.stringify({
+          ccVersion: '1.0.0',
+          ccInstallationPath: null,
+          lastModified: '2024-01-01',
+          changesApplied: true,
+          settings: { ...DEFAULT_SETTINGS, complexityRouter },
+        });
+      const defLevels = DEFAULT_SETTINGS.complexityRouter.levels;
+
+      it('backfills an empty levels array to the defaults (no silent no-op)', async () => {
+        vi.spyOn(fs, 'readFile').mockResolvedValue(
+          mkConfig({ enabled: true, levels: [] })
+        );
+        const result = await readConfigFile();
+        expect(result.settings.complexityRouter.levels).toEqual(defLevels);
+      });
+
+      it('falls back to defaults for a non-array levels (no .map crash)', async () => {
+        vi.spyOn(fs, 'readFile').mockResolvedValue(
+          mkConfig({ enabled: true, levels: 'garbage' })
+        );
+        const result = await readConfigFile();
+        expect(result.settings.complexityRouter.levels).toEqual(defLevels);
+      });
+
+      it('coerces a garbage or falsy effort to the per-index default', async () => {
+        vi.spyOn(fs, 'readFile').mockResolvedValue(
+          mkConfig({
+            enabled: true,
+            levels: [
+              { id: 'routine', label: 'R', help: '', effort: 'SUPERHIGH' },
+              { id: 'standard', label: 'S', help: '', effort: '' },
+            ],
+          })
+        );
+        const result = await readConfigFile();
+        const lv = result.settings.complexityRouter.levels;
+        expect(lv[0].effort).toBe(defLevels[0].effort);
+        expect(lv[1].effort).toBe(defLevels[1].effort);
+      });
+
+      it('preserves a valid custom effort', async () => {
+        vi.spyOn(fs, 'readFile').mockResolvedValue(
+          mkConfig({
+            enabled: true,
+            levels: [{ id: 'routine', label: 'R', help: '', effort: 'max' }],
+          })
+        );
+        const result = await readConfigFile();
+        expect(result.settings.complexityRouter.levels[0].effort).toBe('max');
+      });
+
+      it('synthesizes unique ids for overflow levels (no duplicate React keys)', async () => {
+        vi.spyOn(fs, 'readFile').mockResolvedValue(
+          mkConfig({
+            enabled: true,
+            levels: [
+              { id: 'a', label: 'A', help: '', effort: 'low' },
+              { id: 'b', label: 'B', help: '', effort: 'medium' },
+              { id: 'c', label: 'C', help: '', effort: 'high' },
+              { id: 'd', label: 'D', help: '', effort: 'max' },
+              { label: 'E', help: '', effort: 'max' },
+              { label: 'F', help: '', effort: 'max' },
+            ],
+          })
+        );
+        const result = await readConfigFile();
+        const ids = result.settings.complexityRouter.levels.map(l => l.id);
+        expect(new Set(ids).size).toBe(ids.length);
+      });
+    });
   });
 
   describe('updateConfigFile', () => {

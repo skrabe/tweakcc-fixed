@@ -9,6 +9,7 @@ import { InputPatternHighlightersView } from './components/InputPatternHighlight
 import { MiscView } from './components/MiscView';
 import { ToolsetsView } from './components/ToolsetsView';
 import { SubagentModelsView } from './components/SubagentModelsView';
+import { ComplexityRouterView } from './components/ComplexityRouterView';
 import { ClaudeMdAltNamesView } from './components/ClaudeMdAltNamesView';
 import { SystemRemindersView } from './components/SystemRemindersView';
 import { SkillsView } from './components/SkillsView';
@@ -137,6 +138,7 @@ Please reapply your changes by running \`${invocationCommand} --apply\`.`,
       case MainMenuItem.MISC:
       case MainMenuItem.TOOLSETS:
       case MainMenuItem.SUBAGENT_MODELS:
+      case MainMenuItem.COMPLEXITY_ROUTER:
       case MainMenuItem.CLAUDE_MD_ALT_NAMES:
       case MainMenuItem.SYSTEM_REMINDERS:
       case MainMenuItem.SKILLS:
@@ -230,6 +232,8 @@ Please reapply your changes by running \`${invocationCommand} --apply\`.`,
           <ToolsetsView onBack={handleBack} />
         ) : currentView === MainMenuItem.SUBAGENT_MODELS ? (
           <SubagentModelsView onBack={handleBack} />
+        ) : currentView === MainMenuItem.COMPLEXITY_ROUTER ? (
+          <ComplexityRouterView onBack={handleBack} />
         ) : currentView === MainMenuItem.CLAUDE_MD_ALT_NAMES ? (
           <ClaudeMdAltNamesView onBack={handleBack} />
         ) : currentView === MainMenuItem.SYSTEM_REMINDERS ? (

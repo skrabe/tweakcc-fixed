@@ -94,6 +94,7 @@ import { writeAllowCustomAgentModels } from './allowCustomAgentModels';
 import { writeMaxEffortDefault } from './maxEffortDefault';
 import { writeAutonomousOperationAllModels } from './autonomousOperationAllModels';
 import { writeAutoModeClassifierModel } from './autoModeClassifierModel';
+import { writeComplexityRouter } from './complexityRouter';
 import { writeVoiceMode } from './voiceMode';
 import { writeChannelsMode } from './channelsMode';
 import { writeClearScreen } from './clearScreen';
@@ -449,6 +450,13 @@ const PATCH_DEFINITIONS = [
       'Pin auto-mode bash safety classifier to Sonnet 4.6 or Haiku 4.5 instead of the user main-loop model (avoids Opus 4.7 congestion denying tool calls)',
   },
   // Features
+  {
+    id: 'complexity-router',
+    name: '[EXPERIMENTAL] Complexity effort router',
+    group: PatchGroup.FEATURES,
+    description:
+      'Auto-route reasoning effort (thinking depth) by task complexity: routine work runs at low effort, the hardest at max. Rides on your current model - no model switch, no prompt-cache churn. While on it drives effort, overriding your saved effortLevel default; an in-session /effort or CLAUDE_CODE_EFFORT_LEVEL still wins. Heuristic by default; optional Haiku-classifier (llm) mode fails back to the heuristic. Off by default.',
+  },
   {
     id: 'allow-custom-agent-models',
     name: 'Allow custom agent models',
@@ -1106,6 +1114,10 @@ export const applyCustomization = async (
         'default',
     },
     // Features
+    'complexity-router': {
+      fn: c => writeComplexityRouter(c, config.settings.complexityRouter),
+      condition: config.settings.complexityRouter.enabled,
+    },
     'allow-custom-agent-models': {
       fn: c => writeAllowCustomAgentModels(c),
       condition: !!config.settings.misc?.allowCustomAgentModels,
