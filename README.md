@@ -3,15 +3,15 @@
 A hard fork of [Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc) that patches an installed Claude Code in place — both npm `cli.js` and the JavaScript embedded in a native Bun binary — to apply **curated system-prompt overrides** and a set of **fork-only patches**. It is purpose-built to pair with [skrabe/lobotomized-claude-code](https://github.com/skrabe/lobotomized-claude-code), and it stays current with every Claude Code release through its own prompt-extraction pipeline.
 
 > [!IMPORTANT]
-> **This fork is a superset of upstream and no longer merges from it (2026-06-04).** Upstream's `tweakcc` gates system-prompt overrides **off** for native installs and doesn't have this fork's override mechanisms (inline-blob, system-reminders) or extended extractor; we add those and apply system prompts to native installs too. Our extractor names 1027 prompts for CC 2.1.186 under our own per-model override conventions, capturing every model-facing string below the old 500-char floor — including 572 ids absent from Piebald's published extract. A merge would only bring a version label and prompt data we already supersede, so we keep the `upstream` remote as a **fetch-only comparison signal** and extract our own prompts.
+> **This fork is a superset of upstream and no longer merges from it (2026-06-04).** Upstream's `tweakcc` gates system-prompt overrides **off** for native installs and doesn't have this fork's override mechanisms (inline-blob, system-reminders) or extended extractor; we add those and apply system prompts to native installs too. Our extractor names 1007 prompts for CC 2.1.187 under our own per-model override conventions, capturing every model-facing string below the old 500-char floor — including 572 ids absent from Piebald's published extract. A merge would only bring a version label and prompt data we already supersede, so we keep the `upstream` remote as a **fetch-only comparison signal** and extract our own prompts.
 
-|                        |                                                                                                           |
-| ---------------------- | --------------------------------------------------------------------------------------------------------- |
-| **This fork**          | [skrabe/tweakcc-fixed](https://github.com/skrabe/tweakcc-fixed)                                           |
-| **Base**               | [Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc) @ `bc41a43`, then diverged                    |
-| **Target CC versions** | 2.0.98 through **2.1.186**                                                                                |
-| **Install**            | `npx tweakcc-fixed@latest` — published on npm from this repo ([Install](#install))                        |
-| **Pairs with**         | [skrabe/lobotomized-claude-code](https://github.com/skrabe/lobotomized-claude-code) (per-model overrides) |
+|                        |                                                                                                              |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------ |
+| **This fork**          | [skrabe/tweakcc-fixed](https://github.com/skrabe/tweakcc-fixed)                                              |
+| **Base**               | [Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc) @ `bc41a43`, then diverged                       |
+| **Target CC versions** | 2.0.98 through **2.1.187**                                                                                   |
+| **Install**            | `npx tweakcc-fixed@latest` — published on npm from this repo ([Install](#install))                           |
+| **Pairs with**         | [skrabe/lobotomized-claude-code](https://github.com/skrabe/lobotomized-claude-code) (per-model overrides)    |
 | **Agent guide**        | [`skills/showtime/`](./skills/showtime/) — bug-class diagnostics, patch authoring, the version-bump pipeline |
 
 ## What this fork adds over the base
@@ -73,7 +73,7 @@ For detailed docs on these shared features, see the [upstream tweakcc README](ht
 
 ## Pairing with lobotomized-claude-code
 
-Use this fork's extraction surface with [skrabe/lobotomized-claude-code](https://github.com/skrabe/lobotomized-claude-code) — per-model override sets (**Claude Opus 4.8**, Claude Fable 5) tuned against this fork's extraction. Our named-prompt JSON catches prompts Piebald's published extract doesn't (572 ids for CC 2.1.186 absent from their extract), and the system-reminder + `string`-kind reach lets the overrides cover content the base mechanisms can't.
+Use this fork's extraction surface with [skrabe/lobotomized-claude-code](https://github.com/skrabe/lobotomized-claude-code) — per-model override sets (**Claude Opus 4.8**, Claude Fable 5) tuned against this fork's extraction. Our named-prompt JSON catches prompts Piebald's published extract doesn't (572 ids for CC 2.1.187 absent from their extract), and the system-reminder + `string`-kind reach lets the overrides cover content the base mechanisms can't.
 
 ## Install
 
@@ -145,8 +145,9 @@ Main exports: `findAllInstallations` / `tryDetectInstallation` /
 `showInteractiveInstallationPicker` (detection), `readContent` / `writeContent`
 (JS I/O across npm + native), `backupFile` / `restoreBackup`, `readTweakccConfig`
 plus the config-path helpers, the `helpers` toolkit (minified-identifier finders
-+ diff utilities), and the `Installation` / `TweakccConfig` / `Settings` /
-`DetectInstallationOptions` types.
+
+- diff utilities), and the `Installation` / `TweakccConfig` / `Settings` /
+  `DetectInstallationOptions` types.
 
 ## The `showtime` skill (CC version-bump pipeline)
 
