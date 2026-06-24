@@ -60,7 +60,7 @@ const BASH_GUIDANCE_MARKER = 'most-relevant-first';
 const BASH_GUIDANCE =
   ' grep/find results are ranked ' +
   BASH_GUIDANCE_MARKER +
-  ' (read the top hit first); a trailing [def] tag flags a likely definition line, and a grep with no exact matches automatically lists the closest approximate matches tagged [~approx]. Add --fuzzy to force typo-tolerant or partial matching, e.g. grep --fuzzy SomeName.';
+  ' (read the top hit first); a trailing [def] tag flags a likely definition line, and a grep or find -name that matches nothing automatically lists the closest approximate hits tagged [~approx]. Add --fuzzy to force typo-tolerant or partial matching, e.g. grep --fuzzy SomeName.';
 
 /** [CRITICAL] Repoint the grep→ugrep / find→bfs shadow at the wrapper. */
 const repointBashSearchShadow = (

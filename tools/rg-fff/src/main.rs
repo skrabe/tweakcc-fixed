@@ -30,8 +30,9 @@ use std::time::Duration;
 
 use fff_search::file_picker::FilePicker;
 use fff_search::{
-    AiGrepConfig, FFFMode, FFFQuery, FilePickerOptions, FuzzyQuery, GrepMode,
-    GrepSearchOptions, QueryParser, SharedFilePicker, SharedFrecency,
+    AiGrepConfig, FFFMode, FFFQuery, FilePickerOptions, FuzzyQuery, FuzzySearchOptions,
+    GrepMode, GrepSearchOptions, PaginationArgs, QueryParser, SharedFilePicker,
+    SharedFrecency,
 };
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -176,7 +177,36 @@ fn main() {
     }
     if tool == Tool::Bfs {
         let cb = claude_bin_from(&raw);
-        fallback(tool, &strip_custom(&raw), cb.as_deref());
+        let clean = strip_custom(&raw);
+        // Pure `find -name`: run the real find, and if it matched NOTHING, augment
+        // its (empty) output with fff's closest filename suggestions — the file-
+        // finding twin of the grep auto-fuzzy-fallback. Shell-find only (raw stdout
+        // the model reads). Anything with -exec/-delete/-type d/etc. is NOT eligible
+        // and execs unchanged (we never capture a find that can have side effects).
+        if std::env::var_os("RG_FFF_NO_FUZZY_FALLBACK").is_none() {
+            if let Some(q) = parse_pure_find_name(&clean) {
+                if let Some((out, code)) =
+                    capture_embedded(tool, &clean, cb.as_deref())
+                {
+                    let mut w = std::io::stdout().lock();
+                    let _ = w.write_all(out.as_bytes());
+                    if out.trim().is_empty() {
+                        if let Some(sug) = fuzzy_file_suggestions(&q, 8) {
+                            let _ = w.write_all(sug.as_bytes());
+                            log_decision(
+                                tool,
+                                &Some(q.name.clone()),
+                                "fuzzy-fallback-find",
+                                sug.lines().count() as i64,
+                            );
+                        }
+                    }
+                    let _ = w.flush();
+                    std::process::exit(code);
+                }
+            }
+        }
+        fallback(tool, &clean, cb.as_deref());
     }
 
     let opts = parse(tool, raw);
@@ -1241,6 +1271,150 @@ fn grep_opts(
 }
 
 /// Re-exec the real embedded tool via the claude binary (argv0 multicall).
+/// A `find` invocation the fuzzy fallback may augment: ONLY `-name`/`-iname`
+/// (single) + optional `-type f`, nothing else. None => not eligible, defer (exec
+/// find unchanged — never capture a find that could have side effects like -exec/-delete).
+struct FindNameQuery {
+    dir: String,
+    name: String,
+}
+
+fn parse_pure_find_name(args: &[String]) -> Option<FindNameQuery> {
+    let mut dir: Option<String> = None;
+    let mut name: Option<String> = None;
+    let mut i = 0;
+    // Leading non-flag args are search paths; keep the first as the fuzzy scope.
+    while i < args.len() && !args[i].starts_with('-') {
+        if dir.is_none() {
+            dir = Some(args[i].clone());
+        }
+        i += 1;
+    }
+    while i < args.len() {
+        match args[i].as_str() {
+            "-name" | "-iname" => {
+                if name.is_some() {
+                    return None; // multiple name predicates -> defer
+                }
+                name = Some(args.get(i + 1)?.clone());
+                i += 2;
+            }
+            // `-type f` is fine (fff finds files); -type d/l etc. -> defer.
+            "-type" => {
+                if args.get(i + 1).map(String::as_str) != Some("f") {
+                    return None;
+                }
+                i += 2;
+            }
+            _ => return None, // any other predicate/operator -> defer
+        }
+    }
+    Some(FindNameQuery {
+        dir: dir.unwrap_or_else(|| ".".to_string()),
+        name: name?,
+    })
+}
+
+/// Like fallback() but CAPTURES the embedded tool's stdout + exit code instead of
+/// exec-replacing — so we can inspect a find result before deciding to augment it.
+fn capture_embedded(
+    tool: Tool,
+    args: &[String],
+    claude_bin: Option<&str>,
+) -> Option<(String, i32)> {
+    use std::os::unix::process::CommandExt;
+    let claude = claude_bin
+        .map(String::from)
+        .filter(|p| Path::new(p).exists())
+        .or_else(|| {
+            std::env::var("CLAUDE_CODE_EXECPATH")
+                .ok()
+                .filter(|p| Path::new(p).exists())
+        })
+        .or_else(|| {
+            let h = std::env::var("HOME").ok()?;
+            let p = format!("{h}/.local/bin/claude");
+            Path::new(&p).exists().then_some(p)
+        });
+    if let Some(bin) = claude {
+        let mut cmd = Command::new(&bin);
+        cmd.args(args);
+        cmd.arg0(tool.embedded_argv0());
+        if let Ok(out) = cmd.output() {
+            return Some((
+                String::from_utf8_lossy(&out.stdout).into_owned(),
+                out.status.code().unwrap_or(1),
+            ));
+        }
+    }
+    let sys = match tool {
+        Tool::Bfs => "find",
+        Tool::Ugrep => "grep",
+        _ => "rg",
+    };
+    let out = Command::new(sys).args(args).output().ok()?;
+    Some((
+        String::from_utf8_lossy(&out.stdout).into_owned(),
+        out.status.code().unwrap_or(1),
+    ))
+}
+
+/// fff fuzzy filename suggestions for a `find -name` that matched nothing — fff's
+/// frecency-ranked fuzzy file discovery (its actual strength). Cold-scans the search
+/// dir, fuzzy-searches the name (glob stars stripped), returns the top-N as a loud,
+/// clearly-approximate block (raw text the model reads — shell-find only, so a label
+/// line is safe). None when there's nothing good to suggest.
+fn fuzzy_file_suggestions(q: &FindNameQuery, n: usize) -> Option<String> {
+    use std::fmt::Write as _;
+    let needle = q.name.trim_matches('*');
+    if needle.len() < 2 {
+        return None;
+    }
+    let shared = SharedFilePicker::default();
+    let frecency = SharedFrecency::default();
+    FilePicker::new_with_shared_state(
+        shared.clone(),
+        frecency.clone(),
+        FilePickerOptions {
+            base_path: q.dir.clone(),
+            mode: FFFMode::Ai,
+            ..Default::default()
+        },
+    )
+    .ok()?;
+    shared.wait_for_scan(Duration::from_secs(10));
+    let guard = shared.read().ok()?;
+    let picker = guard.as_ref()?;
+    let query = FFFQuery {
+        raw_query: needle,
+        constraints: Vec::new(),
+        fuzzy_query: FuzzyQuery::Text(needle),
+        location: None,
+    };
+    let opts = FuzzySearchOptions {
+        max_threads: 0,
+        current_file: None,
+        project_path: None,
+        combo_boost_score_multiplier: 0,
+        min_combo_count: 0,
+        pagination: PaginationArgs { offset: 0, limit: n },
+    };
+    let res = picker.fuzzy_search(&query, None, opts);
+    if res.items.is_empty() {
+        return None;
+    }
+    let mut out = String::new();
+    let _ = writeln!(
+        out,
+        "# rg-fff: 0 exact matches for '{}' — closest filenames by fuzzy search (NOT exact; verify):",
+        q.name
+    );
+    for it in res.items.iter().take(n) {
+        let _ = writeln!(out, "{}{}", it.relative_path(picker), APPROX_MARK);
+    }
+    Some(out)
+}
+
 fn fallback(tool: Tool, args: &[String], claude_bin: Option<&str>) -> ! {
     use std::os::unix::process::CommandExt;
 
@@ -1344,6 +1518,26 @@ mod tests {
             &opts(Tool::Ugrep, "foo", &[]),
             Mode::Fuzzy
         ));
+    }
+
+    #[test]
+    fn find_name_eligibility() {
+        let sv = |a: &[&str]| a.iter().map(|s| s.to_string()).collect::<Vec<_>>();
+        // eligible: pure -name / -iname (+ optional -type f)
+        assert!(parse_pure_find_name(&sv(&[".", "-name", "*.ts"])).is_some());
+        assert!(parse_pure_find_name(&sv(&["src", "-iname", "X"])).is_some());
+        assert!(parse_pure_find_name(&sv(&[".", "-type", "f", "-name", "X"])).is_some());
+        let q = parse_pure_find_name(&sv(&["app", "-name", "UserService.ts"])).unwrap();
+        assert_eq!(q.dir, "app");
+        assert_eq!(q.name, "UserService.ts");
+        // NOT eligible -> defer (exec find unchanged; never capture side effects)
+        assert!(parse_pure_find_name(&sv(&[".", "-name", "X", "-exec", "rm", "{}", ";"])).is_none());
+        assert!(parse_pure_find_name(&sv(&[".", "-delete"])).is_none());
+        assert!(parse_pure_find_name(&sv(&[".", "-type", "d", "-name", "X"])).is_none());
+        assert!(parse_pure_find_name(&sv(&[".", "-mtime", "-1"])).is_none());
+        assert!(parse_pure_find_name(&sv(&[".", "-maxdepth", "2", "-name", "X"])).is_none());
+        assert!(parse_pure_find_name(&sv(&[".", "-name", "a", "-name", "b"])).is_none());
+        assert!(parse_pure_find_name(&sv(&["."])).is_none()); // no -name
     }
 
     #[test]
