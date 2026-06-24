@@ -750,6 +750,13 @@ fn run_search(o: &Opts, mode: Mode) -> i32 {
     }
 }
 
+/// Trailing marker for a line fff truncated at its 512 B display cap. fff (and
+/// OpenCode) cut silently; we append this so the model knows the line was cut and
+/// can Read the file for the rest. ASCII-only + parser-safe (trailing text in the
+/// `path:line:text` shape; a -c count still counts the line once, unaffected).
+const TRUNC_MARK: &str =
+    " [...rg-fff: line truncated at ~512B; Read the file for the full line]";
+
 /// Grep `picker` per `req` and render tool-compatible output. Shared verbatim by
 /// the cold path and the daemon. Returns None when fff can't serve faithfully.
 pub fn format_results(
@@ -894,7 +901,18 @@ pub fn format_results(
     // overlapping windows by line number, then emit with grep's separators.
     // (to_req zeroes context for -l/-c/fuzzy, so this is content mode only.)
     if req.before_context > 0 || req.after_context > 0 {
-        let trunc = |s: &str| s.len() >= 509 || s.contains('\u{FFFD}');
+        // Per line: U+FFFD (non-UTF-8) -> defer the whole query (None); a >=509 B
+        // line gets the truncation marker; otherwise pass through unchanged.
+        let mark = |s: &str| -> Option<String> {
+            if s.contains('\u{FFFD}') {
+                return None;
+            }
+            Some(if s.len() >= 509 {
+                format!("{s}{TRUNC_MARK}")
+            } else {
+                s.to_string()
+            })
+        };
         // path -> (line_no -> (is_match, content)); BTreeMap keeps line order.
         let mut per_file: BTreeMap<String, BTreeMap<u64, (bool, String)>> =
             BTreeMap::new();
@@ -912,28 +930,30 @@ pub fn format_results(
                 if !keep(&path) {
                     continue;
                 }
-                // Same truncation/lossy gate as the match line, extended to
-                // every context line: any one truncated -> defer the whole query.
-                if trunc(&m.line_content)
-                    || m.context_before.iter().any(|s| trunc(s))
-                    || m.context_after.iter().any(|s| trunc(s))
-                {
-                    return None;
-                }
+                let mln = match mark(&m.line_content) {
+                    Some(x) => x,
+                    None => return None, // non-UTF-8 -> defer
+                };
                 let fmap = per_file.entry(path).or_default();
                 let ln = m.line_number;
                 // fff returns only the context lines that exist, so the first
                 // before-context line sits at ln - context_before.len().
                 let blen = m.context_before.len() as u64;
                 for (i, c) in m.context_before.iter().enumerate() {
-                    fmap.entry(ln - blen + i as u64)
-                        .or_insert((false, c.clone()));
+                    let cm = match mark(c) {
+                        Some(x) => x,
+                        None => return None,
+                    };
+                    fmap.entry(ln - blen + i as u64).or_insert((false, cm));
                 }
                 // The match line wins over any context tag for the same line.
-                fmap.insert(ln, (true, m.line_content.clone()));
+                fmap.insert(ln, (true, mln));
                 for (i, c) in m.context_after.iter().enumerate() {
-                    fmap.entry(ln + 1 + i as u64)
-                        .or_insert((false, c.clone()));
+                    let cm = match mark(c) {
+                        Some(x) => x,
+                        None => return None,
+                    };
+                    fmap.entry(ln + 1 + i as u64).or_insert((false, cm));
                 }
             }
             if result.next_file_offset == 0 {
@@ -989,29 +1009,32 @@ pub fn format_results(
                 if !keep(&path) {
                     continue;
                 }
-                // fff truncates line_content to 512 bytes (MAX_LINE_DISPLAY_LEN,
-                // backed up to a char boundary -> [509,512]) and lossily replaces
-                // invalid UTF-8 with U+FFFD. grep/rg print the raw, full line. For
-                // exact (non-fuzzy) modes, a possibly-truncated or lossy line can't
-                // be reproduced byte-for-byte -> defer the whole query so the model
-                // gets the complete line from the real tool, never a 512B stub.
-                if !is_fuzzy
-                    && (m.line_content.len() >= 509
-                        || m.line_content.contains('\u{FFFD}'))
-                {
+                // fff caps line_content at 512 B (MAX_LINE_DISPLAY_LEN, backed up
+                // to a char boundary -> [509,512]) and lossily replaces invalid
+                // UTF-8 with U+FFFD. A 512-byte preview is the right thing for an
+                // agent (a full minified line is context-noise) — so serve it with
+                // an explicit marker (parser-safe trailing text) rather than the
+                // silent cut fff/OpenCode emit. Non-UTF-8 (U+FFFD) still defers:
+                // raw bytes can't be represented as a String.
+                if !is_fuzzy && m.line_content.contains('\u{FFFD}') {
                     return None;
                 }
+                let mark = if m.line_content.len() >= 509 {
+                    TRUNC_MARK
+                } else {
+                    ""
+                };
                 if req.line_numbers {
                     let _ = writeln!(
                         out,
-                        "{}{}:{}:{}",
-                        out_prefix, path, m.line_number, m.line_content
+                        "{}{}:{}:{}{}",
+                        out_prefix, path, m.line_number, m.line_content, mark
                     );
                 } else {
                     let _ = writeln!(
                         out,
-                        "{}{}:{}",
-                        out_prefix, path, m.line_content
+                        "{}{}:{}{}",
+                        out_prefix, path, m.line_content, mark
                     );
                 }
                 any = true;
