@@ -70,7 +70,6 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     statuslineThrottleMs: null as number | null,
     statuslineUseFixedInterval: false,
     tableFormat: 'default' as TableFormat,
-    enableSwarmMode: true,
     enableSessionMemory: true,
     enableDreamMode: true,
     enableLeanMemoryTypes: false,

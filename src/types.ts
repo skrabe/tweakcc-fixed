@@ -127,7 +127,6 @@ export interface MiscConfig {
   statuslineThrottleMs: number | null;
   statuslineUseFixedInterval: boolean;
   tableFormat: TableFormat;
-  enableSwarmMode: boolean;
   enableSessionMemory: boolean;
   enableDreamMode: boolean;
   enableLeanMemoryTypes: boolean;

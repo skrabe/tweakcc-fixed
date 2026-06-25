@@ -725,7 +725,6 @@ export const DEFAULT_SETTINGS: Settings = {
     statuslineThrottleMs: null,
     statuslineUseFixedInterval: false,
     tableFormat: 'default',
-    enableSwarmMode: true,
     enableSessionMemory: true,
     enableDreamMode: true,
     enableLeanMemoryTypes: false,
