@@ -51,7 +51,12 @@ const ZE_SHAPE =
 // CC's global session-id accessor (the optional persistence anchor).
 const SID_SHAPE = 'getSessionId(){return It()}';
 
-const FILE = `var head=1;${GB_SHAPE}${VPT_SHAPE}${KM_SHAPE}${ZE_SHAPE}${COMPACT_SHAPE}${XQ_SHAPE}${HMM_SHAPE}var tail=2;`;
+// CC's rewind dialog wiring (the splice-5 anchor): "Restore conversation" calls
+// onRestoreMessage with the "message_selector" source.
+const RESTORE_SHAPE =
+  'function P9o(p){return me(Sb,{onRestoreMessage:(ut)=>Dlr(ut,"message_selector"),onSummarize:()=>0})}';
+
+const FILE = `var head=1;${GB_SHAPE}${VPT_SHAPE}${KM_SHAPE}${ZE_SHAPE}${COMPACT_SHAPE}${RESTORE_SHAPE}${XQ_SHAPE}${HMM_SHAPE}var tail=2;`;
 
 const cfg = (
   over: Partial<ComplexityRouterConfig> = {}
@@ -86,6 +91,9 @@ type RouterState = {
   prevUser?: string;
   prevAssistant?: string;
   pendingCompaction?: string;
+  pendingRewindCut?: string | number;
+  log?: { ts: number; summary: string; level?: number }[];
+  model?: string;
   loaded?: boolean;
 };
 
@@ -114,11 +122,11 @@ const makeGB = (results: GbResult[]) => {
 };
 
 // Extract the whole runtime (state + helpers + classify) and return a callable
-// classify(text, mode) wired to a stub gB/km, reading/writing globalThis.
+// classify(text, mode, model?) wired to a stub gB/km, reading/writing globalThis.
 const extractClassify = (
   patched: string,
   gb: GbFn
-): ((text: string, mode: string) => Promise<void>) => {
+): ((text: string, mode: string, model?: string) => Promise<void>) => {
   const m = patched.match(
     /function __tweakccRouterState[\s\S]*?(?=function XQ\()/
   );
@@ -127,7 +135,7 @@ const extractClassify = (
   return new Function('gB', 'km', m[0] + ';return __tweakccRouterClassify;')(
     gb,
     km
-  ) as (text: string, mode: string) => Promise<void>;
+  ) as (text: string, mode: string, model?: string) => Promise<void>;
 };
 
 const routerState = () =>
@@ -224,6 +232,21 @@ describe('writeComplexityRouter', () => {
     expect(out).toContain('summaryText:Sx,'); // original return shape preserved
   });
 
+  it('captures the rewind target timestamp on the Restore handler (splice 5)', () => {
+    const out = writeComplexityRouter(FILE, cfg()) as string;
+    // comma-op tag of m.timestamp; the original onRestoreMessage call is untouched
+    expect(out).toContain(
+      'globalThis.__tweakccRouter.pendingRewindCut=ut&&ut.timestamp'
+    );
+    expect(out).toContain('Dlr(ut,"message_selector")');
+    expect(out).toContain('__st.pendingRewindCut'); // reconcile consumes it
+    expect(out).toContain('__st.log.push({ts:'); // per-turn snapshot record
+    // absent restore site -> no capture emitted, still patches fine
+    const noRestore = `var head=1;${GB_SHAPE}${KM_SHAPE}${XQ_SHAPE}${HMM_SHAPE}var tail=2;`;
+    const out2 = writeComplexityRouter(noRestore, cfg()) as string;
+    expect(out2).not.toContain('pendingRewindCut=ut&&');
+  });
+
   it('still patches when the prev-assistant capture site is absent', () => {
     const noZe = `var head=1;${GB_SHAPE}${KM_SHAPE}${XQ_SHAPE}${HMM_SHAPE}var tail=2;`;
     const out = writeComplexityRouter(noZe, cfg()) as string;
@@ -238,6 +261,12 @@ describe('writeComplexityRouter', () => {
     expect(out).toContain('return typeof __s==="string"&&__s?__s:null}'); // sid()
     expect(out).toContain('var __s=It()'); // discovered accessor wired in
     expect(out).toContain('function __tweakccRouterSave');
+    // the rewind-snapshot log is persisted (save) and reloaded (load) too, so
+    // resume->rewind cuts precisely; the write is async fire-and-forget.
+    expect(out).toContain('log:Array.isArray(__st.log)?__st.log:[]'); // saved
+    expect(out).toContain('if(Array.isArray(__d.log))__st.log=__d.log'); // loaded
+    expect(out).toContain('__fs.writeFile('); // async, not writeFileSync
+    expect(out).not.toContain('writeFileSync');
   });
 
   it('disables persistence (sid=null) when no accessor is found', () => {
@@ -359,6 +388,31 @@ describe('writeComplexityRouter', () => {
       expect(routerState().effort).toBe('low'); // down allowed
     });
 
+    it('feeds the model into <context> and detects a mid-session model switch', async () => {
+      const { gb, captured } = makeGB([
+        { level: 1, summary: 's1' },
+        { level: 1, summary: 's2' },
+      ]);
+      const classify = extractClassify(
+        writeComplexityRouter(FILE, cfg()) as string,
+        gb
+      );
+      await classify('first task', 'prompt', 'claude-opus-4-8');
+      // turn 1: model reported, no switch (no prior model), state records it
+      expect(captured[0].userPrompt).toContain('model in use: claude-opus-4-8');
+      expect(captured[0].userPrompt).not.toContain('switched from');
+      expect(routerState().model).toBe('claude-opus-4-8');
+      // turn 2 on a different model: <context> flags the switch + prev level
+      await classify('next task', 'prompt', 'claude-sonnet-4-6');
+      expect(captured[1].userPrompt).toContain(
+        'model in use: claude-sonnet-4-6'
+      );
+      expect(captured[1].userPrompt).toContain('switched from claude-opus-4-8');
+      expect(captured[1].userPrompt).toContain(
+        'level you assigned last turn: 1'
+      );
+    });
+
     it('folds the rolling summary forward into the next call', async () => {
       const { gb, captured } = makeGB([
         { level: 1, summary: 'SUMMARY-ONE' },
@@ -435,6 +489,82 @@ describe('writeComplexityRouter', () => {
       expect(captured[0].userPrompt).not.toContain('old-assistant-text'); // stale exchange dropped
       expect(routerState().pendingCompaction).toBeUndefined(); // consumed
       expect(routerState().summary).toBe('fresh tldr'); // Haiku re-compressed it
+    });
+
+    it('CUTS to the logged turn at the rewind target time (restore + truncate tail)', async () => {
+      const { gb, captured } = makeGB([{ level: 0, summary: 'after redo' }]);
+      const classify = extractClassify(
+        writeComplexityRouter(FILE, cfg({ pinPerTask: false })) as string,
+        gb
+      );
+      // a 3-turn log; the rewind target's time (2500) sits between turn 2 (ts 2000)
+      // and turn 3 (ts 3000), so the cut restores turn-2's state (S2) and drops 3+.
+      setRouterState({
+        pendingRewindCut: 2500, // numeric ms, compared against the logged ts
+        summary: 'S3 stale rewound-away work',
+        level: 3,
+        prevAssistant: 'old',
+        log: [
+          { ts: 1000, summary: 'S1', level: 1 },
+          { ts: 2000, summary: 'S2', level: 2 },
+          { ts: 3000, summary: 'S3', level: 3 },
+        ],
+      });
+      await classify('redo from here', 'prompt');
+      // restored S2 (last logged turn with ts<=2500), fed to the classifier - the
+      // stale S3 work never reaches it
+      expect(captured[0].userPrompt).toContain('S2');
+      expect(captured[0].userPrompt).not.toContain('S3 stale');
+      expect(routerState().pendingRewindCut).toBeUndefined(); // consumed
+      // log truncated to before the cut (S1) + this turn's fresh snapshot appended
+      expect(routerState().log?.map(e => e.summary)).toEqual(['S1', 'S2']);
+      expect(routerState().summary).toBe('after redo');
+    });
+
+    it('cold-resets on a rewind whose target predates the log (no stale carryover)', async () => {
+      const { gb } = makeGB(['throw']); // fail-open exposes the post-reset level
+      const classify = extractClassify(
+        writeComplexityRouter(FILE, cfg({ pinPerTask: false })) as string,
+        gb
+      );
+      setRouterState({
+        pendingRewindCut: 50, // older than the earliest log entry (ts 1000)
+        summary: 'stale',
+        level: 3,
+        log: [{ ts: 1000, summary: 'S1', level: 1 }],
+      });
+      await classify('redo', 'prompt');
+      expect(routerState().summary).toBeUndefined(); // reset (no match)
+      expect(routerState().effort).toBe('high'); // fail-open from reset, never silently low
+    });
+
+    it('rewind supersedes a co-pending compaction (no clobber of the restored state)', async () => {
+      // Regression for the review bug: if /compact and /rewind both land before a
+      // turn, the rewind cut must win - the compaction reseed must NOT overwrite
+      // the rewind-restored summary with the (rewound-away) compaction text.
+      const { gb, captured } = makeGB([{ level: 0, summary: 'after redo' }]);
+      const classify = extractClassify(
+        writeComplexityRouter(FILE, cfg({ pinPerTask: false })) as string,
+        gb
+      );
+      setRouterState({
+        pendingRewindCut: 2500, // -> restores the ts=2000 entry (S2)
+        pendingCompaction: 'COMPACTION-OF-REWOUND-AWAY-WORK',
+        summary: 'S3 stale',
+        level: 3,
+        log: [
+          { ts: 1000, summary: 'S1', level: 1 },
+          { ts: 2000, summary: 'S2', level: 2 },
+        ],
+      });
+      await classify('redo from here', 'prompt');
+      // the cut restored S2 and fed it; the compaction text never reaches the
+      // classifier (rewind cleared pendingCompaction)
+      expect(captured[0].userPrompt).toContain('S2');
+      expect(captured[0].userPrompt).not.toContain(
+        'COMPACTION-OF-REWOUND-AWAY'
+      );
+      expect(routerState().pendingCompaction).toBeUndefined(); // dropped by the rewind
     });
 
     it('fails open to HIGH on a classifier error (cold start)', async () => {

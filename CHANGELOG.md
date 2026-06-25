@@ -1,388 +1,127 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to **tweakcc-fixed** (skrabe's fork of
+[Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc)) are documented here.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/);
+this fork uses its own `2.x` line (npm package `tweakcc-fixed`) and is a strict
+superset of upstream. Pre-fork upstream history lives in Piebald's releases.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [Unreleased]
 
-## Unreleased
+Complexity effort router — memory, true rewind, and full customizability.
 
-## [v4.0.13](https://github.com/Piebald-AI/tweakcc/releases/tag/v4.0.13) - 2026-05-10
+- **Classifier memory**: the Haiku router now gets a `<context>` block each turn
+  — the model in use (and whether it switched mid-session) plus the level it
+  assigned last turn — so a continuing thread holds effort instead of being
+  re-judged cold. Kills the "tunnel-vision" mis-routes on terse follow-ups.
+- **Rewind-aware (true cut)**: a per-turn snapshot keyed by timestamp; `/rewind` →
+  "Restore conversation" captures the rewound-to message's timestamp (splice 5 on
+  `onRestoreMessage`) and the next turn cuts the rolling summary + level back to
+  that point, dropping the rewound-away work (or cold-resets if the target
+  predates the log). The log is persisted in the sidecar (bounded, async write),
+  so resume→rewind cuts precisely too. "Summarize from here/up to here" rewinds
+  reseed via the existing compaction path. No uuid-matching (the fork mints new
+  uuids); the message timestamp is the stable cross-fork link.
+- **Full customizability in the TUI**: edit the classifier system prompt in your
+  `$EDITOR` (`{LEVELS}`/`{MAX}` stay dynamic), and each tier's label/help inline
+  — all with sane defaults and reset-to-default.
 
-- Fixed patchesAppliedIndicator patch (#713) - @risenowrise
-- Fix native binary patching on Linux (#730) - @signadou
+## [2.2.2] - 2026-06-25
 
-## [v4.0.12](https://github.com/Piebald-AI/tweakcc/releases/tag/v4.0.12) - 2026-05-07
+- Deep-review fixes on the router rework: shared `escapeNonAscii` helper,
+  `getRequireFuncName` so sidecar persistence works on NPM/esbuild installs (not
+  just Bun native), and corrected `assistantCap` docs.
 
-- Add voice mode patch (tengu_amber_quartz + tengu_sotto_voce) (#587) - @TyceHerrman
-- Fix auto-escape backticks in template literal context instead of skipping (#576) - @tesles
-- Fix `defaultToolset` fallback when persisted state has no toolset field (#592) - @y0usaf
-- Add `allow-custom-agent-models` patch (#593) - @GMNGeoffrey
-- Support Claude Code 2.1.69+ patch patterns (#595) - @paradoxally
-- Add support for community themes (see [claude-code-themes](https://github.com/Piebald-AI/claude-code-themes)) (#598) - @georpar
-- Don't blindly escape all quotes in the prompts (#620) - @mike1858
-- Fix patching for 2.1.81+ (#624) - @basekevin
-- Fix Linux native installation support (#644) - @signadou
-- Add channels mode patch (`tengu_harbor` bypass) (#653) - @viceversaco
-- Windows: look for `~/.local/bin/claude.exe`, skip `maybeResolveNixWrapper` (#721) - @bl-ue
+## [2.2.1] - 2026-06-25
 
-## [v4.0.11](https://github.com/Piebald-AI/tweakcc/releases/tag/v4.0.11) - 2026-03-05
+- CC 2.1.191 prompt sync; fix version stamp for new/cache-named prompts (a
+  missing `version` crashed the sync and aborted all stubs).
 
-- Fix AGENTS.md patch replacing CLAUDE.md content instead of falling back (#579) - @TyceHerrman
-- Move context-limit patch to opt-in, add 200K fallback (#577) - @liafonx
-- Make model customizations configurable and update models to latest (#572) - @liafonx
-- Support Claude Code 2.1.69 module path (#585) - @zigazaga4
+## [2.2.0] - 2026-06-24
 
-## [v4.0.10](https://github.com/Piebald-AI/tweakcc/releases/tag/v4.0.10) - 2026-02-27
+- Complexity effort router reworked to Haiku-only with a rolling TL;DR session
+  summary fed to the classifier each turn, reseeded from CC's compaction summary
+  on compaction; unified middle-truncation caps (TUI-editable); reshaped rubric
+  (top tier reserved for genuinely frontier work).
 
-- Fix React var and AGENTS.md patching 2.1.62 (#563) - @bl-ue
+## [2.1.1] - 2026-06-24
 
-## [v4.0.9](https://github.com/Piebald-AI/tweakcc/releases/tag/v4.0.9) - 2026-02-25
+- CC 2.1.190 prompt sync.
 
-- Add Nix support (#548) - @signadou
-- Fix patching for CC 2.1.51+ (#551) - @bl-ue
+## [2.1.0] - 2026-06-24
 
-## [v4.0.8](https://github.com/Piebald-AI/tweakcc/releases/tag/v4.0.8) - 2026-02-24
+- fff-first Bash search (`swapRipgrepForFff`, default off) + the first cut of the
+  complexity effort router.
 
-- Fix `? for shortcuts [undefined]` when no toolset is active (#544) - @bl-ue
+## [2.0.16] - 2026-06-24
 
-## [v4.0.7](https://github.com/Piebald-AI/tweakcc/releases/tag/v4.0.7) - 2026-02-23
+- CC 2.1.187 support.
 
-- Fix tool call patching typo (#542) - @bl-ue
+## [2.0.15] - 2026-06-23
 
-## [v4.0.6](https://github.com/Piebald-AI/tweakcc/releases/tag/v4.0.6) - 2026-02-22
+- Banner-layout fix (Clawd logo next to the header, not in the patch list).
 
-- Fix boundary detection to not use `\b` in several regexes and fix tool call patching typo (#538) - @bl-ue
-- Don't diff on arbitrary repack (#539) - @bl-ue
+## [2.0.14] - 2026-06-23
 
-## [v4.0.5](https://github.com/Piebald-AI/tweakcc/releases/tag/v4.0.5) - 2026-02-21
+- CC 2.1.186 support — `createElement` → `jsx()` runtime migration fixes (4 UI
+  patches) + prompt sync.
 
-- Fix an unnecessary warning when certain LSP patches aren't patched (#535) - @bl-ue
+## [2.0.13] - 2026-06-22
 
-## [v4.0.4](https://github.com/Piebald-AI/tweakcc/releases/tag/v4.0.4) - 2026-02-21
+- Escape injected non-ASCII at every injection surface (mojibake fix on
+  Bun-compiled CC, which stores `cli.js` as Latin-1).
 
-- Fix patching errors for CC 2.1.50+ and remove the swarm mode patch (#532) - @bl-ue
+## [2.0.12] - 2026-06-21
 
-## [v4.0.3](https://github.com/Piebald-AI/tweakcc/releases/tag/v4.0.3) - 2026-02-16
+- Fable/Mythos prompt set (all models) toggle.
 
-- Fix patchesAppliedIndication for CC 2.1.42+ ternary minHeight (#518) - @zigazaga4
-- Fix opusplan1m, statuslineUpdateThrottle, and rememberSkill patches for CC 2.1.42 (#520) - @bl-ue
+## [2.0.11] - 2026-06-21
 
-## [v4.0.2](https://github.com/Piebald-AI/tweakcc/releases/tag/v4.0.2) - 2026-02-11
+- CC 2.1.185 support.
 
-- Fix LSP patches (#511) - @TyceHerrman
+## [2.0.10] - 2026-06-19
 
-## [v4.0.1](https://github.com/Piebald-AI/tweakcc/releases/tag/v4.0.1) - 2026-02-10
+- CC 2.1.183 support.
 
-- Fix session memory past sessions gate for CC 2.1.38+ (#509) - @astrosteveo
+## [2.0.9] - 2026-06-18
 
-## [v4.0.0](https://github.com/Piebald-AI/tweakcc/releases/tag/v4.0.0) - 2026-02-09
+- CC 2.1.181 support.
 
-- Add a patch to filter out escape sequences that cause unwanted terminal scrolling (#496) - @brrock
-- Add comprehensive documentation for thinking verbs and thinking indicator customizations
-- Add contributing guidelines and AGENTS.md for developer experience
-- Add a fallback for WASMagic when it's not available (#399) - @signadou
-- Add opusplan[1m] model alias for 1M context support (#404) - @mike1858
-- Add MCP startup optimization settings (#407) - @mike1858
-- Add all available CC tools and their aliases to the toolset editor (#410) - @signadou
-- Add the option to be able to change the table format - @mike1858
-- Enable swarm mode (via `tengu_brass_pebble`) (#414) - @mike1858
-- Do smart diffing and add a `--show-unchanged` flag (#424) - @bl-ue
-- Add a `--restore`/`--revert` flag to undo patches and restore original CC installation (#431) - @bl-ue
-- Redesign `--apply` output (#433) - @bl-ue
-- Remove interactive apply in favor of more detailed `--apply` (#434) - @bl-ue
-- Add `--patches`, `--list-patches`, and `--list-system-prompt-patches` for patch-level application (#441) - @bl-ue
-- Add a patch unlocking session memory (#444) - @odysseus0
-- Add a patch to round the token count to the nearest multiple of a specified base (#451) - @bl-ue
-- Add a patch for throttling/pacing of statusline updates (#453) - @bl-ue
-- Extend the `thinkingVerbs` patch to cover past-tense verbs e.g. "Baked" (#454) - @bl-ue
-- Only apply the `thinkingBlockStyling` patch in CC version under 2.1.26 (#455) - @bl-ue
-- Fix `subagentModels` patch to not error when nothing was changed (#456) - @bl-ue
-- Enable the builtin `/remember` skill (#457) - @bl-ue
-- AGENTS.md support for Claude Code (#459) - @bl-ue
-- Add auto-accept plan mode patch (#464) - @irdbl
-- Add `--config-url` flag to fetch configuration from a URL (#465) - @bl-ue & @basekevin
-- Fix ALL the patching errors for 2.1.31 (#466) - @bl-ue
-- Add CLI spinners (#470) - @bl-ue
-- Add support for dangerously bypassing permissions in sudo with new setting and patch (#478) - @brrock
-- Add `unpack`, `repack`, and `adhoc-patch --string/regex/script` subcommands (#481)
-- Offer to set edited theme as Claude Code's current theme when exiting editor (#482) - @brrock
-- Add a patch to suppress the native installer warning (#483) - @brrock
-- Show lightning fast formatted patch changes via oxfmt before applying patch scripts (#489) - @bl-ue
-- Fix native installation support for newer CC versions (#492) - @signadou
-- Fix 2 config file saves on TUI startup (#494) - @bl-ue
-- Fix 2.1.37 patching errors in native JS (#497) - @bl-ue
+## [2.0.8] - 2026-06-17
 
-## [v3.4.0](https://github.com/Piebald-AI/tweakcc/releases/tag/v3.4.0) - 2026-01-18
+- Atomic native write (fixes the macOS code-signature SIGKILL via a fresh inode)
+  - network-first prompts fetch for npm + workflow-script harness gate.
 
-- Add input pattern highlighters (#387) - @bl-ue
-- Fix patching for CC 2.1.9 (#388) - @basekevin
-- Add missing fields recursively to settings on startup (#389) - @bl-ue
+## [2.0.7] - 2026-06-17
 
-## [v3.3.0](https://github.com/Piebald-AI/tweakcc/releases/tag/v3.3.0) - 2026-01-18
+- Generalize member-access keys (Linux member-access prompt apply).
 
-- Suppress /rate-limit-options from being triggered when rate limits are hit (#358) - @basekevin
-- Don't suppress line numbers by default (#360) - @bl-ue
-- Fix hideCtrlGToEdit patch (#361) - @basekevin
-- Fix context limit patch for CC 2.1.5 (#367) - @bl-ue
-- Add a patch to make thinking blocks italic and dim again (#369) - @bl-ue
-- Don't trim newlines when reading system prompt markdown files (#380)
-- Make the `expandThinkingBlocks` patch optional per the existing setting (#381) - @bl-ue
+## [2.0.6] - 2026-06-17
 
-## [v3.2.5](https://github.com/Piebald-AI/tweakcc/releases/tag/v3.2.5) - 2026-01-09
+- npm-install identifier-union fallback (#15, dividedby) — hardens the
+  unresolved-placeholder guard.
 
-- Fix patching for CC 2.1.2 (#352) - @basekevin
-- Update node-lief to 0.1.8 (#340) - @signadou
-- Add subagent model configuration (#331) - @brrock
+## [2.0.5] - 2026-06-17
 
-## [v3.2.4](https://github.com/Piebald-AI/tweakcc/releases/tag/v3.2.4) - 2026-01-04
+- Code-review slot-bind + inline-blob nested-`${}` remap.
 
-- Fix macOS and Windows native installation support (#327) - @signadou
-- Suppress line numbers in edit/read tools: `1→Line 1` to `Line 1` (#326) - @basekevin
+## [2.0.4] - 2026-06-16
 
-## [v3.2.3](https://github.com/Piebald-AI/tweakcc/releases/tag/v3.2.3) - 2026-01-01
+- CC 2.1.179 deep support + apply round-trip safety (ground-truth harness).
 
-- Increase thinkerFormat search window to 1000 chars (#317) - @ljepson
-- Add `--verbose` flag (#320) - @signadou
-- Add debug logs for native installation module loading (#321) - @signadou
-- Fix native installation support (#322) - @signadou
+## [2.0.3] - 2026-06-13
 
-## [v3.2.2](https://github.com/Piebald-AI/tweakcc/releases/tag/v3.2.2) - 2025-12-21
+- CC 2.1.177 support.
 
-- Add an option to increase tokens that can be read in a single file (#314) - @mike1858
+## [2.0.2] - 2026-06-12
 
-## [v3.2.1](https://github.com/Piebald-AI/tweakcc/releases/tag/v3.2.1) - 2025-12-19
+- CC 2.1.175 prompts (395 named, + Projects tool).
 
-- Remove the patch to hide the thinking banner - the banner itself was removed in CC 2.0.70 (#298) - @basekevin
-- Fallback instead of error when claude is in PATH but not cli.js/binary (#307) - @bl-ue
+## [2.0.1] - 2026-06-11
 
-## [v3.2.0](https://github.com/Piebald-AI/tweakcc/releases/tag/v3.2.0) - 2025-12-14
+- Fix: version stamp reads `package.json`.
 
-- Support for `~/.claude/tweakcc` configuration directory location (#259) - @bl-ue
-- `TWEAKCC_CONFIG_DIR` environment variable for explicit config location override (#259) - @bl-ue
-- Warning when multiple configuration locations are detected (#259) - @bl-ue
-- Configuration priority order now: `TWEAKCC_CONFIG_DIR` > `~/.tweakcc` (if exists) > `~/.claude/tweakcc` > `XDG_CONFIG_HOME/tweakcc` > `~/.tweakcc` (default) (#259) - @bl-ue
-- Fix Claude Code hanging due to `/title` patches (#265) - @bl-ue
-- Allow disabling `/title` patches via the Misc view (#265) - @bl-ue
-- Add `EnterPlanMode` and `LSP` to the toolset edit view (#266) - @bl-ue
-- Ignore permission errors when searching for cli.js (#268) - @bl-ue
-- Improve user message display (#269) - @bl-ue
-- Add support for explicitly setting the native install path (#270) - @signadou
-- Load `node-lief` using dynamic `import()` (#272) - @signadou
-- Prefer latest bunx cached claude-code version when patching (#282) - @y0usaf
-- Support `<<BUILD_TIME>>` in newer CC prompts (#281) - @mike1858
-- Show a Piebald announcement (#284) - @bl-ue
-- Rework logic to find claude: `TWEAKCC_CC_INSTALLATION_DIR`, `ccInstallationPath`, `claude` from PATH, search dirs, user selection (#285) - @bl-ue
-- Brought up to speed with CC 2.0.69 (#286) - @bl-ue
-- Add new options to hide the Clawd logo, the whole startup banner, and the `ctrl-g to edit prompt` text (#287) - @bl-ue
+## [2.0.0] - 2026-06-11
 
-## [v3.1.6](https://github.com/Piebald-AI/tweakcc/releases/tag/v3.1.6) - 2025-12-05
-
-- Add bunx cache detection and lazy-load node-lief for NixOS compatibility (#255) - @y0usaf
-
-## [v3.1.5](https://github.com/Piebald-AI/tweakcc/releases/tag/v3.1.5) - 2025-11-30
-
-- Fix `$` variable name replacement in system prompts (#241) - @signadou
-
-## [v3.1.4](https://github.com/Piebald-AI/tweakcc/releases/tag/v3.1.4) - 2025-11-29
-
-- Allow making a toolset the default for plan mode (#238) - @bl-ue
-
-## [v3.1.3](https://github.com/Piebald-AI/tweakcc/releases/tag/v3.1.3) - 2025-11-26
-
-- Add paths for mise npm backend (#234) - @coryzibell
-- Emit a Rust-style error when system prompt markdown files contain unescaped backslashes (#226) - @bl-ue & @mike1858
-
-## [v3.1.2](https://github.com/Piebald-AI/tweakcc/releases/tag/v3.1.2) - 2025-11-23
-
-- Fix toolset patching (#224) - @bl-ue
-- Remove the `/cost` patch (#223) - @bl-ue
-- Fix `/title` patching for CC 2.0.49+ (#222) - @bl-ue
-
-## [v3.1.1](https://github.com/Piebald-AI/tweakcc/releases/tag/v3.1.1) - 2025-11-17
-
-- Fix Restore menu item to account for native binary too (#208) - @bl-ue
-- Detect the native CC version from the active binary instead of the backup (#207) - @bl-ue
-- Use `require` instead of `import` in patches (`import` doesn't work in Bun) (closes #205) (#206) - @bl-ue
-
-## [v3.1.0](https://github.com/Piebald-AI/tweakcc/releases/tag/v3.1.0) - 2025-11-15
-
-- Show the currently-active toolset next to the "accept edits on"/"plan mode on" banner (#200) - @bl-ue
-- Add `/title` and `/rename` slash commands to CC for manual session naming per [CC#2112](https://github.com/anthropics/claude-code/issues/2112) (#199) - @bl-ue
-
-## [v3.0.2](https://github.com/Piebald-AI/tweakcc/releases/tag/v3.0.2) - 2025-11-13
-
-- Create an example `config.json` if it doesn't exist and cli.js isn't found (#195) - @bl-ue
-- Add `/usr/local/{+ share/}nvm` to the list of search paths (#190) - @bl-ue
-
-## [v3.0.1](https://github.com/Piebald-AI/tweakcc/releases/tag/v3.0.1) - 2025-11-11
-
-- Fix Mach-O segment alignment for ARM64 binaries (#183) - @signadou
-
-## [v3.0.0](https://github.com/Piebald-AI/tweakcc/releases/tag/v3.0.0) - 2025-11-10
-
-- Remove the "CLAUDE CODE" figlet ASCII art customization to keep up with Claude Code (#174) - @bl-ue
-- Support slight bun-specific differences in React module accessing, `$` identifier frequency, and unicode escaping (#163) - @bl-ue
-- Enable a toolset to be the default toolset (#161) - @bl-ue
-- Add a misc view - @bl-ue
-- Expand thinking blocks by default (#159) - @bl-ue
-- Add indicators to CC's startup UI that tweakcc's patching has been applied (#158) - @bl-ue
-- Add /toolset to Claude Code (#157) - @bl-ue
-- Makes the Claude Code's native LSP support work (#152) - @bl-ue
-
-## [v2.0.3](https://github.com/Piebald-AI/tweakcc/releases/tag/v2.0.3) - 2025-11-02
-
-- Handle ENOTDIR errors when searching for Claude Code installation (#148) - @bl-ue
-
-## [v2.0.2](https://github.com/Piebald-AI/tweakcc/releases/tag/v2.0.2) - 2025-10-31
-
-- Better error handling when the prompt JSON file doesn't exist yet (#130) - @bl-ue
-- Add ~/.linuxbrew to the search dirs (#132) - @bl-ue
-- Add fnm multishell path to the search dirs (#139) - @wu-json
-- Cache prompt JSON files and fix download error handling (#140) - @bl-ue
-
-## [v2.0.1](https://github.com/Piebald-AI/tweakcc/releases/tag/v2.0.1) - 2025-10-23
-
-- Support `XDG_CONFIG_HOME` per #120 (#121) - @bl-ue
-- Add `C:\nvm4w\nodejs` to the cli.js search list per #118 (#119) - @bl-ue
-
-## [v2.0.0](https://github.com/Piebald-AI/tweakcc/releases/tag/v2.0.0) - 2025-10-22
-
-- **New:** Add system prompt customization support
-
-## [v1.6.0](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.6.0) - 2025-10-11
-
-- Update the builtin themes' colors and IDs to account for all the changes in CC over time (#110) - @bl-ue
-- Update the theme preview to match the modern CC UI (#110) - @bl-ue
-- Properly incorporate new colors in existing config files (#110) - @bl-ue
-- Dynamically fetch Claude subscription and current model for live display in the theme preview (#110) - @bl-ue
-
-## [v1.5.5](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.5.5) - 2025-09-29
-
-- Fix input box border customization for CC 1.0.128 (#105) - @bl-ue
-- Fix user message styling for CC 1.0.128 (#105) - @bl-ue
-- Add the tweakcc version to `claude --version` and `/status` (#106) - @bl-ue
-
-## [v1.5.4](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.5.4) - 2025-09-18
-
-- Fix input box border customization for CC 1.0.115 (#98) - @bl-ue
-- Fix user message styling for CC 1.0.115 (#98) - @bl-ue
-
-## [v1.5.3](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.5.3) - 2025-09-12
-
-- Properly glob directories and show the glob paths to the user in the error message when cli.js can't be found--#93 (#94) - @bl-ue
-
-## [v1.5.2](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.5.2) - 2025-09-11
-
-- **New:** Make /cost work with Pro/Max subscriptions (See Claude Code issue [#1109](https://github.com/anthropics/claude-code/issues/1109)) (#91) - @bl-ue
-- Remove colors and emoji from --apply output (#92) - @bl-ue
-
-## [v1.5.1](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.5.1) - 2025-09-09
-
-- **New:** Make all the select menus (like the /model and /theme lists) show 25 items by default instead of 5 (#85) - @bl-ue
-- Sort the models added to /models in descending order of release date (#84) - @bl-ue
-- Speed up patching from 8s+ to <=1s (#86) - @bl-ue
-- Simplify the diff shown for the context limit patch in debug mode (#89) - @bl-ue
-
-## [v1.5.0](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.5.0) - 2025-09-08
-
-- **New:** Add all the Anthropic models to Claude Code's /model command (#82) - @bl-ue
-- Restore cli.js permissions before deleting it and recreating it to break link networks (#81) - @bl-ue
-
-## [v1.4.2](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.4.2) - 2025-09-08
-
-- Delete cli.js before overwriting it to avoid any link networks (#78) - @bl-ue
-- Fix the black on black preview in the user message display section (#77) - @bl-ue
-
-## [v1.4.1](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.4.1) - 2025-09-07
-
-- Fix a bug where resetting the past user message's prefix and content background/foreground would set them both to black, making them unreadable in Claude Code (see https://github.com/Piebald-AI/tweakcc/issues/69#issuecomment-3263942674) (#75) - @bl-ue
-
-## [v1.4.0](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.4.0) - 2025-09-06
-
-- **New:** Add a feature to remove the border from Claude Code's input box (#72) - @bl-ue
-- **New:** User message display customization (#71) - @bl-ue
-
-## [v1.3.0](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.3.0) - 2025-09-02
-
-- **New:** Add support for customizing the context limit with `CLAUDE_CODE_CONTEXT_LIMIT` (#63) - @bl-ue
-
-## [v1.2.5](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.2.5) - 2025-09-01
-
-- Fix n search path (#60) - @bl-ue
-
-## [v1.2.4](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.2.4) - 2025-08-29
-
-- Add star recommendation to the UI home screen
-
-## [v1.2.3](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.2.3) - 2025-08-28
-
-- **New:** Add a patch to fix the generating spinner freezing when CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC is set (#54) - @heromantf
-- Update the thinking verb patching to work with CC 1.0.96 (#55) - @heromantf
-
-## [v1.2.2](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.2.2) - 2025-08-26
-
-- Continuation of #43
-
-## [v1.2.1](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.2.1) - 2025-08-26
-
-- **New:** feat: add welcome message customization to replace 'Claude Code' with custom text (#39) - @patrickjaja
-- fix(patching): include $ in matched identifier names (#43) - @bl-ue
-- feat(search): support local installation, fix ~/.npm\* paths (#44) - @bl-ue
-
-## [v1.2.0](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.2.0) - 2025-08-25
-
-- **New:** Bring back the token counter and elapsed time metric (#37) - @bl-ue
-
-## [v1.1.4](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.1.4) - 2025-08-25
-
-- **New:** `--apply` CLI option to apply stored customizations without interactive UI (#33) - @patrickjaja
-- Updated patching logic to work with Claude Code 1.0.89 (#34) - @bl-ue
-
-## [v1.1.3](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.1.3) - 2025-08-24
-
-- Fix a bug where the backup.cli.js file would sometimes be incorrectly overwritten (closes #30) - @bl-ue
-
-## [v1.1.2](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.1.2) - 2025-08-21
-
-- Support thinking phases with multiple characters by editing the container's width in CC
-- Stop showing subagent colors to reduce vertical space usage in preview
-- Don't show the 'Claude Code was updated ...' message on initial startup
-
-## [v1.1.1](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.1.1) - 2025-08-21
-
-- **New:** Add `--debug` option to print debugging information
-- Updated patching to support CC 1.0.86 (breaks compatibility with .85 and earlier)
-
-## [v1.1.0](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.1.0) - 2025-08-19
-
-- **New:** Support for new colors (claudeShimmer, ide, and subagent-related ones) (closes #26)
-- **New:** Add new verbs from Claude Code ~1.0.83
-- **New:** Add paths for common operating systems, package managers, and Node managers
-- Fix patching of thinking verbs (closes #21)
-- Fix support for thinking verb punctuation and generalize to thinking verb format (closes #23)
-- Fix breaking the config file when changing colors (closes #18)
-- Clarify tab usage for switching sections (closes #20)
-
-## [v1.0.3](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.0.3) - 2025-08-10
-
-- **New:** Support pasting colors into the picker and theme editor (#14) - @bl-ue
-- Works with Claude Code 1.0.72
-- Remove hardcoded "white" color
-- Upgraded dependencies
-
-## [v1.0.2](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.0.2) - 2025-08-02
-
-- **New:** Homebrew path support for macOS (#11) - @petems
-- **New:** NVM search directories - @signadou
-- Check for cli.js only once at startup (#9) - @signadou
-- Remove support for Haiku-generated words
-
-## [v1.0.1](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.0.1) - 2025-07-27
-
-- Fix theme duplication bug where Theme.colors wasn't properly cloned (closes #7)
-- Fix hue slider max value from 360 to 359 in color picker (closes #8)
-
-## [v1.0.0](https://github.com/Piebald-AI/tweakcc/releases/tag/v1.0.0) - 2025-07-25
-
-- Initial release with theme customization for Claude Code
+- First release of the `tweakcc-fixed` npm package from this fork (re-forked
+  directly off Piebald-AI/tweakcc; trusted publish-to-npm via GitHub release).

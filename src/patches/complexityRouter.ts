@@ -53,11 +53,11 @@
 // The support guards (dUe/GRe) are re-applied so an unsupported level still
 // downgrades to "high".
 //
-// Four splices:
+// Five splices:
 //   1. wrap XQ (effort resolver) + prepend the runtime.
 //   2. call the classify entry from the submit handler (anchor: the stable
-//      "requires a string input." throw), where the finalized user text `E` and
-//      the submit mode are in scope.
+//      "requires a string input." throw), where the finalized user text `E`, the
+//      submit mode, and the in-use model (r.options.mainLoopModel) are in scope.
 //   3. (optional) capture the previous assistant reply text for the next turn's
 //      summary, at CC's tool-use-summary site where the last assistant text is
 //      already extracted. This site is gated on emitToolUseSummaries && toolUses
@@ -67,14 +67,19 @@
 //   4. (optional) capture CC's conversation-compaction summary (the summaryText
 //      in the compaction result) so the next routed turn resets + reseeds its
 //      TL;DR from it. Absent anchor only costs the reseed.
+//   5. (optional) capture the rewind TARGET's timestamp at CC's rewind dialog
+//      (onRestoreMessage), so the next routed turn cuts the snapshot log back to
+//      that point. Absent anchor only costs the precise cut on plain Restore.
 //
 // -- Persistence (survives session leave/resume) --
-// The rolling summary + last level are cached on globalThis and mirrored to a
-// per-session sidecar file ~/.tweakcc/router-state/<sessionId>.json, keyed by
-// CC's session id (discovered via the getSessionId(){return X()} accessor). On
-// the first routed turn of a (resumed) session we reload it; we never touch CC's
-// own transcript jsonl. Best-effort: any fs error degrades to in-memory only, and
-// if the session-id accessor is not found persistence is simply disabled.
+// The rolling summary, last level, AND the per-turn rewind-snapshot log are cached
+// on globalThis and mirrored to a per-session sidecar ~/.tweakcc/router-state/
+// <sessionId>.json, keyed by CC's session id (discovered via the
+// getSessionId(){return X()} accessor). The write is async fire-and-forget (never
+// blocks the submit path); on the first routed turn of a (resumed) session we
+// reload all three, so resume->rewind cuts precisely. We never touch CC's own
+// transcript jsonl. Best-effort: any fs error degrades to in-memory only, and if
+// the session-id accessor is absent persistence is simply disabled.
 //
 // -- Scope note --
 // XQ is CC's single effort resolver, used for the main loop AND for subagents /
@@ -122,6 +127,11 @@ const ROUTER_MARKER = '__tweakccRouterClassify';
 const DEFAULT_MESSAGE_CAP = 100000;
 const DEFAULT_ASSISTANT_CAP = 100000;
 const DEFAULT_TIMEOUT_MS = 15000;
+// Cap on the per-turn rewind-snapshot log (oldest evicted). Bounds both the
+// in-memory array AND the persisted sidecar; rewinding past it cold-resets. Each
+// entry is {ts,summary,level} (~a TL;DR), so the worst-case file stays well under
+// ~1MB and is pruned by the 14-day TTL.
+const MAX_LOG_ENTRIES = 1000;
 
 // CC helpers captured from the binary: gB (Haiku-pinned json-schema side-call) +
 // km (agent-context builder). Both are required - gB throws without agentContext.
@@ -186,18 +196,20 @@ const buildRuntime = (
 
   return (
     // ----- per-session state -----
-    `function __tweakccRouterState(){return globalThis.__tweakccRouter||(globalThis.__tweakccRouter={level:void 0,effort:void 0,baseline:void 0,summary:void 0,prevUser:void 0,prevAssistant:void 0,pendingCompaction:void 0,model:void 0,loaded:!1})}` +
+    `function __tweakccRouterState(){return globalThis.__tweakccRouter||(globalThis.__tweakccRouter={level:void 0,effort:void 0,baseline:void 0,summary:void 0,prevUser:void 0,prevAssistant:void 0,pendingCompaction:void 0,pendingRewindCut:void 0,log:void 0,model:void 0,loaded:!1})}` +
     // Middle-truncate: keep head + tail, drop the middle (where the bulk paste /
     // logs live), with a size marker. The intent/framing (head) and the actual
     // ask or result (tail) survive, and the omitted-size marker is itself a
     // complexity signal - both better for routing than head-only truncation.
-    `function __tweakccRouterTrunc(__s,__cap){if(typeof __s!=="string")return"";if(__s.length<=__cap)return __s;var __h=Math.floor(__cap/2);return __s.slice(0,__h)+"\\n...["+(__s.length-__cap)+" chars omitted from the middle]...\\n"+__s.slice(__s.length-(__cap-__h))}` +
+    `function __tweakccRouterTrunc(__s,__cap){if(typeof __s!=="string")return"";if(__s.length<=__cap)return __s;var __mk="\\n...["+(__s.length-__cap)+" chars omitted from the middle]...\\n";var __b=__cap-__mk.length;if(__b<0)__b=0;var __h=Math.floor(__b/2);return __s.slice(0,__h)+__mk+__s.slice(__s.length-(__b-__h))}` +
     // ----- sidecar persistence (best-effort; any error -> in-memory only) -----
     `function __tweakccRouterSid(){try{var __s=${sidExpr};return typeof __s==="string"&&__s?__s:null}catch(__e){return null}}` +
     `function __tweakccRouterDir(){var __p=${requireFunc}("path"),__o=${requireFunc}("os");return __p.join(__o.homedir(),".tweakcc","router-state")}` +
     `function __tweakccRouterFile(__sid){return ${requireFunc}("path").join(__tweakccRouterDir(),__sid+".json")}` +
-    `function __tweakccRouterLoad(__st){if(__st.loaded)return;__st.loaded=!0;try{var __sid=__tweakccRouterSid();if(!__sid)return;var __fs=${requireFunc}("fs"),__f=__tweakccRouterFile(__sid);if(__fs.existsSync(__f)){var __d=JSON.parse(__fs.readFileSync(__f,"utf8"));if(__d){if(typeof __d.summary==="string")__st.summary=__d.summary;if(Number.isInteger(__d.level))__st.level=__d.level}}__tweakccRouterPrune(__fs)}catch(__e){}}` +
-    `function __tweakccRouterSave(__st){try{var __sid=__tweakccRouterSid();if(!__sid)return;var __fs=${requireFunc}("fs"),__dir=__tweakccRouterDir();__fs.mkdirSync(__dir,{recursive:!0});__fs.writeFileSync(__tweakccRouterFile(__sid),JSON.stringify({summary:__st.summary,level:__st.level,updatedAt:Date.now()}))}catch(__e){}}` +
+    `function __tweakccRouterLoad(__st){if(__st.loaded)return;__st.loaded=!0;try{var __sid=__tweakccRouterSid();if(!__sid)return;var __fs=${requireFunc}("fs"),__f=__tweakccRouterFile(__sid);if(__fs.existsSync(__f)){var __d=JSON.parse(__fs.readFileSync(__f,"utf8"));if(__d){if(typeof __d.summary==="string")__st.summary=__d.summary;if(Number.isInteger(__d.level))__st.level=__d.level;if(Array.isArray(__d.log))__st.log=__d.log}}__tweakccRouterPrune(__fs)}catch(__e){}}` +
+    // Fire-and-forget async write: persistence is best-effort, so we never block
+    // the submit hot path on fs (errors swallowed via no-op callbacks).
+    `function __tweakccRouterSave(__st){try{var __sid=__tweakccRouterSid();if(!__sid)return;var __fs=${requireFunc}("fs"),__dir=__tweakccRouterDir(),__j=JSON.stringify({summary:__st.summary,level:__st.level,log:Array.isArray(__st.log)?__st.log:[],updatedAt:Date.now()});__fs.mkdir(__dir,{recursive:!0},function(){try{__fs.writeFile(__tweakccRouterFile(__sid),__j,function(){})}catch(__e){}})}catch(__e){}}` +
     `function __tweakccRouterDrop(__st){try{var __sid=__tweakccRouterSid();if(!__sid)return;var __fs=${requireFunc}("fs"),__f=__tweakccRouterFile(__sid);if(__fs.existsSync(__f))__fs.unlinkSync(__f)}catch(__e){}}` +
     // Prune sidecars older than 14 days so the dir can't grow unbounded.
     `function __tweakccRouterPrune(__fs){try{var __dir=__tweakccRouterDir(),__ns=__fs.readdirSync(__dir),__now=Date.now(),__ttl=12096e5;for(var __i=0;__i<__ns.length;__i++){try{var __ff=${requireFunc}("path").join(__dir,__ns[__i]);if(__now-__fs.statSync(__ff).mtimeMs>__ttl)__fs.unlinkSync(__ff)}catch(__e){}}}catch(__e){}}` +
@@ -228,14 +240,35 @@ const buildRuntime = (
     `if(typeof __text!=="string")return;` +
     `var __tr=__text.replace(/^\\s+/,"");` +
     // /clear (NOT /clear-screen) is a clean slate: reset state + baseline + sidecar.
-    `if(/^\\/clear(\\s|$)/.test(__tr)){__st.level=void 0;__st.effort=void 0;__st.baseline=void 0;__st.summary=void 0;__st.prevUser=void 0;__st.prevAssistant=void 0;__st.pendingCompaction=void 0;__tweakccRouterDrop(__st);return}` +
+    `if(/^\\/clear(\\s|$)/.test(__tr)){__st.level=void 0;__st.effort=void 0;__st.baseline=void 0;__st.summary=void 0;__st.prevUser=void 0;__st.prevAssistant=void 0;__st.pendingCompaction=void 0;__st.pendingRewindCut=void 0;__st.log=void 0;__st.model=void 0;__tweakccRouterDrop(__st);return}` +
     `if(__tr.charAt(0)==="/")return;` +
     `if(__mode!==void 0&&__mode!=="prompt")return;` +
     `__tweakccRouterLoad(__st);` +
+    // Rewind CUT. CC's /rewind "Restore conversation" forks with new uuids, so the
+    // only stable link from the fork back to the rewound-TO message is its
+    // TIMESTAMP - which splice 5 captured into pendingRewindCut. We keep a per-turn
+    // snapshot log {ts,summary,level} (ts = Date.now() at submit, the same clock CC
+    // stamps messages with). On a rewind we find the latest logged turn at or before
+    // the target's time, restore its summary+level, and drop the rewound-away tail.
+    // If the target predates the (in-memory) log - e.g. after resume - we cold-reset
+    // (no stale carryover). Turns are seconds apart, so the match is unambiguous.
+    `if(__st.pendingRewindCut!=null){var __rt=__st.pendingRewindCut;__st.pendingRewindCut=void 0;` +
+    `var __rms=typeof __rt==="number"?__rt:Date.parse(__rt),__ci=-1;` +
+    `if(__rms===__rms&&Array.isArray(__st.log))for(var __i=__st.log.length-1;__i>=0;__i--){if(__st.log[__i]&&__st.log[__i].ts<=__rms){__ci=__i;break}}` +
+    `if(__ci>=0){var __pe=__st.log[__ci];__st.summary=__pe.summary;__st.level=__pe.level;__st.log=__st.log.slice(0,__ci)}else{__st.summary=void 0;__st.level=void 0}` +
+    `__st.prevUser=void 0;__st.prevAssistant=void 0;__st.pendingCompaction=void 0;` +
+    `if(process.env.TWEAKCC_ROUTER_DEBUG)try{process.stderr.write("[tweakcc-router] rewind cut to "+__rt+" ("+(__ci>=0?"restored":"reset")+")\\n")}catch(__e){}}` +
     // On a real conversation compaction (captured by splice 4) the history was
     // replaced by CC's compaction summary - reset and reseed the TL;DR from it,
     // dropping the now-stale exchange + pin floor (same session, fresh context).
     `if(typeof __st.pendingCompaction==="string"){__st.summary=__st.pendingCompaction;__st.prevUser=void 0;__st.prevAssistant=void 0;__st.level=void 0;__st.pendingCompaction=void 0}` +
+    // RECORD: snapshot the pre-turn state (timestamped) so a later rewind to this
+    // point can restore it. Persisted in the sidecar (alongside summary/level), so a
+    // resume reloads it and resume->rewind cuts precisely too. Bounded to the most
+    // recent MAX_LOG_ENTRIES turns; rewinding past that cold-resets.
+    `if(!Array.isArray(__st.log))__st.log=[];` +
+    `__st.log.push({ts:Date.now(),summary:typeof __st.summary==="string"?__st.summary:"",level:__st.level});` +
+    `if(__st.log.length>${MAX_LOG_ENTRIES})__st.log.splice(0,__st.log.length-${MAX_LOG_ENTRIES});` +
     // CONTEXT block: give the classifier memory of (a) the model it is calibrating
     // effort FOR and whether it changed mid-session, and (b) the level it itself
     // assigned last turn - so a continuing thread holds effort instead of being
@@ -368,12 +401,15 @@ const injectSubmitHook = (file: string): string | null => {
   // Capture the in-use model id from the enclosing query fn's `<r>.options
   // .mainLoopModel` (assigned just above the throw, e.g. `k=Sg(r.options
   // .mainLoopModel)`), so the classifier knows what it is calibrating effort for.
-  // Optional: absent -> the <context> block just reports "unknown".
+  // Scan backward from the throw and take the NEAREST occurrence (the receiver in
+  // scope at the throw), not the first - robust to an unrelated earlier match if a
+  // future build reshapes the surrounding code. Optional: absent -> "unknown".
   const before = file.slice(Math.max(0, match.index - 4000), match.index);
-  const modelMatch = before.match(/([$\w]+)\.options\.mainLoopModel/);
-  const modelExpr = modelMatch
-    ? `${modelMatch[1]}.options.mainLoopModel`
-    : 'void 0';
+  const modelMatches = [
+    ...before.matchAll(/([$\w]+)\.options\.mainLoopModel/g),
+  ];
+  const last = modelMatches[modelMatches.length - 1];
+  const modelExpr = last ? `${last[1]}.options.mainLoopModel` : 'void 0';
   const call = `await ${ROUTER_MARKER}(${textVar},${modeVar},${modelExpr});`;
 
   const insertAt = match.index + match[0].length;
@@ -429,6 +465,38 @@ const injectCompactionCapture = (file: string): string => {
   }
   const sumVar = match[1];
   const replacement = `return globalThis.__tweakccRouter&&(globalThis.__tweakccRouter.pendingCompaction=${sumVar}),{ok:!0,summaryText:${sumVar},`;
+  const start = match.index;
+  const end = start + match[0].length;
+  const newFile = file.slice(0, start) + replacement + file.slice(end);
+  showDiff(file, newFile, replacement, start, end);
+  return newFile;
+};
+
+// ---------------------------------------------------------------------------
+// Splice 5 (optional): capture the rewind TARGET's timestamp. CC's rewind dialog
+// wires "Restore conversation" to `onRestoreMessage:(m)=>X(m,"message_selector")`
+// where m is the message rewound TO. We tag the router global with m.timestamp
+// (comma operator, return value untouched) so the next routed turn cuts its
+// snapshot log back to that point. Timestamp is the only stable link: the restore
+// forks with new uuids and m exposes no parentUuid. "Summarize from here/up to
+// here" rewinds go through the compaction summaryText path instead (splice 4).
+// Absent anchor only costs the cut on the plain-restore path.
+// ---------------------------------------------------------------------------
+const injectRestoreReset = (file: string): string => {
+  const pattern =
+    /onRestoreMessage:\(([$\w]+)\)=>([$\w]+)\(\1,"message_selector"\)/;
+  const match = file.match(pattern);
+  if (!match || match.index === undefined) {
+    debug(
+      'patch: complexityRouter: restore-conversation site absent - no rewind cut'
+    );
+    return file;
+  }
+  const param = match[1];
+  const fn = match[2];
+  // Capture the rewound-TO message's timestamp - the only stable link across the
+  // fork (it has no exposed parentUuid, and its own uuid is in the new fork space).
+  const replacement = `onRestoreMessage:(${param})=>(globalThis.__tweakccRouter&&(globalThis.__tweakccRouter.pendingRewindCut=${param}&&${param}.timestamp),${fn}(${param},"message_selector"))`;
   const start = match.index;
   const end = start + match[0].length;
   const newFile = file.slice(0, start) + replacement + file.slice(end);
@@ -507,7 +575,9 @@ export const writeComplexityRouter = (
     return oldFile;
   }
 
-  // Splices 3 and 4 are optional: a missing capture site only costs
-  // prior-assistant context / compaction reseed, so never fail the patch on them.
-  return injectCompactionCapture(injectPrevAssistantCapture(afterHook));
+  // Splices 3, 4, 5 are optional: a missing capture site only costs prior-assistant
+  // context / compaction reseed / rewind reset, so never fail the patch on them.
+  return injectRestoreReset(
+    injectCompactionCapture(injectPrevAssistantCapture(afterHook))
+  );
 };

@@ -374,10 +374,22 @@ export function ComplexityRouterView({ onBack }: ComplexityRouterViewProps) {
         </Text>
         <Text dimColor>
           A one-shot Haiku side-call routes each prompt, fed a rolling TL;DR
-          summary of the session (kept in ~/.tweakcc/router-state, restored on
-          resume; reset and reseeded from the main model&apos;s summary when the
-          conversation compacts). On a Haiku error it keeps the last level, else
-          defaults high.
+          summary of the session plus the model in use and the level it set last
+          turn (so it judges in context, not cold). Kept in ~/.tweakcc/router-
+          state, restored on resume; reset and reseeded from the main
+          model&apos;s summary when the conversation compacts. On a Haiku error
+          it keeps the last level, else defaults high.
+        </Text>
+        <Text dimColor>
+          Rewind-aware: it snapshots the routed state each turn, so /rewind
+          (Restore conversation) cuts the summary back to the point you rewound
+          to - effort and memory follow the conversation instead of carrying
+          rewound-away work. (Summarize-from-here rewinds reseed via
+          compaction.)
+        </Text>
+        <Text dimColor>
+          Fully customizable: edit the classifier System prompt in your $EDITOR,
+          and each tier&apos;s label/help inline - all with sane defaults.
         </Text>
         <Text dimColor>
           pin per task is a monotonic floor - effort never drops below the
@@ -395,8 +407,8 @@ export function ComplexityRouterView({ onBack }: ComplexityRouterViewProps) {
           TWEAKCC_ROUTER_DEBUG=1 also logs each decision.
         </Text>
         <Text dimColor>
-          ↑↓ navigate · enter/space toggle or edit · type digits to set a number
-          · x reset · esc back
+          ↑↓ navigate · enter/space toggle, edit, or open $EDITOR · digits set a
+          number · on a tier: l/h edit label/help · x reset · esc back
         </Text>
       </Box>
 
