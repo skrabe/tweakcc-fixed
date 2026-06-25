@@ -4895,5 +4895,208 @@
     "desc": "Tool result telling the agent its plan was submitted to the team lead and to wait for approval before implementing"
   },
   "4b91a44ce428618f60b0374bc3aee36b59c19f25": { "facing": "ui" },
-  "1a7838633c00ca11dab2b104141cd8401c2d20fd": { "facing": "ui" }
+  "1a7838633c00ca11dab2b104141cd8401c2d20fd": { "facing": "ui" },
+  "fe273b208d8cd2eb0cbb9ae04cfe631d41c77270": { "facing": "ui" },
+  "e6edfb2142217b2af7d20acc9527af2c067cd222": { "facing": "ui" },
+  "92fdc5717b1dfba46f24b12d363ee7d0a288ac04": {
+    "facing": "model",
+    "id": "data-context-tip-situation-workflow-orchestration",
+    "name": "Data: Context Tip Situation — Workflow Orchestration",
+    "desc": "Situation catalog entry describing manual subagent chaining, used by the context-tip selector model to decide when to suggest dynamic workflows/ultracode"
+  },
+  "2321b0c979651ac57705ab5d48dc6614b22ea24e": {
+    "facing": "model",
+    "id": "tool-description-context-tip-reception-field",
+    "name": "Tool Description: Context Tip Reception Field",
+    "desc": "Schema field description for the reception enum on the context-tip reception-evaluation tool, read by the evaluator model"
+  },
+  "0cd22bcd7ab2b5a365cde08d8bd1bef408d88f6b": { "facing": "internal" },
+  "65ca6e3aeb8cc33de8a3052600ece91968976ba2": {
+    "facing": "model",
+    "id": "data-context-tip-situation-statusline-discovery",
+    "name": "Data: Context Tip Situation — Statusline Discovery",
+    "desc": "Situation catalog entry describing the user asking about ambient session state, used by the context-tip selector model to decide when to suggest /statusline"
+  },
+  "2f23c0c72c64d02a941851740a681ae8345d5084": {
+    "facing": "model",
+    "id": "data-context-tip-situation-manual-polling",
+    "name": "Data: Context tip situation — manual polling",
+    "desc": "Situation text for detecting when the user is manually polling status and should be shown the /loop context tip"
+  },
+  "120eb15ddf969bce9988e55f7433c2f44e3e7965": {
+    "facing": "model",
+    "id": "agent-prompt-context-tip-reception-evaluator",
+    "name": "Agent Prompt: Context tip reception evaluator",
+    "desc": "Evaluates whether a shown Claude Code context tip was acted on and whether its reception was positive, neutral, negative, or unknown"
+  },
+  "8f1af3b7c492daa21084e4cb56ffc87c0e630b62": { "facing": "ui" },
+  "74086c69a3784854612fa37c44cd913a6683a343": { "facing": "ui" },
+  "74001ef466a28e5d481b2d4d40dfae282efdd65c": {
+    "facing": "model",
+    "id": "tool-description-context-tip-action",
+    "name": "Tool Description: Context Tip Action Field",
+    "desc": "Schema field description for the optional 'action' (command/shortcut) parameter of the contextual-tip emit tool"
+  },
+  "71d9d55bdadea2502b9dacfe9e2f21f7ef453b0c": { "facing": "ui" },
+  "8246caaa1a0d190be759bca443eaa9d5f53ddc91": {
+    "facing": "model",
+    "id": "tool-description-context-tip-feature-id",
+    "name": "Tool Description: Context Tip Feature ID Field",
+    "desc": "Schema field description for the 'feature_id' (situation catalog ID) parameter of the contextual-tip emit tool"
+  },
+  "5c2c04fcddcbc007bb7565d7e0b6d0f675d53f57": {
+    "facing": "model",
+    "id": "data-context-tip-situation-hooks-automation",
+    "name": "Data: Context Tip Situation - Hooks Automation",
+    "desc": "Contextual-tip situation-catalog entry for detecting when a user is teaching Claude a standing automation rule (suggests /hooks)"
+  },
+  "b24dbb05a8c93c2c415e6fa5f9e60ead5227ba64": {
+    "facing": "model",
+    "id": "data-context-tip-situation-at-mention-paths",
+    "name": "Data: Context Tip Situation - At-Mention Paths",
+    "desc": "Contextual-tip situation-catalog entry for detecting manual file-path typing (suggests @ autocomplete)"
+  },
+  "81193902cede8a24a8e126497f0a241897140980": {
+    "facing": "model",
+    "id": "agent-prompt-context-tip-selector-user-message",
+    "name": "Agent Prompt: Context Tip Selector User Message",
+    "desc": "User-message wrapper template for the context-tip selector call: transcript head plus <eligible_ids> and <transcript> blocks the model reads to pick a tip."
+  },
+  "451a0c79caec444b51945b193e9220bf676efa03": {
+    "facing": "model",
+    "id": "tool-description-context-tip-tip-field",
+    "name": "Tool Description: Context Tip Tip Field",
+    "desc": "input_schema field description for the `tip` string property on the context-tip emit tool (dsf), sent to the model as part of the tool schema."
+  },
+  "ce6e8cd9e70ccda0424c373dc0053b23e5fb337c": {
+    "facing": "model",
+    "id": "data-context-tip-feature-context-filling-up",
+    "name": "Data: Context Tip Feature — Context Filling Up",
+    "desc": "`feature:` text for the context-filling-up situation in the v6o tip catalog, rendered into the <situations> block of the selector system prompt via lsf()."
+  },
+  "0a0d1309a30eafcac56a896066b1711e353c00f2": { "facing": "internal" },
+  "f1eeb5bb45f929f9cae8a464c6a1e6e4c0578f88": {
+    "facing": "model",
+    "id": "data-context-tip-situation-high-effort-low-yield",
+    "name": "Data: Context Tip Situation — High Effort Low Yield",
+    "desc": "Situation text detecting a short response preceded by an extensive thinking block, used by the tip selector to suggest reducing reasoning effort."
+  },
+  "7183fe053d532a5dcbf01eec70bf006dd6813f5b": {
+    "facing": "model",
+    "id": "data-context-tip-situation-parallel-investigation",
+    "name": "Data: Context Tip Situation — Parallel Investigation",
+    "desc": "Situation text detecting a broad investigation request over many files, used by the tip selector to suggest subagent/parallel investigation."
+  },
+  "33b6327eaea7e7cfbea7056cdeef27068780cdab": {
+    "facing": "model",
+    "id": "data-context-tip-situation-mcp-discovery",
+    "name": "Data: Context Tip Situation — MCP Discovery",
+    "desc": "Situation text detecting manual bridging of external system data into the conversation, used by the tip selector to suggest MCP connectors."
+  },
+  "32b1762645baafaa94c771b494c5c556f749d0d8": { "facing": "ui" },
+  "25d57bb862dd9d37ef5973554fb0741eb3f7688d": {
+    "facing": "model",
+    "id": "data-context-tip-situation-long-running-wait",
+    "name": "Data: Context tip situation — long-running wait",
+    "desc": "Situation text in the contextual-tips catalog for detecting a long-running command the user had to wait on, surfacing the background-task tip"
+  },
+  "0bf16878cc6ee31886375180f0fbe4a3bd197197": {
+    "facing": "model",
+    "id": "tool-description-context-tip-reception-acted-on",
+    "name": "Tool Description: Context Tip Reception — Acted On Field",
+    "desc": "Schema field description on the tip-reception evaluator tool's acted_on boolean asking whether the user tried the suggested action"
+  },
+  "718fae0c3718203420ad5c432b2f81014b9c1a97": { "facing": "ui" },
+  "23a3b60222b947daf6ea69b931cfceee50bdd251": {
+    "facing": "model",
+    "id": "data-context-tip-situation-multi-step-no-todos",
+    "name": "Data: Context tip situation — multi-step no todos",
+    "desc": "Situation text in the contextual-tips catalog for detecting multi-step work the user has lost track of, surfacing the todo-list tip"
+  },
+  "98ef8c8a56a09c6cfe4f35ef2442f6f4f48c65c6": {
+    "facing": "model",
+    "id": "data-context-tip-situation-image-description-friction",
+    "name": "Data: Context tip situation — image description friction",
+    "desc": "Situation text in the contextual-tips catalog for detecting the user describing a visual problem in prose without an image, surfacing the screenshot-paste tip"
+  },
+  "76fa735ea490cd539fa15bf10d3020c95ae6b07b": {
+    "facing": "model",
+    "id": "data-context-tip-situation-persistent-memory",
+    "name": "Data: Context tip situation — persistent memory",
+    "desc": "Situation text for detecting when the user is restating persistent project context and should be shown the memory context tip"
+  },
+  "13125c41d2ee2ae2731944b40eb2450d796928fc": {
+    "facing": "model",
+    "id": "data-context-tip-reception-transcript-wrapper",
+    "name": "Data: Context Tip Reception Transcript Wrapper",
+    "desc": "User-message wrapper template (tip_shown + transcript_after_tip) sent to the context-tip reception evaluator model"
+  },
+  "d1ac49ba4480a96bd116910e0d79441fb4185909": {
+    "facing": "model",
+    "id": "data-context-tip-situation-queue-while-working",
+    "name": "Data: Context Tip Situation — Queue While Working",
+    "desc": "Situation text for detecting when the user waited out a long turn before sending a correction/addition, to surface the queue-while-working tip"
+  },
+  "fe87f64118fa46952732d95d242ca186d7bccacc": { "facing": "ui" },
+  "2bad1d901044d002cecb5fa9873efe23bd84c30a": {
+    "facing": "model",
+    "id": "data-context-tip-feature-permission-fatigue",
+    "name": "Data: Context Tip Feature — Permission Fatigue",
+    "desc": "Feature-description line for the permission-fatigue context tip, serialized into the selector system prompt's situations catalog"
+  },
+  "c34565d3ceac5337eb376be6e6f60c0d29263f2c": {
+    "facing": "model",
+    "id": "data-context-tip-situation-side-question-during-work",
+    "name": "Data: Context Tip Situation — Side Question During Work",
+    "desc": "Situation text for detecting an off-topic side question (btw/quick question) that interrupted mid-task, to surface the /btw tip"
+  },
+  "2957baee05e7dee6d10a61b5ef5f3c600933038f": {
+    "facing": "model",
+    "id": "data-context-tip-situation-remote-scheduling",
+    "name": "Data: Context Tip Situation — Remote Scheduling",
+    "desc": "Situation text for detecting when the user wants a recurring task to run while away, to surface the remote-scheduling tip"
+  },
+  "c425f1ecfc710f5012a6c29f25d05cf15fe6b442": {
+    "facing": "model",
+    "id": "tool-description-context-tip-has-tip-field",
+    "name": "Tool Description: Context Tip has_tip Field",
+    "desc": "input_schema description for the has_tip boolean of the emit_context_tip tool given to the tip-selector model"
+  },
+  "7ea07f2c70971cceff6cb6e2b152459582636353": { "facing": "ui" },
+  "21c90c7575c51b93169027180b2aad76805033fd": {
+    "facing": "model",
+    "id": "data-context-tip-situation-undo-changes-feature",
+    "name": "Data: Context Tip Situation Undo-Changes Feature",
+    "desc": "The feature/answer text for the 'undo-changes' context-tip situation, rendered into the tip-selector model context as 'Feature: ${t.feature}'."
+  },
+  "42882d08cac74972a5b3e95f9e9c0bcbb2c19b69": {
+    "facing": "model",
+    "id": "tool-description-emit-context-tip",
+    "name": "Tool Description: Emit Context Tip",
+    "desc": "Description of the emit_context_tip tool used by the contextual-tip selector to surface or decline a tip."
+  },
+  "4bf0de9ad00f7ece4f5234412ca9b77e0e6b8edb": {
+    "facing": "model",
+    "id": "tool-description-rate-tip-reception",
+    "name": "Tool Description: Rate Tip Reception",
+    "desc": "Description of the rate_tip_reception tool that scores how a shown context tip was received."
+  },
+  "22d148d9438796d9b3c9552c2431417204285715": {
+    "facing": "model",
+    "id": "data-context-tip-situation-diff-request",
+    "name": "Data: Context Tip Situation Diff Request",
+    "desc": "The 'situation' matcher text for the diff-request context-tip catalog entry, read by the tip-selector model as 'Situation: ${t.situation}'."
+  },
+  "32cdf59c83bfd3e951112b6ec1405acbcc50242b": {
+    "facing": "model",
+    "id": "data-context-tip-situation-verbose-preference",
+    "name": "Data: Context Tip Situation Verbose Preference",
+    "desc": "The 'situation' matcher text for the verbose-preference context-tip catalog entry, read by the tip-selector model as 'Situation: ${t.situation}'."
+  },
+  "3bf8734d6360331eaae682cabb3a51184659985e": {
+    "facing": "model",
+    "id": "agent-prompt-context-tip-selector",
+    "name": "Agent Prompt: Context tip selector",
+    "desc": "Selects whether to show a brief Claude Code feature tip by matching the recent transcript and session metadata against eligible context-tip situations"
+  }
 }
