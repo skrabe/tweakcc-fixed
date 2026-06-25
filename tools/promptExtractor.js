@@ -2822,6 +2822,16 @@ if (require.main === module) {
     }
   }
 
+  // Stamp the current version on any prompt still lacking one. Net-new
+  // captures named during extraction (classifyByCache) or by applyCacheNames
+  // never pass through mergeWithExisting's new-prompt branch, so they carry no
+  // version. An absent version dumps as `ccVersion: undefined`, which js-yaml
+  // refuses — aborting syncPrompt stub generation for every prompt after it,
+  // so the new prompts get no override stub and `--apply` floods ENOENT.
+  for (const p of mergedResult.prompts) {
+    if (!p.version) p.version = version;
+  }
+
   // Normalize empty identifierMap names to stable synthetic names. An empty
   // name forces applyIdentifierMapping's `UNKNOWN_<slot>` fallback, which ships
   // a latent ReferenceError risk and unreadable overrides; it happens for
