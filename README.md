@@ -72,28 +72,30 @@ Two of those are worth calling out, and both ship off by default. **fff-first Ba
 
 <br>
 
+Each patch is tagged with how it behaves on `--apply`: **`[default on]`** applies unless you set its config flag to `false`, **`[always]`** applies unconditionally with no toggle, **`[opt-in]`** applies only if you turn it on. Patches that change model-facing behavior are marked **on by default** below — `--apply` activates them even if you never selected them, so review these before applying.
+
 **Memory & context**
 
-- `dream-mode` — `/dream` plus automatic memory consolidation
-- `lean-memory-types` — a trimmed memory-type taxonomy
-- `claudemd-context-once-per-conversation` — inject CLAUDE.md and context once per conversation, not every turn
+- `dream-mode` **`[default on]`** — `/dream` plus automatic memory consolidation
+- `lean-memory-types` **`[opt-in]`** — a trimmed memory-type taxonomy
+- `claudemd-context-once-per-conversation` **`[default on]`** — inject CLAUDE.md and context once per conversation, not every turn (rewrites how CLAUDE.md reaches the model)
 
 **Reasoning**
 
-- `max-effort-default` — Opus defaults to max reasoning effort
-- `complexity-router` — route reasoning effort by task difficulty _(experimental)_
+- `max-effort-default` **`[opt-in]`** — Opus defaults to max reasoning effort
+- `complexity-router` **`[opt-in]`** — route reasoning effort by task difficulty _(experimental)_
 
 **Search**
 
-- `swap-ripgrep-for-fff` — fff-backed grep, find, and rg _(experimental)_
+- `swap-ripgrep-for-fff` **`[opt-in]`** — fff-backed grep, find, and rg _(experimental)_
 
 **Correctness & noise**
 
-- `fix-rewind-summary-header` — an honest rewind / compaction summary header
-- `fix-summarize-from-here` — "summarize from here" starts at the rewind point, not the top
-- `strip-empty-system-reminders` — drop the empty `<system-reminder>` blocks left after empty tool output
-- `read-default-lines` — an env-gated cap on the default `Read` line count
-- `suppress-deferred-tools` — drop the deferred-tools announcement
+- `fix-rewind-summary-header` **`[default on]`** — an honest rewind / compaction summary header
+- `fix-summarize-from-here` **`[default on]`** — "summarize from here" starts at the rewind point, not the top
+- `strip-empty-system-reminders` **`[always]`** — drop the empty `<system-reminder>` blocks left after empty tool output
+- `read-default-lines` **`[always]`** — an env-gated cap on the default `Read` line count
+- `suppress-deferred-tools` **`[opt-in]`** — drop the deferred-tools announcement
 
 **Models & prompts**
 
