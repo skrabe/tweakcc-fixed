@@ -99,8 +99,8 @@ Each patch is tagged with how it behaves on `--apply`: **`[default on]`** applie
 
 **Models & prompts**
 
-- `autonomous-operation-all-models` — apply the Fable/Mythos autonomous prompt set to every model
-- `auto-mode-classifier-model` — pin the auto-mode safety classifier to a cheaper model
+- `autonomous-operation-all-models` **`[opt-in]`** — apply the Fable/Mythos autonomous prompt set to every model
+- `auto-mode-classifier-model` **`[opt-in]`** — pin the auto-mode safety classifier to a cheaper model
 
 </details>
 
