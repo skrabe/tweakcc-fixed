@@ -37,7 +37,7 @@ const NUMERIC_ROWS: Record<
     unit: 'chars',
     lo: 500,
     hi: 400000,
-    hint: 'prev assistant reply beyond this is sent as a heavy-work marker (floors to hard)',
+    hint: 'prev assistant reply beyond this is middle-truncated (head+tail + an omitted-size marker the classifier weighs); no mechanical floor',
   },
   timeoutMs: {
     label: 'Haiku timeout',

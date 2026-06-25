@@ -1,5 +1,6 @@
 import { describe, expect, it, beforeEach } from 'vitest';
 import { writeComplexityRouter } from './complexityRouter';
+import { clearRequireFuncNameCache } from './helpers';
 import { ComplexityRouterConfig } from '../types';
 
 // Faithful CC 2.1.186 (darwin) minified shapes the patch anchors on.
@@ -207,6 +208,23 @@ describe('writeComplexityRouter', () => {
   it('disables persistence (sid=null) when no accessor is found', () => {
     const out = writeComplexityRouter(FILE, cfg()) as string;
     expect(out).toContain('var __s=null;'); // sidExpr === 'null'
+  });
+
+  it('threads the esbuild require fn into the sidecar fs/path/os (not bare require)', () => {
+    // On NPM/esbuild builds `require` is not global - it's a createRequire-derived
+    // var. The sidecar must use the resolved name or fs calls throw (persistence
+    // silently dies). getRequireFuncName caches, so clear around this case.
+    clearRequireFuncNameCache();
+    try {
+      const esbuildFile = `import{createRequire as Qx}from"node:module";var Rq=Qx(import.meta.url);${FILE}`;
+      const out = writeComplexityRouter(esbuildFile, cfg()) as string;
+      expect(out).toContain('Rq("fs")'); // resolved esbuild require var
+      expect(out).toContain('Rq("path")');
+      expect(out).toContain('Rq("os")');
+      expect(out).not.toContain('require("fs")'); // no bare require survived
+    } finally {
+      clearRequireFuncNameCache(); // don't leak "Rq" into the Bun-shaped cases
+    }
   });
 
   it('produces syntactically valid injected JS', () => {

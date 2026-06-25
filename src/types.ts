@@ -202,7 +202,7 @@ export interface ComplexityRouterConfig {
   enabled: boolean;
   pinPerTask: boolean; // default TRUE - monotonic floor: routed level never drops below the session max (only escalates). Off = track each message up and down.
   messageCap: number; // max chars of a user message (new + previous) fed to the classifier
-  assistantCap: number; // max chars of the previous assistant reply fed to the classifier; beyond this it is replaced by a heavy-work marker and the level is floored to the hard tier
+  assistantCap: number; // max chars of the previous assistant reply fed to the classifier; beyond this it is middle-truncated (head + tail + an omitted-size marker), which the classifier weighs in context (no mechanical floor)
   timeoutMs: number; // classifier (Haiku) call timeout in ms; on timeout the router fails open
   levels: RouterLevel[]; // ordinal complexity level -> effort map (index 0 = easiest)
 }

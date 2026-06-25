@@ -106,8 +106,8 @@
 // for free: its working indicator renders ` with ${fet(e,t)} effort` (fet -> eZ),
 // so the spinner reads e.g. "thinking with max effort" for EVERY user, no setup.
 
-import { debug } from '../utils';
-import { showDiff } from './index';
+import { debug, escapeNonAscii } from '../utils';
+import { showDiff, getRequireFuncName } from './index';
 import { ComplexityRouterConfig } from '../types';
 
 const ROUTER_MARKER = '__tweakccRouterClassify';
@@ -144,7 +144,8 @@ interface ClassifierHelpers {
 const buildRuntime = (
   config: ComplexityRouterConfig,
   helpers: ClassifierHelpers,
-  sidFn: string | null
+  sidFn: string | null,
+  requireFunc: string
 ): string => {
   const efforts = config.levels.map(l => l.effort);
   const efJson = JSON.stringify(efforts);
@@ -180,12 +181,9 @@ const buildRuntime = (
     '# summary',
     'Output an updated running summary - a terse TL;DR of the session in the fewest words that still capture what was done and how hard it has been. Fold the most recent exchange into the prior summary as one short line (what this turn did and its complexity), then compress: keep the task or goal, key decisions, files or systems touched, unresolved threads, and difficulty signals (errors, retries, large changes); mark resolved items resolved and drop anything that will not affect future routing. It is a routing aid, not documentation - favor brevity.',
   ].join('\n');
-  // JSON.stringify gives a valid JS string literal; the extra pass forces any
+  // JSON.stringify gives a valid JS string literal; escapeNonAscii forces any
   // non-ASCII in user-edited tier help to \uXXXX (mojibake-safe injection).
-  const sysLit = JSON.stringify(sysPrompt).replace(
-    /[\u0080-\uffff]/g,
-    c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0')
-  );
+  const sysLit = escapeNonAscii(JSON.stringify(sysPrompt));
 
   return (
     // ----- per-session state -----
@@ -197,13 +195,13 @@ const buildRuntime = (
     `function __tweakccRouterTrunc(__s,__cap){if(typeof __s!=="string")return"";if(__s.length<=__cap)return __s;var __h=Math.floor(__cap/2);return __s.slice(0,__h)+"\\n...["+(__s.length-__cap)+" chars omitted from the middle]...\\n"+__s.slice(__s.length-(__cap-__h))}` +
     // ----- sidecar persistence (best-effort; any error -> in-memory only) -----
     `function __tweakccRouterSid(){try{var __s=${sidExpr};return typeof __s==="string"&&__s?__s:null}catch(__e){return null}}` +
-    `function __tweakccRouterDir(){var __p=require("path"),__o=require("os");return __p.join(__o.homedir(),".tweakcc","router-state")}` +
-    `function __tweakccRouterFile(__sid){return require("path").join(__tweakccRouterDir(),__sid+".json")}` +
-    `function __tweakccRouterLoad(__st){if(__st.loaded)return;__st.loaded=!0;try{var __sid=__tweakccRouterSid();if(!__sid)return;var __fs=require("fs"),__f=__tweakccRouterFile(__sid);if(__fs.existsSync(__f)){var __d=JSON.parse(__fs.readFileSync(__f,"utf8"));if(__d){if(typeof __d.summary==="string")__st.summary=__d.summary;if(Number.isInteger(__d.level))__st.level=__d.level}}__tweakccRouterPrune(__fs)}catch(__e){}}` +
-    `function __tweakccRouterSave(__st){try{var __sid=__tweakccRouterSid();if(!__sid)return;var __fs=require("fs"),__dir=__tweakccRouterDir();__fs.mkdirSync(__dir,{recursive:!0});__fs.writeFileSync(__tweakccRouterFile(__sid),JSON.stringify({summary:__st.summary,level:__st.level,updatedAt:Date.now()}))}catch(__e){}}` +
-    `function __tweakccRouterDrop(__st){try{var __sid=__tweakccRouterSid();if(!__sid)return;var __fs=require("fs"),__f=__tweakccRouterFile(__sid);if(__fs.existsSync(__f))__fs.unlinkSync(__f)}catch(__e){}}` +
+    `function __tweakccRouterDir(){var __p=${requireFunc}("path"),__o=${requireFunc}("os");return __p.join(__o.homedir(),".tweakcc","router-state")}` +
+    `function __tweakccRouterFile(__sid){return ${requireFunc}("path").join(__tweakccRouterDir(),__sid+".json")}` +
+    `function __tweakccRouterLoad(__st){if(__st.loaded)return;__st.loaded=!0;try{var __sid=__tweakccRouterSid();if(!__sid)return;var __fs=${requireFunc}("fs"),__f=__tweakccRouterFile(__sid);if(__fs.existsSync(__f)){var __d=JSON.parse(__fs.readFileSync(__f,"utf8"));if(__d){if(typeof __d.summary==="string")__st.summary=__d.summary;if(Number.isInteger(__d.level))__st.level=__d.level}}__tweakccRouterPrune(__fs)}catch(__e){}}` +
+    `function __tweakccRouterSave(__st){try{var __sid=__tweakccRouterSid();if(!__sid)return;var __fs=${requireFunc}("fs"),__dir=__tweakccRouterDir();__fs.mkdirSync(__dir,{recursive:!0});__fs.writeFileSync(__tweakccRouterFile(__sid),JSON.stringify({summary:__st.summary,level:__st.level,updatedAt:Date.now()}))}catch(__e){}}` +
+    `function __tweakccRouterDrop(__st){try{var __sid=__tweakccRouterSid();if(!__sid)return;var __fs=${requireFunc}("fs"),__f=__tweakccRouterFile(__sid);if(__fs.existsSync(__f))__fs.unlinkSync(__f)}catch(__e){}}` +
     // Prune sidecars older than 14 days so the dir can't grow unbounded.
-    `function __tweakccRouterPrune(__fs){try{var __dir=__tweakccRouterDir(),__ns=__fs.readdirSync(__dir),__now=Date.now(),__ttl=12096e5;for(var __i=0;__i<__ns.length;__i++){try{var __ff=require("path").join(__dir,__ns[__i]);if(__now-__fs.statSync(__ff).mtimeMs>__ttl)__fs.unlinkSync(__ff)}catch(__e){}}}catch(__e){}}` +
+    `function __tweakccRouterPrune(__fs){try{var __dir=__tweakccRouterDir(),__ns=__fs.readdirSync(__dir),__now=Date.now(),__ttl=12096e5;for(var __i=0;__i<__ns.length;__i++){try{var __ff=${requireFunc}("path").join(__dir,__ns[__i]);if(__now-__fs.statSync(__ff).mtimeMs>__ttl)__fs.unlinkSync(__ff)}catch(__e){}}}catch(__e){}}` +
     // ----- defensive parse of gB's result into {level, summary} -----
     // gB returns an assistant message {message:{content:[{type:"text",text}]}}.
     `function __tweakccRouterReadResult(__r){try{` +
@@ -318,7 +316,15 @@ const wrapEffortResolver = (
     `if(__twkRE==="xhigh"&&!${xhighGuard}(${model}))__twkRE="high";` +
     `return __twkRE}`;
 
-  const runtime = buildRuntime(config, helpers, sidFn);
+  // Resolve the require fn name for THIS build: Bun exposes `require` directly,
+  // but esbuild (NPM installs) routes it through a createRequire-derived var, so
+  // bare require() is undefined there - the sidecar fs/path/os calls would throw.
+  const runtime = buildRuntime(
+    config,
+    helpers,
+    sidFn,
+    getRequireFuncName(file)
+  );
   const replacement = runtime + prefix + inject + match[0].slice(prefix.length);
 
   const start = match.index;
