@@ -6,6 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/);
 this fork uses its own `2.x` line (npm package `tweakcc-fixed`) and is a strict
 superset of upstream. Pre-fork upstream history lives in Piebald's releases.
 
+## [2.3.2] - 2026-06-25
+
+Transparency for the patches that change how the model behaves.
+
+- **`--apply` announces model-facing patches** (#23): after the patch-results
+  listing, a flagged notice lists only the patches that actually applied _and_
+  change model-facing behavior (what reaches the model / how it reasons), not
+  cosmetic output styling — so default-on behavioral patches like
+  `claudemd-context-once-per-conversation` are never activated silently. Each
+  carries a `modelFacing` flag on its definition; the notice is informational
+  only (no prompt), because `--apply` runs non-interactively on CI and the npx
+  VPS mirrors where a confirm would hang. Marked model-facing:
+  `fix-summarize-from-here`, `fix-rewind-summary-header`, `max-effort-default`,
+  `autonomous-operation-all-models`, `auto-mode-classifier-model`,
+  `complexity-router`, `dream-mode`, `lean-memory-types`,
+  `suppress-deferred-tools`, `claudemd-context-once-per-conversation`.
+- **README patch list tags default state** (#22, thanks @voidfreud): every patch
+  in the "Every patch the fork adds" list now carries `[default on]` /
+  `[always]` / `[opt-in]` with a legend, so the patches that activate without
+  opt-in are visible at a glance.
+
 ## [2.3.1] - 2026-06-25
 
 - Complexity router (experimental): document the prompt-cache cost. Effort level
