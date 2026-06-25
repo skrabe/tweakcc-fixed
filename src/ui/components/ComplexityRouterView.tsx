@@ -370,7 +370,16 @@ export function ComplexityRouterView({ onBack }: ComplexityRouterViewProps) {
           Classifies each task by difficulty and sets the reasoning-effort
           (thinking) level to match - low for routine work, the top tier only
           for genuinely frontier problems. Runs on your current model (no model
-          switch, no prompt-cache churn). Off by default.
+          switch). Off by default.
+        </Text>
+        <Text dimColor>
+          Heads up - it burns more tokens: effort level is part of the prompt
+          cache key, so every turn the router changes the level the whole
+          conversation is re-read uncached (a big one-time hit that turn, then
+          cheaper again while the level holds). Each level keeps its own cache,
+          so returning to a prior level reuses most of its earlier work. pin per
+          task on (the default, monotonic) minimizes the churn; pin off flips
+          both ways and pays it more often. Measured, not theoretical.
         </Text>
         <Text dimColor>
           A one-shot Haiku side-call routes each prompt, fed a rolling TL;DR

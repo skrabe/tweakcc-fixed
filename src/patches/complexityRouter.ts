@@ -6,10 +6,15 @@
 // reasoning-effort (thinking) level accordingly - routine work runs at low
 // effort (fast, cheap), the hardest work at max. It rides on whatever model the
 // user is already on (Opus 4.8 by default): a pure thinking-depth dial, no model
-// switch. Changing the effort level is NOT a prompt-cache invalidator - per the
-// Anthropic caching hierarchy only model and tool-definition changes rebuild the
-// cache, and effort-level changes are not listed - so routing the effort never
-// churns the prompt cache or adds cost. Off by default.
+// switch. COST NOTE: effort level IS part of the prompt-cache key (measured on
+// CC 2.1.191 via statusline current_usage - changing effort gives cache_read=0 +
+// a full cache_creation that turn; same effort = full read-hit). So every turn
+// the router changes the level forces a one-time full-history re-read uncached,
+// then cheaper again while the level holds. Each level keeps its own cache, so
+// returning to a prior level reuses most of its earlier work; pin-on (monotonic)
+// minimizes churn, pin-off pays it on every flip. The router sets effort via the
+// resolver, bypassing CC's manual-/effort confirm dialog, so the cost is silent.
+// Experimental; off by default.
 //
 // -- Classifier: Haiku-only, with rolling-summary context --
 // Routing is done by a one-shot Haiku side-call (gB) on every prompt-mode submit.

@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/);
 this fork uses its own `2.x` line (npm package `tweakcc-fixed`) and is a strict
 superset of upstream. Pre-fork upstream history lives in Piebald's releases.
 
+## [2.3.1] - 2026-06-25
+
+- Complexity router (experimental): document the prompt-cache cost. Effort level
+  is part of the cache key — measured on CC 2.1.191 (statusline `current_usage`):
+  a turn that changes the routed level reads the whole conversation uncached
+  (`cache_read=0` + full `cache_creation`), then hits cache again while the level
+  holds; each level keeps its own cache, so returning to a prior level reuses
+  most of its earlier work. pin-on (monotonic) minimizes the churn; pin-off pays
+  it on every up/down flip. Corrected the stale "no prompt-cache churn" claim in
+  the TUI and patch comment. No behavior change.
+
 ## [2.3.0] - 2026-06-25
 
 Complexity effort router — memory, true rewind, and full customizability.
