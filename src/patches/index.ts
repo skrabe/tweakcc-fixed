@@ -161,6 +161,7 @@ export interface PatchResult {
   skipped?: boolean;
   details?: string;
   description?: string;
+  modelFacing?: boolean;
 }
 
 export interface ApplyCustomizationResult {
@@ -216,6 +217,7 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
       'Make "Summarize from here" summarize only the messages after the rewind point (feed the slice, not the whole conversation)',
+    modelFacing: true,
   },
   {
     id: 'fix-rewind-summary-header',
@@ -223,6 +225,7 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
       'Label a rewind summary as a deliberate rewind instead of the misleading "ran out of context" header',
+    modelFacing: true,
   },
   {
     id: 'statusline-update-throttle',
@@ -434,6 +437,7 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
       'Opus 4.7 sessions default to "max" reasoning effort instead of "xhigh" (override with /effort or CLAUDE_CODE_EFFORT_LEVEL)',
+    modelFacing: true,
   },
   {
     id: 'autonomous-operation-all-models',
@@ -441,6 +445,7 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
       'Treats your selected model as Fable/Mythos everywhere CC branches on model family (flips the zQ gate): you get the autonomous-operation prompt (proceed without asking for reversible in-scope work; finish the job before ending the turn), the "# Communicating with the user" comms block in place of "# Text output", /loop dynamic-pacing behavior, and brief-mode comms shaping. Per-model feature-flag routing also follows fable but is inert on a local install',
+    modelFacing: true,
   },
   {
     id: 'auto-mode-classifier-model',
@@ -448,6 +453,7 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
       'Pin auto-mode bash safety classifier to Sonnet 4.6 or Haiku 4.5 instead of the user main-loop model (avoids Opus 4.7 congestion denying tool calls)',
+    modelFacing: true,
   },
   // Features
   {
@@ -456,6 +462,7 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.FEATURES,
     description:
       'Auto-route reasoning effort (thinking depth) by task complexity: routine work runs at low effort, the top tier only for genuinely frontier problems. Rides on your current model - no model switch, no prompt-cache churn. A one-shot Haiku side-call routes each prompt using a rolling TL;DR summary of the session (so terse follow-ups that continue hard work stay elevated; persisted across resume, reseeded from the main model summary on compaction). While on it drives effort, overriding your saved effortLevel default; an in-session /effort or CLAUDE_CODE_EFFORT_LEVEL still wins. Off by default.',
+    modelFacing: true,
   },
   {
     id: 'allow-custom-agent-models',
@@ -491,6 +498,7 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.FEATURES,
     description:
       'Enable dream (/dream + auto-dream background memory consolidation)',
+    modelFacing: true,
   },
   {
     id: 'lean-memory-types',
@@ -498,6 +506,7 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.FEATURES,
     description:
       'Compact "Types of memory" prompt block + on-demand memory-types skill',
+    modelFacing: true,
   },
   {
     id: 'toolsets',
@@ -555,6 +564,7 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.SYSTEM_REMINDERS,
     description:
       'Kill the "deferred tools are now available via ToolSearch" announcement. WARNING: MCP/Cron/EnterPlanMode/WebFetch/Monitor become invisible to the model unless explicitly named.',
+    modelFacing: true,
   },
   {
     id: 'claudemd-context-once-per-conversation',
@@ -562,6 +572,7 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.SYSTEM_REMINDERS,
     description:
       'Inject the claudeMd / userEmail / currentDate <system-reminder> only on the first API call per conversation (re-fires after /clear). Default: ON. Toggle OFF for vanilla CC per-turn injection.',
+    modelFacing: true,
   },
 ] as const;
 
@@ -574,6 +585,13 @@ export interface PatchDefinition {
   name: string;
   group: PatchGroup;
   description: string;
+  /**
+   * True for patches that change how the model behaves (what reaches its
+   * context, how it reasons), as opposed to cosmetic output styling or pure
+   * correctness fixes. `--apply` surfaces the model-facing patches it applied
+   * so they are never activated silently. See printModelFacingNotice.
+   */
+  modelFacing?: boolean;
 }
 
 /**
@@ -666,6 +684,7 @@ const applyPatchImplementations = (
       applied,
       failed,
       description: def.description,
+      modelFacing: (def as PatchDefinition).modelFacing,
     });
   }
 

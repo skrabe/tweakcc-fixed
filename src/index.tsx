@@ -154,6 +154,37 @@ function printPatchResults(
   console.log('');
 }
 
+/**
+ * After an apply, surface the patches that changed model-facing behavior (what
+ * reaches the model / how it reasons) rather than just output styling. Several
+ * of these are on by default with no menu toggle, so without this notice they
+ * would activate on a bare `--apply` with no signal. This is informational
+ * only — no prompt — because `--apply` runs non-interactively (CI, the npx VPS
+ * legs) and a confirm would hang those.
+ */
+function printModelFacingNotice(results: PatchResult[]): void {
+  const modelFacing = results.filter(r => r.applied && r.modelFacing);
+  if (modelFacing.length === 0) return;
+
+  console.log(
+    chalk.yellow(
+      'ℹ These applied patches change model-facing behavior (not just output styling):'
+    )
+  );
+  for (const r of modelFacing) {
+    const description = r.description
+      ? ` ${chalk.dim('—')} ${r.description}`
+      : '';
+    console.log(`    ${chalk.yellow('•')} ${r.name}${chalk.dim(description)}`);
+  }
+  console.log(
+    chalk.dim(
+      '  Several are on by default. Toggle any off in the menu or ~/.tweakcc/config.json, or run --restore to revert everything.'
+    )
+  );
+  console.log('');
+}
+
 const main = async () => {
   const program = new Command();
   program
@@ -430,6 +461,10 @@ async function handleApplyMode(
 
     // Print patch results
     printPatchResults(results, patchFilter);
+
+    // Surface model-facing patches so default-on behavioral changes are never
+    // applied silently.
+    printModelFacingNotice(results);
 
     // Check if any patches failed
     const hasFailures = results.some(r => r.failed);
