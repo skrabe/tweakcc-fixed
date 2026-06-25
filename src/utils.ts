@@ -194,6 +194,48 @@ export function revealFileInExplorer(filePath: string) {
   }
 }
 
+/**
+ * Open `initial` in the user's terminal editor ($VISUAL/$EDITOR, else vi/notepad)
+ * on a temp file and return the saved contents. Synchronous (blocks on the
+ * editor). Returns null on any failure or a non-zero exit, so the caller keeps
+ * the prior value. The CALLER must drop Ink raw mode around this
+ * (useStdin().setRawMode(false/true)) so the editor owns the TTY.
+ */
+export function editTextInEditor(
+  initial: string,
+  extension = 'md'
+): string | null {
+  const editor =
+    process.env.VISUAL ||
+    process.env.EDITOR ||
+    (process.platform === 'win32' ? 'notepad' : 'vi');
+  const tmp = path.join(
+    os.tmpdir(),
+    `tweakcc-edit-${process.pid}-${Date.now()}.${extension}`
+  );
+  try {
+    fsSync.writeFileSync(tmp, initial, 'utf8');
+    // shell:true lets a multi-word $EDITOR ("code --wait") work; the path is a
+    // process-owned temp file, not user input, so there's no injection surface.
+    const res = child_process.spawnSync(`${editor} "${tmp}"`, {
+      stdio: 'inherit',
+      shell: true,
+    });
+    if (res.error || (typeof res.status === 'number' && res.status !== 0)) {
+      return null;
+    }
+    return fsSync.readFileSync(tmp, 'utf8');
+  } catch {
+    return null;
+  } finally {
+    try {
+      fsSync.unlinkSync(tmp);
+    } catch {
+      /* temp file cleanup is best-effort */
+    }
+  }
+}
+
 export function isValidColorFormat(color: string): boolean {
   if (!color || typeof color !== 'string') {
     return false;

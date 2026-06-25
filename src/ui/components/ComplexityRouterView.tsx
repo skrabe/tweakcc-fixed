@@ -1,9 +1,10 @@
-import { Box, Text, useInput } from 'ink';
+import { Box, Text, useInput, useStdin } from 'ink';
 import { useContext, useState } from 'react';
 import { SettingsContext } from '../App';
 import Header from './Header';
 import { DEFAULT_SETTINGS } from '../../defaultSettings';
 import { ComplexityRouterConfig, RouterEffort } from '../../types';
+import { editTextInEditor } from '../../utils';
 
 interface ComplexityRouterViewProps {
   onBack: () => void;
@@ -49,19 +50,26 @@ const NUMERIC_ROWS: Record<
 };
 
 // Settings rows that live above the per-level list.
-type SettingRow = 'enabled' | 'pinPerTask' | NumericRow;
+type SettingRow = 'enabled' | 'pinPerTask' | NumericRow | 'systemPrompt';
 const SETTING_ROWS: SettingRow[] = [
   'enabled',
   'pinPerTask',
   'messageCap',
   'assistantCap',
   'timeoutMs',
+  'systemPrompt',
 ];
 const isNumericRow = (row: SettingRow): row is NumericRow =>
   row in NUMERIC_ROWS;
 
 type SubPicker = { levelIndex: number } | null;
 type Editing = { row: NumericRow; value: string } | null;
+// Inline text edit for a level's label/help (short free-text fields).
+type TextEdit = {
+  kind: 'label' | 'help';
+  levelIndex: number;
+  value: string;
+} | null;
 
 const defaultRouter = DEFAULT_SETTINGS.complexityRouter;
 
@@ -82,10 +90,14 @@ export function ComplexityRouterView({ onBack }: ComplexityRouterViewProps) {
 
   // Flat navigable list: the setting rows, then one row per level.
   const totalRows = SETTING_ROWS.length + router.levels.length;
+  const { setRawMode, isRawModeSupported } = useStdin();
   const [focusIndex, setFocusIndex] = useState(0);
   const [picker, setPicker] = useState<SubPicker>(null);
   const [pickerIndex, setPickerIndex] = useState(0);
   const [editing, setEditing] = useState<Editing>(null);
+  const [textEdit, setTextEdit] = useState<TextEdit>(null);
+  // Bumped after $EDITOR returns to force a clean re-render of the suspended TUI.
+  const [, setRefresh] = useState(0);
 
   const mutate = (fn: (r: ComplexityRouterConfig) => void) => {
     updateSettings(s => {
@@ -105,6 +117,31 @@ export function ComplexityRouterView({ onBack }: ComplexityRouterViewProps) {
   };
 
   useInput((input, key) => {
+    // ---- inline text edit mode (level label/help) ----
+    if (textEdit) {
+      if (key.escape) {
+        setTextEdit(null);
+        return;
+      }
+      if (key.return) {
+        const { kind, levelIndex: li, value } = textEdit;
+        mutate(r => {
+          const lv = r.levels[li];
+          if (lv) lv[kind] = value;
+        });
+        setTextEdit(null);
+        return;
+      }
+      if (key.backspace || key.delete) {
+        setTextEdit(e => (e ? { ...e, value: e.value.slice(0, -1) } : e));
+        return;
+      }
+      if (input && !key.ctrl && !key.meta) {
+        setTextEdit(e => (e ? { ...e, value: e.value + input } : e));
+      }
+      return;
+    }
+
     // ---- numeric edit mode ----
     if (editing) {
       if (key.escape) {
@@ -178,7 +215,7 @@ export function ComplexityRouterView({ onBack }: ComplexityRouterViewProps) {
     const isSettingRow = focusIndex < SETTING_ROWS.length;
     const levelIndex = focusIndex - SETTING_ROWS.length;
 
-    // 'x' resets a focused numeric setting OR level to its default.
+    // 'x' resets a focused setting/prompt OR a level (label+help+effort) to default.
     if (input === 'x') {
       if (isSettingRow) {
         const row = SETTING_ROWS[focusIndex];
@@ -186,15 +223,32 @@ export function ComplexityRouterView({ onBack }: ComplexityRouterViewProps) {
           mutate(r => {
             r[row] = defaultRouter[row];
           });
+        } else if (row === 'systemPrompt') {
+          mutate(r => {
+            r.systemPrompt = defaultRouter.systemPrompt;
+          });
         }
       } else {
         const def = defaultRouter.levels[levelIndex];
         if (def) {
           mutate(r => {
-            if (r.levels[levelIndex]) r.levels[levelIndex].effort = def.effort;
+            const lv = r.levels[levelIndex];
+            if (lv) {
+              lv.effort = def.effort;
+              lv.label = def.label;
+              lv.help = def.help;
+            }
           });
         }
       }
+      return;
+    }
+
+    // On a level row, l/h open inline edit of its label/help.
+    if (!isSettingRow && (input === 'l' || input === 'h')) {
+      const kind = input === 'l' ? 'label' : 'help';
+      const lv = router.levels[levelIndex];
+      if (lv) setTextEdit({ kind, levelIndex, value: lv[kind] });
       return;
     }
 
@@ -209,6 +263,19 @@ export function ComplexityRouterView({ onBack }: ComplexityRouterViewProps) {
           mutate(r => {
             r.pinPerTask = !r.pinPerTask;
           });
+        } else if (row === 'systemPrompt') {
+          // Suspend Ink's raw mode so $EDITOR owns the TTY, then restore + redraw.
+          if (isRawModeSupported) setRawMode(false);
+          const edited = editTextInEditor(router.systemPrompt);
+          if (isRawModeSupported) setRawMode(true);
+          if (edited != null) {
+            const v = edited.replace(/\s+$/, '');
+            if (v && v !== router.systemPrompt)
+              mutate(r => {
+                r.systemPrompt = v;
+              });
+          }
+          setRefresh(x => x + 1);
         } else {
           setEditing({ row, value: String(router[row]) });
         }
@@ -260,6 +327,12 @@ export function ComplexityRouterView({ onBack }: ComplexityRouterViewProps) {
     } else if (row === 'pinPerTask') {
       label = 'Pin per task';
       value = router.pinPerTask ? 'on' : 'off';
+    } else if (row === 'systemPrompt') {
+      label = 'System prompt';
+      const isDefault = router.systemPrompt === defaultRouter.systemPrompt;
+      value = `${router.systemPrompt.length} chars${isDefault ? ' (default)' : ' (customized)'} - enter to edit in $EDITOR`;
+      hint =
+        'opens the classifier system prompt in your $EDITOR; {LEVELS} (the tier rubric) and {MAX} are substituted at apply time · x = reset to default';
     } else {
       const meta = NUMERIC_ROWS[row];
       label = meta.label;
@@ -336,19 +409,43 @@ export function ComplexityRouterView({ onBack }: ComplexityRouterViewProps) {
       {router.levels.map((level, i) => {
         const index = SETTING_ROWS.length + i;
         const isSelected = index === focusIndex;
+        const editingLabel =
+          textEdit?.levelIndex === i && textEdit.kind === 'label';
+        const editingHelp =
+          textEdit?.levelIndex === i && textEdit.kind === 'help';
         return (
           <Box key={level.id} flexDirection="column" marginBottom={1}>
             <Box>
               <Text color={isSelected ? 'cyan' : undefined}>
                 {isSelected ? '❯ ' : '  '}
-                <Text bold>{level.label}</Text>
+                <Text bold>
+                  {editingLabel ? `${textEdit.value}_` : level.label}
+                </Text>
                 {'  '}
                 <Text color="green">{level.effort}</Text>
               </Text>
             </Box>
             <Box marginLeft={4}>
-              <Text dimColor>{level.help}</Text>
+              <Text dimColor>
+                {editingHelp ? `${textEdit.value}_` : level.help}
+              </Text>
             </Box>
+            {isSelected && !textEdit ? (
+              <Box marginLeft={4}>
+                <Text dimColor>
+                  enter = set effort · l = edit label · h = edit help · x =
+                  reset this tier
+                </Text>
+              </Box>
+            ) : null}
+            {isSelected && textEdit ? (
+              <Box marginLeft={4}>
+                <Text dimColor>
+                  editing {textEdit.kind} - type to change · enter save · esc
+                  cancel
+                </Text>
+              </Box>
+            ) : null}
           </Box>
         );
       })}

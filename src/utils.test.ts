@@ -1,8 +1,12 @@
 import { describe, it, expect } from 'vitest';
+import * as fs from 'node:fs';
+import * as os from 'node:os';
+import * as path from 'node:path';
 import {
   readResponseTextCapped,
   MAX_FETCH_BYTES,
   escapeNonAscii,
+  editTextInEditor,
 } from './utils';
 
 describe('escapeNonAscii', () => {
@@ -72,5 +76,48 @@ describe('readResponseTextCapped', () => {
 
   it('defaults to a generous 32 MB cap', () => {
     expect(MAX_FETCH_BYTES).toBe(32 * 1024 * 1024);
+  });
+});
+
+describe('editTextInEditor', () => {
+  // A scripted, non-interactive "editor" so the round-trip is testable without a
+  // TTY: it runs a shell snippet against whatever file it is handed.
+  const writeFakeEditor = (body: string): string => {
+    const p = path.join(
+      os.tmpdir(),
+      `fake-editor-${process.pid}-${body.length}.sh`
+    );
+    fs.writeFileSync(p, `#!/bin/sh\n${body}\n`, { mode: 0o755 });
+    return p;
+  };
+  const withEditor = (cmd: string, fn: () => void) => {
+    const prevE = process.env.EDITOR;
+    const prevV = process.env.VISUAL;
+    delete process.env.VISUAL;
+    process.env.EDITOR = cmd;
+    try {
+      fn();
+    } finally {
+      if (prevE === undefined) delete process.env.EDITOR;
+      else process.env.EDITOR = prevE;
+      if (prevV !== undefined) process.env.VISUAL = prevV;
+    }
+  };
+
+  it('round-trips: opens the seed text and returns the editor-saved contents', () => {
+    const ed = writeFakeEditor('printf "EDITED\\n" >> "$1"');
+    withEditor(ed, () => {
+      // seed is written verbatim (no auto-newline); the editor appends EDITED.
+      expect(editTextInEditor('seed line\n')).toBe('seed line\nEDITED\n');
+    });
+    fs.unlinkSync(ed);
+  });
+
+  it('returns null when the editor exits non-zero (caller keeps the prior value)', () => {
+    const ed = writeFakeEditor('exit 3');
+    withEditor(ed, () => {
+      expect(editTextInEditor('seed')).toBeNull();
+    });
+    fs.unlinkSync(ed);
   });
 });
