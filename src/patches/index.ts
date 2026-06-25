@@ -134,12 +134,6 @@ export interface LocationResult {
   identifiers?: string[];
 }
 
-export interface ModificationEdit {
-  startIndex: number;
-  endIndex: number;
-  newContent: string;
-}
-
 // =============================================================================
 // Patch Group and Result Types
 // =============================================================================
@@ -606,15 +600,6 @@ export const getAllPatchDefinitions = (): PatchDefinition[] => {
 interface PatchImplementation {
   fn: (content: string) => string | null;
   condition?: boolean;
-}
-
-// =============================================================================
-// Legacy types (for backward compatibility with patchesAppliedIndication)
-// =============================================================================
-
-export interface PatchApplied {
-  newContent: string;
-  items: string[];
 }
 
 // =============================================================================

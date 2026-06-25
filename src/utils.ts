@@ -4,7 +4,6 @@ import * as path from 'path';
 import * as os from 'os';
 import * as child_process from 'child_process';
 import * as crypto from 'crypto';
-import { Theme } from './types';
 import { CUSTOM_MODELS } from './patches/modelSelector';
 
 let isDebugModeOn = false;
@@ -137,10 +136,6 @@ export function getSelectedModel(): string {
   }
 
   return 'Opus 4.5';
-}
-
-export function getColorKeys(theme: Theme): string[] {
-  return Object.keys(theme.colors);
 }
 
 export function openInExplorer(filePath: string) {

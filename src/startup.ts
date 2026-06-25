@@ -7,8 +7,6 @@ import {
 import { doesFileExist } from './utils';
 import {
   CLIJS_BACKUP_FILE,
-  CONFIG_DIR,
-  CONFIG_FILE,
   NATIVE_BINARY_BACKUP_FILE,
   readConfigFile,
 } from './config';
@@ -147,28 +145,3 @@ export async function completeStartupCheck(
     ccInstInfo,
   };
 }
-
-export const createExampleConfigIfMissing = async (
-  examplePath: string
-): Promise<void> => {
-  try {
-    await fs.mkdir(CONFIG_DIR, { recursive: true });
-    // Only create if config file doesn't exist
-    try {
-      await fs.stat(CONFIG_FILE);
-    } catch (error) {
-      if (
-        error instanceof Error &&
-        'code' in error &&
-        error.code === 'ENOENT'
-      ) {
-        const exampleConfig = {
-          ccInstallationPath: examplePath + '/cli.js',
-        };
-        await fs.writeFile(CONFIG_FILE, JSON.stringify(exampleConfig, null, 2));
-      }
-    }
-  } catch {
-    // Silently fail if we can't write the config file
-  }
-};

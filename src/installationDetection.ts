@@ -811,27 +811,8 @@ export async function selectAndSaveInstallation(
 }
 
 /**
- * Gets candidates for display in non-interactive error messages.
- * This re-collects candidates, used when we need to show what was found.
- */
-export async function getCandidatesForError(): Promise<
-  InstallationCandidate[]
-> {
-  return collectCandidates();
-}
-
-/**
  * Formats the "not found" error message for display.
  */
 export function formatNotFoundError(): string {
   return getNotFoundError();
-}
-
-/**
- * Formats the "multiple candidates" error message for display.
- */
-export function formatMultipleCandidatesError(
-  candidates: InstallationCandidate[]
-): string {
-  return getMultipleCandidatesError(candidates);
 }

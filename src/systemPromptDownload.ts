@@ -164,26 +164,3 @@ export async function downloadStringsFile(
     throw error;
   }
 }
-
-/**
- * Downloads strings files for multiple versions
- * @param versions - Array of version strings
- * @returns Promise that resolves to a map of version to parsed JSON content
- */
-export async function downloadMultipleStringsFiles(
-  versions: string[]
-): Promise<Map<string, StringsFile>> {
-  const results = new Map<string, StringsFile>();
-
-  for (const version of versions) {
-    try {
-      const data = await downloadStringsFile(version);
-      results.set(version, data);
-    } catch (error) {
-      console.error(`Failed to download version ${version}:`, error);
-      // Continue with other versions
-    }
-  }
-
-  return results;
-}

@@ -149,34 +149,6 @@ export const getPromptHash = async (
 };
 
 /**
- * Checks if a markdown file's content (excluding frontmatter) matches the expected hash
- *
- * @param markdownContent - The full content of a markdown file with frontmatter
- * @param expectedHash - The expected MD5 hash
- * @returns true if the content matches the hash (unmodified), false otherwise
- */
-export const verifyMarkdownHash = (
-  markdownContent: string,
-  expectedHash: string
-): boolean => {
-  // Extract content after frontmatter
-  const frontmatterMatch = markdownContent.match(
-    /^---\n[\s\S]+?\n---\n([\s\S]*)$/
-  );
-
-  if (!frontmatterMatch) {
-    // No frontmatter found - hash the entire content
-    const hash = computeMD5Hash(markdownContent.trim());
-    return hash === expectedHash;
-  }
-
-  // Hash only the content part (after frontmatter), trimmed
-  const contentOnly = frontmatterMatch[1].trim();
-  const hash = computeMD5Hash(contentOnly);
-  return hash === expectedHash;
-};
-
-/**
  * Structure of the applied hashes file
  * Maps: "prompt-id" => "md5hash" | null
  * Example: "main-system-prompt" => "a1b2c3..." or null if not applied/defaults restored
@@ -197,16 +169,6 @@ export const readAppliedHashIndex = async (): Promise<AppliedHashIndex> =>
 export const writeAppliedHashIndex = async (
   index: AppliedHashIndex
 ): Promise<void> => writeJsonIndexFileAtomic(getAppliedHashesPath(), index);
-
-/**
- * Updates the applied hash for a specific prompt ID
- */
-export const setAppliedHash = async (
-  promptId: string,
-  hash: string
-): Promise<void> => {
-  await setAppliedHashes({ [promptId]: hash });
-};
 
 export const setAppliedHashes = async (
   updates: Record<string, string>
@@ -232,17 +194,6 @@ export const clearAllAppliedHashes = async (): Promise<void> => {
   }
 
   await writeAppliedHashIndex(clearedIndex);
-};
-
-/**
- * Gets the applied hash for a specific prompt ID
- * Returns undefined if not found, null if explicitly set to null
- */
-export const getAppliedHash = async (
-  promptId: string
-): Promise<string | null | undefined> => {
-  const index = await readAppliedHashIndex();
-  return index[promptId];
 };
 
 /**
