@@ -33,6 +33,316 @@ const WORKFLOW_SCRIPT_IDENTIFIER_MAP = {
 // semantic names for the prompt's interpolated identifiers — required when
 // override .md files reference those names (`${ATTACHMENT_OBJECT.filename}`).
 const NEW_PROMPT_ASSIGNMENTS = [
+  {
+    matcher: t => t.includes("File unchanged since last read"),
+    name: "Read File-Unchanged Result",
+    id: "tool-result-read-file-unchanged",
+    description: "Model-facing Read tool_result hint (eSd) telling the model the file is unchanged since the last read and to refer to the earlier tool_result instead of re-reading.",
+  },
+  {
+    matcher: t => t.includes("Run `gh pr list` to show the open pull requests"),
+    name: "Review No-Arg Fallback",
+    id: "agent-prompt-review-no-arg-fallback",
+    description: "Model-facing /review no-argument fallback prompt instructing the model to run gh pr list to show open pull requests.",
+  },
+  {
+    matcher: t => t.includes("No matches found"),
+    name: "Grep No-Matches Fallback Literal",
+    id: "tool-result-grep-no-matches-literal",
+    description: "Model-facing Grep tool_result fallback text shown when a content/count search finds no matches.",
+  },
+
+  // ===== 2.1.190/191 model-facing-audit gaps (template literals that fail the
+  // prose-quality gate: system-prompt fragments, var-indirected tool_results,
+  // reminders, env/context blocks, git block, context-tip wrappers). Audit §4/§8/§9. =====
+  {
+    matcher: t => t.includes("Interactive flags"),
+    name: "Git Guidance Block",
+    id: "system-prompt-git-guidance-block",
+    description: "Model-facing system-prompt `# Git` guidance block (built by Atm), listing the interactive-flag/gh-CLI/commit rules; gated by BFt() (git repo + git instructions enabled).",
+  },
+  {
+    matcher: t => t.includes("on the default branch, branch first"),
+    name: "Git Default-Branch Branch-First Rule",
+    id: "system-prompt-git-default-branch-branch-first",
+    description: "Model-facing tail of the `# Git` system-prompt block (Atm) instructing the model to branch first when on the default branch; gated by BFt() (git repo + git instructions enabled).",
+  },
+  {
+    matcher: t => t.includes("Plan mode still active"),
+    name: "Plan Mode Sparse Continuation Reminder",
+    id: "system-reminder-plan-mode-sparse-continuation",
+    description: "Model-facing system-reminder (L9m, injected via _p([On({content,isMeta:!0})])) re-asserting plan-mode constraints on plan-continuation turns; gated by reminderType sparse.",
+  },
+  {
+    matcher: t => t.includes("Showing results with pagination"),
+    name: "Grep No-Matches / Pagination Result",
+    id: "tool-result-grep-no-matches-found",
+    description: "Model-facing Grep tool_result content for content/count modes when no matches are found, optionally annotated with the pagination footer.",
+  },
+  {
+    matcher: t => t.includes("Results are truncated. Consider using a more specific path or pattern"),
+    name: "Grep Files-Truncated Result",
+    id: "tool-result-grep-files-truncated",
+    description: "Model-facing Grep files_with_matches tool_result note (f2p) telling the model results were truncated and to narrow the path or pattern.",
+  },
+  {
+    matcher: t => t.includes("Execution stopped by PreToolUse hook"),
+    name: "PreToolUse Hook Stopped Execution Result",
+    id: "tool-result-pretooluse-hook-stopped-execution",
+    description: "Model-facing error tool_result content emitted when a PreToolUse hook blocks a tool call (is_error:true); gated on the hook returning a stop decision.",
+  },
+  {
+    matcher: t => t.includes("Permission denied by hook"),
+    name: "Permission Denied By Hook Result",
+    id: "tool-result-permission-denied-by-hook",
+    description: "Model-facing default deny message (buildDeny fallback) surfaced as the denied-tool result reason when a PermissionRequest hook denies a call without its own message.",
+  },
+  {
+    matcher: t => t.includes("Command timed out after"),
+    name: "Bash Command Timed Out Result",
+    id: "tool-result-bash-command-timed-out",
+    description: "Model-facing Bash tool_result text written into the command's stdout/stderr output when the command exceeds its timeout.",
+  },
+  {
+    matcher: t => t.includes("Command was aborted before completion"),
+    name: "Bash Command Aborted Result",
+    id: "tool-result-bash-command-aborted",
+    description: "Model-facing `<error>` marker appended to the Bash tool_result content when the command was aborted before completion.",
+  },
+  {
+    matcher: t => t.includes("The user modified your proposed content before accepting it"),
+    name: "Edit/Write User-Modified Content Result",
+    id: "tool-result-edit-user-modified-content",
+    description: "Model-facing suffix in the Edit/Write tool_result (mapToolResultToToolResultBlockParam) noting the user modified the proposed content before accepting; gated on userModified.",
+  },
+  {
+    matcher: t => t.includes("Truncated: PARTIAL view"),
+    name: "Read Partial-View Truncation Result",
+    id: "tool-result-read-partial-view-truncated",
+    description: "Model-facing Read tool_result prefix (iLt) introducing a truncated partial view of an oversized file with offset/limit continuation guidance; gated on token-cap overflow.",
+  },
+  {
+    matcher: t => t.includes("The user did not answer the questions"),
+    name: "AskUserQuestion No-Answer Result",
+    id: "tool-result-askuserquestion-no-answer",
+    description: "Model-facing AskUserQuestion tool_result content telling the model the user did not answer the questions; gated on no response provided.",
+  },
+  {
+    matcher: t => t.includes("You MUST include the sources above in your response"),
+    name: "WebSearch Include Sources Reminder",
+    id: "tool-result-websearch-include-sources",
+    description: "Model-facing WebSearch tool_result trailer appended to formatted search results (\"REMINDER: You MUST include the sources above in your response to the user using markdown hyperlinks.\"); always present on a non-empty web-search result.",
+  },
+  {
+    matcher: t => t.includes("# Custom Agent Instructions"),
+    name: "Custom Agent Instructions Header",
+    id: "system-prompt-custom-agent-instructions-header",
+    description: "Model-facing system-prompt wrapper header prepended to an in-process teammate/sub-agent's custom system prompt (\"# Custom Agent Instructions\\n${V}\"); conditional on the spawned agent supplying a system prompt.",
+  },
+  {
+    matcher: t => t.includes("This is ambient context"),
+    name: "Ambient Context Do-Not-Narrate Note",
+    id: "system-reminder-ambient-context-do-not-narrate",
+    description: "Model-facing system-reminder fragment (knr) appended to MCP-delta / context-injection reminder messages instructing the model not to narrate the injected context unless relevant.",
+  },
+  {
+    matcher: t => t.includes("# MCP Server Instructions"),
+    name: "MCP Server Instructions Header",
+    id: "system-reminder-mcp-server-instructions-header",
+    description: "Model-facing CC-authored framing/header wrapping per-server MCP instructions in the mcp_instructions_delta reminder (\"# MCP Server Instructions\\n\\nThe following MCP servers have provided instructions...\"); conditional on at least one connected MCP server providing instructions.",
+  },
+  {
+    matcher: t => t.includes("This session is being continued from a previous conversation that ran out of context"),
+    name: "Continued Session Compaction Preamble",
+    id: "system-prompt-continued-session-preamble",
+    description: "Model-facing preamble injected at the start of a compacted/continued session (\"This session is being continued from a previous conversation that ran out of context...\"); conditional on resuming after auto-compaction.",
+  },
+  {
+    matcher: t => t.includes("[earlier conversation truncated for compaction retry]"),
+    name: "Compaction Retry Truncation Marker",
+    id: "data-compaction-retry-truncated-marker",
+    description: "Model-facing placeholder marker inserted into the message history passed to the summarization model when compaction is retried with fewer messages (\"[earlier conversation truncated for compaction retry]\"); conditional on a compaction retry.",
+  },
+  {
+    matcher: t => t.includes("# Context management\nWhen the conversation grows long"),
+    name: "Context Management System Block",
+    id: "system-prompt-context-management-block",
+    description: "Model-facing system-prompt block (C2m) telling the model that long context is summarized and continued so it need not wrap up early; conditional on the context_management feature being active.",
+  },
+  {
+    matcher: t => t.includes("The following skills are available for use with the Skill tool:"),
+    name: "Skill Listing System-Reminder Wrapper",
+    id: "system-reminder-skill-listing-wrapper",
+    description: "Model-facing skill_listing system-reminder wrapper injected each turn (\"The following skills are available for use with the Skill tool:\\n\\n${content}\"); conditional on at least one skill being available.",
+  },
+  {
+    matcher: t => t.includes("# Output Style: "),
+    name: "Output Style System-Prompt Header",
+    id: "system-prompt-output-style-framing-header",
+    description: "Model-facing system-prompt block (s2m) framing a custom output style's prompt (\"# Output Style: ${name}\\n${prompt}\"); conditional on a non-default output style being active.",
+  },
+  {
+    matcher: t => t.includes("(project instructions, checked into the codebase)"),
+    name: "CLAUDE.md Project Instructions Suffix",
+    id: "system-prompt-claude-md-project-instructions-suffix",
+    description: "Model-facing type-suffix label appended to a project CLAUDE.md path in the memory/context injection (\"Contents of ${path} (project instructions, checked into the codebase):\"); conditional on a Project-type memory item being present.",
+  },
+  {
+    matcher: t => t.includes("<command-name>"),
+    name: "Slash-Command Name Framing Tag",
+    id: "system-prompt-command-name-framing-tag",
+    description: "Model-facing framing tag wrapping a slash-command invocation into a user-role message sent to the model (\"<command-name>...</command-name>\"); present whenever a slash command is expanded into the conversation.",
+  },
+  {
+    matcher: t => t.includes("<local-command-stdout>"),
+    name: "Local Command Stdout Framing Tag",
+    id: "system-prompt-local-command-stdout-framing-tag",
+    description: "Model-facing framing tag wrapping a forked/local slash-command's stdout into a user-role message sent to the model (\"<local-command-stdout>\\n${out}\\n</local-command-stdout>\"); present whenever a local command produces output that is fed back to the model.",
+  },
+  {
+    matcher: t => t.includes("Stop hook feedback:"),
+    name: "Stop Hook Feedback Framing",
+    id: "system-prompt-stop-hook-feedback-framing",
+    description: "Model-facing framing 'Stop hook feedback:\\n${blockingError}' built by Qvo() and injected as an isMeta message (On({content:Qvo(...),isMeta:!0})) carrying a Stop-hook's blocking-error feedback to the model.",
+  },
+  {
+    matcher: t => t.includes("operation blocked by hook:"),
+    name: "Operation Blocked By Hook Framing",
+    id: "system-prompt-operation-blocked-by-hook",
+    description: "Model-facing framing '<Surface> operation blocked by hook:\\n${blockingError}' (UserPromptSubmit/UserPromptExpansion) emitted by FBo()/gJa as a system informational message in the messages array when a hook blocks prompt expansion/submission.",
+  },
+  {
+    matcher: t => t.includes('Prefer dedicated tools over'),
+    name: "Prefer Dedicated Tools (Default CLI)",
+    id: "system-prompt-prefer-dedicated-tools-default-cli",
+    description: "Model-facing default-CLI branch of the '# Using your tools' system-prompt block ('Prefer dedicated tools over ${o} ... reserve ${o} for shell-only operations.'), the BASH_GUIDANCE anchor; emitted only on the non-REPL tool path.",
+  },
+  {
+    matcher: t => t.includes("Object and array parameter values must be a single JSON value"),
+    name: "Tool Parameter JSON Single-Value Rule",
+    id: "system-prompt-tool-param-json-single-value",
+    description: "Model-facing tool_param_json system-prompt block (e2m) instructing that object/array parameter values must be a single JSON value and never contain parameter-tag markup; conditionally injected (uwi() or tengu_silent_harbor gate).",
+  },
+  {
+    matcher: t => t.includes("Reproduce the issue and observe the actual symptom before editing"),
+    name: "Reproduce-Verify Workflow",
+    id: "system-prompt-reproduce-verify-workflow",
+    description: "Model-facing reproduce_verify_workflow system-prompt block (g2m) prescribing the step-by-step reproduce/edit/re-observe debugging loop; conditionally injected (gated by h2m()).",
+  },
+  {
+    matcher: t => t.includes("If you need the user to run a shell command themselves"),
+    name: "Suggest Bang-Prefix Shell Command",
+    id: "system-prompt-shell-command-suggest-bang-prefix",
+    description: "Model-facing session-guidance fragment inside the '# Using your tools' block telling the model to suggest the user type '! <command>' for interactive shell commands (e.g. gcloud auth login); gated on Hr().",
+  },
+  {
+    matcher: t => t.includes("Here is useful information about the environment you are running in:"),
+    name: "Environment Info Block",
+    id: "system-prompt-env-info-block",
+    description: "Model-facing environment context block (T2m) 'Here is useful information about the environment you are running in:' with the <env> working-directory/git/platform/OS details, injected into the (sub)agent system prompt.",
+  },
+  {
+    matcher: t => t.includes("You have been invoked in the following environment:"),
+    name: "Environment Info Worktree Block",
+    id: "system-prompt-env-info-worktree-block",
+    description: "Model-facing '# Environment / You have been invoked in the following environment:' block (S2m, env_info_simple) listing primary working directory, git-worktree note, and is-a-git-repository status in the system prompt.",
+  },
+  {
+    matcher: t => t.includes("Assistant knowledge cutoff is "),
+    name: "Knowledge Cutoff Line",
+    id: "system-prompt-knowledge-cutoff-line",
+    description: "Model-facing 'Assistant knowledge cutoff is ${date}.' line emitted in the environment system-prompt blocks (b2m/S2m/T2m); conditional on a known cutoff for the model.",
+  },
+  {
+    matcher: t => t.includes("Claude Code is available as a CLI in the terminal, desktop app"),
+    name: "Claude Code CLI Availability",
+    id: "system-prompt-claude-code-cli-availability",
+    description: "Model-facing line in the static environment system-prompt block (b2m, env_info_static) stating Claude Code is available as a CLI in the terminal, desktop app, web app, and IDE extensions.",
+  },
+  {
+    matcher: t => t.includes("The user's email address is ${"),
+    name: "User Email Context Line",
+    id: "system-prompt-user-email-context",
+    description: "Model-facing dynamic-context line 'The user's email address is ${email}.' assembled into the context payload (userEmail) injected into the model's system/context.",
+  },
+  {
+    matcher: t => t.includes("The date has changed. Today's date is now "),
+    name: "Date Changed Reminder",
+    id: "system-reminder-date-changed",
+    description: "Model-facing date_change system-reminder ('The date has changed. Today's date is now ${newDate}. DO NOT mention this to the user explicitly...') dispatched via _p([On({content,isMeta:!0})]) from the L6l reminder registry.",
+  },
+  {
+    matcher: t => t.includes("Retrieved for possible relevance"),
+    name: "Relevant Memories Retrieved Reminder",
+    id: "system-reminder-relevant-memories-retrieved",
+    description: "Model-facing system-reminder (relevant_memories case in the L6l registry, injected via pp([Mn({content,isMeta:!0})])) that prefaces recalled memories with a relevance caveat before showing the memory body.",
+  },
+  {
+    matcher: t => t.includes("Available agent types for the Agent tool:"),
+    name: "Agent Listing Delta Initial Reminder",
+    id: "system-reminder-agent-listing-delta-initial",
+    description: "Model-facing system-reminder (agent_listing_delta isInitial branch, isMeta meta-message) that lists the initial set of available subagent types for the Agent tool.",
+  },
+  {
+    matcher: t => t.includes("updated your memory directory"),
+    name: "Memory Directory Updated Reminder",
+    id: "system-reminder-memory-directory-updated",
+    description: "Model-facing system-reminder (memory_update case in the L6l registry, isMeta meta-message) announcing that a source updated the agent's memory directory and which files changed.",
+  },
+  {
+    matcher: t => t.includes("The user named this session"),
+    name: "Session Named Reminder",
+    id: "system-reminder-session-named",
+    description: "Model-facing system-reminder (NXn renameSystemReminder wrapped in Qw) telling the model the user named the session, signalling its likely focus or intent.",
+  },
+  {
+    matcher: t => t.includes("The PermissionDenied hook indicated you may retry this tool call."),
+    name: "Permission Denied Retry Nudge",
+    id: "system-reminder-permission-denied-retry-nudge",
+    description: "Model-facing isMeta meta-message injected in auto-mode (H3p @10361519) when a PermissionDenied hook signals the tool call may be retried.",
+  },
+  {
+    matcher: t => t.includes("Continue from where you left off."),
+    name: "Resume Continue Prompt",
+    id: "system-prompt-resume-continue-prompt",
+    description: "Model-facing resume prompt (aqn() env-fallback returning CLAUDE_CODE_RESUME_PROMPT or this literal, isMeta) injected as a user message on interrupted-turn and deferred-tool auto-resume.",
+  },
+  {
+    matcher: t => t.includes("<bash-input>"),
+    name: "Bash Input Tag Wrapper",
+    id: "tool-result-bash-input-tag-wrapper",
+    description: "Model-facing framing tag (Swt='bash-input') wrapping a user's bang-command (!cmd) shell input into <bash-input>...</bash-input> via XVm -> On({content}) as a message to the model.",
+  },
+  {
+    matcher: t => t.includes("Command failed: missing command"),
+    name: "Bash Command Missing (SDK)",
+    id: "tool-result-bash-command-missing-sdk",
+    description: "Model-facing error wrapped in <bash-stderr> and enqueued as a user message when a malformed SDK bash_command message omits the command string.",
+  },
+  {
+    matcher: t => t.includes("Suggested action:"),
+    name: "Context Tip Reception Suggested Action Label",
+    id: "data-context-tip-reception-tip-shown-wrapper",
+    description: "Model-facing label inside the <tip_shown> user-message block sent to the context-tip reception evaluator aux model (gated tengu_context_tip, gsf system + _sf tool).",
+  },
+  {
+    matcher: t => t.includes("<session_metadata>"),
+    name: "Context Tip Selector Session Metadata Block",
+    id: "data-context-tip-selector-session-metadata",
+    description: "Model-facing session-metadata framing block (hsf) injected into the user message sent to the context-tip selector aux model (csf system, gated tengu_context_tip).",
+  },
+  {
+    matcher: t => t.includes("<tip_shown>"),
+    name: "Context Tip Reception Tip Shown Block",
+    id: "data-context-tip-reception-tip-shown-block",
+    description: "Model-facing wrapper (Tsf) framing the previously shown tip (feature/tip/action) as the user message sent to the context-tip reception evaluator aux model (gated tengu_context_tip).",
+  },
+  {
+    matcher: t => t.includes("shared with you; summary below"),
+    name: "Artifact Read Shared-With-You Result",
+    id: "tool-result-artifact-read-shared-with-you",
+    description: "Model-facing tool_result framing for an artifact read (frame-reader-persist branch) returned as result:k, prefixing the artifact summary with a shared-with-you header.",
+  },
   // 2.1.186 — five prompts were reworded/rewritten past the 100-char fuzzy
   // fingerprint so they extract anonymous (and read-mcp-resource, after
   // Anthropic split its directory-listing into a separate tool, shrank to a
@@ -1646,9 +1956,21 @@ function leadShowsModelFacingContext(lead) {
   if (/\bdescriptionForModel:\s*$/.test(tail)) return true;
   // Static tool-result text block the model reads: {type:"text",text:"<here>"}.
   if (/\btype:\s*["']text["']\s*,\s*text:\s*$/.test(tail)) return true;
+  // Static tool_result content the model reads: {type:"tool_result",content:"…"}.
+  // (The var-indirected / template-literal forms are caught as ≥40-char candidates
+  // + classified; this catches the inline-literal content. Audit gap G5/G23.)
+  if (/\btype:\s*["']tool_result["']\s*,\s*content:\s*$/.test(tail)) return true;
   // Skill/slash-command "when to use" guidance — surfaced in the model's
   // available-skills list.
   if (/\bwhenToUse:\s*$/.test(tail)) return true;
+  // Zod `.describe()` — a tool/param/schema description. The model reads tool
+  // inputSchema param descriptions (audit gap G3: ~61 of 70 missed because Zod's
+  // JSON shape is generated at RUNTIME, so statically only `.describe("…")` exists,
+  // not the flat {description,type} the rule above matches). This broadens capture;
+  // the classification cache then drops settings/CLI `.describe()` as
+  // facing:'internal' (the §6.5 broaden-capture-then-classify doctrine, safe via
+  // the cache KEEP/DROP at the capture site).
+  if (/\.describe\(\s*$/.test(tail)) return true;
   return false;
 }
 
@@ -1681,6 +2003,10 @@ function contentIsModelFacingShortPrompt(text) {
   // A real system-reminder BLOCK (opens with the tag) is always model-injected.
   // (Merely mentioning <system-reminder> in prose is handled by other signals.)
   if (/^\s*<system-reminder>/.test(text)) return true;
+  // A <tool_use_error> wrapper is a tool_result the model reads (any length).
+  // Audit gap G5: these are assembled at the dispatch site (often from a thrown
+  // error message wrapped at runtime), so the wrapper template carries the tag.
+  if (/<tool_use_error>/.test(text)) return true;
   return false;
 }
 

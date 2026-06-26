@@ -259,6 +259,22 @@
       "version": "2.1.31"
     },
     {
+      "name": "Knowledge Cutoff Line",
+      "id": "system-prompt-knowledge-cutoff-line",
+      "description": "Model-facing 'Assistant knowledge cutoff is ${date}.' line emitted in the environment system-prompt blocks (b2m/S2m/T2m); conditional on a known cutoff for the model.",
+      "pieces": [
+        "\n\nAssistant knowledge cutoff is ${",
+        "}."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_KNOWLEDGE_CUTOFF_LINE_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
       "name": "System Prompt: Monitor fallback heartbeat guidance",
       "id": "system-prompt-monitor-fallback-heartbeat-guidance",
       "description": "Guides dynamic loop ticks to use Monitor as the primary wake signal, ScheduleWakeup as a fallback heartbeat, and stop the monitor when ending the loop",
@@ -531,6 +547,22 @@
       "version": "2.1.141"
     },
     {
+      "name": "Custom Agent Instructions Header",
+      "id": "system-prompt-custom-agent-instructions-header",
+      "description": "Model-facing system-prompt wrapper header prepended to an in-process teammate/sub-agent's custom system prompt (\"# Custom Agent Instructions\\n${V}\"); conditional on the spawned agent supplying a system prompt.",
+      "pieces": [
+        "\n# Custom Agent Instructions\n${",
+        "}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_CUSTOM_AGENT_INSTRUCTIONS_HEADER_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: SendMessageTool",
       "id": "tool-description-sendmessagetool",
       "description": "Agent teams version of SendMessageTool.",
@@ -741,6 +773,17 @@
         "0": "TOOL_DESCRIPTION_READ_MCP_RESOURCE_VAR_0"
       },
       "version": "2.1.187"
+    },
+    {
+      "name": "WebSearch Include Sources Reminder",
+      "id": "tool-result-websearch-include-sources",
+      "description": "Model-facing WebSearch tool_result trailer appended to formatted search results (\"REMINDER: You MUST include the sources above in your response to the user using markdown hyperlinks.\"); always present on a non-empty web-search result.",
+      "pieces": [
+        "\nREMINDER: You MUST include the sources above in your response to the user using markdown hyperlinks."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "System Prompt: REPL tool usage and scripting conventions",
@@ -1216,6 +1259,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "CLAUDE.md Project Instructions Suffix",
+      "id": "system-prompt-claude-md-project-instructions-suffix",
+      "description": "Model-facing type-suffix label appended to a project CLAUDE.md path in the memory/context injection (\"Contents of ${path} (project instructions, checked into the codebase):\"); conditional on a Project-type memory item being present.",
+      "pieces": [
+        " (project instructions, checked into the codebase)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "System Prompt: Memory Scope Privacy Defaults",
       "id": "system-prompt-memory-scope-privacy-defaults",
       "description": "Memory-instructions fragment on default scopes (user/feedback private, project/reference team) and not writing secrets.",
@@ -1276,6 +1330,17 @@
         "0": "ASK_USER_QUESTION_TOOL_NAME"
       },
       "version": "2.1.178"
+    },
+    {
+      "name": "Edit/Write User-Modified Content Result",
+      "id": "tool-result-edit-user-modified-content",
+      "description": "Model-facing suffix in the Edit/Write tool_result (mapToolResultToToolResultBlockParam) noting the user modified the proposed content before accepting; gated on userModified.",
+      "pieces": [
+        " The user modified your proposed content before accepting it."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: ToolSearch",
@@ -1843,6 +1908,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "Onboarding guide share-link mode param",
+      "id": "tool-parameter-onboarding-guide-share-link-mode",
+      "description": "inputSchema param of the onboarding-guide share-link tool documenting the check/update/create/delete modes; model-facing.",
+      "pieces": [
+        "'check' (default): if ONBOARDING.md is present locally, uploads it to the most-recent guide (creates one if none exist); otherwise reports the existing link without uploading. 'update': upload to a specific guide by short_code. 'create': always make a new link. 'delete': remove a guide."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Parameter: SendUserFile Inline Data",
       "id": "tool-parameter-senduserfile-inline-data",
       "description": "Param schema description for inline file contents (UTF-8 or base64), for small dynamic content only.",
@@ -1852,6 +1928,28 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Slash-Command Name Framing Tag",
+      "id": "system-prompt-command-name-framing-tag-2",
+      "description": "Model-facing framing tag wrapping a slash-command invocation into a user-role message sent to the model (\"<command-name>...</command-name>\"); present whenever a slash command is expanded into the conversation.",
+      "pieces": [
+        "\"content\":\"<command-name>/"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "ExitWorktree action param",
+      "id": "tool-parameter-exitworktree-action",
+      "description": "inputSchema param of the ExitWorktree tool documenting keep vs remove of the worktree/branch; model-facing.",
+      "pieces": [
+        "\"keep\" leaves the worktree and branch on disk; \"remove\" deletes both."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: Bash (sandbox — evidence: operation not permitted)",
@@ -1874,6 +1972,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Grep Files-Truncated Result",
+      "id": "tool-result-grep-files-truncated",
+      "description": "Model-facing Grep files_with_matches tool_result note (f2p) telling the model results were truncated and to narrow the path or pattern.",
+      "pieces": [
+        "(Results are truncated. Consider using a more specific path or pattern.)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Result: Subagent Returned No Output",
@@ -2049,6 +2158,24 @@
       "version": "2.1.178"
     },
     {
+      "name": "Onboarding share-link tool result line",
+      "id": "tool-result-onboarding-guide-share-link-status",
+      "description": "tool_result content template formatting the onboarding-guide share-link status/message back to the model; model-facing.",
+      "pieces": [
+        "[${",
+        ".status}] ${",
+        ".message}"
+      ],
+      "identifiers": [
+        0,
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ONBOARDING_GUIDE_SHARE_LINK_STATUS_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
       "name": "Data: Unprocessable file content placeholder",
       "id": "data-content-removed-api-could-not-process",
       "description": "Content block replacing a file the API could not process; tells the model not to retry and to use a shell command.",
@@ -2080,6 +2207,28 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Artifact Read Shared-With-You Result",
+      "id": "tool-result-artifact-read-shared-with-you",
+      "description": "Model-facing tool_result framing for an artifact read (frame-reader-persist branch) returned as result:k, prefixing the artifact summary with a shared-with-you header.",
+      "pieces": [
+        "[Artifact ${",
+        ".slug} — shared with you; summary below, ${",
+        "}]\n${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_READ_SHARED_WITH_YOU_VAR_0",
+        "1": "TOOL_RESULT_ARTIFACT_READ_SHARED_WITH_YOU_VAR_1",
+        "2": "TOOL_RESULT_ARTIFACT_READ_SHARED_WITH_YOU_VAR_2"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "Data: Binary content placeholder",
@@ -2129,6 +2278,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Compaction Retry Truncation Marker",
+      "id": "data-compaction-retry-truncated-marker",
+      "description": "Model-facing placeholder marker inserted into the message history passed to the summarization model when compaction is retried with fewer messages (\"[earlier conversation truncated for compaction retry]\"); conditional on a compaction retry.",
+      "pieces": [
+        "[earlier conversation truncated for compaction retry]"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "System Prompt: Hook evaluator truncated transcript note",
@@ -2339,6 +2499,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Read Partial-View Truncation Result",
+      "id": "tool-result-read-partial-view-truncated",
+      "description": "Model-facing Read tool_result prefix (iLt) introducing a truncated partial view of an oversized file with offset/limit continuation guidance; gated on token-cap overflow.",
+      "pieces": [
+        "[Truncated: PARTIAL view — "
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Data: User answered (AskUserQuestion)",
@@ -3234,6 +3405,17 @@
       "version": "2.1.165"
     },
     {
+      "name": "Context Management System Block",
+      "id": "system-prompt-context-management-block",
+      "description": "Model-facing system-prompt block (C2m) telling the model that long context is summarized and continued so it need not wrap up early; conditional on the context_management feature being active.",
+      "pieces": [
+        "# Context management\nWhen the conversation grows long, some or all of the current context is summarized; the summary, along with any remaining unsummarized context, is provided in the next context window so work can continue — you don't need to wrap up early or hand off mid-task."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Skill: Cowork Plugin Authoring",
       "id": "skill-cowork-plugin-authoring",
       "description": "Skill for creating a new Cowork plugin from scratch or customizing an existing one for an organization, delivering an installable .plugin file",
@@ -3833,6 +4015,22 @@
       "version": "2.1.165"
     },
     {
+      "name": "MCP Server Instructions Header",
+      "id": "system-reminder-mcp-server-instructions-header",
+      "description": "Model-facing CC-authored framing/header wrapping per-server MCP instructions in the mcp_instructions_delta reminder (\"# MCP Server Instructions\\n\\nThe following MCP servers have provided instructions...\"); conditional on at least one connected MCP server providing instructions.",
+      "pieces": [
+        "# MCP Server Instructions\n\nThe following MCP servers have provided instructions for how to use their tools and resources:\n\n${",
+        ".join(`\n\n`)}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_REMINDER_MCP_SERVER_INSTRUCTIONS_HEADER_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
       "name": "System Prompt: Memory instructions",
       "id": "system-prompt-memory-instructions",
       "description": "Instructions for using persistent file-based memory, including memory file format, scope, indexing, and stale-memory handling",
@@ -3911,6 +4109,24 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.187"
+    },
+    {
+      "name": "Output Style System-Prompt Header",
+      "id": "system-prompt-output-style-framing-header",
+      "description": "Model-facing system-prompt block (s2m) framing a custom output style's prompt (\"# Output Style: ${name}\\n${prompt}\"); conditional on a non-default output style being active.",
+      "pieces": [
+        "# Output Style: ${",
+        ".name}\n${",
+        ".prompt}"
+      ],
+      "identifiers": [
+        0,
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_OUTPUT_STYLE_FRAMING_HEADER_VAR_0"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "Skill: /design-sync package source shape",
@@ -4994,6 +5210,24 @@
       "version": "2.1.178"
     },
     {
+      "name": "Bash Command Missing (SDK)",
+      "id": "tool-result-bash-command-missing-sdk",
+      "description": "Model-facing error wrapped in <bash-stderr> and enqueued as a user message when a malformed SDK bash_command message omits the command string.",
+      "pieces": [
+        "<${",
+        "}>Command failed: missing command</${",
+        "}>"
+      ],
+      "identifiers": [
+        0,
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_BASH_COMMAND_MISSING_SDK_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
       "name": "Data: Bash output unavailable",
       "id": "data-bash-output-unavailable",
       "description": "Bash tool_result stdout substitute when the output file could not be read.",
@@ -5008,6 +5242,330 @@
         "0": "DATA_BASH_OUTPUT_UNAVAILABLE_VAR_0"
       },
       "version": "2.1.178"
+    },
+    {
+      "name": "Bash Input Tag Wrapper",
+      "id": "tool-result-bash-input-tag-wrapper-2",
+      "description": "Model-facing framing tag (Swt='bash-input') wrapping a user's bang-command (!cmd) shell input into <bash-input>...</bash-input> via XVm -> On({content}) as a message to the model.",
+      "pieces": [
+        "<bash-input>"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Bash Input Tag Wrapper",
+      "id": "tool-result-bash-input-tag-wrapper-2",
+      "description": "Model-facing framing tag (Swt='bash-input') wrapping a user's bang-command (!cmd) shell input into <bash-input>...</bash-input> via XVm -> On({content}) as a message to the model.",
+      "pieces": [
+        "<bash-input>"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Bash Input Tag Wrapper",
+      "id": "tool-result-bash-input-tag-wrapper-2",
+      "description": "Model-facing framing tag (Swt='bash-input') wrapping a user's bang-command (!cmd) shell input into <bash-input>...</bash-input> via XVm -> On({content}) as a message to the model.",
+      "pieces": [
+        "<bash-input>"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Bash Input Tag Wrapper",
+      "id": "tool-result-bash-input-tag-wrapper",
+      "description": "Model-facing framing tag (Swt='bash-input') wrapping a user's bang-command (!cmd) shell input into <bash-input>...</bash-input> via XVm -> On({content}) as a message to the model.",
+      "pieces": [
+        "<bash-input>${",
+        "}</bash-input>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_BASH_INPUT_TAG_WRAPPER_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Bash Input Tag Wrapper",
+      "id": "tool-result-bash-input-tag-wrapper",
+      "description": "Model-facing framing tag (Swt='bash-input') wrapping a user's bang-command (!cmd) shell input into <bash-input>...</bash-input> via XVm -> On({content}) as a message to the model.",
+      "pieces": [
+        "<bash-input>${",
+        "}</bash-input>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_BASH_INPUT_TAG_WRAPPER_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Bash Input Tag Wrapper",
+      "id": "tool-result-bash-input-tag-wrapper",
+      "description": "Model-facing framing tag (Swt='bash-input') wrapping a user's bang-command (!cmd) shell input into <bash-input>...</bash-input> via XVm -> On({content}) as a message to the model.",
+      "pieces": [
+        "<bash-input>${",
+        "}</bash-input>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_BASH_INPUT_TAG_WRAPPER_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Slash-Command Name Framing Tag",
+      "id": "system-prompt-command-name-framing-tag-3",
+      "description": "Model-facing framing tag wrapping a slash-command invocation into a user-role message sent to the model (\"<command-name>...</command-name>\"); present whenever a slash command is expanded into the conversation.",
+      "pieces": [
+        "<command-name>/loop</command-name>"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Slash-Command Name Framing Tag",
+      "id": "system-prompt-command-name-framing-tag",
+      "description": "Model-facing framing tag wrapping a slash-command invocation into a user-role message sent to the model (\"<command-name>...</command-name>\"); present whenever a slash command is expanded into the conversation.",
+      "pieces": [
+        "<command-name>/ultrareview${",
+        "?\" \"+",
+        ":\"\"}</command-name>"
+      ],
+      "identifiers": [
+        0,
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_COMMAND_NAME_FRAMING_TAG_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Bash Command Aborted Result",
+      "id": "tool-result-bash-command-aborted",
+      "description": "Model-facing `<error>` marker appended to the Bash tool_result content when the command was aborted before completion.",
+      "pieces": [
+        "<error>Command was aborted before completion</error>"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Bash Command Aborted Result",
+      "id": "tool-result-bash-command-aborted",
+      "description": "Model-facing `<error>` marker appended to the Bash tool_result content when the command was aborted before completion.",
+      "pieces": [
+        "<error>Command was aborted before completion</error>"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Local Command Stdout Framing Tag",
+      "id": "system-prompt-local-command-stdout-framing-tag-2",
+      "description": "Model-facing framing tag wrapping a forked/local slash-command's stdout into a user-role message sent to the model (\"<local-command-stdout>\\n${out}\\n</local-command-stdout>\"); present whenever a local command produces output that is fed back to the model.",
+      "pieces": [
+        "<local-command-stdout>\n${",
+        "}\n</local-command-stdout>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_LOCAL_COMMAND_STDOUT_FRAMING_TAG_2_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Local Command Stdout Framing Tag",
+      "id": "system-prompt-local-command-stdout-framing-tag",
+      "description": "Model-facing framing tag wrapping a forked/local slash-command's stdout into a user-role message sent to the model (\"<local-command-stdout>\\n${out}\\n</local-command-stdout>\"); present whenever a local command produces output that is fed back to the model.",
+      "pieces": [
+        "<local-command-stdout>${",
+        ".displayText}</local-command-stdout>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_LOCAL_COMMAND_STDOUT_FRAMING_TAG_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Local Command Stdout Framing Tag",
+      "id": "system-prompt-local-command-stdout-framing-tag-4",
+      "description": "Model-facing framing tag wrapping a forked/local slash-command's stdout into a user-role message sent to the model (\"<local-command-stdout>\\n${out}\\n</local-command-stdout>\"); present whenever a local command produces output that is fed back to the model.",
+      "pieces": [
+        "<local-command-stdout>${",
+        ".value}</local-command-stdout>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_LOCAL_COMMAND_STDOUT_FRAMING_TAG_4_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Local Command Stdout Framing Tag",
+      "id": "system-prompt-local-command-stdout-framing-tag-4",
+      "description": "Model-facing framing tag wrapping a forked/local slash-command's stdout into a user-role message sent to the model (\"<local-command-stdout>\\n${out}\\n</local-command-stdout>\"); present whenever a local command produces output that is fed back to the model.",
+      "pieces": [
+        "<local-command-stdout>${",
+        ".value}</local-command-stdout>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_LOCAL_COMMAND_STDOUT_FRAMING_TAG_4_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Local Command Stdout Framing Tag",
+      "id": "system-prompt-local-command-stdout-framing-tag-3",
+      "description": "Model-facing framing tag wrapping a forked/local slash-command's stdout into a user-role message sent to the model (\"<local-command-stdout>\\n${out}\\n</local-command-stdout>\"); present whenever a local command produces output that is fed back to the model.",
+      "pieces": [
+        "<local-command-stdout>${",
+        "}</local-command-stdout>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_LOCAL_COMMAND_STDOUT_FRAMING_TAG_3_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Local Command Stdout Framing Tag",
+      "id": "system-prompt-local-command-stdout-framing-tag-3",
+      "description": "Model-facing framing tag wrapping a forked/local slash-command's stdout into a user-role message sent to the model (\"<local-command-stdout>\\n${out}\\n</local-command-stdout>\"); present whenever a local command produces output that is fed back to the model.",
+      "pieces": [
+        "<local-command-stdout>${",
+        "}</local-command-stdout>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_LOCAL_COMMAND_STDOUT_FRAMING_TAG_3_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Local Command Stdout Framing Tag",
+      "id": "system-prompt-local-command-stdout-framing-tag-3",
+      "description": "Model-facing framing tag wrapping a forked/local slash-command's stdout into a user-role message sent to the model (\"<local-command-stdout>\\n${out}\\n</local-command-stdout>\"); present whenever a local command produces output that is fed back to the model.",
+      "pieces": [
+        "<local-command-stdout>${",
+        "}</local-command-stdout>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_LOCAL_COMMAND_STDOUT_FRAMING_TAG_3_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Local Command Stdout Framing Tag",
+      "id": "system-prompt-local-command-stdout-framing-tag-3",
+      "description": "Model-facing framing tag wrapping a forked/local slash-command's stdout into a user-role message sent to the model (\"<local-command-stdout>\\n${out}\\n</local-command-stdout>\"); present whenever a local command produces output that is fed back to the model.",
+      "pieces": [
+        "<local-command-stdout>${",
+        "}</local-command-stdout>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_LOCAL_COMMAND_STDOUT_FRAMING_TAG_3_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Local Command Stdout Framing Tag",
+      "id": "system-prompt-local-command-stdout-framing-tag-3",
+      "description": "Model-facing framing tag wrapping a forked/local slash-command's stdout into a user-role message sent to the model (\"<local-command-stdout>\\n${out}\\n</local-command-stdout>\"); present whenever a local command produces output that is fed back to the model.",
+      "pieces": [
+        "<local-command-stdout>${",
+        "}</local-command-stdout>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_LOCAL_COMMAND_STDOUT_FRAMING_TAG_3_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Local Command Stdout Framing Tag",
+      "id": "system-prompt-local-command-stdout-framing-tag-3",
+      "description": "Model-facing framing tag wrapping a forked/local slash-command's stdout into a user-role message sent to the model (\"<local-command-stdout>\\n${out}\\n</local-command-stdout>\"); present whenever a local command produces output that is fed back to the model.",
+      "pieces": [
+        "<local-command-stdout>${",
+        "}</local-command-stdout>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_LOCAL_COMMAND_STDOUT_FRAMING_TAG_3_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Local Command Stdout Framing Tag",
+      "id": "system-prompt-local-command-stdout-framing-tag-3",
+      "description": "Model-facing framing tag wrapping a forked/local slash-command's stdout into a user-role message sent to the model (\"<local-command-stdout>\\n${out}\\n</local-command-stdout>\"); present whenever a local command produces output that is fed back to the model.",
+      "pieces": [
+        "<local-command-stdout>${",
+        "}</local-command-stdout>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_LOCAL_COMMAND_STDOUT_FRAMING_TAG_3_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Local Command Stdout Framing Tag",
+      "id": "system-prompt-local-command-stdout-framing-tag-3",
+      "description": "Model-facing framing tag wrapping a forked/local slash-command's stdout into a user-role message sent to the model (\"<local-command-stdout>\\n${out}\\n</local-command-stdout>\"); present whenever a local command produces output that is fed back to the model.",
+      "pieces": [
+        "<local-command-stdout>${",
+        "}</local-command-stdout>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_LOCAL_COMMAND_STDOUT_FRAMING_TAG_3_VAR_0"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "System Reminder: MCP resource no content",
@@ -5074,6 +5632,22 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.20"
+    },
+    {
+      "name": "Context Tip Selector Session Metadata Block",
+      "id": "data-context-tip-selector-session-metadata",
+      "description": "Model-facing session-metadata framing block (hsf) injected into the user message sent to the context-tip selector aux model (csf system, gated tengu_context_tip).",
+      "pieces": [
+        "<session_metadata>\n${",
+        ".join(`\n`)}\n</session_metadata>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "DATA_CONTEXT_TIP_SELECTOR_SESSION_METADATA_VAR_0"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "System Reminder: Team coordination",
@@ -5285,6 +5859,155 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.18"
+    },
+    {
+      "name": "Context Tip Reception Suggested Action Label",
+      "id": "data-context-tip-reception-tip-shown-wrapper",
+      "description": "Model-facing label inside the <tip_shown> user-message block sent to the context-tip reception evaluator aux model (gated tengu_context_tip, gsf system + _sf tool).",
+      "pieces": [
+        "<tip_shown>\nFeature: ${",
+        ".tip.featureId}\nTip: ${",
+        ".tip.tip}\nSuggested action: ${",
+        ".tip.action??\"(none)\"}\n</tip_shown>"
+      ],
+      "identifiers": [
+        0,
+        0,
+        0
+      ],
+      "identifierMap": {
+        "0": "DATA_CONTEXT_TIP_RECEPTION_TIP_SHOWN_WRAPPER_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool permission denied tool_use_error wrapper",
+      "id": "tool-result-permission-denied-wrapper",
+      "description": "tool_result content wrapping a deny message in a <tool_use_error> tag sent to the model; model-facing.",
+      "pieces": [
+        "<tool_use_error>${",
+        ".denyMessage}</tool_use_error>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PERMISSION_DENIED_WRAPPER_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool error message tool_use_error wrapper",
+      "id": "tool-result-error-message-wrapper",
+      "description": "tool_result content wrapping a tool error message in a <tool_use_error> tag sent to the model; model-facing.",
+      "pieces": [
+        "<tool_use_error>${",
+        ".message}</tool_use_error>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ERROR_MESSAGE_WRAPPER_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Generic tool_use_error wrapper",
+      "id": "tool-result-generic-error-wrapper",
+      "description": "tool_result content wrapping a generic error string in a <tool_use_error> tag sent to the model; model-facing.",
+      "pieces": [
+        "<tool_use_error>${",
+        "}</tool_use_error>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_GENERIC_ERROR_WRAPPER_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "No-such-tool error (named) tool_result",
+      "id": "tool-result-no-such-tool-named",
+      "description": "tool_result content telling the model a named tool is not available, wrapped in <tool_use_error>; model-facing.",
+      "pieces": [
+        "<tool_use_error>Error: No such tool available: ${",
+        ".name}${",
+        "}</tool_use_error>"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_NO_SUCH_TOOL_NAMED_VAR_0",
+        "1": "TOOL_RESULT_NO_SUCH_TOOL_NAMED_VAR_1"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "No-such-tool error tool_result",
+      "id": "tool-result-no-such-tool",
+      "description": "tool_result content telling the model the requested tool is not available, wrapped in <tool_use_error>; model-facing.",
+      "pieces": [
+        "<tool_use_error>Error: No such tool available: ${",
+        "}${",
+        "}</tool_use_error>"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_NO_SUCH_TOOL_VAR_0",
+        "1": "TOOL_RESULT_NO_SUCH_TOOL_VAR_1"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Streaming fallback discarded tool_result",
+      "id": "tool-result-streaming-fallback-discarded",
+      "description": "tool_result content telling the model a tool execution was discarded by the streaming fallback, wrapped in <tool_use_error>; model-facing.",
+      "pieces": [
+        "<tool_use_error>Error: Streaming fallback - tool execution discarded</tool_use_error>"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "InputValidationError tool_use_error wrapper",
+      "id": "tool-result-input-validation-error-wrapper",
+      "description": "tool_result content wrapping an InputValidationError message in a <tool_use_error> tag sent to the model; model-facing.",
+      "pieces": [
+        "<tool_use_error>InputValidationError: ${",
+        "}</tool_use_error>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_INPUT_VALIDATION_ERROR_WRAPPER_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "InputValidationError tool_use_error wrapper",
+      "id": "tool-result-input-validation-error-wrapper",
+      "description": "tool_result content wrapping an InputValidationError message in a <tool_use_error> tag sent to the model; model-facing.",
+      "pieces": [
+        "<tool_use_error>InputValidationError: ${",
+        "}</tool_use_error>"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_INPUT_VALIDATION_ERROR_WRAPPER_VAR_0"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "Data: Transcript opening tag",
@@ -5704,6 +6427,25 @@
       "version": "2.1.191"
     },
     {
+      "name": "Memory Directory Updated Reminder",
+      "id": "system-reminder-memory-directory-updated",
+      "description": "Model-facing system-reminder (memory_update case in the L6l registry, isMeta meta-message) announcing that a source updated the agent's memory directory and which files changed.",
+      "pieces": [
+        "${",
+        "[e.source]} updated your memory directory: ${",
+        ".summary}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_REMINDER_MEMORY_DIRECTORY_UPDATED_VAR_0",
+        "1": "SYSTEM_REMINDER_MEMORY_DIRECTORY_UPDATED_VAR_1"
+      },
+      "version": "2.1.191"
+    },
+    {
       "name": "System Reminder: Workflow isolated worktree",
       "id": "system-reminder-workflow-isolated-worktree",
       "description": "Tells a workflow subagent it is running in an isolated git worktree separate from the main working directory",
@@ -5724,6 +6466,25 @@
         "2": "MAIN_WORKING_DIRECTORY_FN"
       },
       "version": "2.1.178"
+    },
+    {
+      "name": "Grep No-Matches / Pagination Result",
+      "id": "tool-result-grep-no-matches-found",
+      "description": "Model-facing Grep tool_result content for content/count modes when no matches are found, optionally annotated with the pagination footer.",
+      "pieces": [
+        "${",
+        "}\n\n[Showing results with pagination = ${",
+        "}]"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_GREP_NO_MATCHES_FOUND_VAR_0",
+        "1": "TOOL_RESULT_GREP_NO_MATCHES_FOUND_VAR_1"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "Skill: Schedule recurring cron and run immediately",
@@ -5867,6 +6628,28 @@
       "identifierMap": {
         "0": "DATA_CONTEXT_TIP_RECEPTION_TRANSCRIPT_WRAPPER_VAR_0",
         "1": "DATA_CONTEXT_TIP_RECEPTION_TRANSCRIPT_WRAPPER_VAR_1"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "ReadMcpResourceDir listing tool_result",
+      "id": "tool-result-readmcpresourcedir-listing",
+      "description": "tool_result content joining the directory listing with serialized resource JSON for the ReadMcpResourceDir tool; model-facing.",
+      "pieces": [
+        "${",
+        "}\n\n${",
+        "(",
+        ")}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_READMCPRESOURCEDIR_LISTING_VAR_0",
+        "1": "TOOL_RESULT_READMCPRESOURCEDIR_LISTING_VAR_1",
+        "2": "TOOL_RESULT_READMCPRESOURCEDIR_LISTING_VAR_2"
       },
       "version": "2.1.191"
     },
@@ -6073,6 +6856,27 @@
       "version": "2.1.178"
     },
     {
+      "name": "SendUserFile files delivered tool_result",
+      "id": "tool-result-senduserfile-files-delivered",
+      "description": "tool_result content confirming files were delivered to the user for the SendUserFile tool; model-facing.",
+      "pieces": [
+        "${",
+        "} ${",
+        "(",
+        ",\"file\")} delivered to user."
+      ],
+      "identifiers": [
+        0,
+        1,
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_SENDUSERFILE_FILES_DELIVERED_VAR_0",
+        "1": "TOOL_RESULT_SENDUSERFILE_FILES_DELIVERED_VAR_1"
+      },
+      "version": "2.1.191"
+    },
+    {
       "name": "Data: Glob/Grep param null byte error",
       "id": "data-glob-param-null-byte-error",
       "description": "tool_result validation error returned to the model when a Glob/Grep param contains a null byte.",
@@ -6162,6 +6966,44 @@
         "1": "SYSTEM_REMINDER_STRUCTURED_OUTPUT_ENFORCEMENT_VAR_1"
       },
       "version": "2.1.187"
+    },
+    {
+      "name": "Git Guidance Block",
+      "id": "system-prompt-git-guidance-block",
+      "description": "Model-facing system-prompt `# Git` guidance block (built by Atm), listing the interactive-flag/gh-CLI/commit rules; gated by BFt() (git repo + git instructions enabled).",
+      "pieces": [
+        "${",
+        "}# Git\n- Interactive flags (\\`-i\\`, e.g. \\`git rebase -i\\`, \\`git add -i\\`) are not supported in this environment.\n- Use the \\`gh\\` CLI for GitHub operations (PRs, issues, API).\n- Commit or push only when the user asks${",
+        "?\" — and for a completed change heading to a PR, only after the pre-ship checks below\":\"\"}. If on the default branch, branch first.${",
+        "?`\n${",
+        "}`:\"\"}${",
+        "?`\n- ${",
+        "}`:\"\"}${",
+        "?`\n\n${",
+        "}`:\"\"}${",
+        "?`\n\n${",
+        "}`:\"\"}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        2,
+        1,
+        1,
+        3,
+        3,
+        4,
+        4
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_GIT_GUIDANCE_BLOCK_VAR_0",
+        "1": "SYSTEM_PROMPT_GIT_GUIDANCE_BLOCK_VAR_1",
+        "2": "SYSTEM_PROMPT_GIT_GUIDANCE_BLOCK_VAR_2",
+        "3": "SYSTEM_PROMPT_GIT_GUIDANCE_BLOCK_VAR_3",
+        "4": "SYSTEM_PROMPT_GIT_GUIDANCE_BLOCK_VAR_4"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "Agent Prompt: Quick PR creation",
@@ -6499,6 +7341,28 @@
       "version": "2.1.178"
     },
     {
+      "name": "Relevant Memories Retrieved Reminder",
+      "id": "system-reminder-relevant-memories-retrieved",
+      "description": "Model-facing system-reminder (relevant_memories case in the L6l registry, injected via pp([Mn({content,isMeta:!0})])) that prefaces recalled memories with a relevance caveat before showing the memory body.",
+      "pieces": [
+        "${",
+        "===0?`Retrieved for possible relevance — use only if it actually applies to what the user asked.\n\n`:\"\"}${",
+        "}\n\n${",
+        ".content}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_REMINDER_RELEVANT_MEMORIES_RETRIEVED_VAR_0",
+        "1": "SYSTEM_REMINDER_RELEVANT_MEMORIES_RETRIEVED_VAR_1",
+        "2": "SYSTEM_REMINDER_RELEVANT_MEMORIES_RETRIEVED_VAR_2"
+      },
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: Context Tip Tip Field",
       "id": "tool-description-context-tip-tip-field",
       "description": "input_schema field description for the `tip` string property on the context-tip emit tool (dsf), sent to the model as part of the tool schema.",
@@ -6592,6 +7456,28 @@
       "version": "2.1.101"
     },
     {
+      "name": "SendMessage summary preview param",
+      "id": "tool-parameter-sendmessage-summary-preview",
+      "description": "inputSchema param of the SendMessage tool documenting the 5-10 word preview summary; model-facing.",
+      "pieces": [
+        "A 5-10 word summary shown as a preview in the UI (required when message is a string)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "TaskCreate subject param",
+      "id": "tool-parameter-taskcreate-subject",
+      "description": "inputSchema param of the TaskCreate tool documenting the task's brief title; model-facing.",
+      "pieces": [
+        "A brief title for the task"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "System Prompt: Memory category 'feedback' description",
       "id": "system-prompt-memory-category-feedback-description",
       "description": "Describes the 'feedback' memory category (corrections/confirmations of how to work) in the memory-extraction prompt",
@@ -6601,6 +7487,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "SendUserFile prebuilt filestore attachment param",
+      "id": "tool-parameter-senduserfile-prebuilt-filestore-attachment",
+      "description": "inputSchema param documenting an already-uploaded filestore attachment object for the SendUserFile/SendUserMessage attachments field; model-facing.",
+      "pieces": [
+        "A file already uploaded to the filestore (e.g. by the device attach_file tool). Passed through without local stat or upload."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "System Prompt: Verify memory claims before recommending",
@@ -6691,6 +7588,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "Agent/Task description param",
+      "id": "tool-parameter-agent-task-description",
+      "description": "inputSchema param of the Agent (Task) tool documenting the short 3-5 word task description; model-facing.",
+      "pieces": [
+        "A short (3-5 word) description of the task"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: Bash (sandbox — failure evidence condition)",
       "id": "tool-description-bash-sandbox-failure-evidence",
       "description": "Condition: command failed with evidence of sandbox restrictions",
@@ -6722,6 +7630,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.129"
+    },
+    {
+      "name": "Agent cwd param",
+      "id": "tool-parameter-agent-cwd",
+      "description": "inputSchema param of the Agent (Task) tool documenting the absolute working directory override; model-facing.",
+      "pieces": [
+        "Absolute path to run the agent in. Overrides the working directory for all filesystem and shell operations within this agent. Mutually exclusive with isolation: \"worktree\"."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: file_upload paths param",
@@ -6902,6 +7821,17 @@
         "1": "SYSTEM_PROMPT_SUBAGENT_ID_USAGE_FOOTER_VAR_1"
       },
       "version": "2.1.187"
+    },
+    {
+      "name": "Grep -C context alias param",
+      "id": "tool-parameter-grep-context-alias",
+      "description": "inputSchema param of the Grep tool documenting that -C is an alias for context; model-facing.",
+      "pieces": [
+        "Alias for context."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: Bash (sandbox — mandatory mode)",
@@ -7135,6 +8065,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "TaskCreate metadata param",
+      "id": "tool-parameter-taskcreate-metadata",
+      "description": "inputSchema param of the TaskCreate tool documenting arbitrary metadata attached to the task; model-facing.",
+      "pieces": [
+        "Arbitrary metadata to attach to the task"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Result: Skill archive missing root SKILL.md",
       "id": "tool-result-skill-archive-missing-root-skill-md",
       "description": "Error returned when an MCP skill archive has no SKILL.md at its root (found inside a wrapper directory); surfaced to the model as the failed prompt-command's text content",
@@ -7160,6 +8101,38 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Knowledge Cutoff Line",
+      "id": "system-prompt-knowledge-cutoff-line-2",
+      "description": "Model-facing 'Assistant knowledge cutoff is ${date}.' line emitted in the environment system-prompt blocks (b2m/S2m/T2m); conditional on a known cutoff for the model.",
+      "pieces": [
+        "Assistant knowledge cutoff is ${",
+        "}."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_KNOWLEDGE_CUTOFF_LINE_2_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Knowledge Cutoff Line",
+      "id": "system-prompt-knowledge-cutoff-line-2",
+      "description": "Model-facing 'Assistant knowledge cutoff is ${date}.' line emitted in the environment system-prompt blocks (b2m/S2m/T2m); conditional on a known cutoff for the model.",
+      "pieces": [
+        "Assistant knowledge cutoff is ${",
+        "}."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_KNOWLEDGE_CUTOFF_LINE_2_VAR_0"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "System Prompt: Async agent launched result",
@@ -7248,6 +8221,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Agent Listing Delta Initial Reminder",
+      "id": "system-reminder-agent-listing-delta-initial",
+      "description": "Model-facing system-reminder (agent_listing_delta isInitial branch, isMeta meta-message) that lists the initial set of available subagent types for the Agent tool.",
+      "pieces": [
+        "Available agent types for the Agent tool:"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "System Prompt: Available memories (empty) for recall",
@@ -7532,6 +8516,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "Tool Parameter: Artifact favicon",
+      "id": "tool-parameter-artifact-favicon",
+      "description": "Model-facing input_schema param description for the Artifact tool's favicon (browser-tab emoji) field, serialized into the model's tool list",
+      "pieces": [
+        "Browser-tab icon: one or two emoji (e.g. \"📊\"). No markup. Keep stable across redeploys; change only on a hard topic pivot."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: Bash Sandbox Intro",
       "id": "tool-description-bash-sandbox-default-intro",
       "description": "Bash tool sandbox section intro explaining commands run sandboxed and what it controls.",
@@ -7570,6 +8565,33 @@
       "version": "2.1.177"
     },
     {
+      "name": "Tool Result: Cron job cancelled",
+      "id": "tool-result-cron-job-cancelled",
+      "description": "Model-facing tool_result content returned by the CronDelete tool after cancelling a scheduled job",
+      "pieces": [
+        "Cancelled job ${",
+        ".id}."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_CRON_JOB_CANCELLED_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Parameter: Grep case insensitive",
+      "id": "tool-parameter-grep-case-insensitive",
+      "description": "Model-facing input_schema param description for the Grep/Search tool's -i case-insensitive flag, serialized into the model's tool list",
+      "pieces": [
+        "Case insensitive search (rg -i)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Agent Prompt: Default Claude Agent When-To-Use",
       "id": "agent-prompt-claude-default-agent-when-to-use",
       "description": "whenToUse description for the built-in catch-all 'claude' agent, surfaced to the model when selecting a subagent.",
@@ -7597,6 +8619,28 @@
       "description": "The feature/answer text for the 'undo-changes' context-tip situation, rendered into the tip-selector model context as 'Feature: ${t.feature}'.",
       "pieces": [
         "Claude automatically checkpoints every edit. You can restore conversation, code, or both to any previous state."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Claude Code CLI Availability",
+      "id": "system-prompt-claude-code-cli-availability",
+      "description": "Model-facing line in the static environment system-prompt block (b2m, env_info_static) stating Claude Code is available as a CLI in the terminal, desktop app, web app, and IDE extensions.",
+      "pieces": [
+        "Claude Code is available as a CLI in the terminal, desktop app (Mac/Windows), web app (claude.ai/code), and IDE extensions (VS Code, JetBrains)."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Claude Code CLI Availability",
+      "id": "system-prompt-claude-code-cli-availability",
+      "description": "Model-facing line in the static environment system-prompt block (b2m, env_info_static) stating Claude Code is available as a CLI in the terminal, desktop app, web app, and IDE extensions.",
+      "pieces": [
+        "Claude Code is available as a CLI in the terminal, desktop app (Mac/Windows), web app (claude.ai/code), and IDE extensions (VS Code, JetBrains)."
       ],
       "identifiers": [],
       "identifierMap": {},
@@ -7636,6 +8680,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "Tool Parameter: PowerShell command description",
+      "id": "tool-parameter-powershell-command-description",
+      "description": "Model-facing input_schema param description for the PowerShell tool's description field, serialized into the model's tool list",
+      "pieces": [
+        "Clear, concise description of what this command does in active voice."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Agent Prompt: Bash command description writer",
       "id": "agent-prompt-bash-command-description-writer",
       "description": "Instructions for generating clear, concise command descriptions in active voice for bash commands",
@@ -7645,6 +8700,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.3"
+    },
+    {
+      "name": "Tool Parameter: REPL script description",
+      "id": "tool-parameter-repl-script-description",
+      "description": "Model-facing input_schema param description for the REPL/JavaScript tool's description field, serialized into the model's tool list",
+      "pieces": [
+        "Clear, concise description of what this script does in active voice (5-10 words). E.g. \"Trace upgrade message to its GrowthBook flag\""
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Result: Click Lands Outside Allowed Apps",
@@ -7818,6 +8884,22 @@
         "2": "TOOL_DESCRIPTION_BASH_RUNNING_IN_BACKGROUND_RESULT_VAR_2"
       },
       "version": "2.1.178"
+    },
+    {
+      "name": "Bash Command Timed Out Result",
+      "id": "tool-result-bash-command-timed-out",
+      "description": "Model-facing Bash tool_result text written into the command's stdout/stderr output when the command exceeds its timeout.",
+      "pieces": [
+        "Command timed out after ${",
+        "(this.#p)}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_BASH_COMMAND_TIMED_OUT_VAR_0"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: Bash (sandbox — no exceptions)",
@@ -8041,6 +9123,17 @@
       "version": "2.1.79"
     },
     {
+      "name": "Resume Continue Prompt",
+      "id": "system-prompt-resume-continue-prompt",
+      "description": "Model-facing resume prompt (aqn() env-fallback returning CLAUDE_CODE_RESUME_PROMPT or this literal, isMeta) injected as a user message on interrupted-turn and deferred-tool auto-resume.",
+      "pieces": [
+        "Continue from where you left off."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Result: DesignSync Expand Scopes Failed (Non-Interactive)",
       "id": "tool-result-designsync-expand-scopes-failed-non-interactive",
       "description": "DesignSync precondition error returned when adding design scopes fails in a non-interactive session.",
@@ -8115,6 +9208,17 @@
       "version": "2.1.177"
     },
     {
+      "name": "DesignSync create_project name parameter",
+      "id": "tool-parameter-designsync-create-project-name",
+      "description": "inputSchema param description for the DesignSync tool's create_project name field; serialized into the model's tool list.",
+      "pieces": [
+        "create_project: name for the new design-system project"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: Tabs Create MCP",
       "id": "tool-description-tabs-create-mcp",
       "description": "Description for the tabs_create_mcp browser tool that creates a new empty tab in the MCP tab group.",
@@ -8179,6 +9283,55 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.141"
+    },
+    {
+      "name": "DesignSync paths parameter",
+      "id": "tool-parameter-designsync-paths",
+      "description": "inputSchema param description for the DesignSync tool's paths field (delete_files/unregister_assets); serialized into the model's tool list.",
+      "pieces": [
+        "delete_files: paths to delete. unregister_assets: paths whose "
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "NotebookEdit deleted-cell result",
+      "id": "tool-result-notebookedit-cell-deleted",
+      "description": "tool_result content returned to the model after a NotebookEdit delete operation; model-facing.",
+      "pieces": [
+        "Deleted cell ${",
+        "}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_NOTEBOOKEDIT_CELL_DELETED_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Agent team_name parameter (deprecated)",
+      "id": "tool-parameter-agent-team-name-deprecated",
+      "description": "inputSchema param description for the launch-agent (Task) tool's deprecated team_name field; serialized into the model's tool list.",
+      "pieces": [
+        "Deprecated; ignored. The session has a single implicit team."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Stop Task shell_id parameter (deprecated)",
+      "id": "tool-parameter-stop-task-shell-id-deprecated",
+      "description": "inputSchema param description for the Stop Task (KillShell/KillBash) tool's deprecated shell_id field; serialized into the model's tool list.",
+      "pieces": [
+        "Deprecated: use task_id instead"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "System Prompt: Agent Summary Generation",
@@ -8591,6 +9744,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "Grep multiline parameter",
+      "id": "tool-parameter-grep-multiline",
+      "description": "Description of the Grep tool's multiline input-schema parameter, serialized into the tool definition sent to the model.",
+      "pieces": [
+        "Enable multiline mode where . matches newlines and patterns can span lines (rg -U --multiline-dotall). Default: false."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Result: Entered Plan Mode",
       "id": "tool-result-entered-plan-mode",
       "description": "EnterPlanMode tool_result message telling the model to focus on exploring the codebase and designing an implementation approach.",
@@ -8904,6 +10068,24 @@
       "version": "2.1.139"
     },
     {
+      "name": "PreToolUse Hook Stopped Execution Result",
+      "id": "tool-result-pretooluse-hook-stopped-execution",
+      "description": "Model-facing error tool_result content emitted when a PreToolUse hook blocks a tool call (is_error:true); gated on the hook returning a stop decision.",
+      "pieces": [
+        "Execution stopped by PreToolUse hook${",
+        "?`: ${",
+        "}`:\"\"}"
+      ],
+      "identifiers": [
+        0,
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PRETOOLUSE_HOOK_STOPPED_EXECUTION_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Parameter: Artifact existing URL",
       "id": "tool-parameter-artifact-existing-url",
       "description": "Input-schema describe() for the artifact tool's url param (existing artifact URL to redeploy to).",
@@ -8924,6 +10106,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.72"
+    },
+    {
+      "name": "AskUserQuestion option description parameter",
+      "id": "tool-parameter-ask-user-question-option-description",
+      "description": "Description of the AskUserQuestion tool's per-option description input-schema parameter, serialized into the tool definition sent to the model.",
+      "pieces": [
+        "Explanation of what this option means or what will happen if chosen. Useful for providing context about trade-offs or implications."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Workflow Script: deep-research",
@@ -9111,6 +10304,28 @@
       "version": "2.1.177"
     },
     {
+      "name": "Write file-created tool result",
+      "id": "tool-result-write-file-created",
+      "description": "The Write tool's success tool_result content shown to the model after creating a file; model-facing.",
+      "pieces": [
+        "File created successfully at: ${",
+        "}${",
+        "}${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_WRITE_FILE_CREATED_VAR_0",
+        "1": "TOOL_RESULT_WRITE_FILE_CREATED_VAR_1",
+        "2": "TOOL_RESULT_WRITE_FILE_CREATED_VAR_2"
+      },
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Result: File Modified Since Read",
       "id": "tool-result-file-modified-since-read",
       "description": "Edit/Write tool_result error telling the model the file changed since read and to re-read before writing.",
@@ -9171,6 +10386,17 @@
       "version": "2.1.187"
     },
     {
+      "name": "Grep path parameter",
+      "id": "tool-parameter-grep-path",
+      "description": "Describe() for the Grep tool input_schema 'path' parameter, serialized into the model's tool list; model-facing.",
+      "pieces": [
+        "File or directory to search in (rg PATH). Defaults to current working directory."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Parameter: SendUserFile file paths",
       "id": "tool-parameter-senduserfile-file-paths",
       "description": "Zod .describe() for the SendUserFile files[] param (paths to send to the user).",
@@ -9198,6 +10424,28 @@
       "version": "2.1.53"
     },
     {
+      "name": "Grep type parameter",
+      "id": "tool-parameter-grep-type",
+      "description": "Describe() for the Grep tool input_schema 'type' parameter, serialized into the model's tool list; model-facing.",
+      "pieces": [
+        "File type to search (rg --type). Common types: js, py, rust, go, java, etc. More efficient than include for standard file types."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Read File-Unchanged Result",
+      "id": "tool-result-read-file-unchanged",
+      "description": "Model-facing Read tool_result hint (eSd) telling the model the file is unchanged since the last read and to refer to the earlier tool_result instead of re-reading.",
+      "pieces": [
+        "File unchanged since last read. The content from the earlier Read tool_result in this conversation is still current — refer to that instead of re-reading."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Parameter: Chrome read_page filter",
       "id": "tool-parameter-chrome-read-page-filter",
       "description": "Input-schema description for the filter param (interactive vs all elements) of the read_page tool.",
@@ -9207,6 +10455,39 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Projects finalize_plan localDir parameter",
+      "id": "tool-parameter-projects-finalize-local-dir",
+      "description": "Describe() for the projects/design-system tool input_schema 'localDir' parameter (rYp), serialized into the model's tool list; model-facing.",
+      "pieces": [
+        "finalize_plan: directory the bundle was built into. write_files with localPath may only read files inside this directory. Defaults to the current working directory. Resolved to an absolute path and shown in the permission prompt."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Projects finalize_plan deletes parameter",
+      "id": "tool-parameter-projects-finalize-deletes",
+      "description": "Describe() for the projects/design-system tool input_schema 'deletes' parameter (rYp), serialized into the model's tool list; model-facing.",
+      "pieces": [
+        "finalize_plan: exact paths or glob patterns that will be deleted (same syntax and limits as writes)."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Projects finalize_plan writes parameter",
+      "id": "tool-parameter-projects-finalize-writes",
+      "description": "Describe() for the projects/design-system tool input_schema 'writes' parameter (rYp), serialized into the model's tool list; model-facing.",
+      "pieces": [
+        "finalize_plan: exact paths or glob patterns that will be written. `*` matches within a single segment, `**` matches any depth (e.g. `ui_kits/acme/**/*.html`). Max 3 `*`/`**` wildcards per "
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: claude-in-chrome find",
@@ -9330,6 +10611,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "Projects design-system group parameter",
+      "id": "tool-parameter-projects-design-system-group",
+      "description": "Describe() for the projects/design-system tool input_schema 'group' (section label) parameter (rYp); model-facing.",
+      "pieces": [
+        "Free-form section label for the Design System pane (max 64 chars). "
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Result: MCP Resource Full Contents Header",
       "id": "tool-result-mcp-resource-full-contents-header",
       "description": "Text content-block header prefixing a fetched MCP resource's full contents in the tool_result.",
@@ -9418,6 +10710,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "Projects get_file path parameter",
+      "id": "tool-parameter-projects-get-file-path",
+      "description": "Describe() for the projects/design-system tool input_schema 'path' (get_file) parameter (rYp); model-facing.",
+      "pieces": [
+        "get_file: file path to read"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Parameter: gif_creator quality",
       "id": "tool-description-gif-creator-quality",
       "description": "GIF compression quality (1-30) param description for the gif_creator browser tool.",
@@ -9427,6 +10730,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Grep glob parameter",
+      "id": "tool-parameter-grep-glob",
+      "description": "Describe() for the Grep tool input_schema 'glob' parameter, serialized into the model's tool list; model-facing.",
+      "pieces": [
+        "Glob pattern to filter files (e.g. \"*.js\", \"*.{ts,tsx}\") - maps to rg --glob"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "System Reminder: Browser read-only access guidance",
@@ -9465,6 +10779,48 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Environment Info Block",
+      "id": "system-prompt-env-info-block",
+      "description": "Model-facing environment context block (T2m) 'Here is useful information about the environment you are running in:' with the <env> working-directory/git/platform/OS details, injected into the (sub)agent system prompt.",
+      "pieces": [
+        "Here is useful information about the environment you are running in:\n<env>\nWorking directory: ${",
+        "()}\nIs directory a git repo: ${",
+        "?\"Yes\":\"No\"}\n${",
+        "}Platform: ${",
+        ".platform}\n${",
+        "()}\nOS Version: ${",
+        "}\n${",
+        "?`${",
+        "}\n`:\"\"}</env>\n${",
+        "}${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        6,
+        7,
+        8
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_ENV_INFO_BLOCK_VAR_0",
+        "1": "SYSTEM_PROMPT_ENV_INFO_BLOCK_VAR_1",
+        "2": "SYSTEM_PROMPT_ENV_INFO_BLOCK_VAR_2",
+        "3": "SYSTEM_PROMPT_ENV_INFO_BLOCK_VAR_3",
+        "4": "SYSTEM_PROMPT_ENV_INFO_BLOCK_VAR_4",
+        "5": "SYSTEM_PROMPT_ENV_INFO_BLOCK_VAR_5",
+        "6": "SYSTEM_PROMPT_ENV_INFO_BLOCK_VAR_6",
+        "7": "SYSTEM_PROMPT_ENV_INFO_BLOCK_VAR_7",
+        "8": "SYSTEM_PROMPT_ENV_INFO_BLOCK_VAR_8"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: Context Tip Reception Field",
@@ -9677,6 +11033,17 @@
       "version": "2.1.108"
     },
     {
+      "name": "Suggest Bang-Prefix Shell Command",
+      "id": "system-prompt-shell-command-suggest-bang-prefix",
+      "description": "Model-facing session-guidance fragment inside the '# Using your tools' block telling the model to suggest the user type '! <command>' for interactive shell commands (e.g. gcloud auth login); gated on Hr().",
+      "pieces": [
+        "If you need the user to run a shell command themselves (e.g., an interactive login like `gcloud auth login`), suggest they type `! <command>` in the prompt — the `!` prefix runs the command in this session so its output lands directly in the conversation."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: Bash run_in_background Notify",
       "id": "tool-description-bash-run-in-background-notify",
       "description": "Bash tool description fragment telling the model to use run_in_background for long-running commands instead of sleeping.",
@@ -9697,6 +11064,28 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.53"
+    },
+    {
+      "name": "workflow description param",
+      "id": "tool-parameter-workflow-description-ignored",
+      "description": "Input-schema param description for the workflow tool's description argument, sent to the model as part of the tool definition.",
+      "pieces": [
+        "Ignored — set the workflow description in the script's `meta` block."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "workflow title param",
+      "id": "tool-parameter-workflow-title-ignored",
+      "description": "Input-schema param description for the workflow tool's title argument, sent to the model as part of the tool definition.",
+      "pieces": [
+        "Ignored — set the workflow title in the script's `meta` block."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: Bash (sandbox — retry without sandbox)",
@@ -9823,6 +11212,36 @@
       "version": "2.1.178"
     },
     {
+      "name": "write_files data param",
+      "id": "tool-parameter-write-files-inline-data",
+      "description": "Input-schema param description for the DesignSync write_files inline file-contents (data) argument, sent to the model as part of the tool definition.",
+      "pieces": [
+        "Inline file contents (UTF-8 text, or base64 when encoding is "
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "NotebookEdit inserted-cell result",
+      "id": "tool-result-notebook-edit-inserted-cell",
+      "description": "Tool_result content string returned to the model after NotebookEdit inserts a notebook cell.",
+      "pieces": [
+        "Inserted cell ${",
+        "} with ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_NOTEBOOK_EDIT_INSERTED_CELL_VAR_0",
+        "1": "TOOL_RESULT_NOTEBOOK_EDIT_INSERTED_CELL_VAR_1"
+      },
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: LSP",
       "id": "tool-description-lsp",
       "description": "Description for the LSP tool.",
@@ -9832,6 +11251,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.162"
+    },
+    {
+      "name": "Tool Parameter: Agent isolation mode",
+      "id": "tool-parameter-agent-isolation-mode",
+      "description": "The isolation enum param in the Task/spawn-agent tool input schema describing worktree vs remote execution; model-facing.",
+      "pieces": [
+        "Isolation mode. \"worktree\" creates a temporary git worktree so the agent works on an isolated copy of the repo. \"remote\" launches the agent in a remote cloud environment (always runs in background; availability is gated)."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Parameter: repl code",
@@ -9845,6 +11275,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "Tool Parameter: CronDelete job ID",
+      "id": "tool-parameter-crondelete-job-id",
+      "description": "The id param in the CronDelete tool input schema identifying the scheduled job to cancel; model-facing.",
+      "pieces": [
+        "Job ID returned by CronCreate."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Parameter: computer hold-key text",
       "id": "tool-description-computer-hold-key-param-text",
       "description": "text param description (key or chord to hold) for the computer hold_key action input schema.",
@@ -9854,6 +11295,25 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Tool Parameter: Monitor timeout_ms",
+      "id": "tool-parameter-monitor-timeout",
+      "description": "The timeout_ms param in the Monitor tool input schema setting the watch deadline; model-facing.",
+      "pieces": [
+        "Kill the monitor after this deadline. Default ${",
+        "}ms, max ${",
+        "}ms. Ignored when persistent is true."
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_PARAMETER_MONITOR_TIMEOUT_VAR_0",
+        "1": "TOOL_PARAMETER_MONITOR_TIMEOUT_VAR_1"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: Agent (when to launch subagents)",
@@ -9889,6 +11349,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Tool Parameter: Grep head_limit",
+      "id": "tool-parameter-grep-head-limit",
+      "description": "The head_limit param in the Grep tool input schema limiting output to first N lines/entries; model-facing.",
+      "pieces": [
+        "Limit output to first N lines/entries, equivalent to \"| head -N\". Works across all output modes: content (limits output lines), files_with_matches (limits file paths), count (limits count entries). Defaults to 250 when unspecified. Pass 0 for unlimited (use sparingly — large result sets waste context)."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: shortcuts_list",
@@ -10033,6 +11504,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "Tool Parameter: Task Output timeout",
+      "id": "tool-parameter-task-output-timeout",
+      "description": "The timeout param in the Task Output (BashOutput/AgentOutput) tool input schema capping the wait for completion; model-facing.",
+      "pieces": [
+        "Max wait time in ms"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Parameter: get_page_text max_chars",
       "id": "tool-description-get-page-text-max-chars-param",
       "description": "max_chars param description for a browser page-text tool input schema.",
@@ -10077,15 +11559,15 @@
       "version": "2.1.178"
     },
     {
-      "name": "System Prompt: Memory persistence scope",
-      "id": "system-prompt-memory-persistence-scope",
-      "description": "Explains that memory is for information useful in future conversations, not only within the current conversation",
+      "name": "Tool Parameter: ToolSearch max_results",
+      "id": "tool-parameter-toolsearch-max-results",
+      "description": "The max_results param in the ToolSearch tool input schema bounding how many deferred tools are returned; model-facing.",
       "pieces": [
-        "Memory is one of several persistence mechanisms available to you as you assist the user in a given conversation. The distinction is often that memory can be recalled in future conversations and should not be used for persisting information that is only useful within the scope of the current conversation."
+        "Maximum number of results to return (default: 5)"
       ],
       "identifiers": [],
       "identifierMap": {},
-      "version": "2.1.178"
+      "version": "2.1.191"
     },
     {
       "name": "System Prompt: Memory persistence scope",
@@ -10108,6 +11590,33 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "System Prompt: Memory persistence scope",
+      "id": "system-prompt-memory-persistence-scope",
+      "description": "Explains that memory is for information useful in future conversations, not only within the current conversation",
+      "pieces": [
+        "Memory is one of several persistence mechanisms available to you as you assist the user in a given conversation. The distinction is often that memory can be recalled in future conversations and should not be used for persisting information that is only useful within the scope of the current conversation."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.178"
+    },
+    {
+      "name": "Message Delivered Tool Result",
+      "id": "tool-result-message-delivered-to-user",
+      "description": "Model-facing tool_result content confirming a message was delivered to the user (with attachment count); sent back to the model.",
+      "pieces": [
+        "Message delivered to user.${",
+        "}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_MESSAGE_DELIVERED_TO_USER_VAR_0"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: computer middle_click",
@@ -10298,6 +11807,17 @@
       "version": "2.1.53"
     },
     {
+      "name": "WebSearch blocked_domains Parameter",
+      "id": "tool-parameter-websearch-blocked-domains",
+      "description": "Model-facing input_schema parameter description for the WebSearch tool's blocked_domains field, serialized into the model's tool list.",
+      "pieces": [
+        "Never include search results from these domains"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: Bash (git — never skip hooks)",
       "id": "tool-description-bash-git-never-skip-hooks",
       "description": "Bash tool git instruction: never skip hooks or bypass signing unless user requests it",
@@ -10369,6 +11889,28 @@
       "version": "2.1.178"
     },
     {
+      "name": "Grep No Files Found Result",
+      "id": "tool-result-grep-no-files-found",
+      "description": "Model-facing tool_result content returned by the Grep tool when no files match; sent back to the model.",
+      "pieces": [
+        "No files found"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Grep No Files Found Result",
+      "id": "tool-result-grep-no-files-found",
+      "description": "Model-facing tool_result content returned by the Grep tool when no files match; sent back to the model.",
+      "pieces": [
+        "No files found"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Result: No Hover Information",
       "id": "tool-description-lsp-no-hover-information",
       "description": "LSP tool result: no hover info available, possibly cursor not on a symbol or server not indexed.",
@@ -10378,6 +11920,94 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Grep No-Matches Fallback Literal",
+      "id": "tool-result-grep-no-matches-literal",
+      "description": "Model-facing Grep tool_result fallback text shown when a content/count search finds no matches.",
+      "pieces": [
+        "No matches found"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Grep No-Matches Fallback Literal",
+      "id": "tool-result-grep-no-matches-literal",
+      "description": "Model-facing Grep tool_result fallback text shown when a content/count search finds no matches.",
+      "pieces": [
+        "No matches found"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Grep No-Matches Fallback Literal",
+      "id": "tool-result-grep-no-matches-literal",
+      "description": "Model-facing Grep tool_result fallback text shown when a content/count search finds no matches.",
+      "pieces": [
+        "No matches found"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Grep No-Matches Fallback Literal",
+      "id": "tool-result-grep-no-matches-literal",
+      "description": "Model-facing Grep tool_result fallback text shown when a content/count search finds no matches.",
+      "pieces": [
+        "No matches found"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Grep No-Matches Fallback Literal",
+      "id": "tool-result-grep-no-matches-literal",
+      "description": "Model-facing Grep tool_result fallback text shown when a content/count search finds no matches.",
+      "pieces": [
+        "No matches found"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Grep No-Matches Fallback Literal",
+      "id": "tool-result-grep-no-matches-literal",
+      "description": "Model-facing Grep tool_result fallback text shown when a content/count search finds no matches.",
+      "pieces": [
+        "No matches found"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Grep No-Matches Fallback Literal",
+      "id": "tool-result-grep-no-matches-literal",
+      "description": "Model-facing Grep tool_result fallback text shown when a content/count search finds no matches.",
+      "pieces": [
+        "No matches found"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Grep No-Matches Fallback Literal",
+      "id": "tool-result-grep-no-matches-literal",
+      "description": "Model-facing Grep tool_result fallback text shown when a content/count search finds no matches.",
+      "pieces": [
+        "No matches found"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Result: No Monitor Named",
@@ -10438,6 +12068,28 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "List MCP Resources None Found Result",
+      "id": "tool-result-list-mcp-resources-none-found",
+      "description": "Model-facing tool_result content returned by the listMcpResources tool when no resources are available; sent back to the model.",
+      "pieces": [
+        "No resources found. MCP servers may still provide tools even if they have no resources."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Task List No Tasks Found Result",
+      "id": "tool-result-task-list-no-tasks-found",
+      "description": "Model-facing tool_result content returned by the task-list tool when no tasks exist; sent back to the model.",
+      "pieces": [
+        "No tasks found"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "System Prompt: Safety Classifier Unavailable",
@@ -10558,6 +12210,39 @@
       "version": "2.1.187"
     },
     {
+      "name": "Grep -A After Context Parameter",
+      "id": "tool-parameter-grep-after-context",
+      "description": "Model-facing input_schema parameter description for the Grep tool's -A (lines after match) field, serialized into the model's tool list.",
+      "pieces": [
+        "Number of lines to show after each match (rg -A). Requires output_mode: \"content\", ignored otherwise."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Grep context (-C) parameter",
+      "id": "tool-parameter-grep-context",
+      "description": "Grep tool inputSchema param description for the -C/context lines option; model-facing as part of the Grep tool's input_schema.",
+      "pieces": [
+        "Number of lines to show before and after each match (rg -C). Requires output_mode: \"content\", ignored otherwise."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Grep before-context (-B) parameter",
+      "id": "tool-parameter-grep-before-context",
+      "description": "Grep tool inputSchema param description for the -B lines-before-match option; model-facing as part of the Grep tool's input_schema.",
+      "pieces": [
+        "Number of lines to show before each match (rg -B). Requires output_mode: \"content\", ignored otherwise."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Parameter: Scroll Amount",
       "id": "tool-parameter-computer-scroll-amount",
       "description": "computer-use scroll_amount param description: number of scroll ticks.",
@@ -10589,6 +12274,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Tool Parameter JSON Single-Value Rule",
+      "id": "system-prompt-tool-param-json-single-value",
+      "description": "Model-facing tool_param_json system-prompt block (e2m) instructing that object/array parameter values must be a single JSON value and never contain parameter-tag markup; conditionally injected (uwi() or tengu_silent_harbor gate).",
+      "pieces": [
+        "Object and array parameter values must be a single JSON value — never write parameter-tag markup inside a JSON value."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Parameter: OAuth Callback URL (remote)",
@@ -10635,6 +12331,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "WebSearch allowed_domains parameter",
+      "id": "tool-parameter-websearch-allowed-domains",
+      "description": "WebSearch tool inputSchema param description for allowed_domains; model-facing as part of the WebSearch tool's input_schema.",
+      "pieces": [
+        "Only include search results from these domains"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "System Prompt: Tone — no emojis default",
       "id": "system-prompt-tone-no-emojis",
       "description": "No emojis in communication unless explicitly requested",
@@ -10662,6 +12369,17 @@
         "0": "CLICK_TIER_TERMINAL_IDE_APPS"
       },
       "version": "2.1.178"
+    },
+    {
+      "name": "Skill args parameter",
+      "id": "tool-parameter-skill-args",
+      "description": "Skill tool inputSchema param description for the optional args field; model-facing as part of the Skill tool's input_schema.",
+      "pieces": [
+        "Optional arguments for the skill"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Parameter: SendUserMessage attachments",
@@ -10708,6 +12426,39 @@
       "version": "2.1.178"
     },
     {
+      "name": "AskUserQuestion metadata source parameter",
+      "id": "tool-parameter-askuserquestion-source",
+      "description": "AskUserQuestion tool inputSchema describe for metadata.source; serialized into the tool's input_schema and thus model-facing.",
+      "pieces": [
+        "Optional identifier for the source of this question (e.g., \"remember\" for /remember command). Used for analytics tracking."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Workflow args parameter",
+      "id": "tool-parameter-workflow-args",
+      "description": "Workflow tool inputSchema param description for the args field passed to the script; model-facing as part of the Workflow tool's input_schema.",
+      "pieces": [
+        "Optional input value exposed to the script as the global `args`, verbatim. Pass arrays/objects as actual JSON values, NOT as a "
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "AskUserQuestion metadata parameter",
+      "id": "tool-parameter-askuserquestion-metadata",
+      "description": "AskUserQuestion tool inputSchema describe for the optional metadata object; serialized into the tool's input_schema and thus model-facing.",
+      "pieces": [
+        "Optional metadata for tracking and analytics purposes. Not displayed to user."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Parameter: Agent Model Override",
       "id": "tool-parameter-agent-model-override",
       "description": "Task/agent model param: optional per-agent model override; ignored for fork subagents which inherit the parent model.",
@@ -10728,6 +12479,93 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "AskUserQuestion annotations parameter",
+      "id": "tool-parameter-askuserquestion-annotations",
+      "description": "AskUserQuestion tool inputSchema describe for the optional per-question annotations record; serialized into the tool's input_schema and thus model-facing.",
+      "pieces": [
+        "Optional per-question annotations from the user (e.g., notes on preview selections). Keyed by question text."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "AskUserQuestion option preview parameter",
+      "id": "tool-parameter-askuserquestion-preview",
+      "description": "AskUserQuestion tool inputSchema describe for an option's preview content field; model-facing as part of the tool's input_schema.",
+      "pieces": [
+        "Optional preview content rendered when this option is focused. Use for mockups, code snippets, or visual comparisons that help users compare options. See the tool description for the expected content format."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "ListMcpResources server parameter",
+      "id": "tool-parameter-listmcpresources-server",
+      "description": "ListMcpResources tool inputSchema param description for the optional server filter; model-facing as part of the tool's input_schema.",
+      "pieces": [
+        "Optional server name to filter resources by"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "SendUserFile caption parameter",
+      "id": "tool-parameter-senduserfile-caption",
+      "description": "SendUserFile tool inputSchema param description for the optional file caption; model-facing as part of the tool's input_schema.",
+      "pieces": [
+        "Optional short caption for the file(s)."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "REPL timeout parameter",
+      "id": "tool-parameter-repl-timeout",
+      "description": "REPL tool inputSchema param description for the optional execution timeout; model-facing as part of the tool's input_schema.",
+      "pieces": [
+        "Optional timeout in milliseconds (default 30000, max 600000)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "PowerShell timeout parameter",
+      "id": "tool-parameter-powershell-timeout",
+      "description": "PowerShell tool inputSchema param description for the optional command timeout; model-facing as part of the tool's input_schema.",
+      "pieces": [
+        "Optional timeout in milliseconds (max ${",
+        "()})"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_PARAMETER_POWERSHELL_TIMEOUT_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "PowerShell timeout parameter",
+      "id": "tool-parameter-powershell-timeout",
+      "description": "PowerShell tool inputSchema param description for the optional command timeout; model-facing as part of the tool's input_schema.",
+      "pieces": [
+        "Optional timeout in milliseconds (max ${",
+        "()})"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_PARAMETER_POWERSHELL_TIMEOUT_VAR_0"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "Tool Parameter: Network URL Pattern",
@@ -10859,6 +12697,17 @@
       "version": "2.1.187"
     },
     {
+      "name": "Grep output_mode parameter",
+      "id": "tool-parameter-grep-output-mode",
+      "description": "Grep tool inputSchema param description for the output_mode option; model-facing as part of the Grep tool's input_schema.",
+      "pieces": [
+        "Output mode: \"content\" shows matching lines (supports -A/-B/-C context, -n line numbers, head_limit), \"files_with_matches\" shows file paths (supports head_limit), \"count\" shows match counts (supports head_limit). Defaults to \"files_with_matches\"."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "System Prompt: Output Token Limit Resume",
       "id": "system-prompt-output-token-limit-resume",
       "description": "Continuation message injected when output token limit is hit; tells the model to resume directly with no apology or recap.",
@@ -10881,6 +12730,22 @@
       "version": "2.1.178"
     },
     {
+      "name": "Read pages parameter",
+      "id": "tool-parameter-read-pages",
+      "description": "Read tool inputSchema (xsm) param description for the PDF pages range; model-facing as part of the Read tool's input_schema.",
+      "pieces": [
+        "Page range for PDF files (e.g., \"1-5\", \"3\", \"10-20\"). Only applicable to PDF files. Maximum ${",
+        "} pages per request."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_PARAMETER_READ_PAGES_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Parameter: Artifact Local Path",
       "id": "tool-parameter-artifact-local-path",
       "description": "artifact tool localPath param: path on disk to read/encode/upload directly so contents never enter the model context; exclusive with data.",
@@ -10892,6 +12757,28 @@
       "version": "2.1.178"
     },
     {
+      "name": "Workflow scriptPath parameter",
+      "id": "tool-parameter-workflow-script-path",
+      "description": "Workflow tool inputSchema (eVp) param description for the scriptPath option; model-facing as part of the Workflow tool's input_schema.",
+      "pieces": [
+        "Path to a workflow script file on disk. Every Workflow invocation persists its script under the session directory and returns the path in the tool result. To iterate, edit that file with Write/Edit and re-invoke Workflow with the same `scriptPath` instead of re-sending the full script. Takes precedence over `script` and `name`."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Artifact file_path parameter",
+      "id": "tool-parameter-artifact-file-path",
+      "description": "Artifact tool inputSchema (Yll) param description for the html/md file_path to render; model-facing as part of the Artifact tool's input_schema.",
+      "pieces": [
+        "Path to an .html or .md file to render. Use a short, distinctive basename — it is the fallback title if the HTML has no <title>."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Parameter: Worktree Path",
       "id": "tool-parameter-enterworktree-path",
       "description": "EnterWorktree path param: path to an existing worktree to switch into instead of creating one; mutually exclusive with name.",
@@ -10901,6 +12788,38 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "tool-parameter-designsync-project-path",
+      "id": "tool-parameter-designsync-project-path",
+      "description": "DesignSync tool inputSchema param: the path of a file within the design-system project (e.g. components/button/index.html).",
+      "pieces": [
+        "Path within the project, e.g. components/button/index.html"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "tool-result-pdf-file-read",
+      "id": "tool-result-pdf-file-read",
+      "description": "Read tool_result content block announcing a PDF file was read, with its path and original size.",
+      "pieces": [
+        "PDF file read: ${",
+        ".file.filePath} (${",
+        "(",
+        ".file.originalSize)})"
+      ],
+      "identifiers": [
+        0,
+        1,
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PDF_FILE_READ_VAR_0",
+        "1": "TOOL_RESULT_PDF_FILE_READ_VAR_1"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "System Reminder: Large PDF read guidance",
@@ -10929,6 +12848,29 @@
         "2": "READ_TOOL_NAME"
       },
       "version": "2.1.178"
+    },
+    {
+      "name": "tool-result-pdf-pages-extracted",
+      "id": "tool-result-pdf-pages-extracted",
+      "description": "Read tool_result content block reporting how many PDF pages were extracted from a file and its original size.",
+      "pieces": [
+        "PDF pages extracted: ${",
+        ".file.count} page(s) from ${",
+        ".file.filePath} (${",
+        "(",
+        ".file.originalSize)})"
+      ],
+      "identifiers": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PDF_PAGES_EXTRACTED_VAR_0",
+        "1": "TOOL_RESULT_PDF_PAGES_EXTRACTED_VAR_1"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: Edit (concise)",
@@ -10972,6 +12914,28 @@
       "version": "2.1.136"
     },
     {
+      "name": "Permission Denied By Hook Result",
+      "id": "tool-result-permission-denied-by-hook",
+      "description": "Model-facing default deny message (buildDeny fallback) surfaced as the denied-tool result reason when a PermissionRequest hook denies a call without its own message.",
+      "pieces": [
+        "Permission denied by hook"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Permission Denied By Hook Result",
+      "id": "tool-result-permission-denied-by-hook",
+      "description": "Model-facing default deny message (buildDeny fallback) surfaced as the denied-tool result reason when a PermissionRequest hook denies a call without its own message.",
+      "pieces": [
+        "Permission denied by hook"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "System Prompt: Tool Denied With User Message",
       "id": "system-prompt-tool-execution-denied-with-user-message",
       "description": "Tool-result message injected when permission is denied and the user added an instruction; prefixes the user's note for the model.",
@@ -10994,6 +12958,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "tool-parameter-agent-spawn-permission-mode",
+      "id": "tool-parameter-agent-spawn-permission-mode",
+      "description": "Agent/Task launch tool inputSchema param: permission mode for the spawned teammate agent (e.g. \"plan\" to require plan approval).",
+      "pieces": [
+        "Permission mode for spawned teammate (e.g., \"plan\" to require plan approval)."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Data: Context Tip Feature — Permission Fatigue",
       "id": "data-context-tip-feature-permission-fatigue",
       "description": "Feature-description line for the permission-fatigue context tip, serialized into the selector system prompt's situations catalog",
@@ -11014,6 +12989,28 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "tool-parameter-sendmessage-message-text",
+      "id": "tool-parameter-sendmessage-message-text",
+      "description": "SendMessage tool inputSchema param: the plain-text message content sent to a teammate.",
+      "pieces": [
+        "Plain text message content"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "tool-parameter-sendmessage-message-text",
+      "id": "tool-parameter-sendmessage-message-text",
+      "description": "SendMessage tool inputSchema param: the plain-text message content sent to a teammate.",
+      "pieces": [
+        "Plain text message content"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "System Reminder: Plan mode is active (subagent)",
@@ -11061,6 +13058,31 @@
         "3": "ASK_USER_QUESTION_TOOL_NAME"
       },
       "version": "2.1.178"
+    },
+    {
+      "name": "Plan Mode Sparse Continuation Reminder",
+      "id": "system-reminder-plan-mode-sparse-continuation",
+      "description": "Model-facing system-reminder (L9m, injected via _p([On({content,isMeta:!0})])) re-asserting plan-mode constraints on plan-continuation turns; gated by reminderType sparse.",
+      "pieces": [
+        "Plan mode still active (see full instructions earlier in conversation). Read-only except plan file (${",
+        ".planFilePath}). ${",
+        "} End turns with ${",
+        "} (for clarifications) or ${",
+        ".name} (for plan approval). Never ask about plan approval via text or AskUserQuestion."
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_REMINDER_PLAN_MODE_SPARSE_CONTINUATION_VAR_0",
+        "1": "SYSTEM_REMINDER_PLAN_MODE_SPARSE_CONTINUATION_VAR_1",
+        "2": "SYSTEM_REMINDER_PLAN_MODE_SPARSE_CONTINUATION_VAR_2",
+        "3": "SYSTEM_REMINDER_PLAN_MODE_SPARSE_CONTINUATION_VAR_3"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "Agent Prompt: CLAUDE.md creation",
@@ -11123,6 +13145,27 @@
       "version": "2.1.88"
     },
     {
+      "name": "Prefer Dedicated Tools (Default CLI)",
+      "id": "system-prompt-prefer-dedicated-tools-default-cli",
+      "description": "Model-facing default-CLI branch of the '# Using your tools' system-prompt block ('Prefer dedicated tools over ${o} ... reserve ${o} for shell-only operations.'), the BASH_GUIDANCE anchor; emitted only on the non-REPL tool path.",
+      "pieces": [
+        "Prefer dedicated tools over ${",
+        "} when one fits (${",
+        "}) — reserve ${",
+        "} for shell-only operations."
+      ],
+      "identifiers": [
+        0,
+        1,
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_PREFER_DEDICATED_TOOLS_DEFAULT_CLI_VAR_0",
+        "1": "SYSTEM_PROMPT_PREFER_DEDICATED_TOOLS_DEFAULT_CLI_VAR_1"
+      },
+      "version": "2.1.191"
+    },
+    {
       "name": "System Prompt: Doing tasks — prefer editing",
       "id": "system-prompt-doing-tasks-prefer-editing",
       "description": "Prefer editing existing files over creating new ones",
@@ -11143,6 +13186,28 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.53"
+    },
+    {
+      "name": "tool-parameter-taskcreate-active-form",
+      "id": "tool-parameter-taskcreate-active-form",
+      "description": "TaskCreate tool inputSchema param: the present-continuous form of the task shown in the spinner while in progress (e.g. \"Running tests\").",
+      "pieces": [
+        "Present continuous form shown in spinner when in_progress (e.g., \"Running tests\")"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "tool-parameter-taskcreate-active-form",
+      "id": "tool-parameter-taskcreate-active-form",
+      "description": "TaskCreate tool inputSchema param: the present-continuous form of the task shown in the spinner while in progress (e.g. \"Running tests\").",
+      "pieces": [
+        "Present continuous form shown in spinner when in_progress (e.g., \"Running tests\")"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: Computer Key",
@@ -11211,6 +13276,72 @@
       "version": "2.1.178"
     },
     {
+      "name": "tool-parameter-grep-only-matching",
+      "id": "tool-parameter-grep-only-matching",
+      "description": "Grep tool inputSchema param (-o): print only the matched parts of each matching line, one match per output line.",
+      "pieces": [
+        "Print only the matched (non-empty) parts of each matching line, one match per output line (rg -o / --only-matching). Requires output_mode: \"content\", ignored otherwise. Defaults to false."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool parameter: Projects doc path",
+      "id": "tool-parameter-projects-doc-path",
+      "description": "inputSchema param of the Projects tool describing the doc path for read/write/delete operations.",
+      "pieces": [
+        "project_read/project_write/project_delete: doc path. project_write: an existing path is replaced in place; a new bare filename (no \"/\") is namespaced to \"claude/<name>\"."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool parameter: Projects search query",
+      "id": "tool-parameter-projects-search-query",
+      "description": "inputSchema param of the Projects tool describing the knowledge-base query for project_search.",
+      "pieces": [
+        "project_search: knowledge-base query"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool parameter: Projects search hit count",
+      "id": "tool-parameter-projects-search-hits",
+      "description": "inputSchema param of the Projects tool describing the number of search hits to return.",
+      "pieces": [
+        "project_search: number of hits (default 5)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool parameter: Projects local upload path",
+      "id": "tool-parameter-projects-local-path",
+      "description": "inputSchema param of the Projects tool describing a working-directory file to upload for project_write.",
+      "pieces": [
+        "project_write: a file inside the working directory to upload. The "
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool parameter: Projects force write",
+      "id": "tool-parameter-projects-force",
+      "description": "inputSchema param of the Projects tool describing the flag that bypasses the chat-injection budget guard.",
+      "pieces": [
+        "project_write: bypass the chat-injection budget guard. Set only when the write is genuinely worth degrading chat to retrieval mode for everyone in the project."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: Projects Content Param",
       "id": "tool-description-projects-content-param",
       "description": "Projects tool project_write content param: inline doc text, mutually exclusive with local_path",
@@ -11220,6 +13351,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Tool parameter: DesignSync card path",
+      "id": "tool-parameter-designsync-card-path",
+      "description": "inputSchema param of the DesignSync tool describing the project-relative preview/spec file an asset card renders.",
+      "pieces": [
+        "Project-relative path to the preview/spec file this card renders"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: Projects Error Policy Disabled",
@@ -11244,6 +13386,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "Tool parameter: ExitPlanMode allowed prompts",
+      "id": "tool-parameter-exitplanmode-allowed-prompts",
+      "description": "inputSchema param of the ExitPlanMode tool describing prompt-based permissions needed to implement the plan.",
+      "pieces": [
+        "Prompt-based permissions needed to implement the plan. These describe categories of actions rather than specific commands."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: Explain Command",
       "id": "tool-description-explain-command",
       "description": "explain_command tool definition: provide an explanation of a shell command",
@@ -11266,6 +13419,27 @@
       "version": "2.1.178"
     },
     {
+      "name": "Tool result: artifact published",
+      "id": "tool-result-artifact-published",
+      "description": "tool_result content returned to the model confirming a published artifact path and URL.",
+      "pieces": [
+        "Published ${",
+        ".path} at ${",
+        ".url}${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_PUBLISHED_VAR_0",
+        "1": "TOOL_RESULT_ARTIFACT_PUBLISHED_VAR_1"
+      },
+      "version": "2.1.191"
+    },
+    {
       "name": "Data: Design-Sync Skill Description",
       "id": "data-design-sync-skill-description",
       "description": "The design-sync SKILL.md frontmatter description that becomes part of the skill prompt the model reads when the skill loads.",
@@ -11275,6 +13449,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.187"
+    },
+    {
+      "name": "Tool parameter: ToolSearch query",
+      "id": "tool-parameter-toolsearch-query",
+      "description": "inputSchema param of the ToolSearch tool describing the query used to find deferred tools.",
+      "pieces": [
+        "Query to find deferred tools. Use \"select:<tool_name>\" for direct selection, or keywords to search."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "AskUserQuestion Questions Field (Velvet Variant)",
@@ -11465,6 +13650,28 @@
       "version": "2.1.178"
     },
     {
+      "name": "Tool Description: Condition Verifier Reason",
+      "id": "tool-description-condition-verifier-reason",
+      "description": "condition-verifier tool output schema reason field: reason if the condition was not met",
+      "pieces": [
+        "Reason, if the condition was not met"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.178"
+    },
+    {
+      "name": "SendMessage to",
+      "id": "tool-parameter-send-message-recipient",
+      "description": "Description of the 'to' input parameter in the SendMessage tool's inputSchema (recipient teammate name); model-facing as part of the tool definition serialized to the model.",
+      "pieces": [
+        "Recipient: teammate name"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: WebFetch Redirect Detected",
       "id": "tool-description-webfetch-redirect-detected",
       "description": "WebFetch tool_result when the URL redirects to a different host, instructing the model to re-fetch the redirect URL",
@@ -11600,6 +13807,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "Edit replace_all",
+      "id": "tool-parameter-edit-replace-all",
+      "description": "Description of the 'replace_all' input parameter in the Edit tool's inputSchema; model-facing as part of the tool definition serialized to the model.",
+      "pieces": [
+        "Replace all occurrences of old_string (default false)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: NotebookEdit",
       "id": "tool-description-notebookedit",
       "description": "Describes the NotebookEdit tool for replacing, inserting, or deleting a single cell in a Jupyter notebook (.ipynb)",
@@ -11616,6 +13834,17 @@
         "0": "READ_TOOL_NAME"
       },
       "version": "2.1.162"
+    },
+    {
+      "name": "DesignSync counts",
+      "id": "tool-parameter-design-sync-report-validate-counts",
+      "description": "Description of the 'counts' input parameter in the DesignSync tool's inputSchema (report_validate aggregate); model-facing as part of the tool definition serialized to the model.",
+      "pieces": [
+        "report_validate: aggregate from the final .render-check.json — "
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: request_teach_access (part of teach mode)",
@@ -11656,6 +13885,50 @@
         "0": "TOOL_DESCRIPTION_COMPUTER_REQUEST_ACCESS_AUTO_DENIED_VAR_0"
       },
       "version": "2.1.178"
+    },
+    {
+      "name": "DesignSync projectId",
+      "id": "tool-parameter-design-sync-project-id",
+      "description": "Description of the 'projectId' input parameter in the DesignSync tool's inputSchema; model-facing as part of the tool definition serialized to the model.",
+      "pieces": [
+        "Required for all methods except list_projects and create_project"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Cron body",
+      "id": "tool-parameter-cron-body",
+      "description": "Description of the 'body' input parameter in the Cron/routines tool's inputSchema; model-facing as part of the tool definition serialized to the model.",
+      "pieces": [
+        "Required for create and update; optional for run"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Cron trigger_id",
+      "id": "tool-parameter-cron-trigger-id",
+      "description": "Description of the 'trigger_id' input parameter in the Cron/routines tool's inputSchema; model-facing as part of the tool definition serialized to the model.",
+      "pieces": [
+        "Required for get, update, and run"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "ExitWorktree discard_changes",
+      "id": "tool-parameter-exit-worktree-discard-changes",
+      "description": "Description of the 'discard_changes' input parameter in the ExitWorktree tool's inputSchema; model-facing as part of the tool definition serialized to the model.",
+      "pieces": [
+        "Required true when action is \"remove\" and the worktree has uncommitted files or unmerged commits. The tool will refuse and list them otherwise."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: Claude in Chrome Resize Window",
@@ -11738,6 +14011,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "Review No-Arg Fallback",
+      "id": "agent-prompt-review-no-arg-fallback",
+      "description": "Model-facing /review no-argument fallback prompt instructing the model to run gh pr list to show open pull requests.",
+      "pieces": [
+        "Run `gh pr list` to show the open pull requests, then ask the user which one to review (`/review <number>`)."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: Monitor Persistent Param",
       "id": "tool-description-monitor-persistent-param",
       "description": "Monitor tool persistent param: run for the lifetime of the session (no timeout) for session-length watches, stop with TaskStop",
@@ -11747,6 +14031,22 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Workflow resumeFromRunId",
+      "id": "tool-parameter-workflow-resume-from-run-id",
+      "description": "Description of the 'resumeFromRunId' input parameter in the Workflow tool's inputSchema; model-facing as part of the tool definition serialized to the model.",
+      "pieces": [
+        "Run ID of a prior Workflow invocation to resume from. Completed agent() calls with unchanged (prompt, opts) return their cached results instantly; only edited or new calls re-run. Same-session only. Stop the prior run first (${",
+        "}) before resuming."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_PARAMETER_WORKFLOW_RESUME_FROM_RUN_ID_VAR_0"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "System Prompt: Workflow Command Prompt",
@@ -11897,6 +14197,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "ScheduleWakeup delaySeconds parameter",
+      "id": "tool-parameter-schedulewakeup-delay-seconds",
+      "description": "The `delaySeconds` input-schema param description for the ScheduleWakeup tool, serialized into the model's tool list.",
+      "pieces": [
+        "Seconds from now to wake up. Clamped to [60, 3600] by the runtime."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: Teach Batch Segment Anchoring",
       "id": "tool-description-teach-batch-segment-anchoring",
       "description": "teach_batch description continuation: a batch is one segment; anchor the next batch to the returned screenshot, within a batch coords refer to the pre-batch screenshot",
@@ -11939,6 +14250,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "ExitPlanMode allowedPrompts action description",
+      "id": "tool-parameter-exitplanmode-allowed-prompt-action",
+      "description": "The `prompt` input-schema param description for the ExitPlanMode tool's allowedPrompts entries, serialized into the model's tool list.",
+      "pieces": [
+        "Semantic description of the action, e.g. \"run tests\", \"install dependencies\""
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: Claude in Chrome switch browser",
@@ -11985,6 +14307,61 @@
       "version": "2.1.183"
     },
     {
+      "name": "WaitForMcpServers servers parameter",
+      "id": "tool-parameter-waitformcpservers-server-names",
+      "description": "The `servers` input-schema param description for the WaitForMcpServers tool, serialized into the model's tool list.",
+      "pieces": [
+        "Server names to wait for (default: all pending)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "PowerShell dangerouslyDisableSandbox parameter",
+      "id": "tool-parameter-powershell-dangerously-disable-sandbox",
+      "description": "The `dangerouslyDisableSandbox` input-schema param description for the PowerShell tool, serialized into the model's tool list.",
+      "pieces": [
+        "Set this to true to dangerously override sandbox mode and run commands without sandboxing."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "PowerShell dangerouslyDisableSandbox parameter",
+      "id": "tool-parameter-powershell-dangerously-disable-sandbox",
+      "description": "The `dangerouslyDisableSandbox` input-schema param description for the PowerShell tool, serialized into the model's tool list.",
+      "pieces": [
+        "Set this to true to dangerously override sandbox mode and run commands without sandboxing."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "DesignSync file encoding parameter",
+      "id": "tool-parameter-designsync-file-encoding-base64",
+      "description": "The `encoding` input-schema param description for the DesignSync tool's write_files entries, serialized into the model's tool list.",
+      "pieces": [
+        "Set to \"base64\" for binary inline data"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "AskUserQuestion multiSelect parameter",
+      "id": "tool-parameter-askuserquestion-multiselect",
+      "description": "The `multiSelect` input-schema param description for the AskUserQuestion tool, serialized into the model's tool list.",
+      "pieces": [
+        "Set to true to allow the user to select multiple options instead of just one. Use when choices are not mutually exclusive."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Parameter: Agent run in background",
       "id": "tool-parameter-agent-run-in-background",
       "description": "Describes the run_in_background boolean param for the agent/task spawn tool.",
@@ -11994,6 +14371,28 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "PowerShell run_in_background parameter",
+      "id": "tool-parameter-powershell-run-in-background",
+      "description": "The `run_in_background` input-schema param description for the PowerShell tool, serialized into the model's tool list.",
+      "pieces": [
+        "Set to true to run this command in the background."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "PowerShell run_in_background parameter",
+      "id": "tool-parameter-powershell-run-in-background",
+      "description": "The `run_in_background` input-schema param description for the PowerShell tool, serialized into the model's tool list.",
+      "pieces": [
+        "Set to true to run this command in the background."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Skill: /init CLAUDE.md and skill setup (new version)",
@@ -12018,6 +14417,50 @@
       "version": "2.1.178"
     },
     {
+      "name": "ShareOnboardingGuide short_code parameter",
+      "id": "tool-parameter-share-onboarding-guide-short-code",
+      "description": "The `short_code` input-schema param description for the ShareOnboardingGuide tool, serialized into the model's tool list.",
+      "pieces": [
+        "Short code of a specific guide to target (returned by a previous call). Honored by check, update, and delete — skips the org-wide lookup and targets this guide directly."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Monitor tool description parameter",
+      "id": "tool-parameter-monitor-description",
+      "description": "The `description` input-schema param description for the Monitor tool, serialized into the model's tool list.",
+      "pieces": [
+        "Short human-readable description of what you are monitoring (shown in notifications)."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "DesignSync asset label parameter",
+      "id": "tool-parameter-designsync-asset-label",
+      "description": "The `name` input-schema param description for the DesignSync tool's register_assets card entries, serialized into the model's tool list.",
+      "pieces": [
+        "Short human-readable label (\"Primary buttons\"), not a path"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Artifact version label parameter",
+      "id": "tool-parameter-artifact-version-label",
+      "description": "The `label` input-schema param description for the Artifact tool, serialized into the model's tool list.",
+      "pieces": [
+        "Short human-readable name for this version (e.g. \"fixed-background\"). Shown in the version picker instead of the raw version id."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Parameter: GIF creator showActionLabels",
       "id": "tool-description-gif-creator-show-action-labels",
       "description": "Describes the showActionLabels option of the gif_creator tool input schema.",
@@ -12038,6 +14481,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Grep -n line numbers parameter",
+      "id": "tool-parameter-grep-line-numbers",
+      "description": "The `-n` input-schema param description for the Grep tool, serialized into the model's tool list.",
+      "pieces": [
+        "Show line numbers in output (rg -n). Requires output_mode: \"content\", ignored otherwise. Defaults to true."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: Teach step",
@@ -12214,6 +14668,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "Tool Parameter: CronCreate cron",
+      "id": "tool-parameter-croncreate-cron",
+      "description": "The cron input_schema parameter description for the CronCreate tool; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "Standard 5-field cron expression in local time: \"M H DoM Mon DoW\" (e.g. \"*/5 * * * *\" = every 5 minutes, \"30 14 28 2 *\" = Feb 28 at 2:30pm local once)."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: Background monitor (streaming events)",
       "id": "tool-description-background-monitor-streaming-events",
       "description": "Describes the background monitor tool that streams stdout events from long-running scripts as chat notifications, with guidelines on script quality, output volume, and selective filtering",
@@ -12239,6 +14704,33 @@
         "0": "HOOK_NAME"
       },
       "version": "2.1.107"
+    },
+    {
+      "name": "Stop Hook Feedback Framing",
+      "id": "system-prompt-stop-hook-feedback-framing",
+      "description": "Model-facing framing 'Stop hook feedback:\\n${blockingError}' built by Qvo() and injected as an isMeta message (On({content:Qvo(...),isMeta:!0})) carrying a Stop-hook's blocking-error feedback to the model.",
+      "pieces": [
+        "Stop hook feedback:\n${",
+        ".blockingError}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_STOP_HOOK_FEEDBACK_FRAMING_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Stop Hook Feedback Framing",
+      "id": "system-prompt-stop-hook-feedback-framing-2",
+      "description": "Model-facing framing 'Stop hook feedback:\\n${blockingError}' built by Qvo() and injected as an isMeta message (On({content:Qvo(...),isMeta:!0})) carrying a Stop-hook's blocking-error feedback to the model.",
+      "pieces": [
+        "Stop hook feedback: "
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Result: Team-protocol message blocked for subagent",
@@ -12524,6 +15016,46 @@
       "version": "2.1.178"
     },
     {
+      "name": "Tool Result: TaskCreate created",
+      "id": "tool-result-taskcreate-created",
+      "description": "The tool_result content returned to the model after creating a task via mapToolResultToToolResultBlockParam; model-facing.",
+      "pieces": [
+        "Task #${",
+        ".id} created successfully: ${",
+        ".subject}"
+      ],
+      "identifiers": [
+        0,
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_TASKCREATE_CREATED_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Parameter: TaskUpdate addBlockedBy",
+      "id": "tool-parameter-taskupdate-add-blocked-by",
+      "description": "The addBlockedBy input_schema parameter description for the TaskUpdate tool; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "Task IDs that block this task"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Parameter: TaskUpdate addBlocks",
+      "id": "tool-parameter-taskupdate-add-blocks",
+      "description": "The addBlocks input_schema parameter description for the TaskUpdate tool; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "Task IDs that this task blocks"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Result: Teach mode already active",
       "id": "tool-description-request-teach-access-already-active-error",
       "description": "request_teach_access tool_result error when teach mode is already active",
@@ -12632,6 +15164,25 @@
       "version": "2.1.178"
     },
     {
+      "name": "Tool Parameter: ScheduleWakeup loop prompt",
+      "id": "tool-parameter-schedulewakeup-loop-prompt",
+      "description": "The prompt input_schema parameter description for the loop self-pacing ScheduleWakeup tool; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "The /loop input to fire on wake-up. Pass the same /loop input verbatim each turn so the next firing re-enters the skill and continues the loop. For autonomous /loop (no user prompt), pass the literal sentinel \\`${",
+        "}\\` instead (the dynamic-pacing variant, not the CronCreate-mode \\`${",
+        "}\\`)."
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_PARAMETER_SCHEDULEWAKEUP_LOOP_PROMPT_VAR_0",
+        "1": "TOOL_PARAMETER_SCHEDULEWAKEUP_LOOP_PROMPT_VAR_1"
+      },
+      "version": "2.1.191"
+    },
+    {
       "name": "System Reminder: Memory index over budget — compact now",
       "id": "system-reminder-memory-index-over-budget-compaction",
       "description": "Instruction injected when a memory index exceeds its read budget; tells the model to compact it",
@@ -12656,6 +15207,160 @@
         "2": "SYSTEM_REMINDER_MEMORY_INDEX_OVER_BUDGET_COMPACTION_VAR_2"
       },
       "version": "2.1.187"
+    },
+    {
+      "name": "Tool Parameter: LSP goToDefinition filePath",
+      "id": "tool-parameter-lsp-go-to-definition-file-path",
+      "description": "The filePath input_schema parameter description for the LSP tool's goToDefinition operation; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "The absolute or relative path to the file"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Parameter: LSP goToDefinition filePath",
+      "id": "tool-parameter-lsp-go-to-definition-file-path",
+      "description": "The filePath input_schema parameter description for the LSP tool's goToDefinition operation; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "The absolute or relative path to the file"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Parameter: LSP goToDefinition filePath",
+      "id": "tool-parameter-lsp-go-to-definition-file-path",
+      "description": "The filePath input_schema parameter description for the LSP tool's goToDefinition operation; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "The absolute or relative path to the file"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Parameter: LSP goToDefinition filePath",
+      "id": "tool-parameter-lsp-go-to-definition-file-path",
+      "description": "The filePath input_schema parameter description for the LSP tool's goToDefinition operation; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "The absolute or relative path to the file"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Parameter: LSP goToDefinition filePath",
+      "id": "tool-parameter-lsp-go-to-definition-file-path",
+      "description": "The filePath input_schema parameter description for the LSP tool's goToDefinition operation; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "The absolute or relative path to the file"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Parameter: LSP goToDefinition filePath",
+      "id": "tool-parameter-lsp-go-to-definition-file-path",
+      "description": "The filePath input_schema parameter description for the LSP tool's goToDefinition operation; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "The absolute or relative path to the file"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Parameter: LSP goToDefinition filePath",
+      "id": "tool-parameter-lsp-go-to-definition-file-path",
+      "description": "The filePath input_schema parameter description for the LSP tool's goToDefinition operation; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "The absolute or relative path to the file"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Parameter: LSP goToDefinition filePath",
+      "id": "tool-parameter-lsp-go-to-definition-file-path",
+      "description": "The filePath input_schema parameter description for the LSP tool's goToDefinition operation; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "The absolute or relative path to the file"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Parameter: LSP goToDefinition filePath",
+      "id": "tool-parameter-lsp-go-to-definition-file-path",
+      "description": "The filePath input_schema parameter description for the LSP tool's goToDefinition operation; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "The absolute or relative path to the file"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Parameter: LSP goToDefinition filePath",
+      "id": "tool-parameter-lsp-go-to-definition-file-path",
+      "description": "The filePath input_schema parameter description for the LSP tool's goToDefinition operation; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "The absolute or relative path to the file"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Parameter: Edit file_path",
+      "id": "tool-parameter-edit-file-path",
+      "description": "The file_path input_schema parameter description for the Edit tool; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "The absolute path to the file to modify"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Parameter: Read file_path",
+      "id": "tool-parameter-read-file-path",
+      "description": "The file_path input_schema parameter description for the Read tool; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "The absolute path to the file to read"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Parameter: Write file_path",
+      "id": "tool-parameter-write-file-path",
+      "description": "The file_path input_schema parameter description for the Write tool; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "The absolute path to the file to write (must be absolute, not relative)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Parameter: NotebookEdit notebook_path",
+      "id": "tool-parameter-notebookedit-notebook-path",
+      "description": "The notebook_path input_schema parameter description for the NotebookEdit tool; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "The absolute path to the Jupyter notebook file to edit (must be absolute, not relative)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Parameter: Computer action",
@@ -12710,6 +15415,116 @@
       "version": "2.1.178"
     },
     {
+      "name": "Tool Description: LSP character offset field",
+      "id": "tool-description-lsp-character-offset-field",
+      "description": "A fragment of the LSP tool description documenting the 1-based character offset required field; model-facing as part of the tool description.",
+      "pieces": [
+        "The character offset (1-based, as shown in editors)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Description: LSP character offset field",
+      "id": "tool-description-lsp-character-offset-field",
+      "description": "A fragment of the LSP tool description documenting the 1-based character offset required field; model-facing as part of the tool description.",
+      "pieces": [
+        "The character offset (1-based, as shown in editors)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Description: LSP character offset field",
+      "id": "tool-description-lsp-character-offset-field",
+      "description": "A fragment of the LSP tool description documenting the 1-based character offset required field; model-facing as part of the tool description.",
+      "pieces": [
+        "The character offset (1-based, as shown in editors)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Description: LSP character offset field",
+      "id": "tool-description-lsp-character-offset-field",
+      "description": "A fragment of the LSP tool description documenting the 1-based character offset required field; model-facing as part of the tool description.",
+      "pieces": [
+        "The character offset (1-based, as shown in editors)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Description: LSP character offset field",
+      "id": "tool-description-lsp-character-offset-field",
+      "description": "A fragment of the LSP tool description documenting the 1-based character offset required field; model-facing as part of the tool description.",
+      "pieces": [
+        "The character offset (1-based, as shown in editors)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Description: LSP character offset field",
+      "id": "tool-description-lsp-character-offset-field",
+      "description": "A fragment of the LSP tool description documenting the 1-based character offset required field; model-facing as part of the tool description.",
+      "pieces": [
+        "The character offset (1-based, as shown in editors)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Description: LSP character offset field",
+      "id": "tool-description-lsp-character-offset-field",
+      "description": "A fragment of the LSP tool description documenting the 1-based character offset required field; model-facing as part of the tool description.",
+      "pieces": [
+        "The character offset (1-based, as shown in editors)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Description: LSP character offset field",
+      "id": "tool-description-lsp-character-offset-field",
+      "description": "A fragment of the LSP tool description documenting the 1-based character offset required field; model-facing as part of the tool description.",
+      "pieces": [
+        "The character offset (1-based, as shown in editors)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Description: LSP character offset field",
+      "id": "tool-description-lsp-character-offset-field",
+      "description": "A fragment of the LSP tool description documenting the 1-based character offset required field; model-facing as part of the tool description.",
+      "pieces": [
+        "The character offset (1-based, as shown in editors)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Description: LSP character offset field",
+      "id": "tool-description-lsp-character-offset-field",
+      "description": "A fragment of the LSP tool description documenting the 1-based character offset required field; model-facing as part of the tool description.",
+      "pieces": [
+        "The character offset (1-based, as shown in editors)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "System Reminder: Cloud ultraplan plan ready",
       "id": "system-reminder-cloud-ultraplan-plan-ready",
       "description": "task-notification injected when a cloud ultraplan session produces a plan awaiting approval",
@@ -12737,6 +15552,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "Tool Parameter: Bash command",
+      "id": "tool-parameter-bash-command",
+      "description": "The command input_schema parameter description for the Bash tool; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "The command to execute"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: AskUserQuestion question param",
       "id": "tool-description-askuserquestion-question",
       "description": "AskUserQuestion question param: complete, clear, ends with a question mark",
@@ -12746,6 +15572,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Tool Parameter: Write content",
+      "id": "tool-parameter-write-content",
+      "description": "The content input_schema parameter description for the Write tool; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "The content to write to the file"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "System Reminder: Coordinator message",
@@ -12762,6 +15599,22 @@
         "0": "COORDINATOR_MESSAGE"
       },
       "version": "2.1.178"
+    },
+    {
+      "name": "Date Changed Reminder",
+      "id": "system-reminder-date-changed",
+      "description": "Model-facing date_change system-reminder ('The date has changed. Today's date is now ${newDate}. DO NOT mention this to the user explicitly...') dispatched via _p([On({content,isMeta:!0})]) from the L6l reminder registry.",
+      "pieces": [
+        "The date has changed. Today's date is now ${",
+        ".newDate}. DO NOT mention this to the user explicitly because they are already aware."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_REMINDER_DATE_CHANGED_VAR_0"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: Switch browser deviceId param",
@@ -12786,6 +15639,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "Tool Parameter: ReadMcpResourceDir uri",
+      "id": "tool-parameter-readmcpresourcedir-uri",
+      "description": "The uri input_schema parameter description for the ReadMcpResourceDir tool; model-facing as part of the tool's serialized input schema.",
+      "pieces": [
+        "The directory resource URI to list"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: Glob path param",
       "id": "tool-description-glob-path",
       "description": "Glob tool's path param: directory to search in; omit for default",
@@ -12806,6 +15670,72 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Tool Result: Edit file updated",
+      "id": "tool-result-edit-file-updated",
+      "description": "The tool_result content returned to the model after a successful file update via mapToolResultToToolResultBlockParam; model-facing.",
+      "pieces": [
+        "The file ${",
+        "} has been updated successfully.${",
+        "}${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_EDIT_FILE_UPDATED_VAR_0",
+        "1": "TOOL_RESULT_EDIT_FILE_UPDATED_VAR_1",
+        "2": "TOOL_RESULT_EDIT_FILE_UPDATED_VAR_2"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Tool Result: Write file updated",
+      "id": "tool-result-write-file-updated",
+      "description": "The tool_result content returned to the model after a successful file update (with user-modified suffix ordering) via mapToolResultToToolResultBlockParam; model-facing.",
+      "pieces": [
+        "The file ${",
+        "} has been updated successfully${",
+        "}.${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_WRITE_FILE_UPDATED_VAR_0",
+        "1": "TOOL_RESULT_WRITE_FILE_UPDATED_VAR_1",
+        "2": "TOOL_RESULT_WRITE_FILE_UPDATED_VAR_2"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Edit all-occurrences replaced result",
+      "id": "tool-result-edit-all-occurrences-replaced",
+      "description": "Edit tool_result content sent to the model confirming the file was updated and all occurrences were successfully replaced; model-facing.",
+      "pieces": [
+        "The file ${",
+        "} has been updated${",
+        "}. All occurrences were successfully replaced.${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_EDIT_ALL_OCCURRENCES_REPLACED_VAR_0",
+        "1": "TOOL_RESULT_EDIT_ALL_OCCURRENCES_REPLACED_VAR_1",
+        "2": "TOOL_RESULT_EDIT_ALL_OCCURRENCES_REPLACED_VAR_2"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "System Reminder: Read line too long, slice by char",
@@ -12899,6 +15829,22 @@
       "version": "2.1.178"
     },
     {
+      "name": "Skill Listing System-Reminder Wrapper",
+      "id": "system-reminder-skill-listing-wrapper",
+      "description": "Model-facing skill_listing system-reminder wrapper injected each turn (\"The following skills are available for use with the Skill tool:\\n\\n${content}\"); conditional on at least one skill being available.",
+      "pieces": [
+        "The following skills are available for use with the Skill tool:\n\n${",
+        ".content}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_REMINDER_SKILL_LISTING_WRAPPER_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
       "name": "System Reminder: Previously invoked skills",
       "id": "system-reminder-previously-invoked-skills",
       "description": "Restores skills invoked before conversation compaction as context only, warning not to re-execute their setup actions or treat prior inputs as current instructions",
@@ -12913,6 +15859,50 @@
         "0": "FORMATTED_SKILLS_LIST"
       },
       "version": "2.1.119"
+    },
+    {
+      "name": "MCP auth callback_url param",
+      "id": "tool-parameter-mcp-oauth-callback-url",
+      "description": "input_schema param describing the full browser callback URL for the MCP complete-authentication tool; serialized to the model, model-facing.",
+      "pieces": [
+        "The full callback URL from the browser address bar after authorizing, e.g. http://localhost:<port>/callback?code=...&state=..."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Glob pattern param",
+      "id": "tool-parameter-glob-pattern",
+      "description": "input_schema param for the Glob tool describing the glob pattern to match files against; model-facing.",
+      "pieces": [
+        "The glob pattern to match files against"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "StopTask task_id param",
+      "id": "tool-parameter-stop-task-task-id",
+      "description": "input_schema param for the Stop Task tool describing the ID of the background task to stop; model-facing.",
+      "pieces": [
+        "The ID of the background task to stop"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "NotebookEdit cell_id param",
+      "id": "tool-parameter-notebookedit-cell-id",
+      "description": "input_schema param for the NotebookEdit tool describing the cell to edit and insert positioning; model-facing.",
+      "pieces": [
+        "The ID of the cell to edit. When inserting a new cell, the new cell will be inserted after the cell with this ID, or at the beginning if not specified."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: Shortcuts execute shortcutId param",
@@ -12937,6 +15927,28 @@
       "version": "2.1.178"
     },
     {
+      "name": "TaskGet taskId param",
+      "id": "tool-parameter-task-get-task-id",
+      "description": "input_schema param for the TaskGet tool describing the ID of the task to retrieve; model-facing.",
+      "pieces": [
+        "The ID of the task to retrieve"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "TaskUpdate taskId param",
+      "id": "tool-parameter-task-update-task-id",
+      "description": "input_schema param for the TaskUpdate tool describing the ID of the task to update; model-facing.",
+      "pieces": [
+        "The ID of the task to update"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Parameter: Claude in Chrome JavaScript code",
       "id": "tool-parameter-claude-in-chrome-javascript-code",
       "description": "Describes the JavaScript code parameter for the Claude in Chrome JavaScript execution tool",
@@ -12946,6 +15958,160 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "LSP description line param fragment",
+      "id": "tool-description-lsp-line-number-param",
+      "description": "Fragment of the LSP tool description prose explaining the 1-based line number required by all operations; part of the tool description serialized to the model, model-facing.",
+      "pieces": [
+        "The line number (1-based, as shown in editors)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "LSP description line param fragment",
+      "id": "tool-description-lsp-line-number-param",
+      "description": "Fragment of the LSP tool description prose explaining the 1-based line number required by all operations; part of the tool description serialized to the model, model-facing.",
+      "pieces": [
+        "The line number (1-based, as shown in editors)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "LSP description line param fragment",
+      "id": "tool-description-lsp-line-number-param",
+      "description": "Fragment of the LSP tool description prose explaining the 1-based line number required by all operations; part of the tool description serialized to the model, model-facing.",
+      "pieces": [
+        "The line number (1-based, as shown in editors)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "LSP description line param fragment",
+      "id": "tool-description-lsp-line-number-param",
+      "description": "Fragment of the LSP tool description prose explaining the 1-based line number required by all operations; part of the tool description serialized to the model, model-facing.",
+      "pieces": [
+        "The line number (1-based, as shown in editors)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "LSP description line param fragment",
+      "id": "tool-description-lsp-line-number-param",
+      "description": "Fragment of the LSP tool description prose explaining the 1-based line number required by all operations; part of the tool description serialized to the model, model-facing.",
+      "pieces": [
+        "The line number (1-based, as shown in editors)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "LSP description line param fragment",
+      "id": "tool-description-lsp-line-number-param",
+      "description": "Fragment of the LSP tool description prose explaining the 1-based line number required by all operations; part of the tool description serialized to the model, model-facing.",
+      "pieces": [
+        "The line number (1-based, as shown in editors)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "LSP description line param fragment",
+      "id": "tool-description-lsp-line-number-param",
+      "description": "Fragment of the LSP tool description prose explaining the 1-based line number required by all operations; part of the tool description serialized to the model, model-facing.",
+      "pieces": [
+        "The line number (1-based, as shown in editors)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "LSP description line param fragment",
+      "id": "tool-description-lsp-line-number-param",
+      "description": "Fragment of the LSP tool description prose explaining the 1-based line number required by all operations; part of the tool description serialized to the model, model-facing.",
+      "pieces": [
+        "The line number (1-based, as shown in editors)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "LSP description line param fragment",
+      "id": "tool-description-lsp-line-number-param",
+      "description": "Fragment of the LSP tool description prose explaining the 1-based line number required by all operations; part of the tool description serialized to the model, model-facing.",
+      "pieces": [
+        "The line number (1-based, as shown in editors)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "LSP description line param fragment",
+      "id": "tool-description-lsp-line-number-param",
+      "description": "Fragment of the LSP tool description prose explaining the 1-based line number required by all operations; part of the tool description serialized to the model, model-facing.",
+      "pieces": [
+        "The line number (1-based, as shown in editors)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Read offset param",
+      "id": "tool-parameter-read-offset",
+      "description": "input_schema param for the Read tool describing the line number to start reading from for large files; model-facing.",
+      "pieces": [
+        "The line number to start reading from. Only provide if the file is too large to read at once"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "LSP operation param",
+      "id": "tool-parameter-lsp-operation",
+      "description": "input_schema param for the LSP tool describing the LSP operation to perform; model-facing.",
+      "pieces": [
+        "The LSP operation to perform"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "ListMcpResourceDir server param",
+      "id": "tool-parameter-listmcpresourcedir-server",
+      "description": "input_schema param for the ListMcpResourceDir tool describing the MCP server name; model-facing.",
+      "pieces": [
+        "The MCP server name"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "ListMcpResourceDir server param",
+      "id": "tool-parameter-listmcpresourcedir-server",
+      "description": "input_schema param for the ListMcpResourceDir tool describing the MCP server name; model-facing.",
+      "pieces": [
+        "The MCP server name"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Data: Context Tip Situation — High Effort Low Yield",
@@ -13014,6 +16180,39 @@
       "version": "2.1.178"
     },
     {
+      "name": "NotebookEdit new_source param",
+      "id": "tool-parameter-notebookedit-new-source",
+      "description": "input_schema param for the NotebookEdit tool describing the new source for the cell; model-facing.",
+      "pieces": [
+        "The new source for the cell"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "PushNotification message param",
+      "id": "tool-parameter-pushnotification-message-body",
+      "description": "input_schema param for the PushNotification tool describing the notification body with a length caveat; model-facing.",
+      "pieces": [
+        "The notification body. Keep it under 200 characters; mobile OSes truncate."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Read limit param",
+      "id": "tool-parameter-read-limit",
+      "description": "input_schema param for the Read tool describing the number of lines to read for large files; model-facing.",
+      "pieces": [
+        "The number of lines to read. Only provide if the file is too large to read at once."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: Computer scroll_amount param",
       "id": "tool-description-computer-scroll-amount",
       "description": "computer tool's scroll_amount param description",
@@ -13071,6 +16270,28 @@
       "version": "2.1.178"
     },
     {
+      "name": "Permission Denied Retry Nudge",
+      "id": "system-reminder-permission-denied-retry-nudge",
+      "description": "Model-facing isMeta meta-message injected in auto-mode (H3p @10361519) when a PermissionDenied hook signals the tool call may be retried.",
+      "pieces": [
+        "The PermissionDenied hook indicated you may retry this tool call."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "PowerShell command param",
+      "id": "tool-parameter-powershell-command",
+      "description": "input_schema param for the PowerShell tool describing the PowerShell command to execute; model-facing.",
+      "pieces": [
+        "The PowerShell command to execute"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "System Prompt: Invalid tool call retry",
       "id": "system-prompt-invalid-tool-call-retry",
       "description": "meta message injected when the previous response failed to produce a valid tool call, asking to retry",
@@ -13080,6 +16301,61 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "CronCreate prompt param",
+      "id": "tool-parameter-cron-prompt",
+      "description": "input_schema param for the schedule/CronCreate tool describing the prompt to enqueue at each fire time; model-facing.",
+      "pieces": [
+        "The prompt to enqueue at each fire time."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "WebFetch prompt param",
+      "id": "tool-parameter-webfetch-prompt",
+      "description": "input_schema param for the WebFetch tool describing the prompt to run on the fetched content; model-facing.",
+      "pieces": [
+        "The prompt to run on the fetched content"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Grep pattern param",
+      "id": "tool-parameter-grep-pattern",
+      "description": "input_schema param for the Grep tool describing the regular expression pattern to search for in file contents; model-facing.",
+      "pieces": [
+        "The regular expression pattern to search for in file contents"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "ReadMcpResource uri param",
+      "id": "tool-parameter-readmcpresource-uri",
+      "description": "input_schema param for the ReadMcpResource tool describing the resource URI to read; model-facing.",
+      "pieces": [
+        "The resource URI to read"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "WebSearch query param",
+      "id": "tool-parameter-websearch-query",
+      "description": "input_schema param for the WebSearch tool describing the search query to use; model-facing.",
+      "pieces": [
+        "The search query to use"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: LSP query param",
@@ -13093,6 +16369,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "LSP query parameter",
+      "id": "tool-parameter-lsp-query",
+      "description": "input_schema param description for the LSP tool's workspaceSymbol query field; serialized into the model's tool list, so model-facing.",
+      "pieces": [
+        "The symbol name or partial name to search for. Most language servers return no results for an empty query."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "System Prompt: Auto-compaction not context-limited",
       "id": "system-prompt-auto-compaction-not-context-limited",
       "description": "system prompt note that prior messages auto-compress so the conversation is not limited by the context window",
@@ -13102,6 +16389,28 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Task prompt parameter",
+      "id": "tool-parameter-task-prompt",
+      "description": "input_schema param description for the Task tool's prompt field; serialized into the model's tool list, so model-facing.",
+      "pieces": [
+        "The task for the agent to perform"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Task Output task_id parameter",
+      "id": "tool-parameter-task-output-task-id",
+      "description": "input_schema param description for the Task Output tool's task_id field; serialized into the model's tool list, so model-facing.",
+      "pieces": [
+        "The task ID to get output from"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "System Reminder: Task tools reminder",
@@ -13121,6 +16430,28 @@
         "1": "TASK_UPDATE_TOOL_NAME"
       },
       "version": "2.1.139"
+    },
+    {
+      "name": "Edit old_string parameter",
+      "id": "tool-parameter-edit-old-string",
+      "description": "input_schema param description for the Edit tool's old_string field; serialized into the model's tool list, so model-facing.",
+      "pieces": [
+        "The text to replace"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Edit new_string parameter",
+      "id": "tool-parameter-edit-new-string",
+      "description": "input_schema param description for the Edit tool's new_string field; serialized into the model's tool list, so model-facing.",
+      "pieces": [
+        "The text to replace it with (must be different from old_string)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: Computer type/key text param",
@@ -13143,6 +16474,83 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.139"
+    },
+    {
+      "name": "ExitPlanMode allowedPrompts tool parameter",
+      "id": "tool-parameter-exit-plan-mode-allowed-prompt-tool",
+      "description": "input_schema param description for the ExitPlanMode tool's allowedPrompts[].tool field; serialized into the model's tool list, so model-facing.",
+      "pieces": [
+        "The tool this prompt applies to"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "NotebookEdit edit_mode parameter",
+      "id": "tool-parameter-notebook-edit-edit-mode",
+      "description": "input_schema param description for the NotebookEdit tool's edit_mode field; serialized into the model's tool list, so model-facing.",
+      "pieces": [
+        "The type of edit to make (replace, insert, delete). Defaults to replace."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Task subagent_type parameter",
+      "id": "tool-parameter-task-subagent-type",
+      "description": "input_schema param description for the Task tool's subagent_type field; serialized into the model's tool list, so model-facing.",
+      "pieces": [
+        "The type of specialized agent to use for this task"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "NotebookEdit cell_type parameter (short)",
+      "id": "tool-parameter-notebook-edit-cell-type",
+      "description": "input_schema param description for the NotebookEdit tool's cell_type field (short form); serialized into the model's tool list, so model-facing.",
+      "pieces": [
+        "The type of the cell"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "NotebookEdit cell_type parameter (detailed)",
+      "id": "tool-parameter-notebook-edit-cell-type-detailed",
+      "description": "input_schema param description for the NotebookEdit tool's cell_type field (detailed form); serialized into the model's tool list, so model-facing.",
+      "pieces": [
+        "The type of the cell (code or markdown). If not specified, it defaults to the current cell type. If using edit_mode=insert, this is required."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "TodoWrite todos parameter",
+      "id": "tool-parameter-todo-write-todos",
+      "description": "input_schema param description for the TodoWrite tool's todos field; serialized into the model's tool list, so model-facing.",
+      "pieces": [
+        "The updated todo list"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "WebFetch url parameter",
+      "id": "tool-parameter-web-fetch-url",
+      "description": "input_schema param description for the WebFetch tool's url field; serialized into the model's tool list, so model-facing.",
+      "pieces": [
+        "The URL to fetch content from"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: Navigate url param",
@@ -13176,6 +16584,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.139"
+    },
+    {
+      "name": "AskUserQuestion No-Answer Result",
+      "id": "tool-result-askuserquestion-no-answer",
+      "description": "Model-facing AskUserQuestion tool_result content telling the model the user did not answer the questions; gated on no response provided.",
+      "pieces": [
+        "The user did not answer the questions."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Result: Tool use rejected, stop",
@@ -13280,6 +16699,22 @@
         "5": "ADDITIONAL_CONTEXT_BLOCK"
       },
       "version": "2.1.139"
+    },
+    {
+      "name": "Session Named Reminder",
+      "id": "system-reminder-session-named",
+      "description": "Model-facing system-reminder (NXn renameSystemReminder wrapped in Qw) telling the model the user named the session, signalling its likely focus or intent.",
+      "pieces": [
+        "The user named this session \"${",
+        "}\". This may indicate the session's focus or intent."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_REMINDER_SESSION_NAMED_VAR_0"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "System Reminder: File opened in IDE",
@@ -13440,6 +16875,22 @@
       "version": "2.1.53"
     },
     {
+      "name": "User Email Context Line",
+      "id": "system-prompt-user-email-context",
+      "description": "Model-facing dynamic-context line 'The user's email address is ${email}.' assembled into the context payload (userEmail) injected into the model's system/context.",
+      "pieces": [
+        "The user's email address is ${",
+        "}."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_USER_EMAIL_CONTEXT_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: Bash (working directory)",
       "id": "tool-description-bash-working-directory",
       "description": "Bash tool note about working directory persistence and shell state",
@@ -13555,6 +17006,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "Ambient Context Do-Not-Narrate Note",
+      "id": "system-reminder-ambient-context-do-not-narrate",
+      "description": "Model-facing system-reminder fragment (knr) appended to MCP-delta / context-injection reminder messages instructing the model not to narrate the injected context unless relevant.",
+      "pieces": [
+        "This is ambient context — do not narrate it to the user unless they ask or it is directly relevant to their request."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "System Prompt: Git status",
       "id": "system-prompt-git-status",
       "description": "System prompt for displaying the current git status at the start of the conversation",
@@ -13586,6 +17048,25 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.128"
+    },
+    {
+      "name": "Continued Session Compaction Preamble",
+      "id": "system-prompt-continued-session-preamble",
+      "description": "Model-facing preamble injected at the start of a compacted/continued session (\"This session is being continued from a previous conversation that ran out of context...\"); conditional on resuming after auto-compaction.",
+      "pieces": [
+        "This session is being continued from a previous conversation that ran out of context. The summary below covers the earlier portion of the conversation.\n\n${",
+        "(",
+        ")}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_CONTINUED_SESSION_PREAMBLE_VAR_0",
+        "1": "SYSTEM_PROMPT_CONTINUED_SESSION_PREAMBLE_VAR_1"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "System Reminder: Session continuation",
@@ -13778,6 +17259,33 @@
       "version": "2.1.178"
     },
     {
+      "name": "CronCreate recurring parameter",
+      "id": "tool-parameter-cron-create-recurring",
+      "description": "input_schema param description for the CronCreate tool's recurring field; serialized into the model's tool list, so model-facing.",
+      "pieces": [
+        "true (default) = fire on every cron match until deleted or auto-expired after ${",
+        "} days. false = fire once at the next match, then auto-delete. Use false for \"remind me at X\" one-shot requests with pinned minute/hour/dom/month."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_PARAMETER_CRON_CREATE_RECURRING_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "CronCreate durable parameter",
+      "id": "tool-parameter-cron-create-durable",
+      "description": "input_schema param description for the CronCreate tool's durable field; serialized into the model's tool list, so model-facing.",
+      "pieces": [
+        "true = persist to .claude/scheduled_tasks.json and survive restarts. false (default) = in-memory only, dies when this Claude session ends. Use true only when the user asks the task to survive across sessions."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: Bash (maintain cwd)",
       "id": "tool-description-bash-maintain-cwd",
       "description": "Bash tool instruction: use absolute paths and avoid cd",
@@ -13833,6 +17341,17 @@
       "version": "2.1.53"
     },
     {
+      "name": "Notebook edit tool_result: unknown edit mode",
+      "id": "tool-result-notebook-edit-unknown-mode",
+      "description": "The tool_result content string returned to the model when a NotebookEdit edit_mode is unrecognized; model-facing.",
+      "pieces": [
+        "Unknown edit mode"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Description: TodoWrite proactive update guidance",
       "id": "tool-description-todowrite-proactive-update-guidance",
       "description": "Concise TodoWrite guidance to proactively track progress with one in-progress task and activeForm values",
@@ -13842,6 +17361,25 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Notebook edit tool_result: updated cell",
+      "id": "tool-result-notebook-edit-updated-cell",
+      "description": "The tool_result content template returned to the model after a NotebookEdit replace operation; model-facing.",
+      "pieces": [
+        "Updated cell ${",
+        "} with ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_NOTEBOOK_EDIT_UPDATED_CELL_VAR_0",
+        "1": "TOOL_RESULT_NOTEBOOK_EDIT_UPDATED_CELL_VAR_1"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "Tool Result: Projects Access Upgraded Notice",
@@ -14390,6 +17928,41 @@
       "version": "2.1.191"
     },
     {
+      "name": "Operation Blocked By Hook Framing",
+      "id": "system-prompt-operation-blocked-by-hook",
+      "description": "Model-facing framing '<Surface> operation blocked by hook:\\n${blockingError}' (UserPromptSubmit/UserPromptExpansion) emitted by FBo()/gJa as a system informational message in the messages array when a hook blocks prompt expansion/submission.",
+      "pieces": [
+        "UserPromptExpansion operation blocked by hook:\n${",
+        ".blockingError.blockingError}\n\nOriginal prompt: ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_OPERATION_BLOCKED_BY_HOOK_VAR_0",
+        "1": "SYSTEM_PROMPT_OPERATION_BLOCKED_BY_HOOK_VAR_1"
+      },
+      "version": "2.1.191"
+    },
+    {
+      "name": "Operation Blocked By Hook Framing",
+      "id": "system-prompt-operation-blocked-by-hook-2",
+      "description": "Model-facing framing '<Surface> operation blocked by hook:\\n${blockingError}' (UserPromptSubmit/UserPromptExpansion) emitted by FBo()/gJa as a system informational message in the messages array when a hook blocks prompt expansion/submission.",
+      "pieces": [
+        "UserPromptSubmit operation blocked by hook:\n${",
+        ".blockingError}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_OPERATION_BLOCKED_BY_HOOK_2_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
       "name": "System Prompt: Hook feedback handling",
       "id": "system-prompt-hook-feedback-handling",
       "description": "Explains that hook feedback should be treated as user feedback and how to respond when hooks block actions",
@@ -14399,6 +17972,33 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Design preview card subtitle param",
+      "id": "tool-parameter-design-preview-card-subtitle",
+      "description": "The inputSchema param description for the subtitle of a design/preview-card tool the model calls; model-facing.",
+      "pieces": [
+        "Variants shown (\"Primary / secondary / ghost, 3 sizes\")"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "AskUserQuestion header param",
+      "id": "tool-parameter-ask-user-question-header",
+      "description": "The inputSchema param description for the AskUserQuestion tool's header (chip label) field; model-facing.",
+      "pieces": [
+        "Very short label displayed as a chip/tag (max ${",
+        "} chars). Examples: \"Auth method\", \"Library\", \"Approach\"."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_PARAMETER_ASK_USER_QUESTION_HEADER_VAR_0"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: Upload Image coordinate param",
@@ -14421,6 +18021,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Loop wakeup-not-scheduled tool_result",
+      "id": "tool-result-loop-wakeup-not-scheduled",
+      "description": "The tool_result content returned to the model when a /loop wakeup is not scheduled; model-facing.",
+      "pieces": [
+        "Wakeup not scheduled. Either the /loop dynamic runtime gate is off or the loop reached its maximum duration — the loop has ended; do not re-issue."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Result: Wasted Read Call",
@@ -14465,6 +18076,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Task tool description: description field",
+      "id": "tool-description-task-field-description",
+      "description": "A line in the Task/TodoWrite tool description documenting the description field; part of the tool description serialized to the model.",
+      "pieces": [
+        "What needs to be done"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: Explain Command explanation param",
@@ -14599,6 +18221,17 @@
       "version": "2.1.178"
     },
     {
+      "name": "Tool Description: Verify condition ok param",
+      "id": "tool-description-verify-condition-ok",
+      "description": "Description of the verify tool's 'ok' boolean field: whether the condition was met.",
+      "pieces": [
+        "Whether the condition was met"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.178"
+    },
+    {
       "name": "Tool Parameter: Append claude.ai session link to commits",
       "id": "tool-parameter-append-session-link",
       "description": "Zod .describe() for the sessionUrl boolean param (append claude.ai session link to commits/PRs).",
@@ -14615,6 +18248,17 @@
       "description": "input_schema description for the has_tip boolean of the emit_context_tip tool given to the tip-selector model",
       "pieces": [
         "Whether to show a tip. false is the expected default."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Task Output tool: block parameter",
+      "id": "tool-parameter-task-output-block",
+      "description": "inputSchema param description for the Task Output tool's 'block' field (wait-for-completion), serialized into the tool's input_schema sent to the model.",
+      "pieces": [
+        "Whether to wait for completion"
       ],
       "identifiers": [],
       "identifierMap": {},
@@ -14670,6 +18314,35 @@
       "version": "2.1.178"
     },
     {
+      "name": "Reproduce-Verify Workflow",
+      "id": "system-prompt-reproduce-verify-workflow",
+      "description": "Model-facing reproduce_verify_workflow system-prompt block (g2m) prescribing the step-by-step reproduce/edit/re-observe debugging loop; conditionally injected (gated by h2m()).",
+      "pieces": [
+        "Work step by step:\n\n1. Reproduce the issue and observe the actual symptom before editing (hit the URL, read the rendered page, inspect the built file).\n2. Edit the source to resolve the issue.\n3. Re-observe the symptom to verify the fix. Rebuild, reload, or regenerate as needed. Don't stop until the symptom is gone."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Workflow tool result: remote CCR launch",
+      "id": "tool-result-workflow-remote-launched",
+      "description": "tool_result content returned to the model when a workflow launches in a remote CCR session, reporting task ID and session URL; model-facing.",
+      "pieces": [
+        "Workflow launched in a remote CCR session. Task ID: ${",
+        ".taskId}\nSession: ${",
+        ".sessionUrl}\n"
+      ],
+      "identifiers": [
+        0,
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_WORKFLOW_REMOTE_LAUNCHED_VAR_0"
+      },
+      "version": "2.1.191"
+    },
+    {
       "name": "Tool Result: Workflow Launched In Background",
       "id": "tool-result-workflow-launched-background",
       "description": "Tool_result telling the model a workflow launched in the background with a task ID and that it will be notified on completion.",
@@ -14696,6 +18369,22 @@
         "4": "TOOL_RESULT_WORKFLOW_LAUNCHED_BACKGROUND_VAR_4"
       },
       "version": "2.1.178"
+    },
+    {
+      "name": "Workflow tool result: syntax error",
+      "id": "tool-result-workflow-syntax-error",
+      "description": "tool_result content (is_error) returned to the model when a workflow script has a syntax error and was not launched; model-facing.",
+      "pieces": [
+        "Workflow script has a syntax error and was not launched:\n${",
+        ".error}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_WORKFLOW_SYNTAX_ERROR_VAR_0"
+      },
+      "version": "2.1.191"
     },
     {
       "name": "Tool Result: Workflow Script Determinism Error",
@@ -14764,6 +18453,28 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "DesignSync tool: files parameter",
+      "id": "tool-parameter-design-sync-write-files",
+      "description": "inputSchema param description for the DesignSync tool's write_files 'files' field, serialized into the tool's input_schema sent to the model.",
+      "pieces": [
+        "write_files: file contents to write (max 256 per call — split "
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "DesignSync tool: planId parameter",
+      "id": "tool-parameter-design-sync-plan-id",
+      "description": "inputSchema param description for the DesignSync tool's 'planId' field (finalize_plan token), serialized into the tool's input_schema sent to the model.",
+      "pieces": [
+        "write_files/delete_files/register_assets/unregister_assets: token from a prior finalize_plan call"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "Tool Description: Write (read existing file first)",
@@ -15602,6 +19313,28 @@
         "1": "SYSTEM_PROMPT_TEAM_MEMORY_INDEX_EMPTY_VAR_1"
       },
       "version": "2.1.178"
+    },
+    {
+      "name": "Environment Info Worktree Block",
+      "id": "system-prompt-env-info-worktree-block",
+      "description": "Model-facing '# Environment / You have been invoked in the following environment:' block (S2m, env_info_simple) listing primary working directory, git-worktree note, and is-a-git-repository status in the system prompt.",
+      "pieces": [
+        "You have been invoked in the following environment: "
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
+    },
+    {
+      "name": "Environment Info Worktree Block",
+      "id": "system-prompt-env-info-worktree-block",
+      "description": "Model-facing '# Environment / You have been invoked in the following environment:' block (S2m, env_info_simple) listing primary working directory, git-worktree note, and is-a-git-repository status in the system prompt.",
+      "pieces": [
+        "You have been invoked in the following environment: "
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.191"
     },
     {
       "name": "System Prompt: Context compaction summary",
