@@ -31,7 +31,13 @@ export const writeAutonomousOperationAllModels = (
   // function NAME(ARG){if(ARG==="claude-fable-5"||ARG==="claude-mythos-5")return!0;return!1}
   const pattern =
     /function\s+([$\w]+)\s*\(\s*([$\w]+)\s*\)\s*\{\s*if\s*\(\s*\2\s*===\s*"claude-fable-5"\s*\|\|\s*\2\s*===\s*"claude-mythos-5"\s*\)\s*return\s*!0\s*;\s*return\s*!1\s*\}/;
-  const match = oldFile.match(pattern);
+  // CC 2.1.195 shape: the fable arm became a feature-gate predicate
+  // (`GATE(ARG,"fable_5_mitigations")`) while the mythos arm and the
+  // return!0/return!1 structure are unchanged:
+  //   function Bte(e){if(tU(e,"fable_5_mitigations")||e==="claude-mythos-5")return!0;return!1}
+  const pattern195 =
+    /function\s+([$\w]+)\s*\(\s*([$\w]+)\s*\)\s*\{\s*if\s*\(\s*[$\w]+\s*\(\s*\2\s*,\s*"fable_5_mitigations"\s*\)\s*\|\|\s*\2\s*===\s*"claude-mythos-5"\s*\)\s*return\s*!0\s*;\s*return\s*!1\s*\}/;
+  const match = oldFile.match(pattern) || oldFile.match(pattern195);
 
   if (!match || match.index === undefined) {
     // Already flipped (fallback is now !0).
@@ -59,8 +65,10 @@ export const writeAutonomousOperationAllModels = (
     return oldFile;
   }
 
-  const [fullMatch, fnName, argName] = match;
-  const replacement = `function ${fnName}(${argName}){if(${argName}==="claude-fable-5"||${argName}==="claude-mythos-5")return!0;return!0}`;
+  const [fullMatch] = match;
+  // Flip only the fallback `return!1` → `return!0`, preserving whatever gate
+  // body the matched shape used (literal fable id, or the feature-gate call).
+  const replacement = fullMatch.replace(/return\s*!1\s*\}$/, 'return!0}');
   const newFile =
     oldFile.slice(0, match.index) +
     replacement +

@@ -27,6 +27,19 @@ describe('autonomousOperationAllModels (treat model as fable/mythos)', () => {
     expect(writeAutonomousOperationAllModels(FLIPPED)).toBe(FLIPPED);
   });
 
+  it('flips the 2.1.195 feature-gate fable arm shape', () => {
+    const src =
+      'var A=1;function Bte(e){if(tU(e,"fable_5_mitigations")||e==="claude-mythos-5")return!0;return!1}var B=2;';
+    const out = writeAutonomousOperationAllModels(src);
+    expect(out).toContain(
+      'function Bte(e){if(tU(e,"fable_5_mitigations")||e==="claude-mythos-5")return!0;return!0}'
+    );
+    expect(out).toContain('var A=1;');
+    expect(out).toContain('var B=2;');
+    // idempotent
+    expect(writeAutonomousOperationAllModels(out as string)).toBe(out);
+  });
+
   it('errors when the model ids are present but the gate shape changed', () => {
     const consoleError = vi
       .spyOn(console, 'error')
