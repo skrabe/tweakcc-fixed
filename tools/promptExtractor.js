@@ -608,6 +608,18 @@ const NEW_PROMPT_ASSIGNMENTS = [
     description:
       'Team-coordination system reminder injected for a teammate agent — establishes its identity, how messages from teammates arrive automatically, and how to reach others via SendMessage by name',
   },
+  // 2.1.195 — Anthropic reworded the Monitor too-much-output notice ("your
+  // script produced too much output … Write a new monitor command" -> "too much
+  // output … Restart with a more selective"), which broke fuzzy carryover. Still
+  // a model-facing injected notice; restore its name explicitly.
+  {
+    matcher: t =>
+      t.includes('Monitor stopped') && t.includes('events suppressed over'),
+    name: 'Data: Monitor stopped — too much output',
+    id: 'data-monitor-stopped-too-much-output',
+    description:
+      'Notice injected when a background Monitor is auto-stopped for producing too much output (events suppressed over N seconds), telling the model to restart with a more selective command',
+  },
   // 2.1.178 — genuinely new. skill-code-review-conventions is shared with upstream
   // (same id); data-bridge-worker-teardown-event is a net-new find of ours (a Zod
   // .describe() doc for the bridge graceful-teardown event — upstream misses it).
