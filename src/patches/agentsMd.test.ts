@@ -62,4 +62,42 @@ describe('agentsMd', () => {
       expect(result).toBeNull();
     });
   });
+
+  // CC >=2.1.196: the async reader was refactored to a helper that returns null
+  // on failure (no try/catch readFile). The not-found path is the `o===null`
+  // branch, so the AGENTS.md reroute goes there.
+  describe('writeAgentsMd async null-check shape (CC >=2.1.196)', () => {
+    const nullCheckReader =
+      'async function Uca(e,t,n){try{let r=Vt(),o=await qN(r,e,Gao);' +
+      'if(o===null)return C(`[CLAUDE.md] skipping ${e}: not a regular file or exceeds ${Gao} byte limit`),{info:null,includePaths:[]};' +
+      'return mpp(o,e,t,n)}catch(r){return hpp(r,e),{info:null,includePaths:[]}}}';
+
+    it('adds didReroute to the signature and reroutes in the o===null branch', () => {
+      const result = writeAgentsMd(nullCheckReader, altNames);
+      expect(result).not.toBeNull();
+      expect(result).toContain('async function Uca(e,t,n,didReroute)');
+      expect(result).toContain('if(o===null){');
+      expect(result).toContain('endsWith("/CLAUDE.md")');
+      expect(result).toContain('AGENTS.md');
+    });
+
+    it('recurses with didReroute=true and a non-colliding result var', () => {
+      const result = writeAgentsMd(nullCheckReader, altNames)!;
+      expect(result).toContain('await Uca(altPath,t,n,true)');
+      // The try block already declares `r` (ctx), so the loop must not redeclare it.
+      expect(result).toContain('let rerouteResult=await Uca(altPath,t,n,true)');
+      expect(result).not.toContain('let r=await Uca');
+    });
+
+    it('preserves the skip-return, processor call, and catch verbatim', () => {
+      const result = writeAgentsMd(nullCheckReader, altNames)!;
+      expect(result).toContain(
+        'return C(`[CLAUDE.md] skipping ${e}: not a regular file or exceeds ${Gao} byte limit`),{info:null,includePaths:[]};}'
+      );
+      expect(result).toContain('return mpp(o,e,t,n)');
+      expect(result).toContain(
+        'catch(r){return hpp(r,e),{info:null,includePaths:[]}}'
+      );
+    });
+  });
 });

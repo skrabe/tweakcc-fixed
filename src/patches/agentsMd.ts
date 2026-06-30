@@ -24,12 +24,70 @@ export const writeAgentsMd = (
     return file;
   }
 
-  // Try the new async pattern first (CC >=2.1.83)
+  // Try the helper-based null-check reader first (CC >=2.1.196)
+  const asyncV2 = writeAgentsMdAsyncNullCheck(file, altNames);
+  if (asyncV2) return asyncV2;
+
+  // Try the readFile/try-catch async pattern (CC 2.1.83..2.1.195)
   const asyncResult = writeAgentsMdAsync(file, altNames);
   if (asyncResult) return asyncResult;
 
   // Fall back to the old sync pattern (CC <=2.1.69)
   return writeAgentsMdSync(file, altNames);
+};
+
+// CC >=2.1.196: the async reader was refactored to a helper that returns null
+// on failure instead of throwing. Shape:
+//   async function Uca(e,t,n){try{let r=Vt(),o=await qN(r,e,Gao);
+//     if(o===null)return C(`[CLAUDE.md] skipping ${e}: ...`),{info:null,includePaths:[]};
+//     return mpp(o,e,t,n)}catch(r){return hpp(r,e),{info:null,includePaths:[]}}}
+// The not-found path is now the `o===null` branch (not the catch), so the
+// AGENTS.md reroute goes there.
+const writeAgentsMdAsyncNullCheck = (
+  file: string,
+  altNames: string[]
+): string | null => {
+  const funcPattern =
+    /(async function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+))\)\{try\{let ([$\w]+)=([$\w]+)\(\),([$\w]+)=await ([$\w]+)\(\6,\3,([$\w]+)\);if\(\8===null\)return (([$\w]+)\(`\[CLAUDE\.md\] skipping[^`]*`\),\{info:null,includePaths:\[\]\});return ([$\w]+)\(\8,\3,\4,\5\)\}catch\(([$\w]+)\)\{return (([$\w]+)\(\14,\3\),\{info:null,includePaths:\[\]\})\}\}/;
+
+  const m = file.match(funcPattern);
+  if (!m || m.index === undefined) return null;
+
+  const funcSig = m[1]; // async function NAME(P1,P2,P3
+  const funcName = m[2]; // Uca
+  const pathParam = m[3]; // e
+  const typeParam = m[4]; // t
+  const thirdParam = m[5]; // n
+  const ctxVar = m[6]; // r
+  const ctxGetter = m[7]; // Vt
+  const contentVar = m[8]; // o
+  const reader = m[9]; // qN
+  const limitVar = m[10]; // Gao
+  const skipReturn = m[11]; // C(`[CLAUDE.md] skipping ...`),{info:null,includePaths:[]}
+  const processor = m[13]; // mpp
+  const catchVar = m[14]; // r (catch-scoped)
+  const catchReturn = m[15]; // hpp(r,e),{info:null,includePaths:[]}
+
+  const altNamesJson = JSON.stringify(altNames);
+
+  // `rerouteResult` (not `r`) — the try block already declares `${ctxVar}` (r).
+  const replacement =
+    `${funcSig},didReroute){try{let ${ctxVar}=${ctxGetter}(),${contentVar}=await ${reader}(${ctxVar},${pathParam},${limitVar});` +
+    `if(${contentVar}===null){` +
+    `if(!didReroute&&(${pathParam}.endsWith("/CLAUDE.md")||${pathParam}.endsWith("\\\\CLAUDE.md"))){` +
+    `for(let alt of ${altNamesJson}){let altPath=${pathParam}.slice(0,-9)+alt;` +
+    `try{let rerouteResult=await ${funcName}(altPath,${typeParam},${thirdParam},true);if(rerouteResult.info)return rerouteResult}catch{}}}` +
+    `return ${skipReturn};}` +
+    `return ${processor}(${contentVar},${pathParam},${typeParam},${thirdParam})}catch(${catchVar}){return ${catchReturn}}}`;
+
+  const startIndex = m.index;
+  const endIndex = startIndex + m[0].length;
+  const newFile =
+    file.slice(0, startIndex) + replacement + file.slice(endIndex);
+
+  showDiff(file, newFile, replacement, startIndex, endIndex);
+
+  return newFile;
 };
 
 const writeAgentsMdAsync = (

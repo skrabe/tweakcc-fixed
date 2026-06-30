@@ -31,10 +31,14 @@
 //   shape drift, a throwing skill loader, …) it degrades to the current
 //   leading-command-only behavior. It can never break the main input path.
 //
-// Stock seam (2.1.195), inside the executor's `case"prompt":`:
-//     let p=await bcl(c,t,r,o,s,l,d.hookMessages);return ke(u),p
-// `bcl` is the prompt/skill executor; `mE` resolves a name against
-// `r.options.commands`; `HH` is the is-enabled check; `myt` is node:crypto.
+// Stock seam, inside the executor's `case"prompt":`:
+//     let p=await EXEC(c,t,r,o,s,l,d.hookMessages);return CLEANUP(u),p
+// EXEC is the prompt/skill executor (bcl@2.1.195, Nml@2.1.196). The executor
+// and cleanup names are CAPTURED from the seam; the command resolver
+// (mE@2.1.195, OT@2.1.196 — `find(c=>matcher(c,name))`) and the is-enabled
+// check (HH@2.1.195, rk@2.1.196 — `c.isEnabled?.()??!0`) are DISCOVERED by
+// shape so the patch survives per-version minifier renames; UUIDs come from
+// globalThis.crypto so there's no crypto-module-name dependency.
 
 import { showDiff } from './index';
 
@@ -45,20 +49,39 @@ export const writeMultiSkillInvocation = (oldFile: string): string | null => {
   }
 
   // Match the leading-skill dispatch in the executor's prompt case. Captures the
-  // result var (1), command (2), args (3), ctx (4), the remaining bcl args (5-8),
-  // and the cleanup call (9-10) — all re-emitted verbatim so only the splice is new.
+  // result var (1), executor (2), command (3), args (4), ctx (5), remaining
+  // executor args (6-9), cleanup call (10-11) — all re-emitted verbatim so only
+  // the splice is new. The 6th arg being a bare ident (not `a??VD`) excludes the
+  // sibling fork-context branch.
   const pattern =
-    /let ([$\w]+)=await bcl\(([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+)\.hookMessages\);return ([$\w]+)\(([$\w]+)\),\1/;
+    /let ([$\w]+)=await ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+)\.hookMessages\);return ([$\w]+)\(([$\w]+)\),\1/;
   const match = oldFile.match(pattern);
 
   if (!match || match.index === undefined) {
     console.error(
-      'patch: multiSkillInvocation: failed to find the leading-skill dispatch (bcl call site)'
+      'patch: multiSkillInvocation: failed to find the leading-skill dispatch (executor call site)'
     );
     return null;
   }
 
-  const [full, p, c, t, r, o, s, l, d, ke, u] = match;
+  const [full, p, exec, c, t, r, o, s, l, d, cleanup, u] = match;
+
+  // Discover the command resolver: `function NAME(name,arr){return arr.find(x=>matcher(x,name))}`
+  const resolverMatch = oldFile.match(
+    /function ([$\w]+)\(([$\w]+),([$\w]+)\)\{return \3\.find\(\(([$\w]+)\)=>[$\w]+\(\4,\2\)\)\}/
+  );
+  // Discover the is-enabled check: `function NAME(c){return c.isEnabled?.()??!0}`
+  const enabledMatch = oldFile.match(
+    /function ([$\w]+)\(([$\w]+)\)\{return \2\.isEnabled\?\.\(\)\?\?!0\}/
+  );
+  if (!resolverMatch || !enabledMatch) {
+    console.error(
+      'patch: multiSkillInvocation: failed to discover the command resolver / is-enabled helper'
+    );
+    return null;
+  }
+  const resolver = resolverMatch[1];
+  const isEnabled = enabledMatch[1];
 
   const siblingPass =
     `try{` +
@@ -68,21 +91,21 @@ export const writeMultiSkillInvocation = (oldFile: string): string | null => {
     `for(let __tcMsiK=0;__tcMsiK<__tcMsiTok.length&&__tcMsiK<16;__tcMsiK++){` +
     `let __tcMsiN=__tcMsiTok[__tcMsiK][0];` +
     `if(__tcMsiSeen.has(__tcMsiN))continue;__tcMsiSeen.add(__tcMsiN);` +
-    `let __tcMsiC=mE(__tcMsiN,${r}.options.commands);` +
-    `if(!__tcMsiC||__tcMsiC.type!=="prompt"||__tcMsiC.userInvocable===!1||!HH(__tcMsiC))continue;` +
+    `let __tcMsiC=${resolver}(__tcMsiN,${r}.options.commands);` +
+    `if(!__tcMsiC||__tcMsiC.type!=="prompt"||__tcMsiC.userInvocable===!1||!${isEnabled}(__tcMsiC))continue;` +
     `let __tcMsiA=${t}.slice(__tcMsiTok[__tcMsiK][1],__tcMsiK+1<__tcMsiTok.length?__tcMsiTok[__tcMsiK+1][2]:${t}.length).trim(),` +
-    `__tcMsiR=await bcl(__tcMsiC,__tcMsiA,${r},[],[],myt.randomUUID(),[]);` +
-    // Drop the sibling's leading <command-message> entry (bcl emits it first) so
-    // it doesn't render a duplicate command box in the TUI — keep only its
-    // injected body + tool-permissions. The user sees one box (what they typed).
+    `__tcMsiR=await ${exec}(__tcMsiC,__tcMsiA,${r},[],[],globalThis.crypto.randomUUID(),[]);` +
+    // Drop the sibling's leading <command-message> entry (the executor emits it
+    // first) so it doesn't render a duplicate command box in the TUI — keep only
+    // its injected body + tool-permissions. The user sees one box (what they typed).
     `if(__tcMsiR&&Array.isArray(__tcMsiR.messages))${p}={...${p},messages:[...${p}.messages,...__tcMsiR.messages.slice(1)]}` +
     `}` +
     `}catch(__tcMsiE){}`;
 
   const replacement =
-    `let ${p}=await bcl(${c},${t},${r},${o},${s},${l},${d}.hookMessages);` +
+    `let ${p}=await ${exec}(${c},${t},${r},${o},${s},${l},${d}.hookMessages);` +
     siblingPass +
-    `return ${ke}(${u}),${p}`;
+    `return ${cleanup}(${u}),${p}`;
 
   const newFile =
     oldFile.slice(0, match.index) +
