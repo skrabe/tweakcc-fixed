@@ -24,9 +24,16 @@ export const CUSTOM_MODELS: { value: string; label: string; description: string 
 const findCustomModelListInsertionPoint = (
   fileContents: string
 ): { insertionIndex: number; modelListVar: string } | null => {
-  // 1. Find the custom model push pattern
+  // 1. Find the custom model push pattern.
+  // The lead boundary must NOT be a literal space: CC 2.1.197 restructured the
+  // availableModels enumeration into a for-of loop so the push is now preceded by
+  // `;` (`...continue;t.push({value:c,...})`) instead of a space. A negative
+  // lookbehind on [$\w] captures the full list var regardless of the preceding
+  // punctuation (`;`, ` `, `{`, `,`, …). The sibling opus[1m] helper push wraps its
+  // arg as `.push(gda(s)??{value:...})`, so requiring `.push({value:` right after
+  // the paren keeps this matching only the real model-list assembly site.
   const pushPattern =
-    / ([$\w]+)\.push\(\{value:[$\w]+,label:[$\w]+,description:"Custom model"\}\)/;
+    /(?<![$\w])([$\w]+)\.push\(\{value:[$\w]+,label:[$\w]+,description:"Custom model"\}\)/;
   const pushMatch = fileContents.match(pushPattern);
   if (!pushMatch || pushMatch.index === undefined) {
     console.error(

@@ -13,8 +13,11 @@ import { writeModelCustomizations, CUSTOM_MODELS } from './modelSelector';
 // FIXTURE mirrors that minified shape: a function that declares the list var
 // `nQ` (with a comma-prefixed sibling, the `let `-prefixed form is also valid),
 // later building the user's custom model and pushing it onto `nQ`.
-// NOTE: the push-site regex requires a literal space before `<var>.push(` and
-// identifier-only `value:`/`label:` operands, so the fixtures keep those spaces.
+// NOTE: the push-site lead boundary is a negative lookbehind on [$\w] (NOT a
+// literal space) — CC 2.1.197 restructured the enumeration into a for-of loop so
+// the push is now preceded by `;` (`...continue;<var>.push(...)`). The operands
+// stay identifier-only `value:`/`label:`. The space-preceded fixtures below still
+// satisfy the lookbehind; the `;`-preceded case has its own regression test.
 const FIXTURE =
   'q=1;function $Hk(B,Q){let aZ=B.foo,nQ=[{value:"claude-x",label:"X",description:"Built in"}];' +
   'if(Q){let mV=Q.model,nm=Q.name; nQ.push({value:mV,label:nm,description:"Custom model"})}return nQ}z=2;';
@@ -51,6 +54,22 @@ describe('writeModelCustomizations', () => {
     const out = writeModelCustomizations(fixture);
     expect(out).not.toBeNull();
     expect(out).toContain(`nQ.push(${JSON.stringify(CUSTOM_MODELS[0])});`);
+  });
+
+  it('matches the CC 2.1.197 shape where the push is preceded by `;` (no space)', () => {
+    // 2.1.197 turned the availableModels enumeration into a for-of loop, so the
+    // model-list push lost its leading space: `...continue;t.push({...})`. The
+    // lookbehind must still discover `t` and splice after `let t=Amp(e),n=1;`.
+    const fixture =
+      'function Rmp(e){let t=Amp(e),n=1;for(let l of e){if(t.has(l))continue;' +
+      't.push({value:l,label:l,description:"Custom model"})}return t}';
+    const out = writeModelCustomizations(fixture);
+    expect(out).not.toBeNull();
+    expect(out).toContain(`t.push(${JSON.stringify(CUSTOM_MODELS[0])});`);
+    const declEnd =
+      out!.indexOf('let t=Amp(e),n=1;') + 'let t=Amp(e),n=1;'.length;
+    const injectAt = out!.indexOf('t.push({"value":"claude-opus-4-6"');
+    expect(injectAt).toBe(declEnd); // spliced right after the declaration's `;`
   });
 
   it('keeps a `$`-bearing list var name intact (escapeIdent path)', () => {
