@@ -53,6 +53,10 @@ const baseMenuItems: SelectItem[] = [
     desc: 'Per-skill listing control (writes settings.json skillOverrides — no patch needed)',
   },
   {
+    name: MainMenuItem.BROWSER_BRIDGE,
+    desc: 'Drive your real, logged-in tabs over CDP — a fuller take on Claude in Chrome',
+  },
+  {
     name: MainMenuItem.VIEW_SYSTEM_PROMPTS,
     desc: "Opens the system prompts directory where you can customize Claude Code's system prompts",
   },

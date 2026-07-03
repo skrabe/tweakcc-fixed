@@ -67,6 +67,8 @@ The extra patches cluster around a few themes: **memory** (a dream-mode consolid
 
 Two of those are worth calling out, and both ship off by default. **fff-first Bash search** routes Claude's grep, find, and rg through [fff](https://github.com/dmtrKovalenko/fff) and a warm-index daemon, so results come back ranked; it serves a query only when the result is provably identical to the real tool and falls back to the embedded ripgrep/ugrep on anything it can't match exactly, so correctness never rides on it. **The complexity router** reads how hard each task is and routes reasoning effort to match — routine work runs low, the hardest runs max — without switching models or churning the prompt cache, and an explicit `/effort` or `CLAUDE_CODE_EFFORT_LEVEL` always wins.
 
+Newest is **Better Claude in Chrome** — a menu item, not a patch, that installs [claude-browser-bridge](https://github.com/skrabe/claude-browser-bridge) and points Claude Code at your real, logged-in browser over the Chrome DevTools Protocol. It sees and _claims_ your existing signed-in tabs — a fuller, self-hosted take on Claude in Chrome, driven through a `/browser` skill and a programmable `run` primitive (script a whole flow — locate, fill, click, wait, read — in one call). Pick it and it fetches the bridge, wires up the MCP server and the skill, walks you through loading the extension once, and disables the built-in Claude in Chrome so you have one browser surface. Pure config plus a fetched repo, no `cli.js` patch; Reinstall and Uninstall live in the same menu.
+
 <details>
 <summary>Every patch the fork adds</summary>
 

@@ -289,6 +289,7 @@ export enum MainMenuItem {
   CLAUDE_MD_ALT_NAMES = 'CLAUDE.md alternative names',
   SYSTEM_REMINDERS = 'System reminders (injection lobotomy)',
   SKILLS = 'Skills (per-skill on/name-only/user-invocable/off)',
+  BROWSER_BRIDGE = 'Better Claude in Chrome',
   VIEW_SYSTEM_PROMPTS = 'View system prompts',
   RESTORE_ORIGINAL = 'Restore original Claude Code (preserves config.json)',
   OPEN_CONFIG = 'Open config.json',

@@ -10,6 +10,7 @@ import { MiscView } from './components/MiscView';
 import { ToolsetsView } from './components/ToolsetsView';
 import { SubagentModelsView } from './components/SubagentModelsView';
 import { ComplexityRouterView } from './components/ComplexityRouterView';
+import { BrowserBridgeView } from './components/BrowserBridgeView';
 import { ClaudeMdAltNamesView } from './components/ClaudeMdAltNamesView';
 import { SystemRemindersView } from './components/SystemRemindersView';
 import { SkillsView } from './components/SkillsView';
@@ -142,6 +143,7 @@ Please reapply your changes by running \`${invocationCommand} --apply\`.`,
       case MainMenuItem.CLAUDE_MD_ALT_NAMES:
       case MainMenuItem.SYSTEM_REMINDERS:
       case MainMenuItem.SKILLS:
+      case MainMenuItem.BROWSER_BRIDGE:
         setCurrentView(item);
         break;
       case MainMenuItem.VIEW_SYSTEM_PROMPTS:
@@ -240,6 +242,8 @@ Please reapply your changes by running \`${invocationCommand} --apply\`.`,
           <SystemRemindersView onSubmit={handleBack} />
         ) : currentView === MainMenuItem.SKILLS ? (
           <SkillsView onSubmit={handleBack} />
+        ) : currentView === MainMenuItem.BROWSER_BRIDGE ? (
+          <BrowserBridgeView onBack={handleBack} />
         ) : null}
       </Box>
     </SettingsContext.Provider>
