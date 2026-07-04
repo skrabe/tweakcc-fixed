@@ -26,15 +26,29 @@ const STATE_FILE = path.join(
 // a per-user /var/folders/… path) — mirror that or the status check reads the wrong path.
 const SOCK = `/tmp/claude-browser-bridge-${os.userInfo().username}.sock`;
 
-const BROWSERS: Record<string, { label: string; dir: string }> = {
-  brave: {
-    label: 'Brave',
-    dir: 'Library/Application Support/BraveSoftware/Brave-Browser',
-  },
-  chrome: { label: 'Chrome', dir: 'Library/Application Support/Google/Chrome' },
-  edge: { label: 'Edge', dir: 'Library/Application Support/Microsoft Edge' },
-  chromium: { label: 'Chromium', dir: 'Library/Application Support/Chromium' },
-};
+// Structural browser detection, mirroring isUserDataDir() in the bridge's host/setup.mjs —
+// no hardcoded browser list, so new Chromium forks (Arc, Aside, Helium, …) qualify
+// automatically. A user-data dir has run at least once (Local State), owns a real profile
+// (Default / "Profile N"), and has the native-messaging surface (NativeMessagingHosts,
+// created by Chromium on first run). Electron apps and Firefox fail these checks.
+function isUserDataDir(d: string): boolean {
+  try {
+    if (!fs.statSync(path.join(d, 'Local State')).isFile()) return false;
+    if (!fs.statSync(path.join(d, 'NativeMessagingHosts')).isDirectory())
+      return false;
+    if (fs.existsSync(path.join(d, 'Default'))) return true;
+    return fs.readdirSync(d).some(n => /^Profile \d+$/.test(n));
+  } catch {
+    return false;
+  }
+}
+function browserLabel(dir: string): string {
+  let n = path.basename(dir);
+  if (n === 'User Data') n = path.basename(path.dirname(dir));
+  if (n.includes('.')) n = n.split('.').pop() || n; // net.imput.helium -> helium
+  n = n.replace(/[-_]/g, ' ');
+  return n.charAt(0).toUpperCase() + n.slice(1);
+}
 
 type Screen =
   | 'menu'
@@ -98,13 +112,25 @@ async function fetchBridge(): Promise<{ code: number; out: string }> {
   return git(['clone', '--depth', '1', REPO, BRIDGE_DIR]);
 }
 function detected(): string[] {
-  return Object.keys(BROWSERS).filter(k => {
+  const root =
+    process.platform === 'darwin'
+      ? path.join(os.homedir(), 'Library', 'Application Support')
+      : path.join(os.homedir(), '.config');
+  const subdirs = (d: string): string[] => {
     try {
-      return fs.existsSync(path.join(os.homedir(), BROWSERS[k].dir));
+      return fs
+        .readdirSync(d, { withFileTypes: true })
+        .filter(e => e.isDirectory() && !e.name.startsWith('.'))
+        .map(e => path.join(d, e.name));
     } catch {
-      return false;
+      return [];
     }
-  });
+  };
+  const found: string[] = [];
+  for (const d1 of subdirs(root))
+    for (const c of [d1, ...subdirs(d1)])
+      if (isUserDataDir(c)) found.push(browserLabel(c));
+  return found.sort();
 }
 function readState(): InstallState | null {
   try {
@@ -527,13 +553,7 @@ export const BrowserBridgeView = ({ onBack }: { onBack: () => void }) => {
             <Text dimColor>not detected</Text>
           )}
         </Text>
-        <Text>
-          {' '}
-          Browsers found ....{' '}
-          {detected()
-            .map(b => BROWSERS[b].label)
-            .join(', ') || 'none'}
-        </Text>
+        <Text> Browsers found .... {detected().join(', ') || 'none'}</Text>
       </Box>
       <SelectInput
         items={actions}
