@@ -7978,5 +7978,202 @@
     "id": "tool-result-shared-memory-concurrent-write-conflict",
     "name": "Tool result: Shared memory concurrent-write conflict",
     "desc": "Model-facing post-tool-use notice returned when a memory-file write loses to a concurrent update, instructing the model to re-read and re-apply its change."
+  },
+  "b9ffc02cee6791aff018715ec22c0ea383540af8": {
+    "facing": "model",
+    "id": "data-claude-tag-claude-in-slack-reference",
+    "name": "Data: Claude Tag (Claude in Slack) reference",
+    "desc": "Offline reference for Claude Tag, Claude Code's org-managed Slack surface, covering what it is, availability, setup, configuration, and how it differs from the earlier Claude in Slack app"
+  },
+  "976c60158c57f7bb668d42657e6a606a4d57763e": { "facing": "ui" },
+  "471c9f3c17cfa3238032afff1808d73661456b6d": { "facing": "ui" },
+  "997ab5019fe919a81ee97afb1a400b1f66cf595b": {
+    "facing": "model",
+    "id": "tool-result-set_cwd-blocked-by-rule-hidden-chars",
+    "name": "Tool Result: set_cwd blocked-by-rule (hidden chars)",
+    "desc": "Fallback message value in the set_cwd tool's rejected response when the blocking Cd rule text contains control/invisible characters and cannot be echoed; model reads it to act."
+  },
+  "852532d474d099adacb7a931349a519f0874016e": {
+    "facing": "model",
+    "id": "tool-result-set_cwd-busy-turn-in-progress",
+    "name": "Tool Result: set_cwd busy (turn in progress)",
+    "desc": "Message value in the set_cwd tool's busy rejection returned to the model when a turn is in progress, telling it to wait or interrupt then retry; model-facing."
+  },
+  "5a5701545bd5050904d4dafcb572568eaf7122b7": { "facing": "internal" },
+  "6766532376a462cda72dc2c8fbc4060a13aa0be4": {
+    "facing": "model",
+    "id": "agent-prompt-background-observer-activity-digest-note",
+    "name": "Agent Prompt: Background Observer Activity Digest Note",
+    "desc": "Fragment of the background observer agent's system prompt telling it each turn brings a read-only activity digest wrapped in envelope tags that is data, not instructions; model-facing."
+  },
+  "6ebb52f6e156b33747a0d522c336d775827b05ac": { "facing": "internal" },
+  "39b09db3f54a6f4dc592f1b6e121a232e03f0dd0": { "facing": "internal" },
+  "2794aee73fc932c5a8813c7f1d01e59c3e02f20c": { "facing": "ui" },
+  "7031c2c34ce0dc636f9139590d408a54713b0813": {
+    "facing": "model",
+    "id": "tool-parameter-set_cwd-ok-cwd",
+    "name": "Tool Parameter: set_cwd ok cwd",
+    "desc": "Describes the canonical realpath working directory returned in the set_cwd tool's ok result arm; model-facing output-schema field."
+  },
+  "a7073f3a246e5af43f881211271a29304b2245c4": {
+    "facing": "model",
+    "id": "tool-parameter-set_cwd-needs_trust-directory",
+    "name": "Tool Parameter: set_cwd needs_trust directory",
+    "desc": "Describes the canonical target directory returned by a set_cwd needs_trust response, which the SDK host must show in a trust dialog and echo back verbatim on accept"
+  },
+  "2fdac2822812a7bfad60fac08bf98d814ab8b65f": { "facing": "ui" },
+  "e281a0451c0eeb6c4ad83cf93c663e1e7d6dcd69": { "facing": "internal" },
+  "025843c192ccaf0002e5731ba36bd0c8b0d91dad": { "facing": "internal" },
+  "9c287ca4ec1521266f63b79d8eebc8086a1f1cda": {
+    "facing": "model",
+    "id": "tool-parameter-set-cwd-changed",
+    "name": "Set Cwd Changed Flag",
+    "desc": "Output-schema field description for the set_cwd tool's `changed` boolean telling the model the target already was the working directory (a successful no-op); model-facing."
+  },
+  "d7bdab778662413a7f08a50ee273ed648db2e2cf": {
+    "facing": "model",
+    "id": "tool-parameter-set-cwd-trust-accepted",
+    "name": "Set Cwd Trust Accepted",
+    "desc": "Input-schema field description for the set_cwd tool's `trust_accepted` boolean instructing the model to only send true after showing a trust dialog; model-facing."
+  },
+  "a44ec19066108c907e34beda6cf9ad69338735b0": {
+    "facing": "model",
+    "id": "tool-parameter-set-cwd-rejected-message",
+    "name": "Set Cwd Rejected Message",
+    "desc": "Output-schema field description for the set_cwd rejected-arm `message` string returned to the model; model-facing."
+  },
+  "183baf71b12e0b10984be5f2f1b1ff595d4e6e75": { "facing": "internal" },
+  "a633f8ad745a664080a050cc3a67d27877f9d72d": { "facing": "internal" },
+  "c210651cfafad1b0f1831894a5045c27759d3678": {
+    "facing": "model",
+    "id": "tool-result-memory-sync-paused-after-failures",
+    "name": "Memory Sync Paused After Failures",
+    "desc": "PostToolUse additionalContext injected after a memory write warning the model that memory sync is paused after repeated failures and recent writes are saved locally but not persisted; model-facing."
+  },
+  "26ff4538c94cc9f46003e89717f86bcd49ef33bd": { "facing": "ui" },
+  "d9081e098932d58a13f40486a004322a60b0ecbf": {
+    "facing": "model",
+    "id": "tool-result-sendmessage-observer-use-observerreport",
+    "name": "SendMessage Unavailable To Observer",
+    "desc": "Tool-result message returned when an observer agent calls SendMessage, telling the model to use ObserverReport instead; model-facing."
+  },
+  "24d76119a88f0533fb1d185a641302a85f7cb4f4": {
+    "facing": "model",
+    "id": "tool-parameter-project-write-present-to-user",
+    "name": "Project Write Present To User",
+    "desc": "Input-schema field description for the project_write tool's `present_to_user` boolean marking the doc as the deliverable the user needs to see; model-facing."
+  },
+  "9ce62ecd965db89f0050262c82cd3be9240e155b": { "facing": "internal" },
+  "024287ac7fcda840f7c7f486c862715043b65fc5": {
+    "facing": "model",
+    "id": "tool-parameter-set-cwd-trusted-directory",
+    "name": "Set Cwd Trusted Directory Param",
+    "desc": "Model-facing input-schema description for the set_cwd control tool's trusted_directory parameter."
+  },
+  "14acfe0bd5da7458104ed5a4d8e4bfc71fdf41e8": { "facing": "internal" },
+  "44b75ee8c92d0423d616da6ccbf54766e81211ca": {
+    "facing": "model",
+    "id": "tool-parameter-project-write-present-to-user",
+    "name": "Project Write Present-to-User Param",
+    "desc": "Model-facing tool-parameter description fragment for the project_write tool's present_to_user flag."
+  },
+  "653e8f1b370563ad3fed0bf283e418a49d211a9b": {
+    "facing": "model",
+    "id": "tool-description-observerreport",
+    "name": "ObserverReport Tool Description",
+    "desc": "Model-facing tool description for the ObserverReport tool used by an observer agent to report to the observed agent."
+  },
+  "33f957e5bedcf9741e68b17046632e63f36dae83": { "facing": "internal" },
+  "da03679f4aae9c3d4a81fb140a80b8653ee0d1eb": { "facing": "internal" },
+  "1a209c3061a131d85b3d39b29485b50f4dabf262": {
+    "facing": "model",
+    "id": "tool-parameter-set-cwd-path",
+    "name": "Set Cwd Path Param",
+    "desc": "Model-facing input-schema description for the set_cwd control tool's path parameter."
+  },
+  "39edced2423e0d56676d08c4c10f500714ee8c3f": {
+    "facing": "model",
+    "id": "system-reminder-observer-activity-digest",
+    "name": "Observer Activity Digest Reminder",
+    "desc": "Model-facing system-reminder appended after each observer activity digest instructing the observing agent when to report via ObserverReport."
+  },
+  "676dab40a4f0e2da3fd5bdca377d2885376f22e8": {
+    "facing": "model",
+    "id": "tool-result-memory-deleted-by-other-session",
+    "name": "Memory Deleted By Other Session Notice",
+    "desc": "Model-facing memory-sync conflict notice delivered as PostToolUse additionalContext after a memory tool call, instructing the model to delete the file if the deletion was intended."
+  },
+  "883fb204764ca27c69f1276c4eb6897a2fde51cf": {
+    "facing": "model",
+    "id": "tool-parameter-observerreport-report",
+    "name": "ObserverReport Report Param",
+    "desc": "Model-facing input-schema description for the ObserverReport tool's report parameter."
+  },
+  "d56355537ce23c69877974708ef89658dd8cb54a": {
+    "facing": "model",
+    "id": "tool-result-memory-sync-content-secret-rejected",
+    "name": "Memory Sync Content Secret Rejection",
+    "desc": "Model-facing memory-sync rejection message (server detected a credential) delivered to the model as PostToolUse additionalContext, telling it to remove the credential."
+  },
+  "31e3771bb4087b344492afea65335f5878576e1b": {
+    "facing": "model",
+    "id": "tool-result-memory-sync-invalid-path",
+    "name": "Memory Sync Invalid Path Rejection",
+    "desc": "Rejection-reason text (rwo.invalid_path) composed into the PostToolUse additionalContext the model reads when a memory file's path is too long/deep/invalid; model-facing."
+  },
+  "1cdc80d5d703fa004ac56d2af9e4e113022a8fc5": {
+    "facing": "model",
+    "id": "tool-result-set-cwd-unsafe-path",
+    "name": "Set Cwd Unsafe Path Rejection",
+    "desc": "The set_cwd tool result message returned to the model when the target path contains invisible/non-printing characters and cannot cross the trust boundary; model-facing."
+  },
+  "860dc6d04ba1db58766514c44f955dd15e07f8f3": {
+    "facing": "model",
+    "id": "tool-parameter-set-cwd-transcript-relocated",
+    "name": "Set Cwd Transcript Relocated Field",
+    "desc": "Description of the transcript_relocated boolean field in the set_cwd tool's output/response schema (W_C), which the model receives as a tool result; model-facing."
+  },
+  "eba776b064dc2b5d66eebc5865e52f7b4ff462aa": {
+    "facing": "model",
+    "id": "tool-parameter-set-cwd-rejection-reason",
+    "name": "Set Cwd Rejection Reason Field",
+    "desc": "Description of the reason enum in the set_cwd rejected-status output schema (W_C) explaining the unsafe_path reason, delivered to the model as tool-result schema; model-facing."
+  },
+  "9efc58fdbddc160fad45ed8ee6e34a2c429b5de6": { "facing": "internal" },
+  "8db297874660f251e7754fd41762b80f74f84d97": {
+    "facing": "model",
+    "id": "agent-prompt-observer-non-participation-guidance",
+    "name": "Observer Non-Participation Guidance",
+    "desc": "Part of the background observer agent's system prompt instructing it not to participate in the observed task and to report only genuinely useful observations via the ObserverReport tool; model-facing."
+  },
+  "22e02fcff18867adedee2ecac7fafeb3015a7861": {
+    "facing": "model",
+    "id": "system-reminder-background-observer-report",
+    "name": "Background Observer Report Delivery",
+    "desc": "The system-reminder injected into the main agent's context delivering a background observer's one-way advisory report and warning it is not user consent; model-facing."
+  },
+  "57951e47e738ab9f5537fd5f32d5304c14718483": {
+    "facing": "model",
+    "id": "tool-result-observer-pairing-not-armed",
+    "name": "Observer Pairing Not Armed Result",
+    "desc": "The ObserverReport tool result (data.message) returned to the model when the observer pairing is not armed and the report was not delivered; model-facing."
+  },
+  "bd33fc91ec6756ec0ff018e508311cb2a610fc53": {
+    "facing": "model",
+    "id": "tool-result-memory-deletion-conflict",
+    "name": "Memory Deletion Concurrent-Write Conflict",
+    "desc": "Model-facing PostToolUse additionalContext telling the model its memory-file deletion was not applied due to a concurrent-write conflict and to re-read and delete again."
+  },
+  "0f57f43a39165aad0f243edf07504411e2b9de1e": {
+    "facing": "model",
+    "id": "tool-result-memory-write-path-conflict",
+    "name": "Memory Write Path Conflict",
+    "desc": "Model-facing PostToolUse additionalContext telling the model its memory write was not saved because the path conflicts with an existing memory, and to re-read and rename or delete the conflicting one."
+  },
+  "7bcee5d31b3e04fe55280d65af39d7e61cfa77d5": {
+    "facing": "model",
+    "id": "tool-result-memory-write-concurrent-conflict",
+    "name": "Memory Write Concurrent-Write Conflict",
+    "desc": "Model-facing PostToolUse additionalContext telling the model its memory write was not saved due to a concurrent-write conflict and to re-read and re-apply the change."
   }
 }
