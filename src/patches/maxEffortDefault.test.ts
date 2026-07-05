@@ -45,6 +45,42 @@ describe('maxEffortDefault', () => {
     expect(writeMaxEffortDefault(file)).toBe(file);
   });
 
+  it('rewrites the CC 2.1.199+ data-driven catalog default_effort to "max"', () => {
+    const file =
+      'var a=1;' +
+      '{id:"claude-sonnet-5",capabilities:["adaptive_thinking"],default_effort:"high",image_l:1},' +
+      '{id:"claude-opus-4-7",capabilities:["fast_mode"],default_effort:"xhigh",image_l:1},' +
+      '{id:"claude-opus-4-8",capabilities:["lean_prompt"],default_effort:"high",image_l:1},' +
+      '{id:"claude-fable-5",capabilities:["fable_5_mitigations"],default_effort:"high",image_l:1}';
+
+    const result = writeMaxEffortDefault(file);
+
+    expect(result).not.toBeNull();
+    // Both Opus defaults flip to "max" (non-greedy anchor hits each model's own
+    // field, not a neighbor's).
+    expect(result).toContain(
+      'id:"claude-opus-4-8",capabilities:["lean_prompt"],default_effort:"max"'
+    );
+    expect(result).toContain(
+      'id:"claude-opus-4-7",capabilities:["fast_mode"],default_effort:"max"'
+    );
+    // Sonnet and Fable are left exactly as-is.
+    expect(result).toContain(
+      'id:"claude-sonnet-5",capabilities:["adaptive_thinking"],default_effort:"high"'
+    );
+    expect(result).toContain(
+      'id:"claude-fable-5",capabilities:["fable_5_mitigations"],default_effort:"high"'
+    );
+  });
+
+  it('is a no-op when the catalog default_effort is already "max"', () => {
+    const file =
+      '{id:"claude-opus-4-8",capabilities:["lean_prompt"],default_effort:"max",image_l:1},' +
+      '{id:"claude-opus-4-7",capabilities:["fast_mode"],default_effort:"max",image_l:1}';
+
+    expect(writeMaxEffortDefault(file)).toBe(file);
+  });
+
   it('returns null when the per-model default is absent', () => {
     const consoleError = vi
       .spyOn(console, 'error')

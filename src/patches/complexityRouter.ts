@@ -318,14 +318,29 @@ const wrapEffortResolver = (
   helpers: ClassifierHelpers,
   sidFn: string | null
 ): string | null => {
-  // function NAME(MODEL,FALLBACK){if(!FR(MODEL))return;let A=fUe(MODEL),B=Tbn(MODEL),ENV=mUe();
-  //   if(ENV===null)return A?B:void 0;let S=ENV??(A?B:void 0)??FALLBACK??B;
-  //   if(S==="max"&&!dUe(MODEL))return"high";if(S==="xhigh"&&!GRe(MODEL))return"high";return S}
-  // Captures: 1=prefix (through `=mUe();`), 2=MODEL, 3=FALLBACK, 4=ENV, 5=maxGuard, 6=xhighGuard.
-  const pattern =
-    /(function [$\w]+\(([$\w]+),([$\w]+)\)\{if\(![$\w]+\(\2\)\)return;let [$\w]+=[$\w]+\(\2\),[$\w]+=[$\w]+\(\2\),([$\w]+)=[$\w]+\(\);)if\(\4===null\)return [$\w]+\?[$\w]+:void 0;let [$\w]+=\4\?\?\([$\w]+\?[$\w]+:void 0\)\?\?\3\?\?[$\w]+;if\([$\w]+==="max"&&!([$\w]+)\(\2\)\)return"high";if\([$\w]+==="xhigh"&&!([$\w]+)\(\2\)\)return"high";return [$\w]+\}/;
+  // Two resolver shapes, tried newest-first. BOTH expose the same capture
+  // groups: 1=prefix (through `=ENV();`), 2=MODEL, 3=FALLBACK, 4=ENV result,
+  // 5=combined effort var, 6=maxGuard, 7=xhighGuard.
+  //
+  // CC 2.1.199+ (iQ shape): the two support guards became ASSIGNMENTS
+  // (S="high") instead of an early `return"high"`, a string-normalization line
+  // was inserted before them, and the env-null branch changed to
+  // `if(ENV===null&&!A)return;`. The wrap still rides right after `=ENV();`, so
+  // only the anchor changes; the injection is identical.
+  //   function NAME(MODEL,FALLBACK){if(!FR(MODEL))return;let A=nWe(MODEL),B=W4t(MODEL),ENV=tWe();
+  //     if(ENV===null&&!A)return;let S=ENV??(A?B:void 0)??FALLBACK??B;
+  //     if(typeof S==="string"&&Ude(S))S=UPe(S,MODEL);
+  //     if(S==="max"&&!FPe(MODEL))S="high";if(S==="xhigh"&&!Hoe(MODEL))S="high";return S}
+  const patternNew =
+    /(function [$\w]+\(([$\w]+),([$\w]+)\)\{if\(![$\w]+\(\2\)\)return;let [$\w]+=[$\w]+\(\2\),[$\w]+=[$\w]+\(\2\),([$\w]+)=[$\w]+\(\);)if\(\4===null&&![$\w]+\)return;let ([$\w]+)=\4\?\?\([$\w]+\?[$\w]+:void 0\)\?\?\3\?\?[$\w]+;(?:if\(typeof \5==="string"&&[$\w]+\(\5\)\)\5=[$\w]+\(\5,\2\);)?if\(\5==="max"&&!([$\w]+)\(\2\)\)\5="high";if\(\5==="xhigh"&&!([$\w]+)\(\2\)\)\5="high";return \5\}/;
+  // Legacy (<=2.1.19x, XQ shape): early `return"high"`, no normalization line.
+  //   function NAME(MODEL,FALLBACK){if(!FR(MODEL))return;let A=fUe(MODEL),B=Tbn(MODEL),ENV=mUe();
+  //     if(ENV===null)return A?B:void 0;let S=ENV??(A?B:void 0)??FALLBACK??B;
+  //     if(S==="max"&&!dUe(MODEL))return"high";if(S==="xhigh"&&!GRe(MODEL))return"high";return S}
+  const patternLegacy =
+    /(function [$\w]+\(([$\w]+),([$\w]+)\)\{if\(![$\w]+\(\2\)\)return;let [$\w]+=[$\w]+\(\2\),[$\w]+=[$\w]+\(\2\),([$\w]+)=[$\w]+\(\);)if\(\4===null\)return [$\w]+\?[$\w]+:void 0;let ([$\w]+)=\4\?\?\([$\w]+\?[$\w]+:void 0\)\?\?\3\?\?[$\w]+;if\(\5==="max"&&!([$\w]+)\(\2\)\)return"high";if\(\5==="xhigh"&&!([$\w]+)\(\2\)\)return"high";return \5\}/;
 
-  const match = file.match(pattern);
+  const match = file.match(patternNew) || file.match(patternLegacy);
   if (!match || match.index === undefined) {
     if (!file.includes('CLAUDE_CODE_EFFORT_LEVEL')) {
       debug(
@@ -343,8 +358,8 @@ const wrapEffortResolver = (
   const model = match[2];
   const fallback = match[3];
   const env = match[4];
-  const maxGuard = match[5];
-  const xhighGuard = match[6];
+  const maxGuard = match[6];
+  const xhighGuard = match[7];
 
   // Apply the router's effort, overriding the persisted baseline (settings.effortLevel
   // / per-model default arrive as the app-state FALLBACK) but yielding to a pin:

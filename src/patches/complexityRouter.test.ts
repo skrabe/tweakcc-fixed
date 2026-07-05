@@ -9,6 +9,16 @@ const XQ_SHAPE =
   'if(o===null)return n?r:void 0;let s=o??(n?r:void 0)??t??r;' +
   'if(s==="max"&&!dUe(e))return"high";if(s==="xhigh"&&!GRe(e))return"high";return s}';
 
+// CC 2.1.201 (darwin) resolver shape: the two support guards became ASSIGNMENTS
+// (i="high") instead of early `return"high"`, a string-normalization line was
+// inserted, and the env-null branch changed to `if(o===null&&!n)return;`. The
+// wrap must still ride right after `=tWe();`.
+const IQ_SHAPE =
+  'function iQ(e,t){if(!jw(e))return;let n=nWe(e),r=W4t(e),o=tWe();' +
+  'if(o===null&&!n)return;let i=o??(n?r:void 0)??t??r;' +
+  'if(typeof i==="string"&&Ude(i))i=UPe(i,e);' +
+  'if(i==="max"&&!FPe(e))i="high";if(i==="xhigh"&&!Hoe(e))i="high";return i}';
+
 // hMm submit handler (trimmed): the throw-guard is the stable hook anchor.
 const HMM_SHAPE =
   'async function hMm(e,t,n,r){let E=null,k=Sg(r.options.mainLoopModel),w=e;if(typeof e==="string")E=e;' +
@@ -57,6 +67,9 @@ const RESTORE_SHAPE =
   'function P9o(p){return me(Sb,{onRestoreMessage:(ut)=>Dlr(ut,"message_selector"),onSummarize:()=>0})}';
 
 const FILE = `var head=1;${GB_SHAPE}${VPT_SHAPE}${KM_SHAPE}${ZE_SHAPE}${COMPACT_SHAPE}${RESTORE_SHAPE}${XQ_SHAPE}${HMM_SHAPE}var tail=2;`;
+
+// Same file but with the CC 2.1.201 (iQ) resolver instead of the legacy XQ one.
+const FILE_IQ = `var head=1;${GB_SHAPE}${VPT_SHAPE}${KM_SHAPE}${ZE_SHAPE}${COMPACT_SHAPE}${RESTORE_SHAPE}${IQ_SHAPE}${HMM_SHAPE}var tail=2;`;
 
 const cfg = (
   over: Partial<ComplexityRouterConfig> = {}
@@ -188,6 +201,30 @@ describe('writeComplexityRouter', () => {
     expect(r).toContain('var tail=2;');
     // The heuristic scorer is gone entirely.
     expect(r).not.toContain('__tweakccRouterScore');
+  });
+
+  it('wraps the CC 2.1.201 (iQ) resolver — assignment guards + normalization line', () => {
+    const out = writeComplexityRouter(FILE_IQ, cfg());
+    expect(out).not.toBeNull();
+    const r = out as string;
+    // Runtime + wrap emitted.
+    expect(r).toContain('function __tweakccRouterClassify');
+    expect(r).toContain('let __twkRE=__st.effort;');
+    // The router check rides RIGHT AFTER the env read (=tWe();), before CC's body.
+    expect(r).toContain('o=tWe();var __st=__tweakccRouterState();');
+    expect(r).toContain('if(__twkRE&&o==null&&(t==null||t===__st.baseline))');
+    // The support guards were captured from the NEW assignment form (FPe/Hoe),
+    // proving the capture-group indices track the iQ shape, not the legacy one.
+    expect(r).toContain('if(__twkRE==="max"&&!FPe(e))__twkRE="high";');
+    expect(r).toContain('if(__twkRE==="xhigh"&&!Hoe(e))__twkRE="high";');
+    // CC's original body (normalization line + assignment guards) survives after
+    // the wrap, so a non-routed turn still resolves effort as CC intended.
+    expect(r).toContain('if(typeof i==="string"&&Ude(i))i=UPe(i,e);');
+    expect(r).toContain('if(i==="max"&&!FPe(e))i="high";');
+    // The submit hook still lands.
+    expect(r).toContain(
+      'await __tweakccRouterClassify(E,t,r.options.mainLoopModel);'
+    );
   });
 
   it('substitutes {LEVELS}/{MAX} into the editable system prompt and emits a <context> block (model + prev level)', () => {
