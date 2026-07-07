@@ -6,7 +6,7 @@
 
 [![npm](https://img.shields.io/npm/v/tweakcc-fixed?color=cb3837&label=npm&logo=npm&style=flat-square)](https://www.npmjs.com/package/tweakcc-fixed)
 [![downloads](https://img.shields.io/npm/dt/tweakcc-fixed?color=cb3837&style=flat-square)](https://www.npmjs.com/package/tweakcc-fixed)
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-2.0.98%20%E2%86%92%202.1.201-d97757?style=flat-square)](https://github.com/anthropics/claude-code)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-2.0.98%20%E2%86%92%202.1.202-d97757?style=flat-square)](https://github.com/anthropics/claude-code)
 [![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#credit--license)
 
 **[Install](#install) · [Customize](#what-you-can-customize) · [The fork](#what-this-fork-adds) · [How it works](#how-it-works)**
@@ -56,8 +56,8 @@ The biggest difference is coverage. Its extractor pulls roughly twice the prompt
 
 |                              | tweakcc-fixed | upstream  |
 | ---------------------------- | :-----------: | :-------: |
-| Prompt sites (CC 2.1.201)    |   **1,513**   |    553    |
-| Unique prompt IDs            |   **1,331**   |    520    |
+| Prompt sites (CC 2.1.202)    |   **1,527**   |    556    |
+| Unique prompt IDs            |   **1,415**   |    556    |
 | Patches                      |    **58**     |    45     |
 | Overrides on native installs |    **yes**    | gated off |
 
