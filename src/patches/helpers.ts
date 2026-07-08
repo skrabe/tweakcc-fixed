@@ -292,9 +292,19 @@ export const clearCaches = (): void => {
  * Find the Text component variable name from Ink
  */
 export const findTextComponent = (fileContents: string): string | undefined => {
-  // Find the Text component function definition from Ink
-  // The minified Text component has this signature:
-  // function X({color:A,backgroundColor:B,dimColor:C=!1,bold:D=!1,...})
+  // Method 1 (CC 2.1.204+): the Ink Text component is now React-Compiler
+  // memoized, so the color/backgroundColor/dimColor/bold props are destructured
+  // out of the body AFTER a memo-cache guard rather than in the params:
+  //   function h(P){let $=X.c(31),...;if($[0]!==P)({color:A,backgroundColor:B,
+  //   dimColor:C,bold:D,...}=P)...}
+  const memoizedTextPattern =
+    /function ([$\w]+)\([$\w]+\)\{let [$\w]+=[$\w]+\.c\(\d+\)[^;]{0,240};if\([$\w]+\[0\]!==[$\w]+\)\(\{color:[$\w]+,backgroundColor:[$\w]+,dimColor:[$\w]+,bold:[$\w]+/;
+  const memoMatch = fileContents.match(memoizedTextPattern);
+  if (memoMatch) return memoMatch[1];
+
+  // Method 2 (CC <= 2.1.202): the minified Text component destructures its props
+  // directly in the signature:
+  //   function X({color:A,backgroundColor:B,dimColor:C=!1,bold:D=!1,...})
   const textComponentPattern =
     /\bfunction ([$\w]+).{0,80}color:[$\w]+,backgroundColor:[$\w]+,dimColor:[$\w]+(?:=![01])?,bold:[$\w]+(?:=![01])?/;
   const match = fileContents.match(textComponentPattern);

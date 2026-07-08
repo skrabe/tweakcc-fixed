@@ -46,13 +46,17 @@ export const writeThinkingVisibility = (oldFile: string): string | null => {
     return oldFile;
   }
 
-  // Unified pattern that matches both formats:
+  // Unified pattern that matches all three formats:
   // - Group 1: `case"thinking":` (+/- `{`)
-  // - Group 2: `if(...) return null;` (the early return we want to remove)
+  // - Group 2: the early return we want to remove. CC <= 2.1.18:
+  //   `if(!D&&!H)return null;`; CC 2.1.204: `if(!cit&&!BY){return null}`
+  //   (braces, no trailing semicolon). Anchored on the two negated vars so the
+  //   lazy body can't span to an unrelated `return null` (e.g. the separate
+  //   `case"thinking":` spinner-icon block that has no early return).
   // - Group 3: Everything from `{` or return up to `isTranscriptMode:`
   // - Then the variable name followed by comma (replaced with `true,`)
   const pattern =
-    /(case"thinking":\{?)(if\(.+?\)return null;)(.{0,400}isTranscriptMode:).+?,/;
+    /(case"thinking":\{?)(if\(![$\w]+&&![$\w]+\)\{?return null\}?;?)(.{0,400}isTranscriptMode:).+?,/;
 
   const match = oldFile.match(pattern);
 
