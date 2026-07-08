@@ -58,6 +58,18 @@ const NEW_PROMPT_ASSIGNMENTS = [
     description: "Model-facing Artifact tool `label` input-schema param description (short human-readable version name shown in the version picker). 2.1.193 reworded the opening (fuzzy-miss restore).",
   },
   {
+    // 2.1.204 — the SendUserFile "N file(s) delivered to user." tool_result is a
+    // short fragment whose only unique literal (" delivered to user.") is a subset
+    // of "Message delivered to user.", so the emission-shape change this version
+    // let it drop from capture. Force-include on the distinctive `"file")}` slot
+    // (the pluralizer's literal "file" arg) which the message result lacks.
+    matcher: t => t.includes('"file")} delivered to user.'),
+    name: "SendUserFile files delivered tool_result",
+    id: "tool-result-senduserfile-files-delivered",
+    description:
+      "Model-facing SendUserFile tool_result confirming N file(s) were delivered to the user. 2.1.204 emission-shape change (subset-shadowed by the message-delivered result) dropped it from capture; force-restore.",
+  },
+  {
     matcher: t => t.includes("File unchanged since last read"),
     name: "Read File-Unchanged Result",
     id: "tool-result-read-file-unchanged",
