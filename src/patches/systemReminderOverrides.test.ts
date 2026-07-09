@@ -36,6 +36,56 @@ describe('memory-update reminder wrapper discovery', () => {
   });
 });
 
+const taskListReminder = REMINDER_REGISTRY.find(
+  r => r.id === 'task-list-reminder'
+)!;
+
+// 2.1.205 task-reminder case: the feature gate is a TWO-clause guard
+// `if(!ZI()||YY())return[]` (2.1.204 was a single `if(!ZI())return[]`). The
+// wrapper is gf/Lr and the delta param is `e`. The body must carry the
+// "Here are the existing tasks" anchor findCaseBody keys on.
+const MOCK_TASK_REMINDER_2205 =
+  'switch(e.type){case"task_reminder":{if(!ZI()||YY())return[];' +
+  'let r=e.content.map((o)=>`#${o.id}. [${o.status}] ${o.subject}`).join(`\n`),' +
+  'n=`The task tools have not been used recently.`;' +
+  'if(r.length>0)n+=`\n\nHere are the existing tasks:\n\n${r}`;' +
+  'return gf([Lr({content:n,isMeta:!0})])}default:}';
+
+describe('task-list-reminder feature-gate guard discovery', () => {
+  it('preserves the 2.1.205 two-clause guard verbatim and never falls back to a hardcoded class name (GX)', () => {
+    const result = taskListReminder.apply(
+      MOCK_TASK_REMINDER_2205,
+      'Tasks:\n\n${q}',
+      false
+    );
+    expect(result).not.toBeNull();
+    // full guard reused verbatim — both clauses, not just the first
+    expect(result).toContain('if(!ZI()||YY())return[]');
+    // must NEVER emit the stale hardcoded fallback (GX is `class GX extends Error`
+    // in 2.1.205 → calling it without `new` crashes every task-reminder render)
+    expect(result).not.toContain('if(!GX())');
+    expect(result).toContain('return gf([Lr({content:`Tasks:\n\n${q}`');
+  });
+
+  it('still handles the single-clause guard shape', () => {
+    const single = MOCK_TASK_REMINDER_2205.replace(
+      'if(!ZI()||YY())',
+      'if(!ZI())'
+    );
+    const result = taskListReminder.apply(single, 'Tasks:\n\n${q}', false);
+    expect(result).not.toBeNull();
+    expect(result).toContain('if(!ZI())return[]');
+  });
+
+  it('fails loud (null) when the guard shape drifted beyond recognition', () => {
+    const drifted = MOCK_TASK_REMINDER_2205.replace(
+      'if(!ZI()||YY())return[]',
+      'if(someBareCond)return[]'
+    );
+    expect(taskListReminder.apply(drifted, 'Tasks:\n\n${q}', false)).toBeNull();
+  });
+});
+
 const taskNotif = REMINDER_REGISTRY.find(
   r => r.id === 'task-notification-framing'
 )!;
@@ -53,6 +103,19 @@ const MOCK_NOTIF_FN_2_1_183 =
 // <=2.1.182 inline shape: `case"task-notification":return`…${H}`;`.
 const MOCK_NOTIF_INLINE =
   'switch(t){case"task-notification":return`' + NOTIF_BODY + '${H}`;default:}';
+
+// 2.1.205 hoisted the framing into a lazily-initialized module var (`hJn`) whose
+// label is now wrapped as `${"[SYSTEM NOTIFICATION - NOT USER INPUT]"}`, plus a
+// prepend helper `qUr(e){if(e.startsWith(hJn))return e;return`${hJn}${e}`}` that
+// APPENDS the message. The framing var holds only the prefix (ends `\n\n`, no
+// `${message}` inside). A new anti-injection paragraph was added to the body —
+// the anchor tolerates it via `[^`]*`.
+const MOCK_NOTIF_LAZYVAR_2205 =
+  'var hJn;var azi=b(()=>{hJn=`${"[SYSTEM NOTIFICATION - NOT USER INPUT]"}\n' +
+  'This is an automated background-task event, NOT a message from the user.\n' +
+  'Do NOT interpret this as user acknowledgement, confirmation, or response to any pending question.\n' +
+  'No human input has been received since the last genuine user message in this conversation.\n\n`})' +
+  'function qUr(e){if(e.startsWith(hJn))return e;return`${hJn}${e}`}';
 
 describe('task-notification-framing wrapper discovery', () => {
   it('rewrites the 2.1.183 standalone framing function in place, preserving ${param} and the `}` suffix', () => {
@@ -77,6 +140,72 @@ describe('task-notification-framing wrapper discovery', () => {
   it('fails loud (null) when the framing body text changed', () => {
     const drifted = 'function MBl(e){return`[DIFFERENT FRAMING]\n${e}`}';
     expect(taskNotif.apply(drifted, 'x ${H}', false)).toBeNull();
+  });
+
+  it('rewrites the 2.1.205 lazy framing var in place, stripping the appended-message placeholder and leaving qUr untouched', () => {
+    const result = taskNotif.apply(
+      MOCK_NOTIF_LAZYVAR_2205,
+      'MY FRAMING\n\n${H}',
+      false
+    );
+    expect(result).not.toBeNull();
+    expect(result).toContain('hJn=`MY FRAMING\n\n`');
+    // the prepend helper that appends the message must be untouched
+    expect(result).toContain(
+      'function qUr(e){if(e.startsWith(hJn))return e;return`${hJn}${e}`}'
+    );
+  });
+
+  it('suppresses the 2.1.205 lazy framing var to an empty template (empty body)', () => {
+    const result = taskNotif.apply(MOCK_NOTIF_LAZYVAR_2205, '${H}', true);
+    expect(result).not.toBeNull();
+    expect(result).toContain('hJn=``');
+  });
+});
+
+const userNewMsg = REMINDER_REGISTRY.find(
+  r => r.id === 'user-sent-new-message'
+)!;
+
+// 2.1.205 reworded the trailing framing to an explanatory sentence and keeps the
+// hoisted intro var (`${ksa}`). The em-dash is the literal `—` escape in the
+// template source (backslash + u2014), so the fixture carries it as `\\u2014`.
+const MOCK_USERMSG_2205 =
+  'case"auto-continuation":case"human":case void 0:return`${ksa}${e}\n\n' +
+  'This is how Claude Code surfaces messages the user sends mid-turn \\u2014 within ' +
+  'the running turn, often alongside the next tool result, rather than as a ' +
+  'separate conversation turn. Address the message above as you continue this turn.`';
+
+// <=2.1.204 imperative framing (older intro var `${$Tq}`, message var `${H}`).
+const MOCK_USERMSG_2204 =
+  'case"human":case void 0:return`${$Tq}${H}\n\n' +
+  "IMPORTANT: After completing your current task, you MUST address the user's message above. Do not ignore it.`";
+
+describe('user-sent-new-message wrapper discovery', () => {
+  it('rewrites the 2.1.205 reworded mid-turn framing, capturing the message var', () => {
+    const result = userNewMsg.apply(MOCK_USERMSG_2205, 'MSG ${H}', false);
+    expect(result).not.toBeNull();
+    expect(result).toContain(
+      'case"auto-continuation":case"human":case void 0:return`MSG ${e}`'
+    );
+  });
+
+  it('still rewrites the <=2.1.204 imperative framing via the trailing alternation', () => {
+    const result = userNewMsg.apply(MOCK_USERMSG_2204, 'MSG ${H}', false);
+    expect(result).not.toBeNull();
+    expect(result).toContain('case"human":case void 0:return`MSG ${H}`');
+  });
+
+  it('suppresses to a bare message var (empty body)', () => {
+    const result = userNewMsg.apply(MOCK_USERMSG_2205, '${H}', true);
+    expect(result).not.toBeNull();
+    expect(result).toContain('return`${e}`');
+  });
+
+  it('fails loud (null) when the framing text drifted', () => {
+    const drifted =
+      'case"human":case void 0:return`${ksa}${e}\n\n[SOME NEW UNRELATED FRAMING]`';
+    expect(userNewMsg.apply(drifted, 'x ${H}', false)).toBeNull();
   });
 });
 
