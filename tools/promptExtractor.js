@@ -32,7 +32,122 @@ const WORKFLOW_SCRIPT_IDENTIFIER_MAP = {
 // naming (mergeWithExisting fallback). The optional `identifierMap` provides
 // semantic names for the prompt's interpolated identifiers — required when
 // override .md files reference those names (`${ATTACHMENT_OBJECT.filename}`).
+// Upstream's identifierMap is the authoritative placeholder<->slot binding for
+// every shared prompt -- EXCEPT where it is verifiably wrong against the binary.
+// Those corrections live here and are re-applied AFTER upstream adoption (which
+// overwrites identifierMap wholesale). Keyed by id; `identifiers` must match, so
+// a shape change disables the correction rather than silently mis-applying it.
+//
+// tool-description-bash-git-commit-and-pr-creation-instructions (verified on the
+// pristine CC 2.1.206 cli.js): the template's tail reads
+//   `## Summary\n${DYt()}\n\n## Test plan\n${PYt()}${o?`\n\n${o}`:""}`
+// so slots 7/8/9 are (summary-template fn, test-plan-template fn, attribution).
+// Upstream labels them (PR_GENERATED_WITH_CLAUDE_CODE, PR_SUMMARY_TEMPLATE_FN,
+// PR_TEST_PLAN_TEMPLATE_FN) -- rotated by one. The LCC override writes
+// `${PR_GENERATED_WITH_CLAUDE_CODE?`\n\n${PR_GENERATED_WITH_CLAUDE_CODE}`:""}`,
+// which therefore bound to slot 7 = `DYt`, a FUNCTION: truthy, so the patched
+// binary rendered the function's SOURCE TEXT into the Bash tool description.
+// No crash, no warning, invisible to the mis-bind audit (which trusts upstream).
+const CURATED_IDENTIFIER_MAPS = {
+  'tool-description-bash-git-commit-and-pr-creation-instructions': {
+    identifiers: [
+      0, 1, 1, 2, 1, 1, 3, 4, 1, 1, 5, 6, 6, 2, 7, 8, 9, 9, 3, 4, 10, 10,
+    ],
+    identifierMap: {
+      0: 'LOADED_COMMANDS_CONTEXT',
+      1: 'COMMIT_CO_AUTHORED_BY_CLAUDE_CODE',
+      2: 'BASH_TOOL_NAME',
+      3: 'GET_TODO_TOOL_FN',
+      4: 'TASK_TOOL_NAME',
+      5: 'PR_INSTRUCTIONS_PREFIX',
+      6: 'PR_WRITING_GUIDANCE_BLOCK',
+      7: 'PR_SUMMARY_TEMPLATE_FN',
+      8: 'PR_TEST_PLAN_TEMPLATE_FN',
+      9: 'PR_GENERATED_WITH_CLAUDE_CODE',
+      10: 'PR_COMMON_OPERATIONS_NOTE',
+    },
+  },
+};
+
 const NEW_PROMPT_ASSIGNMENTS = [
+  // 2.1.206 — `tool-result-loop-stopped` was split into shared constants: the
+  // re-arm sentence became a `let c = ...` template reused by two envelopes
+  // (`Loop stopped — ${reason}. ${c}` and the no-pending-wakeup variant). Name
+  // all three. The re-arm suffix is a single sentence, so validateInput's
+  // prose-quality gate drops it — a NEW_PROMPT_ASSIGNMENTS hit bypasses that.
+  {
+    matcher: t =>
+      t.startsWith('If you armed a ') &&
+      t.includes('otherwise nothing more to do this turn'),
+    name: 'Tool Result: Loop Re-arm Suffix',
+    id: 'tool-result-loop-rearm-suffix',
+    description:
+      'Model-facing tool_result sentence shared by both loop-stopped envelopes: if a wakeup tool was armed for this loop, trigger the stop tool now. Split out of tool-result-loop-stopped in 2.1.206.',
+    identifierMap: {
+      '0': 'TOOL_RESULT_LOOP_REARM_MONITOR_TOOL',
+      '1': 'TOOL_RESULT_LOOP_REARM_TASKSTOP_TOOL',
+    },
+  },
+  {
+    matcher: t => t.includes('there was no pending wakeup to cancel'),
+    name: 'Tool Result: Loop Stopped (no pending wakeup)',
+    id: 'tool-result-loop-stopped-no-pending-wakeup',
+    description:
+      'Model-facing tool_result for stop:true when no dynamic wakeup was pending: the dynamic loop ended, but a fixed-interval /loop cron is NOT stopped and must be cancelled explicitly. New envelope in 2.1.206.',
+    identifierMap: {
+      '0': 'TOOL_RESULT_LOOP_STOPPED_CRON_DELETE_TOOL',
+      '1': 'TOOL_RESULT_LOOP_STOPPED_REARM_SUFFIX',
+    },
+  },
+  {
+    // Matched twice with different inputs: validateInput passes the RAW source
+    // (`—` escape, named identifiers), naming passes pieces.join('') (em
+    // dash decoded, identifiers stripped to `${}`). Tolerate both.
+    matcher: t =>
+      /^Loop stopped (?:—|\\u2014) \$\{[$\w]*\}\.\s\$\{[$\w]*\}\s*$/.test(t),
+    name: 'Tool Result: Loop Stopped',
+    id: 'tool-result-loop-stopped',
+    description:
+      'Model-facing tool_result telling the model the dynamic loop stopped, with the wakeup-cancellation reason interpolated and the shared re-arm suffix appended. 2.1.206 reduced this to an envelope (fuzzy-miss restore).',
+    identifierMap: {
+      '0': 'TOOL_RESULT_LOOP_STOPPED_REASON',
+      '1': 'TOOL_RESULT_LOOP_STOPPED_REARM_SUFFIX',
+    },
+  },
+  // 2.1.206 — the /design slash command was rewritten into a table dispatcher;
+  // the hub description's literal fragment now opens after a `${toolName}` tool
+  // interpolation instead of a period, a fuzzy-miss that dropped the name.
+  {
+    matcher: t =>
+      t.includes('Always fetches the live Claude Design instructions via'),
+    name: 'Slash Command: /design hub description',
+    id: 'slash-command-design-hub-description',
+    description:
+      '/design hub command description: routes sync/login to dedicated commands and maps import/export/status/free-form prompts to the native Claude Design tool, always fetching live instructions rather than a vendored copy.',
+  },
+  // 2.1.206 — the /code-review inline prompt envelope gained a `.cell` argument
+  // and a third conditional slot, shifting every identifier slot from 6 on.
+  // Supply the COMPLETE new identifierMap so carried-over labels can't mis-bind
+  // (see reference_identifier_slot_shifts_on_prompt_restructure).
+  {
+    // `[$\w]*` (not `+`) so this matches both the raw source the capture gate
+    // sees (`${I.text}${wdb(m.cell,_)}`) and the pieces.join('') form naming
+    // sees (`${.text}${(.cell,)}`).
+    matcher: t =>
+      /^\$\{[$\w]*\}\$\{[$\w]*\}\$\{[$\w]*\.text\}\$\{[$\w]*\([$\w]*\.cell,\s*[$\w]*\)\}/.test(
+        t
+      ),
+    name: 'Skill: Code Review Inline Prompt Envelope',
+    id: 'skill-code-review-inline-prompt-envelope',
+    description:
+      'Assembly envelope for the inline /code-review prompt: concatenates the preamble, review target, effort-tier body, angle cell, and the optional findings/verify/report fragments. Pure interpolation — carries no literal prompt text.',
+    identifierMap: Object.fromEntries(
+      Array.from({ length: 14 }, (_, i) => [
+        String(i),
+        `SKILL_CODE_REVIEW_INLINE_PROMPT_ENVELOPE_VAR_${i}`,
+      ])
+    ),
+  },
   // 2.1.199 — the Opus-4.8-1M model-catalog descriptionForModel was refactored
   // from the literal "Opus 4.8 with 1M context - ..." to an interpolated
   // "${o} with 1M context - ..." (the model display name is now a variable), a
@@ -3209,6 +3324,19 @@ if (require.main === module) {
         }
       }
       console.log(`Adopted upstream identifierMap for ${adopted} shared prompt(s)`);
+      // ...except where upstream's map is verifiably WRONG against the binary.
+      // Adoption runs last and overwrites wholesale, so curated corrections must
+      // be re-applied on top of it. See CURATED_IDENTIFIER_MAPS.
+      let curated = 0;
+      for (const p of mergedResult.prompts) {
+        const fix = p.id && CURATED_IDENTIFIER_MAPS[p.id];
+        if (fix && JSON.stringify(fix.identifiers) === JSON.stringify(p.identifiers)) {
+          p.identifierMap = { ...fix.identifierMap };
+          curated++;
+        }
+      }
+      if (curated)
+        console.log(`Applied ${curated} curated identifierMap correction(s)`);
     } catch (err) {
       console.warn(
         `Warning: could not apply upstream identifierMaps: ${err.message}`

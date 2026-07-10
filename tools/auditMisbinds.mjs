@@ -37,6 +37,19 @@ try {
   );
   process.exit(0);
 }
+// Upstream is the reference, not scripture. Where its map is verifiably wrong
+// against the binary, tools/promptExtractor.js CURATED_IDENTIFIER_MAPS corrects
+// ours on purpose, and this audit must not "restore" the bug. Every entry here
+// needs the evidence recorded next to the correction in the extractor.
+//
+// tool-description-bash-git-commit-and-pr-creation-instructions: upstream rotates
+// slots 7/8/9, so the LCC override's ${PR_GENERATED_WITH_CLAUDE_CODE} bound to a
+// FUNCTION and the patcher rendered its source text into the Bash tool
+// description. Verified against the pristine 2.1.206 cli.js.
+const CURATED_DIVERGENCES = new Set([
+  'tool-description-bash-git-commit-and-pr-creation-instructions',
+]);
+
 const invert = m => {
   const r = {};
   if (m) for (const [s, n] of Object.entries(m)) r[n] = s;
@@ -62,6 +75,10 @@ for (const f of fs.readdirSync(overridesDir)) {
     [...body.matchAll(/(?<!\\)\$\{([A-Z][A-Z0-9_]+)/g)].map(m => m[1])
   );
   if (!used.size || !P[id]) continue; // can only audit prompts upstream also has
+  if (CURATED_DIVERGENCES.has(id)) {
+    console.log(`mis-bind audit: curated divergence from upstream — ${id}`);
+    continue;
+  }
   const our = invert(O[id]?.identifierMap);
   const pieb = invert(P[id]?.identifierMap);
   for (const name of used) {

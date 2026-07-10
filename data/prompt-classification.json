@@ -8546,5 +8546,233 @@
     "desc": "Prefix note stamped onto background-task events warning the model this is not user acknowledgement/consent"
   },
   "712848f83620027fd6ee37c2a30b4cdb209b5b1e": { "facing": "internal" },
-  "3c0d643c0dbe39e2eb6d88f50a39c7205699fafc": { "facing": "internal" }
+  "3c0d643c0dbe39e2eb6d88f50a39c7205699fafc": { "facing": "internal" },
+  "aec3742f29e3143a658cc452ef7cec2956903678": {
+    "facing": "model",
+    "id": "tool-parameter-cowork-if-match-etag",
+    "name": "Tool parameter: Cowork output if_match CAS etag",
+    "desc": "Model-facing describe() text for the if_match output-file CAS parameter in the Cowork staged-call mcp tool inputSchema."
+  },
+  "a519a8f2958b8886f2e18bbbcfcab02d8619062e": {
+    "facing": "model",
+    "id": "tool-parameter-cowork-staging-detail",
+    "name": "Tool parameter: Cowork staging error detail",
+    "desc": "Model-facing describe() text for the staging.detail field in the Cowork staged-call result schema."
+  },
+  "f46b030cbfb82905eef5246940f6d46c300a9b51": {
+    "facing": "model",
+    "id": "tool-parameter-cowork-staging-result-presence",
+    "name": "Tool parameter: Cowork staging result presence",
+    "desc": "Model-facing describe() text for the optional staging result object in the Cowork staged-call mcp tool output schema."
+  },
+  "aa0068d96964c1a1c5d06de01fa103f07a188962": {
+    "facing": "model",
+    "id": "tool-parameter-cowork-staging-retryable",
+    "name": "Tool parameter: Cowork staging retryable flag",
+    "desc": "Model-facing describe() text for the staging.retryable field in the Cowork staged-call result schema."
+  },
+  "05685fcbc617ea9f81b2e36d4b3ee3cb72bf01e0": {
+    "facing": "model",
+    "id": "tool-result-end-conversation-reflection",
+    "name": "Tool result: End-conversation reflection prompt",
+    "desc": "Model-facing END_CONVERSATION_REFLECTION_PROMPT returned when the model first calls the end_conversation tool, prompting it to reconfirm before ending."
+  },
+  "40fa524d05ab16f1e24b6113b3000ceb54b30507": {
+    "facing": "model",
+    "id": "tool-parameter-cowork-expires-at",
+    "name": "Tool parameter: Cowork staged-call expires_at",
+    "desc": "Model-facing describe() text for the expires_at RFC3339 deadline parameter in the Cowork staged-call mcp tool inputSchema."
+  },
+  "38b51d821061d5f56c7c70571cf490c077e4067a": {
+    "facing": "model",
+    "id": "tool-description-mcp-call-staged-semantics",
+    "name": "Tool description: MCP call staged-call semantics",
+    "desc": "Model-facing fragment concatenated into the mcp_call tool description explaining STAGED-call lane staging, error subtypes, and redelivery semantics."
+  },
+  "126f32f2202b2aa023b4b0f9e32300111b84242f": {
+    "facing": "model",
+    "id": "tool-parameter-cowork-input-lane-path",
+    "name": "Tool parameter: Cowork input lane_path",
+    "desc": "Model-facing describe() text for the lane_path parameter of an input_files entry in the Cowork staged-call mcp tool inputSchema."
+  },
+  "c60832a6abf3d59527342027aa737fc41fb9e47c": {
+    "facing": "model",
+    "id": "tool-result-mcp-url-elicitation-required",
+    "name": "Tool result: MCP URL elicitation required",
+    "desc": "Model-facing tool_result text returned when an MCP tool call requires URL elicitation, telling the model to open the URL and then retry."
+  },
+  "ac640536fce12dd0c1b08d96117e1d61815ac85d": {
+    "facing": "model",
+    "id": "skill-pr-writeup-five-questions",
+    "name": "Skill: PR writeup five questions",
+    "desc": "Model-facing prompt fragment for the PR explanation/writeup skill requiring the generated page to answer five specific PR questions (problem, why, how, alternatives, why-better)."
+  },
+  "61c6f4163414d49cfbaca8cf86e6bc3b99ae771d": { "facing": "internal" },
+  "b68476f465e708c6dc14c1aeb4f91d55bab7268b": {
+    "facing": "model",
+    "id": "skill-code-review-focus-correctness-bugs",
+    "name": "Skill: Code-review correctness-bugs focus",
+    "desc": "Model-facing /code-review skill prompt fragment directing the model to surface every plausible correctness bug at this effort level, favoring recall over avoiding false positives."
+  },
+  "f21b5efd30dfc9a77f5700c02f4b962d74c1503f": {
+    "facing": "model",
+    "id": "tool-result-end-conversation-background-fork-noop",
+    "name": "Tool result: EndConversation no-op in background fork",
+    "desc": "Model-facing message returned by the end_conversation tool when invoked from a background fork, telling the model the tool does nothing here and how to raise welfare concerns via fork output."
+  },
+  "fa314f01ed59826649839a5153ed167a746fc49b": { "facing": "ui" },
+  "4ac608c42e627e8b8f6449457e876c3774e86d76": {
+    "facing": "model",
+    "id": "system-prompt-chrome-tools-excluded-from-agent",
+    "name": "System prompt: Chrome tools excluded from agent context",
+    "desc": "Model-facing browser-preload text block (assigned to o and returned as [{type:'text',text:o}]) telling the model that Claude-in-Chrome tools are enabled for the session but not part of this fixed agent tool set"
+  },
+  "f45b369b59cd7d2d4be354cf3dfbdc5a67aa2032": {
+    "facing": "model",
+    "id": "system-prompt-chrome-connection-not-working",
+    "name": "System prompt: Chrome connection not working",
+    "desc": "Model-facing browser-preload text block (returned as [{type:'text',text:o}]) telling the model the Chrome connection failed/disabled so mcp__claude-in-chrome__* tools are unavailable and to continue without them"
+  },
+  "616d42fce27c6631a2a637126164d93e4cfd3f7a": {
+    "facing": "model",
+    "id": "system-prompt-chrome-setup-completed",
+    "name": "System prompt: Chrome setup completed",
+    "desc": "Model-facing browser-preload text block, a backtick template prepended to the base Chrome-automation prompt ${KZt}, telling the model the extension is installed and browser tools are now available"
+  },
+  "5de5f0dbc686e68f3a2905b9dd46db458110324f": {
+    "facing": "model",
+    "id": "skill-artifact-explainer-type-description",
+    "name": "Skill: Artifact explainer type description",
+    "desc": "Model-facing description field of the explainer artifact type ({kind:'explainer',description:…}) that the model reads (keywords: explainer, how it works, walkthrough…) to decide when to create an explainer artifact"
+  },
+  "a6b5413e9f59191dcb506733d9bb8291b463e643": {
+    "facing": "model",
+    "id": "tool-parameter-cowork-staged-input-output-files",
+    "name": "Tool parameter: Cowork staged input/output files",
+    "desc": "Model-facing inputSchema parameter description (zod .describe on the input_files/output_files array) explaining that declaring these makes a STAGED Cowork call with lane-row fetch and durable-at-ack output PUT"
+  },
+  "816b2c1071a5f9ddeaadf206c8b1be84b03b00d4": { "facing": "internal" },
+  "308ba8add75e528902c743c029a15fc2a75b9422": {
+    "facing": "model",
+    "id": "tool-description-endconversation",
+    "name": "Tool Description: EndConversation",
+    "desc": "Defines when the assistant may use the EndConversation tool and the safety constraints that forbid ending the conversation"
+  },
+  "dd58921bbe1db39892be5334e8c3276fa275b6be": {
+    "facing": "model",
+    "id": "skill-artifact-data-table-html-template",
+    "name": "Skill: Artifact data-table HTML template",
+    "desc": "Model-facing SKILL_FILES template.html for the artifact-data-table skill — the sortable/filterable HTML table body fragment the model reads and fills the SLOTs of."
+  },
+  "50ac33e4ab70e6736e4af55e8ba4cbcac63a1e4f": {
+    "facing": "model",
+    "id": "skill-artifact-dashboard-html-template",
+    "name": "Skill: Artifact dashboard HTML template",
+    "desc": "Model-facing SKILL_FILES template.html for the artifact-dashboard skill — the KPI/chart dashboard body fragment (incl. the fallback SVG chart renderer) the model reads and fills the SLOTs of."
+  },
+  "93e01d88f1ab0f96d23a2254d98d28a4dbb1542c": {
+    "facing": "model",
+    "id": "tool-description-end-conversation-deferred",
+    "name": "Tool description: End conversation (deferred short form)",
+    "desc": "Model-facing deferred/short description of the EndConversation tool shown in the tool listing before ToolSearch loads the full guidance."
+  },
+  "0e41f1873a9d2a6a929c17195dfecc76a8710b4c": { "facing": "ui" },
+  "0dd63a9964a9ac8914878f1b222a892b0443e7b7": {
+    "facing": "model",
+    "id": "system-prompt-browser-unavailable-managed-policy-late",
+    "name": "System prompt: Browser unavailable — managed policy (late)",
+    "desc": "Model-facing context note injected when Claude in Chrome is blocked by org managed settings that loaded mid-setup; instructs the assistant to continue without browser tools and not re-suggest the extension."
+  },
+  "aaf4e29892d3d2dbe214a452f2a69846f48868ab": {
+    "facing": "model",
+    "id": "system-prompt-browser-unavailable-managed-policy",
+    "name": "System prompt: Browser unavailable — managed policy",
+    "desc": "Model-facing context note injected when Claude in Chrome is blocked by org managed settings; instructs the assistant to continue without browser tools and not suggest installing the extension."
+  },
+  "263db22a5b6ce560a4347e829f11a9c112df7029": {
+    "facing": "model",
+    "id": "system-prompt-browser-unavailable-extension-not-set-up",
+    "name": "System prompt: Browser unavailable — extension not set up",
+    "desc": "Model-facing context note injected when the Claude in Chrome extension is not installed/connected; instructs the assistant to continue without browser tools and not attempt mcp__claude-in-chrome__* tool calls."
+  },
+  "f2ae42aafe3a057ed200e49f526f9e674ebe1cec": {
+    "facing": "model",
+    "id": "skill-code-review-re-report-findings-with-outcome",
+    "name": "Skill: Code review re-report findings with outcome",
+    "desc": "Model-facing code-review skill fragment instructing the model to call ReportFindings again with each finding carrying an outcome (fixed/no_change_needed/skipped) after applying fixes, and not to repeat the findings as text."
+  },
+  "2ae28e9270337ad86d118dc429be194fb7522fd0": { "facing": "internal" },
+  "264646d02ccf0030f1d790135f4490ef15ba31f6": { "facing": "ui" },
+  "dbd73cc17010f7fd30c7f42cbdfefd2c451d9f7d": { "facing": "internal" },
+  "60b5a1fa0e26b71b8a64551470174a320432c3d5": {
+    "facing": "model",
+    "id": "data-chrome-install-upsell-declined",
+    "name": "Data: Chrome install declined, continue without browser",
+    "desc": "Model-facing outcome message returned (var Pwa) from the chrome_install_upsell handler on not_now/cancelled/dont_ask_again, injected into the model's context to tell it not to re-suggest the extension and to continue without browser tools this session"
+  },
+  "e4037f6b3e45472793d9d60bdbc99d521517a86b": {
+    "facing": "model",
+    "id": "data-chrome-install-upsell-started-continue",
+    "name": "Data: Chrome install started, continuing without browser",
+    "desc": "Model-facing outcome message returned (var udb) when the user began installing the Claude in Chrome extension but chose to continue without browser tools, injected into the model's context so it stops suggesting the extension and proceeds"
+  },
+  "e60da1a274111133cf4a3bfe82f3e47fc619b4a2": { "facing": "ui" },
+  "bc909b8980659b03a0d7c170f14499c9a1c9264a": { "facing": "internal" },
+  "1e896ce5d369678060288dcde89750c43d64bcf7": { "facing": "internal" },
+  "1988d19c0a24a5c828281c27496bbb5bc2e9ca68": {
+    "facing": "model",
+    "id": "data-auto-mode-recon-step-failed",
+    "name": "Data: Auto-mode recon step failed",
+    "desc": "Model-facing fallback text inserted as a section body in the '# Auto Mode Setup & Customisation' environment-recon document handed to the /auto-mode-setup agent when a recon step throws."
+  },
+  "5d1b7dd735d3a9c18861095356397cfc8856bbf4": { "facing": "internal" },
+  "8fb2ebbc1660691c6950f04dce2885b6df7a707e": { "facing": "internal" },
+  "068611fad23b57a967d7560acb05431b92b1be5e": {
+    "facing": "model",
+    "id": "skill-code-review-inline-medium-high-template",
+    "name": "Skill: Code Review inline medium/high template",
+    "desc": "Template for medium and high inline code-review prompts that run eight finder angles, deduplicate without verification, and enforce a minimum findings target"
+  },
+  "a4296eb099fa9f5af84b430575db7516989f7b71": {
+    "facing": "model",
+    "id": "skill-code-review-keep-it-honest",
+    "name": "Skill: Code review keep it honest",
+    "desc": "Model-facing /code-review skill fragment telling the reviewer to describe what the diff actually does and flag unclear parts in section 4 rather than guessing."
+  },
+  "e10ab6b6966fa4d8bf97c232664a0d58e028f17f": {
+    "facing": "model",
+    "id": "skill-code-review-output-findings-target",
+    "name": "Skill: Code review findings target floor",
+    "desc": "Model-facing /code-review skill output instruction setting the minimum findings target (at least floor(N/2)) while telling the model not to invent findings to hit it."
+  },
+  "ccb2ced23e930a96abb6b2210b6ef6af270f37a5": {
+    "facing": "model",
+    "id": "skill-artifact-report-html-template",
+    "name": "Skill: Artifact report HTML template",
+    "desc": "Model-facing template.html scaffold for the artifact-report skill (masthead, key takeaways, TOC, sections, appendix) that the model fills in to author a report artifact."
+  },
+  "dbe098155a273708a0e61d3cb4b33bc73eeb8c6a": {
+    "facing": "model",
+    "id": "skill-artifact-explainer-html-template",
+    "name": "Skill: Artifact explainer HTML template",
+    "desc": "Model-facing template.html scaffold for the artifact-explainer skill (numbered steps / topic sections, recap) that the model fills in to author an explainer artifact."
+  },
+  "1522cdb49c9875c4ba2f4ba91bc63222380f993a": { "facing": "internal" },
+  "bc1df4bb07c59a9a771ddc7b9d19e63c25a2672f": { "facing": "internal" },
+  "d25ca47cf3fcf1be1eefa8cc93666279af01b82a": { "facing": "internal" },
+  "3446b9b2c99fc244b95ad0c7f5e70667bc6e29e3": { "facing": "internal" },
+  "44ec46d506f91f0c74af271751892aac498bc3c5": {
+    "facing": "model",
+    "id": "tool-parameter-schedulewakeup-cancelled-wakeups",
+    "name": "Tool parameter: ScheduleWakeup cancelledWakeups result field",
+    "desc": "Model-facing outputSchema field description on the ScheduleWakeup (/loop) tool, explaining how many pending dynamic-loop wakeups a stop:true call cancelled"
+  },
+  "b8c308e3f424cf05dcd0dc83bf83768cdd3c090b": { "facing": "internal" },
+  "47c0a05327f0a461d482fb6d5216bf1e9644060c": {
+    "facing": "model",
+    "id": "tool-result-mcp-session-expired-reconnect",
+    "name": "Tool result: MCP session expired — reconnect and retry",
+    "desc": "Model-facing tool_result error text returned by an MCP tool call when the session has expired, instructing the model to send mcp_reconnect and retry"
+  },
+  "ba968342c728f4392a5bd782d3eb0859486de26f": { "facing": "internal" }
 }
