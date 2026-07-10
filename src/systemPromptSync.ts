@@ -236,6 +236,29 @@ export const parseMarkdownPrompt = (markdown: string): MarkdownPrompt => {
 };
 
 /**
+ * `matter.stringify(content, ...)` re-parses `content` before writing it. When
+ * the body itself opens with the `<!--` delimiter — CC 2.1.206's artifact
+ * `template.html` fragments start with `<!-- Artifact-tool body fragment ... -->`
+ * — gray-matter reads that comment as the file's front-matter and then treats
+ * the remainder of its first line as an engine name, throwing
+ * `gray-matter engine "..." is not registered`.
+ *
+ * Emitting the header from an EMPTY body sidesteps the re-parse and produces
+ * byte-identical output for every ordinary body, so this is safe to use at
+ * every call site.
+ */
+export const stringifyPromptMarkdown = (
+  content: string,
+  frontmatterData: Record<string, unknown>
+): string => {
+  const header = matter
+    .stringify('', frontmatterData, { delimiters: ['<!--', '-->'] })
+    .replace(/\n$/, '');
+  // gray-matter appends a trailing newline only when the body lacks one.
+  return header + (content.endsWith('\n') ? content : content + '\n');
+};
+
+/**
  * Generates markdown file content from a prompt using gray-matter
  * Uses HTML comment delimiters to avoid conflicts with markdown content
  */
@@ -278,9 +301,7 @@ export const generateMarkdownFromPrompt = (
     }
   }
 
-  return matter.stringify(content, frontmatterData, {
-    delimiters: ['<!--', '-->'],
-  });
+  return stringifyPromptMarkdown(content, frontmatterData);
 };
 
 /**
@@ -439,9 +460,7 @@ export const updateVariables = async (
     if (!canonicalKeys.has(k)) updatedData[k] = v;
   }
 
-  const updatedMarkdown = matter.stringify(parsed.content, updatedData, {
-    delimiters: ['<!--', '-->'],
-  });
+  const updatedMarkdown = stringifyPromptMarkdown(parsed.content, updatedData);
   if (updatedMarkdown === markdown) return;
   await writePromptFile(promptId, updatedMarkdown);
 };
@@ -1059,8 +1078,17 @@ export const syncSystemPrompts = async (
       const result = await syncPrompt(prompt);
       summary.results.push(result);
     } catch (error) {
-      console.log(chalk.red(`Failed to sync prompt ${prompt.id}:`));
-      throw error;
+      // Keep going: rethrowing aborted the whole loop, so a single malformed
+      // prompt silently left every later prompt without its override .md (and
+      // the apply then logged an ENOENT per missing file instead of naming the
+      // real cause). Report this prompt and sync the rest.
+      console.log(
+        chalk.red(
+          `Failed to sync prompt ${prompt.id}: ${
+            error instanceof Error ? error.message : String(error)
+          }`
+        )
+      );
     }
   }
 

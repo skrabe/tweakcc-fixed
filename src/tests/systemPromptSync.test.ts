@@ -649,9 +649,18 @@ Greet user as \${SETTINGS.preferredName}!`;
         new Error('Permission denied')
       );
 
-      await expect(promptSync.syncSystemPrompts('2.0.0')).rejects.toThrow(
-        'Permission denied'
-      );
+      // A failing prompt is reported and skipped, not fatal: rethrowing aborted
+      // the loop, so one malformed prompt left every later prompt without its
+      // override .md (CC 2.1.206's artifact templates hit exactly this).
+      const errorSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+      const summary = await promptSync.syncSystemPrompts('2.0.0');
+      expect(summary.results).toEqual([]);
+      expect(
+        errorSpy.mock.calls.some(c =>
+          String(c[0]).includes('Permission denied')
+        )
+      ).toBe(true);
+      errorSpy.mockRestore();
     });
 
     it('should throw error if download fails', async () => {

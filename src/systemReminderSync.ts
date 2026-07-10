@@ -2,6 +2,7 @@ import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import matter from 'gray-matter';
 import { SYSTEM_REMINDERS_DIR } from './config';
+import { stringifyPromptMarkdown } from './systemPromptSync';
 import { escapeNonAscii } from './utils';
 
 export interface ReminderOverride {
@@ -49,9 +50,9 @@ export const serializeReminderMarkdown = (
     ccVersion,
   };
   if (placeholders.length > 0) frontmatter.placeholders = placeholders;
-  return matter.stringify(body, frontmatter, {
-    delimiters: ['<!--', '-->'],
-  });
+  // Same hazard as the prompt overrides: a reminder body opening with `<!--`
+  // would make gray-matter re-parse it as this file's front-matter and throw.
+  return stringifyPromptMarkdown(body, frontmatter);
 };
 
 export const loadReminderOverride = async (
