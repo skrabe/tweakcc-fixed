@@ -24,7 +24,11 @@ export const writeAgentsMd = (
     return file;
   }
 
-  // Try the helper-based null-check reader first (CC >=2.1.196)
+  // Try the dir-flag null-check reader first (CC >=2.1.210)
+  const asyncV3 = writeAgentsMdAsyncDirFlag(file, altNames);
+  if (asyncV3) return asyncV3;
+
+  // Try the helper-based null-check reader next (CC 2.1.196..2.1.209)
   const asyncV2 = writeAgentsMdAsyncNullCheck(file, altNames);
   if (asyncV2) return asyncV2;
 
@@ -34,6 +38,66 @@ export const writeAgentsMd = (
 
   // Fall back to the old sync pattern (CC <=2.1.69)
   return writeAgentsMdSync(file, altNames);
+};
+
+// CC >=2.1.210: the async reader gained an isDirectory() probe. The reader now
+// takes a 4th callback arg that captures whether the path is a directory, and
+// the not-found (o===null) branch became a braced compound block that logs the
+// skip, records a metric, then returns {info:null,includePaths:[]}. Shape:
+//   async function _Kc(e,t,r){try{let n=Jt(),o=!1,
+//     i=await Zq(n,e,cKc,(s)=>{o=s.isDirectory()});
+//     if(i===null){if(C(`[CLAUDE.md] skipping ${e}: ...`),!pKc&&!o)pKc=!0,We(...);
+//       return{info:null,includePaths:[]}}
+//     return rrg(i,e,t,r)}catch(n){return org(n,e),{info:null,includePaths:[]}}}
+// The AGENTS.md reroute goes at the head of the `i===null` branch, before the
+// original skip-log/metric/return body (which we splice back verbatim).
+const writeAgentsMdAsyncDirFlag = (
+  file: string,
+  altNames: string[]
+): string | null => {
+  const funcPattern =
+    /(async function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+))\)\{try\{let ([$\w]+)=([$\w]+)\(\),([$\w]+)=!1,([$\w]+)=await ([$\w]+)\(\6,\3,([$\w]+),\(([$\w]+)\)=>\{\8=\12\.isDirectory\(\)\}\);if\(\9===null\)\{([\s\S]*?\[CLAUDE\.md\] skipping[\s\S]*?return\{info:null,includePaths:\[\]\})\}return ([$\w]+)\(\9,\3,\4,\5\)\}catch\(([$\w]+)\)\{return ([$\w]+)\(\15,\3\),\{info:null,includePaths:\[\]\}\}\}/;
+
+  const m = file.match(funcPattern);
+  if (!m || m.index === undefined) return null;
+
+  const funcSig = m[1]; // async function _Kc(e,t,r
+  const funcName = m[2]; // _Kc
+  const pathParam = m[3]; // e
+  const typeParam = m[4]; // t
+  const thirdParam = m[5]; // r
+  const ctxVar = m[6]; // n
+  const ctxGetter = m[7]; // Jt
+  const dirFlag = m[8]; // o
+  const contentVar = m[9]; // i
+  const reader = m[10]; // Zq
+  const limitVar = m[11]; // cKc
+  const cbParam = m[12]; // s
+  const nullBody = m[13]; // if(C(`[CLAUDE.md] skipping ...`)...return{info:null,includePaths:[]}
+  const processor = m[14]; // rrg
+  const catchVar = m[15]; // n (catch-scoped)
+  const errorHandler = m[16]; // org
+
+  const altNamesJson = JSON.stringify(altNames);
+
+  // `rerouteResult` (not `${ctxVar}`) — the try block already declares it.
+  const replacement =
+    `${funcSig},didReroute){try{let ${ctxVar}=${ctxGetter}(),${dirFlag}=!1,${contentVar}=await ${reader}(${ctxVar},${pathParam},${limitVar},(${cbParam})=>{${dirFlag}=${cbParam}.isDirectory()});` +
+    `if(${contentVar}===null){` +
+    `if(!didReroute&&(${pathParam}.endsWith("/CLAUDE.md")||${pathParam}.endsWith("\\\\CLAUDE.md"))){` +
+    `for(let alt of ${altNamesJson}){let altPath=${pathParam}.slice(0,-9)+alt;` +
+    `try{let rerouteResult=await ${funcName}(altPath,${typeParam},${thirdParam},true);if(rerouteResult.info)return rerouteResult}catch{}}}` +
+    `${nullBody}}` +
+    `return ${processor}(${contentVar},${pathParam},${typeParam},${thirdParam})}catch(${catchVar}){return ${errorHandler}(${catchVar},${pathParam}),{info:null,includePaths:[]}}}`;
+
+  const startIndex = m.index;
+  const endIndex = startIndex + m[0].length;
+  const newFile =
+    file.slice(0, startIndex) + replacement + file.slice(endIndex);
+
+  showDiff(file, newFile, replacement, startIndex, endIndex);
+
+  return newFile;
 };
 
 // CC >=2.1.196: the async reader was refactored to a helper that returns null

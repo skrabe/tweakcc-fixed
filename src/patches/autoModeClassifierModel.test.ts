@@ -87,6 +87,27 @@ describe('writeAutoModeClassifierModel', () => {
     );
   });
 
+  it('rewrites the 2.1.210 resolver (demotion gate + external-default lookup)', () => {
+    const SHAPE_2_1_210 =
+      'function Fds(){let e=Hi(),t=Ze("tengu_auto_mode_config",{}),r=Red(t?.modelByMainModel);' +
+      'if(r)return{value:r,src:"gb"};' +
+      'if(t?.model)return{value:t.model,src:"gb"};' +
+      'if(pdo!=="demoted"){let n=WTi(e);if(n)return{value:n,src:"default",externalDefault:!0}}' +
+      'return{value:Nds(e),src:"default"}}';
+    const file = `function Ids(){return Fds().value}${SHAPE_2_1_210}var B=2;`;
+    const result = writeAutoModeClassifierModel(file, 'haiku');
+    expect(result).toContain(
+      'function Fds(){return{value:"claude-haiku-4-5",src:"default"}}'
+    );
+    expect(result).not.toContain('tengu_auto_mode_config');
+    expect(result).toContain('function Ids(){return Fds().value}');
+    expect(result).toContain('var B=2;');
+    // idempotent
+    expect(writeAutoModeClassifierModel(result as string, 'haiku')).toBe(
+      result
+    );
+  });
+
   it('is a no-op for choice=default', () => {
     const file = `var A=1;${SHAPE_2_1_170}`;
     expect(writeAutoModeClassifierModel(file, 'default')).toBe(file);

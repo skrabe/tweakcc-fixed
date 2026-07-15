@@ -100,4 +100,46 @@ describe('agentsMd', () => {
       );
     });
   });
+
+  // CC >=2.1.210: the async reader gained an isDirectory() probe — a 4th
+  // callback arg to the reader and an extra `o=!1` dir flag — and the
+  // not-found path became a braced compound block (`if(i===null){...}`) that
+  // logs a skip, records a metric, then returns {info:null,includePaths:[]}.
+  describe('writeAgentsMd async dir-flag shape (CC >=2.1.210)', () => {
+    const dirFlagReader =
+      'async function _Kc(e,t,r){try{let n=Jt(),o=!1,i=await Zq(n,e,cKc,(s)=>{o=s.isDirectory()});' +
+      'if(i===null){if(C(`[CLAUDE.md] skipping ${e}: not a regular file or exceeds ${cKc} byte limit`),!pKc&&!o)pKc=!0,We("context_claude_md_load","file_skipped_special_or_oversize");return{info:null,includePaths:[]}}' +
+      'return rrg(i,e,t,r)}catch(n){return org(n,e),{info:null,includePaths:[]}}}';
+
+    it('adds didReroute to the signature and reroutes in the i===null branch', () => {
+      const result = writeAgentsMd(dirFlagReader, altNames);
+      expect(result).not.toBeNull();
+      expect(result).toContain('async function _Kc(e,t,r,didReroute)');
+      expect(result).toContain('if(i===null){');
+      expect(result).toContain('endsWith("/CLAUDE.md")');
+      expect(result).toContain('AGENTS.md');
+    });
+
+    it('recurses with didReroute=true and a non-colliding result var', () => {
+      const result = writeAgentsMd(dirFlagReader, altNames)!;
+      expect(result).toContain('await _Kc(altPath,t,r,true)');
+      expect(result).toContain('let rerouteResult=await _Kc(altPath,t,r,true)');
+      // The try block already declares `n` (ctx); the loop must not redeclare it.
+      expect(result).not.toContain('let n=await _Kc');
+    });
+
+    it('preserves the reader dir-flag probe, skip body, processor, and catch verbatim', () => {
+      const result = writeAgentsMd(dirFlagReader, altNames)!;
+      expect(result).toContain(
+        'let n=Jt(),o=!1,i=await Zq(n,e,cKc,(s)=>{o=s.isDirectory()})'
+      );
+      expect(result).toContain(
+        'if(C(`[CLAUDE.md] skipping ${e}: not a regular file or exceeds ${cKc} byte limit`),!pKc&&!o)pKc=!0,We("context_claude_md_load","file_skipped_special_or_oversize");return{info:null,includePaths:[]}}'
+      );
+      expect(result).toContain('return rrg(i,e,t,r)');
+      expect(result).toContain(
+        'catch(n){return org(n,e),{info:null,includePaths:[]}}'
+      );
+    });
+  });
 });

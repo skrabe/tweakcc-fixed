@@ -33,10 +33,23 @@ const UP_TO_HEADER =
   'This session was rewound at your request, not a context overflow. The summary below covers the earlier portion up to your selected point; the recent messages are kept intact.';
 
 export const writeFixRewindSummaryHeader = (file: string): string | null => {
-  // The rewind summary message: content:<jR_ call>,isCompactSummary:!0,...<J>.length>0?{summarizeMetadata:{messagesSummarized:<j>.length,userContext:<O>,direction:<T>}}
-  const pattern =
-    /content:([$\w]+\([$\w]+,!1,[$\w]+,void 0,[$\w]+\)),(isCompactSummary:!0,\.\.\.[$\w]+\.length>0\?\{summarizeMetadata:\{messagesSummarized:[$\w]+\.length,userContext:[$\w]+,direction:([$\w]+)\}\})/;
-  const match = file.match(pattern);
+  // The rewind summary message: content:<header helper call>,isCompactSummary:!0,...<J>.length>0?{summarizeMetadata:{messagesSummarized:<j>.length,userContext:<O>,direction:<T>}}
+  // Every method captures the same 3 groups: [1] the header-helper call to wrap,
+  // [2] the isCompactSummary…summarizeMetadata tail, [3] the direction var.
+  const patterns = [
+    // Method 1 (CC 2.1.210+): the header helper takes an options-object arg,
+    // e.g. X6r(H,{suppressFollowUpQuestions:!1,transcriptPath:V,replStateCleared:j}).
+    // Tolerant of object-key reorder/additions (no nested braces at this site).
+    /content:([$\w]+\([$\w]+,\{[^}]*\}\)),(isCompactSummary:!0,\.\.\.[$\w]+\.length>0\?\{summarizeMetadata:\{messagesSummarized:[$\w]+\.length,userContext:[$\w]+,direction:([$\w]+)\}\})/,
+    // Method 2 (<= CC 2.1.209): positional-arg helper, e.g. jR_(y,!1,r,void 0,s).
+    /content:([$\w]+\([$\w]+,!1,[$\w]+,void 0,[$\w]+\)),(isCompactSummary:!0,\.\.\.[$\w]+\.length>0\?\{summarizeMetadata:\{messagesSummarized:[$\w]+\.length,userContext:[$\w]+,direction:([$\w]+)\}\})/,
+  ];
+  let match: RegExpMatchArray | null = null;
+  for (const pattern of patterns) {
+    match = file.match(pattern);
+    if (match && match.index !== undefined) break;
+    match = null;
+  }
 
   if (!match || match.index === undefined) {
     if (file.includes('.replace(/This session is being continued')) {
