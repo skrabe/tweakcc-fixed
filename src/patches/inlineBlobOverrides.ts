@@ -296,6 +296,99 @@ const extractTemplateInterpolations = (text: string): string[] => {
 };
 
 /**
+ * The string literals inside one `${...}` interpolation expression, in order.
+ *
+ * Used to tell an intentional identifier rename apart from authored prose. The
+ * remap rewrites an interpolation wholesale from pristine, so a `${H}` vs `${e}`
+ * difference is expected and harmless — but the STRING LITERALS inside an
+ * expression are content, not names: a rename never touches them, an author
+ * editing a ternary branch always does.
+ */
+const interpolationStringLiterals = (expr: string): string[] => {
+  const out: string[] = [];
+  let i = 0;
+  while (i < expr.length) {
+    const c = expr[i];
+    if (c === '"' || c === "'" || c === '`') {
+      const q = c;
+      let j = i + 1;
+      let lit = '';
+      while (j < expr.length) {
+        if (expr[j] === '\\') {
+          lit += expr.slice(j, j + 2);
+          j += 2;
+          continue;
+        }
+        if (expr[j] === q) break;
+        // A nested `${...}` inside a backtick literal holds identifiers, not
+        // content — and those get renamed per build/platform. Collapse the whole
+        // slot to a marker so `hi ${A}` and `hi ${z}` compare equal; otherwise a
+        // routine rename reads as an authored edit and the guard cries wolf.
+        if (q === '`' && expr[j] === '$' && expr[j + 1] === '{') {
+          let bd = 1;
+          let k = j + 2;
+          while (k < expr.length && bd > 0) {
+            if (expr[k] === '{') bd++;
+            else if (expr[k] === '}') bd--;
+            k++;
+          }
+          lit += '${}';
+          j = k;
+          continue;
+        }
+        lit += expr[j];
+        j++;
+      }
+      out.push(lit);
+      i = j + 1;
+      continue;
+    }
+    i++;
+  }
+  return out;
+};
+
+/**
+ * Interpolation slots whose authored content the remap will silently DISCARD.
+ *
+ * `remapTemplateInterpolations` replaces the Nth `${...}` wholesale with
+ * pristine's Nth expression, so anything an override author writes INSIDE a slot
+ * — most easily a reworded ternary branch — is thrown away with no warning, no
+ * `Could not find`, and a passing smoke test. The result can even stay fluent
+ * while losing the edit entirely.
+ *
+ * Detect it by comparing string literals per slot: identical literals mean the
+ * only delta is the identifier name (expected, the remap's whole job); differing
+ * literals mean the author edited content that cannot survive. Returns the
+ * 0-based slot indexes whose content would be dropped.
+ *
+ * Real case (CC 2.1.211, `inline-intro-interactive-agent`): an override rewrote
+ * the false branch of `${H!==null?'…':"with software engineering tasks."}` to
+ * carry new framing. The remap restored Anthropic's branch, so the block vanished
+ * and the sentence read "an interactive agent working with software engineering
+ * tasks". Place content in the literal AROUND the slot instead.
+ */
+export const droppedInterpolationEdits = (
+  body: string,
+  pristineExprs: string[]
+): number[] => {
+  const bodyExprs = extractTemplateInterpolations(body);
+  const dropped: number[] = [];
+  const n = Math.min(bodyExprs.length, pristineExprs.length);
+  for (let i = 0; i < n; i++) {
+    const a = interpolationStringLiterals(bodyExprs[i]);
+    // A slot the override writes as a BARE placeholder (`${x4}`, `${SOME_NAME}`)
+    // carries no authored content, so the remap swapping in pristine's richer
+    // expression loses nothing — that is the placeholder working as designed.
+    // Only an override that wrote its OWN literals inside a slot can lose them.
+    if (a.length === 0) continue;
+    const b = interpolationStringLiterals(pristineExprs[i]);
+    if (a.length !== b.length || a.some((s, k) => s !== b[k])) dropped.push(i);
+  }
+  return dropped;
+};
+
+/**
  * Rewrite the top-level `${...}` interpolations in `body` by replacing the
  * Nth one with `pristineExprs[N]`. The override body keeps its surrounding
  * literal text exactly; only the inside of each `${...}` is swapped to match
@@ -781,6 +874,21 @@ export const applyInlineBlobOverrides = async (
 
       const pristineBody = content.slice(startTick + 1, end - 1);
       const pristineExprs = extractTemplateInterpolations(pristineBody);
+
+      // Guard 3 — authored content inside a `${...}` slot cannot survive. The
+      // remap below swaps each slot wholesale for pristine's, so an edit made
+      // inside one (typically a reworded ternary branch) is discarded silently:
+      // apply reports ✓, nothing warns, the smoke test passes, and the override
+      // is simply not there. Warn loudly instead — the fix is always to move the
+      // content into the literal AROUND the slot. Not fatal: the rest of the
+      // override still applies correctly, so we splice and report.
+      const droppedSlots = droppedInterpolationEdits(body, pristineExprs);
+      if (droppedSlots.length > 0) {
+        console.log(
+          `inline-blob: "${frontmatter.name}" (${filename}) edits inside \${...} slot(s) ${droppedSlots.join(', ')} are DISCARDED — interpolations are re-emitted from the binary; move that text into the literal around the slot`
+        );
+      }
+
       const remappedBody = remapTemplateInterpolations(body, pristineExprs);
 
       replacement = encodeAsTemplateLiteral(remappedBody, escapeNonAscii);
