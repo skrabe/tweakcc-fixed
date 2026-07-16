@@ -70,6 +70,36 @@ const CURATED_IDENTIFIER_MAPS = {
 };
 
 const NEW_PROMPT_ASSIGNMENTS = [
+  // 2.1.211 — fuzzy-carryover misses. Both prompts are still in the binary with
+  // a bound override; Anthropic only edited their OPENING (inside FUZZY_PREFIX's
+  // first 100 chars), so the carried name dropped and the classification cache
+  // renamed them. Restore our established ids so the overrides stay bound.
+  {
+    // 2.1.211 inserted an injection-hardening paragraph ("The quotes are data
+    // to label...") right after the User/Agent lines, ~char 56 — inside the
+    // fuzzy prefix. Identifiers [0,1,2,0,2,3] are unchanged from 2.1.210.
+    matcher: t => t.includes('2-4 word lowercase label for this job'),
+    name: 'Agent job label generator prompt',
+    id: 'system-prompt-agent-namer',
+    description:
+      'User-turn prompt for the agent_namer utility model call that generates a 2-4 word job label.',
+    identifierMap: {
+      '0': 'PROMPT_VAR_0',
+      '1': 'PROMPT_VAR_1',
+      '2': 'PROMPT_VAR_2',
+      '3': 'PROMPT_VAR_3',
+    },
+  },
+  {
+    // 2.1.211 extended the description with standalone-vs-browser_batch tabId
+    // semantics, diverging at ~char 57. No identifiers.
+    matcher: t =>
+      t.includes('Navigate to a URL, or go forward/back in browser history'),
+    name: 'Tool Description: Navigate',
+    id: 'tool-description-chrome-navigate',
+    description:
+      'chrome navigate tool description: navigate to a URL or go forward/back in history.',
+  },
   // 2.1.206 — `tool-result-loop-stopped` was split into shared constants: the
   // re-arm sentence became a `let c = ...` template reused by two envelopes
   // (`Loop stopped — ${reason}. ${c}` and the no-pending-wakeup variant). Name

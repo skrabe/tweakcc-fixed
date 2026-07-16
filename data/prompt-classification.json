@@ -18669,5 +18669,422 @@
   "6377a8a8ca7607e3fc7367541d25ef469055a6b9": { "facing": "ui" },
   "049f6773e6f1447df9ec583ada9e7af82418ae4e": { "facing": "ui" },
   "28f96fae36d34a690e4a799c25f55d133eaf5f23": { "facing": "ui" },
-  "3ad581161b74ccdd4d66d024b5b7bd0d89e644bc": { "facing": "ui" }
+  "3ad581161b74ccdd4d66d024b5b7bd0d89e644bc": { "facing": "ui" },
+  "777ee29cf1653310f9a3261c0f568e4f06446370": { "facing": "internal" },
+  "839dbb7855863d52fd93e6308f63ff1563f1f7b4": { "facing": "internal" },
+  "8c3fa34c94b743fdbab402231b85e17d8881d203": { "facing": "internal" },
+  "3bedc5898bb71bd0a33bffd4192a347978ebb441": { "facing": "internal" },
+  "794a64125b6380bdf229a37506870bc4f63b4057": { "facing": "internal" },
+  "42dff68f6ec6c5657e84d1bcb32c5bad2c27163f": { "facing": "internal" },
+  "d6149a4dfb3e17c98eff7c15c2a10ddb9ad67121": { "facing": "internal" },
+  "fa6f5b04f5ebf6d33ba3f265fb8d34e54a702e91": { "facing": "internal" },
+  "cc45f554b0053633f00bfafdb27ba30268bd7b65": { "facing": "internal" },
+  "19acb28a99806f27afe734db7afc38d546bc2192": { "facing": "internal" },
+  "fa84fe9a1b0eb31ca60e5fc9496849be9c494570": { "facing": "internal" },
+  "120930a99d42f986582177b73899190cfe9f9f4b": { "facing": "internal" },
+  "ab9323df094db2a14b134d377090a61b726bce7a": { "facing": "internal" },
+  "b5d47cb4cc495b035334ee241026ff519b683903": { "facing": "internal" },
+  "d1b1a257003fd1c3ac6db111987e8c9a6dd80183": { "facing": "internal" },
+  "f99b5475c1ef301dd04b495283bc4c9b8f1a59e8": {
+    "facing": "model",
+    "id": "data-memory-sync-org-writes-enabled-notice",
+    "name": "Memory Sync: Org Writes Enabled Notice",
+    "desc": "Notice returned by the memory-write sync check telling the model that org-memory writes are enabled for this directory so the file syncs to the org-wide shared store; injected after Edit/Write via the PostToolUse hook's additionalContext."
+  },
+  "20d5d7be75d0091dcd492eba0943accfff34ab2f": {
+    "facing": "model",
+    "id": "tool-description-bash-cwd-persists-shell-state",
+    "name": "Tool Description: Bash Working Directory Persists (No cd Prompt Variant)",
+    "desc": "Bash tool description bullet stating that the working directory persists between calls while shell state does not; the branch selected when the cd-permission-prompt caveat does not apply, concatenated into the Bash tool's description the model reads."
+  },
+  "6f01c20d7f2da0ba0659f03614accd7ad12b132f": { "facing": "internal" },
+  "df62da83a9ae784868fc44b38999e877b7413fc3": { "facing": "internal" },
+  "0a450bffcef7f9cce911fc66acac2c2e3375d9e2": {
+    "facing": "model",
+    "id": "tool-result-mcp-refresh-discovery-unauthorized",
+    "name": "Tool Result: MCP Refresh Discovery Unauthorized",
+    "desc": "Error string returned when an MCP server rejects tool discovery as unauthorized, telling the model the user must authorize the connector via /mcp; surfaced in the refresh-MCP-tools tool result."
+  },
+  "79fe2938fe61761ad90c6574335f7e700428f883": {
+    "facing": "model",
+    "id": "tool-description-refresh-mcp-tools-searchhint",
+    "name": "Tool Description: Refresh MCP Tools Search Hint",
+    "desc": "searchHint one-liner for the refresh-MCP-tools tool, rendered into the subagent worker tool roster the model reads."
+  },
+  "3107ffa3ae64e56a7c866c38ae7fc8b33febff3c": {
+    "facing": "model",
+    "id": "tool-result-mcp-refresh-tools-list-failed-kept-previous",
+    "name": "Tool Result: MCP Refresh tools/list Failed, Previous Set Kept",
+    "desc": "Default error string when an MCP server's tools/list call fails and the previous tool set is retained; returned in the refresh-MCP-tools tool result."
+  },
+  "27f216f78f56f2ff41e5874acc3a478a3be419ca": {
+    "facing": "model",
+    "id": "tool-result-mcp-refresh-pool-not-updated",
+    "name": "Tool Result: MCP Refresh Pool Not Updated",
+    "desc": "Error string explaining that the server refreshed but the live tool pool was not updated (server removed/disconnected mid-refresh or tools unmanaged in this session mode); returned in the refresh-MCP-tools tool result."
+  },
+  "5d91cc4e928b7a774c6e626fb88555c6cabfd365": { "facing": "internal" },
+  "3a0bcd8782892e4f98422032b7b0bd0b3482cf4b": {
+    "facing": "model",
+    "id": "system-prompt-background-subagent-delegation-examples",
+    "name": "System Prompt: Background subagent delegation examples",
+    "desc": "Worked <example> block showing background subagent delegation, the waiting-state reply, and later result reporting; concatenated into the Task/agent tool description string returned by its async description()/prompt() builder."
+  },
+  "43fdad90b07686a17156d30bf4fa3860fcd1821f": {
+    "facing": "model",
+    "id": "tool-result-mcp-screenshot-saved-include-paths",
+    "name": "Tool Result: Screenshot saved — include paths",
+    "desc": "Note appended to an MCP screenshot tool result telling the model to include the saved screenshot path(s) in its response so they can be attached for the user."
+  },
+  "ddddec35ed86f4a31a9419b9d98209b820318d35": { "facing": "internal" },
+  "7851dbae6ed9a02fe53fcd8a560458e3360db715": { "facing": "internal" },
+  "ab2b6f2f5fd077402c6ac35da37ba518126e1851": {
+    "facing": "model",
+    "id": "tool-description-navigate",
+    "name": "Tool Description: Navigate",
+    "desc": "Describes the browser navigate tool for opening URLs and moving forward or backward in tab history, including tabId rules standalone vs inside browser_batch; emitted as the tool-definition `description` field."
+  },
+  "e41f6a4ea114da00be3015268addbdcfd23fe77f": { "facing": "ui" },
+  "e8395d450324fe80dfd3fdd94a26df51a8f84e74": {
+    "facing": "model",
+    "id": "tool-result-refresh-mcp-tools-none",
+    "name": "Tool Result: No MCP Servers To Refresh",
+    "desc": "Tool-result content returned to the model by refreshMcpTools when no MCP servers were available to refresh."
+  },
+  "3b44302cb63789e25714a2d913417bef035864a7": {
+    "facing": "model",
+    "id": "tool-result-mcp-screenshot-save-dir-failed",
+    "name": "Tool Result: Screenshot Save Directory Could Not Be Created",
+    "desc": "Note appended to an MCP screenshot tool result when save_to_disk failed because the screenshot directory could not be created; tells the model the image is inline above."
+  },
+  "1015206dc349daef567a116eaaf960c0d2e9349e": {
+    "facing": "model",
+    "id": "tool-result-mcp-screenshot-save-write-failed",
+    "name": "Tool Result: Screenshot Write To Disk Failed",
+    "desc": "Note appended to an MCP screenshot tool result when at least one screenshot could not be written to disk; tells the model the image is included inline above."
+  },
+  "7b3b1cec96c9c355b4d500cc584d7abd3720b931": {
+    "facing": "model",
+    "id": "tool-result-mcp-screenshot-save-no-effect",
+    "name": "Tool Result: Screenshot save_to_disk Had No Effect",
+    "desc": "Note appended to an MCP screenshot tool result when screenshots are not persisted to disk this session, instructing the model to use the inline image and not retry save_to_disk."
+  },
+  "94025ce93817cb4492a4ad66ac1eea89aeb1c564": { "facing": "internal" },
+  "10fc26d9a3ab9e7d922306bd096e86689bde0443": {
+    "facing": "model",
+    "id": "tool-parameter-refresh-mcp-tools-server",
+    "name": "Tool Parameter: refreshMcpTools server",
+    "desc": "Description of the optional `server` parameter of the refreshMcpTools tool, emitted in the tool's inputSchema that the model reads."
+  },
+  "f7fd602d58660ea480c6af89f3bce6a66c0ee458": { "facing": "internal" },
+  "8b38248eebee38a4e590c21e1dd5aca86cc0208a": {
+    "facing": "model",
+    "id": "tool-result-screenshot-save-to-disk-dir-failed",
+    "name": "Tool Result: Screenshot save_to_disk Directory Failed",
+    "desc": "Note appended to a screenshot MCP tool result telling the model save_to_disk failed because the screenshot directory could not be created and the image is inline instead."
+  },
+  "e24ecd55e612f69f89b15cb29c5f2ee68af6d338": {
+    "facing": "model",
+    "id": "tool-result-screenshot-save-to-disk-no-effect",
+    "name": "Tool Result: Screenshot save_to_disk No Effect",
+    "desc": "Note appended to a screenshot MCP tool result telling the model screenshots are not persisted this session, to refer to the inline image, and not to retry save_to_disk."
+  },
+  "a433453a42578aee5237c91a822d2743fb2ea37b": {
+    "facing": "model",
+    "id": "tool-result-screenshot-save-to-disk-write-failed",
+    "name": "Tool Result: Screenshot save_to_disk Write Failed",
+    "desc": "Note appended to a screenshot MCP tool result telling the model at least one screenshot could not be written to disk and the image is included inline."
+  },
+  "c5378a2858eb4cbfb87d821690173baae43887fc": {
+    "facing": "model",
+    "id": "tool-result-claude-in-chrome-navigate-tabid-required",
+    "name": "Tool Result: Navigate Requires tabId For Back/Forward",
+    "desc": "Error tool-result returned to the model when it calls the browser navigate tool with url:\"back\"/\"forward\" without a tabId, directing it to call tabs_context_mcp first."
+  },
+  "9c0d55f77fe8091b79e7e8fd8676742c9d334f6f": { "facing": "internal" },
+  "5a502a5448c81e79fb0ae742feb56202e5ca3f00": { "facing": "internal" },
+  "7ac09447e5d6cc99154e85d03c671e9b3b8f4f54": { "facing": "internal" },
+  "418c2922f8c789648724fcacb2138f5059c52da4": { "facing": "internal" },
+  "34f91d9e8a83c3ff2f9fd1a1c89df94c8ac53bcd": { "facing": "internal" },
+  "dfea1650d858b5dcb5c823f2def6a9bd73d6825b": { "facing": "internal" },
+  "27c78d1cac7636faf7dc323bb40dff9eddb4f6e7": { "facing": "internal" },
+  "e07b029229a1ea9c1e7fd3de16a1080e5b21d739": {
+    "facing": "model",
+    "id": "tool-result-design-grant-mint-refused-404",
+    "name": "Tool Result: Design Project Grant Mint Refused (404)",
+    "desc": "ClaudeDesign error message returned to the model when POST /v1/design/grants 404s, telling it the project cannot hold a durable write grant and to fall back to finalize_plan with a plan_token."
+  },
+  "41296abc13c4dd5396ff79dc6d5235e0a93254be": {
+    "facing": "model",
+    "id": "tool-result-design-finalize-plan-scope-project-unsupported",
+    "name": "Tool Result: Design finalize_plan scope \"project\" Unsupported",
+    "desc": "ClaudeDesign permission-deny message returned to the model when finalize_plan is called with scope \"project\", directing it to write directly or use path-scoped writes/deletes plans."
+  },
+  "a63c12580ba7d4cdcb2a348da69d21dddf802274": {
+    "facing": "model",
+    "id": "tool-result-design-copy-files-tokenless-denied",
+    "name": "Tool Result: Design copy_files Without plan_token Denied",
+    "desc": "ClaudeDesign permission-deny message returned to the model when copy_files is invoked without a plan_token, instructing it to declare every destination via finalize_plan writes."
+  },
+  "c53a9f7db4f03bce766d3a9525adfc1e8509cb03": {
+    "facing": "model",
+    "id": "tool-result-design-no-target-paths",
+    "name": "Tool Result: Design Call Names No Target Paths",
+    "desc": "ClaudeDesign permission-deny message returned to the model when a write batch declares an empty targets list, asking it to list files to write or use finalize_plan."
+  },
+  "3e8869ac738e6072046007cc01ad1f32e217a922": {
+    "facing": "model",
+    "id": "tool-result-design-batch-too-large-for-approval",
+    "name": "Tool Result: Design Batch Too Large To Display For Approval",
+    "desc": "ClaudeDesign permission-deny message returned to the model when a write batch is too large to render for per-batch approval, telling it to split the batch or use finalize_plan."
+  },
+  "b9ac6d000a044e9e1fdb3e10998f276368b2ee80": {
+    "facing": "model",
+    "id": "tool-result-design-reserved-paths-per-batch-approval",
+    "name": "Tool Result: Design Batch Includes Reserved Paths",
+    "desc": "ClaudeDesign permission-deny message returned to the model when a batch touches paths that always require per-batch approval, directing it to finalize_plan with writes/deletes."
+  },
+  "d7ac171985a484779a758168b35fe566a64f7d7e": {
+    "facing": "model",
+    "id": "tool-result-design-grant-unavailable-noninteractive",
+    "name": "Tool Result: Design Project Grant Unavailable (Non-Interactive)",
+    "desc": "ClaudeDesign permission-deny message returned to the model when a tokenless write needs a one-time interactive project approval that cannot be shown in a non-interactive session."
+  },
+  "728e7e4071936887df2becd5fb5b99bcf9aa78ac": {
+    "facing": "model",
+    "id": "tool-result-design-grant-unavailable-subagent-hook",
+    "name": "Tool Result: Design Project Grant Unavailable (Subagent/Hook)",
+    "desc": "ClaudeDesign permission-deny message returned to the model when a tokenless write needs a one-time project approval unavailable in subagent or PermissionRequest-hook sessions."
+  },
+  "0ffa86877aa01780e08d8a092bb4fcc4772e72d3": {
+    "facing": "model",
+    "id": "tool-result-design-project-grant-ineligible",
+    "name": "Tool Result: Design Project Cannot Hold Durable Write Grant",
+    "desc": "ClaudeDesign permission-deny message returned to the model when the target project_id is ineligible for a durable write grant (e.g. shared from another org), routing it to finalize_plan."
+  },
+  "0b0f02e5436e527c1f6d82b0976e60d909ce919f": {
+    "facing": "model",
+    "id": "tool-result-design-grant-not-shown-plan-mode",
+    "name": "Tool Result: Design Project Approval Not Shown In Plan Mode",
+    "desc": "ClaudeDesign permission-deny message returned to the model when a tokenless write needs a one-time project approval that plan mode will not display."
+  },
+  "735b96a17a2e27faf78581007dbe4f2d15537afb": {
+    "facing": "model",
+    "id": "tool-result-design-grant-check-unavailable",
+    "name": "Tool Result: Design Write-Grant Check Unavailable",
+    "desc": "ClaudeDesign permission-deny message returned to the model when the server cannot be probed for a durable project write grant, telling it to use finalize_plan instead."
+  },
+  "2dfe4cf9383440f5579614ce80580f9bbeb5e13f": {
+    "facing": "model",
+    "id": "tool-result-design-grant-not-shown-permission-mode",
+    "name": "Tool Result: Design Project Approval Blocked By Permission Mode",
+    "desc": "ClaudeDesign permission-deny message returned to the model when a tokenless write to an ungranted project needs an interactive approval the current permission mode cannot show."
+  },
+  "e13a8a0742a2968b99617b6d75b820498bf21752": {
+    "facing": "model",
+    "id": "tool-description-refreshmcptools",
+    "name": "Tool Description: RefreshMcpTools",
+    "desc": "Describes when and how to refresh connected MCP servers tool lists to recover missing or stale tools"
+  },
+  "e223ffd52931d0bb7d7b711dbf21317672e8acd9": {
+    "facing": "model",
+    "id": "tool-description-refreshmcptools-prompt",
+    "name": "Tool Description: RefreshMcpTools prompt",
+    "desc": "Tool prompt for refreshing one or all connected MCP servers tool lists and interpreting per-server results"
+  },
+  "a0c8e3b98bf2faea685feef591e7d1ea7fda5b40": { "facing": "internal" },
+  "3a3a29009c62f9a068e61f81792a492a4126ecfd": { "facing": "ui" },
+  "738825fc2b7494043112adbc70564b9858044171": { "facing": "internal" },
+  "b83ea16a5ff8a161896e5f6dd81bce62bdb66e88": {
+    "facing": "model",
+    "id": "tool-description-claude-in-chrome-navigate-tabid",
+    "name": "Tool Parameter: Claude in Chrome navigate tabId",
+    "desc": "Description of the `tabId` parameter in the claude-in-chrome `navigate` tool's inputSchema, sent to the model as part of the browser tool definitions."
+  },
+  "28a1361e505ab59dd2b324230710ce5adf423c5d": {
+    "facing": "model",
+    "id": "tool-result-claude-in-chrome-tabs-context-error",
+    "name": "Tool Result: Claude in Chrome tabs_context_mcp Error Fallback",
+    "desc": "Fallback tool-result text returned to the model when the hidden front-loaded tabs_context_mcp lookup errors and its error payload carries no content blocks."
+  },
+  "9c7918c5ce53b9b6ed3e7aac87936e0f1f3ed8b3": {
+    "facing": "model",
+    "id": "tool-result-claude-in-chrome-tabs-context-timeout",
+    "name": "Tool Result: Claude in Chrome tabs_context_mcp Timeout",
+    "desc": "Tool-result error returned to the model when the front-loaded tabs_context_mcp lookup for a standalone navigate call times out, telling it to retry or call tabs_context_mcp explicitly."
+  },
+  "402694656e97f3ac5d7bd8495a43729a53cd3476": { "facing": "internal" },
+  "6c4f473d551a029177e4d369c35c758e40e654b6": { "facing": "internal" },
+  "1189a57bf5516b51a46e579f46230ac2a010dd14": { "facing": "internal" },
+  "69f54ce6f90748819a166711144ea963e310fd5d": { "facing": "internal" },
+  "1b0f5595ef49a42054ee50deaef2cf0cc8d54889": { "facing": "ui" },
+  "3f3ac64e32b405f9475e4f5e52e56d704092f5ce": {
+    "facing": "model",
+    "id": "tool-result-projects-auth-lock-contended",
+    "name": "Tool Result: Projects OAuth Lock Contended",
+    "desc": "Precondition failure text returned by the Projects tool's auth-reason switch ($Jg) when another Claude Code process holds the OAuth refresh lock; thrown as ProjectsPreconditionError from the tool's call and delivered to the model inside a <tool_use_error> tool_result."
+  },
+  "51073d10ad74b8a848a0072ed2914d6392d61d74": { "facing": "internal" },
+  "50cb09a8d686b4ee2e88f783b930d6224dbfecc2": {
+    "facing": "model",
+    "id": "tool-result-browser-batch-subaction-not-object",
+    "name": "Tool Result: browser_batch Sub-Action Must Be An Object",
+    "desc": "Validation error returned by prepareChromeFileUploadInput when a browser_batch action is not an object with a string name or nests browser_batch; surfaced to the model as a <tool_use_error> tool_result."
+  },
+  "d78d5f0e719b6b93bbe04cee175d640a31735de8": {
+    "facing": "model",
+    "id": "tool-result-browser-batch-subaction-invalid-tool-name",
+    "name": "Tool Result: browser_batch Sub-Action Name Invalid",
+    "desc": "Validation error returned when a browser_batch sub-action name contains non-printable-ASCII characters or aliases file_upload by case; surfaced to the model as a <tool_use_error> tool_result."
+  },
+  "ad1302bbec32994e8126b63c4e4e210c91952604": {
+    "facing": "model",
+    "id": "tool-result-file-upload-path-not-shared",
+    "name": "Tool Result: file_upload Path Not Shared With Session",
+    "desc": "Rejection message built by Med(path) when a file_upload target resolves outside the session's allowed read roots or fails its attachment digest check; returned to the model as a <tool_use_error> tool_result instructing it to ask the user to share the file or run /add-dir."
+  },
+  "6558b30dd7ac997b5f23c78a75829a525d5e6666": {
+    "facing": "model",
+    "id": "tool-result-file-upload-paths-required",
+    "name": "Tool Result: file_upload Requires Non-Empty paths",
+    "desc": "Validation error returned by Ned when file_upload is called without a non-empty `paths` array; surfaced to the model as a <tool_use_error> tool_result."
+  },
+  "b9f85a4f1bc361835613c60a22f220d9bc748ee0": {
+    "facing": "model",
+    "id": "tool-result-file-upload-paths-must-be-strings",
+    "name": "Tool Result: file_upload paths Entries Must Be Strings",
+    "desc": "Validation error returned by Ned when a file_upload `paths` entry is not a string; surfaced to the model as a <tool_use_error> tool_result."
+  },
+  "53f847f17ec0bc07b77eb01fca9cd238c13a5390": { "facing": "internal" },
+  "d6844063e3c07def8ddd066b06c2e0c425ae7886": { "facing": "internal" },
+  "62deca302f2823723220c472b8b9c2cb13b5ee55": {
+    "facing": "model",
+    "id": "tool-result-file-upload-not-regular-file",
+    "name": "Tool Result: file_upload Target Not A Regular File",
+    "desc": "Validation error returned by jiy when a file_upload path lstat's to something other than a regular file; surfaced to the model as a <tool_use_error> tool_result."
+  },
+  "83dc01a2c6b773a7a4b4f17a6abf5abd5c51c68e": {
+    "facing": "model",
+    "id": "tool-result-file-upload-multiple-hard-links",
+    "name": "Tool Result: file_upload Blocked By Multiple Hard Links",
+    "desc": "Rejection returned by jiy when an upload target has nlink>1 (e.g. node_modules stores that Bun/pnpm hard-link), explaining the aliasing risk and telling the model to copy the file and upload the copy; delivered as a <tool_use_error> tool_result."
+  },
+  "f923c399f24b8ce19b925686fb5c17b512d5a14e": {
+    "facing": "model",
+    "id": "tool-description-task-background-subagent-notification",
+    "name": "Tool Description: Task Background Subagent Notification",
+    "desc": "Conditional bullet in the Task/Agent tool description telling the model that subagents run in the background and that it must never fabricate a pending agent's results; injected as part of the Task tool's description field."
+  },
+  "2717b0b1fde627804090243610343f8ed17c4f60": {
+    "facing": "model",
+    "id": "data-mcp-tab-context-front-loaded",
+    "name": "Data: Front-Loaded Tab Context Block",
+    "desc": "Text block appending the front-loaded tabs_context_mcp JSON onto a browser MCP tool result, injected into the model's context as part of the tool result content."
+  },
+  "3b6f1ff9682f1a718b4b15492a38a32c762d5392": { "facing": "internal" },
+  "aaf40dfed003a15d17467990e75da1c47c7092af": {
+    "facing": "model",
+    "id": "system-prompt-fresh-subagent-delegation-example",
+    "name": "System Prompt: Fresh subagent delegation example",
+    "desc": "Provides an example of briefing a fresh specialized subagent with sufficient context and a specific reporting request"
+  },
+  "13d3c6e28bd8a1f10c4a8b4b2e2da66de897f68d": { "facing": "ui" },
+  "667297a04494abf7ee3c180c982b7b4a762b6eb3": { "facing": "ui" },
+  "ace68ab4193adb63c109ae04db8c663bae90e0f0": { "facing": "ui" },
+  "100f9043e11d2fecd6d63ac75f647883949f3fe2": { "facing": "internal" },
+  "fed0dfc4912f37e843347faf52a241ab5b0a7ff4": {
+    "facing": "model",
+    "id": "agent-prompt-agent-namer-job-label",
+    "name": "Agent Prompt: Agent Namer Job Label",
+    "desc": "Side-call prompt asking a small model to produce a 2-4 word lowercase label for a background job, sent as the user message of the agent_namer query."
+  },
+  "59b21d9553d74c4968506587ade57edad8230e70": { "facing": "ui" },
+  "e4f29d69a75d4f66c15f8d85937ab6ede2206cf4": {
+    "facing": "model",
+    "id": "tool-result-claudedesign-project-identity-unverified-deny",
+    "name": "Tool Result: ClaudeDesign Project Identity Unverified Deny",
+    "desc": "Denial message returned when a durable project write grant cannot be offered because the project identity could not be verified, instructing the model to read the project first or fall back to the finalize_plan/plan_token flow; delivered to the model as an is_error tool_result."
+  },
+  "af0129e5b2be01fe65074f458a983900a234ba98": {
+    "facing": "model",
+    "id": "system-prompt-foreground-subagent-delegation-examples",
+    "name": "System Prompt: Foreground subagent delegation examples",
+    "desc": "Provides foreground subagent examples showing self-contained task prompts and how to relay returned results"
+  },
+  "2b398b3aa49148b8c758504c0d4d6670993dbc6f": { "facing": "ui" },
+  "849f84445fc1ec1254e475fad617771e04bf0479": { "facing": "ui" },
+  "60099d27ec9870a2b17964b2be17b5d0fc52afcb": { "facing": "internal" },
+  "4ee694bd7d3e2d69a84287333bb43cda5b8f5328": { "facing": "internal" },
+  "cebe85f728a734ddbff09dcfac67ca056db535d0": { "facing": "ui" },
+  "dc342b4b6fd2047ccfa8077e7528b480c3bb4844": { "facing": "ui" },
+  "1bb77a9d4cb743773e560cff96f0037d2737219b": { "facing": "ui" },
+  "0575d8611c078f94d290ccc51dc25c436e2bcc84": { "facing": "ui" },
+  "513fabb0fab0c9aefad58cf4259d842596008829": { "facing": "ui" },
+  "fca9341c3445e660a5b231de70b316d7b5f435ce": { "facing": "ui" },
+  "b975f820ce869cca323d2f09bfafd24db8a3105c": { "facing": "internal" },
+  "b5495b281fc549b96ae1e1bd196c8f1b420135ff": { "facing": "ui" },
+  "8118635160e228c1852a0dc3ad53763d89b574b5": { "facing": "ui" },
+  "6e88e5b9dcfde750d118b7e83c08806d3877b4f1": { "facing": "ui" },
+  "62381c5a01df167d6808f3271b612ac813d71d4d": { "facing": "ui" },
+  "53aab98397dc0fe694bedd8d1d8e139bbf8ad383": { "facing": "ui" },
+  "773e2ab99e8dd1efa75a53a940f4211808ae0f6b": { "facing": "ui" },
+  "55b431da65885fca8f7ed28d370337d1d7956aa9": { "facing": "internal" },
+  "839fead05a714aba6f83bf1115d3804ab3bc502f": { "facing": "ui" },
+  "57cba48c314a232f44d20054ab9c4150b1912b73": { "facing": "ui" },
+  "843b823f9a1ad4a816dc5c9e85d68d3161fda962": { "facing": "internal" },
+  "4aaa3e1dc06e4361e36668710477d48d09ea55b3": { "facing": "internal" },
+  "783f62a8a8db3dacc18d273fd8c651ba5d4558ff": { "facing": "ui" },
+  "9ace401a392027d7824b68b11f65ec4270158442": { "facing": "ui" },
+  "96400cf02578e7433cbe7fdb8a8f64c1d1936c78": { "facing": "ui" },
+  "77853c8da5f8875ab7882bb43bc102039612484a": { "facing": "ui" },
+  "961ae9bb2e387a71d633ef273681f3cb0dbbf356": { "facing": "ui" },
+  "9f5c7609fe17dff9236404e062d4ce4008948edf": { "facing": "ui" },
+  "3f5169a16771386adaee0365b5af134a8e250b8e": { "facing": "ui" },
+  "2b870d505aea23e7a6893fef13953016d44cd37e": {
+    "facing": "model",
+    "id": "tool-result-file-upload-total-size-exceeded",
+    "name": "Tool Result: file_upload Total Size Exceeded",
+    "desc": "Error returned when a Claude-in-Chrome file_upload exceeds the 10 MB browser-bridge budget, delivered to the model as a <tool_use_error> tool_result telling it to use a smaller file or split the upload."
+  },
+  "92d84a49631d56e5531c7f2da05468a614c2371f": {
+    "facing": "model",
+    "id": "tool-result-design-tokenless-write-denied",
+    "name": "Tool Result: Design Write Requires plan_token",
+    "desc": "Permission-denial message returned to the model when a first-party Design MCP connector write is attempted without a plan_token, instructing it to call finalize_plan first."
+  },
+  "e885a077f1b38543adf9ee6643b5250f7c0c9e62": { "facing": "ui" },
+  "8a4a178d236edb1581593394369c5dd787bb3d18": {
+    "facing": "model",
+    "id": "slash-command-config-consent-gated-key-value-rejected",
+    "name": "Slash Command: /config Consent-Gated Key Rejected",
+    "desc": "Message emitted when /config key=value tries to enable a consent-gated setting, telling the user to open the /config panel; returned as the command's text output and injected as <local-command-stdout>."
+  },
+  "ebca6743bb9e56c44051a92846b66f2d1d929cb0": { "facing": "internal" },
+  "fefa4baa36222e5aa03c15784ac223300d755b3d": {
+    "facing": "model",
+    "id": "slash-command-terminal-setup-description-apple-terminal",
+    "name": "Slash Command: /terminal-setup Description (Apple Terminal)",
+    "desc": "The /terminal-setup command description shown on macOS Apple Terminal; injected into the model's context as a line of the 'Available commands' block in the claude-code skill/guide-agent system prompt."
+  },
+  "23cf1e464e40e692025e7749276f6743538c5c9a": {
+    "facing": "model",
+    "id": "slash-command-terminal-setup-description-native-shift-enter",
+    "name": "Slash Command: /terminal-setup Description (Native Shift+Enter)",
+    "desc": "The /terminal-setup command description used when the terminal (Ghostty/Kitty/Warp/WezTerm/Windows Terminal) natively supports Shift+Enter; injected into the model's context via the 'Available commands' block."
+  },
+  "4e2092704220ddcee53516cf54a7e210dafe3a81": { "facing": "ui" },
+  "46d17b7916c1baeed44f13e2397436173abbfa48": {
+    "facing": "model",
+    "id": "slash-command-c4e-upsell-enterprise-only",
+    "name": "Slash Command: Claude for Enterprise Upsell",
+    "desc": "Text returned when an API-key user invokes a Claude-for-Enterprise-only slash command, telling them to ask their admin about migrating; injected into the model's context as <local-command-stdout>."
+  },
+  "ffee5e9e2a32f405b83aba56662b60c398f86496": {
+    "facing": "model",
+    "id": "slash-command-usage-credits-admin-request-sent",
+    "name": "Slash Command: Usage-Credits Admin Request Sent",
+    "desc": "Confirmation emitted after a usage-credit limit-increase request is sent to the org admin; surfaced via the local-jsx command's onDone and injected as <local-command-stdout>."
+  },
+  "5e57b6ee5d4bb4beb1531fea1891512d6caa35ce": { "facing": "internal" },
+  "938c836ba55df8bb18e03d27b0adb6191d1a3c0f": { "facing": "ui" }
 }
