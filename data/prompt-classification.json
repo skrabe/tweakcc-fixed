@@ -19086,5 +19086,1166 @@
     "desc": "Confirmation emitted after a usage-credit limit-increase request is sent to the org admin; surfaced via the local-jsx command's onDone and injected as <local-command-stdout>."
   },
   "5e57b6ee5d4bb4beb1531fea1891512d6caa35ce": { "facing": "internal" },
-  "938c836ba55df8bb18e03d27b0adb6191d1a3c0f": { "facing": "ui" }
+  "938c836ba55df8bb18e03d27b0adb6191d1a3c0f": { "facing": "ui" },
+  "bfd2be3458e22ac770b085dbceb0e297f408b2d4": { "facing": "ui" },
+  "8ba2aee3d04154dc079fecb71e56645ee7356316": {
+    "facing": "model",
+    "id": "data-agent-import-unmappable-codex-hooks",
+    "name": "Data: Agent Import — Codex Hooks Unmappable",
+    "desc": "Reason text for the unmapped Codex `hooks` setting; user-scope unmappable reasons are interpolated into the `/import` query prompt (BA_) and into the generated import-to-claude-code SKILL.md body."
+  },
+  "6a7c8b81b6ade8e3c260f8c589ce22b3c6f27ada": {
+    "facing": "model",
+    "id": "data-agent-import-unmappable-user-root-redirected",
+    "name": "Data: Agent Import — User-Scope Root Redirected",
+    "desc": "Reason text emitted when the user-scope read/write root is redirected; pushed as a user-scope unmappable and injected into the `/import` prompt and the fallback SKILL.md."
+  },
+  "8b83334d6efa0dc53516ef0766edc16a50aab680": { "facing": "ui" },
+  "ce7e8d99cbda9f67748fa51eb3c3f514b14192c9": {
+    "facing": "model",
+    "id": "data-agent-import-unmappable-shell-block-no-whitespace",
+    "name": "Data: Agent Import — Shell Block Missing Leading Whitespace",
+    "desc": "`untranslatable` reason from the Gemini command translator; becomes a user-scope unmappable reason injected into the `/import` prompt and the import-to-claude-code SKILL.md."
+  },
+  "888992d98dd7d967a96180c109a45793fbf88cce": {
+    "facing": "model",
+    "id": "data-agent-import-unmappable-shell-exec-introduced",
+    "name": "Data: Agent Import — Translation Would Introduce Shell Exec",
+    "desc": "`untranslatable` reason when translation would make an inert Gemini string execute a shell command; surfaced as a user-scope unmappable in the `/import` prompt and SKILL.md."
+  },
+  "f7c29ba5eb4f97a7f1a035c193c0fa3c189d9ba5": {
+    "facing": "model",
+    "id": "data-agent-import-unmappable-gemini-mcpservers-shape",
+    "name": "Data: Agent Import — Gemini mcpServers Unexpected Shape",
+    "desc": "User-scope unmappable reason for a malformed `mcpServers` block in ~/.gemini/settings.json; injected into the `/import` prompt and the fallback SKILL.md."
+  },
+  "ca1b407304c6338817140e9c7085e754d348d216": {
+    "facing": "model",
+    "id": "data-agent-import-unmappable-gemini-mcp-entry-shape",
+    "name": "Data: Agent Import — Gemini MCP Entry Unexpected Shape",
+    "desc": "User-scope unmappable reason for a single malformed MCP server entry in ~/.gemini/settings.json; injected into the `/import` prompt and SKILL.md."
+  },
+  "9c17c7eb69875d81d79a3e2483f0e27cc6d8b780": {
+    "facing": "model",
+    "id": "data-agent-import-unmappable-namespaced-commands",
+    "name": "Data: Agent Import — Namespaced Commands Not Imported",
+    "desc": "User-scope unmappable reason for subdirectory-organized foreign slash commands; injected into the `/import` prompt and the import-to-claude-code SKILL.md."
+  },
+  "4b1d7b36a68395017bb4408fa9cddeabfe7d637d": {
+    "facing": "model",
+    "id": "data-agent-import-unmappable-command-toml-parse",
+    "name": "Data: Agent Import — Command TOML Unparseable",
+    "desc": "User-scope unmappable reason when a foreign command file cannot be parsed as TOML; injected into the `/import` prompt and SKILL.md."
+  },
+  "34b45faeb294c291a5b33e943eaf2e512d39e35a": {
+    "facing": "model",
+    "id": "data-agent-import-unmappable-command-format",
+    "name": "Data: Agent Import — Command Missing Prompt Field",
+    "desc": "User-scope unmappable reason when a foreign command lacks the expected `prompt` string; injected into the `/import` prompt and SKILL.md."
+  },
+  "97bf42370db46f2e733c833515de3325d5d7ec99": { "facing": "ui" },
+  "0793666d44698fa91ac76efb0e7e59371009c164": { "facing": "ui" },
+  "d6125e67c7f3909928819a9f640a1d3c3153bd8c": { "facing": "ui" },
+  "9240584f075b5773b4f2a644f2b44092908982ff": {
+    "facing": "model",
+    "id": "data-agent-import-scan-failed-warning",
+    "name": "Data: Agent Import — Source Scan Failed Warning",
+    "desc": "Warning emitted when a foreign agent's config can't be read; joined into BA_'s `value`, which the local-command dispatcher wraps as `Ur({content:'<local-command-stdout>…'})` — a real user message in the API request."
+  },
+  "9d41cd44aecff2d12368cdbe4519971b33062eac": {
+    "facing": "model",
+    "id": "data-agent-import-no-manual-config-read-guardrail",
+    "name": "Data: Agent Import — Do Not Read Foreign Config Guardrail",
+    "desc": "Guardrail sentence (xdd) appended to the `/import` query prompt and interpolated into the /init CLAUDE.md generation prompt, telling the model not to read foreign-agent config itself."
+  },
+  "48363b942ef715001f139251547c5cc82d84e24c": {
+    "facing": "model",
+    "id": "data-agent-import-offer-guidance",
+    "name": "Data: Agent Import — Offer To Import Guidance",
+    "desc": "Instruction block (wCs) interpolated into the /init CLAUDE.md-generation prompt telling the model how to offer `/import` when a Codex or Gemini config is detected."
+  },
+  "7523f296f3b6c16138d8d8673756182e74cf1e1b": {
+    "facing": "model",
+    "id": "data-agent-import-headless-scan-intro",
+    "name": "Data: Agent Import — Headless Scan Intro",
+    "desc": "Opening line of the `/import` query prompt (BA_), delivered to the model as an isMeta user message when the surface has no interactive picker."
+  },
+  "867ab10600ab8fb29b037abe23abbea61736b0d0": {
+    "facing": "model",
+    "id": "data-agent-import-untrusted-labels-notice",
+    "name": "Data: Agent Import — Untrusted Labels Notice",
+    "desc": "Second half of the prompt-injection warning in the `/import` query prompt, telling the model that item labels copied from foreign config are data, not instructions."
+  },
+  "6b57ad8ce900c3a586415c3cbcc11bb6701bd29e": {
+    "facing": "model",
+    "id": "data-agent-import-project-scope-held-back",
+    "name": "Data: Agent Import — Project-Scope Config Held Back",
+    "desc": "Prompt line explaining that project-level foreign config is neither listed nor imported by `--yes`; part of the `/import` query prompt sent to the model."
+  },
+  "89a6c3895d560a24386e60785e1d6daf75aefad9": {
+    "facing": "model",
+    "id": "data-agent-import-summarise-instruction",
+    "name": "Data: Agent Import — Summarise Instruction",
+    "desc": "Directive in the `/import` query prompt telling the model to summarise the scan in its own words and ask the user how to proceed."
+  },
+  "4b98a818a0e5ab072d58ecde238ff9dfb4dc6705": {
+    "facing": "model",
+    "id": "data-agent-import-apply-user-items-option",
+    "name": "Data: Agent Import — Apply User Items Option",
+    "desc": "Prompt bullet the model relays to the user, describing the `/import … --yes` reply that imports user-level items."
+  },
+  "db1e3b839bd2576de8ae25430e29317f319bc7e9": {
+    "facing": "model",
+    "id": "data-agent-import-fallback-skill-option",
+    "name": "Data: Agent Import — Fallback Skill Option",
+    "desc": "Prompt bullet in the `/import` query prompt explaining that `--yes` also writes the import-to-claude-code reference skill for unmapped items."
+  },
+  "d8392eeadb9c4f27ba8537a6142094ccc9576e6a": {
+    "facing": "model",
+    "id": "data-agent-import-terminal-picker-option",
+    "name": "Data: Agent Import — Terminal Picker Option",
+    "desc": "Final bullet of the `/import` query prompt telling the model to point the user at `claude import` in a terminal for per-item selection."
+  },
+  "a82203cd47215eaf8e2b5b261342e122b4930238": { "facing": "ui" },
+  "f2258cd7524c48a21cb69d724a15eb652dc88197": { "facing": "ui" },
+  "77c8fb3f41d281333fbed6db9d5917cc3fbe10ea": { "facing": "ui" },
+  "d11ac9c36676ac43dc94d0906cd02bc012cfa524": { "facing": "internal" },
+  "c1963af728e0ae05e21b3da434b4caf889b1d367": {
+    "facing": "model",
+    "id": "slash-command-terminal-setup-description-native-shift-enter",
+    "name": "Slash Command: /terminal-setup description (native Shift+Enter)",
+    "desc": "Slash-command registration description; reaches the model through the \"**Available commands (N in this build):**\" listing built by PoS() for the claude-code-guide skill (local-jsx commands pass the f.type!==\"prompt\" filter)."
+  },
+  "f68e2fb5b54f860507e390775d9c3cdf95ff722f": { "facing": "ui" },
+  "86c5cd3b13d8c3611c0efbd6608ae28b7f24cf13": { "facing": "ui" },
+  "269753a1e43f6f8676aaea8ef27f82ea16fc28f0": { "facing": "ui" },
+  "bb042a9daac81ac5d50375434c854c28db8c73a9": { "facing": "ui" },
+  "4d13727424abee5c1002ebda0c3f4a9685745592": { "facing": "ui" },
+  "bd79bee321fb819676962bac39b034bcd47e552a": { "facing": "ui" },
+  "ef44c7193870efbcb5c8e1165b1bf3d038fe962a": { "facing": "ui" },
+  "9e2847c3bc84ceb89de85fcfd81b99ffd3211a45": { "facing": "ui" },
+  "647715dd1ecba0a7c3388394b81cf2ebaa1c365e": { "facing": "internal" },
+  "43996c9b333d73f4cb55d63ab641aab30be39c64": { "facing": "ui" },
+  "10aac4f952f34fc90bf4d8233fcac2379045616f": { "facing": "internal" },
+  "6850b45daacbfa84a089a10fd3173f4e67c431bf": { "facing": "internal" },
+  "cf0c0d1f48867f5b3a8ae131b7da3bf98358bfa8": { "facing": "ui" },
+  "e49626184284c9bce5ace7649f8b9df7d9b2a87b": { "facing": "ui" },
+  "3c62f6d8a8281fc414c4ec39f0493c0fdc031d95": { "facing": "ui" },
+  "fcff7513987ee6d3c67b11add371cd379af05ca0": { "facing": "ui" },
+  "888ea367c5852d9a1c5654ec25b0a4acecc65674": { "facing": "ui" },
+  "f61e3255b22ffff5935bd86d7ac949461277ab60": { "facing": "ui" },
+  "5658def8a508029627c00e74ae34aea2364d860b": { "facing": "ui" },
+  "ae733fdb5d115bc820737fcaa0168cc421a51bf2": { "facing": "ui" },
+  "a04109a34099a18f28f07f1acbc374fb410b46b7": { "facing": "ui" },
+  "2cbcc819ffde7bdf6f01b78ebc5531e02540466e": { "facing": "ui" },
+  "66116261cb38a0c4e42282e302584799d347970f": { "facing": "ui" },
+  "d94796c365187848afe101d5791581ef757a7f76": { "facing": "ui" },
+  "4a752480758753ebcedd0504c32d628dc16eb04b": { "facing": "ui" },
+  "d064f7c344008af24fcaee048b1f1a675bbf9974": { "facing": "ui" },
+  "e5ff445d4b2c682d38b96893c3b12f96d1c22ca0": { "facing": "internal" },
+  "a6ff0971d3e95d4d0b18cbad8d53b4f3329b481d": { "facing": "internal" },
+  "e2710d22a0d5899524149dc0a7de76f41d5cf26c": { "facing": "ui" },
+  "3382edd079b4bb11e43e1d7a400f248fe3b7fecb": { "facing": "ui" },
+  "ddb2994b96f14154b78aee2a9588b7c05c4c192a": { "facing": "ui" },
+  "1c4f48108c9f6b7b9b9bd5b79762317810d2a00c": { "facing": "internal" },
+  "e37a2f5379c48d6b49fe3cd0a0dfd65080b0f70b": { "facing": "ui" },
+  "771b358508ddb5caf7eab3c3eb895134b1aba79c": { "facing": "ui" },
+  "0abfe49012b316a5fe9a590df02558f7d70a41be": { "facing": "ui" },
+  "afe68ba5eda32da3b5e4594926e6ff3d407cd3af": { "facing": "ui" },
+  "82065afd75a3b92160967791f3d31abe7564d5b2": { "facing": "ui" },
+  "acd4893ea731ca5bfb8456f45dac1138b25d0a5f": { "facing": "ui" },
+  "6ed3ee0c9ccf0af23836d3f7e60d3181dfaa5657": {
+    "facing": "model",
+    "id": "data-fork-blocked-session-persistence-off",
+    "name": "Data: Fork blocked — session persistence off",
+    "desc": "Refusal text returned by the /fork command when session persistence is disabled; emitted via onDone without display:\"system\", so it is wrapped in <local-command-stdout> inside a role:\"user\" message the model reads."
+  },
+  "47e33ad9e0d1ae46d3f27e2e9f2560f1d95f559f": {
+    "facing": "model",
+    "id": "data-fork-blocked-launch-flags",
+    "name": "Data: Fork blocked — restrictive launch flags",
+    "desc": "Refusal text returned by /fork when the session was started with safe/bare mode, a custom system prompt, a tool allowlist or restricted settings; delivered to the model as <local-command-stdout> in a role:\"user\" message."
+  },
+  "a5945dd9cd87a0b0a8ba3aad6ba62aed234f58b8": {
+    "facing": "model",
+    "id": "data-fork-nothing-to-fork-yet",
+    "name": "Data: Fork has no messages yet",
+    "desc": "Refusal text returned by /fork when the transcript is still empty; delivered to the model as <local-command-stdout> in a role:\"user\" message."
+  },
+  "0188388ea2e6b30e7e20b3a91dba4f43de553128": { "facing": "ui" },
+  "e6207d2346cb054bdcad0a590f96ca7e10cd1551": { "facing": "ui" },
+  "14825fc33d97ebe56bb94b5cc9778f856f1110e7": { "facing": "ui" },
+  "fad02509334f78dbff1d7115040804415f4ff9dc": { "facing": "ui" },
+  "8ce56c93a3eab238db19ef1d02fc5a2fc1cbed1b": {
+    "facing": "model",
+    "id": "data-sandbox-install-filters-unverifiable",
+    "name": "Data: Sandbox install — filters unverifiable",
+    "desc": "Status stem for /sandbox install on Windows when the WFP state is 'cannot-read'; interpolated into the {status,message} result that onDone emits as <local-command-stdout> in a role:\"user\" message."
+  },
+  "cc6cec391720c460c1fdd8613e6108b29c7681a9": {
+    "facing": "model",
+    "id": "data-sandbox-install-check-status-suffix",
+    "name": "Data: Sandbox install — check status suffix",
+    "desc": "Suffix appended to the /sandbox install success message when sandboxing is enabled in settings but not active; reaches the model as <local-command-stdout> command output."
+  },
+  "dc22db9ffdda358b350f023253146834eefe9919": {
+    "facing": "model",
+    "id": "data-sandbox-install-choose-mode-suffix",
+    "name": "Data: Sandbox install — choose mode suffix",
+    "desc": "Suffix appended to the /sandbox install success message when sandboxing is not yet enabled in settings; reaches the model as <local-command-stdout> command output."
+  },
+  "0fb55f2656b1ca61fe8e0642e2971b91dc312405": {
+    "facing": "model",
+    "id": "data-sandbox-install-partial-status",
+    "name": "Data: Sandbox install partial result",
+    "desc": "Partial-completion message for /sandbox install describing which of the sandbox user, credential and network filters landed; emitted as <local-command-stdout> command output the model sees."
+  },
+  "88e6d801a645436a78f6718a02377cd41e225535": {
+    "facing": "model",
+    "id": "data-sandbox-install-status-probe-failed",
+    "name": "Data: Sandbox install status probe failed",
+    "desc": "Error message for /sandbox install when the post-install status probe could not be read back; emitted as <local-command-stdout> command output the model sees."
+  },
+  "440fbb89ad21ff5aa5ed86aba7c7e41cac790545": { "facing": "ui" },
+  "65fe327695790872d9eacaca7a28a83334a0cb30": { "facing": "ui" },
+  "80bf56a9a55f36845ae4ecc3f66dba00712dc6b7": { "facing": "internal" },
+  "d01158bbcd522cd47420256186803b75627e657e": { "facing": "internal" },
+  "edaabd32ef7820ef82c78991f18196db1b4b98c8": { "facing": "ui" },
+  "e1edbe6b7e1b180ad148b0663981e69b972337c1": { "facing": "internal" },
+  "48174971d7522ac2ca656a24d1ebb31de76ad6f7": {
+    "facing": "model",
+    "id": "skill-artifact-capabilities-description",
+    "name": "Skill: Artifact Runtime Capabilities description",
+    "desc": "Second half of the concatenated `description` on the Hu({name:Pne}) artifact-capabilities skill registration — the blurb shown to the model in the available-skills listing so it knows when to load the skill."
+  },
+  "fa5ef7c3d35be72c984a6a3e68595e6fc705361a": {
+    "facing": "model",
+    "id": "data-artifact-no-runtime-capabilities-available",
+    "name": "Data: No artifact runtime capabilities available",
+    "desc": "tZb, the fallback section composed by jIf() and returned as [{type:\"text\",text:...}] skill content, telling the model not to declare or guess any `capabilities` name for this artifact."
+  },
+  "672711bf95e4192c344fc826c042a12e080c469b": { "facing": "ui" },
+  "9c7b9932e24fe6d0f2cfe8a8395a287987bb6a67": { "facing": "internal" },
+  "763b0c0251ba98fe525c79fb99be5190400ac8bf": { "facing": "internal" },
+  "85d9131025ff3bff72a88ffa9a614c93b9b9ac9c": { "facing": "internal" },
+  "293a8d6618a586e838f61a7e43e16cdc243a18bd": {
+    "facing": "model",
+    "id": "data-permission-prompt-tool-consent-surface-label",
+    "name": "Data: Permission-prompt-tool consent surface label",
+    "desc": "Surface label interpolated into hdo()'s {behavior:\"deny\", message:'Permission for X requires the user to read a consent disclosure … and <label> cannot display it.'} — a denial message returned to the model as the tool result."
+  },
+  "3b425c5628c5ae44c2f5c90183debbb299511557": { "facing": "ui" },
+  "fd18f3e2d6cac3706d120129f8454354332bc4cc": { "facing": "ui" },
+  "6f4269d060a2bbe469bc267a13cf228736bc858e": { "facing": "ui" },
+  "8d9047f3c4976419bdf70a36c8c3111a5295a947": { "facing": "ui" },
+  "89aca5b0d45f749e0e2c1dbda555a30a2222403f": { "facing": "ui" },
+  "059571adc5fbbb164d738c7479732d5525a65de7": { "facing": "ui" },
+  "7a69ee6c4aea638af1597efc2a4608f8eef516ff": { "facing": "ui" },
+  "d0a1087d0abac5735d7f1fa2049aa4445b2b7656": { "facing": "ui" },
+  "53bb35f28a6ecc8d33fefa51e4feae95dce8b8ca": { "facing": "ui" },
+  "9204c69e606f9aa971d544cd91b09be54ae71c3b": { "facing": "ui" },
+  "5bcc0ae0d3c80373a6232f36e0e275a33fdc3819": { "facing": "ui" },
+  "e8df48fcd672175d473505087bed40ffb40580e2": { "facing": "ui" },
+  "7a38c3ef2711f0a3ad69eaefd639331272f382eb": { "facing": "ui" },
+  "d72678f57f8a587a4dd7696fd1a9c60ff13f2766": { "facing": "internal" },
+  "0fdf4a5d2e295ddaa109faac2b3fae212a52d263": { "facing": "ui" },
+  "56dfe18d79e687c016dd0902c918bc7292020ef0": { "facing": "ui" },
+  "4065d85b9c2972641baabef43c97c4aa5cad8255": { "facing": "ui" },
+  "937ac4cd5d14ef326462b42487e521b4710680cc": { "facing": "internal" },
+  "c62b26626c89038235ddc96154f55b1483db9d78": { "facing": "ui" },
+  "f0aae361580d7e0a6c00c6d9cf804e0df7d36f63": { "facing": "internal" },
+  "77ca1de3c06a5d5f89fba589b33b944236a2ac24": { "facing": "internal" },
+  "07576957d765bfbd2b4da3c80c0d623cf3c5537c": { "facing": "ui" },
+  "dc70b58d0136547fe9f3086712e1b8536e6457b5": { "facing": "ui" },
+  "78a2207fe70bb08279709e61df87e2b3ee6a024f": { "facing": "ui" },
+  "ac35333520da563096b3ac8ede947977405a6b57": { "facing": "internal" },
+  "b9a474f2bbce28c0ad3c4175185528d823c64c07": { "facing": "internal" },
+  "f2de93f745c1e6dd1e872a0cfff376eae17d761c": { "facing": "internal" },
+  "1319e954d70ab9cecfd6c26275abd7f44e460df3": { "facing": "internal" },
+  "bb8ff084635bbcca2d4e90b30f8289ede3ab72e1": { "facing": "internal" },
+  "5ecdb1e46b46da323260ca253f7004819df99c96": { "facing": "internal" },
+  "1b937f74aae9c96dd1269fe1b669edd7417c9d97": { "facing": "internal" },
+  "b6e914d0d4e357478f31b85ddceae0f46c32b8f8": {
+    "facing": "model",
+    "id": "system-prompt-memory-dirs-private-and-shared-intro",
+    "name": "System Prompt: Memory Directories (Private and Shared)",
+    "desc": "Directory clause interpolated into the '# Memory' system prompt built by WUc(), describing the private auto-dir and the shared team mount(s) the model may write memories to."
+  },
+  "8dfb5a5ce69c642ed9fe61347b76318ec3b9b39d": {
+    "facing": "model",
+    "id": "system-prompt-memory-write-private-only-shared-readonly",
+    "name": "System Prompt: Write Only to Private Memory Directory",
+    "desc": "Branch of the memory system prompt used when the shared team directories are read-only, telling the model to write only to the private directory."
+  },
+  "445b08e6cf850ec0b2ac1b070eac8a438ce00ffa": {
+    "facing": "model",
+    "id": "system-prompt-memory-index-pointer-after-write",
+    "name": "System Prompt: Memory Index Pointer After Writing",
+    "desc": "Memory system prompt clause instructing the model to append a one-line pointer to the memory index file after writing a memory file."
+  },
+  "076440e90b6ab3b06187a311e9b936e3c560018a": {
+    "facing": "model",
+    "id": "system-prompt-memory-index-team-path-prefix",
+    "name": "System Prompt: Memory Index Team Path Prefix",
+    "desc": "Tail appended to the memory-index instructions when team mounts exist, telling the model which path prefix to use for team memories in the index."
+  },
+  "dc75424b22496c8fca0b060c5139a3f9d218cfc1": {
+    "facing": "model",
+    "id": "system-prompt-memory-remember-to-private-team-readonly",
+    "name": "System Prompt: Save Remembered Facts to Private Directory",
+    "desc": "Memory system prompt line telling the model to save explicitly-requested memories to the private directory because team memory is read-only this session."
+  },
+  "8bcf2cd0eba85820a7318ec265ff95a00aab25f4": {
+    "facing": "model",
+    "id": "system-prompt-memory-private-alongside-team-scopes",
+    "name": "System Prompt: Private Memory Alongside Writable Team Memory",
+    "desc": "Memory system prompt clause splitting memory types between the private directory and writable team directories."
+  },
+  "8b5a3f9a8e019866379230553be391a1b21d301b": {
+    "facing": "model",
+    "id": "system-prompt-memory-private-only-team-readonly-session",
+    "name": "System Prompt: Private Memory Only (Team Read-Only)",
+    "desc": "Memory system prompt clause used when team memory is read-only, directing every memory type to the private directory for this session."
+  },
+  "501a7cb3ae3f6e635859e524b27df436f01f7f0b": { "facing": "internal" },
+  "622d40b71194b982e1d47f1e247ea7b87acd2406": { "facing": "ui" },
+  "a63478b981f03e6aba406a029b45d86abdd25ce8": { "facing": "internal" },
+  "0060c12d6f3665244cc485f6a9869c59ab5f1673": { "facing": "ui" },
+  "dda355f4b9a257174cad5e54445b02c587d5bb11": { "facing": "ui" },
+  "b777e3edc807c5d4cea73a4a2d5f98741e0e6de0": { "facing": "ui" },
+  "9e4eb11a096b136f0198bb69136c24125a6116d0": {
+    "facing": "model",
+    "id": "tool-result-bash-windows-sandbox-command-too-long",
+    "name": "Tool Result: Windows Sandbox Command Too Long",
+    "desc": "Message of SandboxCommandTooLongError thrown while wrapping a Bash/PowerShell command; propagates uncaught to the tool harness and is returned to the model as <tool_use_error>, advising it to write the script to a file or split the command."
+  },
+  "7b11e273dd35ba396261e7871064fd5ec74e92fc": {
+    "facing": "model",
+    "id": "tool-result-bash-linux-sandbox-bridge-missing",
+    "name": "Tool Result: Linux Sandbox Bridge Socket Missing",
+    "desc": "Message of SandboxBridgeUnavailableError raised when wrapping a sandboxed Bash command; delivered to the model as a <tool_use_error> tool result."
+  },
+  "47978883c5ecc7aca149e70962c9a8c5939337cb": { "facing": "ui" },
+  "fb8ff0fcfb0e4dd34e05e4e0a7a9e1855da9f2d2": { "facing": "internal" },
+  "566002d688c911ed30c5541b5c1f698ca1070758": {
+    "facing": "model",
+    "id": "tool-description-propose-skills",
+    "name": "Tool Description: Propose Skills (Short)",
+    "desc": "Short description() returned by the propose_skills tool definition; shown to the model in the tool roster / tool-search summaries."
+  },
+  "89daab81edc65d0b795017932c2c981497f9f784": {
+    "facing": "model",
+    "id": "tool-description-propose-skills-2",
+    "name": "Tool Description: Propose Skills (Full)",
+    "desc": "Full prompt() body of the propose_skills tool, sent to the model as the tool's description with usage rules (max 3 proposals, render-only, no re-proposing)."
+  },
+  "ac007d1e6473ced4402711a8f631bed654ffa1bc": {
+    "facing": "model",
+    "id": "system-prompt-worker-tools-context-simple",
+    "name": "System Prompt: Worker Tools Context (simple)",
+    "desc": "CLAUDE_CODE_SIMPLE branch of getCoordinatorSystemPrompt(), interpolated into the coordinator-mode system prompt to tell the coordinator which tools its workers have."
+  },
+  "b3eaf075798b3a0a0e0e124380db12de6ca3891a": {
+    "facing": "model",
+    "id": "tool-result-worktree-create-symlink-rejected",
+    "name": "Tool Result: Worktree Creation Rejected (Symlink)",
+    "desc": "WorktreeIsolationError message thrown by the worktree-containment check; reaches the model as a <tool_use_error> tool result when EnterWorktree creates a worktree."
+  },
+  "915b6b28dbbc0121a3e18f937cc6e048d53892f8": {
+    "facing": "model",
+    "id": "tool-result-worktree-create-containment-failed",
+    "name": "Tool Result: Worktree Containment Check Failed",
+    "desc": "WorktreeIsolationError message emitted when the created worktree resolves outside the expected .claude/worktrees location; returned to the model as a tool error."
+  },
+  "b3f18d83b418c79229f78bc29520514df16401ac": {
+    "facing": "model",
+    "id": "tool-result-worktree-create-realpath-failed-tail",
+    "name": "Tool Result: Worktree Realpath Failure Advisory",
+    "desc": "Trailing fragment of the WorktreeIsolationError raised when containment cannot be verified, telling the model to check ~/.claude/skills and other sensitive locations."
+  },
+  "09c811a0f81cbe8a4ac7742cbab459bfd9a4df5b": { "facing": "ui" },
+  "ac2132c609cd2e21eef0498ea56a80f6183210f5": { "facing": "ui" },
+  "6ac5100c1887aaf617584ed5f8b4531b74116382": { "facing": "ui" },
+  "efbe5f787e861b85e68473b08dbe88c507e39c48": { "facing": "ui" },
+  "6ec36a047ed434aa8e93b2c0dde935edebf1c91d": { "facing": "ui" },
+  "b27d30cb0add53db47b8592e27bc3c3f7cce47c1": { "facing": "ui" },
+  "10f622a33143d755c4d01ac34b9b43bbe251c2a5": { "facing": "ui" },
+  "240b7911e7377b0ea84dc50d8ce57252a8c223ba": { "facing": "internal" },
+  "a47a9bc2766099ede704ce4a8f6ee9cfa0ac40ec": { "facing": "internal" },
+  "8a59bc6ad93f18e387e825e7c7e8fd4ec7189dbc": { "facing": "internal" },
+  "d60ecf8a41e3c9b8f4337529ff51aa2fa2dbaf2b": { "facing": "internal" },
+  "d7807a084fc4f3ea7eaf8974e2a7dddcd9d9259a": { "facing": "internal" },
+  "743b7c46bf397916ead7c9179aacee6f4b746dea": { "facing": "internal" },
+  "678a3c2e1d3019e2893dc44af864620dc1b83df2": { "facing": "internal" },
+  "0769408711cec00b21c1f31c3e002ac5be971d92": { "facing": "internal" },
+  "b1acfb5b48b47377522ab210ed006758a60df019": { "facing": "internal" },
+  "46d6cdd3019fdbcaa88fbdf14878ebde01648872": { "facing": "internal" },
+  "3c6bb54ec480e847040d224c69d0d80365e70801": { "facing": "internal" },
+  "a23a468d3884116ce4cead28b214850ddda66943": { "facing": "internal" },
+  "8001eb3ff16f0bda59ad16639ed917a2dc72c2e1": { "facing": "internal" },
+  "5b29501c55092178e7921e2d13ce76b64f00dd1a": { "facing": "internal" },
+  "212b4c60812c72b972e34bf592342973dac533d2": {
+    "facing": "model",
+    "id": "tool-result-binary-content-over-persist-limit",
+    "name": "Tool Result: Binary Content Over Persist Limit",
+    "desc": "Error returned by persistBinaryContent() and interpolated verbatim into model-facing tool-result text such as 'Binary content could not be saved to disk: ${error}' for MCP resources and MCP task results."
+  },
+  "f12c7331fea539b01822ce85a3fc2e21e44f457a": { "facing": "internal" },
+  "b29787d8e5732074445cbf2979e52050d100a771": {
+    "facing": "model",
+    "id": "tool-result-webfetch-proxy-rejected",
+    "name": "Tool Result: WebFetch proxy rejected",
+    "desc": "errorMessage for a PROXY_REJECTED ccr response; JSON-serialized into a thrown TelemetrySafeError from the WebFetch path, which the tool harness returns to the model as <tool_use_error>. Sibling of tool-result-webfetch-proxy-transport-error."
+  },
+  "943dc71ccf8e5c87ed62ff63d80d4f954557ac7b": {
+    "facing": "model",
+    "id": "tool-result-artifact-too-large-highlight-note",
+    "name": "Tool Result: Artifact Too Large (Highlight Runtime Note)",
+    "desc": "Fragment appended to the Artifact 'too large' publish rejection when the inline syntax-highlight runtime was injected; thrown as ArtifactInputError and returned to the model as a tool error. Sibling of tool-result-artifact-too-large-mermaid-note."
+  },
+  "bc2412063fd7f58c6048a7422126a491eb0e09d3": { "facing": "internal" },
+  "9f5b38b2b0b401fc9b822f63a1fec611c10410d1": {
+    "facing": "model",
+    "id": "tool-result-permission-denied-consent-disclosure-undisplayable",
+    "name": "Tool Result: Consent Disclosure Cannot Be Displayed",
+    "desc": "The `behavior:\"deny\"` message returned to the model when a localDisplayOnly permission ask cannot be forwarded because the surface cannot render the required consent disclosure."
+  },
+  "c8b5061018dfdbc9cdfc2904ddf03372ed0d96f2": { "facing": "internal" },
+  "829df2605dfc46ef6cd8802b66865797f581dbdb": {
+    "facing": "model",
+    "id": "data-permission-deny-surface-teammate-mailbox",
+    "name": "Data: Teammate Mailbox Surface Label",
+    "desc": "Surface label passed to hdo() and interpolated into the model-facing consent-disclosure permission-deny message."
+  },
+  "83a8c87008d7d582a97e43b6d5e7283044c7f8dc": {
+    "facing": "model",
+    "id": "tool-description-task-no-background-or-name",
+    "name": "Tool Description: Task Synchronous-Only Note",
+    "desc": "Conditional bullet appended to the Task/Agent tool description when background subagents and named teammates are unavailable in the current surface."
+  },
+  "3aab2dd795731a853320b5d2ff49802f9de4a062": {
+    "facing": "model",
+    "id": "tool-description-sendfeedback",
+    "name": "Tool Description: SendFeedback",
+    "desc": "The description of the SendFeedback tool, telling the model it queues a local product-feedback draft for the user to review via /feedback."
+  },
+  "96b1e322b8c535af4e293bb9836042f756e47f23": {
+    "facing": "model",
+    "id": "tool-result-sendfeedback-not-enabled",
+    "name": "Tool Result: SendFeedback Not Enabled",
+    "desc": "Result message returned to the model when SendFeedback is invoked in a session where the feature is disabled."
+  },
+  "4185f07a7e2886f6bcb971b736107cb789b32a2b": {
+    "facing": "model",
+    "id": "tool-result-sendfeedback-draft-too-large",
+    "name": "Tool Result: Feedback Draft Too Large",
+    "desc": "Error result returned to the model when the feedback draft exceeds the size limit."
+  },
+  "852ae5787f1d3a4ebe72c44a981b82df49061c58": {
+    "facing": "model",
+    "id": "tool-result-sendfeedback-write-failed",
+    "name": "Tool Result: Feedback Draft Write Failed",
+    "desc": "Error result returned to the model when the feedback draft could not be persisted to disk."
+  },
+  "60453dd1971aa6daa9d1a361df6a9726e8c02e47": {
+    "facing": "model",
+    "id": "tool-result-sendfeedback-draft-queued",
+    "name": "Tool Result: Feedback Draft Queued",
+    "desc": "Success result returned to the model after a feedback draft is queued locally, instructing it not to announce the draft to the user."
+  },
+  "88092ec2b891600713868ff04d221bf39554dc81": { "facing": "ui" },
+  "e80b884eb7472757db37f933875176f1367acb45": {
+    "facing": "model",
+    "id": "tool-result-sendmessage-plan-rejected",
+    "name": "Tool Result: Plan Rejected With Feedback",
+    "desc": "Success message returned to the team lead's model after rejecting a teammate's plan via the SendMessage tool."
+  },
+  "243fd4a2524e26b526eaa96dabe16f41fcc4a592": {
+    "facing": "model",
+    "id": "tool-description-artifact-publish-lang-parameter",
+    "name": "Tool Description: Artifact lang Parameter",
+    "desc": "Paragraph of the ArtifactTool description instructing the model to pass a BCP-47 `lang` on every publish."
+  },
+  "eff8918bc20cb5dcdd872abf2b0ead77590c90ef": {
+    "facing": "model",
+    "id": "skill-code-review-single-pass-disclosure",
+    "name": "Skill: Code Review Single-Pass Disclosure",
+    "desc": "Fragment appended to the code-review skill prompt when the Agent tool is unavailable, telling the model to disclose that only a single-pass review ran."
+  },
+  "0f177cc8125ddc2715aed7e5fe35929730c6ede2": {
+    "facing": "model",
+    "id": "agent-prompt-automemory-apply-memory-section-guidance",
+    "name": "Agent Prompt: Automemory Apply Memory Section Guidance",
+    "desc": "Line in the memory-extraction subagent prompt pointing it at the Memory section already in its system prompt for writing guidance and frontmatter format."
+  },
+  "c022e4ba424c67a1b60c20ff4fa6c0a20577bd0f": { "facing": "ui" },
+  "4e3b1b501e79c870805fb12e8acb4ec5a128d69c": { "facing": "internal" },
+  "54698cc86acda2a04c46bdaf276a70e9d5889205": { "facing": "internal" },
+  "07d762215c8a7541f3825b78dfb680e01bf17b14": { "facing": "internal" },
+  "1117dd47f69570009d563c96060019d28891afb4": {
+    "facing": "model",
+    "id": "tool-result-mcp-task-persist-budget-exhausted",
+    "name": "Tool Result: MCP Task Truncation Not Persisted",
+    "desc": "savedHint appended to a backgrounded MCP task result telling the model the truncated portion was not written to disk."
+  },
+  "878a1bd022df9b44b8d2da078c805b1877409d4e": {
+    "facing": "model",
+    "id": "tool-result-mcp-task-long-lines-slice-hint",
+    "name": "Tool Result: MCP Task Long-Line Slice Hint",
+    "desc": "Retrieval hint embedded in the MCP task result telling the model to slice the saved file by character range via Bash because its lines defeat Read's offset/limit."
+  },
+  "4098c1922c09341f377cc7d044fcc2eef8bc8e0c": {
+    "facing": "model",
+    "id": "tool-result-mcp-task-output-saved-hint",
+    "name": "Tool Result: MCP Task Output Saved",
+    "desc": "savedHint appended to a truncated MCP task result telling the model where the full output was saved and how to retrieve it."
+  },
+  "ca6a3315f8b5d614e987f0a271e9420f743ebca6": {
+    "facing": "model",
+    "id": "tool-result-mcp-task-block-save-failed",
+    "name": "Tool Result: MCP Task Content Block Save Failed",
+    "desc": "Placeholder text substituted into an MCP task result when a binary content block could not be persisted to disk."
+  },
+  "a6239cb09e014b35dd025254ef5b3ca65ac69bd2": {
+    "facing": "model",
+    "id": "data-task-notification-mcp-task-render-failed",
+    "name": "Data: MCP Task Notification Render Failure",
+    "desc": "Degraded task-notification enqueued into the conversation when the full MCP task completion notification could not be rendered."
+  },
+  "04303c5c5584010c1e22b92ef23d6c92525f791a": {
+    "facing": "model",
+    "id": "tool-result-mcp-server-needs-claudeai-connection",
+    "name": "Tool Result: MCP Server Needs claude.ai Connection",
+    "desc": "McpAuthError message surfaced to the model as the MCP tool call's error result when the server is not connected in claude.ai."
+  },
+  "6c7fa0637bb2de8e15a78c70806f03827dc4c6af": { "facing": "internal" },
+  "849837e577403c6d620309843985d68997d4c10e": { "facing": "internal" },
+  "2851d91240b7dd05cc7d97977994354bff3d30ee": { "facing": "internal" },
+  "760d4c11ec81c4066ac8a5a46f15cf4476886dd8": {
+    "facing": "model",
+    "id": "agent-prompt-permission-judge-severity-review-reminder",
+    "name": "Agent Prompt: Permission Judge Severity Review Reminder",
+    "desc": "Trailing reminder appended to the auto-mode permission classifier prompt for the thinking-enabled severity+category grading pass."
+  },
+  "bf81ea21c6192610249057a813994f3016a4ce02": {
+    "facing": "model",
+    "id": "agent-prompt-permission-judge-severity-scale",
+    "name": "Agent Prompt: Permission Judge Severity Scale",
+    "desc": "Output-format section of the auto-mode permission classifier prompt defining the <severity> scale and the <category> BLOCK-rule tag."
+  },
+  "339d97e0673de32a5d4aee7aae24734acae0eb7f": {
+    "facing": "model",
+    "id": "data-auto-mode-recon-bucket-scan-failed",
+    "name": "Data: Auto-Mode Recon Bucket Scan Failed",
+    "desc": "Bucket-scan section of the auto-mode recon report telling the proposing model to treat bucket evidence as unavailable because the scan failed."
+  },
+  "5b76b8757206cef8eab88a557d318623e3388d13": {
+    "facing": "model",
+    "id": "data-auto-mode-recon-bucket-scan-empty",
+    "name": "Data: Auto-Mode Recon Bucket Scan Collected Nothing",
+    "desc": "Bucket-scan section of the auto-mode recon report shown when the scan ended dirty with zero results."
+  },
+  "334cc068acd8984d27af67bc347cf9566433f28b": {
+    "facing": "model",
+    "id": "data-auto-mode-recon-bucket-scan-header",
+    "name": "Data: Auto-Mode Recon Bucket Scan Header",
+    "desc": "Header line introducing the repo-wide bucket-name list in the auto-mode recon report given to the proposing model."
+  },
+  "29a0e316e016f1b94b02965da2786d1003ec4f6d": {
+    "facing": "model",
+    "id": "data-auto-mode-recon-bucket-scan-truncated",
+    "name": "Data: Auto-Mode Recon Bucket Scan Truncated",
+    "desc": "Caveat appended to the bucket-scan section of the auto-mode recon report when the scan hit its time/size budget."
+  },
+  "14762ff8574ac48e0cccd6c2213828d0fa23e898": { "facing": "internal" },
+  "ae29ebdf8c1b3c26df5b95fafd01e41ef54fa430": { "facing": "internal" },
+  "c2c69bac6f3201b10101b95d7d8d78913ada6edd": {
+    "facing": "model",
+    "id": "data-import-unmappable-unexpected-table-shape",
+    "name": "Data: Import Unmappable Table Shape",
+    "desc": "Default `reason` for a malformed config.toml table, interpolated into the /import summary prompt the model is asked to relay."
+  },
+  "08bcd46120f627dbd8fa6a617b2af47de76b5dc4": {
+    "facing": "model",
+    "id": "data-import-unmappable-mixed-placeholders-backticks",
+    "name": "Data: Import Unmappable Mixed Placeholders And Backticks",
+    "desc": "`reason` for a foreign command that mixes argument placeholders with backticks or '!', interpolated into the /import summary prompt sent to the model."
+  },
+  "ae9712439d93ea624dfabc937923e363dfc1a51d": { "facing": "ui" },
+  "de0e064d35ed89011c7b74521e910c00efff0240": { "facing": "ui" },
+  "fe3c442d011cfd41bef9cd0cb2ee67131f4824d6": { "facing": "ui" },
+  "945dd7cfdd44a05ca007f01031385f0789589b8c": {
+    "facing": "model",
+    "id": "skill-import-to-claude-code-user-level-section",
+    "name": "Skill: Import To Claude Code User-Level Section",
+    "desc": "Section wrapper written into the generated skills/import-to-claude-code/SKILL.md listing the unmapped user-level config items the model must port manually."
+  },
+  "c3535d6b005d9e9e01ef615a310e1e12484880c4": { "facing": "ui" },
+  "06de0024a6b50b1cc3f7f51f9e09d98bccafbdbd": {
+    "facing": "model",
+    "id": "data-import-unmappable-skills-config-shape",
+    "name": "Data: Import Unmappable [[skills.config]] Shape",
+    "desc": "`reason` for a malformed [skills] block, interpolated into the /import summary prompt the model is asked to relay."
+  },
+  "c157147bb55b2d7f3a3c577fb7b6cd7dbf40dcf2": {
+    "facing": "model",
+    "id": "data-import-unmappable-config-unreadable",
+    "name": "Data: Import Unmappable Config Unreadable",
+    "desc": "`reason` when the Codex config.toml cannot be read, interpolated into the /import summary prompt sent to the model."
+  },
+  "f79f65caebe87f8abf7fe2008260b2bf93429719": {
+    "facing": "model",
+    "id": "data-import-unmappable-config-unparseable",
+    "name": "Data: Import Unmappable Config Unparseable",
+    "desc": "`reason` when the Codex config.toml fails schema parsing, interpolated into the /import summary prompt sent to the model."
+  },
+  "c963e379f1fc8197f3d4a1c6c531d228ac719d51": {
+    "facing": "model",
+    "id": "data-import-warning-approval-policy-escalation",
+    "name": "Data: Import Warning Approval Policy Escalation",
+    "desc": "Warning attached to an importable permission-mode item, listed alongside the item in the /import summary prompt the model relays to the user."
+  },
+  "90a5d214726bab57f87d0280be4997725fae3e29": {
+    "facing": "model",
+    "id": "data-import-unmappable-mcp-entry-shape",
+    "name": "Data: Import Unmappable MCP Entry Shape",
+    "desc": "`reason` for a malformed [mcp_servers] entry, interpolated into the /import summary prompt sent to the model."
+  },
+  "9afd7d92ad9637edbe13e58091bf45250cf8eaf2": {
+    "facing": "model",
+    "id": "data-import-unmappable-mcp-no-url-or-command",
+    "name": "Data: Import Unmappable MCP Missing Transport",
+    "desc": "`reason` for an MCP server entry with neither url nor command, interpolated into the /import summary prompt sent to the model."
+  },
+  "87825c5c246a0f29f52215d57b0c27734b79480f": { "facing": "ui" },
+  "805da79a2f76ef4c2fecee1cf1f533331a9817c8": { "facing": "ui" },
+  "d196fb8fec97d1b523de62a32dcf75cd1a8615bc": { "facing": "ui" },
+  "5a55e7b810c9201fc7a690a4f7a282b86234db8c": {
+    "facing": "model",
+    "id": "data-import-warning-codex-tool-restrictions-dropped",
+    "name": "Data: Import Warning Codex Tool Restrictions Dropped",
+    "desc": "Warning attached to an importable Codex subagent, listed with the item in the /import summary prompt the model relays."
+  },
+  "3b223dc701e6943fca997fc7351689de07bd537e": { "facing": "ui" },
+  "cff3688b16c2e477df227fe6971e56b440da510d": { "facing": "ui" },
+  "089be83771888cf9b584d736abedde304e2396a8": {
+    "facing": "model",
+    "id": "data-import-unmappable-skill-path-missing",
+    "name": "Data: Import Unmappable Skill Path Missing",
+    "desc": "`reason` for a [[skills.config]] entry without a string `path`, interpolated into the /import summary prompt sent to the model."
+  },
+  "a7ae48693fc7e17fc1e4c385287426b2bb08b7f6": {
+    "facing": "model",
+    "id": "data-import-unmappable-skill-path-escapes",
+    "name": "Data: Import Unmappable Skill Path Escapes Config Dir",
+    "desc": "`reason` for a skill path that resolves outside the Codex config directory, interpolated into the /import summary prompt sent to the model."
+  },
+  "5db4bbfa6497d8c61bd6e43e320d213fe1e7bc1c": {
+    "facing": "model",
+    "id": "data-import-warning-skill-copied-as-is",
+    "name": "Data: Import Warning Skill Copied As-Is",
+    "desc": "Warning attached to an importable Codex skill, listed with the item in the /import summary prompt the model relays to the user."
+  },
+  "7ff0c7ebb462c408269979a92292a15e288d4c9c": { "facing": "ui" },
+  "67336d43e7effc9f4fe5a7c0fcbb681755ff0047": { "facing": "ui" },
+  "bb1038748a8d541f362c2b678586bb78ebdd3db2": {
+    "facing": "model",
+    "id": "skill-artifact-template-runtime-capabilities-note",
+    "name": "Skill: Artifact template runtime capabilities note",
+    "desc": "Appended to every artifact-template skill body (dashboard/report/data-table/explainer) returned as the skill's prompt text, telling the model to load the artifact-capabilities skill when the page needs more than static HTML"
+  },
+  "c965ddf660b95f6dd305fba3e8fa42c37ae8409d": {
+    "facing": "model",
+    "id": "system-prompt-auto-mode-classifier-block-bias-suffix",
+    "name": "System Prompt: Auto-mode classifier block-bias suffix",
+    "desc": "Trailing instruction appended to the auto-mode permission classifier prompt telling the classifier model to err toward blocking and to begin its response with <block> without preamble"
+  },
+  "87507e2c2fe8b02e4386352ceb85ce3ef2a00841": {
+    "facing": "model",
+    "id": "system-prompt-persistent-memory-usage-and-writing-guidance",
+    "name": "System Prompt: Persistent memory usage and writing guidance",
+    "desc": "Explains how to use persistent file-based memory across sessions, what makes memories applicable, durable, and legible, when memory updates are mandatory, and the required file format"
+  },
+  "13141f2207509efb06804829caa5b9e72e4013b1": {
+    "facing": "model",
+    "id": "tool-result-bash-pkill-self-protection-guard",
+    "name": "Tool Result: Bash pkill self-protection guard",
+    "desc": "stderr message emitted by the pkill shell-function guard injected into the Bash tool's shell snapshot, surfacing in the Bash tool result when the model's pkill pattern would match the Claude CLI process"
+  },
+  "ba4f02e3347ed9ab53563d992383fa45bca633d5": { "facing": "ui" },
+  "9da7b0b1f21e339283f32b781cbe639d7a042b9e": { "facing": "ui" },
+  "589ecbdd986224c70ae8f9c1eb28208676faf397": {
+    "facing": "model",
+    "id": "data-artifact-capability-roster-available",
+    "name": "Data: Artifact capability roster available",
+    "desc": "Interpolated into the artifact-capabilities skill guidance to enumerate the capability names this user may declare"
+  },
+  "b210eec788093e69b167ed7ed964a3237aac3384": {
+    "facing": "model",
+    "id": "tool-description-artifact-runtime-capabilities-guidance",
+    "name": "Tool Description: Artifact runtime capabilities guidance",
+    "desc": "Explains when Artifact runtime capabilities require loading the artifact-capabilities skill and how redeploys preserve or clear capabilities"
+  },
+  "5c3bf3c5fbb79f4f59c3ea189705a6328710b304": {
+    "facing": "model",
+    "id": "tool-description-artifact-update-and-list-guidance",
+    "name": "Tool Description: Artifact update and list guidance",
+    "desc": "Artifact tool description fragment covering redeploying to the same URL, updating an artifact from an earlier conversation via url, reading artifacts with WebFetch, and the list/shared-scope rules"
+  },
+  "22119cce78404a2c1c211d729c02538371043d5a": {
+    "facing": "model",
+    "id": "agent-prompt-simplify-unavailable-agent-inline-mode",
+    "name": "Agent Prompt: /simplify unavailable-agent inline mode",
+    "desc": "Runs the /simplify cleanup workflow inline across reuse, simplification, efficiency, and altitude angles when the Agent tool is unavailable"
+  },
+  "88dae731a6a19a18fc1f64188da420e45ff3b58e": {
+    "facing": "model",
+    "id": "agent-prompt-code-review-unavailable-agent-inline-mode",
+    "name": "Agent Prompt: /code-review unavailable-agent inline mode",
+    "desc": "Builds a single-pass inline code-review prompt that gathers a diff, evaluates configured angles, deduplicates findings, optionally sweeps gaps, and reports capped results when the Agent tool is unavailable"
+  },
+  "560ce6f6b2180c21733fbb756383e5931e2edbe2": {
+    "facing": "model",
+    "id": "skill-artifact-pr-review-html-template",
+    "name": "Skill: Artifact PR review HTML template",
+    "desc": "template.html shipped as a SKILL_FILES entry for the artifact-pr-review skill and read by the model as the slot-annotated body fragment for a PR review briefing page"
+  },
+  "827766efcf54a975c7cb6fc288e6e843bc4b3fd1": {
+    "facing": "model",
+    "id": "data-model-description-custom-haiku",
+    "name": "Data: Custom Haiku model description for model",
+    "desc": "descriptionForModel string for an env-configured custom Haiku model, the model-facing description of that model option"
+  },
+  "b10baf8f3670f968e8c0c215609c9ea412098d11": {
+    "facing": "model",
+    "id": "data-model-description-custom-opus",
+    "name": "Data: Custom Opus model description for model",
+    "desc": "descriptionForModel string for an env-configured custom Opus model (with optional 1M-context variant), the model-facing description of that model option"
+  },
+  "6746ddb34508481f151098a49e89b2ce12194410": {
+    "facing": "model",
+    "id": "data-model-description-custom-sonnet",
+    "name": "Data: Custom Sonnet model description for model",
+    "desc": "descriptionForModel string for an env-configured custom Sonnet model (with optional 1M-context variant), the model-facing description of that model option"
+  },
+  "5447f2208a707254f896c3f998cc747d387b13de": {
+    "facing": "model",
+    "id": "system-reminder-scheduled-task-automated-firing",
+    "name": "System Reminder: Scheduled task automated firing",
+    "desc": "Marks a scheduled turn as an automated firing of a stored prompt and warns that no live user approval or confirmation has occurred"
+  },
+  "4b098cc8d31a544dc6fdd6955370af79acac5b33": {
+    "facing": "model",
+    "id": "agent-prompt-code-review-inline-prompt-assembly",
+    "name": "Agent Prompt: Code review inline prompt assembly",
+    "desc": "Pure-interpolation template that concatenates the /code-review inline prompt sections and is returned as the command's [{type:\"text\",text}] prompt to the model"
+  },
+  "9263ff6f1af4e5a6b6312d41df2281cc6c4057d8": {
+    "facing": "model",
+    "id": "data-import-untranslatable-shell-block-dropped",
+    "name": "Data: Import untranslatable shell block dropped",
+    "desc": "Unmappable-item reason from the foreign-agent importer, interpolated into the /import query prompt sent to the model and into the generated import-to-claude-code SKILL.md"
+  },
+  "016173f1797542db8b0bf72e2f1d63911632e956": { "facing": "ui" },
+  "f9438c94e08669ea8b49ef4cfd410dd398569ba1": { "facing": "ui" },
+  "2ad0ffaa286124ee996c05cecc30938abeefb512": { "facing": "ui" },
+  "15ac2af4063368da466ad39f1605f8ad77f2b65b": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-lang",
+    "name": "Tool Parameter: Artifact lang",
+    "desc": "zod .describe() for the Artifact tool's lang input, telling the model to pass the BCP-47 tag of the page's text content on every publish"
+  },
+  "64a7d5c421705ec2fd83091e9f6bfcbb56d01c48": { "facing": "ui" },
+  "46658768190af54ad9a89c7313e44201bd891d05": { "facing": "ui" },
+  "f6cc69b97509f770117518ab42e155971ee2686f": { "facing": "ui" },
+  "39c6570a1fd17b118c44a32b5ce4c4ea9a781fa4": { "facing": "ui" },
+  "2870df25e1ca6b5ea5e3d17c80997b536958cab9": {
+    "facing": "model",
+    "id": "tool-result-enterworktree-containment-verify-failed",
+    "name": "Tool Result: EnterWorktree containment verify failed",
+    "desc": "Error thrown when a newly created worktree's realpath cannot be verified as contained in the repo; surfaces to the model as the EnterWorktree tool's error result"
+  },
+  "36e082169f51d0a314fdecdeef6152c71b6dd8ca": {
+    "facing": "model",
+    "id": "tool-parameter-proposeskills-skill-md",
+    "name": "Tool Parameter: ProposeSkills skillMd",
+    "desc": "zod .describe() for the ProposeSkills tool's per-proposal skillMd field, instructing the model to supply a complete SKILL.md draft"
+  },
+  "704cbf9ed3c5ee5f9c6c7091dc4f1327c7c57871": {
+    "facing": "model",
+    "id": "tool-parameter-reportfindings-short-summary",
+    "name": "Tool Parameter: ReportFindings short_summary",
+    "desc": "zod .describe() for the ReportFindings tool's short_summary field, telling the model to compress the claim to a <=60 char label with no rationale clause"
+  },
+  "26dc522e1c6226b3f2ffa2463cdd405368aaf9e1": {
+    "facing": "model",
+    "id": "data-import-untranslatable-shell-exec-marker",
+    "name": "Data: Import untranslatable shell-exec marker",
+    "desc": "Unmappable-item reason for a Codex prompt carrying a shell-exec marker, interpolated into the /import query prompt and the generated import-to-claude-code SKILL.md"
+  },
+  "0d643665da021a657d2b602495ba51c6efdd4060": {
+    "facing": "model",
+    "id": "data-import-untranslatable-dangling-shell-marker",
+    "name": "Data: Import untranslatable dangling shell marker",
+    "desc": "Unmappable-item reason for a prompt whose dangling shell-exec marker could be completed into a live command, shown to the model via the /import prompt and fallback skill"
+  },
+  "044c5e5c7c81c7cfe30b72e86fc265ced8be77a3": {
+    "facing": "model",
+    "id": "slash-command-fork-description",
+    "name": "Slash Command: /fork description",
+    "desc": "Slash-command registration description; reaches the model through the \"**Available commands (N in this build):**\" listing built by PoS() for the claude-code-guide skill (local-jsx commands pass the f.type!==\"prompt\" filter)."
+  },
+  "ec6562d33f6c3365bd657da30d5b78ecfa7cb132": {
+    "facing": "model",
+    "id": "data-import-gemini-settings-unparseable",
+    "name": "Data: Import Gemini settings unparseable",
+    "desc": "Unmappable-item reason for a ~/.gemini/settings.json with an unexpected structure, interpolated into the /import query prompt and the import-to-claude-code SKILL.md"
+  },
+  "19927e5909b5dbebdcf372d3d1ef02b71b50d208": {
+    "facing": "model",
+    "id": "data-import-gemini-settings-unreadable",
+    "name": "Data: Import Gemini settings unreadable",
+    "desc": "Unmappable-item reason for an unreadable ~/.gemini/settings.json, interpolated into the /import query prompt and the import-to-claude-code SKILL.md"
+  },
+  "ee1894089a35ad40495625869faa811780510cab": { "facing": "ui" },
+  "edea1eeea1bb0addd5ed1a5f99c43c190c414637": { "facing": "ui" },
+  "a54f9f327e11154c0b14f0c7371e44f94116cbbc": { "facing": "ui" },
+  "3a4e9ee9f62f3279c68aff223515de4d7880e842": { "facing": "ui" },
+  "af8f34eaed59f04ecb8a45a8e1b5d34b0c4e0315": { "facing": "ui" },
+  "c9050fb8ecb9518cdb67205b5227fc9620e6a656": {
+    "facing": "model",
+    "id": "skill-artifact-pr-review-description",
+    "name": "Skill: Artifact PR review description",
+    "desc": "Trigger description for creating a shareable PR review briefing Artifact with a recommendation, reviewer judgment calls, visual explainer, signals, and blind spots"
+  },
+  "91ed837eeab67d0f3bedbf2c694006c57efbc5e3": {
+    "facing": "model",
+    "id": "tool-parameter-task-mode-deprecated",
+    "name": "Tool Parameter: Task mode (deprecated)",
+    "desc": "zod .describe() for the Task/Agent tool's deprecated mode input, telling the model it is ignored and that subagents inherit the parent session's permission mode"
+  },
+  "9df6433ef5971de5f06298b109e5e186f8f3192a": {
+    "facing": "model",
+    "id": "tool-result-powershell-windows-sandbox-policy-refusal",
+    "name": "Tool Result: PowerShell Windows sandbox policy refusal",
+    "desc": "Returned from the PowerShell tool's validateInput (and thrown on call) when enterprise policy requires sandboxing but the command would not be sandboxed on Windows; delivered to the model as the tool's error result"
+  },
+  "5306ff7f8fab87fb12995e9057f48c3b95d9fb55": { "facing": "ui" },
+  "db2f8882605fe612e30da392ca9426a5256851fc": {
+    "facing": "model",
+    "id": "tool-parameter-proposeskills-target",
+    "name": "Tool Parameter: ProposeSkills target",
+    "desc": "zod .describe() for the ProposeSkills tool's target field, telling the model when to name an existing skill to amend"
+  },
+  "0ad41730aea6885b0e7fdc40e1272e25df71b50d": {
+    "facing": "model",
+    "id": "tool-parameter-feedback-details",
+    "name": "Tool Parameter: Feedback details",
+    "desc": "zod .describe() for the product-feedback tool's details field, instructing the model to write a factual, reproducible report with no speculation or secrets"
+  },
+  "6400c040d613418828a9f97030f963038aedb34c": {
+    "facing": "model",
+    "id": "tool-parameter-suggestskills-trigger",
+    "name": "Tool Parameter: SuggestSkills trigger",
+    "desc": "zod .describe() for the SuggestSkills tool's trigger field, telling the model to record whether the suggestion was user-asked or proactive"
+  },
+  "52df412c928070ce1ae08934a3478404284cfed4": { "facing": "internal" },
+  "1768f5c26c8d3f03eefe459a398ecb6e8e6d1425": {
+    "facing": "model",
+    "id": "system-prompt-memory-explicit-remember-request",
+    "name": "System Prompt: Memory explicit remember request",
+    "desc": "Line in the assembled Memory system-prompt section instructing the model to save immediately when the user asks it to remember something, and to remove the entry when asked to forget"
+  },
+  "de9c39eddd7e87ff6ec1da0210f7c9510333273e": {
+    "facing": "model",
+    "id": "slash-command-import-description",
+    "name": "Slash Command: /import description",
+    "desc": "Slash-command registration description; reaches the model through the \"**Available commands (N in this build):**\" listing built by PoS() for the claude-code-guide skill (local-jsx commands pass the f.type!==\"prompt\" filter)."
+  },
+  "79762e1b95285d923c9510d8ee73ad3ff7f5a215": { "facing": "ui" },
+  "323cb00776f163e5d88c077210aa655878179388": { "facing": "ui" },
+  "77a317c0c6ac2619186f2d48b2d67f8a91f4fcef": { "facing": "ui" },
+  "e345af17b9ebcc6a5faabe91ef31746f17e5b82b": {
+    "facing": "model",
+    "id": "data-import-untranslatable-literal-shell-marker",
+    "name": "Data: Import untranslatable literal shell marker",
+    "desc": "Unmappable-item reason for a Gemini prompt with a literal !` outside any shell block, interpolated into the /import query prompt and the import-to-claude-code SKILL.md"
+  },
+  "39a8cbf81bd8d1ba770c0354ab14873925fe2c04": {
+    "facing": "model",
+    "id": "data-import-untranslatable-backtick-in-shell-block",
+    "name": "Data: Import untranslatable backtick in shell block",
+    "desc": "Unmappable-item reason for a !{…} block containing a backtick, interpolated into the /import query prompt and the import-to-claude-code SKILL.md"
+  },
+  "70d4477f609a3899cf1996ebbafd0d329e470b9f": {
+    "facing": "model",
+    "id": "data-import-untranslatable-nested-braces-shell-block",
+    "name": "Data: Import untranslatable nested braces in shell block",
+    "desc": "Unmappable-item reason for a !{…} block with nested braces the importer would truncate, interpolated into the /import query prompt and the import-to-claude-code SKILL.md"
+  },
+  "5df8a75cf1feb5d939ba2cfb08783d47e3852db2": {
+    "facing": "model",
+    "id": "data-import-untranslatable-nested-brace-path",
+    "name": "Data: Import untranslatable nested brace path",
+    "desc": "Unmappable-item reason for an @{…} path with a nested brace the importer would truncate, interpolated into the /import query prompt and the import-to-claude-code SKILL.md"
+  },
+  "06f9efe2a8cb3466824a513779c03cedd2f2134c": {
+    "facing": "model",
+    "id": "data-import-untranslatable-fenced-shell-block",
+    "name": "Data: Import untranslatable fenced shell block",
+    "desc": "Unmappable-item reason for a body containing a ```! fenced shell block, interpolated into the /import query prompt and the import-to-claude-code SKILL.md"
+  },
+  "9d89070938c036312b46778bb945db7e88ebfe5e": {
+    "facing": "model",
+    "id": "data-import-untranslatable-translated-shell-marker",
+    "name": "Data: Import untranslatable translated shell marker",
+    "desc": "Unmappable-item reason for a translated body that gained a !`cmd` marker absent from the Gemini prompt, interpolated into the /import query prompt and the import-to-claude-code SKILL.md"
+  },
+  "27a787172050149be0c36af58bd4a925fe40c2d2": {
+    "facing": "model",
+    "id": "tool-parameter-proposeskills-name",
+    "name": "Tool Parameter: ProposeSkills name",
+    "desc": "zod .describe() for the ProposeSkills tool's per-proposal name field, telling the model to supply a kebab-case skill slug"
+  },
+  "52ad9a5624121302690566bf51b8bafe248e25a3": { "facing": "internal" },
+  "cda6be8bc4ed1821f0357ef4afd31b09434b36b8": {
+    "facing": "model",
+    "id": "data-import-unmappable-codex-permission-mode-project",
+    "name": "Data: Import Unmappable — Codex Permission Mode (Project Scope)",
+    "desc": "Reason text for an unmappable Codex approval_policy at project scope; interpolated into the generated import-to-claude-code SKILL.md and into the /import preview prompt the model summarises."
+  },
+  "0a2bcb38bdc156e61193bf384b6aef8811ce30ee": {
+    "facing": "model",
+    "id": "tool-result-mcp-tool-backgrounded",
+    "name": "Tool Result: MCP Tool Moved To Background",
+    "desc": "Text tool_result returned to the model when a slow MCP tool call is auto-backgrounded as a task, telling it to keep working and how to stop the task."
+  },
+  "6b99a26e2ffe49b143520b7be40ed1d91e2fe3ff": {
+    "facing": "model",
+    "id": "tool-parameter-proposeskills-evidence",
+    "name": "Tool Parameter: ProposeSkills evidence",
+    "desc": "Describes the evidence array in the ProposeSkills tool input schema, sent to the model as part of the tool definition."
+  },
+  "1472404dadf7a2b6a108df644c23ca9495a23760": { "facing": "internal" },
+  "e081f9b07a361aa5b43acaaa0fde0d15de27c5eb": { "facing": "internal" },
+  "7755ccae799b090d6a91091517077ba209146a3d": {
+    "facing": "model",
+    "id": "data-import-unmappable-settings-keys-no-equivalent",
+    "name": "Data: Import Unmappable — No Claude Code Equivalent",
+    "desc": "Reason text for foreign-agent settings keys with no Claude Code mapping; interpolated into the generated import-to-claude-code SKILL.md and the /import preview prompt."
+  },
+  "62b1e96fb4943b3a572884d46332e84a63739f35": { "facing": "ui" },
+  "c69dec875ee442bfa37f1d013a3ad6faf1332763": {
+    "facing": "model",
+    "id": "slash-command-import-yes-nothing-to-confirm",
+    "name": "Slash Command: /import --yes Nothing To Confirm",
+    "desc": "Output of `/import --yes` when no prior preview exists; returned as {type:'text'} and wrapped in <local-command-stdout>, which tN() replays to the model as a user message."
+  },
+  "c46d258c12bf2dbfac74619e55a2929550f44a2a": { "facing": "internal" },
+  "9720389ee69a5d109eb30531387b00c1255ba967": {
+    "facing": "model",
+    "id": "tool-parameter-proposeskills-description",
+    "name": "Tool Parameter: ProposeSkills description",
+    "desc": "Describes the per-proposal description field in the ProposeSkills tool input schema, sent to the model with the tool definition."
+  },
+  "26290d74964bc6e6f5e2cc2364061dc86280f6c3": {
+    "facing": "model",
+    "id": "data-import-unmappable-shell-block-bang-with-placeholder",
+    "name": "Data: Import Unmappable — Shell Block '!' With Placeholders",
+    "desc": "Portability-blocker reason returned by the import shell-safety check; lands in unmappable[].reason and is interpolated into the generated import-to-claude-code SKILL.md and the /import preview prompt."
+  },
+  "7703f3d272c2509a0321e01a24f594752bc9e195": {
+    "facing": "model",
+    "id": "data-import-unmappable-shell-block-argument-placeholder",
+    "name": "Data: Import Unmappable — Shell Block Argument Placeholder",
+    "desc": "Portability-blocker reason for a Gemini shell block containing an argument placeholder; interpolated into the generated import-to-claude-code SKILL.md and the /import preview prompt."
+  },
+  "57cded51af97dec3dab28d44c0bf7dba2192791e": {
+    "facing": "model",
+    "id": "tool-parameter-sendfeedback-area",
+    "name": "Tool Parameter: SendFeedback area",
+    "desc": "Describes the optional area tag in the SendFeedback tool input schema, sent to the model with the tool definition."
+  },
+  "772980f73c8f0dd9769aa3c808629e6d0140a741": { "facing": "internal" },
+  "fa9442be5a5027c63999b3e4f9eac2163f1c8024": {
+    "facing": "model",
+    "id": "data-import-warning-codex-approval-policy-default",
+    "name": "Data: Import Warning — Codex approval_policy Maps To default",
+    "desc": "Warning attached to an importable Codex permission-mode item; BA_() appends it to each item line in the {type:'query'} prompt that /import sends to the model to summarise."
+  },
+  "e4a013f8e1e7ba8c877fd1491a39f95171f76a32": {
+    "facing": "model",
+    "id": "system-prompt-auto-mode-setup-proposal-json-repair",
+    "name": "System Prompt: Auto-Mode Setup Proposal JSON Repair",
+    "desc": "Retry turn pushed as {role:'user'} to the auto-mode-setup proposal side-query when the model's previous reply could not be parsed as JSON."
+  },
+  "0a094a8040626b11d092e2404f2f1d5ed4349dc8": { "facing": "internal" },
+  "fb3bcb4ea99c5caf072350c6e8166d6a395ad87a": {
+    "facing": "model",
+    "id": "tool-result-pretooluse-hook-unexpected-error",
+    "name": "Tool Result: PreToolUse Hook Unexpected Error",
+    "desc": "Default stopReason when a PreToolUse hook throws; the stop handler assigns it as the tool_result content block returned to the model in place of the blocked tool's output."
+  },
+  "71b3f61eb0b87db55de82902956907024ebb2825": {
+    "facing": "model",
+    "id": "slash-command-bug-description",
+    "name": "Slash Command: /bug description",
+    "desc": "Slash-command registration description; reaches the model through the \"**Available commands (N in this build):**\" listing built by PoS() for the claude-code-guide skill (local-jsx commands pass the f.type!==\"prompt\" filter)."
+  },
+  "f21bd55c4a5ed27e2326476aadbffae5cadb4c06": {
+    "facing": "model",
+    "id": "skill-artifact-capabilities-description",
+    "name": "Skill: Artifact Capabilities Description",
+    "desc": "First fragment of the artifact-capabilities bundled skill's `description` (the model-facing one; menuDescription is the UI sibling), listed to the model in the skill system-reminder."
+  },
+  "8fd4e41f1b947e915c39e98029a6786a1312d773": {
+    "facing": "model",
+    "id": "data-import-unmappable-codex-sandbox-mode",
+    "name": "Data: Import Unmappable — Codex sandbox_mode",
+    "desc": "Reason text for an unmappable Codex sandbox_mode key; interpolated into the generated import-to-claude-code SKILL.md and the /import preview prompt."
+  },
+  "5ed004d072a1469d27d012d7c0cb074eb28e4578": { "facing": "ui" },
+  "8416c5d410f6bd82f6933715c85a8296390586de": { "facing": "ui" },
+  "4fff5027b7b9e06e143c46c0ac8ca62b2b08ab06": {
+    "facing": "model",
+    "id": "slash-command-subtask-description",
+    "name": "Slash Command: /subtask description",
+    "desc": "Slash-command registration description; reaches the model through the \"**Available commands (N in this build):**\" listing built by PoS() for the claude-code-guide skill (local-jsx commands pass the f.type!==\"prompt\" filter)."
+  },
+  "628c0fa8eaa46ee0a9aa1cf2c7a88a2a3a5d16ef": {
+    "facing": "model",
+    "id": "slash-command-feedback-description",
+    "name": "Slash Command: /feedback description",
+    "desc": "Slash-command registration description; reaches the model through the \"**Available commands (N in this build):**\" listing built by PoS() for the claude-code-guide skill (local-jsx commands pass the f.type!==\"prompt\" filter)."
+  },
+  "294da8e393b750d6d1be83c9a6ae402038a5b927": {
+    "facing": "model",
+    "id": "tool-result-sendfeedback-call-cap-reached",
+    "name": "Tool Result: SendFeedback Per-Session Cap Reached",
+    "desc": "data.message returned by the SendFeedback tool once its per-session call cap is hit, delivered to the model as the tool result."
+  },
+  "538c4fa49d81f5ef3fd519ac8429fbc28c410d4b": { "facing": "internal" },
+  "8111ddfb1c2fa9c078ab009f6464957e3b0cad4d": {
+    "facing": "model",
+    "id": "tool-parameter-sendfeedback-title",
+    "name": "Tool Parameter: SendFeedback title",
+    "desc": "Describes the title field in the SendFeedback tool input schema, sent to the model with the tool definition."
+  },
+  "75b9bef286868a36a66e7a138b9d32a024bb32c0": {
+    "facing": "model",
+    "id": "tool-result-proposeskills-shown",
+    "name": "Tool Result: ProposeSkills Proposals Shown",
+    "desc": "tool_result content built by ProposeSkills' mapToolResultToToolResultBlockParam, telling the model the proposals were shown and to continue without waiting."
+  },
+  "557574033a3990d5afe4fa914a5509f959705fa3": { "facing": "internal" },
+  "9231dfa691549e9cafa99e7462c6c35729de13fb": {
+    "facing": "model",
+    "id": "tool-result-task-subagent-spawn-limit",
+    "name": "Tool Result: Subagent Spawn Limit Reached",
+    "desc": "AgentPreconditionError message thrown by the Task tool at the spawn cap; runToolUse wraps it as <tool_use_error> tool_result content returned to the model."
+  },
+  "5e9353f49cc7c639b538ded053196aac5330f089": {
+    "facing": "model",
+    "id": "slash-command-subtask-coordinator-unavailable",
+    "name": "Slash Command: /subtask Unavailable In Coordinator Sessions",
+    "desc": "Output of /subtask in a coordinator session; emitted with display:'system' as <local-command-stdout>, which tN() replays to the model as a user message."
+  },
+  "7bc57ce182309eba235dd50bbc530d9fdfef3db4": { "facing": "ui" },
+  "231214536501b1ed0831a46c25d5ea88a6582237": {
+    "facing": "model",
+    "id": "skill-code-review-no-task-tool-single-pass",
+    "name": "Skill: Code Review Without Task Tool (Single Pass)",
+    "desc": "Code-review skill prompt fragment substituted when the Task tool is unavailable, instructing the model to work every angle in one pass instead of fanning out."
+  },
+  "26139eee61cfa1ce31b973680379677ee66259e9": { "facing": "internal" },
+  "64dd00a851eb562bac30bc9354c7dddd67517f34": {
+    "facing": "model",
+    "id": "tool-result-artifact-title-tag-wins",
+    "name": "Tool Result: Artifact <title> Tag Overrides title Param",
+    "desc": "Warning pushed into the Artifact tool's result `warnings` array, returned to the model when the document's <title> supersedes the title parameter."
+  },
+  "58ff2e2f10137253b980f2cd1ae19cda4969400a": {
+    "facing": "model",
+    "id": "slash-command-sandbox-install-timeout",
+    "name": "Slash Command: /sandbox install Timed Out",
+    "desc": "Result message of `/sandbox install` on Windows UAC timeout; the local-jsx onDone is called without display:'system', so it becomes a <local-command-stdout> user message in the model's context."
+  },
+  "0844554e02789370c4a9e9d714a6d15085668114": { "facing": "ui" },
+  "3a07bc3f6e0ef378bc7a32455c47bee784ac08f8": {
+    "facing": "model",
+    "id": "data-import-unmappable-project-scope-items-not-listed",
+    "name": "Data: Import Unmappable — Project-Level Items Withheld",
+    "desc": "Section emitted by yA_() into the generated import-to-claude-code SKILL.md explaining that project-scope unmapped items are deliberately not listed."
+  },
+  "8ee1aafa5aa83e17afc847cafb40c2ba037444d7": {
+    "facing": "model",
+    "id": "system-prompt-forked-from-live-worktree-isolation",
+    "name": "System Prompt: Forked Out Of A Live Worktree",
+    "desc": "Appended via --append-system-prompt to a session forked out of a worktree another live session owns, forbidding edits in that directory and directing isolation."
+  },
+  "28856fe848ffaf0bc4067d94799b4cb8019f6815": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-no-base-branch",
+    "name": "Slash Command: Ultrareview Missing Base Branch",
+    "desc": "Precondition error from JFo() when the repo has no base branch; the /code-review ultra local-jsx command emits it as <local-command-stdout>, replayed to the model."
+  },
+  "5d4ad066c02941ea315c10d3cd8a04b653b55c47": { "facing": "internal" },
+  "92dd3abbc27454c645c6e5c9ae7b75d31ad886d3": { "facing": "internal" },
+  "de154ef84a4c18b5c6c829252047e4d76eedb857": { "facing": "internal" },
+  "4babbf5aea36d55adc23e28d1e6d6b1748e9e689": {
+    "facing": "model",
+    "id": "tool-description-sendfeedback-drafting-guidance",
+    "name": "Tool Description: SendFeedback drafting guidance",
+    "desc": "Instructs when and how to queue factual local Claude Code feedback drafts without interrupting the user, duplicating issues, guessing details, or including sensitive information"
+  },
+  "ec2f0af9459a95f1f08e05c623efe463bca19474": {
+    "facing": "model",
+    "id": "data-import-warning-gemini-shell-exec-allowed-tools",
+    "name": "Data: Import Warning — Gemini Shell-Exec Command",
+    "desc": "Warning attached to an importable Gemini command that uses !{cmd}; BA_() appends it to the item line in the {type:'query'} prompt /import sends to the model."
+  },
+  "b4c9150ac5aa0b33a2ebf62e181f3dcbaa27be59": {
+    "facing": "model",
+    "id": "tool-result-websearch-session-budget-exhausted",
+    "name": "Tool Result: Web Search Session Budget Exhausted",
+    "desc": "Synthetic WebSearch result returned to the model once the per-session search cap is hit, telling it to stop issuing searches."
+  },
+  "627e71ae038f512083e399323f3ea2ca5ba08b4e": {
+    "facing": "model",
+    "id": "tool-parameter-sendfeedback-type",
+    "name": "Tool Parameter: SendFeedback type",
+    "desc": "Describes the feedback-kind enum in the SendFeedback tool input schema, sent to the model with the tool definition."
+  },
+  "c6e2bf791a6cf9b41fa5a86d26a021ba221c61ab": { "facing": "internal" },
+  "659b2f34d9c9b57caf247a962fb5d8348553d06b": {
+    "facing": "model",
+    "id": "system-prompt-read-only-team-memory-private-fallback",
+    "name": "System Prompt: Read-Only Team Memory With Private Fallback",
+    "desc": "System-prompt memory-directory branch used when team memory is read-only but a private memory directory still persists, pointing the model there for new memories."
+  },
+  "a089fe7567626d99a5fd2da69edb23910e71b145": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-shallow-clone-deepen",
+    "name": "Slash Command: Ultrareview Shallow Clone (Deepen Hint)",
+    "desc": "Precondition error for a shallow clone with an explicit base arg; emitted by the /code-review ultra command as <local-command-stdout> and replayed to the model."
+  },
+  "e889751afe59116a32077f63f2340b3ccb924aab": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-shallow-clone-unshallow",
+    "name": "Slash Command: Ultrareview Shallow Clone (Unshallow Hint)",
+    "desc": "Precondition error for a shallow clone with no explicit base arg; emitted by the /code-review ultra command as <local-command-stdout> and replayed to the model."
+  },
+  "436ebe73381ab6fa362009853bfefa37d16cccc6": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-no-commits",
+    "name": "Slash Command: Ultrareview Branch Has No Commits",
+    "desc": "Precondition error when HEAD does not resolve; emitted by the /code-review ultra command as <local-command-stdout> and replayed to the model."
+  },
+  "fb5418639dc6cb79d2e5812470fbc83ac4a98c64": { "facing": "internal" },
+  "076fc79c30db471245d2664c1bc64d650f2d91d7": { "facing": "internal" },
+  "bcb21abef3e65b21981b266f2bac72fadc0dff74": { "facing": "internal" },
+  "2a777820a603ccc986a2ff1aedd42716049cac55": { "facing": "internal" },
+  "bd8a2d9b483dc3b9a4aa36fd8411a631b1a624c0": { "facing": "internal" },
+  "b6db1c6214c26585d5c4bb4f9c40713c9588f08d": { "facing": "internal" },
+  "0f8d8a296e6d37b36f02d2ad0058593e574b37f7": { "facing": "internal" }
 }
