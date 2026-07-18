@@ -14,7 +14,22 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const VER = process.env.CC_VER || '2.1.168';
+// Default to the newest committed prompts JSON. A hardcoded old version silently
+// audits the wrong release (or skips entirely) long after that version is gone.
+const latestCommittedVer = () => {
+  const dir = 'data/prompts';
+  const vers = fs
+    .readdirSync(dir)
+    .map((f) => /^prompts-(\d+\.\d+\.\d+)\.json$/.exec(f)?.[1])
+    .filter(Boolean)
+    .sort((a, b) => {
+      const [x, y] = [a, b].map((v) => v.split('.').map(Number));
+      return x[0] - y[0] || x[1] - y[1] || x[2] - y[2];
+    });
+  return vers[vers.length - 1];
+};
+
+const VER = process.env.CC_VER || latestCommittedVer();
 const ourJson = process.argv[2] || `data/prompts/prompts-${VER}.json`;
 const upstreamJson = process.argv[3] || `/tmp/pieb-${VER}.json`;
 const overridesDir =
@@ -25,17 +40,22 @@ const OURS = JSON.parse(fs.readFileSync(ourJson, 'utf8'));
 // Upstream reference is required. On a box without the `upstream` remote (e.g. a
 // VPS mirror) the dump is empty — skip loudly rather than crash with a raw
 // JSON.parse stack. The audit runs during showtime on the Mac, which has upstream.
+// A skip exits NON-ZERO: this is a showtime gate, and "did nothing" must never be
+// mistaken for "found nothing" (exit 0 on skip read as a pass for three releases).
+// Set TWEAKCC_ALLOW_MISBIND_SKIP=1 on boxes that legitimately have no upstream.
 let PIEB;
 try {
   const raw = fs.readFileSync(upstreamJson, 'utf8');
   if (!raw.trim()) throw new Error('file is empty');
   PIEB = JSON.parse(raw);
 } catch (e) {
+  const allowSkip = process.env.TWEAKCC_ALLOW_MISBIND_SKIP === '1';
   console.error(
     `mis-bind audit: SKIPPED — upstream reference '${upstreamJson}' missing/empty (${e.message}). ` +
-      `Dump it first: git show upstream/main:data/prompts/prompts-<ver>.json > ${upstreamJson}`
+      `Dump it first: git show upstream/prompts/${VER}:data/prompts/prompts-${VER}.json > ${upstreamJson}` +
+      (allowSkip ? '' : ' (set TWEAKCC_ALLOW_MISBIND_SKIP=1 to treat a skip as non-fatal)')
   );
-  process.exit(0);
+  process.exit(allowSkip ? 0 : 2);
 }
 // Upstream is the reference, not scripture. Where its map is verifiably wrong
 // against the binary, tools/promptExtractor.js CURATED_IDENTIFIER_MAPS corrects
