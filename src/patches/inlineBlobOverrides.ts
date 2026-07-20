@@ -28,6 +28,7 @@ import * as path from 'node:path';
 import matter from 'gray-matter';
 
 import { debug, escapeNonAscii as escapeNonAsciiUnicode } from '../utils';
+import { detectUnicodeEscaping } from '../systemPromptSites';
 import { SYSTEM_PROMPTS_DIR } from '../config';
 import { showDiff } from './patchDiffing';
 
@@ -199,9 +200,6 @@ const walkTemplate = (content: string, start: number): number | null => {
 // ---------------------------------------------------------------------------
 // Re-encoding bodies for cli.js delimiter context
 // ---------------------------------------------------------------------------
-
-const detectUnicodeEscaping = (content: string): boolean =>
-  /\\u[0-9a-fA-F]{4}/.test(content);
 
 // Escape body text for embedding as the value of a double-quoted JS string
 // literal.  Used for each element of an array-kind override.
@@ -711,7 +709,11 @@ export interface InlineBlobApplyResult {
 }
 
 export const applyInlineBlobOverrides = async (
-  content: string
+  content: string,
+  // Restrict the run to a single override file. The apply preflight uses this
+  // to measure ONE override's claimed span against the pristine binary through
+  // the real resolution path, instead of re-deriving the boundary walkers.
+  options?: { only?: string }
 ): Promise<{ content: string; results: InlineBlobApplyResult[] }> => {
   const escapeNonAscii = detectUnicodeEscaping(content);
   if (escapeNonAscii) {
@@ -726,7 +728,10 @@ export const applyInlineBlobOverrides = async (
     return { content, results: [] };
   }
   const candidates = entries.filter(
-    n => n.startsWith('inline-') && n.endsWith('.md')
+    n =>
+      n.startsWith('inline-') &&
+      n.endsWith('.md') &&
+      (!options?.only || n === options.only)
   );
   if (candidates.length === 0) return { content, results: [] };
 

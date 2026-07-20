@@ -1131,6 +1131,42 @@ export const preloadStringsFile = async (
 };
 
 /**
+ * Canonical pristine bodies per prompt id for a CC version.
+ *
+ * One id can hold several DISTINCT bodies when it occupies multiple binary
+ * sites with different shapes, hence a Set per id. Built with
+ * `reconstructContentFromPieces` — never re-derive it inline: the `${` and `}`
+ * already live inside the pieces (so the BARE label is appended) and the map
+ * key is `identifiers[i]`, not `i`. Getting either wrong silently makes most
+ * prompts un-matchable.
+ */
+export const pristineBodiesById = async (
+  version: string
+): Promise<Map<string, Set<string>>> => {
+  const file =
+    globalStringsFile && globalCachedVersion === version
+      ? globalStringsFile
+      : await downloadStringsFile(version);
+  const out = new Map<string, Set<string>>();
+  for (const prompt of file.prompts) {
+    if (!prompt.id) continue;
+    let bodies = out.get(prompt.id);
+    if (!bodies) {
+      bodies = new Set<string>();
+      out.set(prompt.id, bodies);
+    }
+    bodies.add(
+      reconstructContentFromPieces(
+        prompt.pieces,
+        prompt.identifiers,
+        prompt.identifierMap
+      )
+    );
+  }
+  return out;
+};
+
+/**
  * System prompt definition for listing
  */
 export interface SystemPromptDefinition {
@@ -1405,6 +1441,71 @@ export const escapeDepthZeroBackticks = (
   }
 
   return { content: out, incomplete };
+};
+
+const escapeUnescapedChar = (str: string, char: string): string => {
+  let result = '';
+  for (let i = 0; i < str.length; i++) {
+    if (str[i] === char) {
+      let bs = 0;
+      let j = i - 1;
+      while (j >= 0 && str[j] === '\\') {
+        bs++;
+        j--;
+      }
+      result += bs % 2 === 0 ? '\\' + char : char;
+    } else {
+      result += str[i];
+    }
+  }
+  return result;
+};
+
+export interface EncodedReplacement {
+  content: string;
+  /** Backtick sites only: an unclosed `${` interpolation was detected. */
+  incomplete: boolean;
+  /** Backtick sites only: unescaped backticks were auto-repaired. */
+  autoEscaped: boolean;
+}
+
+/**
+ * Encode override content for embedding at a resolved cli.js site, given the
+ * delimiter the resolution determined. Shared by the apply and its preflight so
+ * a dry run sees the exact bytes the apply would splice.
+ *
+ * Order matters: literal backslashes are doubled FIRST so they survive JS
+ * string embedding (#660) — but only in quote contexts, because
+ * escapeDepthZeroBackticks is parity-aware and pre-doubling breaks `` \` ``
+ * (#664). Non-ASCII escaping runs LAST, after the doubling, or an already
+ * emitted `\uXXXX` becomes literal `\\uXXXX` text in the binary.
+ */
+export const encodeReplacementForDelimiter = (
+  text: string,
+  delimiter: string,
+  escapeNonAsciiOutput: boolean
+): EncodedReplacement => {
+  let out = text;
+  let incomplete = false;
+  let autoEscaped = false;
+
+  if (delimiter === '"' || delimiter === "'") {
+    out = out.replace(/\\/g, '\\\\');
+    out = out.replace(/\r\n|\r|\n/g, '\\n');
+    out = escapeUnescapedChar(out, delimiter);
+  } else if (delimiter === '`') {
+    out = out.replace(/\r\n|\r/g, '\n');
+    const escaped = escapeDepthZeroBackticks(out);
+    incomplete = escaped.incomplete;
+    autoEscaped = escaped.content !== out;
+    out = escaped.content;
+  }
+
+  if (escapeNonAsciiOutput) {
+    out = escapeNonAsciiChars(out);
+  }
+
+  return { content: out, incomplete, autoEscaped };
 };
 
 /**

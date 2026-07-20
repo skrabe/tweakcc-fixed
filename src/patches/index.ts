@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import * as fs from 'node:fs/promises';
 import * as fsSync from 'node:fs';
 import * as os from 'node:os';
@@ -64,6 +65,10 @@ import { writeSubagentModels } from './subagentModels';
 import { writePatchesAppliedIndication } from './patchesAppliedIndication';
 import { applySystemPrompts } from './systemPrompts';
 import { applyInlineBlobOverrides } from './inlineBlobOverrides';
+import {
+  formatPreflightFinding,
+  runSystemPromptPreflight,
+} from '../systemPromptPreflight';
 import { writeFixLspSupport } from './fixLspSupport';
 import { writeFixSummarizeFromHere } from './fixSummarizeFromHere';
 import { writeFixRewindSummaryHeader } from './fixRewindSummaryHeader';
@@ -778,6 +783,58 @@ export const applyCustomization = async (
   // pristine binary → warn), so consumed-region prompts don't raise spurious
   // "Could not find" noise.
   const pristineContent = content;
+
+  // ==========================================================================
+  // Preflight — the same checks `--validate-system-prompts` runs, against the
+  // pristine binary, BEFORE the first splice. Every finding is printed (the
+  // 0-warnings bar makes a red apply line actionable on its own), but only
+  // raw-non-ASCII aborts: that one is a failure of the escaping pipeline
+  // itself — bytes Bun stores as Latin-1 and the model reads as mojibake — and
+  // never a judgement call about authored text. Aborting on the content-level
+  // findings would strand an operator mid-bump behind a validator they cannot
+  // satisfy without editing overrides, which is how gates end up bypassed.
+  // ==========================================================================
+  if (ccInstInfo.version) {
+    // A preflight that cannot run must not take the apply down with it: it is
+    // an advisory pass in front of the real work, not a dependency of it.
+    const preflight = await runSystemPromptPreflight({
+      pristine: pristineContent,
+      version: ccInstInfo.version,
+      patchFilter,
+    }).catch(error => {
+      debug(`system-prompt preflight skipped: ${error}`);
+      return null;
+    });
+    // Errors surface here; advisories do not. The corpus carries ~48 standing
+    // cardinality/ownership findings that no single apply can act on, and a
+    // recurring wall of yellow is how a real error gets scrolled past. The full
+    // report is one command away via --validate-system-prompts.
+    const advisories: string[] = [];
+    for (const finding of preflight?.findings ?? []) {
+      const line = `preflight: ${formatPreflightFinding(finding)}`;
+      if (finding.severity === 'error') console.log(chalk.red(line));
+      else {
+        advisories.push(line);
+        debug(line);
+      }
+    }
+    if (advisories.length > 0) {
+      debug(
+        `system-prompt preflight: ${advisories.length} advisory finding(s) — ` +
+          'run --validate-system-prompts for the full report'
+      );
+    }
+    const blocking = (preflight?.findings ?? []).filter(
+      f => f.check === 'raw-non-ascii'
+    );
+    if (blocking.length > 0) {
+      throw new Error(
+        `system-prompt preflight found ${blocking.length} span(s) that would ` +
+          'introduce raw non-ASCII into the binary; nothing was modified. ' +
+          'Re-run with --validate-system-prompts for the full report.'
+      );
+    }
+  }
 
   // ==========================================================================
   // Apply inline-blob overrides FIRST (prompts not extracted into prompts JSON)

@@ -4,10 +4,15 @@ import { showDiff, PatchResult, PatchGroup } from './index';
 import {
   loadSystemPromptsWithRegex,
   reconstructContentFromPieces,
-  escapeDepthZeroBackticks,
-  escapeNonAsciiChars,
+  encodeReplacementForDelimiter,
   loadIdentifierMapUnion,
 } from '../systemPromptSync';
+import {
+  delimiterBefore,
+  detectUnicodeEscaping,
+  extractBuildTime,
+  pickMatchForSplice,
+} from '../systemPromptSites';
 import { setAppliedHashes, computeMD5Hash } from '../systemPromptHashIndex';
 import { findAllMatchesWithStackFallback } from '../safeRegexMatch';
 
@@ -71,28 +76,6 @@ export interface SystemPromptsResult {
 }
 
 /**
- * Detects if the cli.js file uses Unicode escape sequences for non-ASCII characters.
- * This is common in Bun native executables.
- */
-const detectUnicodeEscaping = (content: string): boolean => {
-  // Look for Unicode escape sequences like \u2026 in string literals
-  // We'll check for a pattern that suggests intentional escaping of common non-ASCII chars
-  const unicodeEscapePattern = /\\u[0-9a-fA-F]{4}/;
-  return unicodeEscapePattern.test(content);
-};
-
-/**
- * Extracts the BUILD_TIME value from cli.js content.
- * BUILD_TIME is an ISO 8601 timestamp like "2025-12-09T19:43:43Z"
- */
-const extractBuildTime = (content: string): string | undefined => {
-  const match = content.match(
-    /\bBUILD_TIME:"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)"/
-  );
-  return match ? match[1] : undefined;
-};
-
-/**
  * Apply system prompt customizations to cli.js content
  * @param content - The current content of cli.js
  * @param version - The Claude Code version
@@ -100,28 +83,6 @@ const extractBuildTime = (content: string): string | undefined => {
  * @param patchFilter - Optional list of patch/prompt IDs to apply (if provided, only matching prompts are applied)
  * @returns SystemPromptsResult with modified content and per-prompt results
  */
-const escapeUnescapedChar = (str: string, char: string): string => {
-  let result = '';
-  for (let i = 0; i < str.length; i++) {
-    if (str[i] === char) {
-      let bs = 0;
-      let j = i - 1;
-      while (j >= 0 && str[j] === '\\') {
-        bs++;
-        j--;
-      }
-      if (bs % 2 === 0) {
-        result += '\\' + char;
-      } else {
-        result += char;
-      }
-    } else {
-      result += str[i];
-    }
-  }
-  return result;
-};
-
 export const applySystemPrompts = async (
   content: string,
   version: string,
@@ -221,30 +182,14 @@ export const applySystemPrompts = async (
       'sig',
       content
     );
-    let match: RegExpMatchArray | RegExpExecArray | null = null;
-    if (allMatches.length === 1) {
-      match = allMatches[0];
-    } else if (allMatches.length > 1) {
-      const isDelim = (c: string) => c === '"' || c === "'" || c === '`';
-      const standalone = allMatches.filter(m => {
-        const before = m.index > 0 ? content[m.index - 1] : '';
-        const after = content[m.index + m[0].length] ?? '';
-        return isDelim(before) && before === after;
-      });
-      if (standalone.length === 1) {
-        match = standalone[0];
-        debug(
-          `Disambiguated ${allMatches.length} matches \u2192 1 standalone for "${prompt.name}"`
-        );
-      } else {
-        // NOT an arbitrary pick. 124 prompt ids occupy MULTIPLE binary sites
-        // (327 catalogue entries). Each entry splices one site; after a splice
-        // the content changes, so the next entry's regex matches the remaining
-        // sites and [0] is the next unpatched one. Removing this in favour of
-        // "fail on ambiguity" broke 124 prompts / 302 sites. Cardinality-checked
-        // sequential consumption belongs in the apply preflight, not here.
-        match = allMatches[0];
-      }
+    // pickMatchForSplice keeps the sequential-consumption contract: when the
+    // standalone filter can't narrow to one, index 0 is the next UNPATCHED site
+    // of a multi-site prompt. Cardinality is verified up-front by the preflight.
+    const { match, disambiguated } = pickMatchForSplice(content, allMatches);
+    if (disambiguated) {
+      debug(
+        `Disambiguated ${allMatches.length} matches \u2192 1 standalone for "${prompt.name}"`
+      );
     }
 
     if (match && match.index !== undefined) {
@@ -253,7 +198,7 @@ export const applySystemPrompts = async (
 
       // Check the delimiter character before the match to determine string type
       const matchIndex = match.index;
-      const delimiter = matchIndex > 0 ? content[matchIndex - 1] : '';
+      const delimiter = delimiterBefore(content, matchIndex);
 
       // Guard: a tweakcc human-name placeholder that survives interpolation into
       // a `${...}` template-literal slot is invalid JS and ReferenceErrors at
@@ -356,58 +301,32 @@ export const applySystemPrompts = async (
       const oldContent = content;
       const matchLength = match[0].length;
 
-      let replacementContent = interpolatedContent;
-
-      // Escape literal backslashes FIRST so they survive JS string
-      // embedding. Without this, a markdown `\"user\"` ends up as `"user"`
-      // because the backslash is consumed as an escape character. (#660)
-      // Backticks are excluded: escapeDepthZeroBackticks already uses a
-      // parity-aware algorithm that treats preceding backslashes correctly,
-      // so pre-doubling breaks `\`` sequences (which become `\\` + closing
-      // backtick in a template literal, terminating the template early).
-      if (delimiter === '"' || delimiter === "'") {
-        replacementContent = replacementContent.replace(/\\/g, '\\\\');
+      const encoded = encodeReplacementForDelimiter(
+        interpolatedContent,
+        delimiter,
+        shouldEscapeNonAscii
+      );
+      if (encoded.incomplete) {
+        console.log(
+          chalk.red(
+            `Incomplete backtick escaping for "${prompt.name}" (unclosed interpolation) - skipping`
+          )
+        );
+        results.push({
+          id: promptId,
+          name: prompt.name,
+          group: PatchGroup.SYSTEM_PROMPTS,
+          applied: false,
+          details: 'incomplete escaping: unclosed interpolation detected',
+        });
+        continue;
       }
-
-      if (delimiter === '"') {
-        replacementContent = replacementContent.replace(/\r\n|\r|\n/g, '\\n');
-        replacementContent = escapeUnescapedChar(replacementContent, '"');
-      } else if (delimiter === "'") {
-        replacementContent = replacementContent.replace(/\r\n|\r|\n/g, '\\n');
-        replacementContent = escapeUnescapedChar(replacementContent, "'");
-      } else if (delimiter === '`') {
-        replacementContent = replacementContent.replace(/\r\n|\r/g, '\n');
-        const { content: escaped, incomplete } =
-          escapeDepthZeroBackticks(replacementContent);
-        if (incomplete) {
-          console.log(
-            chalk.red(
-              `Incomplete backtick escaping for "${prompt.name}" (unclosed interpolation) - skipping`
-            )
-          );
-          results.push({
-            id: promptId,
-            name: prompt.name,
-            group: PatchGroup.SYSTEM_PROMPTS,
-            applied: false,
-            details: 'incomplete escaping: unclosed interpolation detected',
-          });
-          continue;
-        }
-        if (escaped !== replacementContent) {
-          // Successful auto-repair, not an actionable condition: the override
-          // applies correctly. Keep it out of the apply log (0-warnings bar).
-          debug(`Auto-escaped unescaped backticks in "${prompt.name}"`);
-        }
-        replacementContent = escaped;
+      if (encoded.autoEscaped) {
+        // Successful auto-repair, not an actionable condition: the override
+        // applies correctly. Keep it out of the apply log (0-warnings bar).
+        debug(`Auto-escaped unescaped backticks in "${prompt.name}"`);
       }
-
-      // Non-ASCII → \uXXXX last, AFTER the backslash-doubling above — doubling
-      // an already-escaped `—` ships literal `\\u2014` text to the model
-      // (silent corruption at every quote-context site with an em-dash).
-      if (shouldEscapeNonAscii) {
-        replacementContent = escapeNonAsciiChars(replacementContent);
-      }
+      const replacementContent = encoded.content;
 
       // Replace the matched content with the interpolated content from the markdown file.
       // Splice at the match offset (rather than `content.replace(pattern, fn)`)

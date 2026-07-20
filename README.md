@@ -34,6 +34,7 @@ $ npx -y tweakcc-fixed@latest --apply
 npx -y tweakcc-fixed@latest            # interactive TUI — toggle patches, edit prompts
 npx -y tweakcc-fixed@latest --apply    # apply everything you've enabled
 npx -y tweakcc-fixed@latest --restore  # revert from the backup
+npx -y tweakcc-fixed@latest --validate-system-prompts  # dry-run the apply preflight over your overrides
 ```
 
 Nothing to clone or build. Prompt data is pulled from this repo at runtime, so a new Claude Code release works the moment its version bump lands here. Updating Claude Code overwrites the patches, so you just re-run `--apply` — your configuration in `~/.tweakcc/config.json` is untouched either way.

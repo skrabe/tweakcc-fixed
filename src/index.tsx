@@ -47,6 +47,14 @@ import {
   restoreNativeBinaryFromBackup,
 } from './installationBackup';
 import { clearAllAppliedHashes } from './systemPromptHashIndex';
+import {
+  formatPreflightFinding,
+  runSystemPromptPreflight,
+} from './systemPromptPreflight';
+import {
+  loadPristineBundleFromFile,
+  resolvePristineBundle,
+} from './systemPromptPristine';
 
 // =============================================================================
 // Invocation Command Detection
@@ -216,6 +224,10 @@ const main = async () => {
       'list all available system prompts for a CC version'
     )
     .option(
+      '--validate-system-prompts [cliJsPath]',
+      'dry-run the apply preflight over the system-prompt overrides (no writes)'
+    )
+    .option(
       '--config-url <url>',
       'fetch configuration from a URL instead of local config.json'
     )
@@ -258,6 +270,14 @@ const main = async () => {
       if (options.listSystemPrompts !== undefined) {
         await handleListSystemPrompts(
           options.listSystemPrompts as string | true
+        );
+        return;
+      }
+
+      // Handle --validate-system-prompts flag
+      if (options.validateSystemPrompts !== undefined) {
+        await handleValidateSystemPrompts(
+          options.validateSystemPrompts as string | true
         );
         return;
       }
@@ -507,6 +527,89 @@ async function handleApplyMode(
     }
     throw error;
   }
+}
+
+/**
+ * Handles the --validate-system-prompts flag.
+ *
+ * Runs the SAME preflight `--apply` runs before its first mutation, against a
+ * pristine version-matched cli.js, and performs no splices and no writes.
+ * Exits non-zero on any finding — and also when the pristine bundle or the
+ * prompt catalogue is unavailable, because a validator that cannot see its
+ * input must fail rather than report clean.
+ */
+async function handleValidateSystemPrompts(
+  pathArg: string | true
+): Promise<void> {
+  const bundle =
+    typeof pathArg === 'string'
+      ? await loadPristineBundleFromFile(pathArg)
+      : await (async () => {
+          const result = await startupCheck({ interactive: false });
+          const ccInstInfo = result.startupCheckInfo?.ccInstInfo;
+          if (!ccInstInfo) {
+            return { error: 'no Claude Code installation detected' };
+          }
+          return resolvePristineBundle(ccInstInfo);
+        })();
+
+  if ('error' in bundle) {
+    console.error(chalk.red(`Error: ${bundle.error}`));
+    process.exit(1);
+  }
+
+  console.log(
+    `Validating system prompt overrides against CC ${bundle.version}`
+  );
+  console.log(chalk.dim(`  pristine: ${bundle.source}`));
+
+  const preload = await preloadStringsFile(bundle.version);
+  if (!preload.success) {
+    console.error(
+      chalk.red(`Error: could not load prompt data for ${bundle.version}:`)
+    );
+    console.error(chalk.red(`  ${preload.errorMessage}`));
+    process.exit(1);
+  }
+
+  const preflight = await runSystemPromptPreflight({
+    pristine: bundle.content,
+    version: bundle.version,
+  });
+
+  if (preflight.promptsChecked === 0) {
+    console.error(
+      chalk.red('Error: no system prompts resolved — nothing was validated.')
+    );
+    process.exit(1);
+  }
+
+  console.log(
+    chalk.dim(
+      `  ${preflight.promptsChecked} catalogue entries, ${preflight.sitesChecked} resolved sites`
+    )
+  );
+
+  for (const finding of preflight.findings) {
+    const line = formatPreflightFinding(finding);
+    console.log(
+      finding.severity === 'error' ? chalk.red(line) : chalk.yellow(line)
+    );
+  }
+
+  if (preflight.findings.length === 0) {
+    console.log(chalk.green('0 findings.'));
+    process.exit(0);
+  }
+
+  const errors = preflight.findings.filter(f => f.severity === 'error').length;
+  console.log(
+    chalk.red(
+      `${preflight.findings.length} finding(s): ${errors} error(s), ` +
+        `${preflight.findings.length - errors} warning(s).`
+    )
+  );
+  process.exit(1);
 }
 
 /**
