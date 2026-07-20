@@ -20247,5 +20247,82 @@
   "2a777820a603ccc986a2ff1aedd42716049cac55": { "facing": "internal" },
   "bd8a2d9b483dc3b9a4aa36fd8411a631b1a624c0": { "facing": "internal" },
   "b6db1c6214c26585d5c4bb4f9c40713c9588f08d": { "facing": "internal" },
-  "0f8d8a296e6d37b36f02d2ad0058593e574b37f7": { "facing": "internal" }
+  "0f8d8a296e6d37b36f02d2ad0058593e574b37f7": { "facing": "internal" },
+  "670786d5ca7a5eb7a17d8f9bb0ff9394011c1689": { "facing": "ui" },
+  "94682d3c8a3bfb761a53ef4a60a19b40b4c02ae2": { "facing": "ui" },
+  "25c447f438f269c387b49f7d62b6544586bef496": { "facing": "internal" },
+  "d3b07417e9c3c5f3e5889ff0bc219bf36b4e5a22": { "facing": "ui" },
+  "b94d83312beaf3a1379f393ca075f8189a60aa73": { "facing": "ui" },
+  "8a9fc7ef7b94b7bebb4f8e29dc5dd4deda17297d": { "facing": "ui" },
+  "a2442b48d3ae575cd1803feb8ce4119356d4735c": { "facing": "ui" },
+  "74ee7e3a0cbb14f4a9b0442d2a1fee6bc6a325b4": { "facing": "ui" },
+  "ec380b9c825fd9d4ed19a68b4db24b314a482d01": { "facing": "internal" },
+  "792a2c05c30b406f39bbc28b4123f0810d871420": { "facing": "ui" },
+  "59b1573cb44310773cb0122fed4427ba97ef595f": { "facing": "ui" },
+  "b28a51ea83ed5f029103be99a9630a10bf11253b": { "facing": "internal" },
+  "bc225c10fb7f634ba24a8f2725155e8f619e3f9a": { "facing": "internal" },
+  "6602f088fc0c1012b396ce7f3b28f8a2ea426991": { "facing": "internal" },
+  "e44f8e163acea1246519aae3118fa1a74309d15e": { "facing": "ui" },
+  "845edf3cbfad5f2a15cfa968162483f7cced3594": { "facing": "ui" },
+  "b9b92aa3c12fa61e9f4f70e324c1a0757bc08b9d": { "facing": "internal" },
+  "88b38b9145d8aafec24db42cf2ba147493925f02": { "facing": "internal" },
+  "3c630d3e0aa3c7e89f836966cb18807c82f9e3c2": { "facing": "internal" },
+  "70115957f1be8076052268024401adeb9c8dff65": {
+    "facing": "model",
+    "id": "tool-description-glob-open-ended-search-use-agent",
+    "name": "Tool Description: Glob (with open-ended-search Agent pointer)",
+    "desc": "Full Glob tool description — the four base bullets plus the note to use the Agent tool for open-ended searches needing multiple rounds of globbing and grepping."
+  },
+  "3a550b20c1991c3be98a2e4f7edbbf0616101e16": {
+    "facing": "model",
+    "id": "tool-description-bash-output-not-shown-to-user",
+    "name": "Tool Description: Bash — output not reliably shown to the user",
+    "desc": "Gated Bash-description bullet warning that command output is displayed to the model but not reliably to the human."
+  },
+  "43da6aecedf76c8dc557b5072f8702150d1a6044": { "facing": "internal" },
+  "f5b79458edcd72f1d242fca216cf87aeac93eb6f": { "facing": "ui" },
+  "efcaad021f6e00c594b52e682d082c9891854124": {
+    "facing": "model",
+    "id": "system-prompt-action-safety-inspect-before-overwrite",
+    "name": "System Prompt: Inspect the target before deleting or overwriting",
+    "desc": "Conditional clause appended to the action-safety block telling the model to surface a mismatch — content that contradicts its description, or that it didn't create — instead of proceeding with a delete or overwrite."
+  },
+  "5840269a9020417059956ee40efcc79c07b90484": {
+    "facing": "model",
+    "id": "tool-description-agent-fork-background-delegation-note",
+    "name": "Tool Description: Agent (fork runs in background)",
+    "desc": "Agent tool description fragment explaining that a fork runs in the background, keeps its tool output out of the parent's context, and that the fork itself must execute directly rather than re-delegate."
+  },
+  "f73f66d8d785088545fc9bfa9de4ce9800bfae4d": {
+    "facing": "model",
+    "id": "system-prompt-subagent-delegation-restraint",
+    "name": "System Prompt: Subagent delegation restraint",
+    "desc": "System-prompt section telling Claude that subagents multiply cost and time, listing tests to apply before spawning (do bounded work inline, don't fan out on one small task, don't spawn to re-verify, commit to the delegation, keep spawn counts low)."
+  },
+  "f3e8bc10a9b1c8b7dc3007d98a9c99b8209b4659": {
+    "facing": "model",
+    "id": "system-prompt-action-safety-and-truthful-reporting-3",
+    "name": "System Prompt: Action safety and truthful reporting (2.1.215 variant)",
+    "desc": "System-prompt action-caution section: confirm hard-to-reverse or outward-facing actions, treat sending content to an external service as publishing, inspect targets before deleting or overwriting, and report outcomes faithfully without hedging."
+  },
+  "ee518e9639c23c3e3701b9cad123320fed24b233": {
+    "facing": "model",
+    "id": "tool-description-agent-simple-usage-notes",
+    "name": "Tool Description: Agent (simple usage notes)",
+    "desc": "The Agent tool's condensed description body: the '## When to use' block plus bullets on the agent's final report not being shown to the user, resuming an agent via SendMessage, per-agent-type model/effort/tools, and worktree isolation."
+  },
+  "174149db46277d5088507bf895254261841b766f": {
+    "facing": "model",
+    "id": "tool-description-agent-single-fact-lookup-search-directly",
+    "name": "Tool Description: Agent (single-fact lookup, search directly)",
+    "desc": "Agent tool description fragment telling Claude to search directly for a single-fact lookup where the file, symbol, or value is already known, and not to re-run a search it has already delegated."
+  },
+  "521704249682671856fc24f578ee79b041a037be": {
+    "facing": "model",
+    "id": "system-prompt-tool-usage-subagent-guidance-trimmed",
+    "name": "System Prompt: Tool usage subagent guidance (steered/trimmed)",
+    "desc": "Trimmed variant of the tool-usage subagent guidance emitted when the subagent-steer experiment is not on 'default': use the Agent tool when the task matches an agent's description and never duplicate work a subagent is already doing."
+  },
+  "704fd37472c6e4498badf2d06b6df9f224da3f65": { "facing": "internal" },
+  "981429708e23e04cba4f7514941e7e80be2bd2b4": { "facing": "internal" }
 }
