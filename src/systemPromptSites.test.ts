@@ -1,12 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import {
-  bodyCarriedBy,
   changedSpan,
   delimiterBefore,
   introducedRawNonAscii,
   lintBacktickEscapes,
+  literalProbeRuns,
+  literalProbeWindows,
   OffsetMapper,
   pickMatchForSplice,
+  presentLiterals,
   resolveCandidateSites,
   spanConflicts,
   SpanClaim,
@@ -26,6 +28,7 @@ const claim = (over: Partial<SpanClaim> & { start: number; end: number }) =>
     site: 0,
     mutates: true,
     body: '',
+    replacement: '',
     ...over,
   }) as SpanClaim;
 
@@ -217,15 +220,77 @@ describe('spanConflicts', () => {
   });
 });
 
-describe('bodyCarriedBy', () => {
-  it('is true when every authored line survives in the owner', () => {
-    expect(bodyCarriedBy('  one\n\ntwo ', 'x one y\nz two w')).toBe(true);
+describe('literalProbeRuns', () => {
+  it('returns the runs outside interpolations, longest first', () => {
+    const runs = literalProbeRuns(
+      'a shorter run ${VAR} a much longer literal run of prose here',
+      10
+    );
+    expect(runs).toEqual([
+      'a much longer literal run of prose here',
+      'a shorter run',
+    ]);
   });
 
-  it('is false when the owner reworded a line', () => {
+  it('drops runs under the minimum length', () => {
+    expect(literalProbeRuns('a ${X} b ${Y} c', 10)).toEqual([]);
+  });
+
+  it('is empty when the replacement is nothing but interpolations', () => {
+    expect(literalProbeRuns('${A}${B.c(d)}${E}', 25)).toEqual([]);
+  });
+
+  it('does not mistake an escaped ${ for an interpolation', () => {
     expect(
-      bodyCarriedBy('Each type below declares', 'Each type declares')
-    ).toBe(false);
+      literalProbeRuns('\\${NOT_A_SLOT} and the rest of the line', 10)
+    ).toEqual(['\\${NOT_A_SLOT} and the rest of the line']);
+  });
+
+  it('keeps ${...} probeable when the containing site is quoted', () => {
+    expect(
+      literalProbeRuns('authored ${LITERAL} quoted text', 10, false)
+    ).toEqual(['authored ${LITERAL} quoted text']);
+  });
+});
+
+describe('literalProbeWindows', () => {
+  it('keeps partial delivery observable inside one long literal run', () => {
+    const opening = 'opening authored region '.repeat(8);
+    const tail = 'later delivered region '.repeat(8);
+    const windows = literalProbeWindows(opening + tail, 25, 80);
+    expect(windows.length).toBeGreaterThan(2);
+    expect(windows.some(window => opening.includes(window))).toBe(true);
+    expect(windows.some(window => tail.includes(window))).toBe(true);
+  });
+
+  it('covers chunk boundaries so separately present halves are not delivery', () => {
+    const left = 'L'.repeat(80);
+    const right = 'R'.repeat(80);
+    const windows = literalProbeWindows(left + right, 25, 80);
+    expect(
+      windows.some(window => window.includes('L') && window.includes('R'))
+    ).toBe(true);
+  });
+
+  it('retains a unique full run when every fixed-size window is old text', () => {
+    const run = `${'A'.repeat(80)}${'B'.repeat(80)}`;
+    expect(literalProbeWindows(run, 25, 80)).toContain(run);
+  });
+
+  it('does not turn interpolation-only content into evidence', () => {
+    expect(literalProbeWindows('${A}${B.c(d)}${E}', 25, 80)).toEqual([]);
+  });
+});
+
+describe('presentLiterals', () => {
+  it('finds overlapping needles in one content pass', () => {
+    expect(
+      presentLiterals('the authored region reaches the final site', [
+        'authored region',
+        'region reaches',
+        'missing region',
+      ])
+    ).toEqual(new Set(['authored region', 'region reaches']));
   });
 });
 

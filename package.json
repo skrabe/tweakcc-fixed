@@ -24,6 +24,7 @@
     "lint": "tsc --noEmit && eslint src tools",
     "test": "vitest run",
     "test:dev": "vitest",
+    "test:matcher": "TWEAKCC_MATCHER_CORPUS=1 vitest run --testTimeout=300000 src/systemPromptPieceMatcherCorpus.test.ts",
     "pretest": "node tools/generateIdentifierUnion.mjs",
     "format": "prettier --write src",
     "version-bump:report": "node tools/versionBumpReport.js",

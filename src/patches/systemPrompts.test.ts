@@ -943,6 +943,32 @@ describe('systemPrompts.ts', () => {
         expect(errors).toEqual([]);
       });
 
+      it('consumes two sites for two catalogue entries sharing one regex', async () => {
+        const first = buildData();
+        const second = buildMockPromptData({
+          promptId: first.promptId,
+          prompt: { content: 'SECOND OVERRIDE' },
+          regex: first.regex,
+          getInterpolatedContent: () => 'SECOND OVERRIDE',
+          pieces: first.pieces,
+        });
+        vi.mocked(promptSync.loadSystemPromptsWithRegex).mockResolvedValue([
+          first,
+          second,
+        ]);
+        vi.mocked(systemPromptHashIndex.setAppliedHashes).mockResolvedValue();
+
+        const { result, errors } = await applyWithSpy(
+          'x="never skip hooks";y="never skip hooks";'
+        );
+
+        expect(result.newContent).toBe(
+          'x="HOOKS OVERRIDE";y="SECOND OVERRIDE";'
+        );
+        expect(result.results.map(item => item.applied)).toEqual([true, true]);
+        expect(errors).toEqual([]);
+      });
+
       // A multi-site prompt must not disturb its neighbours.
       it('applies both a multi-site prompt and an unrelated one', async () => {
         const ambiguous = buildData();

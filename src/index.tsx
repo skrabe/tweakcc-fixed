@@ -592,9 +592,9 @@ async function handleValidateSystemPrompts(
 
   for (const finding of preflight.findings) {
     const line = formatPreflightFinding(finding);
-    console.log(
-      finding.severity === 'error' ? chalk.red(line) : chalk.yellow(line)
-    );
+    if (finding.severity === 'error') console.log(chalk.red(line));
+    else if (finding.severity === 'warning') console.log(chalk.yellow(line));
+    else console.log(chalk.dim(line));
   }
 
   if (preflight.findings.length === 0) {
@@ -602,11 +602,12 @@ async function handleValidateSystemPrompts(
     process.exit(0);
   }
 
-  const errors = preflight.findings.filter(f => f.severity === 'error').length;
+  const count = (severity: string): number =>
+    preflight.findings.filter(f => f.severity === severity).length;
   console.log(
     chalk.red(
-      `${preflight.findings.length} finding(s): ${errors} error(s), ` +
-        `${preflight.findings.length - errors} warning(s).`
+      `${preflight.findings.length} finding(s): ${count('error')} error(s), ` +
+        `${count('warning')} warning(s), ${count('info')} info.`
     )
   );
   process.exit(1);

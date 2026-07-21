@@ -6,6 +6,63 @@
  * `patches/index.ts`.
  */
 
+const JS_GLOBAL_NAMES = new Set([
+  'JSON',
+  'Math',
+  'Object',
+  'Array',
+  'String',
+  'Number',
+  'Boolean',
+  'Date',
+  'RegExp',
+  'Map',
+  'Set',
+  'WeakMap',
+  'WeakSet',
+  'Promise',
+  'Symbol',
+  'BigInt',
+  'Error',
+  'TypeError',
+  'RangeError',
+  'Infinity',
+  'NaN',
+  'undefined',
+  'globalThis',
+  'console',
+  'process',
+  'Buffer',
+  'URL',
+  'URLSearchParams',
+  'Intl',
+  'Reflect',
+  'Proxy',
+  'Function',
+]);
+
+export const isTweakccHumanName = (name: string): boolean =>
+  name.length > 3 && !JS_GLOBAL_NAMES.has(name);
+
+export const leakedPromptPlaceholders = (
+  interpolatedContent: string,
+  markdownContent: string,
+  identifierMapUnion: Set<string>
+): string[] => {
+  const placeholderRe = /(?<!\\)\$\{([A-Za-z_][A-Za-z0-9_]*)/g;
+  const inOutput = new Set(
+    [...interpolatedContent.matchAll(placeholderRe)].map(match => match[1])
+  );
+  return [...inOutput].filter(
+    name =>
+      isTweakccHumanName(name) &&
+      identifierMapUnion.has(name) &&
+      new RegExp('(?<!\\\\)\\$\\{' + name + '(?![A-Za-z0-9_])').test(
+        markdownContent
+      )
+  );
+};
+
 export type MatchLike = RegExpMatchArray | RegExpExecArray;
 
 /**
@@ -41,12 +98,17 @@ export const delimiterBefore = (content: string, index: number): string =>
 export const standaloneMatches = <T extends MatchLike>(
   content: string,
   matches: T[]
+): T[] => standaloneMatchesAt(matches, index => content[index] ?? '');
+
+export const standaloneMatchesAt = <T extends MatchLike>(
+  matches: T[],
+  charAt: (index: number) => string
 ): T[] =>
   matches.filter(m => {
     const index = m.index ?? -1;
     if (index < 0) return false;
-    const before = delimiterBefore(content, index);
-    const after = content[index + m[0].length] ?? '';
+    const before = charAt(index - 1);
+    const after = charAt(index + m[0].length);
     return DELIMITERS.has(before) && before === after;
   });
 
@@ -62,10 +124,16 @@ export const standaloneMatches = <T extends MatchLike>(
 export const pickMatchForSplice = <T extends MatchLike>(
   content: string,
   matches: T[]
+): { match: T | null; disambiguated: boolean } =>
+  pickMatchForSpliceAt(matches, index => content[index] ?? '');
+
+export const pickMatchForSpliceAt = <T extends MatchLike>(
+  matches: T[],
+  charAt: (index: number) => string
 ): { match: T | null; disambiguated: boolean } => {
   if (matches.length === 0) return { match: null, disambiguated: false };
   if (matches.length === 1) return { match: matches[0], disambiguated: false };
-  const standalone = standaloneMatches(content, matches);
+  const standalone = standaloneMatchesAt(matches, charAt);
   if (standalone.length === 1) {
     return { match: standalone[0], disambiguated: true };
   }
@@ -231,6 +299,8 @@ export interface SpanClaim extends Span {
   mutates: boolean;
   /** The authored markdown body this surface would write. */
   body: string;
+  delimiter?: string;
+  replacement: string;
 }
 
 export interface SpanConflict {
@@ -240,38 +310,14 @@ export interface SpanConflict {
   owner: SpanClaim;
 }
 
-/**
- * Every non-empty line of `body` also appears in `ownerBody`.
- *
- * A named prompt that lives INSIDE an inline-blob region is normal here: the
- * blob body is the consolidated text and carries the same authored lines, so
- * the prompt's own splice being dropped loses nothing — the content still
- * reaches the model through the owner. Content that is NOT carried by the owner
- * is the case worth reporting.
- */
 export const bodyCarriedBy = (body: string, ownerBody: string): boolean => {
   const lines = body
     .split('\n')
-    .map(l => l.trim())
+    .map(line => line.trim())
     .filter(Boolean);
-  if (lines.length === 0) return true;
-  return lines.every(line => ownerBody.includes(line));
+  return lines.length === 0 || lines.every(line => ownerBody.includes(line));
 };
 
-/**
- * Claims that a surface earlier in the apply order already owns.
- *
- * `claims` must be in APPLY order (inline blobs, then reminders, then named
- * prompts in catalogue order). The apply splices in that order, so once a
- * region is rewritten the later surface's anchor no longer matches it and its
- * override is dropped — silently, by design, via the clobbered-by-earlier-splice
- * path. Reported only when the loser would have written something the owner does
- * not carry: a pristine passthrough loses nothing, and neither does a prompt
- * whose text the owning blob already contains.
- *
- * A pair is exempt when either side declares the other's id in `shadows:` —
- * the explicit "I own this region" declaration.
- */
 export const spanConflicts = (
   claims: SpanClaim[],
   shadowedBy: (owner: string, victim: string) => boolean
@@ -296,6 +342,124 @@ export const spanConflicts = (
     }
   }
   return conflicts;
+};
+
+export const literalProbeRuns = (
+  replacement: string,
+  minLength: number,
+  hasRuntimeInterpolations = true
+): string[] => {
+  const runs: string[] = [];
+  let start = 0;
+  let i = 0;
+  const push = (end: number): void => {
+    const run = replacement.slice(start, end).trim();
+    if (run.length >= minLength) runs.push(run);
+  };
+  while (i < replacement.length) {
+    if (replacement[i] === '\\') {
+      i += 2;
+      continue;
+    }
+    if (
+      hasRuntimeInterpolations &&
+      replacement[i] === '$' &&
+      replacement[i + 1] === '{'
+    ) {
+      push(i);
+      i = skipInterpolation(replacement, i);
+      start = i;
+      continue;
+    }
+    i++;
+  }
+  push(replacement.length);
+  return runs.sort((a, b) => b.length - a.length);
+};
+
+export const literalProbeWindows = (
+  replacement: string,
+  minLength: number,
+  maxLength: number,
+  hasRuntimeInterpolations = true
+): string[] => {
+  const windows = new Set<string>();
+  const width = Math.max(minLength, maxLength);
+  const stride = width - minLength + 1;
+  for (const run of literalProbeRuns(
+    replacement,
+    minLength,
+    hasRuntimeInterpolations
+  )) {
+    windows.add(run);
+    if (run.length <= width) {
+      continue;
+    }
+    for (let start = 0; start + minLength <= run.length; start += stride) {
+      const window = run.slice(start, start + width).trim();
+      if (window.length >= minLength) windows.add(window);
+    }
+    const tail = run.slice(-width).trim();
+    if (tail.length >= minLength) windows.add(tail);
+  }
+  return [...windows];
+};
+
+interface LiteralNode {
+  next: Map<string, number>;
+  fail: number;
+  outputs: string[];
+}
+
+export const presentLiterals = (
+  content: string,
+  needles: Iterable<string>
+): Set<string> => {
+  const unique = [...new Set(needles)].filter(Boolean);
+  if (unique.length === 0) return new Set();
+  const nodes: LiteralNode[] = [{ next: new Map(), fail: 0, outputs: [] }];
+  for (const needle of unique) {
+    let state = 0;
+    for (const char of needle) {
+      const existing = nodes[state].next.get(char);
+      if (existing !== undefined) {
+        state = existing;
+        continue;
+      }
+      const parent = state;
+      state = nodes.length;
+      nodes.push({ next: new Map(), fail: 0, outputs: [] });
+      nodes[parent].next.set(char, state);
+    }
+    nodes[state].outputs.push(needle);
+  }
+
+  const queue: number[] = [];
+  for (const child of nodes[0].next.values()) queue.push(child);
+  for (let head = 0; head < queue.length; head++) {
+    const state = queue[head];
+    for (const [char, child] of nodes[state].next) {
+      let failure = nodes[state].fail;
+      while (failure !== 0 && !nodes[failure].next.has(char)) {
+        failure = nodes[failure].fail;
+      }
+      nodes[child].fail = nodes[failure].next.get(char) ?? 0;
+      nodes[child].outputs.push(...nodes[nodes[child].fail].outputs);
+      queue.push(child);
+    }
+  }
+
+  const found = new Set<string>();
+  let state = 0;
+  for (const char of content) {
+    while (state !== 0 && !nodes[state].next.has(char)) {
+      state = nodes[state].fail;
+    }
+    state = nodes[state].next.get(char) ?? 0;
+    for (const needle of nodes[state].outputs) found.add(needle);
+    if (found.size === unique.length) break;
+  }
+  return found;
 };
 
 const COMPARE_CHUNK = 1 << 16;
@@ -377,6 +541,26 @@ export class OffsetMapper {
     return {
       start: this.toPristine(span.start),
       end: this.toPristine(span.end),
+    };
+  }
+
+  toCurrent(offset: number, side: 'start' | 'end'): number {
+    let out = offset;
+    for (const edit of this.edits) {
+      const end = edit.start + edit.oldLen;
+      if (out >= end) {
+        out += edit.newLen - edit.oldLen;
+      } else if (out > edit.start) {
+        out = side === 'start' ? edit.start : edit.start + edit.newLen;
+      }
+    }
+    return out;
+  }
+
+  spanToCurrent(span: Span): Span {
+    return {
+      start: this.toCurrent(span.start, 'start'),
+      end: this.toCurrent(span.end, 'end'),
     };
   }
 }

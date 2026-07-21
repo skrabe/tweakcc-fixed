@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { debug, stringifyRegex, verbose } from '../utils';
+import { debug, isVerbose, stringifyRegex, verbose } from '../utils';
 import { showDiff, PatchResult, PatchGroup } from './index';
 import {
   loadSystemPromptsWithRegex,
@@ -8,64 +8,21 @@ import {
   loadIdentifierMapUnion,
 } from '../systemPromptSync';
 import {
-  delimiterBefore,
   detectUnicodeEscaping,
   extractBuildTime,
-  pickMatchForSplice,
+  leakedPromptPlaceholders,
+  pickMatchForSpliceAt,
 } from '../systemPromptSites';
 import { setAppliedHashes, computeMD5Hash } from '../systemPromptHashIndex';
-import { findAllMatchesWithStackFallback } from '../safeRegexMatch';
+import { MutableText } from '../mutableText';
+import {
+  findAllPromptPieceMatches,
+  foldPromptMatchContent,
+  PromptPieceMatcherCatalog,
+  PromptMatchSpec,
+} from '../systemPromptPieceMatcher';
 
-// The identifierMap union is polluted from two directions: old prompt JSONs
-// named some slots after JS globals (`JSON`, from `${JSON.stringify(...)}` in
-// the workflow-script prompts) and after raw minified vars (`U`, `G`, `P2`,
-// `YU`, `HH8`). Neither is a tweakcc human-name. Once the leak detector stopped
-// requiring a `}` right after the name, `${JSON.stringify(x)}` in a legitimate
-// workflow-script override would match — so the detector must first ask whether
-// the name is one tweakcc could have written.
-const JS_GLOBAL_NAMES = new Set([
-  'JSON',
-  'Math',
-  'Object',
-  'Array',
-  'String',
-  'Number',
-  'Boolean',
-  'Date',
-  'RegExp',
-  'Map',
-  'Set',
-  'WeakMap',
-  'WeakSet',
-  'Promise',
-  'Symbol',
-  'BigInt',
-  'Error',
-  'TypeError',
-  'RangeError',
-  'Infinity',
-  'NaN',
-  'undefined',
-  'globalThis',
-  'console',
-  'process',
-  'Buffer',
-  'URL',
-  'URLSearchParams',
-  'Intl',
-  'Reflect',
-  'Proxy',
-  'Function',
-]);
-
-/**
- * A tweakcc human-name is a descriptive placeholder the extractor generated
- * (`PROMPT_VAR_0`, `AGENT_TOOL_NAME`, `TOOL`). Reject JS globals and the short
- * minified identifiers (<= 3 chars) that leaked into older prompt JSONs, so the
- * leak detector never fires on real JS an override is allowed to contain.
- */
-export const isTweakccHumanName = (name: string): boolean =>
-  name.length > 3 && !JS_GLOBAL_NAMES.has(name);
+export { isTweakccHumanName } from '../systemPromptSites';
 
 /**
  * Result of applying system prompts
@@ -117,6 +74,30 @@ export const applySystemPrompts = async (
     buildTime
   );
   debug(`Loaded ${systemPrompts.length} system prompts with regexes`);
+  const matchSpecs = new Map<string, PromptMatchSpec>();
+  for (const entry of systemPrompts) {
+    matchSpecs.set(entry.regex, {
+      regex: entry.regex,
+      pieces: entry.pieces,
+      version,
+      buildTime,
+    });
+  }
+  const matchCatalog = new PromptPieceMatcherCatalog([...matchSpecs.values()]);
+  matchCatalog.index(content, foldPromptMatchContent(content));
+  const lastMatchUse = new Map<string, number>();
+  systemPrompts.forEach((entry, index) => {
+    lastMatchUse.set(entry.regex, index);
+  });
+  const expiringMatches = new Map<number, string[]>();
+  for (const [regex, index] of lastMatchUse) {
+    const current = expiringMatches.get(index);
+    if (current) current.push(regex);
+    else expiringMatches.set(index, [regex]);
+  }
+  const working = new MutableText(content);
+  let contentChanged =
+    pristineContent !== undefined && pristineContent !== content;
 
   // The set of every tweakcc human-name the leaf has ever used as a
   // placeholder, unioned across all bundled prompt JSONs. Used below to detect
@@ -147,15 +128,19 @@ export const applySystemPrompts = async (
   const hashResultIndexes: number[] = [];
 
   // Search for and replace each prompt in cli.js
-  for (const {
-    promptId,
-    prompt,
-    regex,
-    getInterpolatedContent,
-    pieces,
-    identifiers,
-    identifierMap,
-  } of systemPrompts) {
+  for (const [promptIndex, entry] of systemPrompts.entries()) {
+    for (const expired of expiringMatches.get(promptIndex - 1) ?? []) {
+      matchCatalog.delete(expired);
+    }
+    const {
+      promptId,
+      prompt,
+      regex,
+      getInterpolatedContent,
+      pieces,
+      identifiers,
+      identifierMap,
+    } = entry;
     // Skip prompts not in the filter (if filter is provided)
     if (patchFilter && !patchFilter.includes(promptId)) {
       results.push({
@@ -177,15 +162,13 @@ export const applySystemPrompts = async (
     // inlined one; the standalone variable lives later. Pick the match that
     // looks like a complete string-literal value (surrounded by matching
     // " ' or ` delimiters) when more than one occurrence exists.
-    const allMatches = await findAllMatchesWithStackFallback(
-      regex,
-      'sig',
-      content
-    );
+    const allMatches = await matchCatalog.matchCurrent(regex, working);
     // pickMatchForSplice keeps the sequential-consumption contract: when the
     // standalone filter can't narrow to one, index 0 is the next UNPATCHED site
     // of a multi-site prompt. Cardinality is verified up-front by the preflight.
-    const { match, disambiguated } = pickMatchForSplice(content, allMatches);
+    const { match, disambiguated } = pickMatchForSpliceAt(allMatches, index =>
+      working.charAt(index)
+    );
     if (disambiguated) {
       debug(
         `Disambiguated ${allMatches.length} matches \u2192 1 standalone for "${prompt.name}"`
@@ -198,7 +181,7 @@ export const applySystemPrompts = async (
 
       // Check the delimiter character before the match to determine string type
       const matchIndex = match.index;
-      const delimiter = delimiterBefore(content, matchIndex);
+      const delimiter = working.charAt(matchIndex - 1);
 
       // Guard: a tweakcc human-name placeholder that survives interpolation into
       // a `${...}` template-literal slot is invalid JS and ReferenceErrors at
@@ -229,17 +212,10 @@ export const applySystemPrompts = async (
         // literal. Anchoring on `\}` missed exactly those — CC 2.1.206 shipped
         // `${SYSTEM_PROMPT_AGENT_RESUMED_WAS_STOPPED_COMPLETED_VAR_2.finalText
         // ||"(no text output)"}` into the binary because of it.
-        const placeholderRe = /(?<!\\)\$\{([A-Za-z_][A-Za-z0-9_]*)/g;
-        const inOutput = new Set(
-          [...interpolatedContent.matchAll(placeholderRe)].map(m => m[1])
-        );
-        const leaked = [...inOutput].filter(
-          name =>
-            isTweakccHumanName(name) &&
-            identifierMapUnion.has(name) &&
-            new RegExp('(?<!\\\\)\\$\\{' + name + '(?![A-Za-z0-9_])').test(
-              prompt.content
-            )
+        const leaked = leakedPromptPlaceholders(
+          interpolatedContent,
+          prompt.content,
+          identifierMapUnion
         );
 
         // Every leaked name resolvable by a same-id sibling entry (and none by
@@ -298,7 +274,7 @@ export const applySystemPrompts = async (
       const originalLength = originalBaselineContent.length;
       const newLength = prompt.content.trim().length;
 
-      const oldContent = content;
+      const verboseOldContent = isVerbose() ? working.toString() : null;
       const matchLength = match[0].length;
 
       const encoded = encodeReplacementForDelimiter(
@@ -332,27 +308,38 @@ export const applySystemPrompts = async (
       // Splice at the match offset (rather than `content.replace(pattern, fn)`)
       // so the disambiguation above isn't undone by replace() always matching
       // the first hit.
-      content =
-        content.slice(0, matchIndex) +
-        replacementContent +
-        content.slice(matchIndex + matchLength);
+      if (replacementContent !== match[0]) {
+        working.splice(
+          matchIndex,
+          matchIndex + matchLength,
+          replacementContent
+        );
+        contentChanged = true;
+        matchCatalog.recordSplice(working, {
+          start: matchIndex,
+          end: matchIndex + matchLength,
+          replacementLength: replacementContent.length,
+        });
+      }
 
       // Store the hash of the applied prompt content
       const appliedHash = computeMD5Hash(prompt.content);
       appliedHashUpdates[promptId] = appliedHash;
 
       // Show diff in debug mode
-      showDiff(
-        oldContent,
-        content,
-        replacementContent,
-        matchIndex,
-        matchIndex + matchLength
-      );
+      if (verboseOldContent !== null) {
+        showDiff(
+          verboseOldContent,
+          working.toString(),
+          replacementContent,
+          matchIndex,
+          matchIndex + matchLength
+        );
+      }
 
       // Track this prompt's result
       const charDiff = originalLength - newLength;
-      const applied = oldContent !== content;
+      const applied = replacementContent !== match[0];
 
       let details: string;
       if (charDiff > 0) {
@@ -389,13 +376,12 @@ export const applySystemPrompts = async (
       // pristine nor the current binary is genuine anchor drift worth
       // surfacing.
       let clobberedByEarlierSplice = false;
-      if (pristineContent !== undefined && pristineContent !== content) {
+      if (pristineContent !== undefined && contentChanged) {
         try {
-          const matchedPristine = await findAllMatchesWithStackFallback(
-            regex,
-            'sig',
-            pristineContent
-          );
+          const spec = matchSpecs.get(regex);
+          const matchedPristine = spec
+            ? await findAllPromptPieceMatches(spec, pristineContent)
+            : [];
           clobberedByEarlierSplice = matchedPristine.length > 0;
         } catch {
           clobberedByEarlierSplice = false;
@@ -429,18 +415,22 @@ export const applySystemPrompts = async (
         );
       }
 
-      verbose(`\n  Debug info for ${prompt.name}:`);
-      verbose(
-        `  Regex pattern (first 200 chars): ${regex.substring(0, 200).replace(/\n/g, '\\n')}...`
-      );
-      verbose(`  Trying to match pattern in cli.js...`);
-      try {
-        const testMatch = content.match(new RegExp(regex.substring(0, 100)));
+      if (isVerbose()) {
+        verbose(`\n  Debug info for ${prompt.name}:`);
         verbose(
-          `  Partial match result: ${testMatch ? 'found partial' : 'no match'}`
+          `  Regex pattern (first 200 chars): ${regex.substring(0, 200).replace(/\n/g, '\\n')}...`
         );
-      } catch {
-        verbose(`  Partial match failed (regex truncation issue)`);
+        verbose(`  Trying to match pattern in cli.js...`);
+        try {
+          const testMatch = working
+            .toString()
+            .match(new RegExp(regex.substring(0, 100)));
+          verbose(
+            `  Partial match result: ${testMatch ? 'found partial' : 'no match'}`
+          );
+        } catch {
+          verbose(`  Partial match failed (regex truncation issue)`);
+        }
       }
     }
   }
@@ -460,7 +450,7 @@ export const applySystemPrompts = async (
   }
 
   return {
-    newContent: content,
+    newContent: working.toString(),
     results,
   };
 };
