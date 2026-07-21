@@ -99,6 +99,33 @@ export const writeAutoModeClassifierModel = (
   const pattern210 =
     /function\s+([$\w]+)\s*\(\s*\)\s*\{\s*let\s+([$\w]+)\s*=\s*[$\w]+\s*\(\s*\)\s*,\s*([$\w]+)\s*=\s*[$\w]+\s*\(\s*"tengu_auto_mode_config"\s*,\s*\{\s*\}\s*\)\s*,\s*([$\w]+)\s*=\s*[$\w]+\s*\(\s*\3\s*\?\.\s*modelByMainModel\s*\)\s*;\s*if\s*\(\s*\4\s*\)\s*return\s*\{\s*value\s*:\s*\4\s*,\s*src\s*:\s*"gb"\s*\}\s*;\s*if\s*\(\s*\3\s*\?\.\s*model\s*\)\s*return\s*\{\s*value\s*:\s*\3\s*\.\s*model\s*,\s*src\s*:\s*"gb"\s*\}\s*;\s*if\s*\(\s*[$\w]+\s*!==\s*"demoted"\s*\)\s*\{\s*let\s+([$\w]+)\s*=\s*[$\w]+\s*\(\s*\2\s*\)\s*;\s*if\s*\(\s*\5\s*\)\s*return\s*\{\s*value\s*:\s*\5\s*,\s*src\s*:\s*"default"\s*,\s*externalDefault\s*:\s*!0\s*\}\s*\}\s*return\s*\{\s*value\s*:\s*[$\w]+\s*\(\s*\2\s*\)\s*,\s*src\s*:\s*"default"\s*\}\s*\}/;
 
+  // CC 2.1.216 shape: same tagged-object linear chain as 2.1.210, but the
+  // `modelByMainModel` lookup and the legacy `model` fallback were merged into a
+  // single `??` expression that runs both through a validating reader
+  // (`Xhd(t?.modelByMainModel,{vet:…}) ?? U0s(t?.model,"model")`), collapsing the
+  // separate `if(q)…;if(_?.model)…` pair from 2.1.210 into one `if(r)` guard:
+  //   function NAME(){let H=MAIN(),_=R("tengu_auto_mode_config",{}),r=VET(_?.modelByMainModel,{vet:(n)=>V(n,"modelByMainModel")})??V(_?.model,"model");if(r)return{value:r,src:"gb"};if(STATE!=="demoted"){let n=EXT(H);if(n)return{value:n,src:"default",externalDefault:!0}}return{value:RESOLVE(H),src:"default"}}
+  const pattern216 =
+    /function\s+([$\w]+)\s*\(\s*\)\s*\{\s*let\s+([$\w]+)\s*=\s*[$\w]+\s*\(\s*\)\s*,\s*([$\w]+)\s*=\s*[$\w]+\s*\(\s*"tengu_auto_mode_config"\s*,\s*\{\s*\}\s*\)\s*,\s*([$\w]+)\s*=\s*[$\w]+\s*\(\s*\3\s*\?\.\s*modelByMainModel\s*,\s*\{\s*vet\s*:\s*\(\s*([$\w]+)\s*\)\s*=>\s*[$\w]+\s*\(\s*\5\s*,\s*"modelByMainModel"\s*\)\s*\}\s*\)\s*\?\?\s*[$\w]+\s*\(\s*\3\s*\?\.\s*model\s*,\s*"model"\s*\)\s*;\s*if\s*\(\s*\4\s*\)\s*return\s*\{\s*value\s*:\s*\4\s*,\s*src\s*:\s*"gb"\s*\}\s*;\s*if\s*\(\s*[$\w]+\s*!==\s*"demoted"\s*\)\s*\{\s*let\s+([$\w]+)\s*=\s*[$\w]+\s*\(\s*\2\s*\)\s*;\s*if\s*\(\s*\6\s*\)\s*return\s*\{\s*value\s*:\s*\6\s*,\s*src\s*:\s*"default"\s*,\s*externalDefault\s*:\s*!0\s*\}\s*\}\s*return\s*\{\s*value\s*:\s*[$\w]+\s*\(\s*\2\s*\)\s*,\s*src\s*:\s*"default"\s*\}\s*\}/;
+
+  const match216 = oldFile.match(pattern216);
+  if (match216 && match216.index !== undefined) {
+    const [fullMatch, fnName] = match216;
+    const replacement = `function ${fnName}(){return{value:"${modelId}",src:"default"}}`;
+    const newFile =
+      oldFile.slice(0, match216.index) +
+      replacement +
+      oldFile.slice(match216.index + fullMatch.length);
+    showDiff(
+      oldFile,
+      newFile,
+      replacement,
+      match216.index,
+      match216.index + fullMatch.length
+    );
+    return newFile;
+  }
+
   const match210 = oldFile.match(pattern210);
   if (match210 && match210.index !== undefined) {
     const [fullMatch, fnName] = match210;
