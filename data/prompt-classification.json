@@ -20324,5 +20324,1036 @@
     "desc": "Trimmed variant of the tool-usage subagent guidance emitted when the subagent-steer experiment is not on 'default': use the Agent tool when the task matches an agent's description and never duplicate work a subagent is already doing."
   },
   "704fd37472c6e4498badf2d06b6df9f224da3f65": { "facing": "internal" },
-  "981429708e23e04cba4f7514941e7e80be2bd2b4": { "facing": "internal" }
+  "981429708e23e04cba4f7514941e7e80be2bd2b4": { "facing": "internal" },
+  "40bd91d59e276dd279cf43c3ecea3dec049eaaec": { "facing": "internal" },
+  "968f4a149d5d310a16ad94dad7b5087f5a30e08e": { "facing": "internal" },
+  "c0d7f6736c0ac2cc138082e6212cb022b595a177": { "facing": "internal" },
+  "ee864f8ee777651b2b2b6f46fd7bd8251da7cc21": { "facing": "ui" },
+  "411429e6ec1d8ca2af68b5c0899847b4b2941da9": { "facing": "internal" },
+  "8afb6e75408784472ca9ba2b856a7015edd8340a": {
+    "facing": "model",
+    "id": "system-prompt-memory-team-only-write-location",
+    "name": "System Prompt: Team-Only Memory Write Location",
+    "desc": "Memory-directory location clause for a team-only session (no private dir): the team dirs shared with all project users, and whether to write directly or that team memory is read-only."
+  },
+  "243e4857aadb0f27ab7bdf9c08c01b7966e48d41": {
+    "facing": "model",
+    "id": "system-prompt-memory-team-readonly-cannot-persist",
+    "name": "System Prompt: Team Memory Read-Only This Session",
+    "desc": "Notice within the memory system prompt that team memory is read-only this session and new memories cannot be persisted."
+  },
+  "6065a5a5bbc9e1ca9a6b3c331b7207d9addb0040": {
+    "facing": "model",
+    "id": "system-prompt-memory-team-only-all-types-no-secrets",
+    "name": "System Prompt: Team-Only Save All Types, No Secrets",
+    "desc": "Team-only session guidance: no separate private memory dir, save every memory type to the team directory (shared with teammates), never write secrets or credentials there."
+  },
+  "d6d7351e95ce6475ea6e7233f23c843b0d245191": {
+    "facing": "model",
+    "id": "system-prompt-memory-team-index-file-ref",
+    "name": "System Prompt: Team Memory Index File Reference",
+    "desc": "Reference to the index file in the team memory directory, used in the write-a-memory instructions to point at where the per-memory pointer line goes."
+  },
+  "eecfd1172b39bb24c7b2582c42d02ff8681a7214": {
+    "facing": "model",
+    "id": "system-prompt-memory-shared-skill-intro",
+    "name": "System Prompt: Shared Memory Skill Intro",
+    "desc": "Explains that a shared memory skill is a SKILL.md file in the shared team memory skills folder and, once synced, auto-loads for everyone with that shared team memory."
+  },
+  "2cc4830934c8ebd6a0f4498a870cf3141875d6bf": {
+    "facing": "model",
+    "id": "system-prompt-memory-shared-skill-restraint",
+    "name": "System Prompt: Shared Memory Skill Restraint",
+    "desc": "Guidance to only create/edit a shared memory skill on explicit user request (never proactively) and keep the set small (<10 workspace-wide, ≤30 total), moving low-value ones back to regular memory."
+  },
+  "ab216f18f274a8ceca5546185ffc353012a99120": {
+    "facing": "model",
+    "id": "system-prompt-memory-shared-skill-load-constraints",
+    "name": "System Prompt: Shared Memory Skill Load Constraints",
+    "desc": "Describes what is ignored/skipped when a shared memory skill loads: capability frontmatter (allowed-tools/hooks/model/shell), inline shell (!) commands, symlinked files, and SKILL.md files over 128KB."
+  },
+  "c1673b755253a770bc1bb8ef1029ccf136bd3b1b": {
+    "facing": "model",
+    "id": "system-reminder-askuserquestion-minimum-options-validation",
+    "name": "System Reminder: AskUserQuestion minimum options validation",
+    "desc": "Explains that a rejected single-option question was not shown and instructs the agent to proceed without retrying or inventing another option"
+  },
+  "103742916cb36443a94172c52dd38d2026b54ee0": {
+    "facing": "model",
+    "id": "slash-command-auto-mode-setup-usage",
+    "name": "Slash Command: /auto-mode-setup usage",
+    "desc": "Usage/help text for the /auto-mode-setup command, returned as a text result when arguments cannot be parsed"
+  },
+  "1916f16cd8a84d75a88654c2460ebddeee0fa352": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-watch-ended",
+    "name": "Data: Task notification — artifact live-watch ended",
+    "desc": "Monitor-event body injected into the session when a live artifact watch stops, noting future republishes won't be heard"
+  },
+  "d182c66c648cc676488dd55bc4bc18ef1a3f4825": { "facing": "internal" },
+  "ca0412d1f282a295fc5b57b851484942913bee49": { "facing": "internal" },
+  "e641090e5f3b23d71d385a22921fa26cdca1510f": { "facing": "internal" },
+  "63595c11ec26b08eba618c68e1850c3060b1995c": { "facing": "internal" },
+  "9e4fb10ea039b2f1bda029079d05d3c4dd2d46ef": { "facing": "internal" },
+  "2713ca38a6beef83a76821451677df38e066a822": { "facing": "internal" },
+  "e30cfcdb12e5ec4877ac86e09e4099e8fb5567a6": { "facing": "internal" },
+  "6e7f3c713452308cc75fb0470b91e76a9901a2fe": { "facing": "internal" },
+  "38a475d10d215c523ce3f57b877cf1715e054c01": { "facing": "internal" },
+  "82645567b7f23805b65dfa0ce365dbc529758236": { "facing": "internal" },
+  "4a499165281aad682a366681f12c48a8530b9ae4": { "facing": "internal" },
+  "d423bc881eb37d393cc50fee4b832109f54a9056": { "facing": "internal" },
+  "3dfb8e26c13788819199669dddae876b6d5c6cf6": { "facing": "ui" },
+  "f83550bf91a7f3b8f693aee85028ca2398940e6e": { "facing": "ui" },
+  "4d790ecbb8a7eecefa1737f767662dc1f3ffa3cc": { "facing": "internal" },
+  "7fab06abc81307ad39e99e01f5a448970d420fc1": { "facing": "ui" },
+  "a73ac75e40fbc99d3b64d495160263e21cba9a43": { "facing": "internal" },
+  "1585431db8fbac6e3e9e864f049345c2460a5d83": { "facing": "internal" },
+  "02530602b73b3f9e238583699b5e7f64dff4f147": { "facing": "internal" },
+  "ac497b487eea94c4f508e8ce828563fd10839547": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-isolation-command-too-complex",
+    "name": "Tool Result: Bash worktree isolation — command too complex",
+    "desc": "Refusal-reason clause returned to the model as the Bash tool's stderr when a worktree-isolated agent's command is too complex to verify it stays inside the worktree."
+  },
+  "7a95db83504e49558fbe5d8842949361f4a00f0a": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-isolation-glob-command",
+    "name": "Tool Result: Bash worktree isolation — glob command",
+    "desc": "Refusal-reason clause returned to the model as the Bash tool's stderr when a worktree-isolated agent's command names its executable via a runtime-resolved glob that can't be verified as git."
+  },
+  "6e38511a99a45ba81edc2a1242280f348e7f4904": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-wrapper-before-git",
+    "name": "Tool Result: Worktree git guard — wrapper command before git",
+    "desc": "Refusal clause: a wrapper command runs before git whose string payload can't be verified to leave the worktree alone."
+  },
+  "3dcd5ca7e08738c9dd8406ff6156cb2c2674a780": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-opaque-config",
+    "name": "Tool Result: Worktree git guard — opaque env injects git config",
+    "desc": "Refusal clause: an opaque env assignment injects git configuration whose effect on where git writes can't be verified."
+  },
+  "3cfc5171840b429b9e7678dd6d94590d9c0d541c": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-env-unmodeled",
+    "name": "Tool Result: Worktree git guard — unmodeled env wrapper",
+    "desc": "Refusal clause: an env invocation carries flags whose effect on the command it wraps can't be verified."
+  },
+  "db46b1f9b36277fe6ec1ca1c080e5988102e110d": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-config-flag-inject",
+    "name": "Tool Result: Worktree git guard — git -c config injection",
+    "desc": "Refusal clause: an opaque -c/config value is passed to git, injecting configuration whose write target can't be verified."
+  },
+  "82fb2f41040d4567e359a9f2a3deeb740a981af5": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-named-twice",
+    "name": "Tool Result: Worktree git guard — git named more than once",
+    "desc": "Refusal clause: git is named more than once in one command, which can't be verified to stay inside the worktree."
+  },
+  "fec4b5c214fe8318eb4303b2666f7326b8b146d1": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-env-multiple-chdir",
+    "name": "Tool Result: Worktree git guard — multiple env -C/--chdir",
+    "desc": "Refusal clause: env is given more than one -C/--chdir (last-wins), which can't be verified."
+  },
+  "0cbad84baa40c3228a949fa29e6d4fbce663699a": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-env-chdir-runtime",
+    "name": "Tool Result: Worktree git guard — env chdir to runtime path",
+    "desc": "Refusal clause: env changes directory to a runtime-computed location before running git."
+  },
+  "8855160dd4415560634676fdf359a9827d274472": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-env-chdir-shared-checkout",
+    "name": "Tool Result: Worktree git guard — env chdir to shared checkout",
+    "desc": "Refusal clause: env changes directory into the shared checkout before running git."
+  },
+  "a961710bb6790bd2c7ef353079096c74b9f62e7a": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-export-prefix-append",
+    "name": "Tool Result: Worktree git guard — exported var re-assigned with prefix",
+    "desc": "Refusal clause: an exported var is re-assigned with a per-command prefix that can append onto the exported value at runtime."
+  },
+  "d17a06b0050ef161c2f4f305502b46e5ad45e54b": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-export-twice",
+    "name": "Tool Result: Worktree git guard — variable exported more than once",
+    "desc": "Refusal clause: a var is exported more than once (a += append or double-export), which can't be verified."
+  },
+  "c7f94d81d28c507d2b3fa36da6af1a43365c51e0": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-var-runtime-value",
+    "name": "Tool Result: Worktree git guard — var set to runtime-computed path",
+    "desc": "Refusal clause: a var is set to a runtime-computed location that can't be verified before it runs."
+  },
+  "389f9589c95644a6109220663edcaad4754a79e3": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-chdir-shared-checkout",
+    "name": "Tool Result: Worktree git guard — cd into shared checkout before git",
+    "desc": "Refusal clause: the command changes directory into the shared checkout before running git."
+  },
+  "1ae33c0ef308b7efba130913e31655a8fb9f28a3": { "facing": "internal" },
+  "0781cb6ceaa7e76b2f9cdfb4e927fdc8b86fbcbb": { "facing": "internal" },
+  "53f98ce5f9c0eba0fd95ba14893eecc9a9c9ba81": { "facing": "internal" },
+  "1a394a5fce981058b11bd0a458d3d9ce4362ac4c": { "facing": "ui" },
+  "45e97130fdfce9ccedd2669fd791cd783e57d5": { "facing": "ui" },
+  "6c9133592bb49bd2d3dc54a2d5b8d82086cf488c": { "facing": "internal" },
+  "dd757ed40d2dee57ee110d043ef7dd654094e836": {
+    "facing": "model",
+    "id": "tool-result-worktree-resume-foreign-repo",
+    "name": "Tool Result: Worktree resume — foreign repository",
+    "desc": "EnterWorktree error when the existing worktree directory is registered under a different repository than expected; tells the user to remove it or pick another name."
+  },
+  "782b05bdbf83eede9546fddb4f64135352d1d7a7": {
+    "facing": "model",
+    "id": "tool-result-worktree-create-hook-dotted-path-rejected",
+    "name": "Tool Result: Worktree create — hook emitted a dotted path",
+    "desc": "EnterWorktree error (head) when the WorktreeCreate hook returns a worktree path containing dot segments the symlink screen cannot verify."
+  },
+  "5e9d096cf3118107b8227a95393517eb123f3e4": {
+    "facing": "model",
+    "id": "tool-result-worktree-create-hook-dotted-path-tail",
+    "name": "Tool Result: Worktree create — dotted-path retry tail",
+    "desc": "Trailing literal of the dotted-path rejection instructing the hook to emit a normalized (dot-free) absolute path and retry."
+  },
+  "b90247d0f7f50670ea4925bf57781ad9518c1d9": {
+    "facing": "model",
+    "id": "tool-result-worktree-create-hook-committed-symlink-rejected",
+    "name": "Tool Result: Worktree create — committed symlink rejected",
+    "desc": "EnterWorktree error tail when a repository-committed symlink under the checkout root could redirect the worktree outside the repo; tells the user to remove it or emit an outside path and retry."
+  },
+  "6289785c5f110ae38cc300889b8ef4f8e521843a": { "facing": "internal" },
+  "1ec8a35cfee0a55f9b0f1f9713f4439b7824ee48": { "facing": "internal" },
+  "da32f587b6f661051d34d045ce975cd6015e9020": {
+    "facing": "model",
+    "id": "agent-prompt-code-review-inline-prompt-assembly",
+    "name": "Agent Prompt: Code-review inline prompt assembly",
+    "desc": "Shell template that concatenates the review target, findings text, and verification-phase fragments into the inline code-review prompt."
+  },
+  "3ad2def6ed2c40578a40bf1c52a8bdf197afbefb": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-root",
+    "name": "Tool Parameter: Artifact multi-file root base directory",
+    "desc": "The Artifact publishing tool's `root` parameter — base dir that relative SOURCE paths resolve against."
+  },
+  "b9f51d78678aa447c65e7970b83e97eda6785a18": {
+    "facing": "model",
+    "id": "data-install-github-app-needs-terminal",
+    "name": "Data: /install-github-app needs an attached terminal",
+    "desc": "Status message added to the conversation when /install-github-app runs in a background session with no terminal attached."
+  },
+  "f0ca651c1c03c20398d85b2943cfa7a47c8a31ab": {
+    "facing": "model",
+    "id": "data-fork-runtime-failure",
+    "name": "Data: session fork failed at runtime",
+    "desc": "Status message added to the conversation when a session fork throws unexpectedly."
+  },
+  "fa04dee861d07400622c23350b8227a7d997515f": {
+    "facing": "model",
+    "id": "data-memory-file-editor-open-failed",
+    "name": "Data: /memory could not open the memory file in an editor",
+    "desc": "Status message when /memory cannot launch an editor for the memory file (no $EDITOR/$VISUAL)."
+  },
+  "5e903b94a64d7bf9aa02d918eea352d85264da14": { "facing": "internal" },
+  "1016cf2acc08014f7657e3f4997f1a864953ea83": { "facing": "internal" },
+  "221551aeadb37ac21bd13610321c30c2495632a9": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-index-html-reserved",
+    "name": "Tool Result: Artifact files map cannot publish index.html",
+    "desc": "Validation error returned to the model when a `files` map uses the reserved published path index.html."
+  },
+  "4cc14f0f9557017df3e2cbbdb2a9005e5ef3c9ae": { "facing": "internal" },
+  "ae83ea41dfde9425fdd4dadbcff634dd693a937c": { "facing": "internal" },
+  "eeb2b57c18b6627b0cb61aef58d79b2b162f2a8a": { "facing": "internal" },
+  "82df18815d7457dbf9d063704c285c1ab472e889": { "facing": "internal" },
+  "a33c1d3d59df78f2a4d2216b5064ec6fa2490fb1": { "facing": "internal" },
+  "a30ec46130ef1ecb8c2c0503d64ff96e406b3a25": { "facing": "internal" },
+  "e4978fd1b2afe484fc8c9a3067695c1bfe27d758": {
+    "facing": "model",
+    "id": "tool-result-artifact-multi-file-publish-unavailable",
+    "name": "Tool Result: Artifact multi-file publish unavailable",
+    "desc": "Tool error returned to the model when multi-file artifact publish is rejected by the server/proxy, advising a single-file retry or waiting for rollout."
+  },
+  "fc2e8f5952ad369896f82929072bcbecbd083d68": { "facing": "ui" },
+  "60143333a7adefcfe38b78ac14c78d737ca5ac17": { "facing": "ui" },
+  "09f368ecc49eb41a48c11eebd43bb2bf21d4cd6f": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-files-path",
+    "name": "Tool Parameter: Artifact files-map entry path",
+    "desc": "Describes the per-file `path` in the multi-file artifact publish `files` map — the file is served at this same path next to the page."
+  },
+  "43fa16047f28915ceb9ee33ae9ec2b2b54b628db": { "facing": "internal" },
+  "de6797cacc801985d9513364a8f97a03b0345c34": { "facing": "internal" },
+  "ad9bde96628292f4e4f6ff2210ab0986763a6f88": {
+    "facing": "model",
+    "id": "tool-result-artifact-published",
+    "name": "Tool Result: Artifact published",
+    "desc": "Tool result confirming an artifact was published, reporting its path and URL plus optional share/live/update fragments."
+  },
+  "5be322ef81223973fe99c37d77232ca3f5866bca": { "facing": "internal" },
+  "504e802913527af3f53647968dfc18942e346caa": {
+    "facing": "model",
+    "id": "skill-workshop",
+    "name": "Skill: Workshop",
+    "desc": "The workshop skill definition (frontmatter + body): run an interactive decision workshop as a published Artifact, driving an iterative decide-and-revise loop."
+  },
+  "36acef128b3ebb8c66693b68fc522aa9804f36c7": { "facing": "internal" },
+  "c1180888ec58d5a9f875159def330a8da1e7e2e4": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-redirect-glob",
+    "name": "Tool Result: Worktree git redirect via glob pattern",
+    "desc": "Deny-reason fragment when a worktree-isolated agent's git command routes through a runtime-expanded glob so its target repo can't be verified."
+  },
+  "3895eea6be8e3e0929ba4118b2eee0292f0fc494": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-redirect-runtime-dir",
+    "name": "Tool Result: Worktree git points at runtime-computed directory",
+    "desc": "Deny-reason fragment when a worktree-isolated git command uses -C with a directory computed at runtime that can't be verified before it runs."
+  },
+  "7aee5ca6f39c4dbb33112ab8c64d8587464661b0": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-redirect-runtime-repo",
+    "name": "Tool Result: Worktree git points at runtime-computed repository",
+    "desc": "Deny-reason fragment when a worktree-isolated git command pins a repository path computed at runtime that can't be verified."
+  },
+  "26b8a8476c50811664a5e785cfe833ad2acb2df7": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-redirect-bare-assignment",
+    "name": "Tool Result: Worktree git bare-assignment redirect",
+    "desc": "Deny-reason fragment when a bare env assignment (GIT_DIR/HOME/etc.) redirects a worktree-isolated git command to an unverifiable repository."
+  },
+  "9353af5700b9adeef0e1d320f9cb74ad4ca33b61": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-redirect-stdin",
+    "name": "Tool Result: Worktree git args from stdin",
+    "desc": "Deny-reason fragment when a worktree-isolated git command takes its arguments from stdin (xargs/parallel), making its target repo unverifiable."
+  },
+  "db83d1195533d89ba1d31741023e805e65986040": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-redirect-string-payload",
+    "name": "Tool Result: Worktree git basename string payload",
+    "desc": "Deny-reason fragment when a worktree-isolated command runs a string through basename that can't be verified to stay inside the worktree."
+  },
+  "bdb504bc7b534f2de6459703a725e7ce0b8c91ea": { "facing": "internal" },
+  "6c00b0991ba66a8e410db844934ef965560bce02": { "facing": "internal" },
+  "68a706039fbbde18125e81adb452955d13d0b375": { "facing": "internal" },
+  "dca5792eb42ac1bc21477e5b94b806b3977310d8": { "facing": "internal" },
+  "0d21a43ac4662c4712601b0636a7521d58520541": {
+    "facing": "model",
+    "id": "system-prompt-saving-skills-via-save-skill-tool",
+    "name": "System Prompt: Saving skills via save_skill tool",
+    "desc": "In-session skill-editing guidance: on-disk skill files are a read-only cache, so create/update skills through the save_skill tool."
+  },
+  "0c1521606328e170090b8d18befdd9b3b682c293": {
+    "facing": "model",
+    "id": "system-prompt-saving-skills-plugin-exception",
+    "name": "System Prompt: Saving skills plugin exception",
+    "desc": "Suffix to the saving-skills block noting plugin-bundled skills are the exception and must be customized through the plugin's own skill."
+  },
+  "603bc836a30a0c82702e34b0dbdf399df8663be6": { "facing": "internal" },
+  "458e3882cb5950309d3ce74d0ed64ff93f078219": {
+    "facing": "model",
+    "id": "tool-result-artifact-multifile-not-enabled",
+    "name": "Tool Result: Multi-file publish not enabled",
+    "desc": "Artifact publish error returned to the model when the account lacks multi-file support; extra files were not published."
+  },
+  "a9491cdf6225a3e227c83c1a5fa2fdc11f33c861": {
+    "facing": "model",
+    "id": "tool-result-artifact-file-binary-needs-buffer",
+    "name": "Tool Result: Artifact file must be a Buffer",
+    "desc": "Artifact publish error telling the model a binary file's content must be passed as a raw-byte Buffer, not a string."
+  },
+  "2375d561eadfd1f3a5106f837f73415649ddaa28": {
+    "facing": "model",
+    "id": "tool-result-artifact-file-too-large-per-file",
+    "name": "Tool Result: Artifact file exceeds per-file size",
+    "desc": "Artifact publish error returned to the model when a single file exceeds the per-file byte cap."
+  },
+  "a79c487358c9ee9239734fa10df45a7b6e1db6c7": {
+    "facing": "model",
+    "id": "tool-result-artifact-per-file-binary-base64-note",
+    "name": "Tool Result: Per-file binary base64 size note",
+    "desc": "Trailing clause of the per-file-size error clarifying binary files must fit a base64-encoded upload request."
+  },
+  "2eb666ee136ec532e276434ec7867b4b5812e672": {
+    "facing": "model",
+    "id": "tool-result-artifact-file-too-large-json-wire",
+    "name": "Tool Result: Artifact file too large JSON-encoded",
+    "desc": "Artifact publish error returned to the model when a file exceeds the per-request cap once JSON-encoded on the wire."
+  },
+  "e3ade548179ab44a7a04f127c56b0ce9c37e2ac4": {
+    "facing": "model",
+    "id": "tool-result-artifact-json-escaping-inflation-note",
+    "name": "Tool Result: JSON-escaping inflation note",
+    "desc": "Trailing clause explaining heavily escaped text inflates when JSON-encoded, advising the model to split or shrink the file."
+  },
+  "3524fa768b1e4996162aff6df2b0194496f02b7d": {
+    "facing": "model",
+    "id": "tool-result-artifact-upload-failed-after-preflight",
+    "name": "Tool Result: Artifact upload failed after preflight",
+    "desc": "Artifact publish error returned to the model when file upload fails post-preflight; publish not completed, retry advised."
+  },
+  "a75880e84567f86d8e1e4900160697cf293f425c": {
+    "facing": "model",
+    "id": "tool-result-artifact-no-version-not-committed",
+    "name": "Tool Result: Artifact publish not committed (no version)",
+    "desc": "Artifact publish error returned to the model when the server returns 200 without a version, so commit can't be confirmed."
+  },
+  "016baa449a8b4c0e3e60285bacf415c067029ca1": {
+    "facing": "model",
+    "id": "tool-result-artifact-gc-loop-missing-content",
+    "name": "Tool Result: Artifact deploy GC loop",
+    "desc": "Artifact publish error returned to the model when the server keeps reporting missing content after upload; refuses to loop."
+  },
+  "7600862382375849bd49a7d631891e5f7fb21031": {
+    "facing": "model",
+    "id": "tool-result-artifact-partial-inline-files-created",
+    "name": "Tool Result: Artifact created with inline files only",
+    "desc": "Suffix appended to later publish errors telling the model the artifact was created inline but remaining files need a republish."
+  },
+  "8cac5a0a320dded516c1c5a7ba00ff073dd72150": {
+    "facing": "model",
+    "id": "tool-result-artifact-upload-hash-not-staged",
+    "name": "Tool Result: Artifact upload hash not staged",
+    "desc": "Artifact publish error returned to the model when uploaded files didn't stage under the expected content hash; no manifest published."
+  },
+  "0b44a3e50d7f30744cf4498919fa6582c4777978": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-files-list-content-type",
+    "name": "Tool Parameter: Artifact files (list form) content type",
+    "desc": "contentType for a list-form published file in the artifact publish tool; servable media type inferred from the extension otherwise."
+  },
+  "3261ce51a8a5562413669f43c514f551b9747b57": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-files-map-content-type",
+    "name": "Tool Parameter: Artifact files (map form) content type",
+    "desc": "contentType for a map-form {from,contentType} published file in the artifact publish tool; inferred from the published extension otherwise."
+  },
+  "07ab8ecf320dd0545ae0f7d726f239430b91d198": { "facing": "ui" },
+  "23af2854ed42045f1732889e17ffa1d4311becf7": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-files-map-source",
+    "name": "Tool Parameter: Artifact files (map form) source path",
+    "desc": "`from` source-file path for a map-form published file in the artifact publish tool; relative to root or absolute under cwd."
+  },
+  "47604162b5ea2869d44aff8777c027881d37f886": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-supporting-files",
+    "name": "Tool Parameter: Artifact supporting files",
+    "desc": "Top-level `files` param of the artifact publish tool: map or list of supporting files published alongside the page."
+  },
+  "8e835d47bd146026e4429e098c4a70034122788d": { "facing": "ui" },
+  "adeed35da2719175a373ee36a089f4e069a569aa": { "facing": "ui" },
+  "7bcd334642360c2f641fbf22213b22c1d4e73caa": { "facing": "internal" },
+  "635571a66f67287096e994810866f740e430029d": {
+    "facing": "model",
+    "id": "tool-result-artifact-update-not-recognized",
+    "name": "Tool Result: Artifact update not recognized",
+    "desc": "Artifact publish/update failure returned to the model when the server does not recognize the artifact for updating."
+  },
+  "827af0152296c1403b9c5c31511f4e18caecb4aa": { "facing": "internal" },
+  "668f9110c9eb575cf7e9a0389603f66766e218a3": {
+    "facing": "model",
+    "id": "tool-result-askuserquestion-answered-read-carefully",
+    "name": "Tool Result: AskUserQuestion answered (read carefully)",
+    "desc": "AskUserQuestion tool-result branch returned to the model when the user answered, telling it to read the answers and follow what they actually say."
+  },
+  "c2810947ade2fd3a7ebc763c302570edebdbe061": {
+    "facing": "model",
+    "id": "tool-result-worktree-isolated-git-redirect-blocked",
+    "name": "Tool Result: Worktree-isolated git redirect blocked",
+    "desc": "Bash-tool refusal returned to the model when a worktree-isolated agent's command would redirect git into the shared checkout."
+  },
+  "904a8d5da13c61a778f33ba845b493bf288bce59": {
+    "facing": "model",
+    "id": "tool-result-artifact-root-not-a-directory",
+    "name": "Tool result: Artifact publish root is not a directory",
+    "desc": "Multi-file artifact-publish validation error returned to the model when the resolved `root` base path is not a directory."
+  },
+  "251ac3b90ed3e1e3b032091d1eddbe782426e8cb": {
+    "facing": "model",
+    "id": "tool-result-artifact-root-relocated-since-approval",
+    "name": "Tool result: Artifact publish base relocated since approval (lead)",
+    "desc": "Lead fragment of the model-facing error emitted when the resolved publish base differs from the one approved before publishing."
+  },
+  "331888efd7f2b5913c4dda787c60b2a97d6ffd50": {
+    "facing": "model",
+    "id": "tool-result-artifact-root-relocated-since-approval-2",
+    "name": "Tool result: Artifact publish base relocated since approval (cont.)",
+    "desc": "Continuation fragment of the publish-base-relocated-since-approval error returned to the model."
+  },
+  "9c12f9ad7641e2f4f2d0f9f0a13c7538387da837": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-map-empty",
+    "name": "Tool result: Artifact files map empty",
+    "desc": "Error returned to the model when the multi-file publish `files` map contains no entries."
+  },
+  "031a0b2475625cc3001d021dbec9cc80d1154868": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-network-path",
+    "name": "Tool result: Artifact file source is a network path",
+    "desc": "Error returned to the model when a `files` source path points at a network location (UNC/network mount)."
+  },
+  "bd22bff5595e016cf9b0d7674b0733baf222bc2e": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-tilde-not-expanded",
+    "name": "Tool result: Artifact file path tilde not expanded",
+    "desc": "Error returned to the model when a `files` source path uses a leading ~ which is not expanded here."
+  },
+  "fa334f339ef36a6af35a4b65966f36281824768b": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-outside-working-dir",
+    "name": "Tool result: Artifact file path outside working directory",
+    "desc": "Error returned to the model when an absolute `files` source path lies outside the working directory."
+  },
+  "f8e44da29cae55694005e38e68bd624c0978adab": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-unsafe-symlink",
+    "name": "Tool result: Artifact file symlink cannot be safely resolved",
+    "desc": "Error returned to the model when a `files` source is a symlink whose chain cannot be safely resolved (network target, `..` in link text, or too many links)."
+  },
+  "a58a06200a7be1c05ad693166d7d61b80b33e8b2": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-resolves-network-path",
+    "name": "Tool result: Artifact file resolves to a network path",
+    "desc": "Error returned to the model when a `files` source resolves (via realpath) to a network path."
+  },
+  "1ff7db98de1029554eee5ef3e9de210def0d1f66": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-resolves-outside-working-dir",
+    "name": "Tool result: Artifact file resolves outside working directory (cont.)",
+    "desc": "Continuation fragment of the error returned to the model when a `files` source resolves outside the working directory (via a symlink)."
+  },
+  "c432f9408bbe3c7b0b87160bfdac8267d7ce0b64": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-changed-to-symlink",
+    "name": "Tool result: Artifact file became a symlink after check",
+    "desc": "TOCTOU error returned to the model when a `files` source changed to a symlink after it was validated."
+  },
+  "2cb993d24558ea1cc62e0a5462a5683674673d94": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-not-regular-file",
+    "name": "Tool result: Artifact file is not a regular file",
+    "desc": "Error returned to the model when a `files` source is not a regular file (e.g. a directory, device, or FIFO)."
+  },
+  "438567d30a428d83a47f0ed3a6cb6bd4811d5446": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-total-size-exceeded",
+    "name": "Tool Result: Artifact Files Total Size Exceeded",
+    "desc": "Artifact multi-file publish error returned to the model when the combined size of all files in a version exceeds the per-version limit."
+  },
+  "f80391c4b9ca8c5d2121390db905831f826d6b78": {
+    "facing": "model",
+    "id": "tool-result-artifact-file-unreadable",
+    "name": "Tool Result: Artifact File Could Not Be Read",
+    "desc": "Artifact multi-file publish error returned to the model when a source file listed in the files map cannot be read."
+  },
+  "21150e8342ae768a6cf9da2eb5d8dfb5623df29e": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-arming",
+    "name": "Tool Result: Artifact Live Subscription Arming",
+    "desc": "Status line appended to the artifact-publish tool result telling the model the live republish watch is arming in the background."
+  },
+  "42ed674d6e98f235af42004b0b1017f4cfa39a35": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-flag-off",
+    "name": "Tool Result: Artifact Live Subscription Skipped (Flag Off)",
+    "desc": "Status appended to the publish tool result: live subscription skipped because the live-subscribe feature flag is off in cached config."
+  },
+  "e1f36f68f95eb86bedaf4961a4cb4308e6aa9918": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-session-context",
+    "name": "Tool Result: Artifact Live Subscription Skipped (Session Context)",
+    "desc": "Status appended to the publish tool result: live subscription skipped because only an interactive/SDK main-loop session holds the watch."
+  },
+  "a42ec8ed0bf85e7388e4e13b1e2ad9e0da5a4969": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-remote-session",
+    "name": "Tool Result: Artifact Live Subscription Skipped (Remote Session)",
+    "desc": "Status appended to the publish tool result: live subscription skipped because remote sessions do not hold the watch."
+  },
+  "8d603301b6afd4eeb170512ae5959fc99c90a9eb": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-control-plane-override",
+    "name": "Tool Result: Artifact Live Subscription Skipped (Control Plane Override)",
+    "desc": "Status appended to the publish tool result: live subscription skipped because the artifact control plane is overridden to a local stack."
+  },
+  "992ccfac7e2b38f04e79723ae3e96a2eb0986179": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-egress-denied",
+    "name": "Tool Result: Artifact Live Subscription Skipped (Egress Denied)",
+    "desc": "Status appended to the publish tool result: live subscription skipped because network egress to the claude.ai edge is denied by policy."
+  },
+  "149b30b4a784fc42273bfe4677b3d5d32a469599": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-artifact-not-found",
+    "name": "Tool Result: Artifact Live Subscription Skipped (Artifact Not Found)",
+    "desc": "Status appended to the publish tool result: live subscription skipped because no such artifact exists for this account (deleted or unshared)."
+  },
+  "6d78543ce49902d5d6ca03eaa5add9f101867b34": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-no-credential",
+    "name": "Tool Result: Artifact Live Subscription Skipped (No Credential)",
+    "desc": "Status appended to the publish tool result: live subscription skipped because the control plane minted no live-channel credential."
+  },
+  "c8f038f141c31091447d52c70afb0a482709303c": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-read-failed",
+    "name": "Tool Result: Artifact Live Subscription Skipped (Read Failed)",
+    "desc": "Status appended to the publish tool result: live subscription skipped because the artifact could not be read right now (network or auth)."
+  },
+  "95ff4b6e5b3708231fd45080716222f73aad4296": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-watch-cap",
+    "name": "Tool Result: Artifact Live Subscription Skipped (Watch Cap)",
+    "desc": "Status appended to the publish tool result: live subscription skipped because the session already holds its maximum number of artifact watches."
+  },
+  "21ab8da46c816b832cccc1956b5db00259ad1f06": {
+    "facing": "model",
+    "id": "skill-code-review-findings-fixed-later",
+    "name": "Skill: Code review findings fixed later",
+    "desc": "Code-review note telling the model to re-report findings with outcomes the moment they get fixed later in the session."
+  },
+  "d028a644a40b3e2f3b5fa908090fd0e1b68a888e": { "facing": "internal" },
+  "6fcef29773e147fe1038be9fd429cca958298fce": {
+    "facing": "model",
+    "id": "tool-description-artifact-supporting-files-guidance",
+    "name": "Tool Description: Artifact supporting-files guidance",
+    "desc": "Artifact-tool description fragment explaining multi-file publishing via the `files` map, `root` base dir, and per-source {from,contentType}."
+  },
+  "247ade7154aa53203d1b03ff0f88c3f3b394b3f1": {
+    "facing": "model",
+    "id": "system-prompt-memory-read-only-session",
+    "name": "System Prompt: Memory (read-only session)",
+    "desc": "Read-only memory intro: memory is read-only this session; recalled memories in <system-reminder> blocks are background context to verify before acting."
+  },
+  "56b8e98a428dec4b0bc3eea7729fab60fd9aefd5": {
+    "facing": "model",
+    "id": "system-prompt-saving-skills-propose-via-tool",
+    "name": "System Prompt: Saving skills (propose via tool)",
+    "desc": "Saving-skills system-prompt notice; skills on disk are a read-only cache, so propose a create/change via the propose-skill tool (${nGe})."
+  },
+  "b3beeb66bee1d78dbbbe06d3feba22e9566c60d0": {
+    "facing": "model",
+    "id": "system-prompt-saving-skills-via-file-delivery",
+    "name": "System Prompt: Saving skills via file delivery",
+    "desc": "Saving-skills notice; deliver a `.skill`/`SKILL.md` file to the user via the send tool (${t_e}); report as delivered, never as saved."
+  },
+  "a58ed84d3657f4750f89e6f088f992533a698ef1": {
+    "facing": "model",
+    "id": "system-prompt-saving-skills-unavailable-here",
+    "name": "System Prompt: Saving skills unavailable here",
+    "desc": "Saving-skills notice; the model can't create/change skills in this session and should point the user to their claude.ai settings."
+  },
+  "b09a8cb52f583d10d1f088dc3258557c67d6a567": {
+    "facing": "model",
+    "id": "system-reminder-unavailable-mcp-tools",
+    "name": "System Reminder: Unavailable MCP tools",
+    "desc": "Meta context block listing MCP tools excluded because their input schemas would be rejected by the Anthropic API, told to explain exclusions if asked."
+  },
+  "6e6dc8b172215115430f8a72e283e0f3dc96d90d": {
+    "facing": "model",
+    "id": "data-workshop-artifact-html-template",
+    "name": "Data: Workshop artifact HTML template",
+    "desc": "The full HTML template for the iteratively-republished workshop decision-document artifact (fill contract, CDS tokens, decision-block styling) that the model fills and publishes."
+  },
+  "14bb4eb7322ab448d7f6b26f4d4f04ca06564f8b": {
+    "facing": "model",
+    "id": "skill-artifact-pr-review-html-template",
+    "name": "Skill: Artifact PR-review HTML template",
+    "desc": "HTML body-fragment template for the PR-review artifact, with slot markers and instructions to the model to HTML-escape untrusted PR-derived input."
+  },
+  "c55f5f7d446b795cd3ee88b135436725dab16757": { "facing": "ui" },
+  "8ae52b92a5e5142b906e81a9efd11417f1718daa": { "facing": "ui" },
+  "739b37063330f0f9d2768adf923bf7804f254a1e": {
+    "facing": "model",
+    "id": "tool-result-artifact-url-wrong-env",
+    "name": "Tool Result: Artifact URL wrong environment",
+    "desc": "Validation message returned to the model when an artifact URL passed to status/watch/unwatch belongs to a different claude.ai environment than the current session."
+  },
+  "a00bf354c9377f9636669f07fea2d4a6d1684449": {
+    "facing": "model",
+    "id": "tool-result-artifact-public-read-not-enabled",
+    "name": "Tool Result: Artifact public read not enabled",
+    "desc": "Artifact-read failure returned to the model when the artifact is served to it as a public (non-member) reader and reading public artifacts that way is not yet enabled."
+  },
+  "a2874a5193a5d1fcf7898d3f687e17eea5c6020e": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-path-empty",
+    "name": "Tool Result: Artifact files path empty",
+    "desc": "Validation error for the Artifact publish `files` map, returned to the model when a published path is an empty string."
+  },
+  "31322138f9b7ebb87bd6e7787ec565d245c3838d": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-path-backslash",
+    "name": "Tool Result: Artifact files path contains backslash",
+    "desc": "Validation error for the Artifact publish `files` map, returned to the model when a published path contains a backslash instead of forward slashes."
+  },
+  "8ac3cc1fc7cfd99275adf0d8a7dc8b22d8b6f74a": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-path-illegal-url-chars",
+    "name": "Tool Result: Artifact files path has illegal URL characters",
+    "desc": "Validation error for the Artifact publish `files` map, returned to the model when a published path contains characters (?, #, %) that can't appear in a served URL path."
+  },
+  "c7f104f603260e3c07f69a3fd0e9d28846380973": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-path-absolute",
+    "name": "Tool Result: Artifact files path is absolute",
+    "desc": "Validation error for the Artifact publish `files` map, returned to the model when a published path is absolute rather than relative to the artifact root."
+  },
+  "287a158911564d82b7b9dad9198084101c44daef": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-path-dot-segments",
+    "name": "Tool Result: Artifact files path has dot segments",
+    "desc": "Validation error for the Artifact publish `files` map, returned to the model when a published path contains '.' or '..' segments."
+  },
+  "046471c90deb1ce8dee99e1fe0d2eb59fae3c723": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-path-reserved-thumbnail",
+    "name": "Tool Result: Artifact files path reserved for thumbnails",
+    "desc": "Validation error for the Artifact publish `files` map, returned to the model when a published path uses a name reserved for artifact thumbnails (_thumb.html/_thumb.img)."
+  },
+  "c309bfa2e05f38a246191549a240b4c29d24981c": {
+    "facing": "model",
+    "id": "tool-result-artifact-root-network-path",
+    "name": "Tool Result: Artifact root is a network path",
+    "desc": "Validation error for the Artifact publish `root` base directory, returned to the model when the given root is a network path outside the working directory."
+  },
+  "e0ffbf69a67ffeff25b28220aa86af38c023bf8e": {
+    "facing": "model",
+    "id": "tool-result-artifact-root-outside-workdir",
+    "name": "Tool Result: Artifact root outside working directory",
+    "desc": "Validation error for the Artifact publish `root` base directory, returned to the model when an absolute root lies outside the working directory."
+  },
+  "c862cd77ecdfb1a52943a190479d6a645ec38cd6": {
+    "facing": "model",
+    "id": "tool-result-artifact-root-symlink-unresolvable",
+    "name": "Tool Result: Artifact root symlink chain unresolvable",
+    "desc": "Validation error for the Artifact publish `root` base directory, returned to the model when root is a symlink whose chain can't be safely resolved (network target, '..' in link text, or too many links)."
+  },
+  "9a3463c1619eac19d21c54bd91b80ec808f4b1f6": {
+    "facing": "model",
+    "id": "tool-result-artifact-root-resolves-network-path",
+    "name": "Tool Result: Artifact root resolves to a network path",
+    "desc": "Validation error for the Artifact publish `root` base directory, returned to the model when root's realpath resolves to a network path outside the working directory."
+  },
+  "66f3321c48153ca4c3aeb052f220be8d43165d26": {
+    "facing": "model",
+    "id": "slash-command-auto-mode-setup-usage",
+    "name": "Slash Command: /auto-mode-setup flag-order usage error",
+    "desc": "Flag-grammar error for /auto-mode-setup telling the caller --request-id must precede --expect-sha256 and --apply-file."
+  },
+  "b227272fc83c2ba321e4807c595c97b06d9e5f44": { "facing": "ui" },
+  "31087ffb7a6423271eb870d957f9fdf023226b20": { "facing": "ui" },
+  "59db639c854685490f755b3cdccb52bdee097b97": { "facing": "ui" },
+  "cda6a8119ef05a79e7981298979e5feb075b6493": { "facing": "ui" },
+  "007a0a93b7770774868d3a7fc9f25a4ff011b816": { "facing": "ui" },
+  "496a47bd58919d70b5d933f6596fbdbd66172c90": { "facing": "internal" },
+  "a22a1db35162936524420332f109eac39e325be8": { "facing": "internal" },
+  "cba784e6babcad63e29f4cd7223ae314a5ab5d44": { "facing": "internal" },
+  "0eb01e81dc0789e41b101b40f1401ee4fb366826": { "facing": "internal" },
+  "cb5df614bcbc25eb4a78c9f7ed121e0379594dda": { "facing": "internal" },
+  "7f2999d6b0e70cc984a7458da476dc53b373318b": { "facing": "internal" },
+  "44e4740785d7fed13ab0032144a23a315f391939": { "facing": "ui" },
+  "bdb8e4947dab56ea32586b5ccf1cae76951e1b3a": { "facing": "ui" },
+  "ae7b14811d5b9bac828359b1e927e357c4a488b8": { "facing": "ui" },
+  "f4dc13cf69870ee0d6fdc56a5de8313d583f9c66": { "facing": "ui" },
+  "49850964eb67f9bc35d3e815b769f35f10926c5d": { "facing": "internal" },
+  "8fbaa17fac6b831e0a7c664d4b88bfe8348f94dd": { "facing": "internal" },
+  "71fad38183509d4af2aaabd12baaf1ff366ed5e2": { "facing": "internal" },
+  "ad37cd6b385b1c1e88719c9ff1592e50e4c04b34": { "facing": "ui" },
+  "28f85f32add4b7ed313574377929fa61cb900f18": { "facing": "ui" },
+  "2782faa11d2afe1302a0406ae14a749abbde95f3": { "facing": "ui" },
+  "001df2ca2039372ff03158dee84dfcdff0322b48": { "facing": "internal" },
+  "30d61c6a009751448283a03010c2e3d84e9495b2": { "facing": "ui" },
+  "33dc0432209cee382e5b1726babc50146c0d2d0a": { "facing": "internal" },
+  "c654780ebeab3ba6818dc899e1b53ce207bcbad3": { "facing": "internal" },
+  "a239b49718642c1e45afeef430f5ba49a9439f18": { "facing": "internal" },
+  "ad70c08813b73fbc0b00d9b52c54eb888cad9d9f": { "facing": "internal" },
+  "3edc3fc8dcc8e991fa163209544627a1a15ee5d7": { "facing": "ui" },
+  "d9b7e0bed16805b30f68aa321079680275c2d671": { "facing": "ui" },
+  "e44c9fa0c29370ea686f625c7cf9f2a29c3b628f": { "facing": "ui" },
+  "84c3eb4e9a877506c531659f2978024b79fb9dcc": { "facing": "ui" },
+  "c294a35e93937091cd3951fddbd410b8771e31fd": { "facing": "ui" },
+  "5dacc893f89d7b2e062c7683c6f43758c0838a09": { "facing": "internal" },
+  "48728cf4f996a3f8f015ed777a8eb13a869cc779": { "facing": "ui" },
+  "10ca0cc7f87c5b72b0fec28bd6cbe165f60064a0": { "facing": "ui" },
+  "241901ff5fc547470c9afa775de56a0f57bf01d6": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-invalid-slug",
+    "name": "Tool result: Artifact live-subscription skipped (invalid slug)",
+    "desc": "Artifact-watch skip message when the url is not a nameable artifact, returned in the Artifact tool result."
+  },
+  "e32b332bf7e8c68d315db0f9e76cd02ba6e3ef8a": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-cancelled",
+    "name": "Tool result: Artifact live-subscription skipped (cancelled)",
+    "desc": "Artifact-watch skip message when the request was aborted before the socket opened, returned in the Artifact tool result."
+  },
+  "801f1d28464ceb5cb4eedaacdfa0c5b8c9b5b297": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-ws-open-error",
+    "name": "Tool result: Artifact live-subscription skipped (connection failed)",
+    "desc": "Artifact-watch skip message when the websocket could not be opened from this environment, returned in the Artifact tool result."
+  },
+  "0a99b6b8fa5f0da6cd881cf9cc7c763cd8edf9c3": {
+    "facing": "model",
+    "id": "data-artifact-live-subscription-monitor-label",
+    "name": "Data: Artifact watch monitor description",
+    "desc": "Background-monitor description for an artifact live subscription; echoed to the model as the Monitor event title in the injected task-notification."
+  },
+  "b74e9f5b8e4ea3a3ade1351062bb7a782fc69bf7": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-absolute-needs-map",
+    "name": "Tool result: Artifact files param — absolute path needs map form",
+    "desc": "Validation error when a files list entry is an absolute path; tells the model to use the published-path map form."
+  },
+  "c9b69edab4aa9bdcb83c0b7848a415ba72d13ab7": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-map-value-invalid",
+    "name": "Tool result: Artifact files map value invalid",
+    "desc": "Validation error when a files map value is neither a source path string nor a {from, contentType?} object, returned to the model."
+  },
+  "7150c4d0484724d6c45b038a4a2827212b4f5897": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-shape-invalid",
+    "name": "Tool result: Artifact files param shape invalid",
+    "desc": "Validation error when the files parameter is neither a list of paths nor a published-path map, returned to the model."
+  },
+  "d5ca375f2041ddd2594e8e25fa65f326681aadf7": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-action-watch",
+    "name": "Tool parameter: Artifact action — watch/unwatch/status",
+    "desc": "Addendum to the Artifact tool's action parameter describing the watch, unwatch, and status actions."
+  },
+  "1d5919741f73d3c31baee0ebe7268dc15b9248aa": { "facing": "ui" },
+  "a64583967f53d5b32d816e9fa0de8eb6cbffc24c": { "facing": "internal" },
+  "9873a74a86386e92e2259e8d10c2627f2fe06966": {
+    "facing": "model",
+    "id": "tool-result-artifact-root-read-blocked-deny-rule",
+    "name": "Tool result: Artifact publish root read blocked by deny rule",
+    "desc": "Hard-deny message when the Artifact publish `root` base directory is blocked by a Read deny rule, returned to the model as the block reason."
+  },
+  "87e826cc8aeb3c461f457866153dbf556115bb66": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-publish-blocked-deny-rule",
+    "name": "Tool result: Artifact files publish blocked by deny rule",
+    "desc": "Hard-deny message when a source file to publish is blocked by a Read deny rule, returned to the model as the block reason."
+  },
+  "0e7702678ac11e43a61558f5e1735464b83a42c2": { "facing": "ui" },
+  "e2677420a32aeb1b052a3a49f72482cb0370e66f": { "facing": "ui" },
+  "54a85dbdcab6ccdd6bcc98b60511e32c41e3bf33": { "facing": "ui" },
+  "c4fbf9498579504d76d1c2c4af300590e43914a8": { "facing": "internal" },
+  "5426dc495608a74b97503fdb8d46a8cefbccaf4a": { "facing": "ui" },
+  "803ca91717a6268c0e9d5151a42cae684af241ac": { "facing": "ui" },
+  "d626cfd0a09b96c03d6c1dbbd580b1c4ccfa442a": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-publish-blocked-read-rule",
+    "name": "Tool Result: Artifact multi-file publish blocked by Read rule",
+    "desc": "Error when a file in the artifact `files` map is blocked by a Read permission deny rule during publish."
+  },
+  "ce0be2eda4a686ad01fd002ab22f861d4b243115": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-publish-blocked-read-rule-fragment",
+    "name": "Tool Result: Artifact files-blocked read-rule remediation fragment",
+    "desc": "Continuation of the artifact files-publish-blocked error: instructs to remove the file or approve the prompt."
+  },
+  "55fa5c2cfa8f7834d5db73ad57ba7156c1650bf3": { "facing": "internal" },
+  "f997e5e7ec46862823db40f0707ccd5222588292": {
+    "facing": "model",
+    "id": "slash-command-auto-mode-setup-expect-sha256-required",
+    "name": "Slash Command: /auto-mode-setup --expect-sha256 required",
+    "desc": "Non-interactive apply error: --expect-sha256 (64-hex proposal digest) must be passed before --apply-file."
+  },
+  "8317aa9aa3116a7edb3def838662c44ddc4d33": {
+    "facing": "model",
+    "id": "slash-command-auto-mode-setup-expect-sha256-malformed",
+    "name": "Slash Command: /auto-mode-setup malformed --expect-sha256",
+    "desc": "Non-interactive apply error: --expect-sha256 must be a 64-character hex sha256 digest."
+  },
+  "5ccd6bb337d9bfc1033421c6784dc50c074cb50d": {
+    "facing": "model",
+    "id": "slash-command-auto-mode-setup-hash-mismatch",
+    "name": "Slash Command: /auto-mode-setup proposal hash mismatch",
+    "desc": "Non-interactive apply error: proposal file bytes no longer match the reviewed digest; nothing written."
+  },
+  "aa7518a608d04057f79e2861bce619c16821a587": {
+    "facing": "model",
+    "id": "slash-command-auto-mode-setup-request-id-invalid",
+    "name": "Slash Command: /auto-mode-setup invalid --request-id",
+    "desc": "Usage error: --request-id must be a canonical 8-4-4-4-12 hex-and-dash UUID; the token is refused."
+  },
+  "d0d2842797eea320849269fd267b59517716ee1c": {
+    "facing": "model",
+    "id": "slash-command-auto-mode-setup-request-id-duplicate",
+    "name": "Slash Command: /auto-mode-setup duplicate --request-id",
+    "desc": "Usage error: --request-id was passed more than once; pass exactly one as the first flag."
+  },
+  "31bfc66cda36c8841322c0188679672c258612fc": {
+    "facing": "model",
+    "id": "slash-command-auto-mode-setup-expect-sha256-equals-form",
+    "name": "Slash Command: /auto-mode-setup --expect-sha256 equals form",
+    "desc": "Usage error: --expect-sha256 takes a space-separated value, not `=`."
+  },
+  "3f790c4bfe98bf6133819834b89920684bda6644": {
+    "facing": "model",
+    "id": "slash-command-auto-mode-setup-expect-sha256-missing-value",
+    "name": "Slash Command: /auto-mode-setup --expect-sha256 missing value",
+    "desc": "Usage error: --expect-sha256 needs its 64-character hex sha256 value."
+  },
+  "b83dac51151ac3f746a745ce6058e94f0da35981": {
+    "facing": "model",
+    "id": "slash-command-auto-mode-setup-expect-sha256-apply-file-only",
+    "name": "Slash Command: /auto-mode-setup --expect-sha256 apply-file only",
+    "desc": "Usage error: --expect-sha256 applies only to --apply-file and must come directly before it."
+  },
+  "a0081fbc89eb7880197758f13ab0c6790eac7259": {
+    "facing": "model",
+    "id": "slash-command-auto-mode-setup-expect-sha256-order",
+    "name": "Slash Command: /auto-mode-setup --expect-sha256 ordering",
+    "desc": "Usage error: --expect-sha256 must come before --apply-file, not after it."
+  },
+  "dd4cb67429e76a217a773cbfc23fcad648d4533e": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-reads-blocked",
+    "name": "Tool Result: Artifact publish blocked (reads disabled)",
+    "desc": "checkPermissions deny reason returned to the model when publishing is blocked because reading file contents is disabled by a Read permission rule."
+  },
+  "a0ad82a823009255d995af966f31fd0c554b199f": { "facing": "ui" },
+  "414ee00eec1e2a3250ab072ef4874d4383accd4e": { "facing": "ui" },
+  "24caa3c4adc99ce78cce09bf32abe1d82eab1657": { "facing": "ui" },
+  "3cbda3ffaac2a6982999b2609da228a33149b646": {
+    "facing": "model",
+    "id": "data-artifact-watch-auto-classifier-input",
+    "name": "Data: Artifact watch auto-classifier input",
+    "desc": "Action summary fed to the permission auto-classifier LLM when the model requests to watch an artifact for republish notifications."
+  },
+  "ce5d9e0bd12c3f520cbf7451718a9a346c6fee5d": {
+    "facing": "model",
+    "id": "tool-description-artifact-multifile-root-relative-sources",
+    "name": "Tool Description: Artifact multi-file root sources note",
+    "desc": "Parenthetical in the Artifact tool description (multi-file publish variant) noting that relative supporting-file sources are read from under the given root directory."
+  },
+  "8094171909bf65d61b72791b9d1929935d8ee814": {
+    "facing": "model",
+    "id": "tool-result-artifact-action-requires-url",
+    "name": "Tool Result: Artifact watch/status action requires url",
+    "desc": "Input-validation error returned to the model when a watch/unwatch/status action call is missing the required artifact url."
+  },
+  "02b2030c41ee3fdbec989eb9682e5c541253ed62": {
+    "facing": "model",
+    "id": "tool-result-artifact-watch-reconnect-note",
+    "name": "Tool Result: Artifact watch reconnect note",
+    "desc": "Note appended to the watch tool result telling the model the background connection auto-reconnects until its ~1h credential expires, and the model will be told if reconnecting must stop."
+  },
+  "18d4fa11611c0869e69d4100950d0e47948bfb58": {
+    "facing": "model",
+    "id": "tool-result-artifact-unwatch-stopped",
+    "name": "Tool Result: Artifact unwatch stopped",
+    "desc": "Tool result confirming a watch was stopped; republishes of the artifact will no longer be reported this session."
+  },
+  "fcf61ad0a85e50a903890c7f63fa7928906912e4": {
+    "facing": "model",
+    "id": "tool-result-artifact-unwatch-not-watching",
+    "name": "Tool Result: Artifact unwatch — no active watch",
+    "desc": "Tool result returned when unwatch finds no active watch for the given url in this session."
+  },
+  "c76f7d9f22c57ec6e4c645e87e9dadd0746970fa": {
+    "facing": "model",
+    "id": "tool-result-artifact-watches-list-header",
+    "name": "Tool Result: Artifact watches list header",
+    "desc": "Header line of the watches tool result listing this session's artifact watches (session-local; none survive a restart)."
+  },
+  "84f942f3de844084790e12f04177acc9bb4253d1": {
+    "facing": "model",
+    "id": "tool-result-artifact-watches-list-item",
+    "name": "Tool Result: Artifact watches list item",
+    "desc": "Per-watch line in the watches tool result showing url, connection state, whether requested or publish-armed, and the since timestamp."
+  },
+  "04497ccc0a16a3579ea12aab0d2b2ba878fb3e78": { "facing": "ui" },
+  "399f0346458a177ec8d70b7add2bef7dd7d767ce": { "facing": "ui" },
+  "b130391a1665d188ad2c67844ea3c516747e2bee": { "facing": "ui" },
+  "f6fd102e277bebdbb359ce4a08f9e4011c190b94": { "facing": "ui" },
+  "b76bbe1f9738db75a4c61e94398ba7c1a1da646b": { "facing": "ui" },
+  "70791c2a5b105756a00cbb6a65cf934df51f09bd": { "facing": "ui" },
+  "cfac230c46be69cea08a1b914db2deedea305e38": { "facing": "ui" },
+  "4a20f0e141a8146c4d158c24591183534577d8d4": {
+    "facing": "model",
+    "id": "data-fork-blocked-session-persistence-off",
+    "name": "Data: Fork blocked — session persistence off",
+    "desc": "/fork result when session persistence is off, so a forked copy would have nothing to start from."
+  },
+  "92c509f2945d38eae8ec295557b3b8f30a8a46c4": {
+    "facing": "model",
+    "id": "data-fork-blocked-launch-flags",
+    "name": "Data: Fork blocked — launch flags",
+    "desc": "/fork result when the session's launch flags (safe/bare mode, custom system prompt, tool allowlist, restricted settings) would not be inherited by the copy."
+  },
+  "2d3487e98a15b73d8d3c1297662ee90e91d778b1": {
+    "facing": "model",
+    "id": "data-fork-nothing-to-fork-yet",
+    "name": "Data: Fork — nothing to fork yet",
+    "desc": "/fork result when no message has been sent yet, so there is nothing to fork."
+  },
+  "da14b7f5bacd6af9178a0311279dec48587d216e": {
+    "facing": "model",
+    "id": "slash-command-mcp-reconnect-needs-auth-background",
+    "name": "Slash Command: MCP reconnect needs auth (background session)",
+    "desc": "/mcp reconnect result when a server needs authentication in a detached/background session, telling the model to open this session and run /mcp."
+  },
+  "0794507bccfe7e321770b0fc6345f5171b2f96a1": {
+    "facing": "model",
+    "id": "slash-command-mcp-reconnect-needs-auth-agent-view-suffix",
+    "name": "Slash Command: MCP reconnect needs-auth agent-view suffix",
+    "desc": "Suffix appended to the /mcp reconnect needs-auth result noting the session now shows 'needs input' in the agent view."
+  },
+  "5e5ff7b24dd526b4f81c69ee5ddca0fc0c5ad2ff": { "facing": "ui" },
+  "ff04a4d3f3cb78dc3c5cb8031fb4d81135d404eb": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-diff-too-large",
+    "name": "Slash Command: Ultrareview local diff too large",
+    "desc": "Ultrareview precondition error shown when the local diff exceeds the file/line limits, suggesting a closer base branch or splitting the change."
+  },
+  "552de2edacd34fa7a149db415bc3d210d4d05e53": {
+    "facing": "model",
+    "id": "system-prompt-artifact-attached-republish-notify-note",
+    "name": "System Prompt: Artifact republish-notification note",
+    "desc": "Trailing note appended to the artifact-attach context message when this session will be notified on republish."
+  },
+  "4acda7ea2b7ffe2a14ec42d3dab1290af1ccf21e": {
+    "facing": "model",
+    "id": "system-prompt-artifact-attached-of-interest",
+    "name": "System Prompt: Artifact attached as current interest",
+    "desc": "Context message injected when the user attaches an artifact, instructing the model to WebFetch it before editing or republishing."
+  },
+  "d959117d04bf996b3507a8196b7ab9d317477130": { "facing": "ui" },
+  "6e15417438f1a1dcd5b6b460905cad05f66acbf7": { "facing": "internal" },
+  "5f86424f77749c1c3b855a7cbfdf60d7c80a0ec1": { "facing": "ui" },
+  "28fc65e6f3b8a7a54ce6b9f03ee1d2687e98faef": { "facing": "ui" },
+  "1d6e0cea374b56bf488682e3be86771ed172fcae": { "facing": "internal" },
+  "d9f9701ea21e67fd31bbc6ab18e386eed00a2cf5": { "facing": "internal" },
+  "0ff0cd46f3a9f29ce4af00b1e5aafb929fa72a55": { "facing": "internal" },
+  "67a63324d4278260ae14c36ed1f3f3bb18ac8559": { "facing": "ui" },
+  "45e97130c9fdfce9ccedd2669fd791cd783e57d5": { "facing": "internal" },
+  "5e9d096caf3118107b8227a95393517eb123f3e4": {
+    "facing": "model",
+    "id": "data-worktree-create-hook-dotted-path",
+    "name": "Data: WorktreeCreate hook dotted-path rejected",
+    "desc": "Error surfaced when the WorktreeCreate hook emits a path with dot segments the symlink screen can't verify."
+  },
+  "b90247dc7f0f50670ea4925bf57781ad9518c1d9": {
+    "facing": "model",
+    "id": "data-worktree-create-hook-symlink-rejected",
+    "name": "Data: WorktreeCreate hook symlink rejected",
+    "desc": "Error surfaced when a repository-committed symlink under the checkout root could redirect the hook worktree outside the repository."
+  },
+  "6289785cf5110ae38cc300889b8ef4f8e521843a": { "facing": "internal" },
+  "a0ad32a823009255d995af966f31fd0c554b199f": { "facing": "ui" },
+  "8317aa9adeb3116a7edb3def838662c44ddc4d33": {
+    "facing": "model",
+    "id": "data-auto-mode-setup-bad-hash-arg",
+    "name": "Data: /auto-mode-setup bad hash arg",
+    "desc": "Error reason returned by non-interactive /auto-mode-setup when --expect-sha256 is not a valid 64-char hex sha256 digest."
+  }
 }

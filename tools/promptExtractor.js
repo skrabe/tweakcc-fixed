@@ -107,6 +107,34 @@ const CURATED_IDENTIFIER_MAPS = {
 };
 
 const NEW_PROMPT_ASSIGNMENTS = [
+  // 2.1.216 — the lean-arm system-prompt builder (Wty, formerly RW_) absorbed the
+  // interactive-intro conditional + the shared security note (l1s) + the whole
+  // "# Harness" block into ONE template literal, so the previously-standalone
+  // `system-prompt-interactive-intro-short`, `-interactive-intro-output-style`,
+  // and `-harness-instructions` prompts vanished as separate entries and this
+  // merged prompt extracts anonymous (its opening is now the intro ternary, not
+  // "# Harness", so fuzzy carryover misses). Piebald keeps the id
+  // `system-prompt-harness-instructions` for it; we match, so the harness override
+  // stays bound. identifiers [0,1,2,3] == Piebald's, so adopt their full map
+  // (OUTPUT_STYLE_CONFIG / SECURITY_NOTE / SYSTEM_REMINDER_TAG_GUIDANCE_FN /
+  // TOOL_CONTEXT). This is the opus-4-8 live arm (lean gate true).
+  {
+    matcher: t =>
+      t.includes('# Harness') &&
+      t.includes(
+        'Prefer the dedicated file/search tools over shell commands when one fits'
+      ),
+    name: 'System Prompt: Harness instructions',
+    id: 'system-prompt-harness-instructions',
+    description:
+      'Core interactive-agent identity and harness instructions for the lean system-prompt arm: terminal Markdown output, permission modes, hook feedback, parallel tools, clickable file refs.',
+    identifierMap: {
+      '0': 'OUTPUT_STYLE_CONFIG',
+      '1': 'SECURITY_NOTE',
+      '2': 'SYSTEM_REMINDER_TAG_GUIDANCE_FN',
+      '3': 'TOOL_CONTEXT',
+    },
+  },
   // 2.1.211 — fuzzy-carryover misses. Both prompts are still in the binary with
   // a bound override; Anthropic only edited their OPENING (inside FUZZY_PREFIX's
   // first 100 chars), so the carried name dropped and the classification cache
