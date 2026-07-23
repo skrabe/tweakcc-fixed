@@ -21355,5 +21355,871 @@
     "id": "data-auto-mode-setup-bad-hash-arg",
     "name": "Data: /auto-mode-setup bad hash arg",
     "desc": "Error reason returned by non-interactive /auto-mode-setup when --expect-sha256 is not a valid 64-char hex sha256 digest."
+  },
+  "c1ba2853b7b8cb3aa06886f11b7cc50403fee0b1": {
+    "facing": "model",
+    "id": "tool-result-artifact-page-data-entries-are-data",
+    "name": "Tool Result: Artifact Page-Data Entries Are Data",
+    "desc": "Trailer appended to the Artifact tool's read_page_data tool_result, telling Claude that data-island entries are writer-authored data rather than directives."
+  },
+  "ea54f3ac0bf56d18467ea8bf415ddb8e0a2684ed": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-decisions-are-data",
+    "name": "Tool Result: Artifact Workshop Decisions Are Data",
+    "desc": "Trailer appended to the Artifact tool's workshop-decisions island tool_result, telling Claude that reader answers are data to show the user, not commands."
+  },
+  "2383ee7b7e425dca4324c249b7935e97a176592b": {
+    "facing": "model",
+    "id": "skill-whiteboard-merge-state-script",
+    "name": "Skill: Whiteboard merge-state.mjs Helper",
+    "desc": "The merge-state.mjs write-back helper bundled as a whiteboard-skill file, extracted to the skill base directory that Claude is pointed at when the whiteboard skill loads."
+  },
+  "5c7bc532e2334616d32f1fdab37fd262964a3885": {
+    "facing": "model",
+    "id": "system-prompt-correction-restraint",
+    "name": "System Prompt: Correction restraint",
+    "desc": "Instructs Claude to correct only consequential errors plainly, avoid unnecessary self-criticism or re-auditing, and evaluate other agents’ corrections before adopting them"
+  },
+  "fe5b6fd2a3d4d94d5399ddc4d3459f2bec627ddc": {
+    "facing": "model",
+    "id": "system-prompt-delivering-work-at-full-scope",
+    "name": "System Prompt: Delivering work at full scope",
+    "desc": "Instructs Claude to complete ordinary requested work at full scope under reasonable assumptions, continue past non-blocking concerns, and preserve necessary refusal and risky-action confirmation boundaries"
+  },
+  "da2aef66b836d0d45e0b945443ca6235c2de858c": {
+    "facing": "model",
+    "id": "skill-artifact-pr-review-html-template",
+    "name": "Skill: Artifact PR Review HTML Template",
+    "desc": "The slot-annotated template.html bundled with the PR-review artifact skill, extracted to the skill base directory for Claude to fill in when authoring the review page."
+  },
+  "33a80912b2dd112be90194688cd52eead0657af1": { "facing": "ui" },
+  "a42ea2c0c173be0e053a8f63764e5a4ba2952ed2": {
+    "facing": "model",
+    "id": "skill-whiteboard-html-template",
+    "name": "Skill: Whiteboard HTML Template",
+    "desc": "The whiteboard canvas template.html bundled with the whiteboard skill, extracted to the skill base directory for Claude to publish and edit as the whiteboard artifact."
+  },
+  "6c1be166a59a420ea65aab11d273608e7702eb10": {
+    "facing": "model",
+    "id": "system-reminder-deferred-tools-removed-summary",
+    "name": "System Reminder: Deferred Tools Removed (Count Summary)",
+    "desc": "Meta user message injected when more than the display cap of deferred MCP tools disappear at once, telling Claude not to search for them via ToolSearch."
+  },
+  "01d303b2f784e3637f98310b7ba50bd7b8926345": { "facing": "ui" },
+  "4986fad598ea55eecf62ddb6ce725e0db78efc7c": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-launched",
+    "name": "Slash Command: /ultrareview Launch Confirmation",
+    "desc": "Confirmation text emitted when /ultrareview launches a cloud review session; injected into the conversation as a local-command-stdout user message alongside a meta follow-up instruction."
+  },
+  "014256d15611319568c05ee8e077317787c898e9": {
+    "facing": "model",
+    "id": "agent-prompt-background-observer-worker-activity-digest-note",
+    "name": "Agent Prompt: Observer Worker Activity-Digest Note",
+    "desc": "Line in the background-observer agent's system prompt (worker-paired variant) explaining that the per-turn activity digest wrapped in <NAME-activity> tags is data about the worker, never instructions."
+  },
+  "2dab082488a74e74b20b77300943244c60dd3441": { "facing": "internal" },
+  "1372769eacd13259dc674b688379cab373d22b10": {
+    "facing": "model",
+    "id": "tool-result-task-budget-limit-reached",
+    "name": "Tool Result: Agent Budget Limit Reached",
+    "desc": "AgentPreconditionError thrown inside the Task tool's call() when maxBudgetUsd is exhausted; returned to the model as the tool's error result telling it to finish the work without spawning agents."
+  },
+  "85855bd9565a07496bd763cad74ec0a6f2d12ef5": { "facing": "internal" },
+  "72457ac68fe750b25bd1af0dc0749ea1fc7c249a": {
+    "facing": "model",
+    "id": "tool-result-subagent-concurrency-limit-reached",
+    "name": "Tool Result: Concurrent Subagent Limit Reached",
+    "desc": "AgentPreconditionError returned from the Task tool when the concurrent-subagent cap is hit, instructing the model not to retry and to ask the user to raise CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS."
+  },
+  "0bd6673140dc105c54bb4e442c1a84fe446703d4": {
+    "facing": "model",
+    "id": "skill-whiteboard-description",
+    "name": "Skill Description: Whiteboard",
+    "desc": "The whiteboard skill's `description` field (GUT), injected into the model's context via the skill_listing system reminder that enumerates skills available to the Skill tool."
+  },
+  "d2af8d3f2eceffc1b148813e4b7e730b8ea50ad1": { "facing": "internal" },
+  "6b5804caeb6d82b4c978c365e2e45dbf2bb81f2c": {
+    "facing": "model",
+    "id": "skill-explain-usage-description",
+    "name": "Skill Description: Explain Usage",
+    "desc": "The /explain-usage command's model-facing `description` (yUT), listed to the model in the skill_listing reminder so it can decide when to invoke the token-usage explainer."
+  },
+  "5a276b4818bcaa11b0f01a145c08340e6c9f502c": { "facing": "internal" },
+  "40bd35723687738c1d7734db5ab9798268118582": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-force",
+    "name": "Tool Parameter: Artifact force",
+    "desc": "Description of the Artifact tool's `force` boolean input parameter, delivered to the model as part of the tool's input_schema."
+  },
+  "6da1f769fbb23a4325dd1bbf13ad6776c568c6a7": {
+    "facing": "model",
+    "id": "data-memory-sync-mass-unlink-guard",
+    "name": "Memory Sync: Mass-Deletion Guard Notice",
+    "desc": "Notice queued when many synced memory files vanish at once; injected into the model's context as PostToolUse additionalContext explaining that shared memory was not deleted."
+  },
+  "61c7dc6b6c32882158c3f28c8fd56454c91152c2": {
+    "facing": "model",
+    "id": "tool-result-artifact-data-island-absent",
+    "name": "Tool Result: Artifact Data Island Absent",
+    "desc": "Artifact page-data read result telling the model the requested schema's data island is missing from the published page."
+  },
+  "b85d4a9061114705dbca1c0b98a7d8526ab989e4": {
+    "facing": "model",
+    "id": "tool-result-artifact-decisions-island-absent",
+    "name": "Tool Result: Workshop Decisions Island Absent",
+    "desc": "Artifact decisions read result telling the model the page carries no decisions island (decision-free or non-workshop page)."
+  },
+  "d036cbb2dc2172fb4a9002044261fdb6508017eb": { "facing": "ui" },
+  "7069278f33df08d8cc13d3ccd9e3e5b06a2f963f": {
+    "facing": "model",
+    "id": "tool-result-write-blocked-network-shaped-path",
+    "name": "Tool Result: Write Blocked — Network-Shaped Path",
+    "desc": "Error message returned from Edit/Write validateInput when the target path is a UNC share or /net automount spelling while the session checkout is local; delivered to the model as the failed tool result."
+  },
+  "34b8c7fc8d8883b32ce2f068b6ff8fb85dee798e": { "facing": "internal" },
+  "dc2702ce749baf3ce06b1011073375f97633ab27": {
+    "facing": "model",
+    "id": "tool-result-artifact-data-island-validated-header",
+    "name": "Tool Result: Artifact Data-Island Validated Entries Header",
+    "desc": "Header line prefixing the validated interaction-schema entries returned by the Artifact tool's read_page_data action; injected into the model context as tool_result content."
+  },
+  "bb83814a39e57d23f9eeff2bad8b2903d6339041": { "facing": "internal" },
+  "1999247d6a8a4e8f726b22620576f38d753d8569": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-interaction-schema",
+    "name": "Tool Parameter: Artifact `schema`",
+    "desc": "Description of the Artifact tool's optional `schema` input parameter naming which registered interaction schema to validate a page's data island against; shipped to the model inside the tool's input_schema."
+  },
+  "90be1c8661dfe094c16150e2cdb6ccc209dabf38": {
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-decisions-header",
+    "name": "Tool Result: Artifact Workshop Decisions Header",
+    "desc": "Header line prefixing the workshop decision entries returned by the Artifact tool's read_page_data action; injected into the model context as tool_result content."
+  },
+  "ea21611f1804cba8b01f4534a5650a6c016c092b": {
+    "facing": "model",
+    "id": "agent-prompt-observer-non-participation-guidance-worker",
+    "name": "Agent Prompt: Observer Non-Participation (Coordinator/Worker Variant)",
+    "desc": "Fragment of the background-observer agent's framing prompt used when the observer watches a worker spawned by a coordinating agent, telling it not to participate and to route ObserverReport output to the coordinator; joined into the observer's system prompt."
+  },
+  "5f6751f2719a0ed1dc65b69e62534b56580d13e9": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-pr-reference-detected",
+    "name": "Slash Command: Ultrareview PR-Reference Detected",
+    "desc": "Precondition error from the /ultrareview | /code-review ultra launcher when the argument looks like a PR reference rather than a base ref, telling the caller to rerun with the PR number; surfaced to the model as local-command output."
+  },
+  "962f9167a1eb38ea717b0eb4d061ab005d860947": { "facing": "internal" },
+  "ea4f387c80f9b3d52ba2d7e1966c11e5e895defc": { "facing": "internal" },
+  "8dbefd71dd9f913df2637b9651c0b5a77fd2d6fc": { "facing": "internal" },
+  "cf0389d0679f5042d6ef999d1cb20365c19f8b3e": {
+    "facing": "model",
+    "id": "skill-artifact-whiteboard-when-to-use-guidance",
+    "name": "Skill: Artifact Whiteboard When-To-Use Guidance",
+    "desc": "The whiteboard skill's when_to_use guidance, carried both in the bundled SKILL.md frontmatter (BQf) and as the whenToUse constant VUT registered via eu({name:\"whiteboard\", whenToUse:VUT}) so it becomes part of the Skill tool description the model reads."
+  },
+  "3f789ccf61f750e62c5f383e188d880d07e1a949": { "facing": "internal" },
+  "ee2054c4e13df1c907a1a9a70e7ca2ad1614c3c6": { "facing": "internal" },
+  "674bcb1849730f7e518dfe40485c43d5d32b8cf7": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-pr-review",
+    "name": "Tool Parameter: Artifact pr_review",
+    "desc": "Description of the Artifact tool's optional `pr_review` boolean input, injected into the Artifact tool's JSON input schema that the model reads."
+  },
+  "1df48c066c75cfc05a55618eaf157d67b8457e81": {
+    "facing": "model",
+    "id": "data-agent-import-yes-digest-stale-refusal",
+    "name": "Data: /import --yes Digest Stale Refusal",
+    "desc": "Refusal returned by the /import slash command when the --yes digest no longer matches the current config scan; delivered to the model as a <local-command-stdout> user message."
+  },
+  "97100d84834055afe2a680c1c25421fc17821680": {
+    "facing": "model",
+    "id": "tool-description-observerreport",
+    "name": "Tool Description: ObserverReport",
+    "desc": "Description (and identical prompt) of the ObserverReport tool, telling an observer agent when to send a report to its resolved report target; injected as the tool's description in the model's tool list."
+  },
+  "3f17854c127202dd3e73b54ac5262f8b8290ebc8": {
+    "facing": "model",
+    "id": "skill-explain-usage-slash-command",
+    "name": "Skill: /explain-usage Slash Command",
+    "desc": "Prompt body of the built-in /explain-usage slash command instructing the model to break the session transcript's token usage into weighted groups, chart it, and explain it plainly."
+  },
+  "f18b8cd8f1881e61749e505abcdc52f4deefd2cb": { "facing": "internal" },
+  "d64209554df3f992f0b265ec8c5f446019c6b419": { "facing": "internal" },
+  "fe9636415882a8bc9feea9694a584f95bcf6005c": {
+    "facing": "model",
+    "id": "tool-parameter-observerreport-report",
+    "name": "Tool Parameter: ObserverReport report",
+    "desc": "Description of the ObserverReport tool's required `report` string input, injected into the tool's JSON input schema the model reads."
+  },
+  "d39864eda4b577c428d47c49d2fbaa0bab2387c8": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-cwd-network-shaped",
+    "name": "Tool Result: Bash Worktree CWD Network-Shaped Block",
+    "desc": "Bash tool refusal returned to the model when a worktree-isolated agent's working directory resolves to a network-shaped path (UNC share or /net automount) while the protected checkout is local."
+  },
+  "037d34ab73e7c8443876249f3808f9f6ed661382": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-template-mismatch",
+    "name": "Tool Result: Artifact PR-Review Template Mismatch",
+    "desc": "Artifact publish-time validation failure telling the model its artifact-pr-review page violated the template contract and how to fix it; delivered to the model inside a <tool_use_error> tool_result."
+  },
+  "669bd94c2ea9f18a5d3d5bb37ce290f9d2df38f9": { "facing": "internal" },
+  "67d627980f7aeec39d4d898d8076d14ea0d7aeb0": { "facing": "internal" },
+  "99d7aa08897c05416314bf310f156020cb10ca15": { "facing": "internal" },
+  "318203a990efadd0d49d4167f9b0d3f3e821b006": { "facing": "internal" },
+  "f4af9988b8cd46d080a2aace217d289768d966b5": { "facing": "internal" },
+  "0ff1337b46d260a9f8949785f5915ec6c23bd28f": { "facing": "internal" },
+  "5b0d34461ee660880df7f0f78fa2a04f228dab84": { "facing": "internal" },
+  "cf441ae6df97a305e12edf1d484b3fcacc7d4eb7": {
+    "facing": "model",
+    "id": "tool-result-worktree-path-case-mismatch-respell",
+    "name": "Tool Result: Worktree Path Case-Mismatch Respell Hint",
+    "desc": "Suffix appended by FQr() to the worktree-isolation edit-block messages, telling the model the supplied path differs from the registered spelling only by letter case; delivered as part of the Edit/Write/NotebookEdit validateInput rejection message."
+  },
+  "3e04b12084b9ee118bcb49c6040cea699de32208": {
+    "facing": "model",
+    "id": "tool-result-agent-worktree-edit-shared-checkout-blocked",
+    "name": "Tool Result: Agent Worktree Edit Of Shared Checkout Blocked",
+    "desc": "Rejection message returned to the model when a worktree-isolated agent tries to Edit/Write/NotebookEdit a file in the shared checkout instead of the worktree copy."
+  },
+  "a58b8b88d7115ae29911092d182b05c490a6b1f1": {
+    "facing": "model",
+    "id": "tool-result-session-worktree-edit-shared-checkout-blocked",
+    "name": "Tool Result: Session Worktree Edit Of Shared Checkout Blocked",
+    "desc": "Rejection message returned to the model when the current session has been isolated into a worktree and an Edit/Write/NotebookEdit targets the shared-checkout path instead of the worktree copy."
+  },
+  "cac298d7f6e2348f99b838902288df2674ea5885": {
+    "facing": "model",
+    "id": "tool-result-worktree-write-blocked-unresolvable-path",
+    "name": "Tool Result: Write Blocked — Unresolvable Path Spelling",
+    "desc": "Rejection message returned to the model when a write's path cannot be safely resolved (raw dot segment through a symlink, network-share/device-namespace shape, or unreadable ancestor), asking it to re-address the file by a plainly-spelled path."
+  },
+  "412b29076d3cacd02daa01a841b86364c1ebd5fa": {
+    "facing": "model",
+    "id": "tool-result-worktree-unresolvable-path-retry-direct",
+    "name": "Tool Result: Unresolvable Path Retry Direct Spelling",
+    "desc": "Ternary branch inside the unresolvable-path write-block message, used when no worktree is known, instructing the model to retry addressing the file by a direct, plainly-spelled path."
+  },
+  "71b1090a45c574e4c60a9ecb74c097027926f734": { "facing": "internal" },
+  "f07bd1a425da17e4e6448e9eb0a5391e07f6742a": { "facing": "internal" },
+  "fafa7f009c9b3b4b5a83e1eafd185a2f73a22725": { "facing": "internal" },
+  "21f85b57dfec99d7a627a28e11420e15ee70c4f7": { "facing": "internal" },
+  "a84829b17a37984de19607319aea969d954db053": { "facing": "internal" },
+  "465e49c4bf68509449b0d55012d887c5bac6355b": { "facing": "internal" },
+  "5e1b7be67c0879a82fcc2a949386c2be07cfe57b": {
+    "facing": "model",
+    "id": "tool-description-glob-agent-hint",
+    "name": "Tool Description: Glob (default mode, Agent hint)",
+    "desc": "Default-search-mode Glob tool description — the base Glob bullet list plus a line steering open-ended multi-round searches to the Agent tool; returned by the Glob tool's description()/prompt() fields the model reads."
+  },
+  "d0cafc319c4af1d9b28076b6bad6895501e9d47f": {
+    "facing": "model",
+    "id": "tool-result-bash-declare-autoload-flags-too-complex",
+    "name": "Tool Result: Bash Guard — declare/typeset With Autoload Flags",
+    "desc": "Static bash-analysis refusal reason emitted when declare/typeset/local/readonly carries both -f and -u/-U; travels as the Bash permission-check message and is delivered to the model as the tool_result error content when the command isn't allowed."
+  },
+  "15962eca00bd50d866b8400b07ad4bda9580b57e": {
+    "facing": "model",
+    "id": "tool-result-bash-unset-value-not-static-wrapped",
+    "name": "Tool Result: Bash Guard — Unset Target Not Statically Known",
+    "desc": "Static bash-analysis refusal reason when a wrapped unset/unsetenv targets a variable whose value is no longer statically known; delivered to the model as the Bash tool_result error content on a non-allow permission decision."
+  },
+  "a04191daef1a367dc1cd5757d65dc3a591168f06": {
+    "facing": "model",
+    "id": "tool-result-bash-wrapped-autoload-flags-not-analyzable",
+    "name": "Tool Result: Bash Guard — Wrapped Declare With Autoload Flags",
+    "desc": "Static bash-analysis refusal reason when declare/typeset/readonly reached as a plain command through a wrapper or quoting carries both -f and -u/-U; delivered to the model as the Bash tool_result error content."
+  },
+  "f63f429875cb6f370e6e7ec142a3124ae586ed64": {
+    "facing": "model",
+    "id": "system-prompt-worker-tools-context-simple",
+    "name": "System Prompt: Worker Tools Context (simple mode)",
+    "desc": "CLAUDE_CODE_SIMPLE variant of the worker-tools intro sentence, interpolated into the coordinator-mode system prompt to tell the coordinator which tools its workers can use."
+  },
+  "c4de447680b1e009e02a2803e1e8c66a4812031a": { "facing": "internal" },
+  "72ddfca7d6330a8533449261d98810022cf96662": {
+    "facing": "model",
+    "id": "tool-result-skill-forked-background-launched",
+    "name": "Tool Result: Skill Forked Background Launch",
+    "desc": "SkillTool tool_result content telling the model a skill was launched as a forked background execution, with the launch result appended."
+  },
+  "8bcdb7f2d9270ab503362c4fe581d0b4413bf0b4": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-decisions-island-shape",
+    "name": "Artifact PR-Review Validation: Decisions Island Shape",
+    "desc": "Publish-time validation reason returned when an artifact-pr-review page's decisions data island is not {items:[...]}; interpolated into the ArtifactInputError the model receives as the Artifact publish tool result."
+  },
+  "6093d8857fc88a8347db0de818dce34fd19b4cf0": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-decisions-item-state",
+    "name": "Artifact PR-Review Validation: Decisions Item State",
+    "desc": "Publish-time validation reason returned when a decisions island item's state is not open/resolved/acted; interpolated into the ArtifactInputError the model receives as the Artifact publish tool result."
+  },
+  "e6aaf28b0bf5c17d639f75bf2b1693130ba6f9a5": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-body-network-element",
+    "name": "Artifact PR-Review Validation: Network/Navigate/Execute Element",
+    "desc": "Publish-time validation reason returned when a review page body contains an iframe/embed/form/meta-class element; interpolated into the ArtifactInputError returned to the model by the Artifact publish tool."
+  },
+  "2fe4454ae40264be990c26bf65a51f4fee17a21a": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-body-title-element",
+    "name": "Artifact PR-Review Validation: Title Element Malformed",
+    "desc": "Publish-time validation reason returned when a review page body has a missing, extra, stray, or unclosed <title>; interpolated into the ArtifactInputError returned to the model by the Artifact publish tool."
+  },
+  "8627efceca63f480a70d03fca7ab7c2d7aff326c": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-script-injection",
+    "name": "Artifact PR-Review Validation: Runtime Script Injection",
+    "desc": "Publish-time validation reason returned when a review page would pull in the mermaid/highlight runtime; interpolated into the ArtifactInputError returned to the model by the Artifact publish tool."
+  },
+  "94c6a27ad9a3ec8fa925bde94886cfdc9beba0ce": {
+    "facing": "model",
+    "id": "tool-result-write-blocked-unresolvable-path-worktree-hint",
+    "name": "Tool Result: Write Blocked, Unresolvable Path (Worktree Hint)",
+    "desc": "Ternary branch of the UTs() write-block message telling the model to re-address the file by its direct symlink-free path inside the named worktree; returned as the FileEdit/FileWrite/NotebookEdit validateInput failure message that becomes the tool_result the model reads."
+  },
+  "7ff6a8251b79a4a47a463eed9494a29b59534336": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-cwd-unresolvable-spelling",
+    "name": "Tool Result: Bash Blocked, Unresolvable Working Directory Spelling",
+    "desc": "Bash pre-spawn error telling the model its working directory is spelled unresolvably (symlinked dot segment / UNC / device namespace) and to re-run from the worktree's direct symlink-free path."
+  },
+  "cd5771eb33dc6e0e293db9ed50eb951922b9f8b2": { "facing": "internal" },
+  "9253df5edcbdf6bbb5438e3e3255374728b97868": {
+    "facing": "model",
+    "id": "agent-prompt-background-observer-of-worker",
+    "name": "Agent Prompt: Background Observer Of Worker",
+    "desc": "Opening line of the observer agent's framing prompt for the via-worker branch, establishing it as a background observer of a named worker spawned by a coordinating agent."
+  },
+  "85f93e8225f997b32e844013e077c5ea780f3405": {
+    "facing": "model",
+    "id": "agent-prompt-background-observer-coordinator-task-header",
+    "name": "Agent Prompt: Observer Coordinator-Task Header",
+    "desc": "Header line pushed into the observer agent's framing prompt introducing the <coordinator-task> block as data rather than instructions."
+  },
+  "cd5610128b9c592d513782c04d52f77ad2ef4adc": {
+    "facing": "model",
+    "id": "system-reminder-cloud-review-fix-apply-findings",
+    "name": "Cloud Review: --fix Apply Instruction",
+    "desc": "Conditional suffix appended to the completed cloud-review task notification instructing the model to apply the findings to the local working tree and run the relevant checks."
+  },
+  "a8f9abc02c5af9be60ad783d52b2ee7e57349ec6": {
+    "facing": "model",
+    "id": "system-reminder-cloud-review-launch-note",
+    "name": "Cloud Review: Launch-Time Note Context",
+    "desc": "Conditional suffix appended to the completed cloud-review task notification, replaying the user's launch-time note and telling the model to prioritize findings against it."
+  },
+  "32b80bc0895d7a59f32fe9000bb449dbe0605040": {
+    "facing": "model",
+    "id": "system-reminder-cloud-review-findings-trailing",
+    "name": "Cloud Review: Findings Delivery Trailer",
+    "desc": "Trailing body of the completed cloud-review task notification that introduces the findings payload plus the optional --fix and launch-note suffixes."
+  },
+  "14bb71d62f5eeefb92203cb38c03a22fdcbcb359": {
+    "facing": "model",
+    "id": "system-reminder-cloud-review-no-output",
+    "name": "Cloud Review: No Output Produced",
+    "desc": "Trailing body of the failed cloud-review task notification telling the model to have the user retry /code-review ultra or fall back to a local /review."
+  },
+  "8fdfc5ffe0b97e90d33c63177922a0c00aa9a18e": { "facing": "internal" },
+  "45165ee98c02571399b289ef1fa1244030029321": { "facing": "internal" },
+  "53b466b41c2d7b29c4855be3bd66f2b80d8447eb": {
+    "facing": "model",
+    "id": "tool-result-forked-skill-spawn-limit-depth-cap",
+    "name": "Tool Result: Forked-Skill Spawn Limit Past Depth Cap",
+    "desc": "TelemetrySafeError thrown by the forked-skill spawn path when the session spawn cap is hit past the nesting depth cap, telling the model to do the skill's work inline; surfaced to the model as the Skill tool's <tool_use_error> or as <local-command-stderr> message content."
+  },
+  "5ac73538b99ce565353bcb6b154d4cfb64378498": {
+    "facing": "model",
+    "id": "tool-result-artifact-file-exceeds-per-file-size-limit",
+    "name": "Artifact Publish: Per-File Size Limit Exceeded",
+    "desc": "Artifact multi-file publish validation error returned to the model as the tool error when a supporting file exceeds the per-file byte cap (with the binary/base64 caveat)."
+  },
+  "f30aa18b61b4aae024c73838486f67dffadebd70": {
+    "facing": "model",
+    "id": "tool-result-artifact-file-json-wire-size-limit",
+    "name": "Artifact Publish: JSON-Encoded Wire Size Limit",
+    "desc": "Artifact multi-file publish validation error telling the model a text file inflates past the per-request JSON-encoded size cap and must be split or shrunk."
+  },
+  "47e10614f3f49149dc9bd14b299418d235642142": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-conflict-lead",
+    "name": "Artifact Publish Conflict (Lead)",
+    "desc": "Opening fragment of the Artifact publish-conflict tool error returned to the model when another session published a newer version, telling it to re-read the live page before republishing."
+  },
+  "0c8b40551e9a3a2821cb7e7a7ec6c36fdb0dad0d": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-conflict-merge-tail",
+    "name": "Artifact Publish Conflict (Merge Tail)",
+    "desc": "Closing fragment of the Artifact publish-conflict tool error instructing the model to merge its edits on top of the newer version and publish again."
+  },
+  "b4210e7acc84d163a6b578032c60d8ad3b740556": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-conflict-force-note",
+    "name": "Artifact Publish Conflict: force:true Note",
+    "desc": "Non-workshop tail of the Artifact publish-conflict tool error telling the model that force:true discards the other session's changes and is only for an explicit user overwrite request."
+  },
+  "7c22779ecefeed753c88140d5e1fd40a2791aa3f": {
+    "facing": "model",
+    "id": "tool-result-repl-url-elicitation-declined",
+    "name": "REPL: URL Elicitation Declined",
+    "desc": "Default tool-error message returned to the model from the REPL inner tool-call path when URL elicitation was declined and the wrapped tool could not complete."
+  },
+  "c3e82e53910b8276413fdea5d4ee07e8c248bf57": {
+    "facing": "model",
+    "id": "tool-result-plugin-skill-search-unavailable",
+    "name": "Tool Result: Plugin And Skill Search Unavailable",
+    "desc": "Fallback tool-error message thrown by the plugin/skill search backend and returned to the model when org policy denies or has not cached the allow_plugin_skill_search permission."
+  },
+  "8f6b6b4af58650213e505e0796d6012913772dd3": {
+    "facing": "model",
+    "id": "tool-result-observer-report-target-not-running",
+    "name": "ObserverReport: Report Target Not Running",
+    "desc": "ObserverReport tool_result message telling the model its report was not delivered because the report-target agent is no longer running."
+  },
+  "7c3029764d54b2b83e84d664f991f547e59573d8": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-forked-skill-scoping-malformed",
+    "name": "Agent Resume: Malformed Forked-Skill Scoping Record",
+    "desc": "Agent-resume refusal returned to the model as a SendMessage tool result when the target agent's forked-skill permission-scoping record is malformed."
+  },
+  "907ece684fca675c585610b108810383dfb9a7d0": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-forked-skill-scoping-missing",
+    "name": "Agent Resume: Forked-Skill Scoping Record Missing",
+    "desc": "Agent-resume refusal returned to the model as a SendMessage tool result when the agent ran as a forked skill but its permission-scoping record is absent."
+  },
+  "2fb28edef4bc56c215033a652496f3440def072d": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-forked-skill-scoping-marker-missing",
+    "name": "Agent Resume: Forked-Skill Provenance Marker Without Scoping",
+    "desc": "Agent-resume refusal returned to the model as a SendMessage tool result when the agent carries a forked-skill provenance marker but its scoping record is missing."
+  },
+  "728eb7ef1cc9daae013cf9242d52f16c598f9a5d": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-forked-skill-scoping-mismatch",
+    "name": "Agent Resume: Forked-Skill Scoping Record Mismatch",
+    "desc": "Agent-resume refusal returned to the model as a SendMessage tool result when the agent's forked-skill scoping record does not match its task record."
+  },
+  "04f89408b6eab4f0283808792f87eae817e36c12": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-forked-skill-cold-witness-mismatch",
+    "name": "Tool Result: Forked-Skill Resume Cold-Witness Mismatch",
+    "desc": "ResumeAgentStateError message refusing to resume a forked-skill agent whose scoping record has no matching provenance-marker witness, surfaced to the model inside the SendMessage tool result (and the generic <tool_use_error> tool_result)."
+  },
+  "daba5d1119745a178ceacc692b82f5bed6b3df6e": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-forked-skill-unresolved",
+    "name": "Tool Result: Forked Skill No Longer Resolvable On Resume",
+    "desc": "ResumeAgentStateError message refusing to resume an agent whose originating forked skill no longer resolves to a fork-capable skill, surfaced to the model in the SendMessage tool result."
+  },
+  "150e74ce29783595521cd4010fa6e9bf05187cb6": {
+    "facing": "model",
+    "id": "tool-result-send-message-no-teammate-lead-only",
+    "name": "No Teammate On Team (Lead-Only Spawn)",
+    "desc": "SendMessage tool-error returned to the model when no teammate by that name is on the team and this agent cannot spawn one itself, so it must ask the lead to spawn one."
+  },
+  "6f0c1b9793fa629040ac421688188da4b3646461": { "facing": "internal" },
+  "b82202b748e6de8c7daa8223aadb24c3c1f3cf3b": { "facing": "internal" },
+  "82cf11636427c08229269bd36fc5317d7a8c7df6": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-live-binding-pinned-sha",
+    "name": "Tool Result: PR Review Live Binding Pinned To A Commit SHA",
+    "desc": "Artifact tool validation error telling the model its pr_review live.input pins a commit sha instead of tracking the PR head by reference, returned as a <tool_use_error> tool result."
+  },
+  "693a26d0c3cccaf55a9f73d2afc702d924c10554": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-republish-island-changed",
+    "name": "Tool Result: PR Review Republish Changes The Staleness Island",
+    "desc": "Artifact tool republish-anchor check error telling the model a republish altered the page staleness island and must reuse the published island exactly, returned as a <tool_use_error> tool result."
+  },
+  "21099fde16773979be40d9b56bd3c0d7be606b0b": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-decisions-state-unknown-id",
+    "name": "Tool Result: decisions_state Names An Id Not On The Published Page",
+    "desc": "Artifact tool decision-provenance error telling the model that decisions_state references an id absent from the published review page, returned as a <tool_use_error> tool result."
+  },
+  "fa0ec42197a4a003f9caf08f20b5cde6c61cacf0": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-decisions-acted-without-resolve",
+    "name": "Tool Result: Acted Decision Without A Writer Resolve",
+    "desc": "Artifact tool decision-provenance error telling the model an item is marked acted although no writer resolved it on the published page, so acted provenance must trace to a pill click; returned as a <tool_use_error> tool result."
+  },
+  "93726795eef4a7e3dd8fa1ea2b965a6c4caa0b83": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-decisions-state-not-a-concern",
+    "name": "Tool Result: decisions_state Id Is Not A Concern With Options",
+    "desc": "Artifact tool decision-provenance error telling the model that a decisions_state id does not correspond to any concern carrying options in the submitted pr_review payload, returned as a <tool_use_error> tool result."
+  },
+  "da9b5b56933dabe57f6dd6ddfd72a5a86ae50f0f": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-decisions-omitted-writer-decision",
+    "name": "Tool Result: Republish Omits A Recorded Writer Decision",
+    "desc": "Artifact tool decision-provenance error instructing the model to carry every resolved and acted item in decisions_state because re-rendering an omitted one open would erase the writer's click; returned as a <tool_use_error> tool result."
+  },
+  "aa03bcfcd1e4bcc0b20abda0e360069047bc3b00": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-no-skill-invocation-in-session",
+    "name": "Tool Result: No artifact-pr-review Invocation In This Session",
+    "desc": "Artifact tool identity-check error telling the model that composed review pages publish only from the skill flow and to run /artifact-pr-review first, returned as a <tool_use_error> tool result."
+  },
+  "274d5e42068a4d2b0a859ca4fba9fb2a0d7bf79e": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-head-moved",
+    "name": "Tool Result: Artifact PR-Review Head Moved",
+    "desc": "First fragment of the pr_review identity-mismatch reason, thrown as an ArtifactInputError and returned to the model as the Artifact tool's error result when the reviewed PR head SHA no longer matches."
+  },
+  "c84ce1de8985759257ce84f4f4a31fd702d7205b": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-head-moved-2",
+    "name": "Tool Result: Artifact PR-Review Head Moved (Remediation)",
+    "desc": "Second concatenated fragment of the pr_review head-moved error, telling the model to re-gather the PR and re-author the payload against the current head; delivered in the Artifact tool_result."
+  },
+  "8b7c1d14c7793cb76659fa8b8bff530196814d9c": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-target-unresolvable",
+    "name": "Tool Result: Artifact PR-Review Target Unresolvable",
+    "desc": "Ternary branch of the pr_review identity-mismatch reason used when no recorded review target could be resolved via gh; returned to the model as the Artifact tool's error result."
+  },
+  "9fe486b188d3ffd4bc6826c7ebb819f283ccaa65": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-identity-from-invocation",
+    "name": "Tool Result: Artifact PR-Review Identity Comes From Invocation",
+    "desc": "Alternate branch of the pr_review identity-mismatch reason naming the session's actual review target; returned to the model as the Artifact tool's error result."
+  },
+  "8caa556ebaf6e495fd49e069c29e57fb7c56ff10": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-action-read-page-data",
+    "name": "Tool Parameter: Artifact action — read_page_data",
+    "desc": "Fragment appended to the Artifact tool's `action` parameter description explaining what read_page_data does; part of the tool schema the model reads."
+  },
+  "4357b2b029b4650f7574dd1d8a25896dd7f023e4": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-absolute-needs-map",
+    "name": "Tool result: Artifact files param — absolute path needs map form",
+    "desc": "Validation error for an absolute source path in the Artifact tool's `files` list, returned to the model as the tool's error result."
+  },
+  "14babb7830f64c8b1eab267c195e408e498e49c1": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-map-value-invalid",
+    "name": "Tool result: Artifact files map value invalid",
+    "desc": "Validation error for a bad value in the Artifact tool's `files` published-path map, returned to the model as the tool's error result."
+  },
+  "9a86290eac8d1b17f25944e03f389bac3dbcf18d": { "facing": "ui" },
+  "a88ec05bf8a43557a9b7bc402d6ff4f74373f735": { "facing": "ui" },
+  "28a767d3350c9a196314bc55c535ba31119cd497": {
+    "facing": "model",
+    "id": "tool-result-artifact-root-read-blocked-deny-rule",
+    "name": "Tool result: Artifact publish root read blocked by deny rule",
+    "desc": "Permission-deny message emitted when the Artifact publish `root` is covered by a Read deny rule; delivered to the model as the Artifact tool's is_error tool_result."
+  },
+  "18ad07cd405b48c91d3c228b7e851cacc077d9b3": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-publish-blocked-deny-rule",
+    "name": "Tool result: Artifact files publish blocked by deny rule",
+    "desc": "Permission-deny message emitted when a file named in the Artifact tool's `files` is covered by a Read deny rule; delivered to the model as the tool's is_error tool_result."
+  },
+  "25d61fe80a006ceb57d590c8a826de7c87b4aba3": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-page-data-requires-schema",
+    "name": "Tool Result: Artifact read_page_data Requires Schema",
+    "desc": "validateInput rejection telling the model that the Artifact `read_page_data` action needs a registered interaction schema; wrapped in <tool_use_error> and returned to the model."
+  },
+  "7be02af23072bc218a43e1ad75ec18aecf63eef4": {
+    "facing": "model",
+    "id": "tool-result-artifact-schema-failed-validation",
+    "name": "Tool Result: Artifact Interaction Schema Failed Validation",
+    "desc": "Artifact-tool validateInput rejection returned to the model when a read_page_data interaction schema is registered but fails validation in this build."
+  },
+  "740a097ba72bcd2a8a618318a641254a4db25217": {
+    "facing": "model",
+    "id": "tool-result-artifact-page-data-provenance-self-session",
+    "name": "Tool Result: Artifact Page-Data Provenance (Self-Session)",
+    "desc": "Provenance line appended to the Artifact read_page_data tool result when this session published the version being read and it is still the Live head."
+  },
+  "bfc0436e7d2c08701016ac56222009f9b556e232": {
+    "facing": "model",
+    "id": "tool-result-artifact-page-data-provenance-unconfirmed",
+    "name": "Tool Result: Artifact Page-Data Provenance (Unconfirmed)",
+    "desc": "Provenance line appended to the Artifact read_page_data tool result when the session cannot confirm it published the version, warning it may include other collaborators' content."
+  },
+  "971b2af0d187dba0b967aac7bcbc46e760b9a5fc": {
+    "facing": "model",
+    "id": "tool-result-artifact-stale-version-guard-workshop-read",
+    "name": "Tool Result: Artifact Stale-Version Guard Workshop Read Instruction",
+    "desc": "Branch of the artifact stale-version guard error telling the model to re-read a workshop page via read_page_data with the workshop-decisions schema instead of WebFetch/force."
+  },
+  "b5e8dac0deb7f9f3896cb6da862e4556a7a14b29": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-publish-blocked-read-rule-prefix",
+    "name": "Tool Result: Artifact Files-Publish Blocked Read-Rule Prefix",
+    "desc": "Opening fragment of the Artifact multi-file publish denial naming the blocked source file; continues into the existing read-rule remediation fragment and is thrown as an ArtifactInputError back to the model."
+  },
+  "e22ae0b3adc2e4d37d2e2010db73badbc93278ce": {
+    "facing": "model",
+    "id": "skill-code-review-task-tool-unavailable-inline-angles",
+    "name": "Skill: Code Review Task-Tool Missing, Run Angles Inline",
+    "desc": "Code-review skill fragment (SLs) interpolated into the recall-mode review prompt telling the model to run each angle and verification itself when the Task tool is absent."
+  },
+  "9bd479abb74f99c3857d313c0ce7dc7006075864": {
+    "facing": "model",
+    "id": "tool-result-tool-disabled-for-session-including-subagents",
+    "name": "Tool Result: Tool Disabled For This Session",
+    "desc": "Suffix appended to the \"No such tool available\" tool_use_error telling the model the tool is disabled for the whole session, subagents included."
+  },
+  "0caa08309a83e1b4c93ccd13c30322b0b92d04e4": {
+    "facing": "model",
+    "id": "data-task-notification-agent-stop-resume-note",
+    "name": "Task Notification: Agent Stop And Resume Note",
+    "desc": "<note> block in the agent task-notification body injected into the orchestrator's context, explaining that a notification fires each time the agent stops and the same task-id may notify more than once."
+  },
+  "946c8b536248b3bf58e959e6e5d953fa8c9842e8": {
+    "facing": "model",
+    "id": "data-task-notification-shell-interactive-prompt-stall",
+    "name": "Task Notification: Background Shell Waiting On Interactive Input",
+    "desc": "Trailing text of the stalled-background-shell task notification injected into the agent's context, showing the last output and instructing it to stop and re-run with piped input or a non-interactive flag."
+  },
+  "22745bc2a32ceefa3f400b6407c2eb37b07f375a": { "facing": "internal" },
+  "3816887e66a61bbbae350e3cfc86f3f4f4c80ef3": { "facing": "internal" },
+  "f7affce89490e1daa48bf144b97cd6586e4d6ea2": { "facing": "internal" },
+  "d7f3f75e47e5528fe80b28bc595ec1cd25990241": {
+    "facing": "model",
+    "id": "data-memory-sync-mount-dir-unreadable",
+    "name": "Memory Sync Failure: Mount Dir Unreadable",
+    "desc": "Failure-reason text for the `mount_dir_unreadable` pause reason in the memory-sync reason map (FMs), interpolated into the \"Memory sync is paused …\" warning that is injected into the model's context as PostToolUse additionalContext after a memory-file write."
+  },
+  "7082f886593d77d2321fb3eca6b98fdcd71da19a": {
+    "facing": "model",
+    "id": "system-reminder-memory-write-synced-project-store-not-mounted",
+    "name": "Memory Write Warning: Synced Project Store Not Mounted",
+    "desc": "Warning injected into the model's context after a Write/Edit whose directory belongs to a synced project memory store that is not mounted in this session; supersedes 2.1.216's `system-reminder-memory-write-org-store-not-mounted` (org-memory → synced project memory rename)."
+  },
+  "151061a3d9c1f5dfb3819490fa6c49489148ba87": {
+    "facing": "model",
+    "id": "data-memory-sync-synced-project-parked-or-ended",
+    "name": "Memory Write Warning: Synced Project Memory Parked Or Ended",
+    "desc": "Warning injected into the model's context after a memory write when the discovery-sourced synced project memory session state is parked/ended, so the store is not syncing."
+  },
+  "f8c5176d6d5dc8f220c916a32d11eeec2afe4f74": {
+    "facing": "model",
+    "id": "data-memory-sync-synced-project-writes-enabled-notice",
+    "name": "Memory Write Notice: Synced Project Memory Writes Enabled",
+    "desc": "One-shot notice injected into the model's context after the first write into a read-write synced project memory store, telling it the file syncs to the shared store; supersedes 2.1.216's `data-memory-sync-org-writes-enabled-notice`."
+  },
+  "adcaf2fc8912335bb4b104f694be2b67240f634e": {
+    "facing": "model",
+    "id": "tool-description-bash-commands-cheap-to-run",
+    "name": "Tool Description: Bash — Commands Are Cheap To Run",
+    "desc": "Gated bullet appended to the Bash tool's description string, telling the model to just run the straightforward command and adjust from its output."
+  },
+  "889b094e5b6f794b9880e5742df9c8ac3e1baf71": {
+    "facing": "model",
+    "id": "slash-command-auto-mode-setup-scope-mismatch-unrecorded",
+    "name": "Slash Command: /auto-mode-setup Scope Not Recorded",
+    "desc": "Refusal reason returned by /auto-mode-setup --apply-file when the proposal predates scope recording, so --apply-target cannot be confirmed; surfaced to the model as the command's JSON result."
+  },
+  "32e10313a0da425bef956c33166be3f942348a79": {
+    "facing": "model",
+    "id": "slash-command-auto-mode-setup-scope-mismatch",
+    "name": "Slash Command: /auto-mode-setup Scope Mismatch",
+    "desc": "Refusal reason returned by /auto-mode-setup --apply-file when the proposal's saved scope disagrees with --apply-target; surfaced to the model as the command's JSON result."
+  },
+  "80ef236851b8079501a4f23c54a7558eb893b0d3": {
+    "facing": "model",
+    "id": "slash-command-auto-mode-setup-apply-target-invalid",
+    "name": "Slash Command: /auto-mode-setup Invalid --apply-target",
+    "desc": "Flag-grammar usage error (plus the full usage block) returned by /auto-mode-setup when --apply-target is not \"user\" or \"project\"; returned to the model as the command's JSON result."
+  },
+  "c80aac2b7362645d2af6a90030eed3008c653f36": {
+    "facing": "model",
+    "id": "slash-command-auto-mode-setup-request-id-order-apply-target",
+    "name": "Slash Command: /auto-mode-setup --request-id Must Precede --apply-target",
+    "desc": "Flag-ordering usage error returned by /auto-mode-setup when --request-id follows --apply-target/--expect-sha256; returned to the model as the command's JSON result."
+  },
+  "4a697aa91197bf8cf7af3977cb21cba726612c13": {
+    "facing": "model",
+    "id": "slash-command-auto-mode-setup-expect-sha256-apply-file-only",
+    "name": "Slash Command: /auto-mode-setup --expect-sha256 Applies Only To --apply-file",
+    "desc": "Flag-ordering usage error returned by /auto-mode-setup when --expect-sha256 is not immediately followed by --apply-file; 2.1.218 wording adds the --apply-target ordering clause (supersedes the 2.1.216 body of the same id)."
+  },
+  "b4df0bb9a2b9d9d2ff712d9769eb5ad3e147832c": {
+    "facing": "model",
+    "id": "slash-command-auto-mode-setup-apply-target-order",
+    "name": "Slash Command: /auto-mode-setup --apply-target Ordering",
+    "desc": "Flag-ordering usage error returned by /auto-mode-setup when --apply-target appears after --apply-file; returned to the model as the command's JSON result."
+  },
+  "d2fc6b7208d37f3f948a925b28c603d851ac2dae": {
+    "facing": "model",
+    "id": "data-agent-import-offer-in-init-prompt",
+    "name": "Agent Import Offer Fragment For /init",
+    "desc": "Shared instruction fragment (LFs) telling the model to offer importing a detected Codex/Gemini CLI config via /import; interpolated into both /init prompt bodies (agent-prompt-claudemd-creation and skill-init-claude-md-and-skill-setup-new-version)."
+  },
+  "f9d7a50d2824bfca2ca4ebbda04f23cb820850c5": {
+    "facing": "model",
+    "id": "slash-command-import-yes-needs-scan-digest",
+    "name": "Slash Command: /import --yes Needs Scan Digest",
+    "desc": "Reply from the /import slash command when --yes is passed without the preview's scan digest, injected into the model's context as <local-command-stdout>."
+  },
+  "993a1396bd5f1355ffeaab2f7035a20cb54de4e5": { "facing": "internal" },
+  "e859cc6a37041aceb410c7d099e4ec834b9abf98": { "facing": "ui" },
+  "a4b2d04f7840bb3d1ae6e0c929a24f1168838ebb": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-note-not-base-branch",
+    "name": "Ultrareview: Argument Read As Review Note",
+    "desc": "Trailing note appended to the 'Ultrareview launched' block when the user's argument was interpreted as a review note rather than a base branch; enters context via the /ultrareview local-command output."
+  },
+  "511e089dd0cd41f9a16d71181053d9b33573c787": {
+    "facing": "model",
+    "id": "system-prompt-ultrareview-post-launch-acknowledgement",
+    "name": "Ultrareview: Post-Launch Acknowledgement Prompt",
+    "desc": "Instruction (dun()) telling the model to briefly acknowledge the already-visible ultrareview launch output and wait for findings; injected as a meta user message right after the command output."
+  },
+  "72de152562923954d2664e458bb9857b784c19c7": {
+    "facing": "model",
+    "id": "system-prompt-ultrareview-post-launch-note-relay",
+    "name": "Ultrareview: Post-Launch Note Relay",
+    "desc": "Conditional branch of the post-launch ultrareview prompt that relays the user's review note and tells the model to relate the incoming findings to it."
+  },
+  "c52e7cc49407ba43d5feadd633304d6e8a292200": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-scope-all-files-current-branch",
+    "name": "Ultrareview: Scope Line — All Files On Branch",
+    "desc": "Scope sentence in the ultrareview billing-confirmation body when there is no merge base; reaches the model as /ultrareview local-command output."
+  },
+  "bbecf66cb6498a17c98d61f43110d6110b113834": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-confirm-note-for-findings",
+    "name": "Ultrareview: Confirmation Note For Findings",
+    "desc": "Suffix of the ultrareview confirmation scope line that echoes the user's review-note argument; reaches the model as /ultrareview local-command output."
+  },
+  "69a9d97f396ae828148c9a4c7ce361f456b3b2f0": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-quota-unverified-confirm",
+    "name": "Ultrareview: Quota Unverified Confirmation",
+    "desc": "Confirmation body returned when the review-quota preflight is unavailable, warning the run may bill as usage credits; enters context as /ultrareview local-command output."
+  },
+  "39290a079442d7eca490d2c980b60dd04cd7326f": { "facing": "ui" },
+  "043c7ce4545e2820cc86bbfdb4346efdfb3db278": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-confirm-hint-interactive",
+    "name": "Ultrareview: Confirm Hint (Interactive)",
+    "desc": "Interactive-session follow-up hint appended to the /ultrareview needs-confirmation reply, telling how to consent and launch; enters context as local-command output."
+  },
+  "b121c68684ace966428ec7b45db049c96d04b4e7": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-confirm-hint-terminal",
+    "name": "Ultrareview: Confirm Hint (Terminal)",
+    "desc": "Non-interactive variant of the /ultrareview confirmation hint pointing at `claude ultrareview`; enters context as local-command output."
+  },
+  "cf1ce5aa0994ba8d224a8da0ac7ffb1e7a457c04": { "facing": "internal" },
+  "6f5f54d6e6ae0fe0bca8297a376cb27ffacfcff6": { "facing": "internal" },
+  "8e9801a4c1b38d76a52ea0b2cce0087fe751ac62": { "facing": "internal" },
+  "29023ffc013ac878ec829ef6fef55b5b86afe9e7": { "facing": "ui" },
+  "2bf220f30a38fe35b57ccc9e9474de210b473f67": {
+    "facing": "model",
+    "id": "data-artifact-attached-current-artifact-of-interest",
+    "name": "Data: Artifact Attached — Current Artifact Of Interest",
+    "desc": "Meta message injected into the conversation when the user attaches an artifact to the session, instructing Claude to re-read it (Artifact read_page_data with the workshop-decisions schema for workshop pages, otherwise WebFetch) before editing or republishing it."
+  },
+  "a1cbcbbbeb6f57d30c6dda373daf7812e0926f82": { "facing": "ui" },
+  "78a6935c25d7561772b527be4f4311e8a5b8c72a": { "facing": "internal" },
+  "ef13a700d63385e75324e48db6c89c500fc6127c": { "facing": "internal" },
+  "1710ae53b8e792ff2d77098f9760b6ceae9cf381": { "facing": "ui" },
+  "020380ecc2bea39374849596b947101314c4db7d": { "facing": "ui" },
+  "a98c9b6feb71bd9c55765574ed10e9ed00973e8f": { "facing": "ui" },
+  "6872860753be84a9817bc370bb74954554351ea4": { "facing": "ui" },
+  "eea262dc9b802bd85dfa5dd7316a34678081cc82": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-billing-confirm-unavailable",
+    "name": "Slash Command: Ultrareview Billing Confirmation Unavailable",
+    "desc": "Ultrareview needs-confirm result text telling the model this session cannot show the billing confirmation and how to consent; emitted by the /ultrareview local command as <local-command-stdout> and replayed into the model's context."
+  },
+  "a783e92df4e85e735a8bf355fdf45412a235d795": { "facing": "ui" },
+  "a5bcd46936944474fc480b74029ae97b6ca9b2ea": {
+    "facing": "model",
+    "id": "slash-command-remote-workflow-disabled-managed-settings",
+    "name": "Slash Command: Remote Workflow Disabled By Managed Settings",
+    "desc": "Policy-gate refusal line explaining dynamic workflows are off via managed settings `disableWorkflows`; wrapped as `remote-workflow: error[policy-gate]: …` and returned by the __remote-workflow / workflow-launch-exec local commands as <local-command-stdout>, which is replayed to the model."
+  },
+  "ef88df2c197487479a2bfa5b8b0a018512dd93a6": {
+    "facing": "model",
+    "id": "slash-command-remote-workflow-disabled-org-policy",
+    "name": "Slash Command: Remote Workflow Disabled By Org Policy",
+    "desc": "Policy-gate refusal line explaining dynamic workflows are off via org policy `allow_workflows`; wrapped as `remote-workflow: error[policy-gate]: …` and returned by the __remote-workflow / workflow-launch-exec local commands as <local-command-stdout>, which is replayed to the model."
+  },
+  "8ef296e62e3d57f447c9375e103c43b7cbed12dc": { "facing": "internal" },
+  "0e92b54a3a5ede96f81f4abe84eae571eb186ae5": { "facing": "internal" },
+  "ff8e2d6f85fdee3a6b40302a133ca42fa0801bb4": {
+    "facing": "model",
+    "id": "slash-command-workflow-launch-exec-no-pending-handoff",
+    "name": "Slash Command: Workflow Launch Exec No Pending Handoff",
+    "desc": "Result text of the hidden workflow-launch-exec command when no pending launch handoff exists (restored session replaying the dispatch turn); emitted as <local-command-stdout> and replayed into the model's context."
+  },
+  "79a8d0c5a79e6b78b2b1c02b6b38a10960013558": { "facing": "ui" },
+  "1c67906ebe79dca4c14a8cf5c8112bdc52dcddb6": { "facing": "internal" },
+  "0980bed76f45b4a798bb43af5500ce3e5e112915": {
+    "facing": "model",
+    "id": "system-reminder-agent-types-removed",
+    "name": "Agent types removed",
+    "desc": "System-reminder injected into context listing agent types no longer available for the Agent tool."
+  },
+  "a89d724b0f6acb632bc001a9704a7c84c3923e59": { "facing": "internal" },
+  "2e0ec33d841cbed0d029f0b0dfc93c66e6174a2d": { "facing": "internal" },
+  "f2b11f3e3c3636aa2a631ce6467cb1641d8131f7": { "facing": "ui" },
+  "e1b6a4c15a29082907a091a95698c982a55f53ad": { "facing": "internal" },
+  "f63387e9633a87fd16021ed75278f219d99df8a5": { "facing": "ui" },
+  "700395b72afdbf8928ae40afe30ddc6193dec7d1": { "facing": "ui" },
+  "3a6459e8fbc0bee6d8f047f25924a9a0bc9b7d82": { "facing": "ui" },
+  "48600c16561403271b4cadf5a2fd6f38b7749fcf": { "facing": "ui" },
+  "a9ef219417efc2e6563f21f1d71f1fdaf727215b": { "facing": "ui" },
+  "adb12e0c26d4bf7b1ee9e02234f8f111f0ccebf3": { "facing": "internal" },
+  "2946d178130305be63088f8fe5e6b90a1040b899": { "facing": "internal" },
+  "586f8746241408949fe9f81a9390d71be6540724": { "facing": "ui" },
+  "c605ae00cff31dc05d6e3ec40bd2f2f3480ea790": { "facing": "ui" },
+  "e489981196eaaf505c10c36baa039e7ff51ae046": { "facing": "ui" },
+  "b9267865e8cf8716ac48b02d0c759ac9e1f1b92b": { "facing": "ui" },
+  "ac8b629679099b1c365f1bfb47de7f19e7b3707b": { "facing": "ui" },
+  "e3859cf90aece24986e68762cfa9685343497e71": { "facing": "internal" },
+  "341d1984c7f838f3fd5c8e73a50237905057c62e": { "facing": "internal" },
+  "d9b7c95fb3fa024367c7d219009fdffbeaa1df6e": { "facing": "ui" },
+  "af91cfb244ce61a173271089bfef40be700326d4": { "facing": "ui" },
+  "a9d03020a49befc4101443982c3ed58d1d1a3a24": { "facing": "ui" },
+  "4e6018bde26adaf4042452923b8a233dd0b09bfb": {
+    "facing": "model",
+    "id": "tool-result-artifact-composed-review-mermaid-lane-note",
+    "name": "Tool Result: Composed Review Mermaid Lane Note",
+    "desc": "Conditional clause appended to the artifact script-injection rejection when the body carries a mermaid fence, telling the model a composed review page with a diagram must republish through the composed lane."
+  },
+  "677ee392d92b99d92b4ffc6188f9b973bfa77847": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-single-file-no-supporting-files",
+    "name": "Tool Result: PR Review Pages Are Single-File",
+    "desc": "ArtifactInputError returned when supporting files are passed alongside an artifact-pr-review page, which must publish as a single file."
+  },
+  "1c12d823944d1e5dab9160b54e09c556855fb7a4": {
+    "facing": "model",
+    "id": "tool-result-artifact-supporting-file-contenttype-not-servable",
+    "name": "Tool Result: Supporting File ContentType Not Servable",
+    "desc": "ArtifactInputError returned when a supporting file's contentType is not in the servable allowlist."
+  },
+  "375505741f568386d33d926190d04d97ee13da44": {
+    "facing": "model",
+    "id": "tool-result-artifact-supporting-file-nul-byte",
+    "name": "Tool Result: Supporting File Carries NUL Bytes",
+    "desc": "Trailing clause of the ArtifactInputError returned when a supporting text file contains embedded NUL bytes."
+  },
+  "9c20aecc08428aa7b6c30c8fe1eac899a46d1a3c": {
+    "facing": "model",
+    "id": "tool-result-artifact-supporting-file-utf16-bom",
+    "name": "Tool Result: Supporting File Is UTF-16",
+    "desc": "Trailing clause of the ArtifactInputError returned when a supporting text file carries a UTF-16 BOM instead of UTF-8."
+  },
+  "c2a93cd88b72a1b3086abafddb864f1728741760": {
+    "facing": "model",
+    "id": "tool-result-artifact-supporting-file-carries-review-machinery",
+    "name": "Tool Result: Supporting File Carries Review Machinery",
+    "desc": "ArtifactInputError returned when a supporting file embeds artifact-pr-review machinery; review pages publish as a single file through the publish-time guard."
   }
 }
