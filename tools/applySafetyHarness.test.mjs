@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   harnessVerdict,
   introducedRawNonAscii,
+  introducedUnresolvedSlots,
 } from './applySafetyHarness.mjs';
 
 const clean = {
@@ -95,5 +96,59 @@ describe('applySafetyHarness: introducedRawNonAscii', () => {
 
   it('ignores ASCII-only differences entirely', () => {
     expect(introducedRawNonAscii('abc', 'abc def \n\t')).toEqual([]);
+  });
+});
+
+// A `${shortvar}` slot is a K9-class UNRESOLVED binary ident only when nothing binds
+// it in its OWN enclosing scope. The bind-discount is scoped per-slot (a window that
+// reaches the enclosing function params / module const), NOT counted file-wide —
+// counting file-wide nets out on common names like `q`/`e` and either hides a leak or
+// cries wolf on a legitimately-bound `${q}` (the 2.1.218 false positive).
+describe('applySafetyHarness: introducedUnresolvedSlots', () => {
+  const flags = (o, p) =>
+    [...introducedUnresolvedSlots(o, p)].map(([v, n]) => `${v}(+${n})`);
+
+  it('does not flag a slot bound by a destructured arrow param (2.1.218 ${q})', () => {
+    const orig = 'x=1;';
+    const patched = 'Object.entries(t).map(([q,K])=>`# ${q}\n${K}`).join(`\n`);';
+    expect(flags(orig, patched)).toEqual([]);
+  });
+
+  it('does not flag a slot bound by a preceding let (2.1.218 ${q} task list)', () => {
+    const orig = 'x=1;';
+    const patched =
+      'let q=e.content.map((O)=>O.id).join(`\n`);return `Tasks:\n\n${q}`;';
+    expect(flags(orig, patched)).toEqual([]);
+  });
+
+  it('does not flag a slot bound by a far function param (${e} in a big body)', () => {
+    const filler = 'a'.repeat(900);
+    const orig = 'x=1;';
+    const patched = `function build(e,r,t){${filler}return \`\${e}/v1/oauth/token\`}`;
+    expect(flags(orig, patched)).toEqual([]);
+  });
+
+  it('does not flag a slot bound by a far module const (${CIu})', () => {
+    const filler = 'z'.repeat(900);
+    const orig = 'x=1;';
+    const patched = `var CIu=524288;${filler}C(\`skipping: exceeds \${CIu} byte limit\`);`;
+    expect(flags(orig, patched)).toEqual([]);
+  });
+
+  it('flags a slot whose ident is bound NOWHERE within reach (real leak)', () => {
+    const orig = 'x=`plain`;';
+    const patched = 'x=`hello ${zz} world`;';
+    expect(flags(orig, patched)).toEqual(['zz(+1)']);
+  });
+
+  it('does not flag when the same unbound slot already existed in pristine', () => {
+    const s = 'x=`hello ${zz} world`;';
+    expect(flags(s, s)).toEqual([]);
+  });
+
+  it('ignores ALLCAPS override placeholders (checked by the driver leak-guard)', () => {
+    const orig = 'x=1;';
+    const patched = 'x=`see ${SHELL_TOOL_NAME}`;';
+    expect(flags(orig, patched)).toEqual([]);
   });
 });

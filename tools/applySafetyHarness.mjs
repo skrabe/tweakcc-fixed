@@ -38,31 +38,57 @@ const VERSION =
   (PRISTINE.match(/cli-(\d+\.\d+\.\d+)\.js$/) || [, '2.1.179'])[1];
 
 // minified `${var}` tokens: 1-4 alnum/$ chars, not an ALL_CAPS tweakcc name.
-const minifiedSlots = (s) => {
+// Is short ident `v` BOUND anywhere in `window` — arrow/function params (incl.
+// destructured), let/const/var declarations? `(?<!\$)` keeps a `${v}` interpolation
+// (opener `{` preceded by `$`) from counting as an object-destructure binding.
+const bindsInWindow = (window, v) => {
+  const re = new RegExp(
+    `(?:\\b(?:let|const|var|function)\\s+|(?<!\\$)[([,{]\\s*)${v.replace(/[$]/g, '\\$&')}(?=\\s*(?:[)\\]},=:]|=>))`
+  );
+  return re.test(window);
+};
+
+// How far back a short-var binding can sit from its `${v}` use. Minified function
+// params and module consts (`function f(e,r,t){…${e}…}`, `var CIu=…;…${CIu}…`)
+// bind arbitrarily far above the interpolation, so a small window false-flags them
+// (2.1.218: 300 flagged bound `e`/`CIu`, 3000 swept in unrelated bindings; 1500
+// clears fable-5 to zero while a name bound NOWHERE within reach — a real leak —
+// still flags). Backstop only: the driver leak-guard + parse + smoke are primary.
+const BIND_WINDOW_BACK = 1500;
+
+// "Dangerous" `${v}` slots in `s`: short-ident interpolations whose `v` is NOT
+// bound in the slot's OWN enclosing window (arrow/params before the template body,
+// or a `let v=` just before its `${v}`). A slot bound in its own window is a plain
+// local in emitted code — it parses and never ReferenceErrors, so it is never
+// dangerous, in pristine OR patched.
+const dangerousSlots = (s) => {
   const out = new Map();
   for (const m of s.matchAll(/\$\{([A-Za-z$][\w$]{0,3})\}/g)) {
     const v = m[1];
-    if (v === v.toUpperCase() && /[A-Z]/.test(v) && v.length > 2) continue; // skip ALLCAPS names
+    if (v === v.toUpperCase() && /[A-Z]/.test(v) && v.length > 2) continue; // ALLCAPS = override placeholder, checked elsewhere
+    const idx = m.index;
+    const window = s.slice(Math.max(0, idx - BIND_WINDOW_BACK), idx + 60);
+    if (bindsInWindow(window, v)) continue; // bound local — safe
     out.set(v, (out.get(v) || 0) + 1);
   }
   return out;
 };
 
-// Binding sites of short idents: arrow/function params (incl. destructured) and
-// let/const/var declarations. A `${v}` is only the dangerous K9-class UNRESOLVED
-// binary ident when nothing BINDS `v` in the same emitted code — patches/overrides
-// legitimately carry JS with short locals (e.g.
-// `Object.entries(_).map(([q,K])=>`# ${q}\n${K}`)`), which parse fine and never
-// ReferenceError. Counting bindings lets the introduced check discount them.
-const boundLocals = (s) => {
+// K9-class UNRESOLVED binary idents the PATCH introduced. The bind-discount MUST be
+// scoped to each slot's own enclosing template literal, not counted file-wide: `q`,
+// `e`, `t` are common minified names, so a whole-file binding delta nets out and
+// either hides a real leak or (2.1.218) cries wolf on a legitimately-bound `${q}`
+// like `Object.entries(t).map(([q,K])=>`# ${q}\n${K}`)`. We instead net-count the
+// DANGEROUS (unbound-in-window) slots per var: a var is introduced-unresolved only
+// where patched has MORE unbound `${v}` slots than pristine did. Net-counting keeps
+// this robust to the byte shifts minification/override edits cause everywhere.
+export const introducedUnresolvedSlots = (orig, patched) => {
+  const o = dangerousSlots(orig);
+  const p = dangerousSlots(patched);
   const out = new Map();
-  // `(?<!\$)` keeps a `${v}` interpolation (opener `{` preceded by `$`) from
-  // counting as an object-destructure binding — else every slot self-discounts
-  // and a real unresolved ident slips through.
-  for (const m of s.matchAll(
-    /(?:\b(?:let|const|var)\s+|(?<!\$)[([,{]\s*)([A-Za-z$][\w$]{0,3})(?=\s*(?:[)\]},=:]|=>))/g
-  )) {
-    out.set(m[1], (out.get(m[1]) || 0) + 1);
+  for (const [v, n] of p) {
+    const delta = n - (o.get(v) || 0);
+    if (delta > 0) out.set(v, delta);
   }
   return out;
 };
@@ -161,19 +187,9 @@ try {
   const cnf = (log.match(/Could not find/g) || []).length;
   const cannotApply = (log.match(/cannot apply safely/gi) || []).length;
 
-  const o = minifiedSlots(orig);
-  const p = minifiedSlots(patched);
-  const ob = boundLocals(orig);
-  const pb = boundLocals(patched);
   const introduced = [];
-  for (const [v, n] of p) {
-    const slotDelta = n - (o.get(v) || 0);
-    if (slotDelta <= 0) continue;
-    // Discount slots matched by a freshly-introduced binding of the same name —
-    // those are bound locals in emitted code, not unresolved binary idents.
-    const bindDelta = (pb.get(v) || 0) - (ob.get(v) || 0);
-    const unresolved = slotDelta - Math.max(0, bindDelta);
-    if (unresolved > 0) introduced.push(`${v}(+${unresolved})`);
+  for (const [v, n] of introducedUnresolvedSlots(orig, patched)) {
+    introduced.push(`${v}(+${n})`);
   }
 
   const rawNonAscii = introducedRawNonAscii(orig, patched);
