@@ -1474,13 +1474,32 @@ function repackELFSection(
     const pageSize = elfBinary.pageSize();
     const newContentSize = BigInt(newSectionData.length);
     const alignedNewSize = alignBigInt(newContentSize, pageSize);
-    const newVaddr = alignBigInt(elfBinary.nextVirtualAddress(), pageSize);
-    const offsetInSegment = newVaddr - rwSegment.virtualAddress;
-    const newFileOffset = rwSegment.fileOffset + offsetInSegment;
+    const oldBunFileOffset = BigInt(bunSection.fileOffset);
+    const SHF_ALLOC = 0x2n;
+    const allocSectionAtOrAfterBun = elfBinary
+      .sections()
+      .some(
+        s =>
+          s.name !== '.bun' &&
+          (BigInt(s.flags) & SHF_ALLOC) !== 0n &&
+          BigInt(s.virtualAddress) >= oldBunSectionVaddr
+      );
+
+    let newVaddr: bigint;
+    let newFileOffset: bigint;
+    if (allocSectionAtOrAfterBun) {
+      newVaddr = alignBigInt(elfBinary.nextVirtualAddress(), pageSize);
+      newFileOffset =
+        rwSegment.fileOffset + (newVaddr - rwSegment.virtualAddress);
+    } else {
+      newVaddr = oldBunSectionVaddr;
+      newFileOffset = oldBunFileOffset;
+    }
+
     const oldRwFileEnd = rwSegment.fileOffset + rwSegment.fileSize;
     const extensionSize = newFileOffset + alignedNewSize - oldRwFileEnd;
 
-    if (extensionSize < 0n) {
+    if (extensionSize < 0n && allocSectionAtOrAfterBun) {
       throw new Error(
         'New .bun location overlaps existing writable ELF segment'
       );
