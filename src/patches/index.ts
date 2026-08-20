@@ -77,6 +77,7 @@ import { writeTableFormat } from './tableFormat';
 import { writeConversationTitle } from './conversationTitle';
 import { writeHideStartupBanner } from './hideStartupBanner';
 import { writeHideCtrlGToEdit } from './hideCtrlGToEdit';
+import { writeIgnoreWhitespaceEdit } from './ignoreWhitespaceEdit';
 import { writeHideStartupClawd } from './hideStartupClawd';
 import { writeIncreaseFileReadLimit } from './increaseFileReadLimit';
 import { writeSuppressLineNumbers } from './suppressLineNumbers';
@@ -583,6 +584,14 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.FEATURES,
     description:
       'Enable MCP channel notifications (--channels without allowlist or dev flag)',
+  },
+  {
+    id: 'ignore-whitespace-edit',
+    name: 'Ignore whitespace in edit tool',
+    group: PatchGroup.FEATURES,
+    description:
+      'Add ignore_whitespace parameter to the edit tool for matching lines with different leading/trailing whitespace',
+    modelFacing: true,
   },
   {
     id: 'suppress-deferred-tools',
@@ -1308,6 +1317,10 @@ export const applyCustomization = async (
     'channels-mode': {
       fn: c => writeChannelsMode(c),
       condition: !!config.settings.misc?.enableChannelsMode,
+    },
+    'ignore-whitespace-edit': {
+      fn: c => writeIgnoreWhitespaceEdit(c),
+      condition: true, // Always apply this patch
     },
     'suppress-deferred-tools': {
       fn: c => writeSuppressDeferredTools(c),
