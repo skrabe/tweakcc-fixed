@@ -85,6 +85,8 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     swapRipgrepForFff: false,
     allowCustomAgentModels: false,
     enableContextLimitOverride: false,
+    enableIgnoreWhitespaceEdit: false,
+    enableThinkingTextTransition: false,
     enableModelCustomizations: true,
     enableVoiceMode: false,
     enableVoiceConciseOutput: true,
@@ -506,6 +508,34 @@ export function MiscView({ onSubmit }: MiscViewProps) {
             ensureMisc();
             settings.misc!.enableContextLimitOverride =
               !settings.misc!.enableContextLimitOverride;
+          });
+        },
+      },
+      {
+        id: 'enableIgnoreWhitespaceEdit',
+        title: 'Ignore whitespace in edit tool',
+        description:
+          'Adds ignore_whitespace parameter to the FileEditTool — trims leading/trailing whitespace from old_string and new_string before matching, so patches survive blank-line injections.',
+        getValue: () => settings.misc?.enableIgnoreWhitespaceEdit ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.enableIgnoreWhitespaceEdit =
+              !settings.misc!.enableIgnoreWhitespaceEdit;
+          });
+        },
+      },
+      {
+        id: 'enableThinkingTextTransition',
+        title: 'Graceful thinking-to-text transition',
+        description:
+          'Bypasses streaming crashes during thinking-to-text transitions by injecting text-type checks at signature_delta and thinking_delta sites. Removes "Content block is not a thinking block" from the bundle.',
+        getValue: () => settings.misc?.enableThinkingTextTransition ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.enableThinkingTextTransition =
+              !settings.misc!.enableThinkingTextTransition;
           });
         },
       },

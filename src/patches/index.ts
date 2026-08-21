@@ -77,6 +77,8 @@ import { writeTableFormat } from './tableFormat';
 import { writeConversationTitle } from './conversationTitle';
 import { writeHideStartupBanner } from './hideStartupBanner';
 import { writeHideCtrlGToEdit } from './hideCtrlGToEdit';
+import { writeIgnoreWhitespaceEdit } from './ignoreWhitespaceEdit';
+import { applyThinkingTextTransition } from './thinkingTextTransition';
 import { writeHideStartupClawd } from './hideStartupClawd';
 import { writeIncreaseFileReadLimit } from './increaseFileReadLimit';
 import { writeSuppressLineNumbers } from './suppressLineNumbers';
@@ -583,6 +585,20 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.FEATURES,
     description:
       'Enable MCP channel notifications (--channels without allowlist or dev flag)',
+  },
+  {
+    id: 'ignore-whitespace-edit',
+    name: 'Ignore whitespace in edit tool',
+    group: PatchGroup.FEATURES,
+    description:
+      'Add ignore_whitespace parameter to the edit tool for matching lines with different leading/trailing whitespace',
+  },
+  {
+    id: 'thinking-text-transition',
+    name: 'Thinking-to-text transition graceful handling',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'Bypass throw-based streaming crashes during thinking-to-text transitions by injecting text-type checks at signature_delta and thinking_delta sites. Removes "Content block is not a thinking block" from the bundle.',
   },
   {
     id: 'suppress-deferred-tools',
@@ -1308,6 +1324,14 @@ export const applyCustomization = async (
     'channels-mode': {
       fn: c => writeChannelsMode(c),
       condition: !!config.settings.misc?.enableChannelsMode,
+    },
+    'ignore-whitespace-edit': {
+      fn: c => writeIgnoreWhitespaceEdit(c),
+      condition: !!config.settings.misc?.enableIgnoreWhitespaceEdit,
+    },
+    'thinking-text-transition': {
+      fn: c => applyThinkingTextTransition(c),
+      condition: !!config.settings.misc?.enableThinkingTextTransition,
     },
     'suppress-deferred-tools': {
       fn: c => writeSuppressDeferredTools(c),

@@ -79,6 +79,8 @@ import { writeInputPatternHighlighters } from './inputPatternHighlighters';
 import { writeConversationTitle } from './conversationTitle';
 import { writeVoiceMode } from './voiceMode';
 import { writeChannelsMode } from './channelsMode';
+import { writeIgnoreWhitespaceEdit } from './ignoreWhitespaceEdit';
+import { applyThinkingTextTransition } from './thinkingTextTransition';
 import {
   writeSuppressDeferredTools,
   writeStripEmptySystemReminders,
@@ -264,6 +266,8 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
   'hide-ctrl-g-to-edit': c => writeHideCtrlGToEdit(c),
   'hide-startup-clawd': c => writeHideStartupClawd(c),
   'increase-file-read-limit': c => writeIncreaseFileReadLimit(c),
+  'ignore-whitespace-edit': c => writeIgnoreWhitespaceEdit(c),
+  'thinking-text-transition': c => applyThinkingTextTransition(c),
   'suppress-line-numbers': c => writeSuppressLineNumbers(c),
   'suppress-rate-limit-options': c => writeSuppressRateLimitOptions(c),
   'token-count-rounding': c => writeTokenCountRounding(c, 100),

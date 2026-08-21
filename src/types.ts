@@ -142,6 +142,8 @@ export interface MiscConfig {
   swapRipgrepForFff: boolean;
   allowCustomAgentModels: boolean;
   enableContextLimitOverride: boolean;
+  enableIgnoreWhitespaceEdit: boolean;
+  enableThinkingTextTransition: boolean;
   enableModelCustomizations: boolean;
   enableVoiceMode: boolean;
   enableVoiceConciseOutput: boolean;
