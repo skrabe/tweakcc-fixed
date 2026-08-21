@@ -751,6 +751,127 @@ export const writePrintToolsFilter = (
     ? JSON.stringify(defaultToolset)
     : 'undefined';
 
+  // Anchored on unique code SHAPES, with every relationship derived by search
+  // rather than by distance. Two earlier forms broke on the same class of
+  // change: `let X=F(S)` plus a 2500-char lookahead (CC 2.1.235 pushed the pair
+  // 2,672 apart), then `tools:X,refreshTools:()=>F(G())` in one object literal.
+  //
+  // CC 2.1.238 split that object. The print path now hoists its arrows into
+  // named consts and hands the SAME thunk to both slots, and the eager array
+  // moved to a different call:
+  //
+  //   let Pk=zs(sH), …                                   // eager, for ACy(...)
+  //   Yh=()=>zs(l()), If=()=>Iiu(…),
+  //   CS={session:e,refreshTools:Yh,refreshMcpClients:If,verbose:…}
+  //   Qe??=ICy({...CS, tools:Yh, mcpClients:If, …})      // lazy branch
+  //   ACy({...CS, …, tools:Pk, mcpClients:fM, …})        // eager branch
+  //
+  // So there are two initialisation sites, not one, and filtering only the
+  // thunk would leave `--print`'s actual submission unfiltered. Pin the thunk
+  // off the `{session:…,refreshTools:…}` object (one match), read `computeFn`
+  // and `getterFn` out of its declaration, then find the eager declaration by
+  // `computeFn` and confirm it against its own `tools:` use site.
+  const csPattern =
+    /\{session:[$\w]+,refreshTools:([$\w]+),refreshMcpClients:([$\w]+),verbose:/;
+  const csMatch = oldFile.match(csPattern);
+  // Method 2 (below) handles every build up to and including CC 2.1.237, where
+  // `tools:` and `refreshTools:` still shared one object literal. Fall through
+  // rather than failing, so this patch keeps working on the older shape.
+  const escapeIdent = (name: string) => name.replace(/\$/g, '\\$');
+  if (csMatch && csMatch.index !== undefined) {
+    const thunkVar = csMatch[1];
+
+    const thunkDecl = oldFile.match(
+      new RegExp(
+        `${escapeIdent(thunkVar)}=\\(\\)=>([$\\w]+)\\(([$\\w]+)\\(\\)\\)`
+      )
+    );
+    if (!thunkDecl || thunkDecl.index === undefined) {
+      console.error(
+        'patch: toolsets: printToolsFilter: failed to find the print tools thunk'
+      );
+      return null;
+    }
+    const computeFn = thunkDecl[1];
+    const getterFn = thunkDecl[2];
+
+    // The filter, written as a self-contained parenthesised arrow EXPRESSION
+    // rather than a `const` statement. Both splice sites are declarators inside a
+    // `let` list (`let bu={…},Yh=()=>zs(l()),…` and `let Pk=zs(sH),a5=…`), so a
+    // statement spliced in front of either one closes the list mid-declarator and
+    // yields JS Bun cannot parse. They are also in different blocks, so a shared
+    // binding declared at one site is not in scope at the other. An expression is
+    // valid in every position and needs no scope analysis; the cost is repeating
+    // the toolset table once, which is a few KB.
+    const filterExpr =
+      `((t,s)=>{const p=${toolsetsJSON},n=s.toolset??${fallback};` +
+      `globalThis.__tweakcc_toolset={name:n,tools:p[n]};` +
+      `if(p.hasOwnProperty(n)){const a=p[n];if(a==="*")return t;` +
+      `return t.filter(d=>a.includes(d.name))}return t})`;
+
+    // Site 1: the shared thunk. Covers `tools:` on the lazy branch AND
+    // `refreshTools:` on both, because 2.1.238 passes one value to all of them.
+    const thunkReplacement = `${thunkVar}=()=>{let s=${getterFn}();return ${filterExpr}(${computeFn}(s),s)}`;
+    let newFile =
+      oldFile.slice(0, thunkDecl.index) +
+      thunkReplacement +
+      oldFile.slice(thunkDecl.index + thunkDecl[0].length);
+
+    showDiff(
+      oldFile,
+      newFile,
+      thunkReplacement,
+      thunkDecl.index,
+      thunkDecl.index + thunkReplacement.length
+    );
+
+    // Site 2: the eager array the non-SDK branch submits. Identify it by its own
+    // `tools:X,mcpClients:` use site so a same-shaped declaration elsewhere in
+    // the bundle cannot be picked up by accident, then rewrite its declaration.
+    const eagerUse = [
+      ...newFile.matchAll(
+        /tools:([$\w]+),mcpClients:([$\w]+),appendSystemPrompt:/g
+      ),
+    ]
+      .map(m => m[1])
+      .find(name => name !== thunkVar);
+    if (eagerUse === undefined) {
+      // Only the lazy branch exists in this build — the thunk covers everything.
+      return newFile;
+    }
+    const eagerDecl = newFile.match(
+      new RegExp(
+        `${escapeIdent(eagerUse)}=${escapeIdent(computeFn)}\\(([$\\w]+)\\)`
+      )
+    );
+    if (!eagerDecl || eagerDecl.index === undefined) {
+      console.error(
+        'patch: toolsets: printToolsFilter: failed to find print tools initialization'
+      );
+      return null;
+    }
+    const stateVar = eagerDecl[1];
+    const eagerReplacement = `${eagerUse}=${filterExpr}(${computeFn}(${stateVar}),${stateVar})`;
+    const beforeEager = newFile;
+    newFile =
+      newFile.slice(0, eagerDecl.index) +
+      eagerReplacement +
+      newFile.slice(eagerDecl.index + eagerDecl[0].length);
+
+    showDiff(
+      beforeEager,
+      newFile,
+      eagerReplacement,
+      eagerDecl.index,
+      eagerDecl.index + eagerReplacement.length
+    );
+
+    return newFile;
+  }
+
+  // ---------------------------------------------------------------------
+  // Method 2 — CC <= 2.1.237: `tools:X,refreshTools:()=>F(G())` in one object.
+  // ---------------------------------------------------------------------
   // Anchor on the USE site, not the declaration. `tools:X,refreshTools:()=>F(G())`
   // is a unique code shape; the declaration is not, so the old form matched
   // `let X=F(S)` and demanded the use within 2500 chars. CC 2.1.235 pushed them
@@ -772,7 +893,6 @@ export const writePrintToolsFilter = (
   const computeFn = useMatch[2];
   const getterFn = useMatch[3];
 
-  const escapeIdent = (name: string) => name.replace(/\$/g, '\\$');
   // CC >=2.1.219 folded the declaration into a multi-declarator `let`, so the
   // statement can end on `,` instead of `;`: `let TOOLS=COMPUTE(STATE),NEXT=...`.
   const declPattern = new RegExp(

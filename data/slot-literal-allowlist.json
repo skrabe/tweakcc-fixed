@@ -275,6 +275,13 @@
     "verdict": "glue",
     "why": "labels the interpolated directory in a kept/replaced result"
   },
+  "5695d6e20644d570": {
+    "label": "TOOL_DESCRIPTION_ARTIFACT_ROOM_SEND_VAR_1",
+    "note": "One arm of the share-status label interpolated into the room_send description, parallel to \"share status unconfirmed\" and `shared with ${...}`.",
+    "promptId": "tool-description-artifact-room-send",
+    "text": "reaches anyone who has the artifact open",
+    "verdict": "glue"
+  },
   "577e449237858c77": {
     "label": "SLASH_COMMAND_TERMINAL_SETUP_CANNOT_RUN_FROM_TERMINAL_VAR_0",
     "promptId": "slash-command-terminal-setup-cannot-run-from-terminal",
@@ -326,6 +333,16 @@
     "promptId": "system-reminder-plan-mode-sparse-continuation",
     "reason": "the terse variant of the same direction",
     "text": "Follow 5-phase workflow.",
+    "verdict": "catalogue"
+  },
+  "6620722f716cfa2b": {
+    "desc": "Clause stating that the session will not be woken on republish or on a comment sent to Claude when the durable wake subscription did not register.",
+    "id": "data-task-notification-artifact-durable-wake-not-woken-condition",
+    "label": "DATA_TASK_NOTIFICATION_ARTIFACT_DURABLE_WAKE_NOT_REGISTERED_VAR_1",
+    "name": "Data: Artifact Durable Wake \u2014 Not-Woken Condition",
+    "note": "Whole template node `This session will NOT be woken when ${cond?\"it is republished or a comment on it is sent to Claude\":\"it is republished\"}` \u2014 a constraint the model must not contradict, delivered next to \"do not claim to be subscribed to it meanwhile\". Branch text at c4dcff2887bcf116 is glue.",
+    "promptId": "data-task-notification-artifact-durable-wake-not-registered",
+    "text": "This session will NOT be woken when ",
     "verdict": "catalogue"
   },
   "6c13ebdecc48834b": {
@@ -447,6 +464,13 @@
     "verdict": "glue",
     "why": "labels the local-file source in the write_db classifier input"
   },
+  "8a0a6b01870a0f0e": {
+    "label": "TOOL_RESULT_ARTIFACT_VERIFY_UNRECOGNIZED_STATE_VAR_1",
+    "note": "Fallback label substituted for a version string that fails the /^[A-Za-z0-9._-]{1,64}$/ shape check.",
+    "promptId": "tool-result-artifact-verify-unrecognized-state",
+    "text": "(unrecognized version)",
+    "verdict": "glue"
+  },
   "8cd886dfa2d568fe": {
     "label": null,
     "promptId": "tool-result-artifact-action-requires-url",
@@ -459,6 +483,13 @@
     "promptId": "tool-result-artifact-publish-cowork-user-approval-required",
     "reason": "joiner before an interpolated recipient",
     "text": ", shared with ",
+    "verdict": "glue"
+  },
+  "8de3e68eedc6cd4a": {
+    "label": "DATA_ARTIFACT_VERIFY_AUTO_CLASSIFIER_INPUT_VAR_2",
+    "note": "Labels which publish the verify action targets when no url is passed.",
+    "promptId": "data-artifact-verify-auto-classifier-input",
+    "text": "(this session's most recent publish)",
     "verdict": "glue"
   },
   "938740c522e6b397": {
@@ -488,6 +519,13 @@
     "text": ", private to you until you share it",
     "verdict": "catalogue"
   },
+  "980e41d677e0d393": {
+    "label": "DATA_TASK_NOTIFICATION_ARTIFACT_AUTO_REPLY_NAME_CHORD_RECEIPT_VAR_6",
+    "note": "Second quasi of the same template node as 9cb8ee10318d5747, which carries the catalogue verdict for the whole sentence.",
+    "promptId": "data-task-notification-artifact-auto-reply-name-chord-receipt",
+    "text": " for good with \u2715 on the watch in the tasks list or the kill-all-agents gesture",
+    "verdict": "glue"
+  },
   "986590c740ba1d03": {
     "desc": "Warns that the publish will replace the page already at the named address.",
     "id": "tool-result-artifact-publish-replacing-existing-page",
@@ -506,6 +544,16 @@
     "promptId": "tool-result-artifact-publish-cowork-user-approval-required",
     "reason": "the unrecognized-address variant of the replace warning",
     "text": ", replacing an existing page (unrecognized address)",
+    "verdict": "catalogue"
+  },
+  "9cb8ee10318d5747": {
+    "desc": "Clause naming the gesture that stops an artifact watch for good \u2014 the tasks-list watch X or the kill-all-agents gesture.",
+    "id": "data-task-notification-artifact-auto-reply-permanent-stop-gesture",
+    "label": "DATA_TASK_NOTIFICATION_ARTIFACT_AUTO_REPLY_NAME_CHORD_RECEIPT_VAR_6",
+    "name": "Data: Artifact Auto-Reply Permanent Stop Gesture",
+    "note": "Whole template node `the user can stop ${n} for good with X on the watch in the tasks list or the kill-all-agents gesture` \u2014 names the exact gesture that permanently stops auto-replies, which the model relays to the user. Reported as two quasis (see 980e41d677e0d393); catalogued once here.",
+    "promptId": "data-task-notification-artifact-auto-reply-name-chord-receipt",
+    "text": "the user can stop ",
     "verdict": "catalogue"
   },
   "9ed00b32484245e8": {
@@ -674,6 +722,13 @@
     "text": " Writable stores: ",
     "verdict": "glue"
   },
+  "ba3f6ec2c3c7c985": {
+    "label": "DATA_TASK_NOTIFICATION_ARTIFACT_AUTO_REPLY_TYPED_RESUME_CLAUSE_VAR_0",
+    "note": "Et(count,\"this artifact\",\"these artifacts\") pluralization helper.",
+    "promptId": "data-task-notification-artifact-auto-reply-typed-resume-clause",
+    "text": "these artifacts",
+    "verdict": "glue"
+  },
   "bb3ff032daa10c47": {
     "label": "SLASH_COMMAND_RESUME_SESSION_NOT_FOUND_VAR_0",
     "promptId": "slash-command-resume-session-not-found",
@@ -710,6 +765,13 @@
     "reason": "states the pinned-version consequence",
     "text": " (viewers see a pinned earlier version)",
     "verdict": "catalogue"
+  },
+  "c4dcff2887bcf116": {
+    "label": "DATA_TASK_NOTIFICATION_ARTIFACT_DURABLE_WAKE_NOT_REGISTERED_VAR_1",
+    "note": "Ternary branch inside the template node catalogued at 6620722f716cfa2b; the other branch is \"it is republished\".",
+    "promptId": "data-task-notification-artifact-durable-wake-not-registered",
+    "text": "it is republished or a comment on it is sent to Claude",
+    "verdict": "glue"
   },
   "c9e17418c95048df": {
     "label": "READ_ONLY_SHELL_COMMANDS",

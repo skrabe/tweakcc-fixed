@@ -206,6 +206,12 @@
     "shape": "concat",
     "verdict": "internal"
   },
+  "4dcecd8e92fa50b9": {
+    "excerpt": "Plugin distributed as a zip archive fetched over HTTPS \u2014 for hosting on any static file server or artifact repository (S3, GitLab, nginx) wi",
+    "shape": "concat",
+    "verdict": "internal",
+    "why": "plugin marketplace zip-source zod schema (.describe on the marketplace/plugin.json validation schema, alongside npm/git source variants) \u2014 config-file validation, never a tool inputSchema"
+  },
   "525c946f97cddf81": {
     "excerpt": "# Keybindings Skill Create or modify `~/.claude/keybindings.json` to customize keyboard shortcuts. ## CRITICAL: Read Before Write **Always r",
     "note": "captured per-FRAGMENT as of 2026-07-27 (the joined form only exists at runtime and can never be spliced); coverage is judged on the fragments",
@@ -412,6 +418,12 @@
     "note": "not model-facing: config schema / CLI help / operator error / TUI dialog",
     "shape": "array",
     "verdict": "internal"
+  },
+  "824ce4c3957f2eff": {
+    "excerpt": "stamp names one recovery copy, a key, not a scope: the scope narrows with kind only",
+    "shape": "array",
+    "verdict": "internal",
+    "why": "storage-scope validator table read by Iya() -> Kp(field,reason), which returns {code:\"InvalidArgument\",argument,reason} for CC internal storage namespaces (transcript/log/task/mailbox/cache/...); never a tool result"
   },
   "831901d9a9e595e3": {
     "excerpt": "Controls whether the SDK parent tier (Options.managedSettings / --managed-settings) layers under this admin tier. \"first-wins\" (default): pa",

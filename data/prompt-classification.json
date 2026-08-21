@@ -47,6 +47,9 @@
     "id": "tool-result-artifact-db-fence-header",
     "name": "Tool Result: Artifact DB Fence Header"
   },
+  "00341b7922455177faf10f564f719a3499571f07": {
+    "facing": "ui"
+  },
   "00365d2a9315d9fe85379c57955b848ad00dbee9": {
     "facing": "ui"
   },
@@ -86,6 +89,12 @@
   "0061bd46f9a8c3e1252286d62c4302f4ed548375": {
     "facing": "internal"
   },
+  "00624c88a273041afec5d329c2d975eaf5d2b357": {
+    "desc": "Artifact asset-read error when the environment's egress proxy refused the content fetch.",
+    "facing": "model",
+    "id": "tool-result-artifact-asset-content-egress-denied",
+    "name": "Tool Result: Artifact content fetch denied by egress proxy"
+  },
   "006536bb8fbc3fb72d123c2713d2783fcbf241bd": {
     "desc": "db_read saved tool_result trailer noting compact writes and that the files are collaborator-written data, not instructions.",
     "facing": "model",
@@ -124,6 +133,12 @@
   },
   "009b6d639c651d80b6327b5cbd132518a05a14ea": {
     "facing": "ui"
+  },
+  "009efa21fa2c662abbf1f80f8dbf092480b64da7": {
+    "desc": "checkPermissions deny (and matching ArtifactInputError) when action verify is gated off for this session.",
+    "facing": "model",
+    "id": "tool-result-artifact-verify-not-available",
+    "name": "Tool Result: Artifact Verify Not Available"
   },
   "00a12ac4f9bd567ef5c40cbd2d29c5cddc69a7f3": {
     "facing": "internal"
@@ -170,6 +185,12 @@
   "00cc3ed0b00c24fa67b17a8a03b6387fc36ec6bb": {
     "facing": "internal"
   },
+  "00cf29789d5f46287a4e73128bd1181868d42173": {
+    "desc": "Non-name-chord branch of the pause disclosure: an asked-for publish or the user's next typed message resumes auto-replies.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-typed-resume-clause",
+    "name": "Data: Artifact Auto-Reply Typed-Resume Clause"
+  },
   "00d142796a7b5503f419552bba4c6919117a872f": {
     "facing": "internal"
   },
@@ -208,6 +229,12 @@
     "facing": "model",
     "id": "system-prompt-memory-organize-by-topic",
     "name": "Memory: organize by topic"
+  },
+  "00f7f036117e37e5e5eb3bd981c1e5861e535c95": {
+    "desc": "Returned as the /insights command prompt when the skill is preloaded rather than invoked, stating the report runs only on direct invocation.",
+    "facing": "model",
+    "id": "skill-insights-preload-direct-invocation-only",
+    "name": "Skill: Insights Preload Direct-Invocation Only"
   },
   "00f8505560c7069a6fb3e08d7146a0bc8eff283d": {
     "facing": "internal"
@@ -431,6 +458,12 @@
   "02195b1aecb48e11e4fbb262e3fcd6832c08fc39": {
     "facing": "ui"
   },
+  "0228b3e2003215a6f1be06914de19ebb77b8a5be": {
+    "desc": "Approval prompt variant for auto-replies that stopped when the user interrupted the session with Ctrl+C or Stop.",
+    "facing": "model",
+    "id": "tool-result-artifact-resume-replies-ask-swept",
+    "name": "Tool Result: resume_replies approval prompt (interrupted session)"
+  },
   "022f115dfd3d7f4f91a69e5de48e466131cfedb5": {
     "facing": "internal"
   },
@@ -454,6 +487,12 @@
     "facing": "model",
     "id": "system-prompt-hook-evaluator-truncated-transcript-note",
     "name": "System Prompt: Hook evaluator truncated transcript note"
+  },
+  "0246946912abe1802c7ec754aa2b46cee5018b03": {
+    "desc": "Standalone clause used when the explanatory reply was withheld, telling the session that a requested automatic edit could not be applied to the artifact's current source, that the artifact was not changed, and that it should read the thread and make the change itself.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-edit-patch-failed-withheld-tail",
+    "name": "Data: Task Notification Artifact Auto-Edit Patch Failed Withheld Tail"
   },
   "02486299211c3e2bfb03328bea7c80a1696cc433": {
     "facing": "internal"
@@ -622,6 +661,9 @@
   },
   "0345446d174d448e2e09935b56688897922af640": {
     "facing": "internal"
+  },
+  "03488cce553d4a559e33adeb643ec6393dbe82b1": {
+    "facing": "ui"
   },
   "034c18b86829b007ea52f57b507576433f3be9ae": {
     "desc": "The `-n` input-schema param description for the Grep tool, serialized into the model's tool list.",
@@ -1100,6 +1142,12 @@
     "id": "tool-description-claude-in-chrome-form-input-tabid",
     "name": "Tool Description: Form input tabId param"
   },
+  "0550ac1f6f21ecdd4ee65a38c8b9ccb3da7b6c77": {
+    "desc": "Per-watch line in the watches tool_result for a disconnected watch, including auto-reply stop cause.",
+    "facing": "model",
+    "id": "tool-result-artifact-watches-list-disconnected-item",
+    "name": "Watches List Disconnected Item"
+  },
   "05511423e13d80b9255c5c5688057721fd59741a": {
     "facing": "internal"
   },
@@ -1216,6 +1264,12 @@
   },
   "05cff2fdf233a79df23b6103739cbbbab72a2603": {
     "facing": "ui"
+  },
+  "05d78c25b0086c2559e20d71195a7303275e563e": {
+    "desc": "validateInput rejection when serialized room_send data exceeds the byte cap.",
+    "facing": "model",
+    "id": "tool-result-artifact-room-send-data-too-large",
+    "name": "Tool Result: Artifact room_send Data Too Large"
   },
   "05de256eda7eab817fe5ded5df2eaeb51f8cd515": {
     "facing": "ui"
@@ -1348,6 +1402,12 @@
     "facing": "model",
     "id": "data-session-metadata-team-mcp-servers",
     "name": "Session metadata team MCP servers line"
+  },
+  "066d2287742b6d17468e3c5071288a52c23234a2": {
+    "desc": "Task-notification event telling the model a live artifact subscription did not arm.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-live-subscription-arm-failed",
+    "name": "Data: Task Notification Artifact Live Subscription Arm Failed"
   },
   "0670c63f3aac03fd880cc9a1c5e220315e8e401d": {
     "facing": "ui"
@@ -1517,6 +1577,9 @@
   "0721db600088752fb62d6cfff2307668cc98f183": {
     "facing": "internal"
   },
+  "072633916bcfbd4f9dfb834e3a8d3e27cdefd263": {
+    "facing": "internal"
+  },
   "07267754b1b1acdf043cc87bc6f08e5a29f7c459": {
     "facing": "ui"
   },
@@ -1673,6 +1736,9 @@
     "id": "tool-result-artifact-resume-replies-swept-rearm-clause",
     "name": "Tool Result: resume_replies Swept-Interrupt Rearm Clause"
   },
+  "079fb9bcffd4012f458865e6d5a2564ecb387b78": {
+    "facing": "internal"
+  },
   "07a114d67fa0b17814f127200039f125985a46ce": {
     "facing": "ui"
   },
@@ -1808,6 +1874,9 @@
     "id": "tool-result-send-message-remote-control-approval-by-name",
     "name": "SendMessage: Remote Control Approval (by name)"
   },
+  "081cf8cc464d875c84a8731621f7d555c4fc0d1a": {
+    "facing": "ui"
+  },
   "08255622e557bb0f4effb674d00118a9ac019261": {
     "desc": "Line introducing the WebFetch tool's own reporting rules inside the fetched-page tool result.",
     "facing": "model",
@@ -1885,6 +1954,12 @@
   },
   "089f7b399226dbeca651bac86531f8d6874dc806": {
     "facing": "internal"
+  },
+  "08a10f1091ebe89a7031d349c15e012003acb794": {
+    "desc": "Allowlist remediation interpolated into the artifact-read egress-blocked tool error for CLAUDE_CODE_REMOTE sessions.",
+    "facing": "model",
+    "id": "tool-result-artifact-content-egress-blocked-remote-allowlist",
+    "name": "Tool Result: Artifact Content Egress Blocked Remote Allowlist"
   },
   "08a39976be4594ec11aad46f9be57c5168a9a10c": {
     "facing": "internal"
@@ -2192,6 +2267,9 @@
   "0a2776df5547c261329400d66aa0a0383d982f89": {
     "facing": "internal"
   },
+  "0a28028061ba10bfe570e3967483f1e3e0618037": {
+    "facing": "internal"
+  },
   "0a2bcb38bdc156e61193bf384b6aef8811ce30ee": {
     "desc": "Text tool_result returned to the model when a slow MCP tool call is auto-backgrounded as a task, telling it to keep working and how to stop the task.",
     "facing": "model",
@@ -2200,6 +2278,12 @@
   },
   "0a314130cdf0dd70b3d4a1236f46f81057ed55a8": {
     "facing": "ui"
+  },
+  "0a3881df941edaa6d58facc7b2d8dec4d9851e82": {
+    "desc": "Artifact publish tool error when a reset hits before anything was published; tells the model to retry after the reset.",
+    "facing": "model",
+    "id": "tool-result-artifact-publish-reset-retry-nothing-published",
+    "name": "Tool Result: Artifact Publish Reset Retry Nothing Published"
   },
   "0a3ae8a89d050310c3ed446408932d98afab956d": {
     "desc": "Note in the auto-mode recon that other projects\u2019 transcripts are not mined (a Q2 opt-in); part of the model-facing recon context.",
@@ -2246,6 +2330,9 @@
     "id": "system-prompt-code-review-inline-command",
     "name": "System Prompt: Inline code-review command text"
   },
+  "0a491b3fe5331a14d53c7d8f9ceee6c81276582a": {
+    "facing": "internal"
+  },
   "0a4b15f52b37a8e75ec107848747bd53f30741cc": {
     "facing": "internal"
   },
@@ -2269,6 +2356,15 @@
   },
   "0a73cbad34040a7f9083bf706604476c0a3ca435": {
     "facing": "internal"
+  },
+  "0a764da25b7faaef85bf9e63eee63509d39e11cc": {
+    "facing": "internal"
+  },
+  "0a7d30a47d6ce44a25b87a62faa84b88f32c8c73": {
+    "desc": "Fail-closed UserPromptSubmit/UserPromptExpansion hook reason when the SDK host reconnects before the prompt hook answers.",
+    "facing": "model",
+    "id": "system-prompt-sdk-host-prompt-hook-reconnect-unsubmitted",
+    "name": "System Prompt: SDK Host Prompt Hook Reconnect Unsubmitted"
   },
   "0a830f555203f2c58203bb44386f4bb291fb65eb": {
     "facing": "internal"
@@ -2398,6 +2494,9 @@
     "facing": "model",
     "id": "tool-result-design-grant-not-shown-plan-mode",
     "name": "Tool Result: Design Project Approval Not Shown In Plan Mode"
+  },
+  "0b14124265c85a498fe74c05d932504fe9149d94": {
+    "facing": "internal"
   },
   "0b209a7fbd3557fb24ae34106332396fe6513f7d": {
     "desc": "ShareOnboardingGuide tool_result telling the model no ONBOARDING.md was found and to write it first.",
@@ -2729,6 +2828,12 @@
   "0cbd8afab99222fb58f104ad5d0b128f0a16a204": {
     "facing": "internal"
   },
+  "0cc0327ea302142df1c34e55583e691daa22cfb4": {
+    "desc": "Reason clause naming an incomplete or malformed response on the artifact publish path.",
+    "facing": "model",
+    "id": "tool-result-artifact-publish-malformed-response",
+    "name": "Tool Result: Artifact Publish \u2014 Incomplete Or Malformed Response"
+  },
   "0cc12c4982348f54185b8c30b860dc4296b18324": {
     "facing": "internal"
   },
@@ -2752,6 +2857,12 @@
     "facing": "model",
     "id": "tool-result-artifact-resume-replies-no-stop-recorded",
     "name": "Auto-Replies Not Resumed \u2014 No Stop Recorded"
+  },
+  "0cf18c71b87c7068572cb5a14a2b7ae0326ed9b7": {
+    "desc": "Publish-time artifact-pr-review verifier reason when a data island carries the server's element id, so the page is a published echo rather than local authoring HTML; interpolated into the ArtifactInputError the model reads.",
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-island-published-page-readback",
+    "name": "PR-Review Island Published Page Readback"
   },
   "0cf55cca96ced7711c9754e1aa49e7e3e452c098": {
     "facing": "ui"
@@ -2897,6 +3008,12 @@
   "0d9206d42a2905d08e85b9cb25d7d5cdfddaaae9": {
     "facing": "ui"
   },
+  "0d96c98447a2d90a5b1143aa0827cbcc96b42fe5": {
+    "desc": "Tail stating that the artifact already matches the requested change so it was not modified, used in auto-edit posted/withheld task notifications.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-edit-noop-withheld-tail",
+    "name": "Data: Task notification artifact auto-edit no-op withheld tail"
+  },
   "0d99bb63002f2651e98e9f0ee985c2fd4919b172": {
     "desc": "Identity note that another session with the same name is registered on this machine.",
     "facing": "model",
@@ -3017,6 +3134,9 @@
     "id": "tool-parameter-requestaccess-clipboard-write",
     "name": "Tool Description: request_access clipboardWrite param"
   },
+  "0e10bffcc997a4a91281b9807f715599a76e4ca3": {
+    "facing": "internal"
+  },
   "0e15eee580cd24c52697ec1415dec5fc9d757abd": {
     "desc": "Artifact validation-steer guidance returned to the model.",
     "facing": "model",
@@ -3049,6 +3169,9 @@
   },
   "0e2fefb54fe320a2d8f747a773a80ed3f09f2a17": {
     "facing": "internal"
+  },
+  "0e305093a175f1560329dde33e075b7fe1b4c85e": {
+    "facing": "ui"
   },
   "0e332521d69967c62a92601427ee852f818861db": {
     "desc": "Continuation of the ExitWorktree result suggesting the model advise restarting from an existing directory.",
@@ -3224,6 +3347,9 @@
     "id": "tool-result-artifact-db-write-session-approval-scope",
     "name": "Tool Result: Artifact DB Session Approval Scope"
   },
+  "0ef6d29a5004952fdbfeb0fb7e9617a65ede22c6": {
+    "facing": "internal"
+  },
   "0eff3ee0f66db8245970dd2fe56c19986646d912": {
     "facing": "ui"
   },
@@ -3395,6 +3521,12 @@
   "0fc929d4ad1d9f588dcb33bd5db2b7fdab73c1ad": {
     "facing": "internal"
   },
+  "0fcb6aff8240781641b32c0b387b2f716d9e0f8c": {
+    "desc": "Permission denial when verify is given a url that is not an artifact url diagnostics can be read from.",
+    "facing": "model",
+    "id": "tool-result-artifact-verify-url-unparseable",
+    "name": "Tool Result: Artifact Verify URL Unparseable"
+  },
   "0fd39d10c47c244011fb93f7ee54abd9fe7ffcdc": {
     "desc": "The bundled artifact-pr-review skill asset template.html that the model fills slot-by-slot when building a PR-review artifact; reworded/expanded successor of the 2.1.221 id.",
     "facing": "model",
@@ -3453,7 +3585,10 @@
     "facing": "internal"
   },
   "100a22f039036292dc54455750ff1d704be1ddce": {
-    "facing": "ui"
+    "desc": "Remedy naming the exact steps to clear ANTHROPIC_API_KEY before a claude.ai login.",
+    "facing": "model",
+    "id": "tool-result-artifact-login-blocked-remedy-anthropic-api-key-env",
+    "name": "Tool Result: Artifact Login Blocked Remedy \u2014 ANTHROPIC_API_KEY Environment Variable"
   },
   "100a777a8c670069428e7f05d4b6e126eb6983ff": {
     "facing": "internal"
@@ -3890,6 +4025,9 @@
     "id": "tool-description-artifact-upload-asset-session-approval-scope",
     "name": "upload_asset description approval-scope clause"
   },
+  "1202729bd6269eb3aca1e8d50493fccb66207cc4": {
+    "facing": "ui"
+  },
   "12046004330e14da24edd7fa49c38de05dadcec3": {
     "facing": "internal"
   },
@@ -4031,6 +4169,18 @@
   "127479f0ef92c322e738c8ff43602619f263c23f": {
     "facing": "internal"
   },
+  "1276c310ba22ef608b5615af528d1a9875ca0069": {
+    "desc": "Reason clause for refusing a worktree whose .git entry exists but git could not resolve.",
+    "facing": "model",
+    "id": "tool-result-worktree-isolation-git-unresolvable-entry",
+    "name": "Tool Result: Worktree Isolation \u2014 Git Could Not Resolve The Entry"
+  },
+  "12794106e24a36fc01e83093603a54a9a90629f2": {
+    "desc": "Permission denial when a Cowork session cannot show the approval card a room_send needs, telling the model not to retry.",
+    "facing": "model",
+    "id": "tool-result-artifact-room-send-cowork-no-consent-surface",
+    "name": "Tool Result: Artifact room_send Cowork Consent Unavailable"
+  },
   "1283a43ae42367b801a915b92a6e425307697c69": {
     "facing": "ui"
   },
@@ -4149,6 +4299,9 @@
     "name": "Tool Result: Bash pkill self-protection guard"
   },
   "1319e954d70ab9cecfd6c26275abd7f44e460df3": {
+    "facing": "internal"
+  },
+  "132c77869381f096cbb024b6ed936daa88bac571": {
     "facing": "internal"
   },
   "132d4397b255d5ae23e32ed7290551eb68d75d7f": {
@@ -4448,6 +4601,9 @@
   "14acfe0bd5da7458104ed5a4d8e4bfc71fdf41e8": {
     "facing": "internal"
   },
+  "14b7636ff46fc64e354e6ec45570285a312e49af": {
+    "facing": "ui"
+  },
   "14b86659a69244725bfa7c1eedf594fb1ebfd356": {
     "facing": "ui"
   },
@@ -4498,6 +4654,12 @@
   },
   "14dddced8248642dd397eb9044e4a71afe49a902": {
     "facing": "internal"
+  },
+  "14deddfdaa34910147f18ec3c22c1cefb560a738": {
+    "desc": "How to allowlist the artifact frame domain after a 403 egress-blocked read.",
+    "facing": "model",
+    "id": "tool-result-artifact-content-egress-blocked",
+    "name": "Tool Result: Artifact Content Egress Blocked"
   },
   "14f04766fd9f9b30769f019f8e35936a4bd39b70": {
     "facing": "ui"
@@ -4579,6 +4741,12 @@
   },
   "1548b3200d5157dd5e2aa31bfa323560c520ec60": {
     "facing": "internal"
+  },
+  "155434ec02758a84c8d18de0f7b5b15718ff6804": {
+    "desc": "Conflict notice that a local memory copy cannot be automatically re-saved to shared memory.",
+    "facing": "model",
+    "id": "system-reminder-memory-local-copy-unsaveable",
+    "name": "System Reminder: Memory Local Copy Unsaveable"
   },
   "155517bff8d006870b41d3c5aa7f303b443f05fc": {
     "facing": "internal"
@@ -4781,6 +4949,9 @@
     "id": "tool-parameter-computer-key-repeat",
     "name": "Tool Parameter: Key Sequence Repeat"
   },
+  "163ae63dca66ee7aebe3ff76e93aa74983ceb76e": {
+    "facing": "ui"
+  },
   "1648824189c0b68dde927171af7a9e1abf29b33f": {
     "desc": "Same parse-failure guidance but with the offending source line and a caret, giving the model the exact position to fix; it is the other branch of the same conditional as the no-location form.",
     "facing": "model",
@@ -4801,6 +4972,9 @@
   },
   "16566f60148a02ef832662f8536f0eb3b21e5a43": {
     "facing": "ui"
+  },
+  "165aa77fd46d257a88924eaac5d5a1467c05d39e": {
+    "facing": "internal"
   },
   "1660c3d62769308785510a05b4fd234729ea6683": {
     "facing": "internal"
@@ -5036,6 +5210,9 @@
     "id": "system-prompt-memory-explicit-remember-request",
     "name": "System Prompt: Memory explicit remember request"
   },
+  "17695ae2063032f16fb7ad959fc6cd8334cea223": {
+    "facing": "internal"
+  },
   "176f34aca3a9a527f0266e711a04cf0c22072f9a": {
     "facing": "internal"
   },
@@ -5068,6 +5245,12 @@
   },
   "1788f95871760321c9ad110107f32eff89d8a3dd": {
     "facing": "ui"
+  },
+  "179650cf543e988ad224280d7fc9c38917214e27": {
+    "desc": "Verifier violation hint returned when the ws-decisions island open tag does not end with the exact template bytes.",
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-verifier-island-open-tag-byte-spelling",
+    "name": "Workshop Verifier: Island Open-Tag Byte Spelling"
   },
   "17995bf0c3ac017621471f6949b2652feeedbec6": {
     "desc": "Tool_result confirming MCP OAuth authentication completed for a server and its tools should now be available",
@@ -5291,6 +5474,9 @@
   "1895c99f9f01e2457abad898e1dbe968a7d75329": {
     "facing": "internal"
   },
+  "189645f61c013e1fced254a05801d4463c0d0b59": {
+    "facing": "ui"
+  },
   "189a8227639c7d44df72be1e4deb2045365d3261": {
     "facing": "ui"
   },
@@ -5426,6 +5612,12 @@
   "191ccbd6f3764e3a7c0bf1227873d19382d7aa3b": {
     "facing": "internal"
   },
+  "191e732abbb47c308c26a66c567e28ddc0f64dcf": {
+    "desc": "Refusal stating the published page carries no element for a named option of a decided item.",
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-published-page-no-option",
+    "name": "Tool Result: Artifact PR Review \u2014 Published Page Carries No Option"
+  },
   "1925fb46917fd5eb3bd4dbbbf915fcdb7df37d00": {
     "desc": "Verb phrase describing an irreversible asset delete, used in the ask message and its safetyCheck reason.",
     "facing": "model",
@@ -5482,6 +5674,12 @@
   },
   "19718bdca2a8fb795c84a18e58a8725718786ddf": {
     "facing": "internal"
+  },
+  "1975b4d74c29e8dd6e867d00506a292df289a268": {
+    "desc": "Refusal clause used when a worktree-isolated command cds to a runtime-computed location before running git.",
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-chdir-runtime",
+    "name": "Tool Result: Bash Worktree Git Chdir Computed At Runtime"
   },
   "1988d19c0a24a5c828281c27496bbb5bc2e9ca68": {
     "desc": "Model-facing fallback text inserted as a section body in the '# Auto Mode Setup & Customisation' environment-recon document handed to the /auto-mode-setup agent when a recon step throws.",
@@ -5566,6 +5764,12 @@
   },
   "19ec76edb3e378a12e8e36c6b26ea12b4818d501": {
     "facing": "ui"
+  },
+  "19ec7cec17fc3322da93fd43010b977fe9b3ed9f": {
+    "desc": "Coordinator system-prompt paragraph on worker tools, MCP, and delegating skills via the Skill tool.",
+    "facing": "model",
+    "id": "system-prompt-worker-tools-context-skills",
+    "name": "System Prompt: Worker Tools Context Skills"
   },
   "19f3b99476c3c58ece26dab0d95910767617aa5f": {
     "facing": "ui"
@@ -5810,6 +6014,12 @@
   "1b54d9119178cc2d7c6c570567eec7d25f8fbf84": {
     "facing": "ui"
   },
+  "1b57fcd728577b1a419b345858c2b64f5654976f": {
+    "desc": "Header fragment noting additional artifacts with auto-replies paused or stopped and no connection.",
+    "facing": "model",
+    "id": "tool-result-artifact-watches-list-stopped-plus-fragment",
+    "name": "Watches List Stopped-Plus Fragment"
+  },
   "1b5e0fd4a726f9f572b9abee2494a1d030f24c4b": {
     "desc": "Follow-on guidance when the publish path is an image, telling the model to wrap it in an HTML page instead of publishing the image directly.",
     "facing": "model",
@@ -5882,6 +6092,9 @@
   "1ba260621eb8fa25f2f1a912fe2812df530ed5c3": {
     "facing": "ui"
   },
+  "1bab9205c6d2ead372acb68161ab70c270789a39": {
+    "facing": "internal"
+  },
   "1badd605d451284993a863a5762cc91946555dd7": {
     "desc": "Verifier violation hint returned when a workshop page places a <style> element inside SVG.",
     "facing": "model",
@@ -5896,6 +6109,12 @@
   },
   "1bb77a9d4cb743773e560cff96f0037d2737219b": {
     "facing": "ui"
+  },
+  "1bc4592aa7b1f66852f3f9df0ade1b03270e0faa": {
+    "desc": "Reason clause for refusing a worktree whose .git entry exists but could not be examined.",
+    "facing": "model",
+    "id": "tool-result-worktree-isolation-git-entry-unexaminable",
+    "name": "Tool Result: Worktree Isolation \u2014 .git Entry Unexaminable"
   },
   "1bc530a4864481509ecef32edfd7b40ef35ff089": {
     "facing": "internal"
@@ -5959,6 +6178,9 @@
   },
   "1c06b2e373e4f4c752327d50511c218dbee20ea8": {
     "facing": "internal"
+  },
+  "1c0b054bbb8787e9cc623832ed8c5827ece45fbe": {
+    "facing": "ui"
   },
   "1c0e58875ccd87ead658489ed528ea93b0b3bb21": {
     "facing": "internal"
@@ -6221,6 +6443,9 @@
   "1d386320c2e89fbf986db8fa969c6dce9c9cef1e": {
     "facing": "internal"
   },
+  "1d4524ca4ace7facfbb5fa31db869b164d23cd2e": {
+    "facing": "ui"
+  },
   "1d50809236e17a71c2e507452ab96b30e2b387ce": {
     "facing": "ui"
   },
@@ -6271,6 +6496,12 @@
   },
   "1da8e9275f259fecc4543d40adfaa2c886a7fd63": {
     "facing": "internal"
+  },
+  "1dab926b0ea9edf799f9ed316c8d00f1314d2e9a": {
+    "desc": "Suffix on Skill-tool denials in a coordinator session telling the model to report that /command is not available here.",
+    "facing": "model",
+    "id": "tool-result-skill-invoke-coordinator-not-available",
+    "name": "Skill Invoke: Coordinator Session, Tell User Unavailable"
   },
   "1dae043d0f9eb1cc2d0bceef1248c934c25a0374": {
     "facing": "ui"
@@ -6323,6 +6554,9 @@
   "1df8efd6d202a0ffa50ce7ce1b89a7a06c987904": {
     "facing": "internal"
   },
+  "1dfbdb2ab0a2640d23980c6dc1bcd86b41618486": {
+    "facing": "internal"
+  },
   "1e0171f9343d98a67fae68054a57f9d2c7ea2f3e": {
     "facing": "internal"
   },
@@ -6367,6 +6601,9 @@
   },
   "1e2c47f305c7570d52e59dcfe82977b8764139a4": {
     "facing": "internal"
+  },
+  "1e31da392cef31c7d0a3ccf002e3c848f17ee775": {
+    "facing": "ui"
   },
   "1e3ae99df8d725546a424a8219ffb2db93638bcb": {
     "facing": "internal"
@@ -6509,6 +6746,9 @@
     "id": "tool-description-claude-in-chrome-read-page-ref-id",
     "name": "Tool Description: Claude in Chrome Read Page ref_id Param"
   },
+  "1eea826fbbd567890f04949414f749e3e42a2262": {
+    "facing": "ui"
+  },
   "1eef81336ace191137adf75cdbc5750a8ef63540": {
     "desc": "Verifier violation hint returned when a workshop page element carries a ping attribute.",
     "facing": "model",
@@ -6539,6 +6779,9 @@
   "1f11dd8b346e0f92067c37f07c2524e8911db477": {
     "facing": "ui"
   },
+  "1f151f6a6ff56e52c24f0197ed6624742810c5bb": {
+    "facing": "internal"
+  },
   "1f21ab75d675d58829342cb3c5bcb462a37ea5a0": {
     "facing": "internal"
   },
@@ -6556,6 +6799,12 @@
   },
   "1f371dbf60f1aee0175b3e4b16bdae96df533162": {
     "facing": "internal"
+  },
+  "1f39dc28e0b005a22a82df9551fb03b645dccb54": {
+    "desc": "validateInput rejection when room_send topic does not match the required lowercase topic grammar.",
+    "facing": "model",
+    "id": "tool-result-artifact-room-send-invalid-topic",
+    "name": "Tool Result: Artifact room_send Invalid Topic"
   },
   "1f3cd21ddc0bf5c975c0c8cb58b36777ab901bcd": {
     "facing": "internal"
@@ -6599,6 +6848,9 @@
   "1f8796a8dcbbb45a437036aea88965b0779ade1c": {
     "facing": "internal"
   },
+  "1f89f04fe209c3bc5f9c66c8f6bac892ee2de959": {
+    "facing": "ui"
+  },
   "1f90c0d976d53d856ee81f49daf256a03709982f": {
     "desc": "teach_batch description about pre-batch screenshot anchor invariant.",
     "facing": "model",
@@ -6625,6 +6877,9 @@
   },
   "1fb0b6ddbc6667ad95b221a35b1c5a6465ab9cfc": {
     "facing": "ui"
+  },
+  "1fc7297ef3af0d86a507d24b38874e3e1ffe5733": {
+    "facing": "internal"
   },
   "1fc9e66f61252e646a71464e07497d59e26d39be": {
     "facing": "internal"
@@ -6676,6 +6931,9 @@
     "facing": "model",
     "id": "tool-result-artifact-files-resolves-outside-working-dir",
     "name": "Tool result: Artifact file resolves outside working directory (cont.)"
+  },
+  "2001c04a28c5c7060e76a374b37bc01ee23d6e2d": {
+    "facing": "internal"
   },
   "200d80ec6c1be646bc803957a4f3263e2c6fc5c3": {
     "facing": "ui"
@@ -6891,6 +7149,9 @@
     "name": "Data: /teleport Remote Control reconnect pending"
   },
   "2143ee16f4aef5ad5542c7bc11138f550ee0b796": {
+    "facing": "ui"
+  },
+  "21480d47f1c097a23908b621d295812491c0271b": {
     "facing": "ui"
   },
   "2148d1816ceb1e68d9c81d77a53aec80211d026c": {
@@ -7184,6 +7445,9 @@
   "230b29f4d18f20c02b750c9e6fe599fe919be490": {
     "facing": "internal"
   },
+  "230ecbf24a6073a00a9473d8dd17a40fc14f47fa": {
+    "facing": "internal"
+  },
   "231214536501b1ed0831a46c25d5ea88a6582237": {
     "desc": "Code-review skill prompt fragment substituted when the Task tool is unavailable, instructing the model to work every angle in one pass instead of fanning out.",
     "facing": "model",
@@ -7226,11 +7490,20 @@
     "id": "tool-parameter-chrome-ref-file-input-upload",
     "name": "Tool Parameter: Chrome ref (file input upload)"
   },
+  "233cab5eab418234261632f37d6c65c1b0a705a1": {
+    "facing": "internal"
+  },
   "233d7d7e07c51f39244c3f9065b42bae93d51e93": {
     "facing": "ui"
   },
   "233f1ed415f16dc7471302e87f584ef2e0ce2339": {
     "facing": "internal"
+  },
+  "233f80e1ca98c22e6007e243786a68ca571f8e24": {
+    "desc": "resume_replies tool_result when auto-replies are resumed while the live watch is still connecting.",
+    "facing": "model",
+    "id": "tool-result-artifact-resume-replies-resumed-connecting",
+    "name": "Tool Result: Artifact Resume Replies Resumed Connecting"
   },
   "2341ee0868bcd01e218e3cc4f9f6c87f3fbcc9b6": {
     "desc": "False-branch Phase 2 Design text for the 5-phase plan-mode reminder; directs producing the implementation plan directly with background context, constraints, and a detailed plan.",
@@ -7282,6 +7555,12 @@
   },
   "2366861c4191b8edf391e529ebd1f9f44158bfa8": {
     "facing": "ui"
+  },
+  "236a1cd38977492ef973ed50f7532ac737920ff2": {
+    "desc": "Fail-closed Artifact deny message when a room-declaring publish cannot complete its permission check.",
+    "facing": "model",
+    "id": "tool-result-artifact-publish-room-disclosure-permission-check-failed",
+    "name": "Tool Result: Artifact Publish Room Disclosure Permission Check Failed"
   },
   "236a96d1a2056c5ec2798fb4e9944ebf4b7f4803": {
     "desc": "Description of the 'resumeFromRunId' input parameter in the Workflow tool's inputSchema; model-facing as part of the tool definition serialized to the model.",
@@ -7412,6 +7691,12 @@
   "23c4abeaae172d6d3487f5f939c980e6507c53f2": {
     "facing": "internal"
   },
+  "23c8af6d14b88f7ee79657e2de9b3a13f346ea2a": {
+    "desc": "Durable-wake failure reason: wake subscriptions are not enabled for the user's organization.",
+    "facing": "model",
+    "id": "tool-result-artifact-durable-wake-org-not-enabled",
+    "name": "Tool Result: Artifact Durable Wake Org Not Enabled"
+  },
   "23c974fe1f84eaf3d73b2d9c70680df70489d46a": {
     "desc": "Suffix on db_read save errors listing documents already written under out_dir that remain there.",
     "facing": "model",
@@ -7472,6 +7757,9 @@
     "id": "tool-result-artifact-live-subscription-invalid-slug",
     "name": "Tool result: Artifact live-subscription skipped (invalid slug)"
   },
+  "2423e321e5e2d941486c89bf65a30599b1a83435": {
+    "facing": "internal"
+  },
   "24259325515500bb04dec63f2204675da7aead90": {
     "facing": "internal"
   },
@@ -7492,6 +7780,12 @@
   },
   "243a4ddef9bcf416862befe6ea942a85a10af17a": {
     "facing": "ui"
+  },
+  "243bfeb729b9da7fb9a32a9fc8f698300d188c41": {
+    "desc": "Meta prompt injected when the recipient session refuses cross-session messages so this session must not wait or resend.",
+    "facing": "model",
+    "id": "data-cross-session-delivery-notice-refused",
+    "name": "Data: Cross-Session Delivery Notice (Refused)"
   },
   "243e4857aadb0f27ab7bdf9c08c01b7966e48d41": {
     "desc": "Notice within the memory system prompt that team memory is read-only this session and new memories cannot be persisted.",
@@ -7522,6 +7816,9 @@
     "facing": "model",
     "id": "slash-command-plugin-tag-unexpected-argument",
     "name": "Slash Command: /plugin tag \u2014 unexpected argument"
+  },
+  "244eb15aeab33b59b09f6b0d3122a89e3f622cab": {
+    "facing": "internal"
   },
   "245d18382eb7420a722ef830285416ca62ea40d4": {
     "facing": "internal"
@@ -7622,6 +7919,9 @@
   "24d7999f8c13c40d93430eb92f6d18ca3d82b702": {
     "facing": "internal"
   },
+  "24e8244eebd9e79def5e66f50873c8ad1f607a4b": {
+    "facing": "internal"
+  },
   "24fb54aec0b4d6d31ad65c6fef949f3ebdb70df6": {
     "facing": "internal"
   },
@@ -7663,6 +7963,9 @@
   },
   "2532714384456b953ee807505807e47688febefe": {
     "facing": "internal"
+  },
+  "25339d74b729af8ac72adfab5fd83434ec309795": {
+    "facing": "ui"
   },
   "2539661669c33146de975a9c979921147cfafe00": {
     "facing": "internal"
@@ -7708,6 +8011,12 @@
     "facing": "model",
     "id": "agent-prompt-permission-safety-judge",
     "name": "Permission safety-judge encouragement rule"
+  },
+  "255e2e72ec71c644025f1e1a6302504efc0b22a3": {
+    "desc": "Per-thread status label telling Claude the thread has not been activated for replies and that a human must activate it in the artifact view.",
+    "facing": "model",
+    "id": "tool-result-artifact-comments-thread-not-activated",
+    "name": "Artifact Comments Thread Not Activated"
   },
   "2562b7e91318db9220833bae46c884f6c8bb6fab": {
     "facing": "ui"
@@ -7859,6 +8168,12 @@
     "id": "tool-description-sendmessage-worker-recipient-rows",
     "name": "Tool Description: SendMessage Worker Recipient Rows"
   },
+  "262c46009105c26da8b2708980f47b3b04e1e699": {
+    "desc": "Failure detail from _Sf during MCP task restore, wrapped by M8a as a <result> task-notification injected into the model context.",
+    "facing": "model",
+    "id": "data-task-notification-mcp-task-restore-no-tasks-support",
+    "name": "MCP Task Restore: Modern Protocol Lacks Tasks Support"
+  },
   "26301cefea1b8182c91ae0cae3b431cde499faf8": {
     "facing": "ui"
   },
@@ -7942,6 +8257,12 @@
   },
   "267be3917e59e55cdead20e1c12120214289d0f8": {
     "facing": "ui"
+  },
+  "26817e87e3b312ec695967f8583fe9ddab0c00e6": {
+    "desc": "Durable-wake failure reason: no wake-webhook minter is reachable, so the subscription could not be registered.",
+    "facing": "model",
+    "id": "tool-result-artifact-durable-wake-no-minter",
+    "name": "Tool Result: Artifact Durable Wake No Minter"
   },
   "26846a5c8bc9da9e3e62c42ea441e6a0add1cf23": {
     "facing": "internal"
@@ -8240,6 +8561,15 @@
   "27df1124b5c9f09d0b4adac5b436dbe742e98d63": {
     "facing": "ui"
   },
+  "27e358143c7780119cc41b84f21fd8cf885210e8": {
+    "desc": "Thrown TelemetrySafeError from Owi/oEi when an MCP dial does not reach type:\"connected\", returned as the MCP tool error the model reads.",
+    "facing": "model",
+    "id": "tool-result-mcp-connect-not-connected",
+    "name": "Tool Result: MCP Server Not Connected"
+  },
+  "27e57047ba177ca83d13447f0f60d5cac1984c9d": {
+    "facing": "ui"
+  },
   "27eef82b95d8780285c433f5381f0bb802a65029": {
     "facing": "internal"
   },
@@ -8254,6 +8584,15 @@
   },
   "28079427846a952d7035e27e5be889450c4f4f0a": {
     "facing": "ui"
+  },
+  "280d83712ea111b073d7f6c32be7c4490b286643": {
+    "facing": "ui"
+  },
+  "28111dcd87e04e2539bd605595140cdade1fe50a": {
+    "desc": "QrT(void 0) clause when the watch is still connecting, telling the model comment-reach is not settled yet.",
+    "facing": "model",
+    "id": "tool-result-artifact-watching-auto-reply-connecting-clause",
+    "name": "Tool Result: Watching Auto-Reply Connecting Clause"
   },
   "28119cbca7a785ac708a5f13f283802d2f4b3ad6": {
     "desc": "Guides permission classification to block attempts to route around configured Edit, Write, or MultiEdit deny rules",
@@ -8696,6 +9035,9 @@
   "29e5bd570bb06841052262066c775a215109be75": {
     "facing": "internal"
   },
+  "29e6f901ac8406cca0c9e96e1d08d97df9e9a104": {
+    "facing": "ui"
+  },
   "29e81971682ddee7039f8530ad3c0c487430e92d": {
     "desc": "Deny message returned when the Artifact tool permission check fails before plan mode can verify a consent surface.",
     "facing": "model",
@@ -8726,8 +9068,14 @@
   "2a1d65337903f9719aa83186ba6353bf153c01ef": {
     "facing": "internal"
   },
+  "2a2682bddfa4b8c4cf9fe29f28b4b49c412d3a86": {
+    "facing": "ui"
+  },
   "2a27dedeee9e64d02db9b5bfd9c744f8ccea878e": {
     "facing": "internal"
+  },
+  "2a289505494415ad7f1aea843b2c458a6a7bda58": {
+    "facing": "ui"
   },
   "2a3d6b68b85da34e7e44229c3e0f556594096039": {
     "facing": "internal"
@@ -9167,6 +9515,9 @@
   "2c05a85d3448ec84e70c6e5aac9f70ce27e779fd": {
     "facing": "internal"
   },
+  "2c177414e91f2cb9467ada634a9033ec20209ccb": {
+    "facing": "internal"
+  },
   "2c21727ffd7d4c121c0f9748a5c2094ce12b4c30": {
     "facing": "internal"
   },
@@ -9214,6 +9565,12 @@
     "facing": "model",
     "id": "tool-description-claude-in-chrome-javascript-tool",
     "name": "Tool Description: Claude in Chrome JavaScript tool"
+  },
+  "2c60da63fdeffe3c62faaeae834629fb92257d3b": {
+    "desc": "Task-notification detail when auto-replies are resumed by resume_replies or re-enabled by publish after an interrupt pause or a killed live-updates task.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-replies-rearmed",
+    "name": "Data: Artifact Auto-Replies Re-Armed"
   },
   "2c63b925403742c4a2f36d71c7719c5b2ffaff4d": {
     "desc": "Sentence in the comments tool result telling the model that threads with comments sent to it appear first and remaining threads follow newest-first order.",
@@ -9277,6 +9634,9 @@
     "facing": "model",
     "id": "tool-result-artifact-db-op-not-valid-for-action",
     "name": "Tool Result: Artifact db_op Not Valid For Action"
+  },
+  "2c8c81a94b865f1fa93f2908c30acf2b9f2ea4c5": {
+    "facing": "ui"
   },
   "2c8cc204dc91ec11a81bb04eb4a1a5488ce8d265": {
     "facing": "internal"
@@ -9398,6 +9758,9 @@
   "2d2207e4b861856ff69e22e6ce83aa78857aa6b3": {
     "facing": "internal"
   },
+  "2d240a478c84b8d4380de043be3628c7fd4e366f": {
+    "facing": "ui"
+  },
   "2d24858ea5d7870ca88dd66eb963a8644b1ddc46": {
     "facing": "internal"
   },
@@ -9414,6 +9777,9 @@
     "name": "Data: Fork \u2014 nothing to fork yet"
   },
   "2d360b5ec3964a04846b2d5f0449ed6d1007034a": {
+    "facing": "ui"
+  },
+  "2d38d75fbb27bba8a3141581bf289bcd0b04482e": {
     "facing": "ui"
   },
   "2d39160caf98c28e289552e72c75eb74f9c389fa": {
@@ -9686,6 +10052,12 @@
   "2e53b51f126aeea59d904c7b79afd44b77ad3fc5": {
     "facing": "internal"
   },
+  "2e5dac0643739e3ee96b3eab26be6975ae84ba70": {
+    "desc": "Clause in the auto-reply pause disclosure warning that publishing without being asked, while handling a notification or wake-up, leaves auto-replies paused.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-unsolicited-publish-paused-clause",
+    "name": "Data: Artifact Auto-Reply Unsolicited Publish Leaves Paused"
+  },
   "2e6de416caa0eb6c112bba9f894ceb15eb1273d1": {
     "facing": "internal"
   },
@@ -9790,6 +10162,12 @@
   },
   "2ee85218866a19e0d9f6c52c176e4eaf9d0877b2": {
     "facing": "internal"
+  },
+  "2eea0e539c476263e1aea618b7435328ea0a75f6": {
+    "desc": "Reports that marketplaces were skipped on update because of managed policy.",
+    "facing": "model",
+    "id": "slash-command-plugin-marketplace-not-updated-managed-policy",
+    "name": "Slash Command: Plugin Marketplace Not Updated Managed Policy"
   },
   "2eee7a45c9070c3202b62e639475fd0691c957a3": {
     "desc": "Edit/Write validation error returned to the model when an isolated session edits a shared-checkout path.",
@@ -10052,6 +10430,12 @@
   "303fce5268e06140f90b120eb8f8ea97f0b9389c": {
     "facing": "ui"
   },
+  "3043fde5c9613ba20b269bd8b9f5cf9221fbb4a1": {
+    "desc": "Refusal stating the published page carries no question element for a decided item.",
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-published-page-no-question",
+    "name": "Tool Result: Artifact PR Review \u2014 Published Page Carries No Question"
+  },
   "3045540b2fdad60d5ffbb008d42c5a5d05efeca8": {
     "desc": "Artifact validateInput rejection returned to the model when the named interaction schema is not registered in this session, listing the available ones.",
     "facing": "model",
@@ -10300,6 +10684,9 @@
   },
   "319b8052ffaf876d85426476c56c858afbccfd80": {
     "facing": "internal"
+  },
+  "319d4d7a0efb0cfe64f534d4b1525aad8903f631": {
+    "facing": "ui"
   },
   "319e16ef559a580f17a5c89f67f8fa63af570ff9": {
     "facing": "ui"
@@ -10781,6 +11168,9 @@
   "33dc0432209cee382e5b1726babc50146c0d2d0a": {
     "facing": "internal"
   },
+  "33e3913699cb3a452cd20699ddcc395173cab091": {
+    "facing": "internal"
+  },
   "33eaa8b1230cc33c3a16bc02d6fd5e4fb202c7a8": {
     "facing": "ui"
   },
@@ -10804,6 +11194,9 @@
     "facing": "model",
     "id": "tool-description-croncreate-durability-session-only",
     "name": "CronCreate durability note (session-only)"
+  },
+  "33fd0ac9ea04aed315866d9f44d0ed5dff8e43e1": {
+    "facing": "ui"
   },
   "3408ed2792394c46222d4bc51a24ef43b5330a8e": {
     "facing": "ui"
@@ -11153,6 +11546,9 @@
   "3595ef8b10734fe7b810697f88031b8cfd8216fa": {
     "facing": "model"
   },
+  "35976ed100b29881f4695f3e73bfcb53c134755b": {
+    "facing": "ui"
+  },
   "359931f079e1285af428ddeb8187b3d1e42a19e6": {
     "facing": "internal"
   },
@@ -11254,6 +11650,9 @@
     "facing": "model",
     "id": "agent-prompt-workflow-skip-initial-question",
     "name": "Agent Prompt: Workflow skip initial question"
+  },
+  "361cff5166f27567fb991412fbd686bf9550e962": {
+    "facing": "internal"
   },
   "361fdf5637654d548d22a743a8f48c057fe7b542": {
     "facing": "internal"
@@ -11570,6 +11969,9 @@
     "id": "system-prompt-memory-both-directories-exist",
     "name": "Memory both-directories-exist note"
   },
+  "37cdfdad195ee206e42059f5f45f310b940df13f": {
+    "facing": "internal"
+  },
   "37d13cb961baeb15f9ed60ebb3c66fd9e04b8298": {
     "desc": "Write tool description fragment requiring the Read tool be used first on an existing file.",
     "facing": "model",
@@ -11623,6 +12025,9 @@
   },
   "3818f48554d9a88ac34a11a9de183e54e8b65d77": {
     "facing": "internal"
+  },
+  "381b2ddd9e826e432ec91d4a8933100ac169a7c6": {
+    "facing": "ui"
   },
   "381b5e0eb1a347f9d978716f1df4ad9704a6a98c": {
     "desc": "Included in an Artifact read result when viewers see the current version but future publishes will not advance the share pin.",
@@ -11750,6 +12155,9 @@
   "38a475d10d215c523ce3f57b877cf1715e054c01": {
     "facing": "internal"
   },
+  "38a5da2930c0fa079704d7025c370738a7a721a4": {
+    "facing": "ui"
+  },
   "38ac367a11e76c79550e21b19ebc5bf36440dadf": {
     "facing": "ui"
   },
@@ -11771,8 +12179,23 @@
   "38b9676ad3eb1135137ecd2f543932060167b233": {
     "facing": "internal"
   },
+  "38bac5a5b86e9dca972f085cc181c939c0dddadc": {
+    "facing": "internal"
+  },
+  "38bc121530826886fdeddb2e3cf9e1fe5be52e8a": {
+    "desc": "Marketplace validation warning that a request-routing/identity header on a catalog entry is dropped at download.",
+    "facing": "model",
+    "id": "slash-command-plugin-validate-routing-identity-header-dropped",
+    "name": "Plugin Validate Routing Identity Header Dropped"
+  },
   "38c565d3cffe79f1a08c0947ac255262ee90e442": {
     "facing": "ui"
+  },
+  "38c6282f241f4e888b3756ac634eaef926a96f96": {
+    "desc": "set_cwd rejection when the requested path is a network path or obfuscated spelling.",
+    "facing": "model",
+    "id": "tool-result-set_cwd-unsafe-network-path",
+    "name": "Set Cwd Unsafe Network Path"
   },
   "38ce6eece0ed6b407016ecaf20506b650f9bc733": {
     "facing": "internal"
@@ -11906,6 +12329,12 @@
     "id": "system-prompt-title-generator-language",
     "name": "Title generator language instruction"
   },
+  "3986dd2659b8b1c2640f65942b34d6127382c95e": {
+    "desc": "Per-invocation Artifact.description() for a room_send live broadcast that is not stored and delivered at most once.",
+    "facing": "model",
+    "id": "tool-description-artifact-room-send",
+    "name": "Tool Description: Artifact room_send"
+  },
   "39885a921e2be62affd51c5ff5d8bc052793a7d7": {
     "desc": "The main system-prompt identity opening line sent to the model.",
     "facing": "model",
@@ -12017,6 +12446,12 @@
   "39f392951a30b1f7988f4f4dc1dbfcddbdbed64d": {
     "facing": "ui"
   },
+  "39f3d313081c1ea3c095560aca3caf991a03ea4a": {
+    "desc": "QrT default clause interpolating the raw auto-reply state when it is not one of the named cases.",
+    "facing": "model",
+    "id": "tool-result-artifact-watching-auto-reply-fallback-clause",
+    "name": "Tool Result: Watching Auto-Reply Fallback Clause"
+  },
   "39ff29695462268e3fdad3fd50b331199ce2a967": {
     "facing": "ui"
   },
@@ -12046,6 +12481,9 @@
     "facing": "model",
     "id": "tool-result-artifact-preflight-slug-mismatch",
     "name": "Tool Result: Artifact preflight slug mismatch"
+  },
+  "3a10413de4056226a8763d9058716c2ed729a49f": {
+    "facing": "internal"
   },
   "3a12b09e6907ca00635e734964fc07c1a714ca4f": {
     "desc": "Conditional tail concatenated onto the same emitted string, stating how many servers did stay disabled.",
@@ -12103,6 +12541,12 @@
     "facing": "model",
     "id": "tool-description-bash-output-not-shown-to-user",
     "name": "Tool Description: Bash \u2014 output not reliably shown to the user"
+  },
+  "3a5749fbaa865e76c5f3f897347c37ab515810c5": {
+    "desc": "Advice tail passed as y to i() when the command is too complex to verify, returned as bash stderr via Mft.",
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-split-into-plain-commands",
+    "name": "Tool Result: Worktree Git Split Into Plain Commands"
   },
   "3a5a7968ce6b69130b5d7ded1f84991ec3f82773": {
     "facing": "internal"
@@ -12388,6 +12832,15 @@
     "facing": "model",
     "id": "data-auto-mode-safety-classifier-unavailable",
     "name": "Data: Auto mode safety classifier unavailable"
+  },
+  "3ba8b1dc33c33279c741bc08259b55a4e5cd2924": {
+    "desc": "Setup note injected into the /schedule command prompt when the skill is only being preloaded.",
+    "facing": "model",
+    "id": "slash-command-schedule-note-skill-preload-env-deferred",
+    "name": "Schedule Note Skill Preload Env Deferred"
+  },
+  "3baaeaa10e44786c966e7ae12485b224c961afc9": {
+    "facing": "ui"
   },
   "3babf04def9be914f48c249bce06b823528c5958": {
     "facing": "internal"
@@ -12694,6 +13147,9 @@
     "facing": "model",
     "id": "data-task-notification-background-agents-webfetch-no-artifacts-tail",
     "name": "WebFetch agents have nothing to check"
+  },
+  "3d25e80fd4794f99b42ebc33e00cdc2512150994": {
+    "facing": "internal"
   },
   "3d2f08cb36e771e0765fbfd2111e4ec4696c3a5c": {
     "facing": "ui"
@@ -13166,6 +13622,9 @@
   "3f7b670017cda1fb45c718684889614f66162122": {
     "facing": "ui"
   },
+  "3f7da9e7d7f5d7db629b20b130bb8ef0ff31926b": {
+    "facing": "ui"
+  },
   "3f821bd968f778560d600a0fa30f50b05743622a": {
     "facing": "ui"
   },
@@ -13207,6 +13666,9 @@
     "facing": "model",
     "id": "tool-result-artifact-content-egress-blocked",
     "name": "Tool Result: Artifact Content Egress Blocked"
+  },
+  "3fc40d678d608366a24b42c06b7fe1d988920395": {
+    "facing": "ui"
   },
   "3fc9f727944b62a5de10b86df2157f907427f908": {
     "facing": "internal"
@@ -13274,6 +13736,12 @@
   "400dfb2da115d8e64a115efc0cfb95fb9f7bdf1d": {
     "facing": "internal"
   },
+  "400e7141842fc6612e74f3ace2e8f954392cf2cd": {
+    "desc": "Artifact-tool error when verify cannot read captured diagnostics.",
+    "facing": "model",
+    "id": "tool-result-artifact-verify-diagnostics-read-failed",
+    "name": "Artifact Verify Diagnostics Read Failed"
+  },
   "4025e6f2edc6b6a1fe63ea41227c79b5c2fcc312": {
     "facing": "internal"
   },
@@ -13289,11 +13757,17 @@
   "403a8f337203b607bfb40767219a557f82732dc4": {
     "facing": "internal"
   },
+  "404a34d20922c88523b9de3c65f4f6fc4d72f198": {
+    "facing": "ui"
+  },
   "404c59163fb611b7fe8c15edd6da01727ea005be": {
     "desc": "Judge prompt asking the model to grade a coding agent's output against a stated criterion",
     "facing": "model",
     "id": "agent-prompt-eval-criterion-grader",
     "name": "Agent Prompt: Eval criterion grader"
+  },
+  "40550ccce6a6cf83a76e70561fe99bcbbbf78dd6": {
+    "facing": "ui"
   },
   "40582a03b104dbd0d1c252f905466d1bde81ea24": {
     "facing": "internal"
@@ -13334,6 +13808,12 @@
     "id": "slash-command-plugin-validate-frontmatter-not-mapping",
     "name": "Plugin validate: frontmatter is not a YAML mapping"
   },
+  "408105bb1fe5cacb2c274ac3cb820ce82548f2c2": {
+    "desc": "Publish-manifest warning returned to the model when multiple manifest entries resolve to one connector and are merged.",
+    "facing": "model",
+    "id": "tool-result-artifact-manifest-connector-merge-warning",
+    "name": "Artifact connector-merge warning"
+  },
   "408e7db6439df950fdd813dc2b411c4a3b9f9f09": {
     "desc": "Harness prefix prepended to a Slack-relayed user turn whose provenance the server verified as human, so the model treats it as this agent's user speaking.",
     "facing": "model",
@@ -13345,6 +13825,9 @@
     "facing": "model",
     "id": "slash-command-copy-written-to-file",
     "name": "Slash Command: /copy \u2014 content written to a file"
+  },
+  "4092beb78953bb828a949a596befe86c9cd51c02": {
+    "facing": "ui"
   },
   "4097d9e241a9e7711c0c61d971893f4be4366631": {
     "facing": "internal"
@@ -13496,6 +13979,9 @@
   "416d7160dd0c5192b77cf14d5f53fcff4ea04302": {
     "facing": "ui"
   },
+  "416e661220f5df3f963deda018ca5ab959ad7cbf": {
+    "facing": "internal"
+  },
   "41774dbfb9a77ba744766d9b6f3f334272e5f90a": {
     "desc": "Examples of input the date parser must reject as INVALID",
     "facing": "model",
@@ -13629,6 +14115,9 @@
     "facing": "internal"
   },
   "4207be098b95778cafa5eb81ee78f38c26cf62b2": {
+    "facing": "ui"
+  },
+  "420b9cda91afb060951981d8772b9c262cfc2e38": {
     "facing": "ui"
   },
   "420bab2f57ea107f0d3f10dc627c38ff2d616b17": {
@@ -13856,6 +14345,12 @@
   "4323b80e953dd60f555494f3c5ca39639f32de6f": {
     "facing": "internal"
   },
+  "4324e0b5c4cc5462ba1e01d5a0f2f0c620ff405a": {
+    "desc": "Workshop HTML verifier hint when the island open-tag sentinel appears more times than real island elements.",
+    "facing": "model",
+    "id": "tool-result-artifact-workshop-island-byte-sequence-collision",
+    "name": "Tool Result: Artifact Workshop Island Byte Sequence Collision"
+  },
   "4325d000cf51633723a6d9c56084486534b24b26": {
     "desc": "Announces whether brief mode is enabled and whether user-facing output must use the SendUserMessage tool",
     "facing": "model",
@@ -13879,6 +14374,9 @@
     "facing": "model",
     "id": "system-reminder-project-memory-picked-project-unavailable",
     "name": "System Reminder: Project Memory Picked Project Unavailable"
+  },
+  "432dc3c1a01e80d9979231477a50638c1f5cfbd2": {
+    "facing": "internal"
   },
   "433a950fae3e7d3d79f10f4027f06c81eb43d519": {
     "facing": "internal"
@@ -13927,6 +14425,12 @@
   },
   "43798cc1e218b76742b17eb98940ca63223f672f": {
     "facing": "ui"
+  },
+  "437f0c785d25e43db8e4d63b2961e2203cab7195": {
+    "desc": "Watch tool_result explaining the live watch is armed, including auto-reply state branches.",
+    "facing": "model",
+    "id": "tool-result-artifact-watching-armed-status",
+    "name": "Tool Result: Artifact Watching Armed Status"
   },
   "43822d93e0cdb7c5a3786c7168316152e3123778": {
     "facing": "internal"
@@ -14330,6 +14834,12 @@
   "44e759878bbced8f59216f6b119a3b85bdd8650e": {
     "facing": "ui"
   },
+  "44e793d046d78cd33d46f6789dbda47bdd30376b": {
+    "desc": "Advice tail when rgv() flags an unverifiable git invocation, returned as bash stderr via Mft.",
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-run-with-literal-args",
+    "name": "Tool Result: Worktree Git Run With Literal Arguments"
+  },
   "44eaaa9a49a0de9ca40a0186d503b36e9c009bd5": {
     "facing": "internal"
   },
@@ -14422,6 +14932,12 @@
   },
   "455c3855e2410a2513a13327d29a4886a92c16b2": {
     "facing": "ui"
+  },
+  "455edb51f9b751abcf71790e2a5d5c2b95321ef2": {
+    "desc": "Watch-action tool_result note that a durable wake is arming in the background and is not registered until status lists it.",
+    "facing": "model",
+    "id": "tool-result-artifact-durable-wake-arming-note",
+    "name": "Tool Result: Artifact Durable Wake Arming Note"
   },
   "455f08f8e7494b55b5d11eceef0f1ddc425cfe78": {
     "facing": "internal"
@@ -14539,6 +15055,9 @@
     "facing": "model",
     "id": "tool-result-artifact-pr-review-republish-provenance-policy-deny",
     "name": "Tool Result: PR-review republish provenance read policy deny"
+  },
+  "45e492f79ba47d9ebd8960a7d4402277fd6452ad": {
+    "facing": "ui"
   },
   "45e54f01ff2efdffb8884c545119323e4315d1b5": {
     "facing": "internal"
@@ -14666,6 +15185,12 @@
   "46a36dc3f181aac8c54f4eda08da89a6aec48ad1": {
     "facing": "internal"
   },
+  "46a6342ef3ae7510a935a7cda1e4f7a0f23c5e5b": {
+    "desc": "Watches-list tool-result header listing artifact rooms this session joined as an agent.",
+    "facing": "model",
+    "id": "tool-result-artifact-rooms-joined-as-agent",
+    "name": "Artifact Rooms Joined As Agent"
+  },
   "46a9d3f440fe6a001813c847ee8fda7a5566cc89": {
     "facing": "internal"
   },
@@ -14736,6 +15261,9 @@
     "facing": "ui"
   },
   "4702c800e28e77cc41ac2fe16b60387f203167bc": {
+    "facing": "internal"
+  },
+  "47048255831462e2a83b91fc6c7270dc8139ede6": {
     "facing": "internal"
   },
   "4707e1ddcd3489175698fbab3fff439d648bd3aa": {
@@ -14840,6 +15368,12 @@
   "476c23d92a05d20f1ef7c119c937353f79bc2ec1": {
     "facing": "internal"
   },
+  "476c79c586f95c472bab440f723544dae7ac94d6": {
+    "desc": "Meta message injected into the coordinator conversation when it tries to run a user-invocable-only skill that cannot run in coordinator mode.",
+    "facing": "model",
+    "id": "tool-result-coordinator-skill-user-invocable-only",
+    "name": "Coordinator Skill User-Invocable-Only"
+  },
   "47700f85e48eea8f651cce86d5ed9bfa092edffb": {
     "desc": "Describes the SearchSkills tool for finding relevant claude.ai skills by keyword and suggesting add cards when results fit",
     "facing": "model",
@@ -14907,6 +15441,9 @@
     "facing": "ui"
   },
   "47b0600bd84e245fb7c4ac5ec406bbadca39568b": {
+    "facing": "ui"
+  },
+  "47b25079695b5fa575a155c036ca5831a1eec618": {
     "facing": "ui"
   },
   "47c060caef0f89ecbf85904f6ab4ae6b72f4feec": {
@@ -14996,6 +15533,9 @@
   "482711f8d96ba736d7cce9b2023d33be6b59d014": {
     "facing": "internal"
   },
+  "482de2e90e05f86ed2f0416a3c28648509983d49": {
+    "facing": "internal"
+  },
   "482f86dd04fa1b486c970b5954d7fdf9a3897a46": {
     "facing": "internal"
   },
@@ -15064,6 +15604,9 @@
     "facing": "model",
     "id": "tool-result-artifact-create-endpoint-not-available",
     "name": "Artifact create endpoint unavailable"
+  },
+  "4865c5d50a608408b95a002a812f01ec1ea73d37": {
+    "facing": "ui"
   },
   "48667d2e36c8be2bfe9ae0e97efa93860a9cb9c4": {
     "facing": "internal"
@@ -15275,11 +15818,17 @@
     "id": "slash-command-ultrareview-launched",
     "name": "Slash Command: /ultrareview Launch Confirmation"
   },
+  "4990b16d910ae7cf7c352d0c478fecc3380d7ae3": {
+    "facing": "ui"
+  },
   "49a5916bef9af55ebe45b193d70289e485ca47f9": {
     "facing": "ui"
   },
   "49a6bc881044d717f0fce6cbb59b2d2744ec0548": {
     "facing": "internal"
+  },
+  "49aaa06e0ee02e8971859c8e6bbf2c35725d2b20": {
+    "facing": "ui"
   },
   "49add0f0bd1437ad32db4d97ea49084be968c9e0": {
     "facing": "internal"
@@ -15401,6 +15950,9 @@
   "4a2da6688097a125524ea46ff231f1ce83ed98d9": {
     "facing": "ui"
   },
+  "4a2feee33714b301de326956e441028851fc82f3": {
+    "facing": "internal"
+  },
   "4a307758e13ccc9b5073cb7900f4a722c1bf8a3a": {
     "facing": "ui"
   },
@@ -15418,6 +15970,12 @@
     "facing": "model",
     "id": "skill-claude-api-no-language-detected",
     "name": "claude-api skill: language-detection fallback"
+  },
+  "4a3e5c7d361ec4c8a9cbde33c6e4104b1275e21c": {
+    "desc": "validateInput rejection when room_send data is present but is not a JSON object.",
+    "facing": "model",
+    "id": "tool-result-artifact-room-send-data-must-be-object",
+    "name": "Tool Result: Artifact room_send Data Must Be Object"
   },
   "4a42287cc457d1dc2f1dec0ecc8a0b449baab90e": {
     "facing": "internal"
@@ -15550,6 +16108,9 @@
   },
   "4ae66824410719d7d6a563ea53a93092a5657a37": {
     "facing": "ui"
+  },
+  "4aefe4488966b9ca9a3b6bf42ca75cc66f94f01c": {
+    "facing": "internal"
   },
   "4b00bc16e3275ae52f31ef9cab1f015f5632e905": {
     "facing": "internal"
@@ -16028,6 +16589,9 @@
     "id": "tool-result-design-op-unrecognized",
     "name": "Design op unrecognized"
   },
+  "4cfc3e88e023a415eec37b7e018cfb6d53019640": {
+    "facing": "internal"
+  },
   "4d068b85d4d124184d81774dc24b97425c9ee44b": {
     "facing": "internal"
   },
@@ -16204,6 +16768,9 @@
     "facing": "model",
     "id": "tool-result-computer-use-opened-app-note",
     "name": "Computer-use opened-app note"
+  },
+  "4dba24ac082b02010472bdf0e3364462b800c3e0": {
+    "facing": "ui"
   },
   "4dbbcd1f060690c8b37292bc7ef4372422121c09": {
     "desc": "Read-tool validateInput error returned to the model when the target is a binary file.",
@@ -16454,6 +17021,12 @@
   "4edc6617d658bfea82c92a56c8d4a40c2b25603d": {
     "facing": "internal"
   },
+  "4ee25d6e6947f07fc45e3c66e27863e9d076298e": {
+    "desc": "Refusal stating that a republish changes the option set of a decided item, which must keep the options the writer clicked among.",
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-republish-option-set-changed",
+    "name": "Tool Result: Artifact PR Review \u2014 Republish Changes A Decided Option Set"
+  },
   "4ee694bd7d3e2d69a84287333bb43cda5b8f5328": {
     "facing": "internal"
   },
@@ -16540,6 +17113,12 @@
   },
   "4f58fe91b4f5f471224930b9bf12f615c64c492f": {
     "facing": "internal"
+  },
+  "4f5f284bad93cff359005db619541b6b4365dea8": {
+    "desc": "Tool error returned to the model when an agent reference matches both a teammate and a background agent.",
+    "facing": "model",
+    "id": "tool-result-ambiguous-agent-id",
+    "name": "Ambiguous agent ID"
   },
   "4f66679c49dd14df0775e99726c74bc06a3cf2c1": {
     "facing": "internal"
@@ -16814,6 +17393,12 @@
   "50953a9331e81d91afd35e002ba6877cf7de8957": {
     "facing": "ui"
   },
+  "5096b547ebaab910025d11037e2f9de42cdd1695": {
+    "desc": "Artifact tool prompt() paragraph describing the room_send action as a live at-most-once broadcast to current viewers.",
+    "facing": "model",
+    "id": "tool-description-artifact-room-send-section",
+    "name": "Tool Description: Artifact room_send Section"
+  },
   "50970337f3d8a6fa7d50dfed485fc29492db2675": {
     "desc": "Computer tool region param description for the zoom action.",
     "facing": "model",
@@ -17051,6 +17636,12 @@
   "51a745e8b0ea33e943028f428dd11fafc61e3985": {
     "facing": "internal"
   },
+  "51a84aa3f6636c2c1c7e9a80a71e2b081461ac0c": {
+    "facing": "ui"
+  },
+  "51c14ae06be82bc567dcbe00f787a5143d259cb1": {
+    "facing": "internal"
+  },
   "51c4fdcae6c217ea6325be8f34927f910d47335e": {
     "facing": "internal"
   },
@@ -17177,6 +17768,9 @@
     "id": "tool-result-artifact-db-next-cursor-past-elided",
     "name": "Tool Result: Artifact DB Cursor Past Elided Documents"
   },
+  "524519b68ab3861fdadb94d4e82827245678d294": {
+    "facing": "ui"
+  },
   "524d4e3fb5632ffb3e6a88679ab8515b23fdaf17": {
     "desc": "Tells the model directory changes are switched off by a named permission rule in a named settings source and that the rule must be edited in /permissions before any move is possible.",
     "facing": "model",
@@ -17285,6 +17879,12 @@
   "52df412c928070ce1ae08934a3478404284cfed4": {
     "facing": "internal"
   },
+  "52e1f0c862e9b0faf8f019fa6ea38a92e598a6de": {
+    "desc": "resume_replies tool_result when reason is not_stopped: no auto-reply stop is recorded for this artifact, so there is nothing to resume.",
+    "facing": "model",
+    "id": "tool-result-artifact-resume-replies-no-stop-recorded",
+    "name": "Auto-Replies Not Resumed \u2014 No Stop Recorded"
+  },
   "52e25e18f869fee83131085b3fdce2553b08cd27": {
     "facing": "internal"
   },
@@ -17332,6 +17932,12 @@
   },
   "531b7e44cd2874e515e8078e52ebf41389ffda57": {
     "facing": "internal"
+  },
+  "531c97a569c1746dce628754093dab596f5af6b3": {
+    "desc": "Local-jsx /plugin install-options finish text when saved userConfig could not be read.",
+    "facing": "model",
+    "id": "slash-command-plugin-options-saved-options-unreadable",
+    "name": "Plugin Options Saved Options Unreadable"
   },
   "532442bd0918b0d9738143e7452be5a92f4b2b9b": {
     "desc": "Restricts the memory consolidation job to read-only shell access plus deleting memory files and lists sessions to review",
@@ -17393,6 +17999,9 @@
   "534bd266833942f39e738fdaee4bc5741895a87f": {
     "facing": "internal"
   },
+  "5352871aa03cc72ce7d70128b08c789b8dfae828": {
+    "facing": "internal"
+  },
   "5352e165d08b4a91372859f1a8fd769b989c2c70": {
     "facing": "ui"
   },
@@ -17410,6 +18019,9 @@
     "facing": "model",
     "id": "tool-result-memory-store-temporarily-unavailable",
     "name": "Tool Result: Memory store temporarily unavailable"
+  },
+  "536220583eea698c1f3f130a4fc462a52c5376e1": {
+    "facing": "internal"
   },
   "536d1a50c3f5011c1d484df18bd8d5815fc68553": {
     "facing": "internal"
@@ -17434,6 +18046,12 @@
     "facing": "model",
     "id": "slash-command-rename-superseded",
     "name": "Rename superseded by newer rename"
+  },
+  "538b61bc549b571f117c7cdb441020189608ba0a": {
+    "desc": "Conflict notice that a locally modified memory file was kept after a remote delete and will resync.",
+    "facing": "model",
+    "id": "system-reminder-memory-local-copy-kept",
+    "name": "System Reminder: Memory Local Copy Kept"
   },
   "538c4fa49d81f5ef3fd519ac8429fbc28c410d4b": {
     "facing": "internal"
@@ -17611,6 +18229,12 @@
   },
   "547313505b6113351cef37b0e5f12bc2531643a8": {
     "facing": "internal"
+  },
+  "5479ce30c07b545ab0b88be24204f0be55325ff5": {
+    "desc": "QrT('paused') clause stating comments do not reach this watch right now.",
+    "facing": "model",
+    "id": "tool-result-artifact-watching-auto-reply-paused-clause",
+    "name": "Tool Result: Watching Auto-Reply Paused Clause"
   },
   "547a6f801c0b4cd36cb4bd67ec931f8143711418": {
     "facing": "internal"
@@ -17897,6 +18521,12 @@
   "55fa5c2cfa8f7834d5db73ad57ba7156c1650bf3": {
     "facing": "internal"
   },
+  "5601701e84750bc14acc7077692ace9f2a4a1d77": {
+    "desc": "Trailing sentence of resumed auto-replies notifications explaining how to pause them again or stop them for good.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-replies-rearmed-pause-hint",
+    "name": "Data: Artifact Auto-Replies Re-Armed Pause Hint"
+  },
   "560c1dad75e2aa9abb47f2dd9a3fde15dd0f2e69": {
     "facing": "ui"
   },
@@ -18032,6 +18662,12 @@
     "id": "system-prompt-saving-skills-propose-via-tool",
     "name": "System Prompt: Saving skills (propose via tool)"
   },
+  "56ba3c6762e7a76418702461503c377d2e870650": {
+    "desc": "Auth-source phrase naming a Console API key saved by an earlier /login as the credential taking precedence.",
+    "facing": "model",
+    "id": "tool-result-artifact-login-blocked-source-console-key-from-login",
+    "name": "Tool Result: Artifact Login Blocked \u2014 Console API Key From A Previous /login"
+  },
   "56bd0c286eca90717b93ec8dc54587d8e9fc824a": {
     "desc": "Environment block listing the last ten Claude Code releases and the running version, injected into the model context.",
     "facing": "model",
@@ -18056,6 +18692,9 @@
   "56dfe18d79e687c016dd0902c918bc7292020ef0": {
     "facing": "ui"
   },
+  "56e1c2b622f6218b738100c113c5d76f24517346": {
+    "facing": "ui"
+  },
   "56f530aa2b14fd497895cea2c4d53b6fd532f96b": {
     "facing": "internal"
   },
@@ -18068,11 +18707,20 @@
   "570aee2eeb1e6ae53ab1946daa948b3f8c354d00": {
     "facing": "internal"
   },
+  "570ebcda50a0a02cee13d8dbe89e8cb8c03a36e1": {
+    "facing": "internal"
+  },
   "5710e5aa9e3832c0e59d5e67a0a90c87262b9450": {
     "desc": "Opening <transcript> text block wrapping conversation history fed to an agent.",
     "facing": "model",
     "id": "data-transcript-opening-tag",
     "name": "Data: Transcript opening tag"
+  },
+  "571ae1882bc20153e2fb544aef071ba0931d07d9": {
+    "desc": "Verify tool_result when diagnostics were captured but none could be read into the result, so the render is unobserved.",
+    "facing": "model",
+    "id": "tool-result-artifact-verify-capture-unreadable",
+    "name": "Tool Result: Artifact Verify Capture Unreadable"
   },
   "572394aed45d3406e3bea19b0ca78c6b83e61049": {
     "facing": "internal"
@@ -18121,6 +18769,12 @@
   },
   "577aae0857fe062a0f182a9eb9cedb3538361cac": {
     "facing": "internal"
+  },
+  "577ea14550b877f7533ed0fe1652c8e93f6a454b": {
+    "desc": "Permission denial telling the model live room events cannot be sent from plan mode and must not be retried while planning.",
+    "facing": "model",
+    "id": "tool-result-artifact-room-send-plan-mode-denied",
+    "name": "Tool Result: Artifact room_send Denied In Plan Mode"
   },
   "57823f27ad8c6ba12e8cf2fa59102f2b9ca08f1e": {
     "facing": "ui"
@@ -18314,6 +18968,12 @@
     "id": "tool-result-send-message-notify-when-idle-peer-gone",
     "name": "Tool Result: Notify When Idle Peer Gone"
   },
+  "5871dcc621f21ff6c583f441ec05523f99c7d98b": {
+    "desc": "Advice tail when a wrapper runs before git, returned as bash stderr via Mft.",
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-run-directly-without-wrapper",
+    "name": "Tool Result: Worktree Git Run Directly Without Wrapper"
+  },
   "5871fc78c6f5e64bf8aec6e29090ab21f1819c65": {
     "facing": "internal"
   },
@@ -18419,6 +19079,9 @@
   "58d0169ceea5b842ef82b256e74b2f1fbb678173": {
     "facing": "ui"
   },
+  "58d14893b17151a0b091b6dec9e360b7764ae2c8": {
+    "facing": "ui"
+  },
   "58d300aaf63abaf151ea20703f198ded343b14e7": {
     "facing": "internal"
   },
@@ -18430,6 +19093,12 @@
   },
   "58d6987aea999f1d374aac12775fb8b486608116": {
     "facing": "ui"
+  },
+  "58d9f42f874d0f80644c9209ea19621d553486fe": {
+    "desc": "Permission denial that artifact runtime diagnostics can be read only for the user's own artifacts.",
+    "facing": "model",
+    "id": "tool-result-artifact-verify-owner-only",
+    "name": "Tool Result: Artifact Verify Owner-Only"
   },
   "58e449188637dcd19c24f10567e7278e380add65": {
     "facing": "internal"
@@ -18539,6 +19208,18 @@
   "59bb56fdac497f70cf4c034a88ed450510affb9b": {
     "facing": "ui"
   },
+  "59bddcc1edb08124ded5106adb2a7be24e37273c": {
+    "desc": "ROOM_CONSENT_CLAUSE appended to the publish permission-ask message when this session will join the artifact's live room.",
+    "facing": "model",
+    "id": "tool-result-artifact-publish-room-join-consent-clause",
+    "name": "Tool Result: Artifact Publish Room-Join Consent Clause"
+  },
+  "59c7e97fe03d675a923ad55ea8519a134f7a547f": {
+    "desc": "User-role framing for the permission safety judge when a subagent has finished and severity review is on.",
+    "facing": "model",
+    "id": "agent-prompt-permission-judge-subagent-hand-back",
+    "name": "Safety-Judge Subagent Hand-Back Framing"
+  },
   "59ce5addb84b46e29bbaed99ebcc1f22b792c23e": {
     "facing": "ui"
   },
@@ -18547,6 +19228,12 @@
   },
   "59d37c04768b8010b3c8a28314039d2809cfebcc": {
     "facing": "internal"
+  },
+  "59d40497791b00dd120ef0685fa113c9a645963d": {
+    "desc": "Header line of the Artifact watches tool_result counting watches in this session and stopped auto-replies.",
+    "facing": "model",
+    "id": "tool-result-artifact-watches-list-header",
+    "name": "Tool Result: Artifact Watches List Header"
   },
   "59d72f452e4fdc4ba0c5964ba38c5fbad0980930": {
     "desc": "Describe() for the projects/design-system tool input_schema 'group' (section label) parameter (rYp); model-facing.",
@@ -18585,6 +19272,9 @@
     "facing": "internal"
   },
   "59f15af03aab33ef3244385380bd1f230457f84f": {
+    "facing": "internal"
+  },
+  "59f43edcd327f011682cb9400af145329cc7ecbb": {
     "facing": "internal"
   },
   "59f637fb400eb17a0e4d541e30754883861913f2": {
@@ -18653,6 +19343,9 @@
   "5a3c14434254a183e7d70b090f2164c321bc0356": {
     "facing": "internal"
   },
+  "5a4279de74c6bc3201fe179b7a1f9e0b78592a76": {
+    "facing": "ui"
+  },
   "5a502a5448c81e79fb0ae742feb56202e5ca3f00": {
     "facing": "internal"
   },
@@ -18691,6 +19384,9 @@
   },
   "5a80b1ffe8d6ef25bad20884280ec688a99b1688": {
     "facing": "ui"
+  },
+  "5a83a817903a874ee0011e7c47d8212b44a0f19f": {
+    "facing": "internal"
   },
   "5a8cab948359f81229607880bcd9a4965d06b2f8": {
     "desc": "Meta note in the coordinator command-block message explaining that listed subcommands still route to their own dedicated commands.",
@@ -18911,6 +19607,9 @@
     "id": "data-auto-mode-recon-bucket-scan-empty",
     "name": "Data: Auto-Mode Recon Bucket Scan Collected Nothing"
   },
+  "5b78eee7f4a1671a0315ebfba0515f7cd326e631": {
+    "facing": "ui"
+  },
   "5b8258e0c762f93424dffc0bb01eed579c6bd44b": {
     "facing": "internal"
   },
@@ -19039,6 +19738,12 @@
   },
   "5c4f8292dafb48cfa22bbe6c70394d391473bf0b": {
     "facing": "internal"
+  },
+  "5c504afc105b4287e54ce93ee75424cfa81056d0": {
+    "desc": "Optional parenthetical on the name-chord receipt stating that comments sent to Claude meanwhile are being answered on this later turn.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-catch-up-now-clause",
+    "name": "Data: Artifact Auto-Reply Catch-Up Now Clause"
   },
   "5c5189b3ebff1cf45651fa6d6fc64ab83a4da056": {
     "facing": "internal"
@@ -19249,6 +19954,9 @@
     "facing": "model",
     "id": "system-prompt-coordinator-comms-tool-only-channel",
     "name": "System Prompt: Coordinator comms-tool-only channel"
+  },
+  "5d8d4d7fdbe1b06773d05feb33f333de4b052c18": {
+    "facing": "ui"
   },
   "5d8f2a5941768ab45a686a8bddd26a2411fd49cf": {
     "desc": "Text block substituted for a document attachment in the model's prompt.",
@@ -19544,6 +20252,12 @@
     "id": "tool-result-artifact-asset-upload-symlink-outside-read-paths-qualifier",
     "name": "Asset upload symlink-escape qualifier"
   },
+  "5ec5fa752ef4bfb52cf637c109a4575db37c8f90": {
+    "desc": "Validation warning that an archive headersHelper entry has no sha256 pin; included in /plugin validate onComplete output.",
+    "facing": "model",
+    "id": "slash-command-plugin-validate-headers-helper-no-sha256",
+    "name": "Plugin Validate: HeadersHelper Missing Sha256 Pin"
+  },
   "5ec7b13539c1478eabfa6bb0ec0bccaf3eb70b6a": {
     "desc": "Content block carrying the user's answer to an agent-surfaced AskUserQuestion.",
     "facing": "model",
@@ -19781,6 +20495,9 @@
     "id": "slash-command-rate-limit-options-auto-continue-armed",
     "name": "Slash command: Rate limit options auto continue armed"
   },
+  "5fef959c0b7189c420ce75d82c2aa7c10e91f836": {
+    "facing": "internal"
+  },
   "5ff2144f02c0fee67a28178c1d4660c66251f405": {
     "desc": "chrome read_network_requests urlPattern param: optional substring filter for request URLs.",
     "facing": "model",
@@ -19918,6 +20635,9 @@
     "facing": "model",
     "id": "system-prompt-memory-save-team-scoped-writable-store",
     "name": "System Prompt: Save team-scoped memories in writable store"
+  },
+  "60854e33d40ed929329fc7c038ddad8747b0d037": {
+    "facing": "ui"
   },
   "6087f8f49c89d830c1707038611cc570a5fa0912": {
     "desc": "Refusal returned by the artifact PR-review approve-stamp validator when a stamp.input value is not one of the anchored PR's identifiers, an approve word, or the create method word. Reworded 2.1.221 id (the create-method word was added to the allowed set); id reused.",
@@ -20060,6 +20780,9 @@
   "6110f8573efda7a2523e8d4ad8704c93cf2519b6": {
     "facing": "internal"
   },
+  "611a0672f0be305b611bc89fcfb4356164b74cbd": {
+    "facing": "ui"
+  },
   "612241e119b2d58fb06c58e1f84bbf889e559c53": {
     "facing": "ui"
   },
@@ -20177,6 +20900,12 @@
   "61adf43e1ecfe750ee61bec22645930d38614b55": {
     "facing": "internal"
   },
+  "61ae1a8c736519b6394f8e3b65e2d7f2d637bb1d": {
+    "desc": "Inner instruction of the interrupt pause disclosure: the user's interrupt paused the watches; do not republish just to re-enable auto-replies unless asked.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-interrupt-paused-instruction",
+    "name": "Data: Artifact Auto-Reply Interrupt Paused Instruction"
+  },
   "61b35525d3021e0ce1f2c56e32ae2e9b8f78207c": {
     "facing": "ui"
   },
@@ -20216,6 +20945,12 @@
   "61cb703843c08078676652ca259ad6966e8552b9": {
     "facing": "ui"
   },
+  "61d36aa3b26d660d0bc8bc56241124f3fb94a765": {
+    "desc": "Watch/status tool_result line while a live subscription is connecting and is not yet a watch.",
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-arming",
+    "name": "Tool Result: Artifact Live Subscription Arming"
+  },
   "61db1b62175545415db434c454e75891f6060bd8": {
     "facing": "internal"
   },
@@ -20224,6 +20959,9 @@
     "facing": "model",
     "id": "tool-result-request-access-permission-not-granted",
     "name": "Tool Result: request_access Permission Pending"
+  },
+  "61f07ac75f14ede0e748017a1f2d3131ff44a4d1": {
+    "facing": "ui"
   },
   "61f199791d951f14a0537e24248c4865b096b5e7": {
     "desc": "Description of the \"value\" input for the browser form_input tool, sent to the model in the tool schema.",
@@ -20555,6 +21293,9 @@
     "id": "tool-result-artifact-stored-capability",
     "name": "Artifact stored-capability note"
   },
+  "63492e8198da2a94dadccd091256696034ad49c6": {
+    "facing": "ui"
+  },
   "634bd59d184a545ac70c7890173d75557573051a": {
     "facing": "internal"
   },
@@ -20717,6 +21458,9 @@
   "641a3288774d0b4f273d33995828ac8db4754dc0": {
     "facing": "internal"
   },
+  "643270534a290059f9e02cfb5ce7d876b56d8d29": {
+    "facing": "ui"
+  },
   "643aa685be8616c5cd1a219de92c1e114a999201": {
     "desc": "Warns the model that handing findings to claude.ai raised an exception and that the pull request should be checked before manual posting.",
     "facing": "model",
@@ -20738,6 +21482,9 @@
   "6455009ee88e42e1a25be64582c3d64c06563d96": {
     "facing": "internal"
   },
+  "645be52f2fdd62ff77fb52dca1f0326a3e809ff8": {
+    "facing": "ui"
+  },
   "6461eeb0de89362a42cb26bdd3d94f984ec6a504": {
     "facing": "ui"
   },
@@ -20749,6 +21496,9 @@
     "facing": "model",
     "id": "system-prompt-memory-recall-available-memories-list",
     "name": "System Prompt: Available memories list for recall"
+  },
+  "646ac9995d8f9fe26062fe30f89e85c87093157a": {
+    "facing": "internal"
   },
   "6477133c1ae192306b553382b203d3d77f0405f8": {
     "facing": "internal"
@@ -20772,6 +21522,9 @@
     "facing": "ui"
   },
   "649572f11f55998882403524ef69558ffbc140eb": {
+    "facing": "internal"
+  },
+  "64985c95cea600a20591c4dd426c221a1e8e3599": {
     "facing": "internal"
   },
   "64a0f761f67a0646606aeffad4dbb10fb607cad6": {
@@ -20851,6 +21604,12 @@
     "facing": "model",
     "id": "system-reminder-coordinator-message",
     "name": "System Reminder: Coordinator message"
+  },
+  "654e7f743f4c4cf418bec2006d05facdd52d8595": {
+    "desc": "QrT('stopped') clause stating comments do not reach this watch and that resume_replies re-enables them.",
+    "facing": "model",
+    "id": "tool-result-artifact-watching-auto-reply-stopped-clause",
+    "name": "Tool Result: Watching Auto-Reply Stopped Clause"
   },
   "65551c5317828435f6fca2bec755a68a178be9e7": {
     "facing": "ui"
@@ -21251,6 +22010,9 @@
     "id": "tool-description-computer-use-screenshot-filtered",
     "name": "Computer-use screenshot description (filtered)"
   },
+  "66b2a6bfc8d633a1009e764206b8d7505e432149": {
+    "facing": "internal"
+  },
   "66b4b6b4b96c51f5d26fb4dd177d1e8a8a1086d9": {
     "desc": "ClaudeDesign validation hint fragment returned to the model (data vs content).",
     "facing": "model",
@@ -21285,6 +22047,9 @@
     "facing": "internal"
   },
   "66d5911a47f914aef2c0ed133aedc0e4fc449c8d": {
+    "facing": "internal"
+  },
+  "66d74e44139ae9c393761adf71532c0a8dfba22e": {
     "facing": "internal"
   },
   "66d9d22b46562adc17dc287a7e7ea5518a925a74": {
@@ -21509,6 +22274,12 @@
   "67cd54359fb06f8e66c05059d20b055358ece0aa": {
     "facing": "ui"
   },
+  "67d047acb387becad7429529d23585791c09b744": {
+    "desc": "Addendum to the Artifact tool description explaining live-room publish, join, inbound page events as data, and room_send.",
+    "facing": "model",
+    "id": "tool-description-artifact-live-room",
+    "name": "Tool Description: Artifact Live Room"
+  },
   "67d5eabab6052f247a3c6c58051567124ab74353": {
     "desc": "Tells the model the mode was already plan so nothing changed, which distinguishes a no-op from a fresh switch.",
     "facing": "model",
@@ -21657,6 +22428,9 @@
     "facing": "ui"
   },
   "68913cd22de12317fb3ebb933acecfde84e0d7cf": {
+    "facing": "ui"
+  },
+  "68950818b2d0267ce8629377a572e9c4a30e3141": {
     "facing": "ui"
   },
   "689ba96cc06e21563590af123938c9e01ca79b44": {
@@ -21842,6 +22616,12 @@
     "id": "tool-result-artifact-publish-upload-failed-retry-slug-tail",
     "name": "Artifact publish upload-failed retry tail"
   },
+  "6994fb01cfec188b17bc76827201fa8876a20372": {
+    "desc": "Reason clause for refusing a worktree because git could not be run to resolve it.",
+    "facing": "model",
+    "id": "tool-result-worktree-isolation-git-unrunnable",
+    "name": "Tool Result: Worktree Isolation \u2014 Git Could Not Be Run"
+  },
   "699db3aded974c03df5ca2f590ca8d6922b0402e": {
     "desc": "Fragment of the model-facing message stating auto mode cannot determine the safety of an action.",
     "facing": "model",
@@ -22010,6 +22790,9 @@
   "6a35591d98726d1da87d2bcc010703fe6c369924": {
     "facing": "internal"
   },
+  "6a3784d610510c0673e596e946a457efae176c59": {
+    "facing": "ui"
+  },
   "6a379759d7559c3ba4569c4c778baee0a00afcd9": {
     "desc": "Warns that listed apps are blocked by computer-use policy, cannot be overridden in Settings, and must not be accessed",
     "facing": "model",
@@ -22114,6 +22897,9 @@
   },
   "6a93ae40b28b0f6ba7e5ac7975e06140f44124a0": {
     "facing": "internal"
+  },
+  "6a93bdede08b4c492ba38b39a18e0230fe1734e2": {
+    "facing": "ui"
   },
   "6a96fce88f421e971bd1e74667f326baeacadf21": {
     "facing": "internal"
@@ -22340,11 +23126,20 @@
     "id": "tool-result-claude-design-truncated",
     "name": "Tool result: Claude Design result truncated"
   },
+  "6bb46e2af34fd1e60756f8eb4957eb3a60fe910c": {
+    "facing": "ui"
+  },
   "6bb87925f2a33cc6c99fe58df9e7a95b22f73e62": {
     "desc": "Optional clause appended to the artifact auto-reply stop-disclosure notification body telling Claude the kill-all-agents gesture disarms auto-replies session-wide.",
     "facing": "model",
     "id": "data-task-notification-artifact-auto-reply-kill-all-gesture-clause",
     "name": "Auto-reply stop disclosure \u2014 kill-all gesture clause"
+  },
+  "6bbb58b1502629ada68046394b9a5446a5eca5f1": {
+    "desc": "Decision-provenance failure when published-page text uses markup or a character reference this CLI's writers never emit, so the recorded decision cannot be verified.",
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-republish-unrecognized-entity",
+    "name": "Tool Result: Artifact PR-Review Republish Unrecognized Entity"
   },
   "6bc1178060fc545a5913a3431da9bf5211dd5c24": {
     "desc": "Note appended to the SendMessage model tool result about other same-named agents.",
@@ -22679,6 +23474,9 @@
   "6d5d09f9d3eda4d067ff458fbab5f556850bff3e": {
     "facing": "internal"
   },
+  "6d68886889507e678c1922d7a4000bda66d18e82": {
+    "facing": "ui"
+  },
   "6d6beb10adb19945ae8ba882a13dec2053f920db": {
     "facing": "internal"
   },
@@ -22988,6 +23786,9 @@
   "6f320cbca5ac41a9b4a78ad3b46acc5a17dd5ea9": {
     "facing": "internal"
   },
+  "6f36a5bc3d12969cafec6ac796ff9f576a859f5f": {
+    "facing": "ui"
+  },
   "6f3995ced76f723d340d59dfb1178cbde9ec40d8": {
     "facing": "internal"
   },
@@ -23035,6 +23836,12 @@
     "facing": "model",
     "id": "tool-result-bash-path-blocked-deny-rule",
     "name": "Bash path blocked by deny rule"
+  },
+  "6f723e6cfbedd2deea5f72ac9d45a309ad51fbf5": {
+    "desc": "validateInput rejection returned to the model when action room_send is missing the artifact url.",
+    "facing": "model",
+    "id": "tool-result-artifact-room-send-requires-url",
+    "name": "Tool Result: Artifact room_send Requires URL"
   },
   "6f73bbf675adbaac739c05000958933fe4b8e754": {
     "desc": "Error result telling the agent the file is missing and to create it (Write tool) before retrying with the same path.",
@@ -23429,11 +24236,20 @@
   "7119ed1c2d251e1100377be5f557fdd1a9638f7f": {
     "facing": "ui"
   },
+  "711e182e772b47c503b94bdd6de098333797699e": {
+    "desc": "toAutoClassifierInput line describing a pending verify diagnostics read, including the unattended-notification clause when that applies.",
+    "facing": "model",
+    "id": "data-artifact-verify-auto-classifier-input",
+    "name": "Artifact verify Auto-Classifier Input"
+  },
   "7124862014b045bd89d2b3385818944068e965e9": {
     "desc": "Injected with a cloud-review task notification when the review produced no postable findings.",
     "facing": "model",
     "id": "system-reminder-cloud-review-post-no-findings",
     "name": "System Reminder: Cloud Review Post No Findings"
+  },
+  "71268c983e36dc7cb455aa010c9c6fd6ae4a8616": {
+    "facing": "ui"
   },
   "712848f83620027fd6ee37c2a30b4cdb209b5b1e": {
     "facing": "internal"
@@ -23518,6 +24334,9 @@
     "facing": "model",
     "id": "data-context-tip-situation-parallel-investigation",
     "name": "Data: Context Tip Situation \u2014 Parallel Investigation"
+  },
+  "7188f1d6d016dacbab2e4997b38a900f6056a328": {
+    "facing": "internal"
   },
   "718f6711342423ae80c246385f67e31c9dacc8c9": {
     "desc": "System-prompt line telling the parser to omit the time component for date-only inputs.",
@@ -23726,6 +24545,12 @@
     "id": "tool-result-bash-clamp-non-bash-surface-denial-prefix",
     "name": "Tool Result: Bash Clamp Non-Bash Surface Denial Prefix"
   },
+  "72a55997beeff5e9249238ce4d3138363b4ae31f": {
+    "desc": "Coordinator-mode system-prompt bullet: Skill loads instructions inline read-only, and execution is handed to workers.",
+    "facing": "model",
+    "id": "system-prompt-coordinator-skill-tool",
+    "name": "System Prompt: Coordinator Skill-Tool Guidance"
+  },
   "72a8c154c2e1971e743ac11625cca9bba49e0fa6": {
     "facing": "internal"
   },
@@ -23932,6 +24757,12 @@
     "facing": "model",
     "id": "tool-result-async-agent-launched-briefly-tell-user",
     "name": "Tool Result: Async Agent Launched (briefly tell user)"
+  },
+  "736429927a0df8a53c00f7a80f3983bb50283c14": {
+    "desc": "Cowritten-branch qualifier inside the artifact-read ownership header, noting the page may include other writers' contributions.",
+    "facing": "model",
+    "id": "data-artifact-read-cowritten-contributors-qualifier",
+    "name": "Data: Artifact Read Cowritten Contributors Qualifier"
   },
   "736602dd78a949b4f19a6d7377fd51a7d75430d7": {
     "facing": "ui"
@@ -24140,6 +24971,9 @@
   "743b7c46bf397916ead7c9179aacee6f4b746dea": {
     "facing": "internal"
   },
+  "743d347922395dad4992a561f95fa4a05acff856": {
+    "facing": "ui"
+  },
   "74438ff08ebfea8b0d3481cd324f35304802c356": {
     "desc": "Meta message injected into the coordinator conversation when it tries to run an MCP prompt that cannot run in coordinator mode.",
     "facing": "model",
@@ -24257,6 +25091,9 @@
     "id": "tool-description-bash-running-in-background-result",
     "name": "Tool Result: Command Running In Background"
   },
+  "74e4d8ff3b398673b9a297be9a18d637dee10a0a": {
+    "facing": "internal"
+  },
   "74e835e87eddffbe663357daa6b2f404de12bd46": {
     "facing": "internal"
   },
@@ -24325,6 +25162,12 @@
   },
   "753d25a08073b34a0b24a917b0c866731409f5bc": {
     "facing": "internal"
+  },
+  "75454ea82499c48dac4a45412ef11c1cdc39165b": {
+    "desc": "Suffix on Skill-tool denials in a coordinator session when the user can still run the slash command by typing it themselves.",
+    "facing": "model",
+    "id": "tool-result-skill-invoke-coordinator-user-can-type",
+    "name": "Skill Invoke: Coordinator Session, User Can Type Command"
   },
   "754921b03f3b954dc9671814c36a82ea318725e9": {
     "desc": "The situation string of the \"code-review-before-ship\" usage-nudge object, injected into model context as part of the usage-nudge catalog.",
@@ -24455,6 +25298,9 @@
     "id": "slash-command-add-dir-added-for-session",
     "name": "Slash Command: /add-dir \u2014 added for this session only"
   },
+  "760ce1ff9a9b51e8ae8ed4d65988338a67f6a1d8": {
+    "facing": "ui"
+  },
   "760d4c11ec81c4066ac8a5a46f15cf4476886dd8": {
     "desc": "Trailing reminder appended to the auto-mode permission classifier prompt for the thinking-enabled severity+category grading pass.",
     "facing": "model",
@@ -24472,6 +25318,12 @@
     "facing": "model",
     "id": "tool-description-waitformcpservers",
     "name": "Tool Description: WaitForMcpServers"
+  },
+  "76285b333c43af2e6b599b4c38344bccf04da1ed": {
+    "desc": "Header when the requested artifact has watch activity in this session but no connected live watch.",
+    "facing": "model",
+    "id": "tool-result-artifact-watch-no-connected-watch-activity",
+    "name": "Tool Result: Artifact Watch No Connected Watch Activity"
   },
   "762bcb544b9e8dc439fad15826635bb4a689face": {
     "facing": "ui"
@@ -24574,6 +25426,12 @@
   },
   "76ca983c8209a4e505a772303263638b6997d2f9": {
     "facing": "ui"
+  },
+  "76ceb270a7ef433089d3b5e34415af7e9116ecd6": {
+    "desc": "Compare-failed reason string used when the template comparison itself threw, telling the model to see the debug log.",
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-republish-compare-threw",
+    "name": "Tool Result: Artifact PR-Review Republish Compare Threw"
   },
   "76d458edc4f6c4683f44cd5bb94542f339938832": {
     "facing": "internal"
@@ -24800,6 +25658,9 @@
   "77f8c5adcf5e982197ca63a6907d8ed60dbe6f4a": {
     "facing": "ui"
   },
+  "77fc8cc5ebd442e50fc37197f6990243ef38339e": {
+    "facing": "internal"
+  },
   "7811ab64b595a01009b5af18695385a2824ef614": {
     "facing": "internal"
   },
@@ -24835,6 +25696,12 @@
   },
   "783f62a8a8db3dacc18d273fd8c651ba5d4558ff": {
     "facing": "ui"
+  },
+  "784f437100f2ba163c5411b7e3c253bdd7e1ed7b": {
+    "desc": "Per-invocation Artifact.description() for action verify when the read was requested after an unattended auto-reply notification.",
+    "facing": "model",
+    "id": "tool-description-artifact-verify-unattended-notification",
+    "name": "Tool Description: Artifact Verify After Unattended Auto-Reply Notification"
   },
   "784f476e6622540aba09db0ffc4b4508d1691119": {
     "facing": "ui"
@@ -24946,6 +25813,12 @@
   },
   "78cfd7003575b2ad5a42870678e5b0db3c48effe": {
     "facing": "internal"
+  },
+  "78d507e7ccb5ba4dceb8627ead54cb62a86ee09b": {
+    "desc": "Name-chord-gesture branch of the auto-reply pause disclosure explaining that a later user-typed turn has already resumed the watches.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-name-chord-receipt",
+    "name": "Data: Artifact Auto-Reply Name-Chord Receipt"
   },
   "78e14e2b9881ed3d6fcb6960436cdeebb07fa59c": {
     "facing": "internal"
@@ -25322,6 +26195,9 @@
     "id": "tool-result-subagent-tools-matched-none-fragment",
     "name": "Subagent zero-tools: matched-none fragment"
   },
+  "7a95da63d7f9e68d5d3e6a25ce47f9e21734a6d2": {
+    "facing": "internal"
+  },
   "7a95db83504e49558fbe5d8842949361f4a00f0a": {
     "desc": "Refusal-reason clause returned to the model as the Bash tool's stderr when a worktree-isolated agent's command names its executable via a runtime-resolved glob that can't be verified as git.",
     "facing": "model",
@@ -25490,6 +26366,9 @@
     "id": "tool-result-artifact-pr-review-republish-cli-version-drift",
     "name": "PR Review Republish CLI Version Drift"
   },
+  "7b2dd3c21ba0730f8e723585540211ee92f06dc9": {
+    "facing": "ui"
+  },
   "7b3159e369bca91b608190d45495942d9587d3b1": {
     "facing": "ui"
   },
@@ -25563,6 +26442,9 @@
     "name": "Workshop Verifier: Page Too Nested To Verify"
   },
   "7ba0090fd4bf515fbd97e22fe4e226cdaced7d93": {
+    "facing": "ui"
+  },
+  "7ba8d72876e4f145ece611a334987f6928a7dc54": {
     "facing": "ui"
   },
   "7bae3f3f0643d5925c4c100b1d3c1ec686596b5f": {
@@ -25709,10 +26591,19 @@
     "id": "system-prompt-todo-usage",
     "name": "Todo tool usage note"
   },
+  "7c444288d612336787439f9dadb9701018e9a738": {
+    "desc": "Durable-wake failure reason: the address is not an artifact this session can name, so registration will not succeed on retry.",
+    "facing": "model",
+    "id": "tool-result-artifact-durable-wake-invalid-slug",
+    "name": "Tool Result: Artifact Durable Wake Invalid Slug"
+  },
   "7c48d83070bcefa97afb5613780fb068084b69f8": {
     "facing": "ui"
   },
   "7c4ac4664685462c53060367a78c7ee13264969f": {
+    "facing": "ui"
+  },
+  "7c5147558a4ed31be2304941f3e68f6267c781dc": {
     "facing": "ui"
   },
   "7c53eaeb57fad942e9b67e16f04f5f705185fd2e": {
@@ -25817,6 +26708,9 @@
   "7cf0868db3da63331570e28b039c392c0f47bdfa": {
     "facing": "internal"
   },
+  "7cf433da0d7574767cb44d4effe4fd7d94e19dd5": {
+    "facing": "internal"
+  },
   "7cfd6553eac2cc49c4fb11683f050acfba3c0e3f": {
     "desc": "Returns a sanitized error result to the model when a device-bridge tool invocation throws.",
     "facing": "model",
@@ -25919,6 +26813,15 @@
     "id": "tool-result-artifact-resume-replies-cowork-deny-reason",
     "name": "Tool Result: resume_replies Cowork denial reason"
   },
+  "7d74f94939059892c531f2b781e6aece93ad99b4": {
+    "facing": "internal"
+  },
+  "7d7898bfd7f01ca47aca989fad2c9e1b27c3269c": {
+    "desc": "Withheld-reply task-notification tail stating a requested automatic edit needed a full rewrite, so the artifact was not changed.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-edit-rewrite-withheld-tail",
+    "name": "Data: Task Notification Artifact Auto-Edit Rewrite-Withheld Tail"
+  },
   "7d78c4b52f455c27db923c97eb46b24f9690f43b": {
     "desc": "Durable-job durability explanation within the cron tool description sent to the model.",
     "facing": "model",
@@ -25942,6 +26845,9 @@
     "facing": "model",
     "id": "data-ultraplan-approved-fresh-session",
     "name": "Ultraplan approved (fresh session) message"
+  },
+  "7da92c0b3ae79b20ad0966be3179286e8d4d12a8": {
+    "facing": "ui"
   },
   "7dacc50f6407e63c6a78a5b1bf6af724244fb190": {
     "facing": "internal"
@@ -26075,6 +26981,12 @@
   "7e74a23f914c96debaeb1a39a47ce680a0086bec": {
     "facing": "internal"
   },
+  "7e7ac8017b57ba7e6e11ffb173a266239b29e6df": {
+    "desc": "Advice tail when env carries an unmodeled flag, returned as bash stderr via Mft.",
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-run-without-env-flag",
+    "name": "Tool Result: Worktree Git Run Without Env Flag"
+  },
   "7e815aa0137354e510195aa99618910e00e5700d": {
     "facing": "ui"
   },
@@ -26095,6 +27007,9 @@
   },
   "7e909b28c99134475be8443927cbf8a34c281d5e": {
     "facing": "internal"
+  },
+  "7e9fc305ca258d26bf784a0e77e68121a2abf813": {
+    "facing": "ui"
   },
   "7ea07f2c70971cceff6cb6e2b152459582636353": {
     "facing": "ui"
@@ -26218,6 +27133,9 @@
   },
   "7f5a44f7b29ef9cbd32a5e933d87311069f53ecd": {
     "facing": "internal"
+  },
+  "7f5b27d6bc2a48fd44b040fd3636e5d78d64787a": {
+    "facing": "ui"
   },
   "7f67772dc5b7e17df32a380a831448fcc2ec06d3": {
     "facing": "internal"
@@ -26345,6 +27263,12 @@
   "8001eb3ff16f0bda59ad16639ed917a2dc72c2e1": {
     "facing": "internal"
   },
+  "800224a7fc3103b9ddd1a4430316929f6b7e0059": {
+    "desc": "SendMessage tool result when the target agent is already waking, so the message is queued for its next tool round.",
+    "facing": "model",
+    "id": "tool-result-send-message-agent-already-waking",
+    "name": "Tool Result: Send Message Agent Already Waking"
+  },
   "800851407695a5340d74a7ecfff3fc1aee49fbd8": {
     "facing": "internal"
   },
@@ -26392,6 +27316,9 @@
   },
   "802c2a9ae6202f9edc05266e327301736ad38d40": {
     "facing": "internal"
+  },
+  "802e7fa03726e6bc8dcc8c898145b9b0e1a137d4": {
+    "facing": "ui"
   },
   "80314364a60fa8ba7475056e367ae455080ecd3e": {
     "facing": "ui"
@@ -26723,6 +27650,12 @@
   "81a2ccd15432a86f54b9f9cd6c042ce2ed9214b4": {
     "facing": "internal"
   },
+  "81a9136e5c1f548c56b1eebba64f85d075970a2b": {
+    "desc": "Durable-wake failure reason: durable wake subscriptions were switched off for this session before registration ran.",
+    "facing": "model",
+    "id": "tool-result-artifact-durable-wake-flag-off",
+    "name": "Tool Result: Artifact Durable Wake Flag Off"
+  },
   "81b549dc01844eb12e90459f475d2f3c82ca43d2": {
     "facing": "internal"
   },
@@ -26905,6 +27838,9 @@
   },
   "82a50d3f299dc66aea1c82744c10d5527323a1c3": {
     "facing": "ui"
+  },
+  "82a55f2aa53c81336bbb8b6b664d9867c229c651": {
+    "facing": "internal"
   },
   "82b3105596e528eb3cb154450316da0b546b090e": {
     "desc": "Trigger description for the /doctor slash command covering setup health, unused extensions, memory cleanup, hooks, updates, and permission prompts",
@@ -27242,6 +28178,12 @@
     "id": "tool-result-sendmessage-plan-approval-inbox-write-failed",
     "name": "Tool Result: Plan approval inbox write failed"
   },
+  "841b55bbdd0e1f0b0f527faab64b0fef8c56dd52": {
+    "desc": "Artifact publish tool error when a 422 deploy is refused and the follow-up preflight rerun also fails.",
+    "facing": "model",
+    "id": "tool-result-artifact-publish-deploy-refused-prepare-rerun-failed",
+    "name": "Tool Result: Artifact Publish Deploy Refused Prepare Rerun Failed"
+  },
   "8420c388078a851ac0d9d27cfbd32025f9899f90": {
     "desc": "Error returned to the model when write_db's file_path is a network/UNC/automount path that cannot be sent.",
     "facing": "model",
@@ -27404,6 +28346,12 @@
     "id": "data-auto-mode-recon-settings-local-skipped",
     "name": "Data: Auto-mode recon settings.local skipped"
   },
+  "84cc14a416edd557b62c17c99bb12e302c2716e4": {
+    "desc": "Publish-time validation failure when the review-page MCP manifest names a host:local server that cannot carry the review grant.",
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-mcp-local-server-rejected",
+    "name": "Tool Result: Artifact PR-Review MCP Local Server Rejected"
+  },
   "84ce5b205a6ceb585f4cdadd6216ae1c1e19c630": {
     "facing": "internal"
   },
@@ -27548,6 +28496,9 @@
   "85700e019afa6ec740d71ef1e8d68eaa51401815": {
     "facing": "internal"
   },
+  "85703e081b98b77ef8025346c4705874dc52cf55": {
+    "facing": "internal"
+  },
   "8575e079970cbf121e0937692c1482a6b2e74132": {
     "facing": "internal"
   },
@@ -27619,6 +28570,9 @@
     "facing": "model",
     "id": "tool-result-artifact-workshop-verifier-refused-lead",
     "name": "Workshop Verifier Refusal Lead"
+  },
+  "85c7ebe1d3afe7d13173798d9a5052d58560a2ed": {
+    "facing": "internal"
   },
   "85c875f2bd744f50cdf82c4f4c1bddbbee497613": {
     "desc": "Permission-analysis reason returned when a [[ ]] conditional pattern leaf may contain a standalone `]]` closer; surfaced to the model as the Bash tool_result when the resulting ask is not granted.",
@@ -27920,6 +28874,9 @@
   "86d4249c2388f8c9dfb41e66b01f81a7e8220109": {
     "facing": "internal"
   },
+  "86dc43ef71b463d8d5ae4f4bfafcb742396ec624": {
+    "facing": "internal"
+  },
   "86dd4458309dbe37c3db487be8c8cb308b4d6c68": {
     "desc": "Sortable/filterable data-table artifact HTML body fragment served as a reference template by the Artifact skill.",
     "facing": "model",
@@ -27947,11 +28904,23 @@
     "id": "tool-result-artifact-workshop-verifier-violation-cap-reached",
     "name": "Workshop Verifier: Violation Cap Reached"
   },
+  "86f43c2b1ef8c7710b8dd47e79567f766340a3f3": {
+    "desc": "QrT('armed') clause appended to the watching tool_result explaining that to-Claude comments also reach this session.",
+    "facing": "model",
+    "id": "tool-result-artifact-watching-auto-reply-armed-clause",
+    "name": "Tool Result: Watching Auto-Reply Armed Clause"
+  },
   "86fb34486ce76f8aa707415701d233c46c629553": {
     "desc": "how_to_use guidance for the user memory type, single-user phrasing",
     "facing": "model",
     "id": "data-memory-type-user-how-to-use-solo",
     "name": "Data: Memory type \"user\" how-to-use (solo)"
+  },
+  "8706263b46f660b8cb7b3f4e246226af99fe8b0e": {
+    "desc": "Auth-source phrase naming the apiKeyHelper setting as the credential taking precedence over a claude.ai account.",
+    "facing": "model",
+    "id": "tool-result-artifact-login-blocked-source-apikeyhelper-setting",
+    "name": "Tool Result: Artifact Login Blocked \u2014 apiKeyHelper Setting"
   },
   "870a085494da893af76fdbf8396090a5a2dfefea": {
     "facing": "ui"
@@ -28000,6 +28969,9 @@
     "facing": "model",
     "id": "slash-command-export-failed",
     "name": "Slash Command: /export \u2014 export failed"
+  },
+  "87398c483dd61ca44ddfd9f39b14fab90a0dee80": {
+    "facing": "internal"
   },
   "873ed9d0cf8d25e4f12046e776b9538e2caab604": {
     "facing": "internal"
@@ -28427,7 +29399,22 @@
     "id": "system-reminder-ultracode-still-on",
     "name": "Ultracode still-on reminder"
   },
+  "89479eb6eb33869c5dc1837a2ba3bc2cffd6df61": {
+    "desc": "Status-row text when auto-replies are paused by the user's interrupt, also quoted in watches-list comment-reachability notes.",
+    "facing": "model",
+    "id": "tool-result-artifact-watches-list-auto-replies-paused",
+    "name": "Tool Result: Artifact Watches List Auto-Replies Paused"
+  },
+  "894ffe729a10c5af6d7bf0cfc623c222215ab407": {
+    "desc": "Default y advice interpolated into the worktree git-guard bash stderr (Mft) telling the model to rerun from the worktree without the redirect.",
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-run-equivalent-without-redirect",
+    "name": "Tool Result: Worktree Git Run Equivalent Without Redirect"
+  },
   "89565a10b02ce253e808f8774c51b430c491af3d": {
+    "facing": "internal"
+  },
+  "895e2a15ab6b088aa2cf8dadb084bf0c26b6b30e": {
     "facing": "internal"
   },
   "89615bf093dfe02e75b182769d96b030f86c9a26": {
@@ -28567,6 +29554,12 @@
   },
   "89e90c6ec67206c4ef9a92ad18ff59b75bd99584": {
     "facing": "ui"
+  },
+  "8a052995b64f15a4566f7ed33a559b8df52867e0": {
+    "desc": "Thrown to the model when publishing is blocked because a Read permission rule asked rather than allowed, telling it to retry so the read can be approved.",
+    "facing": "model",
+    "id": "tool-result-artifact-publish-reads-ask-retry",
+    "name": "Tool Result: Artifact Publish Reads Need Approval"
   },
   "8a0ada28462454bc264160d887b9f73c6cf767c5": {
     "facing": "ui"
@@ -28916,6 +29909,12 @@
     "id": "tool-description-computer-imageid-param",
     "name": "Tool Parameter: computer imageId"
   },
+  "8b6b10d80c18ed1948be9a6b8ee759eab6aca84a": {
+    "desc": "Reason phrase distinguishing an undecodable Chrome image from an unsupported media type in the not-inlined tool-result block.",
+    "facing": "model",
+    "id": "data-chrome-image-not-inlined-decode-failed",
+    "name": "Data: Chrome Image Not Inlined \u2014 Decode Failed"
+  },
   "8b7b3ac009b35fedc97bb65718c6928170520021": {
     "desc": "Artifact asset error for an organization artifact-policy block, defaulting to a generic policy sentence when the server gives no detail.",
     "facing": "model",
@@ -28941,6 +29940,9 @@
     "facing": "ui"
   },
   "8b87244d4945e8f4e0f5e17a5604e1c7fda72ec9": {
+    "facing": "internal"
+  },
+  "8b89d8f642207a01de192bea912db5505475cde0": {
     "facing": "internal"
   },
   "8b8d72a67fdb865491e2a5f98d5c73b2081657fa": {
@@ -28995,6 +29997,9 @@
     "facing": "ui"
   },
   "8bc471fe691acc269f83a98dbe9e70790bae2712": {
+    "facing": "internal"
+  },
+  "8bc8378a60c48b987edf805d362b0cece5898929": {
     "facing": "internal"
   },
   "8bcbecc8ec28584548f5bb7617a47de9a6b29a3c": {
@@ -29183,6 +30188,9 @@
     "id": "data-sandbox-install-filters-unverifiable",
     "name": "Data: Sandbox install \u2014 filters unverifiable"
   },
+  "8ceeef8cc39a675a0ee0df5e1ef853836d795c50": {
+    "facing": "internal"
+  },
   "8cf92afbd11e9789af856095ce86d4c1211e5382": {
     "desc": "Input-schema description for the SendFile tool's files parameter, telling the model to always pass an array of file paths.",
     "facing": "model",
@@ -29200,6 +30208,9 @@
   },
   "8cfafa95f51abbbbf16d363453b7e6f5c97e3969": {
     "facing": "ui"
+  },
+  "8d0138ed9c492c58bb55385149e6d9beb41c930c": {
+    "facing": "internal"
   },
   "8d0566133033c5e899838a1ba6eaf3a166bb664f": {
     "facing": "ui"
@@ -29321,7 +30332,16 @@
   "8d9047f3c4976419bdf70a36c8c3111a5295a947": {
     "facing": "ui"
   },
+  "8d92aa41607341264ee7563793ca79832790f77c": {
+    "desc": "Refusal clause used when a worktree-isolated command redirects git through a glob that expands at runtime.",
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-redirect-glob",
+    "name": "Tool Result: Bash Worktree Git Redirect Via Glob"
+  },
   "8d93fccf07055301065f393b76596a5edd263914": {
+    "facing": "ui"
+  },
+  "8d967901dab7d983fa5ebc7901161dbb0330a01c": {
     "facing": "ui"
   },
   "8d969caeb3ba44d069b2abe3df0ff507058b1932": {
@@ -29368,6 +30388,12 @@
     "facing": "model",
     "id": "system-reminder-prefer-browser-batch",
     "name": "System Reminder: Prefer browser_batch"
+  },
+  "8dd2f330418bd01a8924f66d336d1ea4591ce43b": {
+    "desc": "Permission denial when verify has no url and this session has no recent publish to target.",
+    "facing": "model",
+    "id": "tool-result-artifact-verify-no-target",
+    "name": "Tool Result: Artifact Verify No Target"
   },
   "8dd2fc07634e84d4bfe2d4ed8d62e649837d539e": {
     "facing": "internal"
@@ -29756,6 +30782,9 @@
   "8f73048fdf9e65204a1614d51170b984d790ef4f": {
     "facing": "ui"
   },
+  "8f7a28bfa0f11ae08765b81f16fb0f437bf3a2eb": {
+    "facing": "internal"
+  },
   "8f81bba903c20bb9569fa25e74302d54f6c643db": {
     "desc": "Warns the model that a project-memory re-pick is still being applied, making prior memory context stale until the connection is checked again.",
     "facing": "model",
@@ -29782,6 +30811,12 @@
   },
   "8f8e3712504e3f8927e452fce46c2909e91323d8": {
     "facing": "internal"
+  },
+  "8f906554bc9352a28ba4a94a1937f3945ba12615": {
+    "desc": "Per-thread status label in the comments tool_result used when the thread's Claude-replies activation state could not be read.",
+    "facing": "model",
+    "id": "tool-result-artifact-comments-thread-activation-unreadable",
+    "name": "Artifact Comments Thread Activation Unreadable"
   },
   "8f9395c0aec362fce03d5703ea105cd9ed609d77": {
     "desc": "States the accepted /effort arguments, which the model sees verbatim as local-command-stdout and repeats back when the user asks how to change effort.",
@@ -29917,6 +30952,12 @@
     "facing": "model",
     "id": "data-fork-blocked-restricted-launch-flags",
     "name": "Data: Fork blocked \u2014 session started with restricting launch flags"
+  },
+  "9034ebfac86cde7624dba1e6b119be6593951e68": {
+    "desc": "Artifact publish tool error when a 409-reset preflight leaves a started publish unfinished; tells the model to retry after the reset.",
+    "facing": "model",
+    "id": "tool-result-artifact-publish-reset-retry-unfinished",
+    "name": "Tool Result: Artifact Publish Reset Retry Unfinished"
   },
   "903bae55bd078f27dd72e845d3c55c61d1a37c72": {
     "facing": "ui"
@@ -30113,6 +31154,12 @@
   "91261e1a8671b35129791a34d10266d1eb678128": {
     "facing": "ui"
   },
+  "912b932caff3d6ef656c5e43063285b7c3a3187e": {
+    "desc": "Else-branch of ylm() when auto-replies are not armed: to-Claude comments can still reach the session if comment auto-replies are on.",
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-comment-wake-clause-unarmed",
+    "name": "Tool Result: Artifact Live Subscription Comment Wake Clause (Unarmed)"
+  },
   "912e588e7193cab1dcc5d473cb4355833b11015c": {
     "desc": "Tells the model the path resolved to a file rather than a directory and names the parent directory as the recovery target.",
     "facing": "model",
@@ -30188,6 +31235,18 @@
   "9196d3a16aae7521c968967e430bf6d718cc53ff": {
     "facing": "internal"
   },
+  "919707e5431d06cbebba32abee94fab93c37a6bc": {
+    "facing": "ui"
+  },
+  "91a33c5f2db9837a9a4a4410cf1315186ee24f89": {
+    "facing": "internal"
+  },
+  "91ad572f148391f0dd1c0cc8a6dfebf6354eedd1": {
+    "desc": "Advice tail paired with the git-named-twice reason, returned as bash stderr via Mft.",
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-one-invocation-per-command",
+    "name": "Tool Result: Worktree Git One Invocation Per Command"
+  },
   "91cb393b4bc30d55b6c0fe092e37b2fdd3f8063f": {
     "facing": "internal"
   },
@@ -30208,6 +31267,12 @@
   },
   "91d6d6ce990ac8f628b3e1ca188d1af5bba18a11": {
     "facing": "internal"
+  },
+  "91d9cf4976a6d23122cb16d1440fc3d7b5836f6c": {
+    "desc": "Meta prompt telling the model outbound messages were dropped at the recipient inbox and must not be retried in a loop.",
+    "facing": "model",
+    "id": "data-cross-session-delivery-notice-dropped-inbox",
+    "name": "Data: Cross-Session Delivery Notice (Dropped Inbox)"
   },
   "91e0bbfca7c3611e2eef9c152b7cc9dac0273d2d": {
     "desc": "inputSchema param description for the DesignSync tool's paths field (delete_files/unregister_assets); serialized into the model's tool list.",
@@ -30404,6 +31469,9 @@
     "id": "system-prompt-memory-example-linear-user",
     "name": "Memory example (user: Linear INGEST project)"
   },
+  "927d53913157c11b468c29a7d2119b845894f166": {
+    "facing": "internal"
+  },
   "928bfd3ac856494eb5ed43e500d8a178c3b4129e": {
     "desc": "XML <when_to_save> guidance for the reference memory type (when learning about external resources).",
     "facing": "model",
@@ -30511,6 +31579,15 @@
     "facing": "model",
     "id": "tool-result-workflow-still-running",
     "name": "Workflow still running"
+  },
+  "92f1701fe37a99f46e3cb86eeabff6a682018958": {
+    "facing": "ui"
+  },
+  "92f4d3da88d856d4f1c615c94dabb99663afd52d": {
+    "desc": "Optional clause appended to live-subscription tool results explaining that to-Claude comments also reach this session while the status row says auto-replies are armed.",
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-comment-wake-clause",
+    "name": "Tool Result: Artifact Live Subscription Comment Wake Clause"
   },
   "92f513f4a8da86d66112163704dcbb2040aac0a2": {
     "desc": "Tells the model this specific directory is excluded by a named rule and gives two ways forward \u2014 choose a directory outside the rule, or change the rule \u2014 so it can retry sensibly instead of repeating the same move.",
@@ -30683,6 +31760,12 @@
     "id": "system-prompt-project-memory-save-guidance",
     "name": "System Prompt: Project memory save guidance"
   },
+  "93ca147e1b910f0eb9a18ef426f29340bf00bb15": {
+    "desc": "decisionReason clause for resume_replies after an interrupt sweep: approving resumes unattended public replies including comments sent since the interrupt.",
+    "facing": "model",
+    "id": "tool-result-artifact-resume-replies-swept-rearm-clause",
+    "name": "Tool Result: resume_replies Swept-Interrupt Rearm Clause"
+  },
   "93d6de7a0f7f7a67c488e3c3a9dbc1c9b4289fb0": {
     "facing": "internal"
   },
@@ -30821,6 +31904,12 @@
   "9460dddd6c7b29e896baf2f31380c45c89d21d45": {
     "facing": "ui"
   },
+  "946272e9b4fb66b21601177a9c11483c651f8c7e": {
+    "desc": "Verify tool_result when no runtime diagnostics are readable because no viewer loaded the version, which is not a clean render.",
+    "facing": "model",
+    "id": "tool-result-artifact-verify-no-viewer",
+    "name": "Tool Result: Artifact Verify No Viewer"
+  },
   "9465df90c0214cbe0a6f318bd27d8b774cb5b3aa": {
     "facing": "internal"
   },
@@ -30835,6 +31924,12 @@
   },
   "946b639f3ae0b31b9d0dedc9e61ee5bd65950e5b": {
     "facing": "internal"
+  },
+  "946be9be346762128770da685578d9c41da802fc": {
+    "desc": "Durable-wake failure reason: registration was cancelled and the minted webhook trigger could not be released, so it still counts against the session.",
+    "facing": "model",
+    "id": "tool-result-artifact-durable-wake-trigger-release-failed",
+    "name": "Tool Result: Artifact Durable Wake Trigger Release Failed"
   },
   "946c8b536248b3bf58e959e6e5d953fa8c9842e8": {
     "desc": "Trailing text of the stalled-background-shell task notification injected into the agent's context, showing the last output and instructing it to stop and re-run with piped input or a non-interactive flag.",
@@ -30860,17 +31955,26 @@
   "949040306444464dd72a075ba854864fd84bddc7": {
     "facing": "ui"
   },
+  "94944c6468997647ffa1806703785fbc5a0e6017": {
+    "facing": "internal"
+  },
   "9499866875c0ebebb391e513039654494eea1ea8": {
     "desc": "REPL tool result for an async dispatch that is queued behind other evals, telling Claude its outcome arrives later as a repl-eval poll event and not to re-issue the code.",
     "facing": "model",
     "id": "tool-result-repl-async-dispatched-queued-behind",
     "name": "Async REPL dispatched \u2014 queued behind"
   },
+  "94a2cf98f1fea30bf475b5b950c779d034ae2e12": {
+    "facing": "ui"
+  },
   "94a4f789a1280051412a8ff50ccfa20ee1fc119c": {
     "desc": "Clause appended to the /loop tick prompt describing when the model should end the loop; injected into model context on each loop tick.",
     "facing": "model",
     "id": "data-loop-ending-conditions",
     "name": "Loop tick ending-conditions clause"
+  },
+  "94a7802c0e3ea587960f57dbc3d52a4a99f21ec4": {
+    "facing": "internal"
   },
   "94aa332c8569907b0efe62468a32ceef2dd45da4": {
     "facing": "internal"
@@ -30904,6 +32008,12 @@
   },
   "94d6af80946d61d7bee70c6f16eb61220274855b": {
     "facing": "ui"
+  },
+  "94dabc26a98bed287fcd7ad8b931d2b93d410cf2": {
+    "desc": "Fail-closed Artifact deny message when room_send cannot complete its permission check.",
+    "facing": "model",
+    "id": "tool-result-artifact-room-send-permission-check-failed",
+    "name": "Tool Result: Artifact Room Send Permission Check Failed"
   },
   "94dd99209ee38c5ff9074782625167a1942106b3": {
     "facing": "ui"
@@ -31007,6 +32117,9 @@
     "id": "system-reminder-fork-separate-session-coordination",
     "name": "System Reminder: Fork runs as a separate session"
   },
+  "955ab9d0cdc84b9d09e7444cdb301064e1f1713f": {
+    "facing": "internal"
+  },
   "955ec2fd13dca2c440864e16acaf4d4c789d5b2c": {
     "desc": "Prompt for an 'agent hook'",
     "facing": "model",
@@ -31075,6 +32188,12 @@
   },
   "95dc2c21c1ce3a2e9374cbbe707a5ef8356ac445": {
     "facing": "ui"
+  },
+  "95e1bde4730137047c338ad0062f81e45543ed11": {
+    "desc": "Publish-result sentence when liveSubscription is durable_registered: the wake subscription was already registered earlier in this session.",
+    "facing": "model",
+    "id": "tool-result-artifact-durable-wake-already-registered-this-session",
+    "name": "Tool Result: Durable Wake Already Registered This Session"
   },
   "95e405519c5875476e2c8a0e4b010da147756835": {
     "facing": "internal"
@@ -31169,6 +32288,12 @@
   "96579f170123b80143d04bb0a5ae86610df3d500": {
     "facing": "internal"
   },
+  "965aee4a8ec1193bf0a5029c4b0ec9b05e501072": {
+    "desc": "Subject clause naming the decided item whose question is spelled in a form this CLI does not produce.",
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-unverifiable-decided-item-question",
+    "name": "Tool Result: Artifact PR Review \u2014 Unverifiable Decided-Item Question"
+  },
   "965ce6ea74d58f1f431a3f18eff253c2dcca84f5": {
     "desc": "Names the rules the user just approved and tells the model it may re-run the previously denied commands, which is the recovery step that resumes the blocked work.",
     "facing": "model",
@@ -31197,6 +32322,9 @@
     "name": "Slash Command: /add-dir \u2014 added but persisting failed"
   },
   "96758412ee6249d808c93ceed078ba2e80d73124": {
+    "facing": "internal"
+  },
+  "967c062e7232e602334d39c04aec51eb929b94a9": {
     "facing": "internal"
   },
   "967c098b8774bba660ccbfaf2241486782f3aff5": {
@@ -31442,6 +32570,9 @@
   "97729da797ade0cde4df04b041ee3c4d848958b3": {
     "facing": "internal"
   },
+  "977b2e7d941d4097d0bfab0ed9ad8eed289fb61d": {
+    "facing": "ui"
+  },
   "977c4b2bdc59843a1e1909c95328f1f497966294": {
     "facing": "internal"
   },
@@ -31601,6 +32732,12 @@
   "985718cf089ba9a00a02ed4edb1f3e4d064f6b41": {
     "facing": "internal"
   },
+  "985ed628b35b376c3669c2dcbe130352b026f68a": {
+    "desc": "Task notification injected when artifact comment auto-reply is held back by the hourly cap, telling the model to read and reply with the Artifact tool.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-hourly-cap",
+    "name": "Data: Artifact Auto-Reply Paused (Hourly Cap)"
+  },
   "9863b808511461f1cacd6f897bb4cce936fae116": {
     "desc": "Optional clause appended to the auto-reply-stopped task-notification summary stating that comments sent to Claude meanwhile are picked up when the subscription is re-armed.",
     "facing": "model",
@@ -31636,6 +32773,9 @@
   },
   "98951b9f334fc3737dc7cbbc771f9b58cbc25f39": {
     "facing": "ui"
+  },
+  "989b13183c53343c02488b2ce3ea938334de88b7": {
+    "facing": "internal"
   },
   "989c9784111be3efd090ef1ae4dbef892e58ee0f": {
     "desc": "Empty watches tool_result in a remote session explaining that a watch is a durable wake subscription held by the artifact service.",
@@ -31862,6 +33002,9 @@
   "99e204eedffc3c45fd23206d7480b30bdbdf1b8e": {
     "facing": "internal"
   },
+  "99e74bf24291139c435e78e81304ddd7acd087cd": {
+    "facing": "ui"
+  },
   "99e8d5a805cd6d92d6d919924babbfae4926403c": {
     "desc": "First-watch permission message explaining live or remote durable notifications, session scope, and that republish notifications carry no content.",
     "facing": "model",
@@ -31943,6 +33086,12 @@
   "9a35c77b95544298b6e290d74df1d9d192134bd2": {
     "facing": "ui"
   },
+  "9a3d354d76b7ad914d828be603823e93602550c7": {
+    "desc": "Header line counting diagnostic entries returned in the artifact verify tool result.",
+    "facing": "model",
+    "id": "tool-result-artifact-verify-diagnostics-count-header",
+    "name": "Artifact Verify Diagnostics Count Header"
+  },
   "9a4676b967a7ece35aedd47e6399fc3223428ee6": {
     "facing": "internal"
   },
@@ -31993,6 +33142,9 @@
   },
   "9a86839f96b509d495e9d6416f6695a3fb27d918": {
     "facing": "internal"
+  },
+  "9a92da7ddb14b6b360b5ca8505579787809c37b8": {
+    "facing": "ui"
   },
   "9a939080c4e25fc9da276bbb3b392cebe35c48b8": {
     "facing": "internal"
@@ -32066,6 +33218,12 @@
   "9ad6946e31821ffe06c37a39faa364199c1949e7": {
     "facing": "ui"
   },
+  "9adc11e19be44cf318bf68996c8284240fa7119c": {
+    "desc": "Plugin update skipped message when archive fetch needs an explicit headersHelper run; passed to /plugin local-jsx onComplete via setResult.",
+    "facing": "model",
+    "id": "slash-command-plugin-update-headers-helper-deferred",
+    "name": "Slash Command: Plugin Update HeadersHelper Deferred"
+  },
   "9adc7546ad9f04724744362cd7abacc71a006657": {
     "desc": "descriptionForModel for Opus 4.6 in the model catalog: previous Opus version.",
     "facing": "model",
@@ -32101,6 +33259,12 @@
     "facing": "model",
     "id": "data-import-unmappable-mcp-no-url-or-command",
     "name": "Data: Import Unmappable MCP Missing Transport"
+  },
+  "9b093d7ca131d2e1bc7b3c15fdb8218987520583": {
+    "desc": "Suffix on the artifact-read tool result when full HTML is saved to disk, warning that the file may include co-writer content, must be treated as untrusted when Read, and should be Read before republishing.",
+    "facing": "model",
+    "id": "data-artifact-cowritten-read-note",
+    "name": "Data: Artifact Cowritten Read Note"
   },
   "9b098c736dc2df0150bdbf5216329e99bdb48ba4": {
     "facing": "internal"
@@ -32149,6 +33313,12 @@
   },
   "9b56a64164711765d6f3a08d11fe47697198ddf3": {
     "facing": "ui"
+  },
+  "9b5745219e8a1ee26d168978b635ac43523d0145": {
+    "desc": "Retry instruction appended to the auto-edit composer after a full-rewrite decision is rejected, requiring a patch-form or reply-form JSON object.",
+    "facing": "model",
+    "id": "system-prompt-artifact-auto-edit-rewrite-withheld-retry",
+    "name": "System Prompt: Artifact Auto-Edit Rewrite-Withheld Retry"
   },
   "9b594128af491b1bc43147bc371b3538c98726de": {
     "facing": "ui"
@@ -32239,6 +33409,12 @@
     "facing": "model",
     "id": "tool-parameter-powershell-command-description",
     "name": "Tool Parameter: PowerShell command description"
+  },
+  "9bc89349302166a4a451b88004b096c83d49574b": {
+    "desc": "Fragment appended to the Artifact too-large publish rejection when the inline syntax-highlight runtime was injected; returned to the model as a tool error.",
+    "facing": "model",
+    "id": "tool-result-artifact-too-large-highlight-note",
+    "name": "Tool Result: Artifact Too Large (Highlight Runtime Note)"
   },
   "9bd479abb74f99c3857d313c0ce7dc7006075864": {
     "desc": "Suffix appended to the \"No such tool available\" tool_use_error telling the model the tool is disabled for the whole session, subagents included.",
@@ -32417,6 +33593,12 @@
     "id": "tool-result-artifact-watches-list-stop-kind-interrupt",
     "name": "Watches List Stop Kind Interrupt"
   },
+  "9c92e2d234a34afb24a32e85ac88727201c200a4": {
+    "desc": "Skill-tool error returned to the model when the named target is a UI or built-in CLI command rather than a skill.",
+    "facing": "model",
+    "id": "tool-result-skill-invoke-not-a-skill-command",
+    "name": "Skill invoke: UI/CLI command not a skill"
+  },
   "9c9bc927247b3e8dc367f71d3c1b8aa6c84cf9db": {
     "facing": "internal"
   },
@@ -32425,6 +33607,12 @@
   },
   "9ca266166dc97c09d40f71e7a8b81b1f1d70e931": {
     "facing": "internal"
+  },
+  "9ca5090f1bdd0907d6ac48505fbc9e89c92f4708": {
+    "desc": "Addendum to the Artifact action parameter describing verify and that an empty diagnostic result is not a clean render.",
+    "facing": "model",
+    "id": "tool-parameter-artifact-action-verify",
+    "name": "Tool Parameter: Artifact Action Verify"
   },
   "9ca75829d11f4718eeafd3636826eea232b23c70": {
     "facing": "ui"
@@ -32540,6 +33728,12 @@
   "9d15022114bd62c6c34ac10c69cd1b355fb0fc93": {
     "facing": "internal"
   },
+  "9d192e18d2dfdec3edd564a4dec0f2b28c0de590": {
+    "desc": "Artifact status tool-result row when a live subscription failed to arm, including the reason and whether retry is possible.",
+    "facing": "model",
+    "id": "tool-result-artifact-watch-failed-to-arm",
+    "name": "Tool Result: Artifact Watch Failed To Arm"
+  },
   "9d1984418630b5f77ad8ed4dd242f44b0a2260d7": {
     "desc": "Tells the model the server cannot be toggled until the user approves it via /mcp, naming the blocking step rather than a generic failure.",
     "facing": "model",
@@ -32572,6 +33766,9 @@
     "facing": "model",
     "id": "tool-parameter-todo-write-todos",
     "name": "TodoWrite todos parameter"
+  },
+  "9d3c6822bc68c59c0cec789dcc2a957096a72ae6": {
+    "facing": "ui"
   },
   "9d3d73cbf87bd531eca93c207782b26386fd0265": {
     "facing": "internal"
@@ -32852,6 +34049,9 @@
     "id": "skill-claude-code-help-plugin-details-description",
     "name": "Skill: claude-code-guide \u2014 `claude plugin details <name>` description"
   },
+  "9e926dff7668fe8c0a7caadf90f0b8c100a8770d": {
+    "facing": "ui"
+  },
   "9e9448876d7d48811576afa2fed3f0b700a54671": {
     "desc": "Placeholder injected into the model's context when a skill's content is truncated during compaction.",
     "facing": "model",
@@ -32866,6 +34066,9 @@
   },
   "9ea48a59507be872963043c5a994b6c71a589bbe": {
     "facing": "internal"
+  },
+  "9ea9caeef0b3b38be071c34df4c093acf777aceb": {
+    "facing": "ui"
   },
   "9eab388586a39c78f373b6b1dfaabb8f427d4b96": {
     "facing": "internal"
@@ -33182,6 +34385,9 @@
     "id": "skill-dataviz-validate-palette-js-script",
     "name": "Skill: dataviz validate_palette.js script"
   },
+  "9fe3a18462ee25f52601e9e274bae3cb6d82570a": {
+    "facing": "internal"
+  },
   "9fe486b188d3ffd4bc6826c7ebb819f283ccaa65": {
     "desc": "Alternate branch of the pr_review identity-mismatch reason naming the session's actual review target; returned to the model as the Artifact tool's error result.",
     "facing": "model",
@@ -33256,6 +34462,9 @@
   },
   "a02e2e706eda481c45039ca973fd9fe6dec4c866": {
     "facing": "internal"
+  },
+  "a032436e2d06e62b23fe07033f978fb74c22d3c9": {
+    "facing": "ui"
   },
   "a032768efd390b06ebb331d41a35ca97f1f0c2a5": {
     "facing": "internal"
@@ -33479,11 +34688,20 @@
   "a12ef4cbecfa0e43f0fa88a342a737fec603e8ba": {
     "facing": "internal"
   },
+  "a12f3499d128aa1767a331f2c0fb4a75c16a79b5": {
+    "facing": "internal"
+  },
   "a132dd4bc8fdd41462144525c0a40f6c60c1fa2b": {
     "facing": "ui"
   },
   "a13c80a0a5609bf76f16975866e5d3fa21d40417": {
     "facing": "internal"
+  },
+  "a13d9a8757476e987981730bc4a264c4fb3869ff": {
+    "desc": "Task-notification summary emitted when the session leaves live artifact rooms because the user stopped background activity.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-room-left-summary",
+    "name": "Data: Artifact Room Left Summary"
   },
   "a13e292ec19527ea0bb22333eaa658ac485c1cb0": {
     "facing": "internal"
@@ -33815,6 +35033,9 @@
   "a2d9e97c326c3d98cd83c47ad8619bbbfa39644e": {
     "facing": "ui"
   },
+  "a2dc8f9fb62eb746098ca25278c44e0d3e1bd48b": {
+    "facing": "ui"
+  },
   "a2e041131d341f22272689bbabf655c2e5f3f47b": {
     "facing": "internal"
   },
@@ -33899,6 +35120,12 @@
   "a342a254ea2f4058272216f5252bad1db2d73e25": {
     "facing": "ui"
   },
+  "a346bbe565f6c6e1aced62403cb35cbb71ba4dda": {
+    "desc": "Optional clause in the auto-reply-paused task-notification body stating that comments sent to Claude in the meantime are answered when a later asked-for resume happens.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-body-catch-up-clause",
+    "name": "Data: Artifact Auto-Reply Stop Body Catch-Up Clause"
+  },
   "a34988198098e07ad6741890043cc074506a97b2": {
     "facing": "ui"
   },
@@ -33928,6 +35155,12 @@
     "facing": "model",
     "id": "tool-result-send-message-bridge-send-failed",
     "name": "Tool Result: Bridge Send Failed"
+  },
+  "a36a312a0738b097afa5c1810155186d89569dc2": {
+    "desc": "Clause appended to the verify toAutoClassifierInput string when the read follows an unattended auto-reply notification.",
+    "facing": "model",
+    "id": "data-artifact-verify-auto-classifier-unattended-note",
+    "name": "Artifact verify Auto-Classifier Unattended-Notification Note"
   },
   "a36c479e09694dfdb9c102da2dc7279e7f91e9e1": {
     "facing": "ui"
@@ -34007,6 +35240,9 @@
     "id": "tool-parameter-report-findings-summary",
     "name": "Tool Parameter: ReportFindings finding summary"
   },
+  "a3bcae598c36dcf80076be6a06c4192332529ad3": {
+    "facing": "internal"
+  },
   "a3bcde299ecab57f68e9e4a3e71672d78f9ae272": {
     "facing": "ui"
   },
@@ -34036,6 +35272,9 @@
     "facing": "model",
     "id": "tool-result-artifact-asset-read-no-gateway-route",
     "name": "Tool Result: Artifact asset content unreachable from this process"
+  },
+  "a3e5d468f5ea13cfd3e08140265fbd6f99976f1d": {
+    "facing": "internal"
   },
   "a3ec2423dc94b4a5fb396d20222629c85937c1f1": {
     "desc": "Auto-continuation prompt injected when the claude.ai usage limit resets, telling the model to continue the interrupted task without repeating completed work",
@@ -34364,6 +35603,12 @@
   "a55127ffae0098b6d00f586778971ae8065eae8d": {
     "facing": "ui"
   },
+  "a5591cb65ebc91e7c72b067bffb9d85bbbaa07b2": {
+    "desc": "Refusal stating a republish rewrites a decided item's option, which must match what the writer saw.",
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-republish-rewrites-option",
+    "name": "Tool Result: Artifact PR Review \u2014 Republish Rewrites A Decided Option"
+  },
   "a55bf553354cecc34e976eae258180959a03e9af": {
     "facing": "internal"
   },
@@ -34481,6 +35726,12 @@
   "a6106c333c0eacd3ff1e6edb9ccbf6327f3e3719": {
     "facing": "internal"
   },
+  "a610f6bf7830dbe5bc1c3c9cf1bc5bf304745e4b": {
+    "desc": "Fragment naming the interrupt sweep as the stop being reversed, inserted into the resume_replies approval reason.",
+    "facing": "model",
+    "id": "tool-result-artifact-resume-replies-swept-stop-fragment",
+    "name": "Tool Result: resume_replies stop-cause fragment (interrupt sweep)"
+  },
   "a619b28320d0e29472b6be216851e8f2d3062b83": {
     "facing": "ui"
   },
@@ -34550,6 +35801,9 @@
   "a64a13cd9c7b142d698a62db0599c006c52ae395": {
     "facing": "internal"
   },
+  "a64bb091b4216812e0731cabf58d80ef486489f8": {
+    "facing": "internal"
+  },
   "a64e8d708db5298a25cfcc726e9404b8aa3b09d4": {
     "facing": "internal"
   },
@@ -34606,6 +35860,9 @@
   },
   "a6a0a530896d254c4427c4496742f14ec62ae625": {
     "facing": "ui"
+  },
+  "a6a1dde7f48bd7db799694162939513b7f9cca98": {
+    "facing": "internal"
   },
   "a6b5413e9f59191dcb506733d9bb8291b463e643": {
     "desc": "Model-facing inputSchema parameter description (zod .describe on the input_files/output_files array) explaining that declaring these makes a STAGED Cowork call with lane-row fetch and durable-at-ack output PUT",
@@ -34684,6 +35941,12 @@
     "facing": "model",
     "id": "tool-parameter-set_cwd-needs_trust-directory",
     "name": "Tool Parameter: set_cwd needs_trust directory"
+  },
+  "a7096f1bcbaa282b934d83e00da8f4d05b9922f2": {
+    "desc": "Refusal clause used when a worktree-isolated bash command cannot be statically verified to stay inside the worktree.",
+    "facing": "model",
+    "id": "tool-result-bash-worktree-isolation-command-too-complex",
+    "name": "Tool Result: Bash Worktree Isolation \u2014 Command Too Complex"
   },
   "a717c9227244bcf1e1691d3e382364f6337d98aa": {
     "facing": "ui"
@@ -34952,6 +36215,9 @@
   "a84201cb48805e35c814f12753771cf4d2210778": {
     "facing": "ui"
   },
+  "a84246c104393265440ebc5cf62f3245b01501d3": {
+    "facing": "internal"
+  },
   "a845ba1722e1d63db1a48a7e19a9998dbfa05f5a": {
     "desc": "Distinguishes a crash of the validator itself from a manifest that failed validation, so the model does not report the plugin as invalid when the run never completed.",
     "facing": "model",
@@ -34988,6 +36254,9 @@
     "id": "tool-result-powershell-drive-relative-path",
     "name": "Tool Result: PowerShell drive-relative path"
   },
+  "a87304ce6b56a3b2bf3655ac3392f05487d64afe": {
+    "facing": "internal"
+  },
   "a87b0e07d62e7e2c1c1dc45d2daf4d1cd9fdaca2": {
     "facing": "ui"
   },
@@ -35002,6 +36271,9 @@
   },
   "a88ec05bf8a43557a9b7bc402d6ff4f74373f735": {
     "facing": "ui"
+  },
+  "a8921b0d4a91302b2deda6fb6560c06909535835": {
+    "facing": "internal"
   },
   "a89301b1f3216d447b36b021b519e24bd71c997d": {
     "facing": "internal"
@@ -35219,6 +36491,9 @@
   "a98c9b6feb71bd9c55765574ed10e9ed00973e8f": {
     "facing": "ui"
   },
+  "a98f0277ec38afdce6beb634207e78f3dfc7fd38": {
+    "facing": "internal"
+  },
   "a99a6dc6165cabb055e6758793cf453be6148b4b": {
     "facing": "internal"
   },
@@ -35269,6 +36544,12 @@
   },
   "a9dc35bcd3081ee1b83ce29dee7295f02b12e0c8": {
     "facing": "internal"
+  },
+  "a9de4eb1d22cb1937a625d306caaa2558847a6da": {
+    "desc": "Task-notification body envelope telling the model the user's interrupt paused auto-replies and that an unsolicited republish must not re-enable them.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-interrupt-stop-disclosure",
+    "name": "Data: Artifact Auto-Reply Interrupt Stop Disclosure"
   },
   "a9e297eb": {
     "desc": "Description for the design-sync tool inputSchema's preview-card path param (project-relative path to the preview/spec file the card renders); model-facing as a tool parameter description.",
@@ -35360,6 +36641,12 @@
   "aa458ea4df9ac3c5ff38c9b7f021f7f6aa032288": {
     "facing": "internal"
   },
+  "aa52fc6ca981d6cc2e459735dec105bf29cf50eb": {
+    "desc": "Task-notification <event> body wrapping the room-leave explanation after live artifact rooms are disposed.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-room-left-event",
+    "name": "Data: Artifact Room Left Event Envelope"
+  },
   "aa5781cb6531f7da02b4bab311785285208bce23": {
     "facing": "internal"
   },
@@ -35437,6 +36724,12 @@
   },
   "aab4eaeaf8667fe28cf4f1c335e630e087c08c16": {
     "facing": "internal"
+  },
+  "aabc771018f60ca272664ddabf36604cb403ab16": {
+    "desc": "Artifact tool schema description for the room_send topic parameter.",
+    "facing": "model",
+    "id": "tool-parameter-artifact-topic",
+    "name": "Tool Parameter: Artifact Topic"
   },
   "aabd7560da25d0d4c6145a0c72f7d7bde35f9369": {
     "desc": "Bullet in the 'When to access memories' section of the Memory system prompt.",
@@ -35957,6 +37250,9 @@
     "id": "skill-claude-code-help-plugin-marketplace-list-description",
     "name": "Skill: claude-code-guide \u2014 `claude plugin marketplace list` description"
   },
+  "ad3363384f888a975773ec532b6e406288417b3d": {
+    "facing": "ui"
+  },
   "ad34fb5855be4ad2031253c34f53c041836ea496": {
     "facing": "internal"
   },
@@ -36026,6 +37322,9 @@
   "ad8a425f26648b1bffe48f43a0acc90d7233e571": {
     "facing": "internal"
   },
+  "ad8ac7895c168edb3707e7bb6a728662799bc178": {
+    "facing": "internal"
+  },
   "ad923f7d60528d24396ed374805c9cb7b0eedd7e": {
     "facing": "internal"
   },
@@ -36079,6 +37378,12 @@
   },
   "adcbe7791bde73ebf7694588b4b6d63464b0e2ee": {
     "facing": "internal"
+  },
+  "adccdbccaf0b369d47597c5be73d75e9c886a792": {
+    "desc": "Success tool_result template after publishing an artifact path to its hosted URL.",
+    "facing": "model",
+    "id": "tool-result-artifact-published",
+    "name": "Tool Result: Artifact Published"
   },
   "add27dadad7a9c8c8e7a2b9d5c926927f1ea6910": {
     "desc": "Instructs the permission classifier to carefully deny blocked actions and require explicit user confirmation for overrides",
@@ -36170,6 +37475,9 @@
     "id": "slash-command-advisor-disabled",
     "name": "Slash Command: /advisor \u2014 advisor turned off"
   },
+  "ae576397db8822ace9c0616c47d28ea328f4e864": {
+    "facing": "internal"
+  },
   "ae5ce7b3ca5e2ece6559e03762629d89c9fca66c": {
     "desc": "Tool param description for the offset/skip option \u2014 skip first N lines/entries before applying head_limit (equivalent to tail -n +N | head -N).",
     "facing": "model",
@@ -36247,6 +37555,12 @@
   },
   "ae850e092cf6c47ba4310fc82ee8941bf5bed2c4": {
     "facing": "ui"
+  },
+  "ae86132a161ba16f5fe313c16aa3a027df5c54af": {
+    "desc": "Artifact-tool input-schema description of the data parameter when used as the room_send event payload.",
+    "facing": "model",
+    "id": "tool-parameter-artifact-room-send-data",
+    "name": "Tool Parameter: Artifact room_send data"
   },
   "ae86239eba50e27357b3594770e033329345773a": {
     "desc": "Artifact tool refusal in eval-stub mode stating url may only name an artifact this run published, and to omit url to publish fresh",
@@ -36641,6 +37955,12 @@
     "id": "tool-description-teammate-spawned-result",
     "name": "Tool Result: Teammate spawned"
   },
+  "b051c27b60f44f2084be50b965d21877e937955c": {
+    "desc": "checkPermissions deny message when artifact ownership cannot be confirmed, returned to the model as the tool_result if the user declines or the deny stands.",
+    "facing": "model",
+    "id": "tool-result-artifact-verify-ownership-unconfirmed",
+    "name": "Tool Result: Artifact Verify Ownership Unconfirmed"
+  },
   "b0529e2833dbd64709bcab9281e0ae369c0970c9": {
     "desc": "Input-schema description for the SendFile tool's optional message delivered alongside the files.",
     "facing": "model",
@@ -36928,6 +38248,9 @@
     "facing": "model",
     "id": "slash-command-advisor-fable-needs-usage-credits",
     "name": "Slash Command: /advisor \u2014 Fable 5 advisor needs usage credits"
+  },
+  "b1ecd7cc8089372bb481b441219bb28d3b2a1545": {
+    "facing": "ui"
   },
   "b1ed326652205c78b4510d8ae6884065f04caefb": {
     "facing": "internal"
@@ -37277,6 +38600,9 @@
     "id": "data-cross-session-delivery-notice-denied",
     "name": "Data: Cross-session delivery notice (denied)"
   },
+  "b33940c728ad0a9b97a6a35f7f47706380830da7": {
+    "facing": "ui"
+  },
   "b33f151b70761dbf4489f2e3ffde39f16a7bb90b": {
     "desc": "Issue title must lead with [Bug] or [Feature Request]",
     "facing": "model",
@@ -37445,6 +38771,12 @@
   "b3cbd8ce60090125b43d646d10c845d83abc0b03": {
     "facing": "ui"
   },
+  "b3cc34e131a4b72ccc504e1999f60e2fd3a80e5f": {
+    "desc": "Refusal stating a republish rewrites a decided item's question, which must match what the writer saw.",
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-republish-rewrites-question",
+    "name": "Tool Result: Artifact PR Review \u2014 Republish Rewrites A Decided Question"
+  },
   "b3cc40568c44e0adfa31ac0cdbb53979858cd5b6": {
     "desc": "memory_write conflict lead returned to the model when it passed if_version=new for a path that already exists.",
     "facing": "model",
@@ -37601,6 +38933,9 @@
   "b4982dd2c5d4f9731339ac47e0e7ba885d4cfe4a": {
     "facing": "internal"
   },
+  "b4a0ba1e0c6cc9c5be11b20b71de24997d32056e": {
+    "facing": "ui"
+  },
   "b4aa5d7a485ac87fa0eb62042b0ad04db2162777": {
     "facing": "internal"
   },
@@ -37618,6 +38953,12 @@
   },
   "b4bf2eccf47a5ff4cfae9d03b11420b35154d5d6": {
     "facing": "ui"
+  },
+  "b4c1ddad917f5512469540ef9ec7db889698c00e": {
+    "desc": "Tail of the Artifact publish tool error after a mid-upload reset, telling the model to publish again to the reserved slug.",
+    "facing": "model",
+    "id": "tool-result-artifact-publish-again-to-slug-after-reset",
+    "name": "Tool Result: Artifact Publish Again To Slug After Reset"
   },
   "b4c1e340800a9cf8fcbce2a919406148a8110287": {
     "facing": "internal"
@@ -37651,6 +38992,12 @@
     "facing": "model",
     "id": "slash-command-auto-mode-setup-apply-target-order",
     "name": "Slash Command: /auto-mode-setup --apply-target Ordering"
+  },
+  "b4e44bd8a3af19a6f967f8766f757eedd80abe9d": {
+    "desc": "Suffix on the Artifact publish too-large error noting the inline mermaid renderer was added, returned to the model.",
+    "facing": "model",
+    "id": "tool-result-artifact-too-large-mermaid-note",
+    "name": "Artifact too-large mermaid renderer note"
   },
   "b4e9cdb7ce735fa8935cf26b8d99aacfe3f71c91": {
     "desc": "Success output for /teleport when the new Remote Control session is found and includes its URL.",
@@ -37973,6 +39320,12 @@
     "id": "skill-code-review-focus-correctness-bugs",
     "name": "Skill: Code-review correctness-bugs focus"
   },
+  "b685902edfda3091f66a6702e7a8701221356af3": {
+    "desc": "Short label interpolated into SendMessage refusals and ListAgents rows when a session has acceptsPeerMessages false.",
+    "facing": "model",
+    "id": "tool-result-send-message-peer-cannot-receive-label",
+    "name": "Tool Result: Peer Cannot Receive Cross-Session Label"
+  },
   "b68d4f9091f19482d9cf5c1df60d640814578f38": {
     "facing": "ui"
   },
@@ -38125,6 +39478,12 @@
     "facing": "model",
     "id": "system-prompt-background-session-shipping-commit-push",
     "name": "System Prompt: Background-session shipping \u2014 commit, push, PR"
+  },
+  "b74c03356febdaf0730eee92fd784da85ebf463a": {
+    "desc": "Tool-result line listing returned artifact-db documents that were not written to out_dir.",
+    "facing": "model",
+    "id": "tool-result-artifact-db-read-not-saved-line",
+    "name": "Artifact Db Read Not Saved Line"
   },
   "b74e9f5b8e4ea3a3ade1351062bb7a782fc69bf7": {
     "desc": "Validation error when a files list entry is an absolute path; tells the model to use the published-path map form.",
@@ -38279,6 +39638,12 @@
     "id": "tool-result-auto-mode-classifier-read-only-operations-note",
     "name": "Auto Mode Classifier Read-Only Operations Note"
   },
+  "b81e6126369e891865fc48cda0a34d368df7074f": {
+    "desc": "Suffix listing failed plugin names in a /plugin marketplace-update summary, pointing at Errors and the debug log.",
+    "facing": "model",
+    "id": "slash-command-plugin-marketplace-update-failed-see-errors",
+    "name": "Slash Command: Plugin Marketplace Update Failed See Errors"
+  },
   "b82202b748e6de8c7daa8223aadb24c3c1f3cf3b": {
     "facing": "internal"
   },
@@ -38325,6 +39690,9 @@
     "name": "Send Target: Cloud List Unavailable"
   },
   "b850d25805f06c151e00c1f7ea2e3c9f2986e20a": {
+    "facing": "ui"
+  },
+  "b851d62256dc6aa2bc2813391a38d98f5a289d88": {
     "facing": "ui"
   },
   "b857417597d1c101671801b052d60516a482a9c9": {
@@ -38540,6 +39908,18 @@
   "b9277052e7dda8f4143b6848e88377b26cb3759d": {
     "facing": "internal"
   },
+  "b92901fc0147425d31fe5ff8ec9115d28bd66fc1": {
+    "desc": "Refusal clause: git is named more than once in one command, which can't be verified to stay inside the worktree.",
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-named-twice",
+    "name": "Tool Result: Worktree git guard \u2014 git named more than once"
+  },
+  "b92c415f7ee5341214c3c82e98dea95ccaea0c5d": {
+    "desc": "Remedy naming the exact step to clear the apiKeyHelper setting before a claude.ai login.",
+    "facing": "model",
+    "id": "tool-result-artifact-login-blocked-remedy-apikeyhelper-setting",
+    "name": "Tool Result: Artifact Login Blocked Remedy \u2014 apiKeyHelper Setting"
+  },
   "b9399d61e52cf5a283415ea79b6f2d0df4b2523b": {
     "facing": "internal"
   },
@@ -38573,6 +39953,12 @@
   "b977c957c02ccfca7cd076d77555e6e76536b6db": {
     "facing": "ui"
   },
+  "b97b181a6bdb52bdbb79608d53c621d4dd861342": {
+    "desc": "Allowlist remediation interpolated into the artifact-read egress-blocked tool error for local/sandbox sessions.",
+    "facing": "model",
+    "id": "tool-result-artifact-content-egress-blocked-session-allowlist",
+    "name": "Tool Result: Artifact Content Egress Blocked Session Allowlist"
+  },
   "b98268bdc1c88cca04c78d830f2a2f6b43740882": {
     "facing": "internal"
   },
@@ -38605,6 +39991,9 @@
     "facing": "model",
     "id": "data-task-notification-artifact-fast-ack-plan-mode",
     "name": "Artifact fast-ack posted (plan mode)"
+  },
+  "b9a1cccf9319469d31e71505a0151ed78b0c306f": {
+    "facing": "ui"
   },
   "b9a474f2bbce28c0ad3c4175185528d823c64c07": {
     "facing": "internal"
@@ -38723,6 +40112,12 @@
   "b9ee57bc0243ee1791cfeb7d8a34a230d7bb709c": {
     "facing": "ui"
   },
+  "b9eec6b7aea243dd7ffdf70a0b9a9e88722b303f": {
+    "desc": "SendMessage tool result when another caller is resuming the agent and its task record is gone, so the message was not delivered.",
+    "facing": "model",
+    "id": "tool-result-send-message-agent-resume-in-flight-missing",
+    "name": "Tool Result: Send Message Agent Resume In-Flight Missing"
+  },
   "b9f075ce8c9fa2eb6c5df66fcdb001a51532d323": {
     "facing": "ui"
   },
@@ -38784,6 +40179,9 @@
     "name": "Tool Result: Attachment upload disabled (privacy configuration)"
   },
   "ba121936cb6683fff4a800c6e0a1241d2bf4f60d": {
+    "facing": "internal"
+  },
+  "ba1f4b39dfc9754bcc940dda8f1d860cf30cc650": {
     "facing": "internal"
   },
   "ba23225034104919f108837b178a915b3be9e050": {
@@ -38968,6 +40366,12 @@
   },
   "baeeadf6e0d3230d604fc137ea363545ccbd7354": {
     "facing": "internal"
+  },
+  "baf9a1fd906dae86cf7df076a07aa6c70a42b2a4": {
+    "desc": "The checkPermissions ask message shown before publishing uploads a file to claude.ai; the declined form is the tool_result the model reads.",
+    "facing": "model",
+    "id": "tool-result-artifact-publish-upload-consent-ask",
+    "name": "Tool Result: Artifact Publish Upload Consent Ask"
   },
   "baf9c17232d1d20967b5ff04c7bf6ba9f2054b74": {
     "desc": "Artifact tool error returned to the model when API access comes from managed settings or the ANTHROPIC_FEDERATION_RULE_ID / ANTHROPIC_ORGANIZATION_ID variables and a claude.ai login is still needed.",
@@ -39230,6 +40634,12 @@
   "bc225c10fb7f634ba24a8f2725155e8f619e3f9a": {
     "facing": "internal"
   },
+  "bc23d30df1c44c7a05d5ca8196165c0108ef8718": {
+    "desc": "Skill-tool tool_result when a coordinator loaded skill instructions without executing them, directing execution to a worker.",
+    "facing": "model",
+    "id": "tool-result-skill-invoke-readonly-loaded",
+    "name": "Tool Result: Skill Loaded Read-Only"
+  },
   "bc2412063fd7f58c6048a7422126a491eb0e09d3": {
     "facing": "internal"
   },
@@ -39473,6 +40883,9 @@
   "bd12b00c011d81e4469daf62776ca932da991e53": {
     "facing": "internal"
   },
+  "bd14768ba86c174f7bbbfbc9713146adfe636238": {
+    "facing": "internal"
+  },
   "bd19ec63663157eeeb426ab0db75d633f37cf413": {
     "desc": "Warns Claude in a refused SendFile result when a locally claimed session identity conflicts with one previously confirmed as remote.",
     "facing": "model",
@@ -39578,6 +40991,12 @@
   "bd79bee321fb819676962bac39b034bcd47e552a": {
     "facing": "ui"
   },
+  "bd7e4d472f3ebef66f264111d0ab36a2db1f8890": {
+    "desc": "Durable-wake failure reason: the turn was interrupted before registration finished, with nothing wrong with the artifact.",
+    "facing": "model",
+    "id": "tool-result-artifact-durable-wake-aborted",
+    "name": "Tool Result: Artifact Durable Wake Aborted"
+  },
   "bd7edb0747b816d2b57aead9553f47ee7a17633e": {
     "facing": "internal"
   },
@@ -39671,6 +41090,9 @@
     "id": "data-task-notification-artifact-auto-replies-disarmed-session",
     "name": "Artifact auto-replies disarmed for the session"
   },
+  "bde1c988dbba5cd9ca908e9421cb5f1dc2540ca3": {
+    "facing": "ui"
+  },
   "bde3cef3c188511faa02dca9b61c600b38692b00": {
     "facing": "internal"
   },
@@ -39755,6 +41177,9 @@
     "id": "system-reminder-artifact-watch-ended",
     "name": "System Reminder: Artifact watch ended"
   },
+  "be744a21aad2f95d181344934b9a027c0279ba8a": {
+    "facing": "internal"
+  },
   "be754ec07af186e4943089cb2935332e21b4a3bf": {
     "facing": "internal"
   },
@@ -39794,6 +41219,12 @@
   "bebc4a88c61efdec861fdaa60333c9b5d67b138f": {
     "facing": "ui"
   },
+  "bebe25e2ced0f33f5f8fd1c99221d3fc52734428": {
+    "desc": "Coordinator-session addendum to the Skill tool description: the coordinator loads instructions read-only and must hand execution to workers.",
+    "facing": "model",
+    "id": "tool-description-invoke-skill-coordinator-readonly",
+    "name": "Tool Description: Invoke Skill (Coordinator Read-Only)"
+  },
   "bec6056e53aa0be0de1a17217cb04a463db62df4": {
     "facing": "ui"
   },
@@ -39811,6 +41242,12 @@
     "facing": "model",
     "id": "slash-command-plugin-eval-usage",
     "name": "Slash Command: /plugin eval \u2014 usage"
+  },
+  "bee62a7a852b3d69d73aaa8e3540cc4ce8100adf": {
+    "desc": "Header when no artifact watch is connected in this session, counting artifacts that still have watch activity.",
+    "facing": "model",
+    "id": "tool-result-artifact-watch-no-connected-count",
+    "name": "Tool Result: Artifact Watch No Connected Count"
   },
   "bee8a4b42a754aa361f0c8358e8a49fe6208d340": {
     "desc": "One line of the `claude plugin` CLI subcommand list in the claude-code-guide skill's Current Build section: the description shown for `claude plugin enable <plugin>`.",
@@ -40109,6 +41546,9 @@
   "c0014509a0e0c76c84020fcf84b5f200f9df0666": {
     "facing": "ui"
   },
+  "c006c016f7169f9a3fbfe7d3f218afe1d357f00d": {
+    "facing": "internal"
+  },
   "c00ae1f2b8eba9493c7e504ef8454027e921f19e": {
     "facing": "internal"
   },
@@ -40120,6 +41560,9 @@
     "facing": "model",
     "id": "data-task-notification-remote-tasks-completed",
     "name": "Data: Remote tasks completed task-notification"
+  },
+  "c021f332d5eab0557c1b28b4762900e898a56aa1": {
+    "facing": "internal"
   },
   "c022e4ba424c67a1b60c20ff4fa6c0a20577bd0f": {
     "facing": "ui"
@@ -40144,6 +41587,12 @@
     "facing": "model",
     "id": "system-reminder-memory-consolidation-tool-constraints-immutable",
     "name": "System Reminder: Memory consolidation tool constraints (immutable)"
+  },
+  "c030b2a2b2ef9754a31979248fa2c500b61b4f43": {
+    "desc": "Addendum to the Artifact tool description requiring action verify after publish and treating diagnostics as untrusted data.",
+    "facing": "model",
+    "id": "tool-description-artifact-verify",
+    "name": "Tool Description: Artifact Verify"
   },
   "c03670440fd2ed4fedcfaf4ff6c3f691849efc1f": {
     "desc": "Model-facing prompt of the SuggestSkills tool describing when to render a card of addable standalone (org/shared/Anthropic) skills not yet enabled.",
@@ -40355,6 +41804,9 @@
     "id": "tool-result-artifact-workshop-sidecar-priors-remedy",
     "name": "Workshop Sidecar Priors Remedy"
   },
+  "c143e663bd22a30cfa1d3620848b597b7ffa481d": {
+    "facing": "ui"
+  },
   "c147f8c75cddc4e54694a7f81b8aa8869ac56995": {
     "facing": "internal"
   },
@@ -40523,6 +41975,9 @@
   "c1dc027d8f3b81d08d0b1f644dab12426bf35470": {
     "facing": "internal"
   },
+  "c1deaff197743160cbd89910c7bfb3103b05752f": {
+    "facing": "ui"
+  },
   "c1ee90246cb710f7a2bdd351d1af9eff138e8e90": {
     "desc": "The action string of the \"diff-request\" usage-nudge object, injected into model context as part of the usage-nudge catalog.",
     "facing": "model",
@@ -40624,6 +42079,9 @@
     "facing": "model",
     "id": "tool-result-powershell-path-outside-working-directories",
     "name": "PowerShell Path Outside Allowed Working Directories"
+  },
+  "c23439d7d6056058a78835ed5c97620f60efce41": {
+    "facing": "ui"
   },
   "c2370615560bba803d10e4ab2f8e5c192b2710a3": {
     "desc": "Fragment of the /loop dynamic-pacing prompt telling the model what to summarize to the user, injected into model context.",
@@ -40804,6 +42262,9 @@
   },
   "c33f57115715bce7644914c7bf26614c20e7dd89": {
     "facing": "ui"
+  },
+  "c33f6c49442d2055381ca244fefe2931b91ee3e8": {
+    "facing": "internal"
   },
   "c34565d3ceac5337eb376be6e6f60c0d29263f2c": {
     "desc": "Situation text for detecting an off-topic side question (btw/quick question) that interrupted mid-task, to surface the /btw tip",
@@ -41122,6 +42583,9 @@
   },
   "c4fe65f49dbb9a3d4476345128e0dab5092ddf60": {
     "facing": "internal"
+  },
+  "c501f1d298274954fd986a2db5dc17c16665e1c2": {
+    "facing": "ui"
   },
   "c50a7735aaf0360bfc228031218cd7b4e4898bd4": {
     "facing": "internal"
@@ -41735,6 +43199,9 @@
   "c7aedade7b7b9aed53953ee2970cf2ddb182c2ac": {
     "facing": "internal"
   },
+  "c7aeeab075e1f7aa2986b414ef763b0166553c75": {
+    "facing": "ui"
+  },
   "c7b7920cda69b70022abdbd1072374190c231d11": {
     "desc": "Input-schema description of the SendFeedback tool's task_category parameter.",
     "facing": "model",
@@ -41831,6 +43298,12 @@
   "c80ba25e638855d4bb99550d7d6d84df2642486b": {
     "facing": "ui"
   },
+  "c816dbc85a3c1141d43fd1ef20d7d97bdc5771f1": {
+    "desc": "Artifact-tool input-schema description for the JSON document fields written by db_op set or update.",
+    "facing": "model",
+    "id": "tool-parameter-artifact-db-data",
+    "name": "Tool Parameter: Artifact DB Data"
+  },
   "c81a5a0ac8116e67b90a5a5215ba8a5273880807": {
     "facing": "internal"
   },
@@ -41861,7 +43334,16 @@
   "c832b228e172519c41bced09b9414c6afe233a4a": {
     "facing": "internal"
   },
+  "c8330c7cdd6f20df55d50d25d10738a7ae27ed11": {
+    "desc": "Permission-decision message returned by checkPermissions for the Artifact tool's resume_replies action; the deny path sends it to the model as the tool result. Permission denial stating no auto-reply stop is recorded for this artifact in this session, so there is nothing to resume.",
+    "facing": "model",
+    "id": "tool-result-artifact-resume-replies-denied-no-stop-recorded",
+    "name": "Tool Result: resume_replies denied \u2014 no stop recorded"
+  },
   "c836b34d71cba4b6ea31514cf8e914e70c221017": {
+    "facing": "ui"
+  },
+  "c83b960925376d520da6a6d26417cfdc1247c55c": {
     "facing": "ui"
   },
   "c840de1ed8a9b0799f9e62de7470a17f3b93cb96": {
@@ -41944,6 +43426,9 @@
     "facing": "model",
     "id": "system-prompt-pr-test-plan-placeholder",
     "name": "PR test plan placeholder"
+  },
+  "c88b9a7588c4ac8b6da50c9bd7361475a92924f5": {
+    "facing": "internal"
   },
   "c89bc25420905a76d5bba956c0362546f254a756": {
     "facing": "ui"
@@ -42098,6 +43583,9 @@
   "c94fa9e85b3cebfc3d86bf733fb0c1ccbd9773d0": {
     "facing": "internal"
   },
+  "c96147169e38dacb721762eb1066a416b2c70073": {
+    "facing": "internal"
+  },
   "c963e379f1fc8197f3d4a1c6c531d228ac719d51": {
     "desc": "Warning attached to an importable permission-mode item, listed alongside the item in the /import summary prompt the model relays to the user.",
     "facing": "model",
@@ -42166,6 +43654,9 @@
     "facing": "model",
     "id": "skill-claude-code-help-plugin-tag-description",
     "name": "Skill: claude-code-guide \u2014 `claude plugin tag [path]` description"
+  },
+  "c9b3bedd445c14eabb85322d21b6e99ce645de3e": {
+    "facing": "ui"
   },
   "c9b69edab4aa9bdcb83c0b7848a415ba72d13ab7": {
     "desc": "Validation error when a files map value is neither a source path string nor a {from, contentType?} object, returned to the model.",
@@ -42239,6 +43730,9 @@
   "ca0412d1f282a295fc5b57b851484942913bee49": {
     "facing": "internal"
   },
+  "ca087044ef01102b75a1388cea153655ee1349c8": {
+    "facing": "ui"
+  },
   "ca08d4ba8e79d88822b4da149d76609cf7460634": {
     "desc": "Guidance appended to permission-denied results: stop and explain to the user when a blocked capability is essential",
     "facing": "model",
@@ -42268,6 +43762,9 @@
     "facing": "model",
     "id": "data-agent-import-unmappable-gemini-mcp-entry-shape",
     "name": "Data: Agent Import \u2014 Gemini MCP Entry Unexpected Shape"
+  },
+  "ca1b51e352f17dd8d7f11e8cfe61283cc186b855": {
+    "facing": "ui"
   },
   "ca1b7cb5b34611f4d4b4d39f2586c49dfcc4ddad": {
     "desc": "Param description for tabs_create_mcp createIfEmpty controlling creation of an MCP tab group/window when none exists.",
@@ -42455,6 +43952,15 @@
   "cae8c6f9817d364aa36b8221558eb6cf7bb115c6": {
     "facing": "ui"
   },
+  "cae8d8199589ee1fce420b0659d656cd1471a770": {
+    "desc": "QrT('none') clause stating comments do not reach this watch because auto-replies are not armed.",
+    "facing": "model",
+    "id": "tool-result-artifact-watching-auto-reply-none-clause",
+    "name": "Tool Result: Watching Auto-Reply None Clause"
+  },
+  "caea209b7d9f96b20bf29122735f60286d7ac064": {
+    "facing": "ui"
+  },
   "caf32afe2288bf6da41ef944736479e216961377": {
     "facing": "internal"
   },
@@ -42472,6 +43978,12 @@
   },
   "cb01b73106a181f75c54b7fc2809022f9f8aaf24": {
     "facing": "ui"
+  },
+  "cb055e64c0db04be4bd9db31cae87e0f5ef04b17": {
+    "desc": "Deny-reason fragment when a worktree-isolated command runs a string through basename that can't be verified to stay inside the worktree.",
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-redirect-string-payload",
+    "name": "Tool Result: Worktree git basename string payload"
   },
   "cb08773419409d40f8d7b083fde062b5aaac725f": {
     "facing": "internal"
@@ -42590,6 +44102,12 @@
   "cb8e9726e7f0d62b860874af7d9adb44e852bdc8": {
     "facing": "internal"
   },
+  "cb950eacac02718c1e7ef1587d4a0da0fa7b0a45": {
+    "desc": "set_cwd rejection when the resolved target is a network path or obfuscated spelling.",
+    "facing": "model",
+    "id": "tool-result-set_cwd-resolved-unsafe-network-path",
+    "name": "Set Cwd Resolved Unsafe Network Path"
+  },
   "cb9526a35e07c0abd71d627dfe886bad8977686f": {
     "facing": "ui"
   },
@@ -42613,6 +44131,9 @@
   },
   "cbaa6c5718f0feac615f79c50de04c1754c59518": {
     "facing": "ui"
+  },
+  "cbae09c55df23dbbbb7da02b29af42f8b11062c2": {
+    "facing": "internal"
   },
   "cbc01a08728221e7c54e4d6f0aba7585a192ce4d": {
     "desc": "Tells the model the IDE connection attempt failed, so IDE-backed capabilities are not available.",
@@ -42784,6 +44305,12 @@
   },
   "ccccbbf044d532b25dfcbab4737a2401a145b099": {
     "facing": "internal"
+  },
+  "ccd7c9868928b61de16919e00075980a7b64ea8a": {
+    "desc": "Durable-wake failure reason: the server does not offer wake subscriptions to this session.",
+    "facing": "model",
+    "id": "tool-result-artifact-durable-wake-tool-not-offered",
+    "name": "Tool Result: Artifact Durable Wake Tool Not Offered"
   },
   "ccd9f6bfc35f7d73f2d7fc16a9080a71e898de2b": {
     "facing": "internal"
@@ -42998,6 +44525,9 @@
   "cdbbf645733a47b9139a4e12fd828aba234f5c99": {
     "facing": "internal"
   },
+  "cdbc468a28b75d268702e76241cb74fae9c3bba7": {
+    "facing": "ui"
+  },
   "cdbcf428239e50826aa561d8afeddd9089670300": {
     "desc": "Model-facing instruction fragment returned as tool_result text (LEr) telling the agent to call switch_browser when the user picks the final browser-selection option.",
     "facing": "model",
@@ -43012,6 +44542,18 @@
   },
   "cdbed1acc3100eeec4e3d88da60211a7c87e0875": {
     "facing": "internal"
+  },
+  "cdc738a553e57696e7703b99d715faee9ac8c452": {
+    "desc": "Auth-source phrase naming the ANTHROPIC_API_KEY environment variable as the credential taking precedence over a claude.ai account.",
+    "facing": "model",
+    "id": "tool-result-artifact-login-blocked-source-anthropic-api-key-env",
+    "name": "Tool Result: Artifact Login Blocked \u2014 ANTHROPIC_API_KEY Environment Variable"
+  },
+  "cdcca5b0b4c56b6e66a088b8b298c86cfc0ecc47": {
+    "desc": "Marketplace validation warning that headers/headersHelper have no effect on non-archive plugin sources.",
+    "facing": "model",
+    "id": "slash-command-plugin-validate-headers-helper-archive-only",
+    "name": "Plugin Validate Headers Helper Archive Only"
   },
   "cdcd7daeb34ca70c26c89a37df76cca4b7570215": {
     "desc": "System-reminder fragment (wrapped in <system-reminder>) prepended to a stored memory's content warning that memories are point-in-time observations; injected into the model's context alongside recalled memories.",
@@ -43054,6 +44596,12 @@
     "facing": "model",
     "id": "tool-result-mcp-oauth-flow-failed",
     "name": "Tool Result: MCP OAuth Flow Failed"
+  },
+  "ce0a3bc19cc2d5ac11e51064ad431ace7e4fc8aa": {
+    "desc": "Task-notification detail when a pending resume_replies disclosure fires because the watch has now connected.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-replies-resumed-watch-connected-detail",
+    "name": "Data: Artifact Auto-Replies Resumed Watch Connected"
   },
   "ce0bdf5e5b64fbe48c3efce0eb3238aa1fe525ec": {
     "desc": "One line of the `claude plugin` CLI subcommand list in the claude-code-guide skill's Current Build section: the description shown for `claude plugin prune`.",
@@ -43205,6 +44753,12 @@
     "id": "tool-result-operation-catalog-unchanged",
     "name": "Operation Catalog Unchanged Note"
   },
+  "ceb1398d2afe7dd7bfe82b00bac90f50b8574ceb": {
+    "facing": "ui"
+  },
+  "ceb91b47a5e378ad65c2cf649fe6e2edddfbcd1f": {
+    "facing": "internal"
+  },
   "cebc1e61ebcd04271f5166bc7ff31a4b4bf5c957": {
     "facing": "internal"
   },
@@ -43293,6 +44847,9 @@
     "name": "Skill: Artifact Whiteboard When-To-Use Guidance"
   },
   "cf0452657a12d9b2ae1ff057a16a0d31d4d5a68a": {
+    "facing": "ui"
+  },
+  "cf051320565df5f1bcdcd7c4f82d168d3cb6e001": {
     "facing": "ui"
   },
   "cf0c0d1f48867f5b3a8ae131b7da3bf98358bfa8": {
@@ -43424,6 +44981,12 @@
   "cfd86f4a192db3ba6ef6f1478e343b796f3f9594": {
     "facing": "internal"
   },
+  "cfd8edd7b7108d496031bc983279c0e5fbd8dfbb": {
+    "desc": "Republish refusal when the published page could not be compared with this CLI version's template, so a republish cannot reproduce it.",
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-republish-compare-failed",
+    "name": "Tool Result: Artifact PR-Review Republish Compare Failed"
+  },
   "cfdcbbd9329a1d03b80efff39c44a2478ec6a4c1": {
     "facing": "ui"
   },
@@ -43444,6 +45007,12 @@
   },
   "cfe6f5a8a129e7b4073d7a3b82303f9993058f76": {
     "facing": "ui"
+  },
+  "cfe84b482e975e42029d56fde7ed5d70379d487b": {
+    "desc": "Task-notification body warning that another live session of the same conversation may also auto-reply to artifact comments.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-another-live-session-comment-replies",
+    "name": "Data: Task Notification Artifact Another Live Session Comment Replies"
   },
   "cff3688b16c2e477df227fe6971e56b440da510d": {
     "facing": "ui"
@@ -43676,6 +45245,12 @@
   "d0db0f57a145736ad2302f77f7599644253c17d6": {
     "facing": "internal"
   },
+  "d0dff3c4f598c470d28898eb5f9b5799f3c459ea": {
+    "desc": "Advice tail when the executable is a runtime glob, returned as bash stderr via the worktree git guard.",
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-spell-command-literally",
+    "name": "Tool Result: Worktree Git Spell Command Literally"
+  },
   "d0eaf16a2bee26af7c16f7047c34af9f578e6664": {
     "facing": "internal"
   },
@@ -43838,6 +45413,12 @@
   "d1bb08c4cb4f437f4e3886fb817a3dcd9cc20a8c": {
     "facing": "internal"
   },
+  "d1bba5387c28026e9a822d5951abe3d8beb1ee2f": {
+    "desc": "Synthetic PreToolUse deny reason when the SDK host reconnects before the hook answers, returned to the model as the blocked tool result.",
+    "facing": "model",
+    "id": "tool-result-pretooluse-hook-sdk-host-reconnect",
+    "name": "Pretooluse Hook Sdk Host Reconnect"
+  },
   "d1c005fb2aa0fd5aa94c212fdaa1360f1399a4bf": {
     "facing": "internal"
   },
@@ -43940,6 +45521,12 @@
   "d2458c68640edb3dd97ae8556f447c28f9d61f87": {
     "facing": "internal"
   },
+  "d24994cc20dc275095f237e9134cf519674e327f": {
+    "desc": "Ownership phrase in the [Artifact \u2026] header of the artifact-read tool result, including private/shared audience and type-locked or cowritten qualifiers.",
+    "facing": "model",
+    "id": "data-artifact-read-ownership-header",
+    "name": "Data: Artifact Read Ownership Header"
+  },
   "d259727bd28bdf81d1b87b80f8eca88f8f8ed52c": {
     "desc": "Lead line of the Artifact publish error when a sidecar file itself fails the workshop structural verifier.",
     "facing": "model",
@@ -43978,6 +45565,12 @@
     "facing": "model",
     "id": "slash-command-sandbox-enabled-regular-permissions",
     "name": "Slash Command: /sandbox \u2014 sandboxed with regular permissions"
+  },
+  "d28849a727fc5375880d26f09fcb5e4579db9914": {
+    "desc": "Reason clause naming a failed deploy request on the artifact publish path.",
+    "facing": "model",
+    "id": "tool-result-artifact-publish-deploy-request-failed",
+    "name": "Tool Result: Artifact Publish \u2014 Deploy Request Failed"
   },
   "d28d2ab1def93c4584cc606730e3d19d198296d8": {
     "facing": "ui"
@@ -44084,6 +45677,9 @@
     "id": "data-model-catalog-opus-47-description",
     "name": "Data: Model Catalog Opus 4.7"
   },
+  "d316d425b808d848c2516a6b98ff086b000aefe7": {
+    "facing": "ui"
+  },
   "d3265d3f7078e71744be7de3c491283448fa8a95": {
     "facing": "internal"
   },
@@ -44101,6 +45697,9 @@
     "facing": "model",
     "id": "data-usage-nudge-subagent-fan-out-feature",
     "name": "Subagent fan-out nudge feature blurb"
+  },
+  "d339ae86cddebd616cc528fc418b357d9cb41cd4": {
+    "facing": "internal"
   },
   "d3412e9444d0f2c172d9b9dbdcfe0ba18cfc59c8": {
     "facing": "internal"
@@ -44141,6 +45740,9 @@
   "d3688eddfd1ed544313bb413999382c6584ebb9e": {
     "facing": "ui"
   },
+  "d36cfa3a5d2418faba9847f02a48b5bfc385a9aa": {
+    "facing": "internal"
+  },
   "d36fc9262fef97832124d47d039dc9b4f7b119cc": {
     "facing": "internal"
   },
@@ -44173,6 +45775,12 @@
     "facing": "model",
     "id": "tool-result-bash-worktree-cwd-network-shaped",
     "name": "Tool Result: Bash Worktree CWD Network-Shaped Block"
+  },
+  "d3a1697b27773f130c31beb484f4cb0fa166419b": {
+    "desc": "Fragment of the mcp-manifest-rejected Artifact tool error telling the model to rename a reserved connector in claude.ai Settings.",
+    "facing": "model",
+    "id": "tool-result-artifact-publish-mcp-reserved-connector-rename-fragment",
+    "name": "Tool Result: Artifact Publish MCP Reserved Connector Rename"
   },
   "d3a637293ec2fd14301d35cdedd5cc5daca8fb92": {
     "facing": "ui"
@@ -44224,6 +45832,12 @@
   },
   "d3ccedd31b12445c828f4ebdb60234145ff56639": {
     "facing": "internal"
+  },
+  "d3cf741b469aed1f21dc0760bc254e3c25b1b3f9": {
+    "desc": "room_send tool_result when the live event was delivered to current peers (at-most-once, not stored).",
+    "facing": "model",
+    "id": "tool-result-artifact-room-send-delivered",
+    "name": "Tool Result: Artifact room_send Delivered"
   },
   "d3ddef9ca863412eb33c669ad079d05cf4ba1102": {
     "desc": "ListMcpResources tool inputSchema param description for the optional server filter; model-facing as part of the tool's input_schema.",
@@ -44435,6 +46049,12 @@
     "id": "skill-artifact-pr-review-html-template",
     "name": "Skill: Artifact PR review HTML template"
   },
+  "d4da301a9f7ecdbade2e568ee6ba329e393030af": {
+    "desc": "Permission-ask disclosure for resume_replies after a session interrupt; on decline this message is returned to the model as the tool_result.",
+    "facing": "model",
+    "id": "tool-result-artifact-resume-replies-consent-ask-disclosure-interrupt",
+    "name": "Tool Result: Resume Replies Consent Disclosure (Interrupt)"
+  },
   "d4da4f8cb93d24a965522d0f3218877de0e9cd5a": {
     "facing": "ui"
   },
@@ -44627,6 +46247,12 @@
   "d60102148dc1b240b2f888c3a46e4ef6f03d891b": {
     "facing": "internal"
   },
+  "d6015ba4fcea007448251b3ad9e18107d1af23d2": {
+    "desc": "QrT(void 0) clause when the watch is up but auto-reply state is unset, pointing the model at the status row.",
+    "facing": "model",
+    "id": "tool-result-artifact-watching-auto-reply-status-unknown-clause",
+    "name": "Tool Result: Watching Auto-Reply Status-Unknown Clause"
+  },
   "d60178047b6d1a59e1312e4de34f8231830879df": {
     "desc": "Model-facing guidance block in the ScheduleWakeup tool prompt on when to set noop true/false and how consecutive quiet ticks fold into one context entry.",
     "facing": "model",
@@ -44711,6 +46337,12 @@
   "d68d70bd749b72e6c2a21317f420b50e968042a5": {
     "facing": "ui"
   },
+  "d69361197e4602b689365bfa4a5578518b3fa7de": {
+    "desc": "Disconnected-watch tool-result tail telling the model that comment notifications stay off until resume and not to republish just to re-enable them.",
+    "facing": "model",
+    "id": "tool-result-artifact-watches-list-disconnected-no-notifications-until",
+    "name": "Artifact Watches List Disconnected No Notifications Until"
+  },
   "d69f375f3c82d34e13ab5855c3f7c9d44f54f4aa": {
     "facing": "ui"
   },
@@ -44722,6 +46354,9 @@
     "facing": "model",
     "id": "skill-artifact-editor-template-runtime-capabilities-note",
     "name": "Editor-template runtime capabilities note lead"
+  },
+  "d6c534f35de5616e78e92ccb1d05bf81041a4f0a": {
+    "facing": "internal"
   },
   "d6c92847e4e2f5fd2668a5704b70a4882cd3f6d2": {
     "facing": "internal"
@@ -44869,6 +46504,12 @@
     "facing": "model",
     "id": "slash-command-model-set",
     "name": "Slash Command: /model \u2014 model switched"
+  },
+  "d761585b625541da3a82ea9c2e4cfe82ea5f8e78": {
+    "desc": "Task-notification event telling the model a durable wake subscription failed to register and not to claim to be subscribed meanwhile.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-durable-wake-not-registered",
+    "name": "Data: Artifact Durable Wake Not Registered Event"
   },
   "d7630a941882ac5b563be187a5ca28bd2b1f93dd": {
     "facing": "ui"
@@ -45125,6 +46766,9 @@
   "d83e8a785695c8bb183ab52d93cf51e9cbea21a9": {
     "facing": "ui"
   },
+  "d83ee96868424c1e2388d459076ee5a8bb316112": {
+    "facing": "internal"
+  },
   "d846beb603551b1dc23aad8572f45818dd7cd065": {
     "desc": "Describes the computer-use left_mouse_up tool for releasing the left mouse button at the current cursor position",
     "facing": "model",
@@ -45242,6 +46886,9 @@
   "d8b810f899941e2ed27b95fcdeb3ec9da2bc0cf8": {
     "facing": "internal"
   },
+  "d8c21d468d382d0b78927eccdbf3e172c37ca774": {
+    "facing": "ui"
+  },
   "d8c7d5d3cd94caef4b99def358b58f430f321839": {
     "facing": "ui"
   },
@@ -45299,6 +46946,12 @@
   "d8fe6e06f4283dc2f32cee10695ae6032379d4d8": {
     "facing": "internal"
   },
+  "d8ffafb5f92554b33426c25c7f9b4684f9d09d89": {
+    "desc": "Remedy naming the exact command to clear a Console API key saved by an earlier /login.",
+    "facing": "model",
+    "id": "tool-result-artifact-login-blocked-remedy-console-key-from-login",
+    "name": "Tool Result: Artifact Login Blocked Remedy \u2014 Console API Key From A Previous /login"
+  },
   "d907a0e1bc362534ab83407de6b1fbe294e01a7d": {
     "facing": "ui"
   },
@@ -45323,8 +46976,17 @@
   "d90f66bedf14f01453f8d4e31839b1a6fdcc997d": {
     "facing": "ui"
   },
+  "d912766acc37c3154a99bd65356a5c5aed0fc76d": {
+    "desc": "Verify tool_result when the recorded diagnostics state is unrecognized and must be re-read.",
+    "facing": "model",
+    "id": "tool-result-artifact-verify-unrecognized-state",
+    "name": "Tool Result: Artifact Verify Unrecognized State"
+  },
   "d91c0fb130fba5714421e8b47654ccf7bc9f1813": {
     "facing": "internal"
+  },
+  "d920fe39f815b38319695c64e6bb45413d7b2ec3": {
+    "facing": "ui"
   },
   "d92eeed9ec29f2d9340b05f78354373994a0ffb0": {
     "desc": "Opening context line of the systemPrompt for the utility model call that generates a GitHub issue title from a bug report.",
@@ -45368,6 +47030,9 @@
   "d959117d04bf996b3507a8196b7ab9d317477130": {
     "facing": "ui"
   },
+  "d95d7b69f41620701ecbdfb6ddd758e25388bb1b": {
+    "facing": "internal"
+  },
   "d95f1bbf4bd2101211c0b097e25ad90498f311f6": {
     "desc": "System prompt for the small model call that writes the one-sentence acknowledgement posted to an artifact comment thread",
     "facing": "model",
@@ -45403,6 +47068,12 @@
     "facing": "model",
     "id": "tool-description-memory-write-no-secrets-refused",
     "name": "Tool Description: MemoryWrite no secrets (refused)"
+  },
+  "d997cecdf017455bcd73707295033da6524e5e9f": {
+    "desc": "Appended to the Artifact publish tool_result telling the model to call action verify before claiming the page works.",
+    "facing": "model",
+    "id": "tool-result-artifact-publish-verify-guide",
+    "name": "Tool Result: Artifact Publish Verify Guide"
   },
   "d99fe0fd9bfafb05e1c2fef7d26324f731334965": {
     "desc": "Description for the keybindings-help skill, telling the model when to customize keyboard shortcuts / edit ~/.claude/keybindings.json.",
@@ -45514,6 +47185,12 @@
   },
   "da0d31689e5b14286cab2db6948e775f05609d87": {
     "facing": "ui"
+  },
+  "da0e1f5364763948d8a427dcd81ba586be06f91c": {
+    "desc": "Inner event text telling the model page events will stop and not to republish just to rejoin after rooms are left.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-room-left-body",
+    "name": "Data: Artifact Room Left Event Body"
   },
   "da14b7f5bacd6af9178a0311279dec48587d216e": {
     "desc": "/mcp reconnect result when a server needs authentication in a detached/background session, telling the model to open this session and run /mcp.",
@@ -45790,6 +47467,12 @@
   },
   "db5a2cc181140f41ecd8b280a609337a4f11561f": {
     "facing": "internal"
+  },
+  "db5aa7c6d4204e43e438c430af9631f0c14822d7": {
+    "desc": "Permission denial when room_send needs an interactive approval surface and this session has none.",
+    "facing": "model",
+    "id": "tool-result-artifact-room-send-no-consent-surface",
+    "name": "Tool Result: Artifact room_send No Consent Surface"
   },
   "db5b893da418eba16d38ad4bea033967b9ad5808": {
     "facing": "internal"
@@ -46178,6 +47861,9 @@
     "id": "slash-command-mcp-claudeai-auth-reconnect-failed-restart",
     "name": "Slash Command: /mcp \u2014 reconnect after auth failed, restart to retry"
   },
+  "dd30a44834a36c0a6f4bec2e588c56193e98947d": {
+    "facing": "ui"
+  },
   "dd32d2ceded91a28bf6ac4838e28420920e55b52": {
     "desc": "Deny message returned when a tool permissionCheckFailureDecision throws and its fail-closed posture cannot be determined.",
     "facing": "model",
@@ -46301,6 +47987,12 @@
     "id": "tool-result-artifact-publish-source-mismatch-user-approval-required",
     "name": "Publish source mismatch approval reason"
   },
+  "ddddaa63fe90ac686828c13f2cedb2bcd0718358": {
+    "desc": "SendMessage denial/tool result when the target session is configured not to accept cross-session messages.",
+    "facing": "model",
+    "id": "tool-result-send-message-peer-session-cannot-receive",
+    "name": "Tool Result: Send Message Peer Session Cannot Receive"
+  },
   "ddddec35ed86f4a31a9419b9d98209b820318d35": {
     "facing": "internal"
   },
@@ -46381,6 +48073,9 @@
   },
   "de2b77766236f7c6d9e4285d44b514b59d984858": {
     "facing": "internal"
+  },
+  "de357ed0ae19843194c4754d7c57894782b8bd51": {
+    "facing": "ui"
   },
   "de3783f80a67f0abec08365fc121dce8e07ad864": {
     "facing": "internal"
@@ -46646,6 +48341,9 @@
     "id": "data-auto-mode-recon-home-not-searched",
     "name": "Data: auto-mode recon home NOT GATHERED (beyond-repo not opted in)"
   },
+  "df449ce78be050d4ba4536cb3237af075dc45802": {
+    "facing": "internal"
+  },
   "df46ee9e2c9f870c292b0092df70caef5c027d03": {
     "facing": "internal"
   },
@@ -46690,6 +48388,12 @@
   },
   "df8d200ebac2176351d23b13c07a6dd95a719fba": {
     "facing": "internal"
+  },
+  "df91a84dcd97999f48387d4c80bb933242cd2ff5": {
+    "desc": "room_send tool_result when the session is not in the artifact room, so the event was not sent.",
+    "facing": "model",
+    "id": "tool-result-artifact-room-send-not-connected",
+    "name": "Tool Result: Artifact room_send Not Connected"
   },
   "df91c77f8e290ec261b0723ca53befd9da1158d6": {
     "facing": "ui"
@@ -46913,6 +48617,9 @@
   "e081f9b07a361aa5b43acaaa0fde0d15de27c5eb": {
     "facing": "internal"
   },
+  "e08866438e290bc1e580b049ffcd0141ea35d49b": {
+    "facing": "ui"
+  },
   "e088b6e9332e1948197885d1e03653f47ab581ac": {
     "facing": "internal"
   },
@@ -46966,6 +48673,12 @@
   },
   "e0e6cfdfe61f752a6564f1268f7715930f3f392f": {
     "facing": "ui"
+  },
+  "e0e83d5c0ce00db9ee02eac4feac663d4f550248": {
+    "desc": "Shared wake-event clause used by both the already-registered and still-arming durable-wake publish-result sentences when comment events are included.",
+    "facing": "model",
+    "id": "tool-result-artifact-durable-wake-publish-and-comment-wake-clause",
+    "name": "Tool Result: Durable-Wake Publish-and-Comment Wake Clause"
   },
   "e0f0e560be4808efa60ab120902eb6188e07adb0": {
     "facing": "internal"
@@ -47078,6 +48791,9 @@
     "id": "tool-result-artifact-asset-store-no-gateway-route",
     "name": "Tool Result: Artifact asset store unreachable from this process"
   },
+  "e190dfa8df0ee83dbb6d6983f4b5d357eaa1afb6": {
+    "facing": "ui"
+  },
   "e1a47fadc2d98e07291c5f0a49b94a70bf8cc8bf": {
     "facing": "internal"
   },
@@ -47111,6 +48827,12 @@
   "e1cd1a6dcac235f8382d7ad40d398ee385109549": {
     "facing": "ui"
   },
+  "e1d050d8fa294f2a08441546b6c599be66af9933": {
+    "desc": "Task-notification detail when resume_replies re-arms auto-replies that had been paused by the user's interrupt.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-replies-resumed-interrupt-detail",
+    "name": "Data: Artifact Auto-Replies Resumed After Interrupt"
+  },
   "e1d14b5a86e75479f92296e1b9fad184435e6230": {
     "desc": "Trailing sentence (E8S) of the re-armed auto-replies notification explaining how to stop them again for one artifact or for the whole session.",
     "facing": "model",
@@ -47119,6 +48841,12 @@
   },
   "e1d5376195de05dccb01e6230c091ea74fbfe84a": {
     "facing": "internal"
+  },
+  "e1da089cf4cd7ee3edae523e4330249dced1b083": {
+    "desc": "Opening fence on artifact verify diagnostics telling the model the captured page output is data, not instructions.",
+    "facing": "model",
+    "id": "tool-result-artifact-verify-diagnostics-data-fence",
+    "name": "Artifact Verify Diagnostics Data Fence"
   },
   "e1e109e1deee786df8093cd5fe2af9e87a5fe954": {
     "desc": "reminder that deferred tools are gone because their MCP server disconnected",
@@ -47291,6 +49019,9 @@
   "e2710d22a0d5899524149dc0a7de76f41d5cf26c": {
     "facing": "ui"
   },
+  "e278ae956ffaaf9addb2e0f89973545e2f21965e": {
+    "facing": "internal"
+  },
   "e27bfa43fda3ac34e82ccf561fe68bf15b7742aa": {
     "facing": "ui"
   },
@@ -47417,6 +49148,9 @@
   "e32e7a2a8e35933b31b96161eabc18ed16f679d7": {
     "facing": "internal"
   },
+  "e334b42b5b9217392b51ececc88da8afd1a50055": {
+    "facing": "ui"
+  },
   "e3385e66d21f63a453a36ae17ef6df62b9981789": {
     "desc": "SendMessage success result for a bridge (Remote Control) address send, noting the send was one-way so the receiver cannot address a reply to this session.",
     "facing": "model",
@@ -47510,6 +49244,9 @@
     "id": "skill-artifact-template-live-editor-capabilities-note",
     "name": "Live-editor template capabilities note"
   },
+  "e393e73e0b5fda030d58849cf69cc28d07be2821": {
+    "facing": "ui"
+  },
   "e3953e012113b8d2a6875be240e2ed0f6d9adedb": {
     "desc": "checkPermissions ask message for a new-comments-notification read of another person's (or unconfirmed) artifact database, including the share note.",
     "facing": "model",
@@ -47542,6 +49279,12 @@
     "facing": "model",
     "id": "tool-result-artifact-json-escaping-inflation-note",
     "name": "Tool Result: JSON-escaping inflation note"
+  },
+  "e3b691433686998c3d0e047ae7f83bca03b20873": {
+    "desc": "Lead of the task-notification detail after an auto-edit auto-reply is posted, with the outcome tail interpolated (unapplied, noop, rewrite-withheld, or timed out).",
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-edit-posted-lead",
+    "name": "Data: Artifact Auto-Edit Posted Lead"
   },
   "e3b8a8c3453d9c1293375b92ab527dc16ff39760": {
     "desc": "Tool validation result telling the model that thread_id and text are only valid for the Artifact comments and reply actions.",
@@ -47764,6 +49507,9 @@
     "facing": "model",
     "id": "tool-result-send-message-notify-when-idle-not-attempted-handler-stripped",
     "name": "Tool Result: Notify When Idle Not Attempted Handler Stripped"
+  },
+  "e4aba88bf13b808fffcaeaa09f19518565ea26be": {
+    "facing": "internal"
   },
   "e4b3db5c6b7868e5f76ad0c676782e5517de386e": {
     "facing": "ui"
@@ -48095,6 +49841,12 @@
   "e650435c20ebbf860f51126cfb0af849f4e3d20d": {
     "facing": "ui"
   },
+  "e655140477b90cae10ab175ab58146892b9c167c": {
+    "desc": "Opening line of the action=comments tool_result giving total thread count plus open, Claude-activated, and unreadable-status counts.",
+    "facing": "model",
+    "id": "tool-result-artifact-comments-header-counts",
+    "name": "Artifact Comments Header Counts"
+  },
   "e6572684a87878a556ef588ce5686331e72746e9": {
     "facing": "ui"
   },
@@ -48230,6 +49982,9 @@
   "e6d7f870b6840939c89fde2a6f27aef51b17cdd8": {
     "facing": "internal"
   },
+  "e6d8f35b253cbeacf02a8cb166724142dc445935": {
+    "facing": "ui"
+  },
   "e6db87b14acc8417798ba9bf62f6b65e5ada2812": {
     "desc": "Nested fragment explaining auto-replies are not armed and how a publish or resume_replies can arm them.",
     "facing": "model",
@@ -48253,6 +50008,12 @@
   },
   "e6eea4d1a755549e65cf9622b2c2be8929f5bfff": {
     "facing": "ui"
+  },
+  "e6f0ef282eecde506c0448af26eb3a60c05d1a9b": {
+    "desc": "Validation error that a headersHelper entry must inline its manifest with strict false; included in /plugin validate onComplete output.",
+    "facing": "model",
+    "id": "slash-command-plugin-validate-headers-helper-not-strict-false",
+    "name": "Plugin Validate: HeadersHelper Requires Strict False"
   },
   "e6f15d695af5e4bc6dc09650fe8d2b59b0116160": {
     "facing": "internal"
@@ -48394,6 +50155,12 @@
     "facing": "model",
     "id": "data-artifact-capability-roster-unfetched",
     "name": "Artifact capability roster unfetched"
+  },
+  "e78537b6955febd732363aac57cbea5264610d92": {
+    "desc": "Wrapper for the Artifact status tool-result listing watches that have activity but no live connection.",
+    "facing": "model",
+    "id": "tool-result-artifact-watch-activity-no-live-connection",
+    "name": "Tool Result: Artifact Watch Activity No Live Connection"
   },
   "e78d2dd355af50de3a744626d86f2f5d0fa888d5": {
     "desc": "Model-facing feature description in the context-tip watcher registry, injected into the tip-selector LLM prompt so it can suggest controlling workflow size.",
@@ -48662,6 +50429,9 @@
   "e8df48fcd672175d473505087bed40ffb40580e2": {
     "facing": "ui"
   },
+  "e8e22cf871737dc5b4d6b1ba262c908b2302b190": {
+    "facing": "ui"
+  },
   "e8e74bf28d9d694f284a95656b9ea73ea2889c28": {
     "facing": "internal"
   },
@@ -48673,6 +50443,9 @@
   },
   "e8f82061b5f29ffb6843e2969d78523d12d90538": {
     "facing": "ui"
+  },
+  "e8fdbd79a36a23ab06af1e28d5fbc45ffb6cafd1": {
+    "facing": "internal"
   },
   "e9080fe88e2102448e69c77e892551e04d704fbf": {
     "facing": "internal"
@@ -48695,6 +50468,12 @@
   "e913c35a8475e94541275dfe2a4ad3daa14e4c5f": {
     "facing": "ui"
   },
+  "e913f417fdd14d372f328e357a7018a7219a5b92": {
+    "desc": "safetyCheck decisionReason for the room_send ask in a Cowork session: approval must come from the user, not the auto-permission classifier.",
+    "facing": "model",
+    "id": "tool-result-artifact-room-send-cowork-approval-reason",
+    "name": "Tool Result: Artifact room_send Cowork Approval Reason"
+  },
   "e91446dff526dd953dd8644b9f39c5b67ed07850": {
     "facing": "ui"
   },
@@ -48703,6 +50482,12 @@
   },
   "e92dcacdd01829a901e17c2db9ab13b71e36429e": {
     "facing": "internal"
+  },
+  "e9302eb5294549734accb85b8e18debf18656b1c": {
+    "facing": "ui"
+  },
+  "e936112311e89fda96577fff83a6f6240f929076": {
+    "facing": "ui"
   },
   "e9440cbc4ded71839f14983ff591b152d40be526": {
     "desc": "Task tool_result placeholder text when a subagent completed but returned no output.",
@@ -48758,6 +50543,12 @@
     "id": "tool-parameter-read-limit-verbose",
     "name": "Read Limit Param (Verbose)"
   },
+  "e97910611bef8f434e35c4312bd79f08af2a0d47": {
+    "desc": "Optional clause appended to the auto-reply-paused task-notification summary stating that comments sent to Claude meanwhile are answered when the subscription resumes.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-summary-catch-up-clause",
+    "name": "Data: Artifact Auto-Reply Stop Summary Catch-Up Clause"
+  },
   "e9797360cfcb163f503233a65441d64d7a765a13": {
     "facing": "ui"
   },
@@ -48791,6 +50582,9 @@
   "e99b5329a87f5a1c78b6936a9aa540aee98e537c": {
     "facing": "internal"
   },
+  "e9ab4f522402d39b40f733160c2e190d1833230d": {
+    "facing": "ui"
+  },
   "e9ae66ec4e02c2dde5578d23f5841fc463652fb6": {
     "facing": "internal"
   },
@@ -48811,6 +50605,12 @@
     "facing": "model",
     "id": "tool-result-bash-sandbox-windows-mapped-drive",
     "name": "Bash Sandbox Windows Mapped-Drive Error"
+  },
+  "e9bf7599556c37344054fb58f29396e158a3e017": {
+    "desc": "Subject clause naming the decided-item option spelled in a form this CLI does not produce.",
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-unverifiable-decided-item-option",
+    "name": "Tool Result: Artifact PR Review \u2014 Unverifiable Decided-Item Option"
   },
   "e9cc4b0ac56503dfb03f83bb83739d13c377fcaa": {
     "facing": "internal"
@@ -48835,6 +50635,12 @@
     "facing": "model",
     "id": "slash-command-ide-open-manually",
     "name": "Slash Command: /ide \u2014 no CLI launcher, open manually"
+  },
+  "e9de1e831dc25239db878f3c4d0181c62db04a23": {
+    "desc": "Withheld-reply task-notification tail stating auto-edit composition timed out, so the artifact was not changed.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-edit-timed-out-tail",
+    "name": "Data: Task Notification Artifact Auto-Edit Timed-Out Tail"
   },
   "e9dea803d10b5f8914423158e891eba12a9f3f06": {
     "desc": "Failure result for /teleport when the move endpoint reports that the session is already on cloud, directing the model to refresh the web UI.",
@@ -48875,6 +50681,9 @@
   "ea29ac7452e43792190cafd865ee2097139833a4": {
     "facing": "internal"
   },
+  "ea2c121608dfe9026b18a8d459ffa9ab75c1b667": {
+    "facing": "ui"
+  },
   "ea2d10acc289c1aaefa6ae103c508e046316f45b": {
     "facing": "internal"
   },
@@ -48886,6 +50695,12 @@
     "facing": "model",
     "id": "slash-command-usage-credits-visit-billing-url",
     "name": "Slash Command: /usage-credits \u2014 visit personal billing page"
+  },
+  "ea347b46d9a6f01df94749f62acc947a34da642d": {
+    "desc": "Verify tool_result when a viewer loaded the version and capture recorded zero diagnostics, a good signal but not proof.",
+    "facing": "model",
+    "id": "tool-result-artifact-verify-zero-diagnostics",
+    "name": "Tool Result: Artifact Verify Zero Diagnostics"
   },
   "ea4baf7dc1969ce986293574a84c958c4e1f00e8": {
     "desc": "Artifact read_db/write_db error telling the model to republish the artifact with the db capability declared.",
@@ -49106,6 +50921,9 @@
   "eb4474396b098986583be1778cf9df6e985549d8": {
     "facing": "ui"
   },
+  "eb4937db971c86eb981671c03a4048a6f6c6f907": {
+    "facing": "internal"
+  },
   "eb516285a1d6e28f107c5a26d7085186e60cf885": {
     "facing": "internal"
   },
@@ -49222,6 +51040,12 @@
     "facing": "model",
     "id": "data-artifact-reply-auto-classifier-input",
     "name": "Artifact Reply Auto-Classifier Input"
+  },
+  "ec0213426b374b35738c16e1f366e28ea52a0992": {
+    "desc": "Per-artifact status line while a durable wake subscription is still registering and is not yet reliable.",
+    "facing": "model",
+    "id": "tool-result-artifact-durable-wake-arming-list-item",
+    "name": "Tool Result: Artifact Durable Wake Arming List Item"
   },
   "ec0252ea8df990dcec77bbf5002c9b2110ca0fb0": {
     "desc": "Content block replacing a file the API could not process; tells the model not to retry and to use a shell command.",
@@ -49622,6 +51446,9 @@
   "edb767cda6522b4be597697d78c0383ff18a8dbd": {
     "facing": "ui"
   },
+  "edbcf44cd3900af40d35e381e94de5e2057e6472": {
+    "facing": "ui"
+  },
   "edc2366a1e01ef768ba683f711d67bdd26b0365b": {
     "facing": "internal"
   },
@@ -49662,6 +51489,9 @@
     "facing": "ui"
   },
   "edea1eeea1bb0addd5ed1a5f99c43c190c414637": {
+    "facing": "ui"
+  },
+  "edef2b5fe7381bc2262eb7a3825a0ac10ded024d": {
     "facing": "ui"
   },
   "edf737dc7de413404151a0979cb035c7c36bbd4a": {
@@ -49877,11 +51707,23 @@
     "id": "system-prompt-memory-shared-skill-intro",
     "name": "System Prompt: Shared Memory Skill Intro"
   },
+  "eed23fa6e9fa2e90d926132362f7e88b424007a1": {
+    "desc": "Artifact asset-read error when the proxy refused the connection to the artifact content host.",
+    "facing": "model",
+    "id": "tool-result-artifact-asset-content-proxy-refused",
+    "name": "Tool Result: Artifact Asset Content Proxy Refused"
+  },
   "eed6ef81d688d68f5dc4a9a73c71d1d836b03c24": {
     "facing": "internal"
   },
   "eed7dcec1cbdbac79d4a2c56e45260b25020531f": {
     "facing": "internal"
+  },
+  "eedcbbd64bd4f23a965efc4447660bb206b8a624": {
+    "desc": "resume_replies tool_result when auto-replies resume on a watch that stayed connected, so catch-up and new to-Claude comments are answered in this pass.",
+    "facing": "model",
+    "id": "tool-result-artifact-resume-replies-resumed-in-place",
+    "name": "Tool Result: Artifact Resume Replies Resumed In Place"
   },
   "eedef723a57ea13c7473c18e0f90465d438ce73b": {
     "facing": "internal"
@@ -49951,6 +51793,12 @@
   },
   "ef44c7193870efbcb5c8e1165b1bf3d038fe962a": {
     "facing": "ui"
+  },
+  "ef460fd103cf7af92a5b6c0239d8cac84b705d6a": {
+    "desc": "Replacement text inserted into skill/command markdown instead of executing shell blocks during a read-only coordinator skill load.",
+    "facing": "model",
+    "id": "skill-readonly-coordinator-shell-not-executed",
+    "name": "Skill Readonly Coordinator Shell Not Executed"
   },
   "ef4a73075a597471000b1af3f9f5fd11378a02df": {
     "facing": "internal"
@@ -50062,6 +51910,9 @@
   },
   "efaa1ab706bc8757d1e1aa13185a1350fd311164": {
     "facing": "internal"
+  },
+  "efaa7346e9b9c166e6cf1f9e2a800be1afb5e49c": {
+    "facing": "ui"
   },
   "efb2e68c64f5c6f16cb7121f7df35801b49c536f": {
     "facing": "internal"
@@ -50191,6 +52042,12 @@
   },
   "f026f688671286cd514b27df09043c8b294c0114": {
     "facing": "internal"
+  },
+  "f03c556acee3e00f4157907d4777f0a4ed18ce1b": {
+    "desc": "Warning appended to a /plugin update result when managed settings blocked a marketplace headersHelper refresh.",
+    "facing": "model",
+    "id": "slash-command-plugin-update-marketplace-headers-helper-blocked",
+    "name": "Plugin Update Marketplace Headers Helper Blocked"
   },
   "f03ef99881494a26629e1af993102079b9f5be10": {
     "facing": "ui"
@@ -50438,6 +52295,9 @@
     "id": "system-prompt-memory-shared-not-mirrored-locally",
     "name": "System Prompt: Shared memories not mirrored locally"
   },
+  "f13ba033157497ad0119b7bf93c7d2606e1a6f69": {
+    "facing": "ui"
+  },
   "f14282dbac963e5b56ae927769ec93c3110a36ae": {
     "desc": "Appended to the Artifact tool description when the artifact-database capability is live, explaining read_db/write_db ops and that stored rows are untrusted viewer data.",
     "facing": "model",
@@ -50445,6 +52305,9 @@
     "name": "Tool Description: Artifact database guidance"
   },
   "f1453bf9b82311758376e56d43e45701025eb832": {
+    "facing": "ui"
+  },
+  "f149b66edb1a6b0501ac94407552c591db6cd005": {
     "facing": "ui"
   },
   "f14a8a04719bb1830af0284d63d824b5eb184d65": {
@@ -50518,6 +52381,12 @@
     "facing": "model",
     "id": "tool-description-suggestplugininstall",
     "name": "Tool description: SuggestPluginInstall"
+  },
+  "f19704648660ea414fe9e1d38599120bdbf78435": {
+    "desc": "Ternary clause in the re-armed auto-replies notification describing pause because the user interrupted and the watch had since dropped.",
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-replies-paused-watch-dropped-clause",
+    "name": "Data: Artifact Auto-Replies Paused Watch-Dropped Clause"
   },
   "f19881e925480aef74cf43031d712029106f2670": {
     "desc": "Reports the parse failure and names the likely causes (TypeScript syntax, broken quoting/escaping) so the model knows what to change; this branch fires when the parser gave no line/column.",
@@ -50860,6 +52729,9 @@
   },
   "f3174441af6829cb46f5419686165eeeaa5830f5": {
     "facing": "internal"
+  },
+  "f31877b41c8f6742ce498217f2def9904f521b6a": {
+    "facing": "ui"
   },
   "f31f4e5e5de7ed53c1f151245b624d77d9f3f4da": {
     "facing": "internal"
@@ -51314,6 +53186,9 @@
   "f4f07beff5bef04dd1c928e6d3e30453ac62d65f": {
     "facing": "internal"
   },
+  "f4f1e8e4cd8abbd341ef8467fc7f6d05ed0c9acf": {
+    "facing": "ui"
+  },
   "f4f768cfa9e0b5ddc108512e949ea46603274364": {
     "facing": "internal"
   },
@@ -51380,6 +53255,9 @@
   "f558f6dca25153323df19bc0f67c466b1f727b2a": {
     "facing": "internal"
   },
+  "f55cab517945bb4b6f46f70b2f6574ab0a4c9eae": {
+    "facing": "internal"
+  },
   "f55e36e265dd4c11a5a096e875610b3b6d71bb24": {
     "facing": "internal"
   },
@@ -51424,6 +53302,12 @@
   },
   "f5a84a8b4a2062fec7f0fce0773cf305a2b6b50c": {
     "facing": "internal"
+  },
+  "f5a85f79eb9b896ea47ad0072084f9083561c3c5": {
+    "desc": "ArtifactInputError thrown when publish cannot verify the source file is unchanged since approval; the message is returned to the model as the tool error.",
+    "facing": "model",
+    "id": "tool-result-artifact-publish-source-unverified",
+    "name": "Tool Result: Artifact Publish Source Unverified"
   },
   "f5b0367bf345cfa8d1b8dc5ab6668b8dcff0bd6d": {
     "desc": "Error tool-result thrown from the Teammate/subagent launch when the model's prompt input is a mailbox protocol frame (permission/mode/plan/shutdown JSON); surfaced to the model to make it pass plain-text instructions.",
@@ -51743,6 +53627,12 @@
   "f74328b410782ca5247277e60ae7347b73d50156": {
     "facing": "ui"
   },
+  "f7497c45c2887071d8e399e2d042c79e127d0b64": {
+    "desc": "Per-watch line in the Artifact watches tool result for a live (non-rail) watch, showing url, connection or handshake state, whether requested or publish-armed, auto-reply state, and the since timestamp.",
+    "facing": "model",
+    "id": "tool-result-artifact-watches-list-item",
+    "name": "Tool Result: Artifact Watches List Item"
+  },
   "f751e361b396a625b16172637018d568d33f13a2": {
     "desc": "Meta message (Lr isMeta) injected into context listing repo directory-scoped variants of a skill the agent invoked.",
     "facing": "model",
@@ -51920,6 +53810,9 @@
   "f8209b0aaeb3883e4196d00b59df5d6ff39e6d26": {
     "facing": "ui"
   },
+  "f828ef6bb4fbb31d086382831b1e4a8c0e5b2776": {
+    "facing": "ui"
+  },
   "f82db9c5c68af1d12e8ac156126850bda58eb116": {
     "facing": "internal"
   },
@@ -52006,6 +53899,12 @@
   },
   "f8a2d8a148964d1b0fd26ab48f2da4d317245201": {
     "facing": "internal"
+  },
+  "f8a339f4eee9aed3eb6e2b84e0eb7466eceecf7c": {
+    "desc": "Reason clause naming a failed relay request on the artifact publish path.",
+    "facing": "model",
+    "id": "tool-result-artifact-publish-relay-request-failed",
+    "name": "Tool Result: Artifact Publish \u2014 Relay Request Failed"
   },
   "f8aa19ac39fbce665e414b64685e5d0dea81fe3d": {
     "facing": "internal"
@@ -52132,6 +54031,9 @@
     "facing": "model",
     "id": "system-reminder-working-directory-changed",
     "name": "Working-directory-changed notice"
+  },
+  "f98ebec384a9cfbd3ceb8c7a9a646f502cb12480": {
+    "facing": "ui"
   },
   "f99738c6b48d4dac06febce506faf6e991d3fc4a": {
     "facing": "internal"
@@ -52361,6 +54263,12 @@
   "fa84fe9a1b0eb31ca60e5fc9496849be9c494570": {
     "facing": "internal"
   },
+  "fa8aaf5d5132f3351167239ab61c1723df2f0138": {
+    "desc": "checkPermissions ask message for a verify read prompted by a new-comments notification; declined, it is the tool_result the model reads.",
+    "facing": "model",
+    "id": "tool-result-artifact-verify-notification-triggered-permission-ask",
+    "name": "Tool Result: Artifact Verify Notification-Triggered Permission Ask"
+  },
   "fa9343bb0b61d8c8a44e5dbd150e41f4812ad2b7": {
     "desc": "The 'What would you like to do with scheduled cloud agents?' question embedded in the /schedule prompt (vmb) sent to the model.",
     "facing": "model",
@@ -52490,6 +54398,12 @@
   "faec157afbd643dad93a82852c2490afcf43fc90": {
     "facing": "internal"
   },
+  "faf4deed96168f9b8caea0a1aac6ef8290af64b9": {
+    "desc": "Publish warning that a declared connector/interface was never observed in-session.",
+    "facing": "model",
+    "id": "data-artifact-unobserved-connector-warning",
+    "name": "Data: Artifact Unobserved Connector Warning"
+  },
   "fafa7f009c9b3b4b5a83e1eafd185a2f73a22725": {
     "facing": "internal"
   },
@@ -52526,6 +54440,9 @@
   "fb255aaf0127da7298c111de5793582f7e131459": {
     "facing": "ui"
   },
+  "fb2a0e974ef3dc3c42a00221c15c350cdbc61d7a": {
+    "facing": "ui"
+  },
   "fb2c7e78fdef36809c1d786c11b5c38143d09b64": {
     "facing": "ui"
   },
@@ -52537,6 +54454,12 @@
   },
   "fb36236fc66bc93a577970cd77ee73a197b1d9ed": {
     "facing": "internal"
+  },
+  "fb3a66495a186b95392ab89f4341f4750e0e7713": {
+    "desc": "Watches-list tool-result branch explaining that auto-replies were paused by a user interrupt after the connection dropped.",
+    "facing": "model",
+    "id": "tool-result-artifact-watches-list-stop-kind-interrupt",
+    "name": "Artifact Watches List Stop Kind Interrupt"
   },
   "fb3b5695ddf43f66fcb28e17299e665639b09595": {
     "facing": "internal"
@@ -52763,6 +54686,12 @@
   "fc3fb4fd4747a7d92a50ce709a4dbf09a21fa1e4": {
     "facing": "internal"
   },
+  "fc50ad5797ea7e6f0f999da196171b2de8415e5a": {
+    "desc": "Refusal clause used when a worktree-isolated command redirects git at the shared checkout through an environment variable.",
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-redirect-shared-checkout",
+    "name": "Tool Result: Bash Worktree Git Redirect To Shared Checkout"
+  },
   "fc552dd4eb31d09178401f1d076c4e94e10d4eee": {
     "desc": "Option 4 of the fast-ack numbered list shown to the selector model, for a question whose answer requires checking the Artifact's contents first; posted into the comment thread when chosen.",
     "facing": "model",
@@ -52771,6 +54700,12 @@
   },
   "fc5f7ebebc72d0d5fa51ba23816b432ec94b6808": {
     "facing": "internal"
+  },
+  "fc62493697db4627a4dcd73c7005b3381f6ec7ba": {
+    "desc": "enT status-list row when a durable wake subscription failed to register, so nothing will wake this session about the artifact.",
+    "facing": "model",
+    "id": "tool-result-artifact-durable-wake-status-failed",
+    "name": "Tool Result: Artifact Durable-Wake Status Failed"
   },
   "fc6fc76b6917386652d2d0d102d90b2fad01bc60": {
     "facing": "ui"
@@ -52798,6 +54733,9 @@
     "facing": "model",
     "id": "system-prompt-cc-memory-citation-wrapping",
     "name": "System Prompt: cc-memory citation wrapping"
+  },
+  "fc8a55d47b8af1e27f07e5da8ccf9da404548cda": {
+    "facing": "ui"
   },
   "fc8deb7f514debaa45c0f1cb016f10fa51f79fa4": {
     "desc": "Description of the 'projectId' input parameter in the DesignSync tool's inputSchema; model-facing as part of the tool definition serialized to the model.",
@@ -52922,6 +54860,9 @@
   "fcff7513987ee6d3c67b11add371cd379af05ca0": {
     "facing": "ui"
   },
+  "fd02dfd1692d2e757f6d90f7d7df1e3b0130106c": {
+    "facing": "ui"
+  },
   "fd0c13557e0e3f71e90b639481bbd2e6a93bdfee": {
     "facing": "internal"
   },
@@ -52957,6 +54898,12 @@
   },
   "fd503096c95e1b1c4e48f3449418ca1cda4e2aac": {
     "facing": "internal"
+  },
+  "fd66906e8c21870b6e0832e92c5131dec3a1cf2b": {
+    "desc": "toAutoClassifierInput line describing a pending room_send broadcast (topic, optional data, destination url) for the auto-permission classifier model.",
+    "facing": "model",
+    "id": "data-artifact-room-send-auto-classifier-input",
+    "name": "Artifact room_send Auto-Classifier Input"
   },
   "fd67541a92de628e389b48a11ec64fcf5af0f305": {
     "desc": "Error returned to the model as tool_result when it tries to Edit/Write a file it has not Read first.",
@@ -53114,6 +55061,9 @@
   "fe3c442d011cfd41bef9cd0cb2ee67131f4824d6": {
     "facing": "ui"
   },
+  "fe51e23c690f5179202acfd404fd68fd547ead21": {
+    "facing": "internal"
+  },
   "fe537a3fde00be2d91c9ce3d105651d1b84a6da6": {
     "facing": "ui"
   },
@@ -53212,6 +55162,9 @@
   },
   "feb187c765e79658d3da48e087a7c389f7347361": {
     "facing": "internal"
+  },
+  "feb7d828f0e29814e9ac0d3f69ec9610ef3e84e6": {
+    "facing": "ui"
   },
   "feba7e69b14bafd81f0ce3ab2a0039bf7e6b679e": {
     "facing": "internal"
@@ -53408,6 +55361,12 @@
     "id": "tool-result-send-message-no-exact-name-confirm-ref",
     "name": "Tool Result: SendMessage no exact name confirm ref"
   },
+  "ff6b548f65d57d336c3317d68f1f9ccbaf5c3984": {
+    "desc": "safetyCheck decisionReason for the room_send ask: viewer page events can steer the broadcast, so the auto-permission classifier must not approve it.",
+    "facing": "model",
+    "id": "tool-result-artifact-room-send-user-approval-required",
+    "name": "Tool Result: Artifact room_send User Approval Required"
+  },
   "ff6b9e214464a7448ee1fae0e4213fa8eee464b7": {
     "desc": "Same emission site and rendered text as the 2.1.221 id (the first sentence was factored out into the Ayo() helper): per-type privacy defaults plus the no-secrets-in-team rule.",
     "facing": "model",
@@ -53476,6 +55435,9 @@
     "facing": "model",
     "id": "tool-result-artifact-updated-type-own-and-type-files",
     "name": "Tool Result: Updated Type Own And Type Files"
+  },
+  "ff8521858a303c41d5a54d304c1d70bea57927e3": {
+    "facing": "ui"
   },
   "ff8e2d6f85fdee3a6b40302a133ca42fa0801bb4": {
     "desc": "Result text of the hidden workflow-launch-exec command when no pending launch handoff exists (restored session replaying the dispatch turn); emitted as <local-command-stdout> and replayed into the model's context.",
@@ -53572,6 +55534,12 @@
     "facing": "model",
     "id": "system-reminder-partial-response-data-not-instructions",
     "name": "Partial-response data-not-instructions guard"
+  },
+  "ffec85c83ea507d9e5b3983864a89b19afcd1561": {
+    "desc": "Per-invocation Artifact tool description shown for a verify diagnostics read of viewer-captured console and error text.",
+    "facing": "model",
+    "id": "tool-result-artifact-verify-action-description",
+    "name": "Tool Result: Artifact Verify Action Description"
   },
   "ffee5e9e2a32f405b83aba56662b60c398f86496": {
     "desc": "Confirmation emitted after a usage-credit limit-increase request is sent to the org admin; surfaced via the local-jsx command's onDone and injected as <local-command-stdout>.",

@@ -260,6 +260,37 @@ describe('writePrintToolsFilter', () => {
     );
   });
 
+  // CC 2.1.238 split the print path: the arrows are hoisted into named consts,
+  // `tools:` and `refreshTools:` take the SAME thunk on the lazy branch, and the
+  // eager array the non-SDK branch submits moved to its own declaration. Both
+  // sites must be filtered, and both splices must be pure EXPRESSIONS — each one
+  // is a declarator inside a `let` list, so a `const` statement in front of
+  // either closes the list mid-declarator and yields JS Bun cannot parse.
+  const split238 =
+    'let $bu={a:1},$th=()=>$cf($gs()),$mc=()=>$mk($gs()),$cs={session:$e,refreshTools:$th,refreshMcpClients:$mc,verbose:1};' +
+    'let $fm=$mk($sv);let $tv=$cf($sv),$a5=2;' +
+    'Q??=ICy({...$cs,tools:$th,mcpClients:$mc,appendSystemPrompt:1});' +
+    'ACy({...$cs,tools:$tv,mcpClients:$fm,appendSystemPrompt:1});';
+
+  it('filters both sites of the CC 2.1.238 split print path', () => {
+    const out = writePrintToolsFilter(split238, TS, 'all')!;
+    expect(out).not.toBeNull();
+    // the shared thunk (covers tools: on the lazy branch AND refreshTools:)
+    expect(out).toContain('$th=()=>{let s=$gs();return ((t,s)=>{const p=');
+    // the eager array the non-SDK branch submits
+    expect(out).toContain('$tv=((t,s)=>{const p=');
+    expect(out).toContain('})($cf($sv),$sv)');
+    // no statement was spliced into a declarator list
+    expect(out).not.toContain('const __tpts=');
+  });
+
+  it('emits parseable JS for the CC 2.1.238 split print path', () => {
+    const out = writePrintToolsFilter(split238, TS, 'all')!;
+    expect(
+      () => new Function(out.replace(/Q\?\?=/, 'globalThis.Q??='))
+    ).not.toThrow();
+  });
+
   it('returns null when the print tools init is absent', () => {
     const err = silenceErr();
     expect(writePrintToolsFilter('x=1', TS, 'all')).toBeNull();
