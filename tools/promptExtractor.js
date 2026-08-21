@@ -110,6 +110,37 @@ const CURATED_IDENTIFIER_MAPS = {
   ],
   'system-prompt-coordinator-mode': [
     {
+      // CC 2.1.238 inserted a conditional Skill-tool bullet (`i`) between the
+      // workflow note and the cross-session peers note, taking the prompt from
+      // 9 distinct slots to 10 and from 32 positions to 33. That is a new
+      // identifiers array, so the 2.1.234 entry below stops matching and the
+      // GENERATED map takes over — and the generated map is wrong at every
+      // slot, because slot 0 is the `Every message you send is to the user.`
+      // conditional rather than a tool, so every carried label slides by one.
+      // Rendered, that reads `- **${SENDMESSAGE_TOOL_NAME}** - Spawn a new
+      // worker` and `- **${WORKFLOW_CONDITIONAL_TOOL_NOTE}** - Stop a running
+      // worker`: valid names bound to the wrong slots, no crash, wrong content.
+      // Derived from the builder at `You are Claude Code, an AI assistant that
+      // orchestrates software engineering tasks`, distinct vars in first-seen
+      // order: l, Ci, Zm, H3, a, i, s, c, __a, o.
+      identifiers: [
+        0, 1, 2, 3, 4, 5, 6, 1, 2, 7, 1, 8, 1, 9, 2, 3, 1, 2, 1, 3, 2, 1, 1, 1,
+        2, 1, 2, 2, 2, 1, 1, 8, 2,
+      ],
+      identifierMap: {
+        0: 'EVERY_MESSAGE_TO_USER_NOTE',
+        1: 'AGENT_TOOL_NAME',
+        2: 'SENDMESSAGE_TOOL_NAME',
+        3: 'TASKSTOP_TOOL_NAME',
+        4: 'WORKFLOW_CONDITIONAL_TOOL_NOTE',
+        5: 'SKILL_TOOL_CONDITIONAL_NOTE',
+        6: 'CROSS_SESSION_PEERS_NOTE',
+        7: 'LAUNCH_ANNOUNCE_NOTE',
+        8: 'SYSTEM_REMINDER_OPENING_TEXT',
+        9: 'WORKER_TOOLS_INTRO_TEXT',
+      },
+    },
+    {
       // CC 2.1.234: Anthropic added the `<system-reminder>` opening-text slot
       // (`aJs`) between LAUNCH_ANNOUNCE_NOTE and the worker-tools intro, which
       // renumbers everything after slot 6 and makes the generated map name slot
