@@ -57,8 +57,8 @@ The biggest difference is coverage. Its extractor pulls over four times the prom
 
 |                              | tweakcc-fixed | upstream  |
 | ---------------------------- | :-----------: | :-------: |
-| Prompt sites (CC 2.1.238)    |   **4,841**   |    690    |
-| Unique prompt IDs            |   **4,515**   |    690    |
+| Prompt sites (CC 2.1.238)    |   **4,854**   |    690    |
+| Unique prompt IDs            |   **4,528**   |    690    |
 | Patches                      |    **61**     |    45     |
 | Overrides on native installs |    **yes**    | gated off |
 
