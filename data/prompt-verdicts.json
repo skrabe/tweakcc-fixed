@@ -792,10 +792,9 @@
     "why": "Sole copy on the single-file branch. Frozen \u2014 an interpolated path, the Read tool name, and the ordering word 'before'; the clause is also a truncated fragment that must join its continuation verbatim."
   },
   "data-artifact-mcp-connector-guidance": {
-    "injectionPath": "Conditional section of the artifact runtime-capabilities skill when explaining how published artifacts bind claude.ai connector tools, including the hermetic/CI discovery fallback.",
     "verdict": "pristine-keep",
-    "version": "2.1.226",
-    "why": "Its claims are all non-inferable integration mechanics: deriving `server` from an MCP tool prefix, preserving case, handling no connected tools, excluding local MCP servers, using upstream rather than normalized tool names, and performing OAuth-backed discovery in hermetic sessions. The Slack example demonstrates a non-obvious segment boundary; the curl fallback and exact headers, token, endpoint, limit, and display-name rule are hard mechanics. No deployed sibling covers this manifest contract."
+    "version": "2.1.238",
+    "why": "The 2.1.210 override was a 12-character trim of a 1,421-char prompt. Anthropic grew it to 1,873 chars for 2.1.238 and the realignment returned it to full pristine, so the override is now byte-identical to pristine in all three sets that carry it \u2014 a no-op. Recorded as pristine-keep rather than left as a phantom trim. Surfaced only after the pristine reconstruction bug was fixed; the inflated bodies had made it look like a 99%-of-pristine trim."
   },
   "data-artifact-mcp-contract-and-definitions-read-instruction": {
     "verdict": "pristine-keep",
@@ -4819,10 +4818,25 @@
     "version": "2.1.237",
     "why": "Post-content trailer for Artifact-type pages. Unique mechanics: the page was written by the type's publisher, use it only to learn which data files the page expects, and the publisher cannot grant escalation. A wrap-lead does not replace a trailer (ordering was already stage-3 refuted the other way on the cowritten pair). Frozen throughout; keep verbatim."
   },
+  "system-prompt-background-subagent-delegation-examples": {
+    "verdict": "wipe-merge",
+    "version": "2.1.238",
+    "why": "Worked delegation examples. The Opus 5 system card treats an enumerated example block backing a capability the model already has as a cut, and says any \"delegate more\" guidance added for Opus 4.8 should come out; CC also damps Opus 5 itself via opus_5_prompt_bundle. So the suppression in opus-5 and opus-4-8 is a deliberate per-model call from the CC 2.1.221 audit, and fable-5 keeping its trimmed copy is legitimate divergence, not drift. Recorded rather than reversed. fable-5 keeps a 1,729-char trim of the 2,640-char pristine."
+  },
   "system-prompt-brief-mode-progress-updates": {
     "verdict": "pristine-keep",
     "version": "2.1.231",
     "why": "Stage-3 refutation applied: The cited carrier is not live in the turn_updates branch, and its quoted coverage is not exact across all four maintained sets. Restore the pristine brief-mode body in every maintained set unless a carrier proven to co-render in the turn_updates branch is added. Restored to current pristine in all four maintained sets."
+  },
+  "system-prompt-cc-memory-citation-wrapping": {
+    "verdict": "pristine-keep",
+    "version": "2.1.238",
+    "why": "Harness mechanics \u2014 a tool name, an exact parameter, a required output tag, a name-resolution rule or a security control. fable-5 alone had it suppressed while opus-5, opus-4-8 (and where present opus-4-7) all carry pristine; nothing model-specific justifies the split, and the mechanics tripwire says text like this is verbatim-or-gone rather than quietly dropped. Restored in fable-5 to match the active set. Defines the <cc-memory filenames=\"...\"> wrapper the model must emit around any sentence citing a memory."
+  },
+  "system-prompt-communication-style": {
+    "verdict": "wipe-merge",
+    "version": "2.1.238",
+    "why": "The non-lean arm of the communications block. claude-opus-5 and claude-fable-5 both carry the lean_prompt capability, so this arm renders for neither and the active-set suppression costs nothing. fable-5 keeps a 150-char precedence note that is equally inert. Recorded; no edit, since changing a branch that never renders is churn."
   },
   "system-prompt-concise-mode": {
     "verdict": "pristine-keep",
@@ -4833,6 +4847,11 @@
     "verdict": "trim",
     "version": "2.1.237",
     "why": "Drop the duplicated identity sentence. Keep the thoroughness clause, \"# Concise Style Active\", and ${SYSTEM_PROMPT_CONCISE_OUTPUT_STYLE_VAR_0} verbatim so the style body still injects."
+  },
+  "system-prompt-conversation-summarizer-2": {
+    "verdict": "wipe-merge",
+    "version": "2.1.238",
+    "why": "Side-model summariser role line (\"You are a helpful AI assistant tasked with summarizing conversations.\"). The summarisation instruction that follows it is carried in every set, so the role preamble is pure scaffolding. fable-5 keeps a 27-char reduction of it; both positions are defensible and neither loses a control."
   },
   "system-prompt-coordinator-cross-session-peer-guidance": {
     "verdict": "trim",
@@ -4848,6 +4867,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.228",
     "why": "Proposed wipe-merge, reverted to pristine. refuted on q3: The cut removes the numeric response-shape requirement and the explicit authorization gate; neither survives in proposedBody. MODEL_DEFAULT does not preserve those mechanics verbatim."
+  },
+  "system-prompt-doing-tasks-focus": {
+    "verdict": "wipe-merge",
+    "version": "2.1.238",
+    "why": "The \"requests are primarily software engineering tasks\" framing. Verified still owned in the active set by system-prompt-harness-instructions, system-prompt-interactive-intro-conditional, system-prompt-learning-mode and inline-intro-interactive-agent, so the CC 2.1.221 suppression here removed a competing copy with a live owner. Correct as it stands."
   },
   "system-prompt-doing-tasks-prefer-editing": {
     "verdict": "pristine-keep",
@@ -4873,6 +4897,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.228",
     "why": "Proposed wipe-merge, reverted to pristine. refuted on q3: The visibility boundary, override ordering, and do-not-assume guard are runtime mechanics, but proposedBody removes them all. The cited inline carrier is also stale at 2.1.138."
+  },
+  "system-prompt-fresh-subagent-delegation-example": {
+    "verdict": "wipe-merge",
+    "version": "2.1.238",
+    "why": "Worked delegation examples. The Opus 5 system card treats an enumerated example block backing a capability the model already has as a cut, and says any \"delegate more\" guidance added for Opus 4.8 should come out; CC also damps Opus 5 itself via opus_5_prompt_bundle. So the suppression in opus-5 and opus-4-8 is a deliberate per-model call from the CC 2.1.221 audit, and fable-5 keeping its trimmed copy is legitimate divergence, not drift. Recorded rather than reversed. fable-5 keeps an 806-char trim of the 890-char pristine."
   },
   "system-prompt-github-issue-title-clarity": {
     "verdict": "wipe-merge",
@@ -5103,6 +5132,11 @@
     "version": "2.1.224",
     "why": "Read in full: '- Update or remove memories that turn out to be wrong or outdated' \u2014 one bullet, no CAPS, no hedging. It fails on duplication, not on slop, and the duplicate CO-FIRES in every arm where the bullet renders. (1) In iSu's lean arm the rendered array is [... `${wyo} ${qrn}` ... ...S] where S = Ryo({...}) contributing this bullet \u2014 so 'delete memories that turn out to be wrong' (system-prompt-memory-save-hygiene-and-exclusions, also in this batch, verdict pristine-keep) and this bullet appear in the SAME system prompt, ~200 characters apart, saying the same thing. (2) In the verbose "
   },
+  "system-prompt-memory-what-not-to-save-fix-recipes": {
+    "verdict": "pristine-keep",
+    "version": "2.1.238",
+    "why": "Harness mechanics \u2014 a tool name, an exact parameter, a required output tag, a name-resolution rule or a security control. fable-5 alone had it suppressed while opus-5, opus-4-8 (and where present opus-4-7) all carry pristine; nothing model-specific justifies the split, and the mechanics tripwire says text like this is verbatim-or-gone rather than quietly dropped. Restored in fable-5 to match the active set. One bullet of the memory save-hygiene list; the surrounding list is carried in every set."
+  },
   "system-prompt-nl-datetime-parser-date-only-format": {
     "verdict": "pristine-keep",
     "version": "2.1.233",
@@ -5157,6 +5191,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Trim REFUTED by stage 3 and reverted to pristine. One cited carrier (skill-claude-code-help-plugin-eval-reference) was wiped to an empty body in the same round, so it covers nothing, and the claimed quickref co-location does not exist \u2014 the target has an empty identifierMap. This is an always-injected Current Build line while every surviving carrier lives in a skill file that renders only when the claude-code skill fires."
+  },
+  "system-prompt-pronoun-neutral-default": {
+    "verdict": "trim",
+    "version": "2.1.238",
+    "why": "RESTORED. The CC 2.1.221 audit suppressed this in opus-5 as a competing copy, but it is the only catalogued prompt that carries the rule and no other opus-5 override states it \u2014 verified against every override body AND against a live wire capture, where \"they/them\" and \"pronoun\" both count 0 in the system array and in tools[].description. That is a deleted copy with no surviving owner. Restored to the 277-char trim the other three sets already share."
   },
   "system-prompt-resume-continue-prompt-3": {
     "verdict": "pristine-keep",
@@ -5214,6 +5253,11 @@
     "version": "2.1.233",
     "why": "The same refusal without the consumed-token clause. Both branches exist in the binary; each is minimal."
   },
+  "system-prompt-subagent-delegation-examples": {
+    "verdict": "wipe-merge",
+    "version": "2.1.238",
+    "why": "Worked delegation examples. The Opus 5 system card treats an enumerated example block backing a capability the model already has as a cut, and says any \"delegate more\" guidance added for Opus 4.8 should come out; CC also damps Opus 5 itself via opus_5_prompt_bundle. So the suppression in opus-5 and opus-4-8 is a deliberate per-model call from the CC 2.1.221 audit, and fable-5 keeping its trimmed copy is legitimate divergence, not drift. Recorded rather than reversed. fable-5 keeps a 742-char trim of the 2,357-char pristine."
+  },
   "system-prompt-system-reminder-framing-tag": {
     "verdict": "pristine-keep",
     "version": "2.1.234",
@@ -5228,6 +5272,16 @@
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "The same message carrying a near-match suggestion, which is the recovery path."
+  },
+  "system-prompt-user-claude-md-context-fragment": {
+    "verdict": "pristine-keep",
+    "version": "2.1.238",
+    "why": "Harness mechanics \u2014 a tool name, an exact parameter, a required output tag, a name-resolution rule or a security control. fable-5 alone had it suppressed while opus-5, opus-4-8 (and where present opus-4-7) all carry pristine; nothing model-specific justifies the split, and the mechanics tripwire says text like this is verbatim-or-gone rather than quietly dropped. Restored in fable-5 to match the active set. Frames the user CLAUDE.md block that follows it; without it the block arrives unlabelled."
+  },
+  "system-prompt-user-deny-rules-laundering": {
+    "verdict": "pristine-keep",
+    "version": "2.1.238",
+    "why": "Harness mechanics \u2014 a tool name, an exact parameter, a required output tag, a name-resolution rule or a security control. fable-5 alone had it suppressed while opus-5, opus-4-8 (and where present opus-4-7) all carry pristine; nothing model-specific justifies the split, and the mechanics tripwire says text like this is verbatim-or-gone rather than quietly dropped. Restored in fable-5 to match the active set. A security control: block an action that reaches the same effect through a different tool."
   },
   "system-prompt-user-message-attribution-guard": {
     "verdict": "pristine-keep",
@@ -5569,6 +5623,11 @@
     "version": "2.1.237",
     "why": "Conditional after several silent turns. Unique now that communication-style is suppressed. Card documents Opus 5 going silent on long-horizon work. Frozen enumeration stays. Keep both sentences."
   },
+  "system-reminder-skill-scoped-variants-guidance": {
+    "verdict": "pristine-keep",
+    "version": "2.1.238",
+    "why": "Harness mechanics \u2014 a tool name, an exact parameter, a required output tag, a name-resolution rule or a security control. fable-5 alone had it suppressed while opus-5, opus-4-8 (and where present opus-4-7) all carry pristine; nothing model-specific justifies the split, and the mechanics tripwire says text like this is verbatim-or-gone rather than quietly dropped. Restored in fable-5 to match the active set. States how a bare skill name resolves versus a qualified variant name."
+  },
   "system-reminder-task-tools-reminder": {
     "verdict": "pristine-keep",
     "version": "2.1.228",
@@ -5826,6 +5885,11 @@
     "version": "2.1.237",
     "why": "Pre-call session-approval plus the per-write exception are unique mechanics. Conditional; keep."
   },
+  "tool-description-bash-alt-write-files": {
+    "verdict": "pristine-keep",
+    "version": "2.1.238",
+    "why": "Harness mechanics \u2014 a tool name, an exact parameter, a required output tag, a name-resolution rule or a security control. fable-5 alone had it suppressed while opus-5, opus-4-8 (and where present opus-4-7) all carry pristine; nothing model-specific justifies the split, and the mechanics tripwire says text like this is verbatim-or-gone rather than quietly dropped. Restored in fable-5 to match the active set. Names the Write tool and the two shell forms not to use."
+  },
   "tool-description-bash-git-commit-and-pr-creation-instructions": {
     "verdict": "pristine-keep",
     "version": "2.1.231",
@@ -5854,15 +5918,30 @@
     "version": "2.1.226",
     "why": "The verify skill already covers test-only and runtime-surface-free eligibility, but this fragment adds two unique pre-commit mechanics: only `/verify` is exempt while other listed checks remain required, and the visible status sentence must name the files proving the exemption. Its frozen tool name, exclusive quantifier, runtime-surface rule, and reporting contract must remain verbatim."
   },
+  "tool-description-bash-sandbox-adjust-settings": {
+    "verdict": "pristine-keep",
+    "version": "2.1.238",
+    "why": "Harness mechanics \u2014 a tool name, an exact parameter, a required output tag, a name-resolution rule or a security control. fable-5 alone had it suppressed while opus-5, opus-4-8 (and where present opus-4-7) all carry pristine; nothing model-specific justifies the split, and the mechanics tripwire says text like this is verbatim-or-gone rather than quietly dropped. Restored in fable-5 to match the active set. Directs a sandbox failure to a settings change rather than a workaround."
+  },
   "tool-description-bash-sandbox-bypass-explicit-request": {
     "verdict": "pristine-keep",
     "version": "2.1.221",
     "why": "One element of the bullet array under tool-description-bash-sandbox-default (\"\u2026Do NOT attempt to set `dangerouslyDisableSandbox: true` unless:\"), which is deployed in a trimmed form that KEEPS the \"unless:\" header. The only other bullet is tool-description-bash-sandbox-failure-evidence (deployed, body present). So the permitted-bypass list has exactly two conditions and this is the sole one author"
   },
+  "tool-description-bash-sandbox-retry": {
+    "verdict": "pristine-keep",
+    "version": "2.1.238",
+    "why": "Harness mechanics \u2014 a tool name, an exact parameter, a required output tag, a name-resolution rule or a security control. fable-5 alone had it suppressed while opus-5, opus-4-8 (and where present opus-4-7) all carry pristine; nothing model-specific justifies the split, and the mechanics tripwire says text like this is verbatim-or-gone rather than quietly dropped. Restored in fable-5 to match the active set. Names the exact parameter dangerouslyDisableSandbox: true and the no-ask retry."
+  },
   "tool-description-bash-sandbox-tmpdir-unset-mktemp": {
     "verdict": "pristine-keep",
     "version": "2.1.228",
     "why": "This conditional sandbox variant supplies exact scratch-directory mechanics for an environment where `$TMPDIR` is absent; the sibling `$TMPDIR` prompt describes the opposite configuration."
+  },
+  "tool-description-bash-working-directory": {
+    "verdict": "pristine-keep",
+    "version": "2.1.238",
+    "why": "Harness mechanics \u2014 a tool name, an exact parameter, a required output tag, a name-resolution rule or a security control. fable-5 alone had it suppressed while opus-5, opus-4-8 (and where present opus-4-7) all carry pristine; nothing model-specific justifies the split, and the mechanics tripwire says text like this is verbatim-or-gone rather than quietly dropped. Restored in fable-5 to match the active set. States that the working directory persists between commands but shell state does not."
   },
   "tool-description-code-review-ultra-cloud-option": {
     "verdict": "pristine-keep",
@@ -6155,8 +6234,8 @@
   },
   "tool-description-request-teach-access-retry-note": {
     "verdict": "pristine-keep",
-    "version": "2.1.221",
-    "why": "Read in full. Structural twin of the request_access retry note but a distinct runtime branch in Kfy(), with a different split point (this fragment ends 'the next call will ', tail is 'show the app selection list.' \u2014 confirmed against cli.js). Slop check: none. Tripwire: FROZEN \u2014 tool name `request_teach_access` plus ordering ('again immediately', 'the next call'). Corpus check: the same-claim sibl"
+    "version": "2.1.238",
+    "why": "Harness mechanics \u2014 a tool name, an exact parameter, a required output tag, a name-resolution rule or a security control. fable-5 alone had it suppressed while opus-5, opus-4-8 (and where present opus-4-7) all carry pristine; nothing model-specific justifies the split, and the mechanics tripwire says text like this is verbatim-or-gone rather than quietly dropped. Restored in fable-5 to match the active set. States that the next request_teach_access call is the one that succeeds."
   },
   "tool-description-searchplugins": {
     "verdict": "pristine-keep",
@@ -6300,6 +6379,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.228",
     "why": "Proposed trim, reverted to pristine. refuted on q3: The removed opener defines the query operation, complete JSONSchema payload, and <functions> container; those are wire mechanics, not generic prose. The listed frozen sentences survive, but this additional load-bearing s"
+  },
+  "tool-description-toolsearch-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.238",
+    "why": "Harness mechanics \u2014 a tool name, an exact parameter, a required output tag, a name-resolution rule or a security control. fable-5 alone had it suppressed while opus-5, opus-4-8 (and where present opus-4-7) all carry pristine; nothing model-specific justifies the split, and the mechanics tripwire says text like this is verbatim-or-gone rather than quietly dropped. Restored in fable-5 to match the active set. States that an unfetched deferred tool has no schema and cannot be invoked."
   },
   "tool-description-upload-direct-read-note": {
     "verdict": "pristine-keep",
@@ -7346,8 +7430,8 @@
   },
   "tool-parameter-powershell-dangerously-disable-sandbox": {
     "verdict": "pristine-keep",
-    "version": "2.1.235",
-    "why": "Sole description of a sandbox-bypass flag shared by two tools. The only available cut is the danger signal itself, which guards a destructive capability rather than being safety theater, and is worth ~4 tokens. Note fable-5 has this file wiped; the opus-5 digest explicitly reverses fable's anti-moralizing cuts, so the sets legitimately diverge here."
+    "version": "2.1.238",
+    "why": "Harness mechanics \u2014 a tool name, an exact parameter, a required output tag, a name-resolution rule or a security control. fable-5 alone had it suppressed while opus-5, opus-4-8 (and where present opus-4-7) all carry pristine; nothing model-specific justifies the split, and the mechanics tripwire says text like this is verbatim-or-gone rather than quietly dropped. Restored in fable-5 to match the active set. The parameter description for the sandbox override flag."
   },
   "tool-parameter-powershell-run-in-background": {
     "verdict": "pristine-keep",
