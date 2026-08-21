@@ -47,7 +47,7 @@ import {
   SpanClaim,
 } from './systemPromptSites';
 import { applyInlineBlobOverrides } from './patches/inlineBlobOverrides';
-import { REMINDER_REGISTRY } from './patches/systemReminderOverrides';
+import { REMINDER_REGISTRY } from './patches/systemReminderOverridesLexPatcher';
 import {
   loadReminderOverride,
   substitutePlaceholders,

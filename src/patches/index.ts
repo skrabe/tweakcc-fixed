@@ -115,7 +115,7 @@ import {
   writeStripEmptySystemReminders,
   writeClaudemdContextOncePerConversation,
 } from './systemReminders';
-import { applySystemReminderOverrides } from './systemReminderOverrides';
+import { applySystemReminderOverrides } from './systemReminderOverridesLexPatcher';
 import {
   restoreNativeBinaryFromBackup,
   restoreClijsFromBackup,

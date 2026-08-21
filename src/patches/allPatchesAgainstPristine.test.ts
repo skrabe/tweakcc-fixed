@@ -18,7 +18,7 @@ import * as path from 'node:path';
 import { execFileSync } from 'node:child_process';
 
 import { getAllPatchDefinitions, PatchId } from './index';
-import { REMINDER_REGISTRY } from './systemReminderOverrides';
+import { REMINDER_REGISTRY } from './systemReminderOverridesLexPatcher';
 import { substitutePlaceholders } from '../systemReminderSync';
 import { DEFAULT_SETTINGS } from '../defaultSettings';
 
