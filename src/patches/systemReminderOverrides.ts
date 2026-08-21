@@ -160,35 +160,17 @@ const applySimpleEntry = (
   return newContent;
 };
 
-const findCaseBody = (
-  content: string,
-  caseName: string,
-  anchorEnglish: string
-): { headerIdx: number; bodyStart: number; bodyEnd: number } | null => {
-  const caseHeader = `case"${caseName}":{`;
-  const occurrences: number[] = [];
-  let scan = 0;
-  while (true) {
-    const idx = content.indexOf(caseHeader, scan);
-    if (idx < 0) break;
-    occurrences.push(idx);
-    scan = idx + caseHeader.length;
-  }
-  if (occurrences.length === 0) return null;
-  const headerIdx = occurrences.find(idx =>
-    content.slice(idx, idx + 2048).includes(anchorEnglish)
-  );
-  if (headerIdx === undefined) return null;
-  const bodyStart = headerIdx + caseHeader.length;
-
-  // Walk to matching `}` accounting for nested {} balance and JS string contexts.
-  let depth = 1;
-  let i = bodyStart;
+// Index of the `}` matching the `{` at `openIdx`, or -1. Brace-balanced and
+// aware of the three JS string contexts plus `${…}` inside a template literal,
+// so a `{` in `T(\`… ${gFn} …\`,{level:"error"})` cannot end the walk early.
+const matchingBrace = (content: string, openIdx: number): number => {
+  if (content[openIdx] !== '{') return -1;
+  let depth = 0;
   let inTpl = false;
   let inSingle = false;
   let inDouble = false;
   let inTplExpr = 0;
-  while (i < content.length && depth > 0) {
+  for (let i = openIdx; i < content.length; i++) {
     const c = content[i];
     const prev = content[i - 1];
     if (inSingle) {
@@ -216,13 +198,35 @@ const findCaseBody = (
       depth++;
     } else if (c === '}') {
       depth--;
-      if (depth === 0) {
-        return { headerIdx, bodyStart, bodyEnd: i };
-      }
+      if (depth === 0) return i;
     }
-    i++;
   }
-  return null;
+  return -1;
+};
+
+const findCaseBody = (
+  content: string,
+  caseName: string,
+  anchorEnglish: string
+): { headerIdx: number; bodyStart: number; bodyEnd: number } | null => {
+  const caseHeader = `case"${caseName}":{`;
+  const occurrences: number[] = [];
+  let scan = 0;
+  while (true) {
+    const idx = content.indexOf(caseHeader, scan);
+    if (idx < 0) break;
+    occurrences.push(idx);
+    scan = idx + caseHeader.length;
+  }
+  if (occurrences.length === 0) return null;
+  const headerIdx = occurrences.find(idx =>
+    content.slice(idx, idx + 2048).includes(anchorEnglish)
+  );
+  if (headerIdx === undefined) return null;
+  const bodyStart = headerIdx + caseHeader.length;
+  const bodyEnd = matchingBrace(content, bodyStart - 1);
+  if (bodyEnd === -1) return null;
+  return { headerIdx, bodyStart, bodyEnd };
 };
 
 // Pull the array-wrapper / message-constructor minified identifiers from an
@@ -472,42 +476,94 @@ const OUTPUT_STYLE_INJECTION: ReminderInjection = {
       '${H.turnReminder??"Remember to follow the specific guidelines for this style."}',
   },
   defaultBody: `{{style_name}} output style is active. {{turn_reminder}}`,
+  // Anchored on the registry key plus the arrow's code shape, never on the
+  // guards that precede the return. CC 2.1.238 replaced the guard wholesale —
+  // `let t=Oke[e.style];if(!t)return[];` became a type/emptiness check, a
+  // 256-char cap and a control-char sanitizer (`pze(e.style)`) — which broke a
+  // regex that spelled the old guard out, even though the site, the key, the
+  // wrapper and the message builder were all unchanged. The guards are none of
+  // this patch's business: it owns the CONTENT template only. So find the arrow
+  // by key, keep whatever precedes the return verbatim, and recover both slot
+  // expressions from the pristine template the same way `slotExpr` does — that
+  // way the next guard rewrite (or a new wrapper around the style name) needs
+  // no change here at all.
   apply(content, body, isSuppressed) {
-    const pattern =
-      /output_style:\(([$\w]+)\)=>\{let ([$\w]+)=([$\w]+)\[\1\.style\];if\(!\2\)return\[\];return ([$\w]+)\(\[([$\w]+)\(\{content:`\$\{\2\.name\} output style is active\. \$\{\1\.turnReminder\?\?"Remember to follow the specific guidelines for this style\."\}`,isMeta:!0\}\)\]\)\}/;
-    const match = content.match(pattern);
-    if (!match || match.index === undefined) {
-      if (/output_style:\([$\w]+\)=>\{return \[\]/.test(content)) {
-        return content;
-      }
+    const head = content.match(/output_style:\(([$\w]+)\)=>/);
+    if (!head || head.index === undefined) {
       console.error(
         'patch: reminder output-style-banner: failed to find output_style arrow'
       );
       return null;
     }
-    const [fullMatch, hParam, sVar, mwhMap, o5Name, j6Name] = match;
-    const bodyForThisBuild = body
-      .replace(/\$\{_\.name\}/g, `\${${sVar}.name}`)
-      .replace(/\$\{H\.turnReminder/g, `\${${hParam}.turnReminder`);
+    const hParam = head[1];
+    const afterArrow = head.index + head[0].length;
+    // Already suppressed (by us, or by a build that emits nothing) — idempotent.
+    if (/^(\[\]|\{\s*return \[\];?\s*\})/.test(content.slice(afterArrow))) {
+      return content;
+    }
+    if (content[afterArrow] !== '{') {
+      console.error(
+        'patch: reminder output-style-banner: output_style arrow is not a block body'
+      );
+      return null;
+    }
+    const bodyEnd = matchingBrace(content, afterArrow);
+    if (bodyEnd === -1) {
+      console.error(
+        'patch: reminder output-style-banner: unbalanced output_style arrow body'
+      );
+      return null;
+    }
+    const arrowBody = content.slice(afterArrow + 1, bodyEnd);
+    const ret = arrowBody.match(
+      /return ([$\w]+)\(\[([$\w]+)\(\{content:`((?:[^`\\]|\\.)*)`,isMeta:!0\}\)\]\)$/
+    );
+    if (!ret || ret.index === undefined) {
+      console.error(
+        'patch: reminder output-style-banner: failed to find the reminder return expression'
+      );
+      return null;
+    }
+    const [, wrapFn, metaFn, template] = ret;
+    const guards = arrowBody.slice(0, ret.index);
     let replacement: string;
     if (isSuppressed) {
-      replacement = `output_style:(${hParam})=>{return [];}`;
+      replacement = `output_style:(${hParam})=>[]`;
     } else {
+      // `${_.name}` is whatever expression pristine interpolates immediately
+      // before " output style is active." — `${t.name}` up to 2.1.237,
+      // `${pze(e.style)}` from 2.1.238.
+      const nameExpr = template.match(
+        /\$\{((?:[^{}]|\{[^{}]*\})*)\} output style is active\./
+      );
+      const reminderExpr = template.match(
+        /\$\{((?:[^{}]|\{[^{}]*\})*turnReminder(?:[^{}]|\{[^{}]*\})*)\}/
+      );
+      if (!nameExpr || !reminderExpr) {
+        console.error(
+          'patch: reminder output-style-banner: no pristine expression for style_name/turn_reminder'
+        );
+        return null;
+      }
+      const built = body
+        .split('${_.name}')
+        .join(`\${${nameExpr[1]}}`)
+        .replace(
+          /\$\{H\.turnReminder(?:[^{}]|\{[^{}]*\})*\}/g,
+          `\${${reminderExpr[1]}}`
+        );
       replacement =
-        `output_style:(${hParam})=>{` +
-        `let ${sVar}=${mwhMap}[${hParam}.style];if(!${sVar})return[];` +
-        `return ${o5Name}([${j6Name}({content:\`${bodyForThisBuild}\`,isMeta:!0})])}`;
+        `output_style:(${hParam})=>{${guards}` +
+        `return ${wrapFn}([${metaFn}({content:\`${built}\`,isMeta:!0})])}`;
     }
     const newContent =
-      content.slice(0, match.index) +
-      replacement +
-      content.slice(match.index + fullMatch.length);
+      content.slice(0, head.index) + replacement + content.slice(bodyEnd + 1);
     showDiff(
       content,
       newContent,
       replacement,
-      match.index,
-      match.index + fullMatch.length
+      head.index,
+      head.index + replacement.length
     );
     return newContent;
   },
@@ -1571,8 +1627,17 @@ const MCP_PER_SERVER_ROUTER_INJECTION: ReminderInjection = {
     'This file is a marker that enables per-MCP-server overrides. Edit per-server content in mcp-<server-name>.md alongside this file. Leave this file with content (any content) to enable routing; empty it to disable.',
   apply(content, _body, isSuppressed) {
     if (isSuppressed) return content;
+    // The loop body is a comma expression whose length is Anthropic's business,
+    // not ours: CC 2.1.238 appended a second `c.set(f.name,f.instructions)` to
+    // stash the raw instructions as a change-detection baseline (it feeds
+    // `addedServerInstructions`, compared as `g!==h` to decide whether to
+    // re-announce a server whose instructions moved). A pattern that ended at
+    // the first `.set(...)` broke on that alone. Match the RUN of trailing sets
+    // instead, and re-emit each one with `<param>.instructions` rewritten to the
+    // overridden text — otherwise the baseline tracks pristine while the model
+    // is shown our override, and every session re-announces the server.
     const pattern =
-      /for\(let ([$\w]+) of ([$\w]+)\)if\(\1\.instructions\)([$\w]+)\.set\(\1\.name,`## \$\{\1\.name\}\n\$\{\1\.instructions\}`\);/;
+      /for\(let ([$\w]+) of ([$\w]+)\)if\(\1\.instructions\)([$\w]+)\.set\(\1\.name,`## \$\{\1\.name\}\n\$\{\1\.instructions\}`\)((?:,[$\w]+\.set\((?:[^()]|\([^()]*\))*\))*);/;
     const match = content.match(pattern);
     if (!match || match.index === undefined) {
       if (content.includes('__tweakccMcpOverride')) return content;
@@ -1581,7 +1646,16 @@ const MCP_PER_SERVER_ROUTER_INJECTION: ReminderInjection = {
       );
       return null;
     }
-    const [fullMatch, jVar, zVar, mapVar] = match;
+    const [fullMatch, jVar, zVar, mapVar, extraSets] = match;
+    // `,a.set(x,y),b.set(z)` -> `;a.set(x,y);b.set(z)`, with the pristine
+    // instructions expression swapped for the resolved override. Split on the
+    // `.set(` calls themselves, never on commas — `set(f.name,f.instructions)`
+    // has one of its own.
+    const extraRebound = [
+      ...(extraSets || '').matchAll(/[$\w]+\.set\((?:[^()]|\([^()]*\))*\)/g),
+    ]
+      .map(m => ';' + m[0].split(`${jVar}.instructions`).join('_c'))
+      .join('');
     const replacement =
       `function __tweakccMcpOverride(_n,_d){try{` +
       `let _f=require('fs'),_p=require('os').homedir()+'/.tweakcc/system-reminders/mcp-'+_n+'.md';` +
@@ -1594,7 +1668,7 @@ const MCP_PER_SERVER_ROUTER_INJECTION: ReminderInjection = {
       `}catch{return _d}}` +
       `for(let ${jVar} of ${zVar}){` +
       `let _c=__tweakccMcpOverride(${jVar}.name,${jVar}.instructions);` +
-      `if(_c)${mapVar}.set(${jVar}.name,\`## \${${jVar}.name}\n\${_c}\`)` +
+      `if(_c){${mapVar}.set(${jVar}.name,\`## \${${jVar}.name}\n\${_c}\`)${extraRebound}}` +
       `}`;
     const newContent =
       content.slice(0, match.index) +

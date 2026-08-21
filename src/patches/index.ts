@@ -459,10 +459,10 @@ const PATCH_DEFINITIONS = [
   },
   {
     id: 'output-style-turn-reminder',
-    name: 'Per-turn reminder for custom output styles',
+    name: 'Custom output styles carry their own per-turn reminder',
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
-      "Claude Code reminds the model which output style is active once per turn, but only for its three built-in styles. The renderer looks the style up in the built-in table and returns nothing when it is missing, and custom styles are merged into a copy of that table rather than into the table itself. So a style you wrote yourself is injected into the system prompt once at the start of the session and never restated, while Proactive or Explanatory are restated on every turn. This makes the reminder fire for custom styles too, using the style name you configured. A style that defines its own turnReminder gets that text; otherwise it gets one short sentence pointing back at the style. The per-turn slot is the position Anthropic's own Opus 5 guidance points at for tone, where a short reminder late in a long prompt is their measured remedy.",
+      'Claude Code restates which output style is active once per turn. Since 2.1.238 that reminder fires for custom styles as well as built-in ones, but its text is fixed: every style you write gets the same generic "Remember to follow the specific guidelines for this style." This lets a style supply its own sentence instead. Add `turn-reminder:` to the style\'s markdown frontmatter and that text is what gets restated each turn, the way the built-in styles carry their own. Without this, the key is read by the frontmatter parser and then dropped on the way to the renderer, so it has no effect. On Claude Code before 2.1.238 this also makes the reminder fire for custom styles at all, which stock builds of that era skipped entirely. The per-turn slot is the position Anthropic\'s own Opus 5 guidance points at for tone, where a short reminder late in a long prompt is their measured remedy.',
     modelFacing: true,
   },
   {

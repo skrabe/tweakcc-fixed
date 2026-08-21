@@ -106,6 +106,36 @@ export const writeOutputStyleTurnReminder = (
       );
       return threadCustomStyleTurnReminder(oldFile);
     }
+    // Verified on CC 2.1.238: Anthropic promoted the renderer half of this
+    // patch. The table lookup and its `if(!t)return[]` bail are gone, replaced
+    // by a type/emptiness guard, a 256-char cap and a control-char sanitizer:
+    //
+    //   output_style:(e)=>{if(typeof e.style!=="string"||e.style==="")return[];
+    //     if(e.style.length>gFn)return T(`Output style name exceeds …`),[];
+    //     return Zy([kn({content:`${pze(e.style)} output style is active. …
+    //
+    // It is a true superset of what we spliced, not a coincidence of wording.
+    // The event is built as `{type:"output_style",style:r.name,
+    // turnReminder:r.turnReminder}` from `ggi()`, which resolves against the
+    // MERGED style table — so `e.style` is already the custom style's own name
+    // and the reminder now renders for it. Our fallback-text substitution is
+    // separately owned by the `system-reminder-output-style-active` override,
+    // so no delta is lost by standing down here.
+    //
+    // The threading half is NOT promoted: the custom-style loader return and
+    // the style-table merge entry are byte-identical to 2.1.237 and still drop
+    // `turnReminder`, so `e.turnReminder` stays undefined for a custom style
+    // without us. Thread it and no-op the renderer.
+    if (
+      /output_style:\(([$\w]+)\)=>\{if\(typeof \1\.style!=="string"/.test(
+        oldFile
+      )
+    ) {
+      console.log(
+        'patch: outputStyleTurnReminder: renderer promoted in this CC build — threading only'
+      );
+      return threadCustomStyleTurnReminder(oldFile);
+    }
     console.error(
       'patch: outputStyleTurnReminder: failed to find the output-style reminder renderer'
     );
