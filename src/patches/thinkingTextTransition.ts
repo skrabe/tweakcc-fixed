@@ -1,216 +1,264 @@
+// Patch for v233+: Gracefully handle text blocks receiving thinking deltas.
+//
+// In the content_block_delta switch, signature_delta and thinking_delta throw
+// "Content block is not a thinking block" when the incoming block type isn't
+// "thinking". During thinking-to-text transitions (the LLM finishes reasoning
+// mid-stream), this causes a stream crash.
+//
+// Fix: inject a text-type check before each throw — if ni.type==="text", set
+// the moreThinkingFlag and break out of the switch instead of throwing. Then
+// replace the throw expression with just `break;`, which also removes the
+// "Content block is not a thinking block" string from the bundle entirely.
+//
+// Anchors on stable English strings (minifier can't rename them):
+//   - "thinking" in ni.type!=="thinking" / ia.type==="thinking"
+//   - "tengu_streaming_error" in the error factory call
+//   - ".signature" / ".thinking" after the throw for assignment site
+// Captures block-check var (from nearby text_delta if) and moreThinking flag
+// (from content_block_delta init) via flexible regex, so it survives per-release
+// minification across v233/v234/v235+.
+
+import { debug } from '../utils';
+import { showDiff } from './index';
+
+const THINKING_BLOCK_TEXT = 'Content block is not a thinking block';
+
+// --- Idempotency: check whether our injection already landed ---
+
+const ALREADY_PAT = new RegExp(
+  `if\\([\\$\\w]+\\.type==="text"\\)\\{[\\$\\w]+=!0;break\\};break`
+);
+
+// --- Variable extraction helpers ---
+
 /**
- * Patch for v234 (and similar versions): Gracefully handle text blocks receiving thinking deltas.
- *
- * In v234's streaming response handler, the `signature_delta` and `thinking_delta`
- * cases throw "Content block is not a thinking block" when ni.type !== "thinking".
- * This happens during thinking-to-text transitions (the LLM finishes reasoning
- * mid-stream). All versions from v233+ share this pattern.
- *
- * Fix: Inject `if(ni.type==="text"){Cn=!0;break}` before each throw to gracefully
- * skip the delta and transition to text mode for this turn, then re-enable thinking
- * on the next turn when a new content_block_start arrives.
- *
- * Uses the LexPatcher engine — variable names (O, Ce/ge/blockTypeVar/moreThinkingFlag) are extracted via
- * structural regex matchers in bounded context windows, so it survives per-release
- * minification/obfuscation across v233/v234/v235+.
+ * Find the "more thinking" flag var: `content_block_delta...:{X=!1` or similar.
+ * Scans within 4000 chars before the anchor to stay scoped.
  */
+function findMoreThinkingFlag(file: string, anchorIdx: number): string | null {
+  const windowStart = Math.max(0, anchorIdx - 4000);
+  const snippet = file.slice(windowStart, anchorIdx + 50);
+  // Pattern: content_block_delta:{<flag>=!1 or similar init near the switch
+  const m = snippet.match(/content_block_delta.{0,20}:\{([$\w]+)=!1/);
+  if (m) return m[1];
 
-import { LexPatcher } from './lexPatcher.js';
-import type { LexPatcherConfig } from './lexPatcher.js';
-
-// ===========================================================================
-// Thinking-to-text transition patch configuration for the LexPatcher engine.
-// ===========================================================================
-
-/** Extract O, Ce/x, ge/me, blockTypeVar, moreThinkingFlag from v23x source */
-const thinkingTextTransitionConfig: LexPatcherConfig = {
-  // sigDelta anchor matches `case"signature_delta":if(` — unique throw-based handler pattern.
-  // contextWindowBefore of 4000 chars reaches content_block_delta (moreThinkingFlag init) and text_delta (blockTypeVar detection).
-  anchors: [
-    {
-      id: 'sigDelta',
-      regex: /case"signature_delta":if\(/,
-      contextWindowBefore: 4000,
-      contextWindowAfter: 3000, // reaches thinking_delta case
-      searchExtensionAfterMatch: 60, // throw O("tengu_streaming_error") starts ~30 chars after anchor end, pattern extends to ~55
-    },
-    // Anchor for the thinking_delta injection: matches `redacted_thinking")break;` which is unique per file.
-    // Injecting after this places the text-check between the redacted_thinking guard and the throw condition.
-    {
-      id: 'thinkDelta',
-      regex: /"redacted_thinking"\)break;/,
-      contextWindowBefore: 3000,
-      contextWindowAfter: 1500,
-    },
-  ],
-
-  // Variables extracted from the signature_delta anchor's wide context window.
-  variables: [
-    /** O — error factory function used in throw statements (e.g., `throw O("tengu_streaming_error"`) */
-    {
-      id: 'O',
-      anchorId: 'sigDelta',
-      direction: 'before',
-      regex: /throw (\w+)\("tengu_streaming_error"/,
-    },
-    /** Ce/x — content block type mapper used in error_type (e.g., `error_type:Ce(` or `error_type:xe(`) */
-    {
-      id: 'contentMapper',
-      anchorId: 'sigDelta',
-      direction: 'before',
-      regex: /error_type:(\w+)\("content_block_type_mismatch/,
-    },
-    /** ge/me — actual type getter used in `actual_type:ge(` or `actual_type:me(` */
-    {
-      id: 'typeGetter',
-      anchorId: 'sigDelta',
-      direction: 'before',
-      regex: /actual_type:(\w+)\([^)]+\.type/,
-    },
-    /** blockTypeVar — the variable used for content type checks in text_delta (e.g., `if(ni.type!=="text")` or `if(Al.type!=="text")`) */
-    {
-      id: 'blockTypeVar',
-      anchorId: 'sigDelta',
-      direction: 'before',
-      regex: /if\((\w+)\.type!=="text"\)/,
-    },
-    /** moreThinkingFlag — the "no more thinking" flag (e.g., `Cn=!1` or `to=!1`) set in content_block_delta handler */
-    {
-      id: 'moreThinkingFlag',
-      anchorId: 'sigDelta',
-      direction: 'before',
-      regex: /content_block_delta.{0,5}:\{(\w+)=!1/,
-    },
-  ],
-
-  // Inject text-mode skip block at two positions.
-  injections: [
-    // sigDelta injection: after `case"signature_delta":if(` → lands right before the type check condition
-    {
-      targetAnchorId: 'sigDelta',
-      position: 'after',
-      template: vars => {
-        const bt = vars.blockTypeVar || '';
-        const mf = vars.moreThinkingFlag || '';
-
-        if (!bt || !mf) return ''; // skip if variables not found
-
-        return `{if(${bt}.type==="text"){${mf}=!0;break};`;
-      },
-    },
-    // thinkDelta injection: after `redacted_thinking")break;` → lands right before the throw condition
-    {
-      targetAnchorId: 'thinkDelta',
-      position: 'after',
-      template: vars => {
-        const bt = vars.blockTypeVar || '';
-        const mf = vars.moreThinkingFlag || '';
-
-        if (!bt || !mf) return ''; // skip if variables not found
-
-        return `{if(${bt}.type==="text"){${mf}=!0;break};`;
-      },
-    },
-  ],
-};
-
-/** Build idempotency check regex from captured variable names */
-function buildIdempotentRe(blockType: string, moreThinking: string): RegExp {
-  return new RegExp(
-    `${blockType}\\.type==="text"\\)\\{${moreThinking}=!0`,
-    'g'
+  // Fallback: look for any single-letter var set to !1 right after content_block_delta:{
+  const fallback = snippet.match(
+    /content_block_delta.{0,50}:\{([a-zA-Z_$][\w$]*)=!1/
   );
+  if (fallback) return fallback[1];
+
+  return null;
 }
 
 /**
- * Extract the block-type-check variable name that LexPatcher uses for text-check injections.
- * Searches only within the sigDelta anchor's context window (4000 chars before),
- * so we don't accidentally match a different variable at an earlier position in the file.
+ * Find the block-check variable: `if(<var>.type!=="text")` or `<var>.type==="text"`
+ * in nearby text_delta or signature_delta cases.
  */
-function extractBlockTypeVar(source: string): string | null {
-  const sigAnchor = /case"signature_delta":if\(/;
-  const m = sigAnchor.exec(source);
-  if (!m || m.index === undefined) return null;
+function findBlockTypeVar(file: string, anchorIdx: number): string | null {
+  const windowStart = Math.max(0, anchorIdx - 3000);
+  const snippet = file.slice(windowStart, anchorIdx + 50);
 
-  // Search within the full context window LexPatcher uses (before anchor + match text itself)
-  const contextStart = Math.max(0, m.index - 4000);
-  const contextWindow = source.substring(contextStart, m.index + m[0].length);
+  // Try matching the text_delta type check first (closest to signature_delta)
+  const m1 = snippet.match(/if\(([$\w]+)\.type!=="text"\)/);
+  if (m1) return m1[1];
 
-  const re = /if\((\w+)\.type!=="text"\)/;
-  const match = re.exec(contextWindow);
-  return match ? match[1] : null;
+  // Fallback: look for any .type==="text" pattern near the anchor
+  const m2 = snippet.match(/\(([$\w]+)\)\.type\s*===\s*"text"/);
+  if (m2) return m2[1];
+
+  return null;
+}
+
+// --- Core injection patterns ---
+
+/**
+ * signature_delta: replace the throw-based handler with a break.
+ * Original v234/v235+: `case"signature_delta":if(X.type!=="thinking")throw Y("tengu_streaming_error",{...}),Error("Content block is not a thinking block");X.signature=Z.signature;break;`
+ * Patched: inject text-check, replace throw+Error with break (keeps assignment).
+ */
+function patchSignatureDelta(file: string): {
+  newFile: string;
+  applied: boolean;
+} {
+  // Match from case label through the Error("...thinking") and up to .signature= assignment.
+  // The key stable anchors are "thinking" in the type check, ".signature=" after the throw,
+  // and "tengu" inside the error factory call. Case-insensitive match for the Thinking text.
+  const pat =
+    /case"signature_delta":if\(([$\w]+)\.type!=="thinking"\)throw\s+([$\w]+)\("tengu[^"]*"[^;]*?Error\([^)]*[Tt]hinking[^)]*\);[\s\n]*\1\.signature=([\w$]+)\.signature;break/;
+  const m = file.match(pat);
+
+  if (!m || m.index === undefined) return { newFile: file, applied: false };
+
+  // Find variable names from context around the anchor
+  const anchorIdx = m.index;
+  const flagVar = findMoreThinkingFlag(file, anchorIdx);
+  const blockVar = findBlockTypeVar(file, anchorIdx);
+
+  if (!flagVar || !blockVar) {
+    debug(
+      'patch: thinkingTextTransition: variable extraction failed for signature_delta'
+    );
+    return { newFile: file, applied: false };
+  }
+
+  const oldBlock = m[0];
+  // Preserve the captured type-check var (m[1]) and assignment target (m[3])
+  // Inject text-check + break before the throw, keep the assignment after
+  const replacement = `case"signature_delta":if(${m[1]}.type!=="thinking"){if(${blockVar}.type==="text"){${flagVar}=!0;break};break;}\n${m[1]}.signature=${m[3]}.signature;break`;
+
+  // For v237+ where Error() is absent — also try matching throw...tengu without Error
+  if (file.indexOf('Error("Content block') === -1) {
+    const patNoError =
+      /case"signature_delta":if\(([$\w]+)\.type!=="thinking"\)throw\s+([$\w]+)\("tengu[^"]*"[^;]*;\s*\1\.signature=([\w$]+)\.signature;break/;
+    const m2 = file.match(patNoError);
+    if (m2 && m2.index !== undefined) {
+      const oldBlock2 = m2[0];
+      const replacement2 = `case"signature_delta":if(${m2[1]}.type!=="thinking"){if(${blockVar}.type==="text"){${flagVar}=!0;break};break;}\n${m2[1]}.signature=${m2[3]}.signature;break`;
+      const newFile =
+        file.slice(0, m2.index) +
+        replacement2 +
+        file.slice(m2.index + oldBlock2.length);
+      showDiff(
+        file,
+        newFile,
+        `thinkingTextTransition: signature_delta`,
+        m2.index,
+        m2.index + oldBlock2.length
+      );
+      return { newFile, applied: true };
+    }
+  }
+
+  const newFile =
+    file.slice(0, anchorIdx) +
+    replacement +
+    file.slice(anchorIdx + oldBlock.length);
+  showDiff(
+    file,
+    newFile,
+    `thinkingTextTransition: signature_delta`,
+    anchorIdx,
+    anchorIdx + oldBlock.length
+  );
+  return { newFile, applied: true };
 }
 
 /**
- * Extract the "more thinking" flag variable name from within the
- * sigDelta anchor's context window (near content_block_delta).
+ * thinking_delta: replace the throw+Error with break.
+ * Original: if(ni.type==="redacted_thinking")break;if(ni.type!=="thinking")throw O(...),Error("...");ni.thinking+=ls.thinking;break;
  */
-function extractMoreThinkingFlag(source: string): string | null {
-  const sigAnchor = /case"signature_delta":if\(/;
-  const m = sigAnchor.exec(source);
-  if (!m || m.index === undefined) return null;
+function patchThinkingDelta(file: string): {
+  newFile: string;
+  applied: boolean;
+} {
+  const pat =
+    /if\(([$\w]+)\.type==="redacted_thinking"\)break;if\(\1\.type!=="thinking"\)throw\s+([$\w]+)\("tengu[^"]*"[^;]*?Error\([^)]*[Tt]hinking[^)]*\);[\s\n]*\1\.thinking\+=([\w$]+)\.thinking;break/;
+  const m = file.match(pat);
 
-  const contextStart = Math.max(0, m.index - 4000);
-  const contextWindow = source.substring(contextStart, m.index + m[0].length);
+  if (!m || m.index === undefined) return { newFile: file, applied: false };
 
-  const cnRe = /content_block_delta.{0,5}:\{(\w+)=!1/;
-  const match = cnRe.exec(contextWindow);
-  return match ? match[1] : null;
+  const anchorIdx = m.index;
+  const flagVar = findMoreThinkingFlag(file, anchorIdx);
+  const blockVar = m[1]; // ni or ia — already captured from the regex
+
+  if (!flagVar) {
+    debug(
+      'patch: thinkingTextTransition: more-thinking flag not found for thinking_delta'
+    );
+    return { newFile: file, applied: false };
+  }
+
+  const oldBlock = m[0];
+  // Preserve redacted_thinking break, replace throw+Error with text-check + break, keep assignment
+  const replacement = `if(${blockVar}.type==="redacted_thinking")break;if(${blockVar}.type!=="thinking"){if(${blockVar}.type==="text"){${flagVar}=!0;break};break;}\n${blockVar}.thinking+=${m[3]}.thinking;break`;
+
+  // For v237+ where Error() is absent
+  if (file.indexOf('Error("Content block') === -1) {
+    const patNoError =
+      /if\(([$\w]+)\.type==="redacted_thinking"\)break;if\(\1\.type!=="thinking"\)throw\s+([$\w]+)\("tengu[^"]*"[^;]*;\s*\1\.thinking\+=([\w$]+)\.thinking;break/;
+    const m2 = file.match(patNoError);
+    if (m2 && m2.index !== undefined) {
+      const oldBlock2 = m2[0];
+      const replacement2 = `if(${blockVar}.type==="redacted_thinking")break;if(${blockVar}.type!=="thinking"){if(${blockVar}.type==="text"){${flagVar}=!0;break};break;}\n${blockVar}.thinking+=${m2[3]}.thinking;break`;
+      const newFile =
+        file.slice(0, m2.index) +
+        replacement2 +
+        file.slice(m2.index + oldBlock2.length);
+      showDiff(
+        file,
+        newFile,
+        `thinkingTextTransition: thinking_delta`,
+        m2.index,
+        m2.index + oldBlock2.length
+      );
+      return { newFile, applied: true };
+    }
+  }
+
+  const newFile =
+    file.slice(0, anchorIdx) +
+    replacement +
+    file.slice(anchorIdx + oldBlock.length);
+  showDiff(
+    file,
+    newFile,
+    `thinkingTextTransition: thinking_delta`,
+    anchorIdx,
+    anchorIdx + oldBlock.length
+  );
+  return { newFile, applied: true };
 }
+
+// --- Combined patch function ---
 
 /**
  * Apply the thinking-to-text graceful transition patch to minified source.
- * Uses LexPatcher engine for version-agnostic variable extraction.
- * Returns patched source or null if anchors not found (not patchable, already patched).
+ * Plain regex splice — no external engine required.
+ * Returns patched source or null if anchors not found (not patchable).
  */
-export function applyThinkingTextTransition(oldFile: string): string | null {
-  const patcher = new LexPatcher(thinkingTextTransitionConfig);
-  const result = patcher.apply(oldFile);
+export const applyThinkingTextTransition = (oldFile: string): string | null => {
+  // Check idempotency first
+  if (ALREADY_PAT.test(oldFile)) {
+    debug('patch: thinkingTextTransition: already patched — skipping');
+    return null;
+  }
 
-  if (!result) {
+  let working = oldFile;
+  let appliedCount = 0;
+
+  // Patch signature_delta site
+  const sigResult = patchSignatureDelta(working);
+  if (sigResult.applied) {
+    working = sigResult.newFile;
+    appliedCount++;
+  }
+
+  // Patch thinking_delta site
+  const thinkResult = patchThinkingDelta(working);
+  if (thinkResult.applied) {
+    working = thinkResult.newFile;
+    appliedCount++;
+  }
+
+  if (appliedCount === 0) {
     console.log('patch: thinkingTextTransition: anchors not found — skipping');
     return null;
   }
 
-  // Extract variable names scoped to sigDelta's context window so we match the
-  // same variables LexPatcher used (not a different one at an earlier position).
-  const blockTypeVar = extractBlockTypeVar(oldFile);
-  const moreThinkingFlag = extractMoreThinkingFlag(oldFile);
-
-  if (!blockTypeVar || !moreThinkingFlag) {
-    console.log(
-      'patch: thinkingTextTransition: variable extraction failed — skipping'
-    );
-    return null;
-  }
-
-  // Check idempotency: count existing text-check injections in original source
-  const idemRe = buildIdempotentRe(blockTypeVar, moreThinkingFlag);
-  const textCheckCount = oldFile.match(idemRe);
-
-  if (textCheckCount && textCheckCount.length >= 2) {
-    console.log('patch: thinkingTextTransition: already patched, skipping');
-    return null;
-  }
-
-  // Verify the injections were actually applied by counting them in result
-  const newTextChecks = result.match(idemRe);
-  if (!newTextChecks || newTextChecks.length < 2) {
-    console.error(
-      `patch: thinkingTextTransition: expected 2 text-check injections, got ${newTextChecks?.length ?? 0}`
-    );
-    return null;
-  }
-
-  const O = oldFile.match(/throw (\w+)\("tengu_streaming_error"/)?.[1] || 'O';
-  const contentMapper = oldFile.match(
-    /error_type:(\w+)\("content_block_type_mismatch/
-  )?.[1];
-  const typeGetter = oldFile.match(/actual_type:(\w+)\([^)]+\.type/)?.[1];
-
-  console.log(
-    `patch: thinkingTextTransition: applied (errorFactory=${O}, contentMapper=${contentMapper}, typeGetter=${typeGetter}, blockTypeVar=${blockTypeVar}, moreThinkingFlag=${moreThinkingFlag})`
+  // Verify "Content block is not a thinking block" was removed from the bundle
+  const errorStrHits = working.match(
+    new RegExp(THINKING_BLOCK_TEXT.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')
   );
+  if (errorStrHits && errorStrHits.length > 0) {
+    console.log(
+      `patch: thinkingTextTransition: WARNING — "${THINKING_BLOCK_TEXT}" still in bundle (${errorStrHits.length} hits)`
+    );
+  } else {
+    debug(
+      `patch: thinkingTextTransition: "${THINKING_BLOCK_TEXT}" removed from bundle`
+    );
+  }
 
-  return result;
-}
+  return working;
+};

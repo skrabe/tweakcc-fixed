@@ -2,7 +2,7 @@
 // system-reminder override — a REMINDER_REGISTRY entry in systemReminderOverrides,
 // not a standalone patch — so src/patches/userSentNewMessage.ts does not exist.
 import { describe, it, expect } from 'vitest';
-import { REMINDER_REGISTRY } from './systemReminderOverridesLexPatcher';
+import { REMINDER_REGISTRY } from './systemReminderOverrides';
 
 const injection = REMINDER_REGISTRY.find(
   r => r.id === 'user-sent-new-message'

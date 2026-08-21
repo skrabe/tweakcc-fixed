@@ -12,7 +12,7 @@ import {
 } from './systemPromptHashIndex';
 import chalk from 'chalk';
 import { SYSTEM_PROMPTS_DIR, SYSTEM_REMINDERS_DIR } from './config';
-import { REMINDER_REGISTRY } from './patches/systemReminderOverridesLexPatcher';
+import { REMINDER_REGISTRY } from './patches/systemReminderOverrides';
 import { debug, escapeNonAscii } from './utils';
 
 /**

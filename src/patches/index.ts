@@ -78,6 +78,7 @@ import { writeConversationTitle } from './conversationTitle';
 import { writeHideStartupBanner } from './hideStartupBanner';
 import { writeHideCtrlGToEdit } from './hideCtrlGToEdit';
 import { writeIgnoreWhitespaceEdit } from './ignoreWhitespaceEdit';
+import { applyThinkingTextTransition } from './thinkingTextTransition';
 import { writeHideStartupClawd } from './hideStartupClawd';
 import { writeIncreaseFileReadLimit } from './increaseFileReadLimit';
 import { writeSuppressLineNumbers } from './suppressLineNumbers';
@@ -115,7 +116,7 @@ import {
   writeStripEmptySystemReminders,
   writeClaudemdContextOncePerConversation,
 } from './systemReminders';
-import { applySystemReminderOverrides } from './systemReminderOverridesLexPatcher';
+import { applySystemReminderOverrides } from './systemReminderOverrides';
 import {
   restoreNativeBinaryFromBackup,
   restoreClijsFromBackup,
@@ -591,7 +592,13 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.FEATURES,
     description:
       'Add ignore_whitespace parameter to the edit tool for matching lines with different leading/trailing whitespace',
-    modelFacing: true,
+  },
+  {
+    id: 'thinking-text-transition',
+    name: 'Thinking-to-text transition graceful handling',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'Bypass throw-based streaming crashes during thinking-to-text transitions by injecting text-type checks at signature_delta and thinking_delta sites. Removes "Content block is not a thinking block" from the bundle.',
   },
   {
     id: 'suppress-deferred-tools',
@@ -912,7 +919,10 @@ export const applyCustomization = async (
   // ==========================================================================
   // Apply named system prompt customizations AFTER inline-blob overrides.
   // ==========================================================================
-  const reminderResult = await applySystemReminderOverrides(content);
+  const reminderResult = await applySystemReminderOverrides(
+    content,
+    ccInstInfo.version ?? ''
+  );
   content = reminderResult.content;
   for (const r of reminderResult.results) {
     allResults.push({
@@ -1317,7 +1327,11 @@ export const applyCustomization = async (
     },
     'ignore-whitespace-edit': {
       fn: c => writeIgnoreWhitespaceEdit(c),
-      condition: true, // Always apply this patch
+      condition: !!config.settings.misc?.enableIgnoreWhitespaceEdit,
+    },
+    'thinking-text-transition': {
+      fn: c => applyThinkingTextTransition(c),
+      condition: !!config.settings.misc?.enableThinkingTextTransition,
     },
     'suppress-deferred-tools': {
       fn: c => writeSuppressDeferredTools(c),

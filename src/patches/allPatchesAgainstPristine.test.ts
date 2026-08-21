@@ -18,7 +18,7 @@ import * as path from 'node:path';
 import { execFileSync } from 'node:child_process';
 
 import { getAllPatchDefinitions, PatchId } from './index';
-import { REMINDER_REGISTRY } from './systemReminderOverridesLexPatcher';
+import { REMINDER_REGISTRY } from './systemReminderOverrides';
 import { substitutePlaceholders } from '../systemReminderSync';
 import { DEFAULT_SETTINGS } from '../defaultSettings';
 
@@ -80,6 +80,7 @@ import { writeConversationTitle } from './conversationTitle';
 import { writeVoiceMode } from './voiceMode';
 import { writeChannelsMode } from './channelsMode';
 import { writeIgnoreWhitespaceEdit } from './ignoreWhitespaceEdit';
+import { applyThinkingTextTransition } from './thinkingTextTransition';
 import {
   writeSuppressDeferredTools,
   writeStripEmptySystemReminders,
@@ -266,6 +267,7 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
   'hide-startup-clawd': c => writeHideStartupClawd(c),
   'increase-file-read-limit': c => writeIncreaseFileReadLimit(c),
   'ignore-whitespace-edit': c => writeIgnoreWhitespaceEdit(c),
+  'thinking-text-transition': c => applyThinkingTextTransition(c),
   'suppress-line-numbers': c => writeSuppressLineNumbers(c),
   'suppress-rate-limit-options': c => writeSuppressRateLimitOptions(c),
   'token-count-rounding': c => writeTokenCountRounding(c, 100),

@@ -23,13 +23,17 @@ describe('applyThinkingTextTransition', () => {
       (result ?? '').match(/type==="text"\)/g)?.length
     ).toBeGreaterThanOrEqual(2);
 
-    // Original error strings should still be present (after the check)
+    // "Content block is not a thinking block" removed from bundle entirely
     const errors =
       result?.match(/Content block is not a thinking block/g) || [];
-    expect(errors.length).toBe(2);
+    expect(errors.length).toBe(0);
 
-    // Size increase from two injections
-    expect((result?.length ?? 0) - V234_SOURCE.length).toBeGreaterThan(60);
+    // Text-check injections present at both sites
+    const textChecks = (result ?? '').match(/type==="text"\)/g);
+    expect(textChecks?.length).toBeGreaterThanOrEqual(2);
+
+    // Size may shrink (we remove error strings) or grow slightly; key is two injections applied
+    expect((result?.length ?? 0) - V234_SOURCE.length).toBeGreaterThan(-500);
   });
 
   it('is idempotent', () => {
