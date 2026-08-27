@@ -1,0 +1,38 @@
+{
+  "system-prompts-opus-5/agent-prompt-conversation-summarization::<summary>": {
+    "verdict": "reviewed",
+    "why": "Pointer override: it defers to the summary contract carried by the live sibling system-prompt-context-compaction-summary ('Wrap it in <summary></summary> tags') and agent-prompt-conversation-summary-analysis-summary-blocks ('an <analysis> block followed by a <summary> block'), both deployed non-empty. The tag instruction still reaches the model."
+  },
+  "system-prompts-opus-5/agent-prompt-conversation-summarization::<analysis>": {
+    "verdict": "reviewed",
+    "why": "Pointer override: it defers to the summary contract carried by the live sibling system-prompt-context-compaction-summary ('Wrap it in <summary></summary> tags') and agent-prompt-conversation-summary-analysis-summary-blocks ('an <analysis> block followed by a <summary> block'), both deployed non-empty. The tag instruction still reaches the model."
+  },
+  "system-prompts-opus-5/system-prompt-partial-compaction-instructions::<summary>": {
+    "verdict": "reviewed",
+    "why": "Pointer override: it defers to the summary contract carried by the live sibling system-prompt-context-compaction-summary ('Wrap it in <summary></summary> tags') and agent-prompt-conversation-summary-analysis-summary-blocks ('an <analysis> block followed by a <summary> block'), both deployed non-empty. The tag instruction still reaches the model."
+  },
+  "system-prompts-opus-5/system-prompt-partial-compaction-instructions::<analysis>": {
+    "verdict": "reviewed",
+    "why": "Pointer override: it defers to the summary contract carried by the live sibling system-prompt-context-compaction-summary ('Wrap it in <summary></summary> tags') and agent-prompt-conversation-summary-analysis-summary-blocks ('an <analysis> block followed by a <summary> block'), both deployed non-empty. The tag instruction still reaches the model."
+  },
+  "system-prompts-fable-5/agent-prompt-conversation-summarization::<summary>": {
+    "verdict": "reviewed",
+    "why": "Pointer override: it defers to the summary contract carried by the live sibling system-prompt-context-compaction-summary ('Wrap it in <summary></summary> tags') and agent-prompt-conversation-summary-analysis-summary-blocks ('an <analysis> block followed by a <summary> block'), both deployed non-empty. The tag instruction still reaches the model."
+  },
+  "system-prompts-fable-5/agent-prompt-conversation-summarization::<analysis>": {
+    "verdict": "reviewed",
+    "why": "Pointer override: it defers to the summary contract carried by the live sibling system-prompt-context-compaction-summary ('Wrap it in <summary></summary> tags') and agent-prompt-conversation-summary-analysis-summary-blocks ('an <analysis> block followed by a <summary> block'), both deployed non-empty. The tag instruction still reaches the model."
+  },
+  "system-prompts-fable-5/system-prompt-partial-compaction-instructions::<summary>": {
+    "verdict": "reviewed",
+    "why": "Pointer override: it defers to the summary contract carried by the live sibling system-prompt-context-compaction-summary ('Wrap it in <summary></summary> tags') and agent-prompt-conversation-summary-analysis-summary-blocks ('an <analysis> block followed by a <summary> block'), both deployed non-empty. The tag instruction still reaches the model."
+  },
+  "system-prompts-fable-5/system-prompt-partial-compaction-instructions::<analysis>": {
+    "verdict": "reviewed",
+    "why": "Pointer override: it defers to the summary contract carried by the live sibling system-prompt-context-compaction-summary ('Wrap it in <summary></summary> tags') and agent-prompt-conversation-summary-analysis-summary-blocks ('an <analysis> block followed by a <summary> block'), both deployed non-empty. The tag instruction still reaches the model."
+  },
+  "system-prompts-opus-4-7/system-prompt-subagent-delegation-examples::<thinking>": {
+    "verdict": "reviewed",
+    "why": "Pristine's <thinking> occurrences are illustrative example prose showing a hypothetical assistant turn, not an output contract. The parser reads the model's real thinking block, which the thinking mechanism produces regardless of this prompt. The override rewrote the examples."
+  }
+}
