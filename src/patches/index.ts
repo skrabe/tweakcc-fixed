@@ -84,6 +84,8 @@ import { writeSuppressRateLimitOptions } from './suppressRateLimitOptions';
 import { writeSessionMemory } from './sessionMemory';
 import { writeDreamMode } from './dreamMode';
 import { writeLeanMemoryTypes } from './leanMemoryTypes';
+import { writeIgnoreWhitespaceEdit } from './ignoreWhitespaceEdit';
+import { applyThinkingTextTransition } from './thinkingTextTransition';
 import { writeRememberSkill } from './rememberSkill';
 import { writeThinkingBlockStyling } from './thinkingBlockStyling';
 import { writeMcpNonBlocking, writeMcpBatchSize } from './mcpStartup';
@@ -534,6 +536,20 @@ const PATCH_DEFINITIONS = [
     description:
       'Compact "Types of memory" prompt block + on-demand memory-types skill',
     modelFacing: true,
+  },
+  {
+    id: 'ignore-whitespace-edit',
+    name: 'Ignore whitespace in file edits',
+    group: PatchGroup.FEATURES,
+    description:
+      'Adds ignore_whitespace parameter to FileEditTool — allows matching lines even when leading/trailing whitespace differs between requested edit and actual file content (recommended for C/Go/Rust/Shell; not Python/YAML)',
+  },
+  {
+    id: 'thinking-text-transition',
+    name: 'Thinking-to-text transition',
+    group: PatchGroup.FEATURES,
+    description:
+      'Gracefully handle text blocks receiving thinking deltas — replaces throw with break to avoid stream crashes during LLM reasoning transitions',
   },
   {
     id: 'toolsets',
@@ -1244,6 +1260,14 @@ export const applyCustomization = async (
     'lean-memory-types': {
       fn: c => writeLeanMemoryTypes(c),
       condition: !!config.settings.misc?.enableLeanMemoryTypes,
+    },
+    'ignore-whitespace-edit': {
+      fn: c => writeIgnoreWhitespaceEdit(c),
+      condition: !!config.settings.misc?.enableIgnoreWhitespaceEdit,
+    },
+    'thinking-text-transition': {
+      fn: c => applyThinkingTextTransition(c),
+      condition: !!config.settings.misc?.enableThinkingTextTransition,
     },
     toolsets: {
       fn: c =>

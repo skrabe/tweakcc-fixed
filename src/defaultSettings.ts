@@ -751,6 +751,8 @@ export const DEFAULT_SETTINGS: Settings = {
     autoModeClassifierModel: 'default',
     suppressDeferredTools: false,
     claudemdContextOncePerConversation: false,
+    enableIgnoreWhitespaceEdit: false,
+    enableThinkingTextTransition: false,
   },
   toolsets: [],
   defaultToolset: null,

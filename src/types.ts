@@ -153,6 +153,8 @@ export interface MiscConfig {
   autoModeClassifierModel: AutoModeClassifierModel;
   suppressDeferredTools: boolean;
   claudemdContextOncePerConversation: boolean;
+  enableIgnoreWhitespaceEdit: boolean;
+  enableThinkingTextTransition: boolean;
 }
 
 export interface InputPatternHighlighter {
