@@ -136,6 +136,11 @@ const main = () => {
       return 1;
     }
     if (/Is this a project you created or one you trust/i.test(trust.pane)) {
+      // The dialog's DEFAULT selection is "No, exit", so a bare Enter quits CC
+      // and leaves an empty pane that reads exactly like a boot crash. Move to
+      // "Yes, I trust this folder" first. Verified on CC 2.1.251: the marker
+      // sits on the No row at first paint.
+      key('Down');
       key('Enter');
     }
 
