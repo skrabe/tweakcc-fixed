@@ -51120,5 +51120,3245 @@
     "id": "tool-result-remote-tool-unverified-refusal-reason-unknown-call",
     "name": "Tool Result: Remote-tool unverified refusal reason - no record of the call",
     "desc": "Reason clause for an unverified-sender remote-tool refusal: the target has no record of the referenced call."
+  },
+  "51573c27d4d50a77412744d0204329267bda22ad": { "facing": "ui" },
+  "3b13a51151ee9a6e971cfc3468eab275c877d958": { "facing": "internal" },
+  "bd2c3c40152ea7ad84c3041e90291e639a06b198": { "facing": "ui" },
+  "ff5a921930d3ea3b4d0aa3375645092517577a78": { "facing": "internal" },
+  "41738d9dce9927c6e3c74ac4743b1f8ca57d48f9": { "facing": "ui" },
+  "535995ab3fea11bcda8aa0a254255d9baaecddb9": { "facing": "ui" },
+  "1ba6bf11e4df1634998d8c37cb71be2e51cd1823": {
+    "facing": "model",
+    "id": "slash-command-mcp-claudeai-auth-reconnect-failed-detail",
+    "name": "Slash Command: /mcp — reconnect after auth failed, with reason",
+    "desc": "Reports that the post-authentication reconnect failed and carries the sanitized failure reason so the model can tell the user what went wrong."
+  },
+  "43bd89635ec5850193d6245d89d9284ba1326ec6": {
+    "facing": "model",
+    "id": "slash-command-mcp-oauth-credentials-rejected",
+    "name": "Slash Command: /mcp — new credentials rejected on reconnect",
+    "desc": "Tells the model the fresh OAuth tokens were refused by the server and gives two recovery paths (re-authenticate, or restart), so it does not loop on the same flow."
+  },
+  "bed4942c684c6955dd3e68a352c6e793ed93743c": { "facing": "ui" },
+  "52c7cf2e24a4d8e09761bfbcdaeef4ad4d4274a9": { "facing": "ui" },
+  "f0045d1dfd18421d857cda0b27d5f6131233de5c": { "facing": "ui" },
+  "a6f77cee60bf36015b65eab5aa6440b5e5a24b20": { "facing": "ui" },
+  "d2cca309b1c3541f376c0fac3d5db5976976cb74": { "facing": "ui" },
+  "4b01689d712f85ce115c4502798ed6a140aded86": {
+    "facing": "model",
+    "id": "slash-command-mcp-agent-server-auth-success",
+    "name": "Slash Command: /mcp — agent server authenticated, connects on next run",
+    "desc": "Tells the model the agent-scoped MCP server is authenticated but deliberately stays unconnected until the agent runs, so it does not treat the absent tools as a failure."
+  },
+  "8437863feebe21d6a009886da546a8a6360536bc": {
+    "facing": "model",
+    "id": "slash-command-mcp-reconnect-needs-auth-background",
+    "name": "Slash Command: MCP reconnect needs auth (background session)",
+    "desc": "/mcp reconnect result when a server needs authentication in a detached/background session, telling the model to open this session and run /mcp."
+  },
+  "a589fba876c4583edae91d8279ef75356a808617": { "facing": "ui" },
+  "f84b026762f989fed09c5077e05fdaed8ee1cdc4": { "facing": "ui" },
+  "f92f4bd9a48addd10f78041214db0b54fde6f88e": { "facing": "ui" },
+  "60825b0ef65f2b3ec87dca3af1f18dc0ee589bcf": { "facing": "ui" },
+  "48a0eaaefe73a814dcb66ac8f439580fb9c00d15": { "facing": "ui" },
+  "6588b935923d5a9dd71560f708f300c6c7788a02": { "facing": "ui" },
+  "cf24770e4a064a1cdbba278157ba20c00a908a4e": { "facing": "ui" },
+  "cb00ec86ad9f816f8727ea5a9b3e7fcee3f7380c": { "facing": "internal" },
+  "41b01e37c129b45f2afa67b5f2c86a93120d5af2": { "facing": "internal" },
+  "cc4b0329918dd311e4c56745a19eb9ff012e1798": { "facing": "internal" },
+  "eecc3e78b5dd6dcfb181f42b9a79272c2e56915f": { "facing": "internal" },
+  "3a056980fe24f50a7d288eabd1d1891422bd6fd3": { "facing": "internal" },
+  "cd0dcd37d88263c47c9287ee31e5ac2e6c71b819": { "facing": "internal" },
+  "d92ecbde75432b36aff1dc783d3fee9b4fff5132": { "facing": "ui" },
+  "fad72afbc180fbd52090b42c73a6bf6fc8cd26f4": { "facing": "internal" },
+  "1576db592d6e878eff095ea71071c0570e561a68": { "facing": "internal" },
+  "50da4294795d981fb65cb4dfdb4b436bc728d5fc": { "facing": "internal" },
+  "512dc6d03940c633d67f1cdeddf165b1c902cba4": { "facing": "internal" },
+  "61b436b04c62bdcf638188c617bed4ffe545f0ff": {
+    "facing": "model",
+    "id": "agent-prompt-eval-mock-stand-in-error-format",
+    "name": "Eval Mock Stand-In Tool-Error Format",
+    "desc": "Tells the plugin-eval mock MCP stand-in model to emit a one-line ERROR: prefix for ordinary tool errors the agent under test should handle."
+  },
+  "b582e5b1fde015670e3c59a888d3d26c65085109": {
+    "facing": "model",
+    "id": "agent-prompt-eval-mock-stand-in-never-abort",
+    "name": "Eval Mock Stand-In Never Abort Line",
+    "desc": "Forbids the mock MCP stand-in model from emitting the ABORT: prefix when the case has no abort_when conditions."
+  },
+  "6db33baabe95a57f4da4d34d6b82f7daeb4f6a9c": {
+    "facing": "model",
+    "id": "agent-prompt-eval-mock-stand-in-author-description-follows",
+    "name": "Eval Mock Stand-In Author Description Follows",
+    "desc": "Bridge line immediately before the evaluation author's MCP server description in the mock stand-in system prompt."
+  },
+  "3637c251ad5ad97ab3a595b407314a05d884fc30": { "facing": "ui" },
+  "54edc867cb26104da1f37c40a588c9c30a87b237": { "facing": "ui" },
+  "724a89b6bc0ae957559dc009908f315f8e406c1a": { "facing": "ui" },
+  "6e6b21a970f30c3baf644dcec00043a03ed67f65": { "facing": "internal" },
+  "da221c71408db8708bfa58fa7d9b7c087c56f6f5": { "facing": "ui" },
+  "310209e02c10d2866f1a4716bebd809d31f30d97": { "facing": "ui" },
+  "ea70d733a3f28b9c4db9932795b11a3669ab5694": { "facing": "ui" },
+  "5f05ab64e7cecdf8a2803930e916cf8a5326055b": { "facing": "ui" },
+  "5469fb6b56b5e2fdc90faf7b0af4c586c1e9e45c": { "facing": "ui" },
+  "a7c0f1fed2cc8f5cdf2772e899646be1fe701a05": { "facing": "ui" },
+  "d836548fa9d97ea6bf0e13e17cc4e9bdd3c0ad69": { "facing": "internal" },
+  "846afd9197199a98e99390d33295d2a2cab7fc84": { "facing": "internal" },
+  "bcc0cbe55609312a006f24cfffaa950ed72d017a": { "facing": "internal" },
+  "780a28128256c4551390b9fd708822bf53fe4a80": { "facing": "ui" },
+  "bc0baabd47e761438f1d95a2e926b0644fc3af88": { "facing": "ui" },
+  "8955ef065cc72b1ac7b6f413a697991c77073cd0": { "facing": "ui" },
+  "d86f26e4f562e7ba1c98f9284b35cb4dcf82e2b0": { "facing": "ui" },
+  "fffd5d39df1984fcf520968209960b4e766fef89": { "facing": "ui" },
+  "6c12156297a2db6e784ad70802dd64c5a8af07c8": { "facing": "ui" },
+  "07314e32eeb7726c49a98147014b7bf5052bc1ae": { "facing": "ui" },
+  "6abbdc1142be444721e00311b33c20ea3a2321ad": { "facing": "ui" },
+  "b1311c292e0ed6584b4af161218da037878840aa": { "facing": "internal" },
+  "d433823e10a4c098eb18dde511849034b49f932c": { "facing": "ui" },
+  "bf5d795e5f7573f4d0083f4d99f7f09aba282553": { "facing": "ui" },
+  "15c087bacd4377c966d7d20d56995281ffade251": { "facing": "ui" },
+  "a194bb3164f13ca30ebda7c2ff8b4ef5087e6279": { "facing": "ui" },
+  "e14bae204aed1db03d67eb747a1079f7f4953da9": { "facing": "ui" },
+  "45fc8a63212ec4cc5844a145ba56f56e37a4f693": { "facing": "ui" },
+  "6cc57f858375b0050bddb1a6d43819c66e3c940e": { "facing": "ui" },
+  "37c186c47264b2d666e102736b0af80caac5898a": { "facing": "ui" },
+  "5a22e48681ddb8c9240759db4553b0ac2e63b1a9": { "facing": "ui" },
+  "2267e286f1225096964e82b929fe7c367841ccf1": { "facing": "ui" },
+  "6b6d6cb5ee7bf679460605c7ce006c1c2bab888f": { "facing": "internal" },
+  "76cbfaa6fb972d0759f297d6df83ffc531c5be1f": {
+    "facing": "model",
+    "id": "tool-result-eval-mock-relay-request-too-large",
+    "name": "Tool Result: Eval Mock Relay Request Too Large",
+    "desc": "isError abort tool result when the plugin-eval mock relay rejects an oversized request, typically after a hook inflated the tool input."
+  },
+  "bc42aaf1299d4633a13132b4d844cd225d8c23ac": { "facing": "ui" },
+  "e15f0b98c402e9e237dbfa4e97a704117ca089b9": { "facing": "ui" },
+  "988fe07f197d372744dabed26a9f7137c45e683e": { "facing": "ui" },
+  "891861ea2dd2a42180797ddab21bce5374da1970": { "facing": "ui" },
+  "a5d7a21ecb9154e8ba3e03bc3c541a969e83b316": { "facing": "ui" },
+  "0cfc40850697d34b38395de3f84a1ec983f88665": { "facing": "ui" },
+  "7a11ee979551de27dfe4b7a75dc1f7334510b5d2": { "facing": "ui" },
+  "5b556684299ea9a6d8d678de144ca7159479ca45": { "facing": "ui" },
+  "989c9e27653730d526ba36d3a3a689b6e1513d74": { "facing": "ui" },
+  "2952c632fdb8f20d36b3eb72fa9496edf81c8771": { "facing": "ui" },
+  "fd5203d3c959b82c48580d76197ac7cca68c683a": { "facing": "ui" },
+  "2d8dcddb9cfeae8ac7e06c7ba6c20c1b30fc6410": { "facing": "ui" },
+  "be2b79280ec4b16f336bef8c8858830d21b14e61": { "facing": "internal" },
+  "3cbe468e526345750156a9700270bd15167d5aba": {
+    "facing": "model",
+    "id": "tool-result-task-output-file-removed",
+    "name": "Task Output File Removed",
+    "desc": "Read/Grep tool error when a task-output path's backing file has been removed, returned to the model as the tool result."
+  },
+  "d7c6b20b2e6eb03d5e7c712839e516276154b36b": { "facing": "internal" },
+  "65f842aa6bbcb350638fe2c41ef5a90a9547b9e7": { "facing": "internal" },
+  "ffa8780238e3353ecff0c2f276031989c261d754": { "facing": "internal" },
+  "28ff3a0077c5acacc639ec9fb2ff68c36ce51f9e": { "facing": "internal" },
+  "fdd53e7dba4ef328f65082dd73c256a83c3dedf4": { "facing": "internal" },
+  "f6dd3ca8e97a4e8e2cd433fb611f3e91c4bb3e55": { "facing": "ui" },
+  "06f0827dae2074093cc4509d7095ed89835d50f7": { "facing": "internal" },
+  "8d0bfcec2e03d60cf57147dd76d04664a484df6c": { "facing": "internal" },
+  "d7003ba37903fee84d950797c7daeb7dd6c42562": {
+    "facing": "model",
+    "id": "tool-result-search-symlink-resolution-changed",
+    "name": "Search Symlink Resolution Changed",
+    "desc": "Glob/Grep tool error when a search path's symlink resolution changed after the permission check, returned to the model as the tool result."
+  },
+  "4e326765e259b15e2ac738bd270f49da1702d22d": { "facing": "internal" },
+  "9cf2eb9dc00e21d56e776527610db25377fdca44": { "facing": "internal" },
+  "8863e41a2ba020f5e1a66d8d8384292a09144136": { "facing": "ui" },
+  "b0c9c08d528852a4a72213cc05c3ec1c8f828d90": { "facing": "internal" },
+  "de85987ce61076251540f274b77622146b70d8be": { "facing": "ui" },
+  "e29defb6410d4be3d2bf98808c41e10848f48a52": { "facing": "ui" },
+  "f85684f18ec0d70c4137a0f51c5f95c4449662b6": {
+    "facing": "model",
+    "id": "tool-result-attachment-outside-working-directory-restricted",
+    "name": "Attachment Outside Working Directory Restricted",
+    "desc": "SendMessage/SendUserFile validateInput error returned to the model when --restricted refuses an attachment outside the working directory."
+  },
+  "e2c6d1c0b96e898e59379085766f52a0d6b174ac": {
+    "facing": "model",
+    "id": "system-prompt-env-info-no-longer-worktree",
+    "name": "Environment Info No Longer A Worktree",
+    "desc": "Environment-update prompt fragment telling the model the primary working directory is no longer a git worktree."
+  },
+  "a07d6dfab4282bab04b4d407150e9f69ff9b6137": {
+    "facing": "model",
+    "id": "system-prompt-env-info-working-directory-changed",
+    "name": "Environment Info Working Directory Changed",
+    "desc": "Environment-update prompt line reporting the new primary working directory and the previous path."
+  },
+  "abf35007098c4b431d19aa61047b19c1f0c55a76": {
+    "facing": "model",
+    "id": "system-prompt-env-info-git-repo-changed",
+    "name": "Environment Info Git Repo Changed",
+    "desc": "Environment-update prompt line reporting whether the primary directory is a git repository after a change."
+  },
+  "953cd31a3cc8dc5a5082431e676027afbf9a12b2": {
+    "facing": "model",
+    "id": "system-prompt-env-info-model-powered-by",
+    "name": "Environment Info Model Powered-By",
+    "desc": "Model-identity prompt fallback telling the model it is powered by a raw model ID when no marketing name is set."
+  },
+  "6ea136f99464b3f01db114adf2fae93e94787fea": {
+    "facing": "model",
+    "id": "system-prompt-language-preference-cleared",
+    "name": "Language Preference Cleared",
+    "desc": "Language-attachment prompt telling the model the language preference was cleared and to match the user's language."
+  },
+  "2cee756e369c89e845a96d54c337ab984d31cac4": {
+    "facing": "model",
+    "id": "tool-result-bash-background-delivery-window",
+    "name": "Bash Background Result Delivery Window",
+    "desc": "Shared Bash tool-result clause telling the model a background command's result arrives between tool calls or on a new turn."
+  },
+  "bdafe3358cc45e1e0f9d29d10bbf3fe55b982b7a": {
+    "facing": "model",
+    "id": "tool-result-bash-background-session-ending",
+    "name": "Bash Background Session Ending",
+    "desc": "Bash tool-result text when the session is ending: the background command is stopped at turn end so its result only arrives while the model is still working."
+  },
+  "77fb9e5ac4784d2274d13211149458ee83733729": {
+    "facing": "model",
+    "id": "tool-result-bash-backgrounded-by-user",
+    "name": "Bash Backgrounded By User",
+    "desc": "Bash tool-result text when the user backgrounded the command, telling the model to carry on without waiting."
+  },
+  "f463b690380991be18ce854a471d0674ece3a9f9": {
+    "facing": "model",
+    "id": "tool-result-bash-background-auto-deliver",
+    "name": "Bash Background Auto Deliver",
+    "desc": "Bash tool-result text telling the model a background command's result is delivered automatically and not to poll or sleep for it."
+  },
+  "30fadffed7a39c119c04c51f7cf21d85bd859e3d": {
+    "facing": "model",
+    "id": "tool-result-bash-command-stopped-output-so-far",
+    "name": "Bash Command Stopped Output So Far",
+    "desc": "Bash task snapshot/tool result when a command is killed, including output captured so far."
+  },
+  "edf2f7c0b1f7aa92d827021fb6c4808a3a85c7b9": {
+    "facing": "model",
+    "id": "tool-result-bash-exited-unknown-code",
+    "name": "Bash Exited Unknown Code",
+    "desc": "Bash task snapshot/tool result when a command completed without a known exit code, including the full output path."
+  },
+  "da184b49e251001fa37a431c82f713a0879b65c5": {
+    "facing": "model",
+    "id": "tool-result-bash-output-file-unverified-killed",
+    "name": "Bash Output File Unverified Killed",
+    "desc": "Prefix spliced into Bash command stdout/stderr when the command is killed because its output file was replaced or could not be verified."
+  },
+  "945784955a13a6fe54fc4b47d4379f23b89db708": { "facing": "internal" },
+  "803138997c7b8864afce483851aa2ab18bd8652c": { "facing": "internal" },
+  "ceed87da93eeba699cfa2926ca66af013e8a8e19": { "facing": "internal" },
+  "95a5af57218044302663459f4d37e4f21e02be0a": { "facing": "internal" },
+  "26943d68f7c74f709a27bf8ebf6af93f7d82a306": { "facing": "ui" },
+  "5468c5b50e2a8bb41ba76954865448c99118718f": { "facing": "internal" },
+  "f11591d8ea7e333a227a974a1fd728a8fa4a09a3": { "facing": "internal" },
+  "7aa79c2ff4cf41b224cee678207c6832bb6b1125": { "facing": "internal" },
+  "7709c944c76ac860270dd3636f73b117014a669e": { "facing": "internal" },
+  "e2e448af03b6cfb553381428c854b92dd94a2628": { "facing": "internal" },
+  "0c3dff4a5b0f71ded841908c6d3081907ca5d5ea": { "facing": "internal" },
+  "3f772ab844c1e21fa02171ebe20f91f633de3151": { "facing": "internal" },
+  "b554b4c25da52a8626cf2220db156ec5ae8d2cce": { "facing": "internal" },
+  "3bfa15aad70caf999689f0efdc91e81f223ab666": { "facing": "ui" },
+  "91076615b682a366b1ab3737d3d3ce227b2afb15": { "facing": "ui" },
+  "4e2a59c0ba83da39b1f95b9306c93f29d64a3ffd": { "facing": "ui" },
+  "82ee6cf15839ab6823850351eb81decd18cfdcde": { "facing": "ui" },
+  "2d10ad63e6ef63a4599445ab46cfe328ae7615e5": {
+    "facing": "model",
+    "id": "system-reminder-cloud-session-hook-not-run",
+    "name": "System Reminder: Cloud session hook not run",
+    "desc": "Tells the model a machine hook was skipped for a cloud-served call and that hook's output is not part of this result."
+  },
+  "cbcfeacbd79833822810218a5733bfdb30a4f5f3": { "facing": "ui" },
+  "7b1a906e85e99eceea14d4c22c033f71419a447e": { "facing": "ui" },
+  "73493ef0d005abe0974810fd2c1a9d4b885566c8": { "facing": "internal" },
+  "dfd52807a758af9d189fee429d42994838a88541": { "facing": "internal" },
+  "8ce5eb295a9f40cfcf4ae4127c712daed3f8c437": { "facing": "internal" },
+  "5307bf15bd9133604a49f4e929e86cf1af80e2a1": { "facing": "internal" },
+  "8d82904ce2c59a64beb4b54603a8c1e0c4aad423": { "facing": "internal" },
+  "b312cf635c7cebc5d7dfd3243bfddb896a4ea0e6": { "facing": "internal" },
+  "1c68e559c401a0007c21111a4c73825f3fbe667d": { "facing": "internal" },
+  "b57f94c5f8b98d2875f04a5c6513b38779744f9e": { "facing": "internal" },
+  "e6e88047f4e758fc34e5cdc91aee480eb648a311": { "facing": "internal" },
+  "316ca347d6b659c47b3675d90d37a22f0e211072": { "facing": "ui" },
+  "999cdda63790726b52ecb107ea4698eb4d1a97a7": { "facing": "ui" },
+  "d946be76eb304c5a7ee7e93f4a4ba2e63c682ddf": { "facing": "ui" },
+  "49378ed347c115c231b72663982db9fbc44f91a5": { "facing": "ui" },
+  "b9a16a55b28636e309c76528b253fe26f218b123": { "facing": "ui" },
+  "f7569436bec73f0e60f71ff8df08caad92a8143b": { "facing": "internal" },
+  "0f8ae8f43c22ca6cba20a295101cc6f90164abbb": { "facing": "ui" },
+  "12d187c86e6fe28588eab15d24a6c6f55e4584b7": { "facing": "ui" },
+  "494119649609584d2a2a6a3695d0c5ca370cd85e": { "facing": "ui" },
+  "1114d40c26c590760cf636ecd8b70bfdf8f6a37b": { "facing": "ui" },
+  "88f76430cb2b466754c55226564ca9960c28acba": { "facing": "ui" },
+  "595b13baa17303f9bd678eef90cac27ddd012c6f": { "facing": "internal" },
+  "331deae076e08df35ad93234881029ba9ca9eea7": {
+    "facing": "model",
+    "id": "tool-result-mcp-authenticate-anthropic-hosted",
+    "name": "MCP authenticate: Anthropic-hosted server",
+    "desc": "Message returned by the MCP authenticate tool when a server is Anthropic-hosted and does not support local OAuth."
+  },
+  "ee2d842dca1b5c7c05b020e91a400750ee22ae1e": {
+    "facing": "model",
+    "id": "tool-description-mcp-repl-callable",
+    "name": "Tool Description: MCP REPL-callable tools",
+    "desc": "Shared clause telling the model MCP tools are callable inside the REPL environment rather than advertised as top-level tools."
+  },
+  "5b7ca640742c266ac9aef3b3c6276c3d3b7826dc": {
+    "facing": "model",
+    "id": "system-prompt-mcp-auth-complete-repl-result",
+    "name": "System Prompt: MCP authentication complete REPL result",
+    "desc": "Tool_result suffix after MCP OAuth completes on a REPL surface, stating the server's tools are now callable inside the REPL."
+  },
+  "908eabbe028683026065c7362cbab6e82f6a4deb": {
+    "facing": "model",
+    "id": "system-prompt-mcp-auth-complete-result",
+    "name": "System Prompt: MCP authentication complete result",
+    "desc": "Tool_result confirming MCP OAuth authentication completed for a server and its tools should now be available"
+  },
+  "8b1f9a893864e57634dd01bcb56b6f0b4fff7adc": {
+    "facing": "model",
+    "id": "tool-description-mcp-authenticate-intro",
+    "name": "MCP authenticate tool description (intro)",
+    "desc": "First fragment of the MCP authenticate tool description stating the server requires authentication."
+  },
+  "185b58e9b156c8ecb12e87a73a2a220710a7e6e4": {
+    "facing": "model",
+    "id": "tool-description-mcp-authenticate-outcome",
+    "name": "MCP authenticate tool description (outcome)",
+    "desc": "Fragment of the MCP authenticate tool description saying the server tools become available after authorization."
+  },
+  "67bc97d6ace0540b9ab403e9bf41a8cab838b1ce": {
+    "facing": "model",
+    "id": "tool-result-mcp-authenticate-unsupported-transport",
+    "name": "MCP authenticate: unsupported transport",
+    "desc": "Tool-result message from MCP authenticate when the server transport does not support OAuth."
+  },
+  "7361d99f7fe5b01d3e7f95de88fcf4bc6b46e413": {
+    "facing": "model",
+    "id": "tool-result-mcp-authenticate-auth-url",
+    "name": "MCP authenticate: authorization URL",
+    "desc": "Tool-result message from MCP authenticate asking the user to open the authorization URL."
+  },
+  "6cb45383c827710368820a665ab4422229b7a7c9": {
+    "facing": "model",
+    "id": "tool-description-mcp-complete-authentication-intro",
+    "name": "MCP complete_authentication tool description (intro)",
+    "desc": "First fragment of the MCP complete_authentication tool description explaining callback-URL submission."
+  },
+  "9717048278afe95b3fab5f9f64ee7bad72e93c3a": {
+    "facing": "model",
+    "id": "tool-result-mcp-complete-authentication-no-flow",
+    "name": "MCP complete_authentication: no flow",
+    "desc": "Tool-result error from MCP complete_authentication when no OAuth flow is in progress."
+  },
+  "78a437e56eb4b727a8045dbf49f08df27b724fa0": {
+    "facing": "model",
+    "id": "tool-result-bash-spawn-failure-detail-withheld",
+    "name": "Tool Result: Bash spawn failure detail withheld",
+    "desc": "Sanitized bash spawn-failure text returned to the model as bash-stderr/user command output on remote connections."
+  },
+  "522be75cbf490f1e1a359d24ebc0dda0657aa490": {
+    "facing": "model",
+    "id": "system-reminder-artifact-editor-follow-up-predates",
+    "name": "System Reminder: Artifact editor follow-up predates",
+    "desc": "Coordinator correction reason that the artifact editor finished its earlier run first, so any result predates the follow-up."
+  },
+  "7a7fe79b73cd10e07cc72a8e257d3bd9420e5022": {
+    "facing": "model",
+    "id": "system-reminder-artifact-editor-follow-up-predates-action",
+    "name": "System Reminder: Artifact editor follow-up predates action",
+    "desc": "Coordinator instruction to send the follow-up to the editor worker now and reply only after the new result."
+  },
+  "c67d2dafc16b713d5a3900a33d95c62be5a38ac4": {
+    "facing": "model",
+    "id": "system-reminder-artifact-editor-follow-up-stopped-action",
+    "name": "System Reminder: Artifact editor follow-up stopped action",
+    "desc": "Coordinator instruction to handle the follow-up itself after the editor stopped before reading it."
+  },
+  "f5132a9bb64d3f82b39c29052a3a89a02ccc2b33": {
+    "facing": "model",
+    "id": "system-reminder-artifact-editor-follow-up-not-resumed",
+    "name": "System Reminder: Artifact editor follow-up not resumed",
+    "desc": "Coordinator correction reason that the artifact editor could not be resumed or another path is resuming it."
+  },
+  "db78f88a2ada36d0df8f0bf9accbe1d0dba99c53": {
+    "facing": "model",
+    "id": "system-reminder-artifact-editor-follow-up-not-resumed-action",
+    "name": "System Reminder: Artifact editor follow-up not resumed action",
+    "desc": "Coordinator instruction to dispatch the follow-up to a worker or answer it directly after resume failed."
+  },
+  "8c813f62defee82ca87e0bf01287909a6232a10f": {
+    "facing": "model",
+    "id": "system-reminder-artifact-editor-follow-up-withdrawn-action",
+    "name": "System Reminder: Artifact editor follow-up withdrawn action",
+    "desc": "Coordinator instruction to handle a follow-up withdrawn before the editor read it."
+  },
+  "5984ed6e1fa362d4a2d7214481646a272a24aa0d": {
+    "facing": "model",
+    "id": "system-reminder-artifact-editor-codelivery-note",
+    "name": "System Reminder: Artifact editor codelivery note",
+    "desc": "Coordinator note template that an artifact editor worker is applying a thread follow-up, with a situation-specific tail."
+  },
+  "3e656b62d0fdb38cb785a897b1a258aa7a599191": {
+    "facing": "model",
+    "id": "system-reminder-artifact-editor-follow-up-cancelled",
+    "name": "System Reminder: Artifact editor follow-up cancelled",
+    "desc": "Coordinator note that a thread follow-up was cancelled, with reached vs withdrawn variants."
+  },
+  "0800c59f522adfbe48c18a28d67cc5551c6017b8": {
+    "facing": "model",
+    "id": "system-reminder-artifact-editor-follow-up-cancelled-after-reach",
+    "name": "System Reminder: Artifact editor follow-up cancelled after reach",
+    "desc": "Coordinator instruction that a cancelled follow-up had already reached the editor, so any result is superseded."
+  },
+  "98f7d4dd38348fc8cc6409f4cf4fe3b701654729": {
+    "facing": "model",
+    "id": "system-reminder-artifact-editor-follow-up-cancelled-before-read",
+    "name": "System Reminder: Artifact editor follow-up cancelled before read",
+    "desc": "Coordinator instruction that a cancelled follow-up was withdrawn before the editor read it."
+  },
+  "cd13cf5be90d3db837fc315c23461ee2be28dc03": {
+    "facing": "model",
+    "id": "system-reminder-artifact-editor-follow-up-page-deleted-after-reach",
+    "name": "System Reminder: Artifact editor follow-up page deleted after reach",
+    "desc": "Coordinator note that the page was deleted after the editor had already read the follow-up."
+  },
+  "3b44ab2ced8b094da152c37ba88a683f59d2159f": {
+    "facing": "model",
+    "id": "system-reminder-artifact-editor-follow-up-page-deleted-before-read",
+    "name": "System Reminder: Artifact editor follow-up page deleted before read",
+    "desc": "Coordinator note that the page was deleted and the follow-up was withdrawn before the editor read it."
+  },
+  "a95908f98ad938eee7dee912e48005c00f4a39c8": {
+    "facing": "model",
+    "id": "system-reminder-artifact-editor-follow-up-page-rehomed-after-reach",
+    "name": "System Reminder: Artifact editor follow-up page rehomed after reach",
+    "desc": "Coordinator note that a newer page version was published after the editor had already read the follow-up."
+  },
+  "77b28953197d43080ffa449dc1deb56f60f5fe3c": {
+    "facing": "model",
+    "id": "system-reminder-artifact-editor-follow-up-page-rehomed-before-read",
+    "name": "System Reminder: Artifact editor follow-up page rehomed before read",
+    "desc": "Coordinator note that a newer page version caused the follow-up to be withdrawn before the editor read it."
+  },
+  "f988ad53f4657f7d28e3718a1f1598d8c708ffdd": {
+    "facing": "model",
+    "id": "system-prompt-sdk-host-pre-model-switch-hook-reinitialized",
+    "name": "System Prompt: SDK host PreModelSwitch hook reinitialized",
+    "desc": "Fail-closed PreModelSwitch deny reason when the SDK host re-initialized before the hook answered, telling the model to retry the switch."
+  },
+  "93a9b41748457f2132c4e8d7139220f3df0ca5ef": { "facing": "internal" },
+  "bcce8cbd227abb61ce4963af23b2b3d6fa4db766": { "facing": "internal" },
+  "363f7b56a37dda22fcff1fbbf8452398881fd079": { "facing": "internal" },
+  "d83e6dee4cb0ae1c253fca4dba397203b73a0b20": { "facing": "internal" },
+  "4694e65de332dc9eb07e6f95760e3e4fafb73bed": { "facing": "internal" },
+  "e0861255c8cc66ad7eab1cd0652bc04317dba757": { "facing": "internal" },
+  "e887555943ca79fb89d3652a276b4aa6121cfaa4": { "facing": "internal" },
+  "575bed2a62001bf73344ca56d6923d090348cfb0": { "facing": "internal" },
+  "9297f4569ad5762730883fc4aac41119f3d16a1d": { "facing": "internal" },
+  "d1f6dc82bbb9a369474909ec8ddb5c322c449ccc": { "facing": "internal" },
+  "1c952ef1ee69a1b68146282acf82047ea3120f0f": { "facing": "internal" },
+  "786c0fc9e1d1aa3b8271ff7f061dd4a01cb3a4a1": { "facing": "ui" },
+  "9cf58dfed5e81c7f6dd9ce7a9e280acd7db0aedc": { "facing": "internal" },
+  "f3d43741ce0584906ae34671c638bba26dbd10d3": { "facing": "ui" },
+  "80be490b3f80019d9a5667504052e32bb2e83a02": { "facing": "ui" },
+  "aae27cc8101dd3463098bd42f74e9fb5bd3b4690": { "facing": "ui" },
+  "82b7c55dc376d29cae87c3fce6dc57d4a7e62ba2": { "facing": "ui" },
+  "80139a5aacb59ecacefcc1fae3030dca552f6420": { "facing": "ui" },
+  "627f96e3638eaef20933f3dc217ec3b5bcd5cbb1": { "facing": "ui" },
+  "22d8440e13ff3ec5e99815f3ed3a77bbe73067e7": { "facing": "ui" },
+  "bb7eecd9fc2ec66ab1244e9d1beb6698818240ae": { "facing": "ui" },
+  "99f7981ab0f4b9d7fdab6058711d08c60e1b322f": { "facing": "ui" },
+  "d0b8506bc2216879dbe23990a47e62a97be343d8": { "facing": "ui" },
+  "6c35d7603d2b8f32b0bf440ea8c2588975a76e42": {
+    "facing": "model",
+    "id": "system-prompt-auto-mode-classifier-remote-machine-allow",
+    "name": "System Prompt: Auto-Mode Classifier Remote Machine Allow",
+    "desc": "Allow-exception list from the remote host, interpolated into the auto-mode classifier prompt so those ALLOW rules can clear a SOFT BLOCK."
+  },
+  "e64e8cc9582f3cade1751d1d47f16c54521d3bbd": {
+    "facing": "model",
+    "id": "system-prompt-auto-mode-classifier-remote-machine-environment",
+    "name": "System Prompt: Auto-Mode Classifier Remote Machine Environment",
+    "desc": "Environment lines from the remote host, interpolated into the auto-mode classifier prompt as context for judging the command."
+  },
+  "d17339d5ccf5ab8c2fd582378626f6935fda7b57": { "facing": "internal" },
+  "b6015d83b80864c6338770351552f8b4aee613d4": {
+    "facing": "model",
+    "id": "slash-command-terminal-setup-description-native-shift-enter",
+    "name": "Slash Command: /terminal-setup Description (Native Shift+Enter)",
+    "desc": "The /terminal-setup command description used when the terminal (Ghostty/Kitty/Warp/WezTerm/Windows Terminal) natively supports Shift+Enter; injected into the model's context via the Available commands block."
+  },
+  "35596f19fc7ecfeb926600a2e07c971339aee7e6": { "facing": "ui" },
+  "fb99ed551f6b4d628a449f55458abb5e6a497a1f": { "facing": "ui" },
+  "92597b9b48aadc88de304f9f3906f41ffda0c326": { "facing": "ui" },
+  "d494093a1c3c15f1492806f2d906633b2a87d753": { "facing": "internal" },
+  "501035ee6ef3c1d803ae2f11fd307cfa24845115": { "facing": "internal" },
+  "d06348d26a399b342b345c1f6452fad9dafb9c8d": { "facing": "internal" },
+  "99cab4929e1b171373dde5dd39b9b9984473d1fa": { "facing": "internal" },
+  "8c0ac7363b482df89f6199b7e453a61e983dd0cb": { "facing": "internal" },
+  "bce6a1d3294892b1ba1e2863677d477a94b45c87": { "facing": "ui" },
+  "2bfe1d8a9072ff9028d8200cdd21d5ba08aab35e": { "facing": "internal" },
+  "82ac85c40a2edb9cae74a79dafd2857cabbb52c6": { "facing": "internal" },
+  "282365ae1ddd86e1598d1bae9158fd16da7b3485": { "facing": "ui" },
+  "455a99b8726907e2624d05b5fa8d6e7ff518ce9b": { "facing": "ui" },
+  "83268b40a7e79f6c7dfd838291dc2079da2f62c0": { "facing": "ui" },
+  "981b829a7c60f8720d3e7b496c1c2d9149a5ba30": { "facing": "ui" },
+  "7b6edd3ec0f81630f37e4061f91912dba1af2722": { "facing": "internal" },
+  "219cc1ea6afebe2495ea18b11788d0bf6a10212c": { "facing": "internal" },
+  "815e3e5d72327ef4d0f4b765a8c038d2f42133b2": { "facing": "ui" },
+  "a06652b5d61f1bf7a6ef9a8a78517850b3ca6c1d": { "facing": "ui" },
+  "831246fa96367e7a76af47da13cbfd08614e42f7": { "facing": "ui" },
+  "b58d992a89ade648d9a71ed0a5c64fde31418173": { "facing": "internal" },
+  "ca51f98e420f7c859a698d7f9733b8dd7db42a2d": { "facing": "internal" },
+  "4b04048bb36b61111058ec88d90ac4f1805d1ff2": { "facing": "ui" },
+  "4d15471611816d64baa13d216297344eb7f0b51f": { "facing": "internal" },
+  "99ba19aac088dcecf9e5a2e173247b74035a89af": { "facing": "internal" },
+  "b860e26131a236a72789511825ae37f9a607e440": { "facing": "internal" },
+  "e3b9101e1b0a05c0be2accd4b72387492b85e074": { "facing": "internal" },
+  "ebbcf62ac2a6f4fe787a1690460ec274aae54320": { "facing": "internal" },
+  "3b64affd916f40d82ef4187ef039a69b1c8d438b": { "facing": "ui" },
+  "002f7daec10f57b8dbec9511d5807bcb182a7987": { "facing": "ui" },
+  "d501ec1280d8f8ed94b160e1b47c37975e8cf306": { "facing": "ui" },
+  "b574dec2b0b6857f8280a1f105182c6dd2916a71": { "facing": "ui" },
+  "8ab99e20f4f0c8621ba917ecaeaa9cb5f5b7ff13": { "facing": "ui" },
+  "9a610aeacf30bf84f18114196c78d3ec96101ecb": { "facing": "ui" },
+  "04fe05c052f660fa91c13169f7c84c60201005c1": { "facing": "ui" },
+  "024a46f945eaa04170f286e3630dbb39d4ecb9b8": { "facing": "ui" },
+  "ca3d6d33cd18827c30ef02f24eabd4f9083eb902": { "facing": "ui" },
+  "666a6ac0946e98b888c00d02b22bf4cea224b0ac": { "facing": "ui" },
+  "743ffbe5aa71c478a553bba84052232640f5850e": { "facing": "internal" },
+  "a6e067eb1260aad33676463877d1a4a7874ef6b1": {
+    "facing": "model",
+    "id": "system-reminder-ultracode-still-on",
+    "name": "Ultracode Still-On Reminder",
+    "desc": "System reminder injected on subsequent turns reminding the model that ultracode mode remains active."
+  },
+  "2c820647b3a7083a47545208f52c70adadd11227": {
+    "facing": "model",
+    "id": "system-reminder-tool-definitions-source-removed",
+    "name": "System Reminder: Tool Definitions Source Removed",
+    "desc": "Tells the model to disregard schemas and description instructions for tools whose source was removed after they were loaded earlier in the conversation."
+  },
+  "a4a0aac57d9b4d69905315bd1b14880c90e27f93": { "facing": "ui" },
+  "8529aa457c4b7dc5a861c0d21af3fcaa2c0c49c2": { "facing": "ui" },
+  "ce1b55659823ccd4cea03ae65ca90408617a8753": { "facing": "ui" },
+  "c90c94bab6697397750279f19a78ba6e25af2225": { "facing": "internal" },
+  "80af4d8891df1279763f1c0457fc59a8b753e9ff": { "facing": "internal" },
+  "0fd161be07a0afb02769c9b3dc7b6cbd7086e905": { "facing": "internal" },
+  "8a6a5cca0367b0a1ea14557df364fd868a7ef8f8": { "facing": "internal" },
+  "bec021826512a2d4666b2147c2413bdb83c465e1": { "facing": "internal" },
+  "aa5c6079b13d7c750a74e4eeba75b44fb9eee1f6": { "facing": "internal" },
+  "06be03db7d51789d393d691f9b7c4c3643740ce1": { "facing": "internal" },
+  "3afb781ff10dec12c2e35f9d8755cd96b39bfb44": {
+    "facing": "model",
+    "id": "slash-command-resume-background-session-attach-or-stop",
+    "name": "Slash Command: /resume Background Session Attach Or Stop",
+    "desc": "Tells the model how to attach to or stop a live background session when /resume hits a session that already has a job id."
+  },
+  "4e8bf2b36978e1180cc1e803a2f2cc48d2a42afe": {
+    "facing": "model",
+    "id": "slash-command-resume-background-session-agents-hint",
+    "name": "Slash Command: /resume Background Session Agents Hint",
+    "desc": "Tells the model to find the background session id via claude agents, then attach or stop it, when /resume hits a live session with no job id."
+  },
+  "7be6b01f69c57999686851903a99f168fd9b7ef5": {
+    "facing": "model",
+    "id": "slash-command-resume-background-session-fork-hint",
+    "name": "Slash Command: /resume Background Session Fork Hint",
+    "desc": "Suffix appended when /resume can fork, telling the model to pass --fork-session to branch a copy instead of attaching."
+  },
+  "2ee4bf3207d862b1bae71b0bfcf88e6e8472e0c2": {
+    "facing": "model",
+    "id": "slash-command-resume-background-session-running",
+    "name": "Slash Command: /resume Background Session Running",
+    "desc": "Wrapper telling the model the requested session is already running as a background session, with attach/stop/fork hints interpolated."
+  },
+  "7590c6c33e8d8ab471d4dc3a4306fc5f9b692eb0": { "facing": "internal" },
+  "976a6504c4678f7b896034b184b37fd338fd3694": { "facing": "ui" },
+  "05c3988720cc89f867558245f891b08341d5bc61": {
+    "facing": "model",
+    "id": "slash-command-background-couldnt-start-detail-withheld",
+    "name": "Slash Command: /background — Couldn't Start (Detail Withheld)",
+    "desc": "local-command-stdout returned to the model when /background fails to spawn the session on a connection that withholds the underlying error."
+  },
+  "bc9bc164f17f149ce270b67b68c4a447c4dc5d19": { "facing": "ui" },
+  "2db55fcbb17e0e29b2d5511d37f840775d1abafe": { "facing": "ui" },
+  "5d687c86eda09bedb8da22b0658c2677734aae5b": { "facing": "internal" },
+  "dfc448c166a603d6105a419a8d3feef53ae83669": { "facing": "internal" },
+  "b2c17ac849b7e6660e4847d129604ec944250e5c": { "facing": "ui" },
+  "778897d76075cacdf7ea864158801c5829d5ad8d": { "facing": "internal" },
+  "1aef2ea98070fcbcfed53ffb5968391e13e1db5a": { "facing": "ui" },
+  "878edf12f99745cb2b7ba68e55b9421087951d2a": { "facing": "ui" },
+  "eeb8573f7c520a4d66ba78bf1b77f5f0bd0b3249": { "facing": "ui" },
+  "34c1f68c060dfaaeb72e040ba6514e066c19a5b3": { "facing": "ui" },
+  "b8df6f61fdab335d0fb7aa920e548f763c5256aa": { "facing": "ui" },
+  "58521c62756233df7d3660e2aeede0d1f38bbaf6": { "facing": "ui" },
+  "281cad0cd5f983c5cd87792d99689b13ac227072": { "facing": "ui" },
+  "eaa3454debf1c9f5eecdc5594aa3376a188cd51a": { "facing": "internal" },
+  "3fde9b0ee9792cd8513a1ad6e69120c1e8754087": { "facing": "internal" },
+  "ad0f26b7e36c98ac56cf2670ac5ee2369137fee5": { "facing": "internal" },
+  "12300f69d587771cb57a240bbda6f02d973961e3": { "facing": "ui" },
+  "95d0a4866d89e231ca5c1e2ae475c55cdb2bfb40": { "facing": "ui" },
+  "c9b09a2adaebb318f468da38c2afb0faf93fead8": { "facing": "ui" },
+  "49ed5ea12926ac3003333eb7c9d244ed958d1236": { "facing": "ui" },
+  "0aae3952b9f1a5c8025007e064ae9de4caf43dfa": { "facing": "ui" },
+  "bbceab65de691f9eb15d194fae8dc67a3d24a3c2": { "facing": "ui" },
+  "8c77c3978f9cba0a18b7c95e516add37dd6ef61d": { "facing": "ui" },
+  "1d859e2282c239b58fe2430f89148450c77d2362": { "facing": "ui" },
+  "f9f4697645d75522a99b29caf7124b671f238ba7": { "facing": "ui" },
+  "fef4d38e5c692381e280c831a25f3171afaaead1": { "facing": "ui" },
+  "c9f06acdfcef1be28d40c540395c3eaad847ec1e": { "facing": "ui" },
+  "0f57e6565e19bef5900a008c31588e269ab88195": { "facing": "ui" },
+  "206ee225e510d46f2c16f16a09b5eb8b098bca44": { "facing": "internal" },
+  "86a4fe28660dd0810d53a94a3235a9dd93113114": { "facing": "internal" },
+  "cd6b8f60c47d5b614cb6c6ecee0443d78b7c9624": { "facing": "internal" },
+  "4cb2031fe46d374c0ecfcbd6a49d6731fe2888f4": { "facing": "internal" },
+  "7fa5fc22c2289ee1f13fabda194c4d69bdcf9727": { "facing": "internal" },
+  "3748c20df54aaa5f4f33ce4747b5319e91aa2514": { "facing": "internal" },
+  "70ed4ad8a9c99721f8262845cb983009e53cbd3c": { "facing": "ui" },
+  "569d454963935e5bf5ccc901ac3ed9787c819558": {
+    "facing": "model",
+    "id": "data-local-command-failed-detail-withheld",
+    "name": "Local Command Failed (Detail Withheld)",
+    "desc": "local-command-stderr body sent to the model when a slash command throws on a connection that withholds the underlying error."
+  },
+  "b5c6ded217e6de12c0342dfb7e98864b391da09d": { "facing": "ui" },
+  "df2209128f488da5538155529bf0211f3017c62d": { "facing": "internal" },
+  "d8fd9a6d3dd34f79e086c8b69e44c4287be09e37": { "facing": "ui" },
+  "6a9fa048bd764a2c9d747a4621bf0290d54b8c14": { "facing": "ui" },
+  "92481654f629333e4f323644fb2be2935875b0d8": { "facing": "ui" },
+  "cd741e5911a213798ae503190fdbf333b9c0935e": { "facing": "ui" },
+  "f843bc6b16db29f1ec9947b237cc258702425bda": { "facing": "internal" },
+  "a03f3409b687e934aa47e7c799c234cd431fca3f": { "facing": "internal" },
+  "58434a55ac53f7446205a19ee0c0c2e7b47647cf": { "facing": "internal" },
+  "b1c6f6f1ca06055c7451cd4f639b38db9fa2d07b": { "facing": "internal" },
+  "990edbabf1d62154ff779471e2cccfc994b6178c": { "facing": "internal" },
+  "357c691af63bf537043bd87562ba11cf0885d478": { "facing": "internal" },
+  "ea6a8c6b0717392896058289d095ba7566420187": { "facing": "internal" },
+  "b9698c2f1b53937eecafebf2b51400aa36a72cac": { "facing": "internal" },
+  "1730a436b2c160e6c1e83b02d147eb35965a46af": { "facing": "internal" },
+  "721f672ff875594fd6ab3f1ae0e88030d31df4ed": { "facing": "internal" },
+  "022aa676e44b6898460fb3053c1f42a48468d015": { "facing": "internal" },
+  "db6d65c674c535c3fc1f1118aa1b452ec130fd1f": { "facing": "internal" },
+  "a1a56264501ece647c38b195884d7820259cbec7": { "facing": "internal" },
+  "8ee2f56d5efe6b14ead7ea53d927a878b8eea442": { "facing": "internal" },
+  "a130cd1833038930768472a65044c9b891dd0f9a": { "facing": "internal" },
+  "1b67fc1539395ee64169d9492a906e13359c7522": { "facing": "internal" },
+  "5c5d0359a815eb6df8ba1e45630af18ed88eb848": {
+    "facing": "model",
+    "id": "tool-result-artifact-reply-permission-ask",
+    "name": "Artifact Reply Permission Ask",
+    "desc": "checkPermissions ask message when Claude wants to post a comment-thread reply visible to an audience."
+  },
+  "6c75305b32b22b9c714fa6d36c3da11bbf0c7c26": {
+    "facing": "model",
+    "id": "tool-result-artifact-reply-confirmation-reason-named",
+    "name": "Artifact Reply Confirmation Reason (Named Comment)",
+    "desc": "decisionReason for the named-comment branch of a reply ask, stating posting a visible reply to that comment requires confirmation."
+  },
+  "e1f68ab40c8f4f2bcf448ac392e035096ce2fa27": {
+    "facing": "model",
+    "id": "tool-result-artifact-reply-already-answered",
+    "name": "Artifact Reply Already Answered",
+    "desc": "Artifact reply tool result telling the model that another session already answered the summon, its draft was discarded, and it should read rather than retry."
+  },
+  "af1f6bca06a104e0231ab7f7fba9031c2e583583": {
+    "facing": "model",
+    "id": "tool-result-artifact-write-db-permission-ask",
+    "name": "Artifact Write-Db Permission Ask",
+    "desc": "checkPermissions ask message when writing an artifact database, noting writes persist and are visible to everyone who can open the artifact."
+  },
+  "685715a08fabc3bc9543c4783a3b55920eaf4056": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-read-out-dir-moved-nothing-saved",
+    "name": "Tool Result: db_read out_dir Moved Before Any Save",
+    "desc": "ArtifactInputError when out_dir no longer resolves at the start of a db_read save, so nothing was written."
+  },
+  "54c9df9efe5f382332e041e28fe9b346a5499a81": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-read-out-dir-write-error",
+    "name": "Tool Result: db_read out_dir Write Error",
+    "desc": "ArtifactInputError when out_dir could not be opened for saving db_read documents, so nothing was saved."
+  },
+  "0b5f22eb9f52132a221dd3135fbe4e85b8c6a491": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-read-not-saved-line",
+    "name": "Artifact Db Read Not Saved Line",
+    "desc": "Tool-result line listing returned artifact-db documents that were not written to out_dir, with the reason and ids."
+  },
+  "ac0102f57917fd9e35fabb64613fabdf458fac95": {
+    "facing": "model",
+    "id": "tool-result-artifact-thumbnail-past-window",
+    "name": "Artifact Thumbnail Tag Past Window",
+    "desc": "Preview/publish issue that a <link rel=\"artifact-thumbnail\"> past the title window was ignored."
+  },
+  "f4142e50fd50771daee97495f88e437bf8570c37": {
+    "facing": "model",
+    "id": "tool-result-artifact-thumbnail-oversize-tag",
+    "name": "Artifact Thumbnail Tag Over 2 kB",
+    "desc": "Preview/publish issue that an over-long artifact-thumbnail <link> was not read."
+  },
+  "c89dd8ce69ecae37581f64ae71cc6edc9dd9d1e4": {
+    "facing": "model",
+    "id": "tool-result-artifact-thumbnail-missing-href",
+    "name": "Artifact Thumbnail Tag Missing Href",
+    "desc": "Preview/publish problem that an artifact-thumbnail <link> has no href."
+  },
+  "0cdbde25b598c176a52038f9eef06584f672be06": {
+    "facing": "model",
+    "id": "tool-result-artifact-thumbnail-bad-media",
+    "name": "Artifact Thumbnail Bad Media Attribute",
+    "desc": "Preview/publish problem that artifact-thumbnail media is not the allowed dark-mode value."
+  },
+  "fc416f5a6e64cab8246cd12172beeba761c37925": {
+    "facing": "model",
+    "id": "tool-result-artifact-thumbnail-dark-needs-default",
+    "name": "Artifact Dark Thumbnail Needs Default Link",
+    "desc": "Preview/publish problem that a dark-mode thumbnail requires a default artifact-thumbnail <link> as well."
+  },
+  "3a0355cd4cc65a71d4ca245c9cc391c852ef09e3": {
+    "facing": "model",
+    "id": "tool-result-artifact-thumbnail-dark-needs-default-past-window-clause",
+    "name": "Artifact Dark Thumbnail Default Past-Window Clause",
+    "desc": "Clause on the dark-needs-default problem noting a tag further down the file does not count."
+  },
+  "66d3ef11d4f5786883e7d821d2ad2f79c23e0a16": {
+    "facing": "model",
+    "id": "tool-result-artifact-thumbnail-dark-needs-default-oversize-clause",
+    "name": "Artifact Dark Thumbnail Default Oversize Clause",
+    "desc": "Clause on the dark-needs-default problem noting an over-long unread tag does not count."
+  },
+  "673583b97f4c54bb38dd1d13dc21227d654de94d": {
+    "facing": "model",
+    "id": "tool-result-artifact-thumbnail-dark-skipped-no-default",
+    "name": "Artifact Dark Thumbnail Skipped Without Default",
+    "desc": "Skip notice that a dark-mode thumbnail was not sent because the default thumbnail was not."
+  },
+  "c4d179bbaa7cac0abde8f092b2f973640c5bfcd2": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-custom-thumbnails-clause",
+    "name": "Artifact Publish Custom Thumbnails Clause",
+    "desc": "Clause naming both custom thumbnail files in the publish permission-ask sentence."
+  },
+  "9d189a880d646ea511a30c7e56f187da5c98d820": {
+    "facing": "model",
+    "id": "tool-result-artifact-preview-page-over-publish-limit",
+    "name": "Artifact Preview Page Over Publish Limit",
+    "desc": "Preview mechanical-check issue that the published page exceeds the MB size limit including the highlighting runtime."
+  },
+  "0e3e263bfaf1cd0d05075bf4e79ebf6c07074651": {
+    "facing": "model",
+    "id": "tool-result-artifact-delete-no-consent-surface",
+    "name": "Artifact delete — no confirmation surface",
+    "desc": "Deny message when an Artifact delete needs the user's confirmation but no one can answer it in this session."
+  },
+  "25a50b5f1247e4981bc41e8269e37fab2d7fa7d1": {
+    "facing": "model",
+    "id": "tool-result-artifact-create-from-type-user-approval-required",
+    "name": "Tool Result: Artifact Create-From-Type User Approval Required",
+    "desc": "safetyCheck decisionReason that creating an Artifact is a durable claude.ai change the auto-permission classifier must not approve."
+  },
+  "f393bee70d724c170f8333d91fc3bddb5952ba08": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-eval-hard-link-denied",
+    "name": "Artifact Publish Eval Hard-Link Denied",
+    "desc": "Eval-confined publish deny when a source path is a hard link that the evaluation run will not publish."
+  },
+  "3c563c386804a79ab8fac0345e1c93f15acbdcb3": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-eval-source-unreadable",
+    "name": "Artifact Publish Eval Source Unreadable",
+    "desc": "Eval-confined publish deny when a file_path or files[] source is outside what the evaluation run may read."
+  },
+  "9c75a8510a9e34187bef0e69842fed964b49ef79": {
+    "facing": "model",
+    "id": "tool-description-artifact-sync-dynamic",
+    "name": "Artifact Sync Action Description",
+    "desc": "Per-call Artifact tool description for action \"sync\": push local edits live and pull others' changes."
+  },
+  "ef13fd1cba6af11c47684d86c4ff5e3e793c12de": {
+    "facing": "model",
+    "id": "tool-description-artifact-publish-named-thumbnails-clause",
+    "name": "Artifact Publish Named Thumbnails Description Clause",
+    "desc": "Tool-description clause noting one or two custom thumbnail images the page names."
+  },
+  "0d4dd9b1619c1cd90ed6a17822aa0a71dc8b457b": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-required-new-artifact-clause",
+    "name": "Artifact Publish Required Fields New-Artifact Clause",
+    "desc": "validateInput suffix when file_path/favicon are required to publish a new Artifact rather than update via url."
+  },
+  "ada77006ac5f84f912edcc72ddee258b6c745dd2": {
+    "facing": "model",
+    "id": "tool-result-artifact-validation-steer-note-max-chars",
+    "name": "Artifact Validation Steer Note Max Chars",
+    "desc": "validationErrorSteer telling the model `note` is a short version changelog and longer text belongs in the page."
+  },
+  "bef0dfc9a53b6450d89736aae43f526879f6af20": {
+    "facing": "model",
+    "id": "tool-result-artifact-sync-record-unreadable",
+    "name": "Artifact Sync Record Unreadable",
+    "desc": "mapToolResult content when a stored sync record fails to parse, telling the model to refetch the artifact url."
+  },
+  "3282d86c1d490fa073b4646babbd16a105bb45a6": {
+    "facing": "model",
+    "id": "tool-result-artifact-capabilities-from-type-immutable",
+    "name": "Artifact Capabilities Come From Type",
+    "desc": "Publish tool_result note that stored capabilities come from the Artifact type and cannot be changed here."
+  },
+  "face82fb3b0c10131eaaff556392d78d164d4b24": {
+    "facing": "model",
+    "id": "tool-result-artifact-capabilities-carried-forward",
+    "name": "Artifact Capabilities Carried Forward",
+    "desc": "Publish tool_result note that stored capabilities were carried forward from the previous version."
+  },
+  "e2e74538616039b4128ceae3b8955e71b3959517": {
+    "facing": "model",
+    "id": "tool-result-artifact-delete-consent-surface-gone",
+    "name": "Artifact Delete - Consent Surface Gone",
+    "desc": "Artifact delete error saying the session can no longer ask the user to confirm, so nothing was deleted and the delete must not be retried."
+  },
+  "93289b31b3426d6bfccac63ac121237e6eb80b80": {
+    "facing": "model",
+    "id": "tool-result-agent-type-not-offered",
+    "name": "Agent Type Not Offered",
+    "desc": "AgentTypeError returned to the model when the requested agent type is not offered in this session."
+  },
+  "05016239c6e580bacfe0ce695dd068c0de1c0093": {
+    "facing": "model",
+    "id": "tool-result-send-message-agent-one-way-address-note",
+    "name": "SendMessage Agent One-Way Address Note",
+    "desc": "SendMessage tool_result message suffix when an agent send is one-way under the session address, not the agent's."
+  },
+  "0b7407cf0cb07226a887c13c977810220a9460e3": { "facing": "ui" },
+  "9ff87c5c461f8d41bfe765a895cfad734a610dab": {
+    "facing": "model",
+    "id": "tool-result-send-message-agent-main-conversation-note",
+    "name": "SendMessage Agent Main-Conversation Address Note",
+    "desc": "SendMessage tool_result message suffix that replies will be delivered to the session's main conversation, not this agent."
+  },
+  "80d968b1d95fa228f2fd86300deb08aff03a1881": { "facing": "ui" },
+  "ccac97b2cdebd8ac2e8b1b3a914634c0a910d1cd": {
+    "facing": "model",
+    "id": "tool-result-send-message-desktop-hook-deferred",
+    "name": "SendMessage Desktop Hook Deferred",
+    "desc": "SendMessage tool_result when a hook deferred Claude Desktop's messaging tool, so nothing was sent and the send cannot be resumed."
+  },
+  "cf13b26772e9457ba92fde8a99c6d7d71d617f2b": {
+    "facing": "model",
+    "id": "tool-result-send-message-teammate-unclaimable-name",
+    "name": "SendMessage Teammate Unclaimable Name",
+    "desc": "Resume-teammate tool error when the recorded name is a reserved recipient or agent-id-shaped name."
+  },
+  "88853e6c40d8a14513a83fc89f7b199c61b8508d": {
+    "facing": "model",
+    "id": "tool-result-send-message-desktop-structured-message",
+    "name": "SendMessage Desktop Structured Message Refused",
+    "desc": "SendMessage tool_result that a Claude Desktop session takes plain text, not a structured message type."
+  },
+  "a3985e390dd7a833588fed343e6099cc4a72da61": {
+    "facing": "model",
+    "id": "tool-result-send-message-desktop-refused",
+    "name": "SendMessage Desktop Delivery Refused",
+    "desc": "SendMessage tool_result when Claude Desktop refused delivery, quoting the desktop session id and reason."
+  },
+  "6d95e5a7d84d021605e8c85477dfaf1513f1dd13": { "facing": "ui" },
+  "b204c1361666b8b53a934468e50ee5d67cdb96e8": { "facing": "ui" },
+  "315aaa301c59a3e39969bce9bb916d1c77137408": { "facing": "ui" },
+  "88a08670562f6453ec6cc89d71b5f085733fcbb9": { "facing": "ui" },
+  "5ad336874e03919435f6c507e8175c8db15cc88d": { "facing": "ui" },
+  "236636cbfc72dfa36421ba2638bd93346b469a68": { "facing": "ui" },
+  "fb3b684548a455affb62fdb9dce79c0c6d1590d5": { "facing": "ui" },
+  "2a2803335d8a4762bd6c10565a9a794d544f7e95": { "facing": "internal" },
+  "9d37645e2345fca26ba759277899e0cc677256b9": {
+    "facing": "model",
+    "id": "tool-description-workflow-load-authoring-skill",
+    "name": "Workflow Load Authoring Skill Before Script",
+    "desc": "Workflow tool prompt/description instruction to load the authoring-reference skill before writing a script."
+  },
+  "2884220cf32e64fb76fca646a5213b0f7f5cd355": {
+    "facing": "model",
+    "id": "tool-result-workflow-load-skill-and-retry",
+    "name": "Workflow Load Skill And Retry",
+    "desc": "Suffix on Workflow validateInput/script errors telling the model to load the script-reference skill, fix, and retry."
+  },
+  "10a077f3bac198b17bb26f14bc511b59916925d8": { "facing": "ui" },
+  "9b13166dd7e15a3d7f74193b30912e3e60469e7a": { "facing": "internal" },
+  "5daaca7184f4f136dfb5926de987f7addf3c41bc": { "facing": "internal" },
+  "246ba08d1dc1c80a57146abeae3968ec61183da3": { "facing": "internal" },
+  "455baec57e87c353f3f2bdc1221240eadd519336": { "facing": "internal" },
+  "bbaab165da971accddc7ffcdd0730c438ef9025a": { "facing": "internal" },
+  "57c701600bd6583a18892a1206f2129ef33eae07": { "facing": "internal" },
+  "f0bfd494e7f3835373ea575a37062c3107f16993": { "facing": "internal" },
+  "fdd3869f7c962ee717d1457dcd7971bca174cc5e": { "facing": "internal" },
+  "794ed50258559a1cc60640076a501b9a8d6ad3f8": { "facing": "internal" },
+  "95944d9348874c1dd20ed7b37263ea54468b091c": { "facing": "internal" },
+  "651030368630d86764f875db310ed6eae6c41094": { "facing": "ui" },
+  "6b7953de22e4fe69759115d8636f33b7b083d6b7": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-after-command-changes-not-here-yet",
+    "name": "Dir Sync After Command Changes Not Here Yet",
+    "desc": "Session note on a forwarded tool result telling the model a host's earlier file changes are written here only after the task returns, so they should be read on that host now."
+  },
+  "ca24c30c2ae466d7cee773661650256b193e9e06": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-after-command-host-gave-up",
+    "name": "Dir Sync After Command Host Gave Up",
+    "desc": "Session note on a forwarded tool result telling the model the host abandoned sending command-changed files, which arrive with the user's next message."
+  },
+  "c0c6c7275f8815b882cfd109003a6b2bdd945902": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-after-command-bring-failed",
+    "name": "Dir Sync After Command Bring Failed",
+    "desc": "Session note on a forwarded tool result telling the model after-command pull threw, so host file changes arrive with the user's next message."
+  },
+  "48a10abc02e0f5559d1f9624f11842383125e959": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-after-command-applied-summary",
+    "name": "Dir Sync After Command Applied Summary",
+    "desc": "Applied-pull summary (updated/renamed/removed/not-taken counts) prefixed with Directory sync and attached as a session note on the forwarded tool result."
+  },
+  "bc36f3adb80db860ed0fc7a8f7c74ff0b9b3d44b": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-after-command-files-renamed-there",
+    "name": "Dir Sync After Command Files Renamed There",
+    "desc": "Fragment of the applied after-command summary reporting files the model had edited that were renamed on the host."
+  },
+  "ff419643f8853767e57aa1de0428e975fa5233a9": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-after-command-not-taken",
+    "name": "Dir Sync After Command Not Taken",
+    "desc": "Fragment of the applied after-command summary for files left as they are here, with the next turn's report naming which and why."
+  },
+  "e800fbd9182fe53416952f51503888ace3165f24": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-after-command-not-seen",
+    "name": "Dir Sync After Command Not Seen",
+    "desc": "After-command note that the host says it sent command-changed files but they have not landed here yet, so read them on the host."
+  },
+  "790dcc70176829744dfbdd1bb750b2d908891797": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-after-command-pull-failed",
+    "name": "Dir Sync After Command Pull Failed",
+    "desc": "After-command note that command-changed files could not be taken in yet (with the pull reason), so read them on the host until they land."
+  },
+  "e7d49bd83d4637c00db0c438d103d304244fa78b": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-after-command-skipped-or-unsupported",
+    "name": "Dir Sync After Command Skipped Or Unsupported",
+    "desc": "After-command note that command-changed files are not taken in here (skipped reason, or this build cannot read what the host sends)."
+  },
+  "476d7f4ad196be1c655d73906743f4c7c33fb394": { "facing": "internal" },
+  "887ceb248247d08a6fb54b8f6fd33ae179a095e8": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-machine-files-synced-copy-work-here",
+    "name": "Tool Hosts Machine Files Synced Copy Work Here",
+    "desc": "Attached-machine guidance that file tools run on the host under its permission rules while the project folder matches this session's synced copy, so project work stays here."
+  },
+  "2431d10d8db7720a8e4bafb5040d15a95e6591de": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-upload-only-absolute-path",
+    "name": "Tool Hosts Upload-Only Absolute Path",
+    "desc": "Upload-only attached-machine clause: durable project edits must use the absolute path on the host under its permission rules because this session's copy is not sent back."
+  },
+  "f19c49e54baec717f1e987b3f98301b199a41557": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-machine-files-absolute-path-permissions",
+    "name": "Tool Hosts Machine Files Absolute Path Permissions",
+    "desc": "Base attached-machine sentence that file tools address that machine by absolute path under its own permission rules."
+  },
+  "ba086d59dc85c6390b9ea5ccb796285fb9436eb3": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-machine-file-path-on-host",
+    "name": "Tool Hosts Machine File Path On Host",
+    "desc": "Tells the model that file tools with the machine argument act on the user's current files there under that host's permission rules, and that searches without it only see this session's snapshot."
+  },
+  "277799a2a61dbe810f772aa60802227f1f741f89": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-add-machine-arg-to-call",
+    "name": "Tool Hosts Add Machine Arg To Call",
+    "desc": "How-to fragment in the attached-machines notice for adding the machine-name argument to a tool call."
+  },
+  "024d7772275c9e9cfa6917f091aa72c6e98fcf96": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-here-emptied-after-sync-stop",
+    "name": "Tool Hosts Here Emptied After Sync Stop",
+    "desc": "Here-machine bullet when file sync stopped and the checkout was emptied: only scratch work that needs none of the project belongs here."
+  },
+  "ea28d0171a869c08183c84a75c7fe91e88ed178b": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-here-stale-after-sync-stop",
+    "name": "Tool Hosts Here Stale After Sync Stop",
+    "desc": "Here-machine bullet when file sync stopped but the directory could not be emptied, so the copy is stale and must not be read, run, or edited."
+  },
+  "0e49d13e25fcad81b441214f90dea6cbeb26d466": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-here-no-synced-copy",
+    "name": "Tool Hosts Here No Synced Copy",
+    "desc": "Here-machine bullet when file sync has stopped and this environment never held a synced copy of the user's project."
+  },
+  "dfd983f098a4e2a4d9b2f4bf4a1b68acb6156115": {
+    "facing": "model",
+    "id": "system-prompt-permission-classifier-remote-host-command",
+    "name": "Permission Classifier Remote Host Command",
+    "desc": "Classifier context that a permission ask runs on another machine, quoting that host's unverified reason, then prefixed as a # comment on the command sent to the classifier."
+  },
+  "13b59415dfa147db131b66fb4092075f49e4be43": { "facing": "internal" },
+  "7d6f192ad1f7b2a7593c7215d44f573e546c7243": { "facing": "internal" },
+  "3fc9c2d9bf3923c08cde6dcdee164fd2f460ea53": { "facing": "internal" },
+  "0677b00eb384981bc804fe1250fbd9d360d493c7": { "facing": "internal" },
+  "00e21e1aa6ce84ab5f0ddaf2814dcb899a5418c2": {
+    "facing": "model",
+    "id": "slash-command-list-agents-unnamed-sessions-withheld",
+    "name": "List Agents Unnamed Sessions Withheld",
+    "desc": "Listing footnote that session names and directories not chosen by a human are withheld on this connection until /rename."
+  },
+  "02fd6c89e9f409339fd6815611a7b46afb93f8c8": {
+    "facing": "model",
+    "id": "tool-result-mcp-first-party-auth-rejected-missing-scope",
+    "name": "MCP First Party Auth Rejected Missing Scope",
+    "desc": "Failed MCP client error that a 403 claude.ai login may be missing a required scope; included in deferred-tools/MCP-failure payloads the model sees."
+  },
+  "7eceafb9564e0c897f34fb26ad6862071c6ed1e8": {
+    "facing": "model",
+    "id": "tool-result-mcp-headers-helper-auth-rejected",
+    "name": "MCP Headers Helper Auth Rejected",
+    "desc": "Failed MCP client error that the server rejected the Authorization header minted by headersHelper."
+  },
+  "06e5400009d57d8fed72d7da624f8f29d20d2c5d": {
+    "facing": "model",
+    "id": "tool-result-mcp-headers-helper-oauth-fallback-disabled",
+    "name": "MCP Headers Helper OAuth Fallback Disabled",
+    "desc": "Continuation of the headersHelper auth-rejected MCP error, explaining that OAuth fallback is disabled when the helper supplies Authorization."
+  },
+  "1750cefc46a9fdd0c00f75bfba62a0af92bf5e4e": { "facing": "internal" },
+  "7d26c7334f43a600c3e3c9fcbaa2734e37b4fe32": { "facing": "internal" },
+  "f5d785985489b3896ceead9e8da2216d6ef9dbb9": { "facing": "internal" },
+  "62368a3985bdc1198c232948c6d783382d1ad824": { "facing": "internal" },
+  "6ac44ee8cddbecd2fba20059f6f6cbcd862eb144": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-renamed-on-user-machine",
+    "name": "Dir Sync Renamed On User Machine",
+    "desc": "Checkout-update reminder bullet listing files renamed on the user's machine and whether the model's edit was kept under the new name."
+  },
+  "9c98c85a6d3f6e04b2bcf83caf867a243f8f59ba": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-renamed-file-kept-or-user-version",
+    "name": "Dir Sync Renamed File Kept Or User Version",
+    "desc": "Per-file fragment of the renamed-on-user-machine reminder, stating the new path and whether the model's edit was kept."
+  },
+  "7d97704155bb26c6be49a035f722b5968e922d00": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-files-trashed",
+    "name": "Dir Sync Files Trashed",
+    "desc": "Checkout-update reminder bullet that files removed on the user's machine were moved out of this checkout."
+  },
+  "4dd5ed4d73514ef345d17b8a1f61b11ff0225381": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-not-installed-on-user-machine",
+    "name": "Dir Sync Not Installed On User Machine",
+    "desc": "Checkout-update reminder that files the model changed earlier were not written on the user's machine, so the user's copy stands there."
+  },
+  "56fd2fbb60d8bc0b0e2a1354e8111c36b5deaa5b": { "facing": "ui" },
+  "eecbeb9361eae5965a66f6a0d75caf6668f0c653": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-checkout-unready-mid-operation",
+    "name": "Dir Sync Checkout Unready Mid Operation",
+    "desc": "Reason fragment interpolated into the model reminder that this turn's changes were not sent because the checkout cannot be snapshotted during a merge, rebase, or cherry-pick."
+  },
+  "70b013d6f9f2001aafc1b50aee28cf2556061797": { "facing": "ui" },
+  "8445b31b642762555c2ac56b23887c12af705d54": { "facing": "ui" },
+  "f8476005c6271c60c361553cdc820b47f9cfcb57": { "facing": "ui" },
+  "4598fc2e42773175feb4871316ad3426187f47e0": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-user-changes-fetch-gave-up",
+    "name": "Dir Sync User Changes Fetch Gave Up",
+    "desc": "Model reminder that the user's latest changes could not be fetched from the lane and their machine was asked to resend; say so if it matters."
+  },
+  "4289fa787ed02ea3dfdbe27ce4e038adbed98e79": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-too-large-on-laptop",
+    "name": "Dir Sync Too Large On Laptop",
+    "desc": "Model reminder that files in the user's directory are larger than sync carries and will never arrive in this checkout."
+  },
+  "a6c3e753fc9633ad8f9d6c82b296c621e93a1609": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-announced-upload-gone-quiet",
+    "name": "Dir Sync Announced Upload Gone Quiet",
+    "desc": "Model reminder that the user's machine announced newer changes then went quiet; this turn runs on files as they were."
+  },
+  "15a97f984743adf0ef57ca4421896ad2c16f6265": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-service-answering-again-resumes-this-turn",
+    "name": "Dir Sync Service Answering Again Resumes This Turn",
+    "desc": "Model reminder that the cloud file service is answering again and file sync with the user's machine resumes from this turn."
+  },
+  "eef815eff0aa8396d06b4be1c1d82eaa6e884f08": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-service-answering-again",
+    "name": "Dir Sync Service Answering Again",
+    "desc": "Shorter model reminder that the cloud file service is answering again (no resume-from-this-turn clause)."
+  },
+  "49cb937e63bfc6ca9b58dbe3ca8fc9b8a26a7f9c": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-stopped-emptied-only-marker-left",
+    "name": "Dir Sync Stopped Emptied Only Marker Left",
+    "desc": "Stopped-sync reminder clause that the synced copy was emptied (git history included) and only FILE_SYNC_STOPPED.md is left."
+  },
+  "a89958a0958f46f0e9dbdde181bb3c64f64fcade": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-stopped-emptied-except-unmoved",
+    "name": "Dir Sync Stopped Emptied Except Unmoved",
+    "desc": "Stopped-sync reminder clause that emptying left some entries that could not be moved and are stale."
+  },
+  "a72f978c0ca745001466b4afad0a63e335f7f98a": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-stopped-could-not-empty-stale",
+    "name": "Dir Sync Stopped Could Not Empty Stale",
+    "desc": "Stopped-sync reminder that the copy could not be emptied so everything in it is stale and must not be read, run, or edited."
+  },
+  "296ae5fc9f8507c55064ad2de2e79aca913f3281": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-stopped-no-checkout-to-empty",
+    "name": "Dir Sync Stopped No Checkout To Empty",
+    "desc": "Stopped-sync reminder that this environment holds no synced copy to empty and nothing here was touched."
+  },
+  "85d12f9738dd63e1149182f3b24e5cbee971e660": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-stopped-set-aside-redo-on-machine",
+    "name": "Dir Sync Stopped Set Aside Redo On Machine",
+    "desc": "Stopped-sync suffix pointing at the set-aside copy and telling the model to redo unsent changes on the user's machine."
+  },
+  "c16377a17a3ee8bd147ef2b43aa92440fff6c4b6": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-stopped-redo-on-machine",
+    "name": "Dir Sync Stopped Redo On Machine",
+    "desc": "Stopped-sync suffix used when there is no set-aside path, telling the model to redo unsent changes on the user's machine and say so."
+  },
+  "25115bad8f73c40d4a789f3b78cd7d56520311c3": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-stopped-unsent-files-when-ended",
+    "name": "Dir Sync Stopped Unsent Files When Ended",
+    "desc": "Stopped-sync clause listing files that had changed here and had not reached the user's machine when sync ended."
+  },
+  "1e7354a46e7678163adf0c17a87119911811551f": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-empty-start-could-not-check-in",
+    "name": "Dir Sync Empty Start Could Not Check In",
+    "desc": "Model reminder that directory sync could not check in before the turn and the working directory is empty, so the user's files have not arrived yet."
+  },
+  "78ebc2858b93ca0b6757ba7c539c0ee9f0db186d": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-empty-start-files-not-delivered",
+    "name": "Dir Sync Empty Start Files Not Delivered",
+    "desc": "Model reminder that the user's machine did not deliver files before this turn and the session was created without a copy, so the working directory is empty."
+  },
+  "d6ae499e6312d7805e9b3d34df54452fa92a91cc": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-empty-start-directory-not-empty",
+    "name": "Dir Sync Empty Start Directory Not Empty",
+    "desc": "Reason fragment in the Directory sync is OFF reminder when empty-start failed because the working directory was not empty."
+  },
+  "92e8e8b9f75f87547adfb4900b88633fd6d8369e": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-empty-start-first-upload-did-not-verify",
+    "name": "Dir Sync Empty Start First Upload Did Not Verify",
+    "desc": "Reason fragment in the Directory sync is OFF reminder when the user's first upload did not verify."
+  },
+  "e4b032581a67993c456d1e87f4b015a046491bb0": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-empty-start-git-could-not-write-checkout",
+    "name": "Dir Sync Empty Start Git Could Not Write Checkout",
+    "desc": "Reason fragment in the Directory sync is OFF reminder when git could not write the checkout."
+  },
+  "48f9c4291185a3551102dbd8c587c4dc8c4845bf": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-announced-upload-abandoned",
+    "name": "Dir Sync Announced Upload Abandoned",
+    "desc": "Model reminder that the user's machine could not upload its latest changes (quoting its reason); this turn runs on the files as they were."
+  },
+  "7674042389ded0cf34d099639b040d118c346dc9": { "facing": "internal" },
+  "0b5f1cb5bdd39110bce65c6c95b99ff0f911311d": { "facing": "internal" },
+  "2edfdb76171a6b9c35b5a4cf8cf5acdb93d5026c": {
+    "facing": "model",
+    "id": "system-prompt-interactive-agent-intro-output-style-active",
+    "name": "System Prompt: Interactive agent intro (output-style active)",
+    "desc": "Opening system-prompt line for sessions that have an Output Style configured"
+  },
+  "65dbe3e4ed8612621adb9c497b691471dc7dd2bb": {
+    "facing": "model",
+    "id": "system-prompt-model-identity-line",
+    "name": "System Prompt: Model Identity Line",
+    "desc": "System-section line stating the model name and exact model ID powering the assistant."
+  },
+  "32f52b8067cc2d5c96c2a5d5188a3595ae0945ee": {
+    "facing": "model",
+    "id": "system-prompt-plugin-eval-mcp-mock-responder",
+    "name": "System Prompt: Plugin Eval MCP Mock Responder",
+    "desc": "System prompt for the nested model that stands in for an MCP server during plugin-eval and must return only tool-result content."
+  },
+  "4760e1530fa5f7d99fa2014373397bf72f6610b9": { "facing": "ui" },
+  "e269cb8e50ee082ca953453c16e688a9c7f4d04d": { "facing": "internal" },
+  "441e8d14617fd4d1f093ce3d40d4a92da25d82e0": { "facing": "internal" },
+  "008630109f67341ba4afb988c3f079cb4f439800": { "facing": "internal" },
+  "1861a892511f046fe1d39264f5f099519c043020": { "facing": "internal" },
+  "30703ba4cf6b26bbde73ecf57157ad90fc5396dd": { "facing": "internal" },
+  "7444b31d9cb422636cbef595182b662d08977f84": { "facing": "internal" },
+  "b7049a861dd7d1f9d03482264cb22de92995e8f8": { "facing": "ui" },
+  "612a5bc25c84e19a27d22346ff9e2bb29a21c9c5": { "facing": "internal" },
+  "76049ee7af8f4ae7446c41a5edd343bd31f19b56": {
+    "facing": "model",
+    "id": "tool-result-file-permission-check-expired",
+    "name": "Tool Result: File Permission Check Expired",
+    "desc": "File-tool error thrown when a path's permission check expired before the operation ran because too many concurrent file operations were in flight."
+  },
+  "ebeb3a035f85ecf778c33bac78e6d0cf7b3067b6": { "facing": "ui" },
+  "8b2debe184af8d3f7662c000223811126260ca3d": { "facing": "ui" },
+  "25a35301caa2cb1cdd3e657095d74247af5f5b35": { "facing": "internal" },
+  "d617348a111745df075a23542a34cd48e49decf7": { "facing": "internal" },
+  "28351f602a69fd73405fbad6ae0246f4c5d58dfe": { "facing": "internal" },
+  "5e8fc35f890e090b7f85d084ecf6ed4ba4cac1d4": { "facing": "internal" },
+  "d352f462e6d9062317b000e29b5cab91abfb731e": { "facing": "internal" },
+  "18df40f1fdb312167c9df8123c5fb2372bc146f9": {
+    "facing": "model",
+    "id": "tool-result-org-compliance-policy-unavailable",
+    "name": "Tool Result: Org Compliance Policy Unavailable",
+    "desc": "Tells the model a feature is unavailable because the organization's compliance policy (for example HIPAA) blocks it."
+  },
+  "a842803982fb98af8563577822441f6cbfe491c1": { "facing": "ui" },
+  "045a0572c8f79d8e43a4b642d9f2a91b5d6f925b": { "facing": "internal" },
+  "046f092c81457952c1c87115e28784f993ade662": { "facing": "internal" },
+  "341def5b9c8767aae5290878bd2a16fd133fd696": { "facing": "internal" },
+  "ad4584d4d0601216f03c7e3ab101ccb5f55c0121": { "facing": "internal" },
+  "f5dd68c8b4709d7a6570fc9935f85985faad8c33": { "facing": "internal" },
+  "ee87a0e0083d5dfd5d542406b49a54646e1303cb": { "facing": "internal" },
+  "4915ed0b07950f42df93250a4483328f9f70da4d": {
+    "facing": "model",
+    "id": "data-cloud-environment-failed-to-start",
+    "name": "Data: Cloud Environment Failed To Start",
+    "desc": "Cloud-session startup-failure fragment interpolated into the ultrareview task-notification (and thrown from the session poll) when the environment did not start."
+  },
+  "c77a336d3ef2f2d1516b57b55d9148e0543e5916": { "facing": "internal" },
+  "869f3aa288b0c6d8a4edf6009d2f25ec8f1a3cf1": { "facing": "internal" },
+  "9af4a8bbf7ea1cdbf8e7f83a7692058b1681c4ec": { "facing": "internal" },
+  "b21b431c1b823f2c19991a334844b0a1e0f92c6f": {
+    "facing": "model",
+    "id": "tool-description-refreshmcptools-repl-callable",
+    "name": "Tool Description: RefreshMcpTools REPL Callable Note",
+    "desc": "Sentence in the RefreshMcpTools tool description stating refreshed tools become callable inside the REPL surface."
+  },
+  "e00ce81c9d2b6e4303c49f55d9f64851dc5b076b": {
+    "facing": "model",
+    "id": "tool-description-refreshmcptools-available-immediately",
+    "name": "Tool Description: RefreshMcpTools Available Immediately",
+    "desc": "Sentence in the RefreshMcpTools tool description stating refreshed tools can be called on the next step."
+  },
+  "122278fc628836f5948d4ff6b9fb6d5094de04dc": {
+    "facing": "model",
+    "id": "system-prompt-coordinator-model-parameter-ignored",
+    "name": "System Prompt: Coordinator Model Parameter Ignored",
+    "desc": "Coordinator-mode instruction that the Agent tool model parameter is ignored when workers are forced to inherit the session model."
+  },
+  "a546b51932ab1c5a85bbaf26c014ec31467bc8dc": {
+    "facing": "model",
+    "id": "tool-result-agent-proxy-tls-to-relay",
+    "name": "Tool Result: Agent Proxy TLS To Relay",
+    "desc": "Kind label appended to bash stderr when a client spoke TLS to the agent-proxy port."
+  },
+  "91744bc7ce5a50ce734d14b116c634a0603d47ad": {
+    "facing": "model",
+    "id": "tool-result-agent-proxy-plain-http-request",
+    "name": "Tool Result: Agent Proxy Plain HTTP Request",
+    "desc": "Kind label appended to bash stderr when a client sent plain HTTP instead of HTTPS CONNECT."
+  },
+  "6f29eed0a6d653284c2545bd41916ae149b70e3f": {
+    "facing": "model",
+    "id": "tool-result-agent-proxy-connect-rejected",
+    "name": "Tool Result: Agent Proxy CONNECT Rejected",
+    "desc": "Kind label appended to bash stderr when the egress proxy denied CONNECT."
+  },
+  "b909211e425c7537a5cd4dad873efe4978656a9d": {
+    "facing": "model",
+    "id": "tool-result-agent-proxy-direct-blocked",
+    "name": "Tool Result: Agent Proxy Destination Blocked",
+    "desc": "Kind label appended to bash stderr when the destination is refused by the proxy."
+  },
+  "8df9c82b3f2ec49c526103ab96bd98864b0c73f2": {
+    "facing": "model",
+    "id": "tool-result-agent-proxy-command-failures",
+    "name": "Tool Result: Agent Proxy Command Failures",
+    "desc": "Header of the bash-stderr note listing agent-proxy connection failures that occurred while a command ran."
+  },
+  "7c156787d076f817467503cc6a6a767251e91600": { "facing": "ui" },
+  "b800140800480a4fbb00e6c5c9daca0a22ea6f03": { "facing": "ui" },
+  "546aa8b8a42a2ae1a7fff26bc6ccf4841490f90d": { "facing": "ui" },
+  "21ff1e2e66e7778cbe054cc78ada0ac02c023a2b": { "facing": "ui" },
+  "6c348b9fbcaf303d95ab02f3c9050b0d558a33c9": { "facing": "ui" },
+  "87c97c6f0c2509070aec42529cbce92650476908": { "facing": "ui" },
+  "bf8c8f5f9bb2aeb99194073888f2dd20306cc4ff": { "facing": "ui" },
+  "ad0888e686953eb6fc35e5a155119162ae27f059": { "facing": "ui" },
+  "29e84141948c27b1189bb3f246ea211e12a92ca9": { "facing": "internal" },
+  "ab9581b10447e38c01ea705adeadfdab08391ef7": { "facing": "internal" },
+  "56ee8c9a5412d6908a0ab2144fe27e62488c1738": { "facing": "internal" },
+  "27eaeb0d9ba15b87f10bf13de23145a4879390ec": {
+    "facing": "model",
+    "id": "tool-result-bash-integer-attribute-assignment-too-complex",
+    "name": "Tool Result: Bash Integer-Attribute Assignment Too Complex",
+    "desc": "Ask-path tool_result when an integer-attribute assignment would arith-eval the RHS and may run command substitution."
+  },
+  "573c25449c5fe5d23e961a7c3b800bce4dc57aec": {
+    "facing": "model",
+    "id": "tool-result-bash-integer-attribute-env-prefix-too-complex",
+    "name": "Tool Result: Bash Integer-Attribute Env-Prefix Too Complex",
+    "desc": "Ask-path tool_result when an integer-attribute env-prefix assignment would arith-eval the value."
+  },
+  "8f55b209708a27252a6a28b1b061040424644fd4": {
+    "facing": "model",
+    "id": "tool-result-bash-double-bracket-non-numeric-operand-too-complex",
+    "name": "Tool Result: Bash Double-Bracket Non-Numeric Operand Too Complex",
+    "desc": "Ask-path tool_result when a [[ ]] operand is non-numeric and would arith-eval identifiers or subscripts."
+  },
+  "0c3ac62817387f42f712d142ccc68dd99be2f069": {
+    "facing": "model",
+    "id": "tool-result-bash-zsh-read-non-numeric-operand-too-complex",
+    "name": "Tool Result: Bash Zsh Read Non-Numeric Operand Too Complex",
+    "desc": "Ask-path tool_result when zsh read's numeric operand may arith-eval a subscript and run command substitution."
+  },
+  "1865c2554ed352a4e01b5e7136ba605b0d2f5dec": {
+    "facing": "model",
+    "id": "tool-result-bash-zsh-read-prompt-subscript-too-complex",
+    "name": "Tool Result: Bash Zsh Read Prompt Subscript Too Complex",
+    "desc": "Ask-path tool_result when zsh read -p's operand is a subscripted NAME that may arith-eval and run $(cmd)."
+  },
+  "3c780eac304383687da916cdaa19247d48efb858": { "facing": "internal" },
+  "50ce7d48bfbed32d2acaf3ae68dee2609871e605": {
+    "facing": "model",
+    "id": "tool-result-restricted-path-outside-working-directory",
+    "name": "Tool Result: Restricted Path Outside Working Directory",
+    "desc": "Deny tool_result when --restricted confines file tools to the working directory and the path is outside it."
+  },
+  "32ff90654bf242fe35ff0516cfe9eb6515452b10": {
+    "facing": "model",
+    "id": "tool-result-read-symlink-resolution-changed-after-permission",
+    "name": "Tool Result: Read Symlink Resolution Changed After Permission",
+    "desc": "Read tool error thrown when symlink resolution changed after permission was checked."
+  },
+  "961e3c8e07ab0740a9912ac23876fc473fff2cc7": {
+    "facing": "model",
+    "id": "tool-result-write-refusing-symbolic-link",
+    "name": "Tool Result: Write Refusing Symbolic Link",
+    "desc": "Write tool error thrown when the target path is a symbolic link."
+  },
+  "60122ede885c98cb11d0a3cb940e6406cd1dc699": { "facing": "internal" },
+  "f93c1af2c50409f13896a88dc82efbf11d36481e": {
+    "facing": "model",
+    "id": "system-reminder-cloud-review-failed-error-not-instructions",
+    "name": "Cloud Review Failed Error Not Instructions",
+    "desc": "Tells the model that error text relayed from a failed cloud ultrareview is data, not user instructions."
+  },
+  "51a1c3a469de8eca2250856ab29e5eb1d5d7ac67": { "facing": "internal" },
+  "894df33493062d56be9cf804b6ab7cead29c1255": { "facing": "internal" },
+  "0658cefff1ab61fe711a71eeab604b9a10b3991a": { "facing": "ui" },
+  "4b9639c0946c7cfc5eb59db3f5fd393a59f0f8b4": { "facing": "ui" },
+  "ce0c89fc2267a5f36c437ffa860067a2cfb8a56e": { "facing": "ui" },
+  "a0adfbbacf12c192b9356804981bf6257192ed73": { "facing": "ui" },
+  "3507a98ace788da1ee48fd4f9c46b7fbc4ffbb1a": { "facing": "ui" },
+  "98d0051a7726be0130b176b3987114dae132b0af": { "facing": "ui" },
+  "6ad0ce2a07735f138f36b650ccf2f7151580bc1a": { "facing": "ui" },
+  "f367208e7dbbb262b71d2e398abc1867a592923f": { "facing": "internal" },
+  "017a3ada9843d47d8be1b51377be71a2a1cdb54c": { "facing": "ui" },
+  "75946aed25a9fdcfbc4dfb72128d77ff0bbe264f": { "facing": "internal" },
+  "9b3e0181bc0d527cceec9d820d84c19c1389f315": { "facing": "ui" },
+  "57bcfe3045cdbf1e6e94b39b3f86752d9bc0ab5d": {
+    "facing": "model",
+    "id": "tool-result-worktree-isolation-eval-confined",
+    "name": "Worktree Isolation Eval Confined",
+    "desc": "Tool-result error when a subagent worktree cannot be created because the session is the plugin evaluation harness."
+  },
+  "560384a58142c37b22a9d0ae6700b6eb4f9d9bc9": { "facing": "ui" },
+  "c65848e9a972422664e2a4b9a84a6eb635b684cc": { "facing": "ui" },
+  "57cdbaa0beaae0f0190c8e5f729a2ae2b177dd21": { "facing": "ui" },
+  "5724a70ae3e0149cc2a6f752b3d6aeb03d7754f1": { "facing": "ui" },
+  "0779907e0c3f3f558456490493897dfda48b51be": { "facing": "internal" },
+  "acc549a81d7bfd583fd02634c384ecfa3eb05b75": {
+    "facing": "model",
+    "id": "slash-command-add-dir-path-unresolved",
+    "name": "Slash Command Add Dir Path Unresolved",
+    "desc": "/add-dir local-jsx onDone text when the path cannot be resolved, wrapped as a user local-command-stdout message."
+  },
+  "4b80671081d5637644bb2471b58815cccdaffe96": { "facing": "internal" },
+  "3868c7154eae4d6f69480410af77019bf744e2e1": { "facing": "internal" },
+  "850e39a1e9c916ce95b68554ae58dc55ea82f62e": { "facing": "internal" },
+  "e1c7ce52821374919531ac2521c8b3e41138444b": {
+    "facing": "model",
+    "id": "tool-result-subagent-turn-limit-partial-output",
+    "name": "Subagent Turn Limit Partial Output",
+    "desc": "Warns the parent model that subagent output is incomplete because the agent hit a turn limit."
+  },
+  "3ffe4c5f466f3861e00fcaefe2ca0fa3e2e3a14c": {
+    "facing": "model",
+    "id": "tool-result-subagent-turn-limit-no-report",
+    "name": "Subagent Turn Limit No Report",
+    "desc": "Tells the parent model a subagent hit a turn limit while still calling tools and produced no report."
+  },
+  "376d9c25bf15278754f0525b4afae7ecdf090244": {
+    "facing": "model",
+    "id": "tool-parameter-agent-model-override-unavailable",
+    "name": "Agent Model Override Unavailable",
+    "desc": "Coordinator-session suffix on the Task tool model parameter telling the model the override is ignored and must not be set."
+  },
+  "89ead59c99a5b8a6deccf20c292270f724b4f30d": {
+    "facing": "model",
+    "id": "tool-parameter-agent-model-override-explicit-only",
+    "name": "Agent Model Override Explicit Only",
+    "desc": "Coordinator-session suffix telling the model to set a worker model only when the user explicitly asked for one."
+  },
+  "6fe1755c3e6f86f3709e3bee49cd5e60e25797f6": {
+    "facing": "model",
+    "id": "tool-result-agent-type-denied-by-permission-rule",
+    "name": "Agent Type Denied By Permission Rule",
+    "desc": "Task tool result when the requested subagent type is denied by a permission rule."
+  },
+  "f58d7f5deddb53f02982338abf757993940d030e": {
+    "facing": "model",
+    "id": "tool-result-agent-type-not-offered",
+    "name": "Agent Type Not Offered",
+    "desc": "Task tool result when the requested teammate/agent type is not offered in this session."
+  },
+  "5150678f786df0638a1adc036458255ce4203888": { "facing": "internal" },
+  "3716a3ddd4f08822728a7148ec941f50424cb5b4": {
+    "facing": "model",
+    "id": "tool-result-prompt-shell-permission-denied-withheld",
+    "name": "Prompt Shell Permission Denied Withheld",
+    "desc": "Sanitized permission-denial the model reads when skill/command !-shell substitution is refused on a confined connection."
+  },
+  "94b507338c5479946d93089c9619161c48e7d9a3": {
+    "facing": "model",
+    "id": "tool-result-prompt-shell-substitution-failed-withheld",
+    "name": "Prompt Shell Substitution Failed Withheld",
+    "desc": "Sanitized spawn-failure the model reads when skill/command !-shell substitution fails on a confined connection."
+  },
+  "ddcde42d1feedf76a1db07415aa96151521e1cc8": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-var-shared-checkout",
+    "name": "Bash Worktree Git Var Shared Checkout",
+    "desc": "Worktree-isolation permission refusal clause when a git command would set an environment variable to the shared checkout."
+  },
+  "b0e64bbb549dd50e11b4531f6c071bd2d914a806": {
+    "facing": "model",
+    "id": "tool-result-mcp-wait-connected-repl",
+    "name": "MCP Wait Connected Repl",
+    "desc": "Wait-for-servers tool result listing MCP servers whose tools are callable only inside the REPL, not as top-level tools."
+  },
+  "48b83f962f0b479c74b624b6f03f8f645d972087": {
+    "facing": "model",
+    "id": "tool-result-mcp-wait-cached-repl",
+    "name": "MCP Wait Cached Repl",
+    "desc": "Wait-for-servers tool result listing cached MCP servers whose tools become callable inside the REPL on first call."
+  },
+  "23e6fc42ccb14294d19bf5bedef9b4c481495c71": {
+    "facing": "model",
+    "id": "tool-result-tool-unavailable-mcp-not-connected-in-context",
+    "name": "Tool Unavailable MCP Not Connected In Context",
+    "desc": "Suffix on a no-such-tool tool_result telling the model the MCP server is not connected in this context."
+  },
+  "51fd1a10b2e944cd6d7d5412fb2628543eaa850f": {
+    "facing": "model",
+    "id": "tool-result-tool-unavailable-mcp-disabled-by-user",
+    "name": "Tool Unavailable MCP Disabled By User",
+    "desc": "Suffix on a no-such-tool tool_result when the user disabled that MCP server."
+  },
+  "8ccaeb22bc8a929cd6eafbd09caf9d5033fe110f": {
+    "facing": "model",
+    "id": "tool-result-tool-unavailable-mcp-not-offered",
+    "name": "Tool Unavailable MCP Not Offered",
+    "desc": "Suffix on a no-such-tool tool_result when the MCP server is connected but does not offer this tool here."
+  },
+  "202e6b7730d0eeaa84226e9a2c4dc5a942580432": {
+    "facing": "model",
+    "id": "tool-result-tool-unavailable-mcp-not-configured",
+    "name": "Tool Unavailable MCP Not Configured",
+    "desc": "Suffix on a no-such-tool tool_result when no MCP server in the session provides the tool."
+  },
+  "e3de9083a174aba8a343a44209baa7462587d085": { "facing": "ui" },
+  "b583dd9766cf76f00e1210b1c24a28edeafcb400": { "facing": "ui" },
+  "0165cb5dce825869b4efb20a94241b790b491006": { "facing": "internal" },
+  "39dd32b5c6f0c67c624aa170b8fb1a6ccef77c47": {
+    "facing": "model",
+    "id": "tool-result-pdf-too-many-pages-remote-call",
+    "name": "PDF Too Many Pages Remote Call",
+    "desc": "Remote Read validation error when a whole PDF or too many pages would be returned over the transport."
+  },
+  "b62cb85c1c701a6a3ba35de910d6537ca2056766": {
+    "facing": "model",
+    "id": "tool-result-pdf-too-large-to-return-whole-remote-call",
+    "name": "PDF Too Large To Return Whole Remote Call",
+    "desc": "Remote Read refusal when a whole-PDF payload exceeds the transport size budget."
+  },
+  "fc4fca81f14f8ef67cb0c7077f0349d3f1c5c1be": { "facing": "ui" },
+  "b531ed4be7fed525ad868859370f631e212ad301": { "facing": "ui" },
+  "eb759472d9a9f2160a1d396da2eb09ea4e2db200": { "facing": "ui" },
+  "9912c9ea99e6f081e72078c90f5fb47b8d4aa74b": { "facing": "ui" },
+  "6c9fa7ac325d75bd224e8effbeea7a94a7606ae3": { "facing": "internal" },
+  "698a7064ffc2940eb2bce7ee8ef5ef9199d2ac99": { "facing": "internal" },
+  "f928e022f0b9713111ebbcdbad6f5bc6ed7a24c5": { "facing": "ui" },
+  "5edd0de4fbe9452d8a838488f335c700bda1ed3c": { "facing": "internal" },
+  "01bdcdaf9bb50872ff557b5fa61e413093e9845b": { "facing": "internal" },
+  "59badce26d17d19f7cc9b1e07beb203cf96cc854": { "facing": "internal" },
+  "9f68f984bb18dcb7adc111b52818125207225798": { "facing": "internal" },
+  "531a8bbdd098b65e06faa811d944ef1c2bd2f141": { "facing": "internal" },
+  "fa36ab1fe88ac6d37b9f6e12541c1c19580d6856": {
+    "facing": "model",
+    "id": "system-prompt-permission-classifier-host-always-block",
+    "name": "Permission Classifier Host Always Block",
+    "desc": "Host-machine hard-deny rules section injected into the permission-classifier system prompt."
+  },
+  "333bd13b2c2b976b5a86fcdfcf4291cb429f2a89": {
+    "facing": "model",
+    "id": "system-prompt-permission-classifier-host-soft-deny",
+    "name": "Permission Classifier Host Soft Deny",
+    "desc": "Host-machine soft-deny rules section injected into the permission-classifier system prompt."
+  },
+  "6687e160dd659d3784dd8201792202d9369cdfcf": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-halt-line-refused",
+    "name": "System Reminder: Dir Sync Halt Line Refused",
+    "desc": "Halt-line quoted into the cloud agent's Directory-sync-has-STOPPED reminder when the laptop refused what it had to upload."
+  },
+  "22a7b391a704088bcdc977137ca6515e6253aeab": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-halt-line-layout-unserved",
+    "name": "System Reminder: Dir Sync Halt Line Layout Unserved",
+    "desc": "Halt-line quoted into the cloud agent's Directory-sync-has-STOPPED reminder when the checkout is a linked working tree file sync does not serve."
+  },
+  "6aa4c804eea6a73486c608c19860922e5b34d9ce": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-halt-line-offline",
+    "name": "System Reminder: Dir Sync Halt Line Offline",
+    "desc": "Halt-line quoted into the cloud agent's Directory-sync-has-STOPPED reminder when file sync went offline and the user continued without it."
+  },
+  "01a99a1e2fc659ff2c5047f057cff92a096cb8e2": { "facing": "internal" },
+  "059c9d74686ff9d2d015bef3bb118a03789411ec": { "facing": "ui" },
+  "2f9a6797bbf70a5ed88d3b25f62972a02dd223f4": { "facing": "ui" },
+  "1c6fe1403574903f25fb815706ef360ac7fd9cdb": { "facing": "ui" },
+  "1004a423f5316a2c122f3919328c1a2c4832dfa7": { "facing": "ui" },
+  "7301409165d6ccbfad32cdda5788643cbfb347a7": { "facing": "ui" },
+  "28e0d637e1d7948fb51a548eda8923ca03cd92e7": { "facing": "ui" },
+  "66a1599005e2af1864652a6ae99f4abc0bdf5ef7": { "facing": "internal" },
+  "3b1e0e138a8ac0d83f25879bff0fa0289a6789f3": { "facing": "ui" },
+  "47509de50f8dbc70c6be47f0c13a67f3c9547a3a": { "facing": "ui" },
+  "d7302b3ceaf6dc47a9b92fb51d7420b166d34246": { "facing": "ui" },
+  "7e9beb683cf83a87749d5df96535c16199024f61": { "facing": "ui" },
+  "ef0d85bf09fe1b2bf2b753aceeb1f5cf139208a5": { "facing": "ui" },
+  "84f0b7ed4a2bd185840769465276af839821cd8f": { "facing": "ui" },
+  "2b3e3b5da6191c20caf6bf0536cae37496897e78": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-abandoned-reason-background-upload",
+    "name": "System Reminder: Dir Sync Abandoned Reason Background Upload",
+    "desc": "Abandoned-upload reason quoted into the cloud agent's Directory-sync reminder when a background upload did not go through."
+  },
+  "67dd157242c1f322e1760ea927d9c6347e6f6b8e": { "facing": "ui" },
+  "a3ce2a59bb35f3c3c42be9ff39d355d2d85b06f9": { "facing": "ui" },
+  "e7b1b1d7e035a63e1e8c33523bcf63c96f2bbf66": { "facing": "ui" },
+  "72e4eb1e17d3766a36cb80a3937b9002e559afff": { "facing": "ui" },
+  "c6fcecae164fe9afc76f17a4dfae754bb3fe4ebd": { "facing": "ui" },
+  "44767cf0444ec6be1c34869f382ffdf11e50b3ce": { "facing": "ui" },
+  "25909d3a4e80d091c64b77b145e10f1b10264d0e": { "facing": "ui" },
+  "d1711037b3b6b85065860cfd1da2e923eff8f13b": { "facing": "ui" },
+  "cc9d82d9ed75c6f22c7b840664e45e6bd6850179": { "facing": "ui" },
+  "699e085e1a3dbdbe261261a99dd60217f18768f7": { "facing": "ui" },
+  "ee5eb56cb79d2cf71087bb6ad77e9853c68ad08d": { "facing": "ui" },
+  "8e209d1b6332dde02767fae8b6b747b018ce33b1": { "facing": "ui" },
+  "f9c27f431d1f73eac9d3f97af3d6eb2ba5b88d9a": { "facing": "ui" },
+  "21a6ba2f070dbf7800860bf610e02c460e0151a9": { "facing": "ui" },
+  "8aa5258649bb53a3eda47039b7ea181f87d9fd74": { "facing": "ui" },
+  "795040ca35c94eb92b6474b3135b952470b267bd": { "facing": "ui" },
+  "90b9b08c1bb50e38424be93e72b8d65eb3ce141f": { "facing": "ui" },
+  "cb8e9ab9f3f4e402fa51abc66ef28042975f4910": { "facing": "ui" },
+  "103853d665cbb5a51d39c0011386411a1b6a1382": { "facing": "ui" },
+  "6302dbf2ef47f367e10409afa40b49d27ad48d3a": { "facing": "ui" },
+  "1d9940d86c2d838de8364ef9fbf2b2697fe56422": { "facing": "internal" },
+  "15faf5f5bd3d5e7f18427fb28f74541f77c3971e": { "facing": "internal" },
+  "cdd33b79705b308720b0b03f545cd71f5ab9a192": { "facing": "internal" },
+  "b9602578d2d2b5ea731022e13da9ac3cc74fa743": { "facing": "ui" },
+  "76783b5ca234781730bfc6c257cfc31c01b8cee7": { "facing": "ui" },
+  "3e26f4c9c633ee96a706f1be6abbb3a7330c602a": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-abandoned-reason-gave-up-offline",
+    "name": "System Reminder: Dir Sync Abandoned Reason Gave Up Offline",
+    "desc": "Abandoned-upload reason quoted into the cloud agent's Directory-sync reminder when the laptop gave up the upload because file sync went offline."
+  },
+  "54937078839e50aa095e1a7b42c3fe0d981dfbcf": { "facing": "ui" },
+  "9badf3879393dd90a0d196564eb9da7909e68b36": { "facing": "internal" },
+  "e19ecc0a9f6d3514cc64a4ca4a46b867589408ec": { "facing": "internal" },
+  "f81f148f1072d97f563fa979e29a44cd8f761ecb": {
+    "facing": "model",
+    "id": "system-prompt-workflow-load-skill-to-modify",
+    "name": "System Prompt: Workflow Load Skill To Modify",
+    "desc": "Trailer on a workflow slash-command prompt telling the model to load the named skill before modifying the workflow or writing a new script."
+  },
+  "636c9961153d504945075932de8e12251092a5a1": {
+    "facing": "model",
+    "id": "tool-result-artifact-agent-scoped-visibility",
+    "name": "Tool Result: Artifact Agent-Scoped Visibility",
+    "desc": "Publish/result note that an agent-scoped artifact is visible to everyone with access to that agent, not private."
+  },
+  "65b26ffdf71bb5be0861a342254f8b419dbf25c9": {
+    "facing": "model",
+    "id": "tool-result-artifact-room-open-tabs",
+    "name": "Tool Result: Artifact Room Open Tabs",
+    "desc": "Live-room tool-result block listing the user's open browser tabs as page DATA rather than instructions."
+  },
+  "0b955a7b8c7ed81d873d11a8177efc3183e5ea48": {
+    "facing": "model",
+    "id": "tool-result-artifact-local-file-symlink-outside-read",
+    "name": "Tool Result: Artifact Local File Symlink Outside Read",
+    "desc": "Permission-ask clause that one local file reaches outside the session's readable folders through a symbolic link."
+  },
+  "99216831e16115014319779fc7ef2080a85f2781": {
+    "facing": "model",
+    "id": "tool-result-artifact-local-file-user-must-approve",
+    "name": "Tool Result: Artifact Local File User Must Approve",
+    "desc": "Permission-ask suffix for a single local file whose path or link requires a human approval."
+  },
+  "c4659c622de84962e9529a52f961e8537cddfa18": {
+    "facing": "model",
+    "id": "tool-result-artifact-local-files-symlink-outside-read",
+    "name": "Tool Result: Artifact Local Files Symlink Outside Read",
+    "desc": "Permission-ask clause that local files being copied reach outside the session's readable folders through symbolic links."
+  },
+  "c5a144f41c0b1a9549d84c94078e9e5a1f1a997b": {
+    "facing": "model",
+    "id": "tool-result-artifact-local-files-all-user-must-approve",
+    "name": "Tool Result: Artifact Local Files All User Must Approve",
+    "desc": "Permission-ask suffix when every local file being copied shares one outside-read or hard-link reason."
+  },
+  "acd6fa0a913a437546dd8ec4dc4f4fdc6540dae0": {
+    "facing": "model",
+    "id": "tool-result-artifact-local-files-mixed-user-must-approve",
+    "name": "Tool Result: Artifact Local Files Mixed User Must Approve",
+    "desc": "Permission-ask suffix when copied local files mix outside-read, symlink-escape, and hard-link reasons."
+  },
+  "e939ae0ef60ec54a1202856fd4d3d637a05af9c7": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-anchor-snippet-follow-row",
+    "name": "Tool Result: Artifact Comments Anchor Snippet Follow Row",
+    "desc": "Marks follow-on rows that quote an anchored element's opening tag and leading page-source text as artifact DATA."
+  },
+  "03ac08fcd19c3f58ab2f468dea36d41a0bb7e2dd": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-anchor-label-marker",
+    "name": "Tool Result: Artifact Comments Anchor Label Marker",
+    "desc": "Marks the tool-emitted row that names where on the page a comment thread sits; text after the marker is artifact DATA."
+  },
+  "3516c5622094d583f11e145aa4027fea9ccc7ac8": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-thread-not-activated-resolved",
+    "name": "Tool Result: Artifact Comments Thread Not Activated Resolved",
+    "desc": "Per-thread label on a resolved thread that Claude is not activated on and cannot reply to."
+  },
+  "00a0875e2f76ee56cc79a3114bdf00b6ac7f0d14": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-thread-not-activated-open",
+    "name": "Tool Result: Artifact Comments Thread Not Activated Open",
+    "desc": "Per-thread label on an open thread that Claude is not activated on and cannot reply to or resolve."
+  },
+  "eb2e9980a1356bd1de03ba0ee054231e2d65b60d": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-notification-triggered-ask-reason",
+    "name": "Tool Result: Artifact Comments Notification-Triggered Ask Reason",
+    "desc": "checkPermissions decisionReason when a new-comments notification triggers a comments read, requiring confirmation outside auto-allow channels."
+  },
+  "0e316f5eb0885e7bbee4a50d745ee51d7920d76d": { "facing": "internal" },
+  "d6e1336590236454159510ac9f62146f4f11ed78": { "facing": "ui" },
+  "3b8589e9b18a0edfda675706e8c12cc3967960a4": { "facing": "ui" },
+  "9eb085ecd3059d559f3ead74f7e28fbc83df0aaf": { "facing": "ui" },
+  "26213681fec9699e319a967925c5d14722f9e3f6": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-mcp-server-rewritten-to-display-name",
+    "name": "Artifact Publish Mcp Server Rewritten To Display Name",
+    "desc": "Publish warning that MCP server keys were rewritten to connector display names viewers must pass to callTool/watchTool."
+  },
+  "ac8e2dbf83ee0989898fa247af01a9539331b92c": { "facing": "internal" },
+  "e0def55f9c4182560292e76808263d5acb0f38a2": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-too-large-highlight-runtime-note",
+    "name": "Artifact Publish Too Large Highlight Runtime Note",
+    "desc": "Suffix on the too-large publish error explaining the inline syntax-highlight runtime was injected because the page has fenced code."
+  },
+  "b715abd473ccb1c2126fb4f4167b431b828a5c92": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-calltool-servers-not-in-manifest",
+    "name": "Artifact Publish Calltool Servers Not In Manifest",
+    "desc": "Publish warning that the page calls callTool/watchTool with server names missing from the MCP manifest."
+  },
+  "d7097db9adc8d840b72090d638e63ca660296fa9": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-custom-thumbnail-rejected",
+    "name": "Artifact Publish Custom Thumbnail Rejected",
+    "desc": "Publish warning that the custom thumbnail was rejected and the automatic screenshot was used instead."
+  },
+  "ebdbb5796d8abb4c3f834db4d55a3240fed7842e": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-mcp-undeclarable-name",
+    "name": "Artifact Publish Mcp Undeclarable Name",
+    "desc": "MCP manifest error telling the model a connector cannot be declared until it is renamed in claude.ai Settings."
+  },
+  "66c4767fbeacd1fc81a537f417821ef4bbec7854": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-thumbnail-href-not-image",
+    "name": "Artifact Publish Thumbnail Href Not Image",
+    "desc": "Validation error when a custom thumbnail href is not a PNG or JPEG file."
+  },
+  "e5d4cf1d84cdf517ceaa59651b4eac9a5af449c0": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-files-changed-while-read",
+    "name": "Artifact Publish Files Changed While Read",
+    "desc": "Publish validation error when a supporting file changed on disk while it was being read."
+  },
+  "ec7ffcd24a15972b1492db11cccf7feaa503ec58": {
+    "facing": "model",
+    "id": "system-prompt-artifact-comment-reply-workshop-change-clause",
+    "name": "Artifact Comment Reply Workshop Change Clause",
+    "desc": "Reply-composer instruction for workshop pages: do not claim to be working on an artifact change; say it is edited in the workshop file."
+  },
+  "9bc2ac74fe3dc2511e4bce9060c38b403f3b67a8": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-edited-review-tail",
+    "name": "Artifact Auto-Edited Review Tail",
+    "desc": "Task-notification tail asking the user to review an auto-edit and republish if it missed the mark."
+  },
+  "161cb279d0a932e64493f1302f55af0d23e425ea": {
+    "facing": "model",
+    "id": "system-prompt-artifact-comment-summoning-rows-guidance",
+    "name": "Artifact Comment Summoning Rows Guidance",
+    "desc": "Tells the model which comment-thread row heads summoned it this turn versus viewer chatter."
+  },
+  "511f2590b911f430f1ca5f8227d2e15a52b6877c": {
+    "facing": "model",
+    "id": "system-prompt-artifact-comment-summoning-rows-other-user-head",
+    "name": "Artifact Comment Summoning Rows Other User Head",
+    "desc": "Optional summoning-row clause for heads meaning a person other than this session's user pressed Send."
+  },
+  "cc52fdf278bf19d1d934975e8602c0d023c8cbf1": { "facing": "internal" },
+  "da8d49a73585fee557ab027e0f5e4837f2628bb0": { "facing": "internal" },
+  "41c4cbe18cdfc66bb25b4bbd7b3c944d658dbcfd": {
+    "facing": "model",
+    "id": "slash-command-terminal-setup-terminal-native-shift-enter",
+    "name": "Terminal Setup Native Shift Enter",
+    "desc": "local-jsx /terminal-setup onDone text that Shift+Enter is native in this terminal and needs no configuration."
+  },
+  "830a3a4eb29d06468372c9a082d31c9c0e5e0b2b": { "facing": "ui" },
+  "861b8a66f62c75515601849fe44689746caa29f6": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-collection-parity-document-path",
+    "name": "Artifact Db Collection Parity Document Path",
+    "desc": "write_db/read_db validation error when collection has even segments and is therefore a document path."
+  },
+  "69e7976a45347a20846c2d66b187c669f2861a32": {
+    "facing": "model",
+    "id": "data-artifact-publish-room-join-auto-classifier-clause",
+    "name": "Artifact Publish Room Join Auto Classifier Clause",
+    "desc": "toAutoClassifierInput disclosure that approving a publish joins this session to the artifact live room."
+  },
+  "6a4ac567130862e9335cf950b399287483802169": {
+    "facing": "model",
+    "id": "tool-result-artifact-delete-self-serve-claude-ai-menu",
+    "name": "Artifact Delete Self Serve Claude Ai Menu",
+    "desc": "Delete-error hint that the user can remove the artifact themselves from the claude.ai Artifact menu."
+  },
+  "14b738ecaadd92bb74f3c97c1a8ee0cc0f9e50f6": {
+    "facing": "model",
+    "id": "tool-description-artifact-write-db-batch-shared-and-private-paths",
+    "name": "Artifact Write Db Batch Shared And Private Paths",
+    "desc": "write_db tool-description continuation covering batch writes, shared viewer data, and the private data/users/ prefix."
+  },
+  "9a8c0cdc2086fb7fe59375087500ed9a49117849": {
+    "facing": "model",
+    "id": "tool-result-artifact-write-db-permission-ask-title",
+    "name": "Artifact Write Db Permission Ask Title",
+    "desc": "checkPermissions decisionReason lead that Claude wants to edit this artifact's data."
+  },
+  "4e065e6cde492e4b5833d066be27d3542070da1b": {
+    "facing": "model",
+    "id": "tool-result-artifact-upload-asset-permission-ask-title",
+    "name": "Artifact Upload Asset Permission Ask Title",
+    "desc": "checkPermissions decisionReason lead that Claude wants to upload a file to this artifact."
+  },
+  "51fb738022a8fb4c63d910afba69084ccca777dd": {
+    "facing": "model",
+    "id": "tool-result-artifact-write-db-session-approval-note",
+    "name": "Artifact Write Db Session Approval Note",
+    "desc": "Permission-ask note that approving covers data edits to any artifact for the rest of this session."
+  },
+  "d3a7a2ed4843dabb0d06a1f71a197e70a9dec09b": {
+    "facing": "model",
+    "id": "tool-result-artifact-upload-asset-session-approval-note",
+    "name": "Artifact Upload Asset Session Approval Note",
+    "desc": "Permission-ask note that approving covers further uploads to this artifact for the rest of this session."
+  },
+  "3bc5ea6fa51b0e67afb9816cf981565ce7641709": {
+    "facing": "model",
+    "id": "tool-result-artifact-plan-mode-also-lasting-change",
+    "name": "Artifact Plan Mode Also Lasting Change",
+    "desc": "Plan-mode permission suffix when a path qualifier is already present: the action also makes a lasting change."
+  },
+  "e505fb066d5d1959327e2c18e65c81b384dcf471": {
+    "facing": "model",
+    "id": "tool-result-artifact-plan-mode-lasting-change-only-you",
+    "name": "Artifact Plan Mode Lasting Change Only You",
+    "desc": "Plan-mode permission suffix when there is no path qualifier: only the user can approve the lasting change."
+  },
+  "5b57e871501274a84b49a00a37d3a30dd2d15227": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-favicon-unread",
+    "name": "Artifact Publish Favicon Unread",
+    "desc": "Publish error when the current favicon cannot be read so nothing was published unless favicon is passed explicitly."
+  },
+  "080c73ebbdcb40daa185a300e9080c7e09063b59": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-path-read-file-live-edit-or-watch",
+    "name": "Artifact Path Read File Live Edit Or Watch",
+    "desc": "Schema description of path for read_file versus live-edit/watch when the artifact has more than one file."
+  },
+  "0c5b65cf1e0ce89e39dd06ff57a0d3050225a910": {
+    "facing": "model",
+    "id": "data-artifact-mcp-connector-undeclarable-until-renamed",
+    "name": "Artifact Mcp Connector Undeclarable Until Renamed",
+    "desc": "MCP connector guidance that undeclarable connectors cannot be declared until renamed in claude.ai Settings."
+  },
+  "20db04c599c5ad4530036534a800a011b9899097": {
+    "facing": "model",
+    "id": "skill-artifact-report-description",
+    "name": "Skill Artifact Report Description",
+    "desc": "When-to-use description for the long-form report artifact skill, including first-party connector deferral."
+  },
+  "15eb1774dcbcc936c981c97f61c4d36d5cd1e716": {
+    "facing": "model",
+    "id": "skill-doc-description",
+    "name": "Skill Doc Description",
+    "desc": "When-to-use description for the working-document artifact skill, including first-party connector deferral."
+  },
+  "660c3c708de446a0d9d5afee17d7720d4a2afd44": { "facing": "ui" },
+  "2fbc569b49fc272beded36ff2a3afe13cd890549": { "facing": "ui" },
+  "538acb88bbc833f05203ceaab2d505e52e089eb3": { "facing": "ui" },
+  "27b0258d128acfd4ad038d69ebf6082492efbc3a": { "facing": "ui" },
+  "bbb8c42a879168cdb951c15b21ba8eeff2c4f70f": { "facing": "internal" },
+  "5fbc179506606ab2b6b15d68170f2818f575f2e9": { "facing": "ui" },
+  "ba662a575eed9551b0dfaae9da19edb79c57e8be": { "facing": "ui" },
+  "7d8e80349c9061d88c6bcf9ee39db7dda92d5842": { "facing": "ui" },
+  "39bf650117fe35567a5c8eea1cb301ce27ec4339": { "facing": "ui" },
+  "76c43ee04efef4f5736b509ed66b7282889e295f": { "facing": "ui" },
+  "dfbbb46cb01ca05e7948d51c126d3fa94ac436cd": { "facing": "ui" },
+  "00f7a80431c130d147fd612802188cfaeac46b14": { "facing": "ui" },
+  "f025be24e96c444bb7a06162d5ef6bd35d641dc8": { "facing": "ui" },
+  "e9e653fd5be53b9b6960bd04325b102f1a54304e": { "facing": "internal" },
+  "1df8f1370fa23c36202ab06cd976e8812b59a532": { "facing": "internal" },
+  "86061120352f5a1ffb8adf52a80b74ef2b4e7ccf": { "facing": "ui" },
+  "f38307166902dced6cab64eb771cca2e1be14044": {
+    "facing": "model",
+    "id": "slash-command-update-failed-withheld-on-connection",
+    "name": "Update Failed Withheld On Connection",
+    "desc": "/update call() text result when restart fails on a connection that must not receive the underlying error detail."
+  },
+  "f11ba0bc2ef933c16143253f42d3ef75bcdbc3b1": { "facing": "ui" },
+  "81091f86d210845d705ecb16981dabfae35bd922": { "facing": "ui" },
+  "30e5ff2be5a1144c21d2f19fde641af060d1367a": {
+    "facing": "model",
+    "id": "tool-result-workflow-script-path-must-be-returned-or-readable",
+    "name": "Workflow Script Path Must Be Returned Or Readable",
+    "desc": "Workflow tool validation error when scriptPath is not a prior tool result path or an already-readable file."
+  },
+  "29bc1eb03859c99ea7d5bc91de761384b95a622e": { "facing": "internal" },
+  "0da11230b09bec3b2aa1d90afef1bb80325d7eb8": { "facing": "ui" },
+  "80712ce8ca16976b202828aeddb546516efd6166": {
+    "facing": "model",
+    "id": "slash-command-heapdump-failed-withheld-on-connection",
+    "name": "Heapdump Failed Withheld On Connection",
+    "desc": "/heapdump type:local {type:text} result when the dump fails on a connection that must not receive the error detail."
+  },
+  "832e65bf7802a55c19bdfa8c1a7dacc723fe69b0": { "facing": "ui" },
+  "321ef06d713d650dd14d26f152f472392dde1ea8": { "facing": "ui" },
+  "e07620e9564c3e9c5b31291fb191674a7189eb28": { "facing": "ui" },
+  "5bb0c4e974f920da288f992aae18b6be4c084762": { "facing": "ui" },
+  "a52dd5d6c956fcd40d960c5d62108867d5a3125c": {
+    "facing": "model",
+    "id": "slash-command-mcp-reconnect-tools-list-failed-withheld",
+    "name": "Slash Command: MCP Reconnect Tools-List Failed Withheld",
+    "desc": "Off-box /mcp reconnect result when tools/list failed after reconnect, with the error detail withheld; handed to local-jsx onComplete."
+  },
+  "10fd719dece1817863ee6d2b48b83985620e1b34": {
+    "facing": "model",
+    "id": "slash-command-mcp-reconnect-needs-auth-headers-helper",
+    "name": "Slash Command: MCP Reconnect Needs Auth Headers Helper",
+    "desc": "/mcp reconnect needs-auth result telling the model to use Authenticate or Reconnect when a headersHelper script is configured."
+  },
+  "1c326b0c78feeca6ac742d60ce650829f21f207a": {
+    "facing": "model",
+    "id": "slash-command-mcp-reconnect-failed-withheld",
+    "name": "Slash Command: MCP Reconnect Failed Withheld",
+    "desc": "Off-box /mcp reconnect failure result with optional withheld-detail suffix; returned via local-jsx onComplete."
+  },
+  "d67e21447b57277f72f8f7fd2d9cad1c02d961e6": {
+    "facing": "model",
+    "id": "slash-command-mcp-reconnect-failed-detail",
+    "name": "Slash Command: MCP Reconnect Failed Detail",
+    "desc": "/mcp reconnect failure result that includes the sanitized error detail when the session is allowed to show it."
+  },
+  "4b65de2388fd25f2ffe00bfe54c051ac8b088c9e": {
+    "facing": "model",
+    "id": "slash-command-mcp-reconnect-unknown-result",
+    "name": "Slash Command: MCP Reconnect Unknown Result",
+    "desc": "/mcp reconnect default-branch result when the client type is not connected, needs-auth, or failed."
+  },
+  "eae6798bc292159afde24c1d22c5006c4b1fb6e4": {
+    "facing": "model",
+    "id": "slash-command-mcp-reconnect-error-withheld",
+    "name": "Slash Command: MCP Reconnect Error Withheld",
+    "desc": "Off-box /mcp reconnect catch text from Ant() with the exception detail withheld; passed to onComplete."
+  },
+  "728f3f23b64b768b21994990ef355270f0a8def9": {
+    "facing": "model",
+    "id": "slash-command-mcp-action-failed-withheld",
+    "name": "Slash Command: MCP Action Failed Withheld",
+    "desc": "Off-box /mcp enable/disable failure from RQ() with the exception detail withheld; returned via local-jsx onComplete."
+  },
+  "04f3b8d6c4276f9e8dc4f3894f3241fa64adae88": {
+    "facing": "model",
+    "id": "skill-loop-fixed-interval-cron-table",
+    "name": "Skill: Loop Fixed-Interval Cron Table",
+    "desc": "Markdown table in the /loop skill mapping Nm/Nh/Nd/Ns interval patterns to cron expressions and rounding guidance."
+  },
+  "fc0b5f67fc46ee2481a97d847c94a06df7173aef": {
+    "facing": "model",
+    "id": "slash-command-schedule-local-mcp-not-attachable",
+    "name": "Slash Command: Schedule Local MCP Not Attachable",
+    "desc": "ConnectorsInfo line in the /schedule cloud-agents prompt stating Claude Code-configured MCP servers cannot be attached to cloud routines."
+  },
+  "a9de00e16f7c7bb49a272531b1e53c00e393b7c6": {
+    "facing": "model",
+    "id": "slash-command-schedule-connector-list-unloaded",
+    "name": "Slash Command: Schedule Connector List Unloaded",
+    "desc": "ConnectorsInfo warning that the claude.ai connector list was not loaded, so the model must not assert a missing service needs connecting."
+  },
+  "253a5a810c003d0c67f59a555f96424862d74a93": {
+    "facing": "model",
+    "id": "slash-command-schedule-suppressed-twin-connectors",
+    "name": "Slash Command: Schedule Suppressed Twin Connectors",
+    "desc": "ConnectorsInfo note that claude.ai connectors shadowed by a locally configured server remain available to routines and must be attached at claude.ai."
+  },
+  "ff6175c52524443e356888381ea2d2647eb47d33": {
+    "facing": "model",
+    "id": "slash-command-schedule-note-connectors-lockdown",
+    "name": "Schedule Note: Connectors Lockdown",
+    "desc": "Setup-note reason that claude.ai connectors are not loaded because the organization manages MCP servers."
+  },
+  "4b4aaaa33e4ff59f197ad104d261bc93904cb412": {
+    "facing": "model",
+    "id": "slash-command-schedule-note-connectors-restricted",
+    "name": "Schedule Note: Connectors Restricted",
+    "desc": "Setup-note reason that claude.ai connectors are not loaded because MCP is restricted to explicitly passed config."
+  },
+  "78f1ed8db3ab0529a50a8ec66e324349a458cabe": {
+    "facing": "model",
+    "id": "slash-command-schedule-note-connectors-optout",
+    "name": "Schedule Note: Connectors Opt-Out",
+    "desc": "Setup-note reason that claude.ai connectors are disabled via disableClaudeAiConnectors or ENABLE_CLAUDEAI_MCP_SERVERS."
+  },
+  "eb715ebf69b04b525a87cd0b158c70a3b6f03120": {
+    "facing": "model",
+    "id": "slash-command-schedule-note-connectors-safe-mode",
+    "name": "Schedule Note: Connectors Safe Mode",
+    "desc": "Setup-note reason that claude.ai connectors are not loaded because the session is in safe mode."
+  },
+  "1f20ac8dc564fb7b201417397313f1e4365bc6b3": {
+    "facing": "model",
+    "id": "slash-command-schedule-note-connectors-missing-scope",
+    "name": "Schedule Note: Connectors Missing Scope",
+    "desc": "Setup-note reason that claude.ai connectors could not be loaded because the login token lacks the MCP-connectors permission."
+  },
+  "b0278ef23f857da1081bb96c9321fb115b0b779c": {
+    "facing": "model",
+    "id": "slash-command-schedule-note-connectors-still-connecting",
+    "name": "Schedule Note: Connectors Still Connecting",
+    "desc": "Setup-note that a claude.ai connector exists but is not connected in this session and remains available to routines."
+  },
+  "37720a867b4a22a45e051159d43a32a8223d7990": {
+    "facing": "model",
+    "id": "slash-command-schedule-note-connectors-connect-one",
+    "name": "Schedule Note: Connect One Connector",
+    "desc": "Fallback setup-note directing the user to connect a claude.ai connector when none are loaded for another reason."
+  },
+  "afb6d13c27a2118f1d34f167dd061aa9e23ba2eb": {
+    "facing": "model",
+    "id": "slash-command-schedule-note-local-mcp-not-attachable",
+    "name": "Schedule Note: Local MCP Not Attachable To Routines",
+    "desc": "Setup note that locally configured MCP servers cannot be attached to cloud routines, which can only use claude.ai connectors."
+  },
+  "03eafd63069dc631afb8c31e1add0ea5a495445c": {
+    "facing": "model",
+    "id": "slash-command-schedule-note-suppressed-twins",
+    "name": "Schedule Note: Suppressed Twin Connectors",
+    "desc": "Setup note that claude.ai connectors shadowed by a Claude Code-configured server remain available to routines."
+  },
+  "6a7959c0a7b52bbd2e79411ccde9aa5b1ae56efd": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-session-stream-closed-clause",
+    "name": "Tool Result: Dir Sync Session Stream Closed Clause",
+    "desc": "Unreachable detail from callPlumbing when sendServedCallRequest does not send; interpolated into the pre-forward dir-sync hold/note cause."
+  },
+  "74317661d3e74c2121e6a81b0386489d468a2c42": {
+    "facing": "model",
+    "id": "tool-result-remote-host-classifier-approved-unverified-refused",
+    "name": "Tool Result: Remote Host Classifier Approved Unverified Refused",
+    "desc": "Cause clause for a still-running remote tool_result when the automatic classifier had approved the call and an unverified sender reported it refused."
+  },
+  "6411f023e0646ace33ca581b8502533e5faf53af": {
+    "facing": "model",
+    "id": "tool-result-remote-host-classifier-approved-approval-refused",
+    "name": "Tool Result: Remote Host Classifier Approved Approval Refused",
+    "desc": "Lead of the withdrawn-approval tool_result when the classifier had approved and an unverified sender reported the approval refused before the host ran it."
+  },
+  "f8259acdd8bcecff811a22647123cbe5c8527ef4": {
+    "facing": "model",
+    "id": "tool-result-remote-host-approval-withdrawn-classifier-surface",
+    "name": "Tool Result: Remote Host Approval Withdrawn Classifier Surface",
+    "desc": "Inner instruction on the withdrawn-approval tool_result when only a person's approval counts: resend and have the user approve from the terminal or desktop prompt."
+  },
+  "aaae12c95e38b1064d1ce181f912b9902837584f": {
+    "facing": "model",
+    "id": "tool-result-remote-host-approval-withdrawn",
+    "name": "Tool Result: Remote Host Approval Withdrawn",
+    "desc": "approval_not_received tool_result when the remote request was withdrawn there and nothing ran, with a retry/surface instruction appended."
+  },
+  "c0fc908cb95609344a5a3d787eb21a3bbcf697c7": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-host-abandoned-push",
+    "name": "System Reminder: Dir Sync Host Abandoned Push",
+    "desc": "dir_sync_notice that the host gave up sending post-command file changes, so they arrive with the user's next message."
+  },
+  "cf4cb2ed026bcc4103148785526614c28d0199d3": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-host-push-not-seen",
+    "name": "System Reminder: Dir Sync Host Push Not Seen",
+    "desc": "dir_sync_notice that the host says it sent post-command changes that have not landed yet, so the model should read those files on the host."
+  },
+  "d23cff599faf66204686e936c4dade4568883050": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-host-push-take-in-failed",
+    "name": "System Reminder: Dir Sync Host Push Take-In Failed",
+    "desc": "dir_sync_notice that post-command changes could not be taken in yet, so the model should read those files on the host until they land."
+  },
+  "152ec31f48821ef38f0998e879e540d302181a5a": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-pre-forward-internal-error",
+    "name": "Tool Result: Dir Sync Pre-Forward Internal Error",
+    "desc": "Cause passed to M() when the pre-forward sync point throws, becoming a sync_failed hold tool_result or a go_with_note on reads."
+  },
+  "74c96d513aeabb0eba28956cacd3b3c031bc2d27": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-peer-upload-did-not-go",
+    "name": "Tool Result: Dir Sync Peer Upload Did Not Go",
+    "desc": "Cause when the host is holding this session's changes until it can upload its own and that upload did not go."
+  },
+  "a28d380bab34000cadc13c8f80b98fc52a43ca89": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-user-clears-on-machine-remedy",
+    "name": "Tool Result: Dir Sync User Clears On Machine Remedy",
+    "desc": "Remedy interpolated into the stale-files hold when the peer kept changes here until the user clears them on the machine."
+  },
+  "67274618022a6bda02ceb1f9e0accb8a1eba6508": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-could-not-ask-catch-up",
+    "name": "Tool Result: Dir Sync Could Not Ask Catch-Up",
+    "desc": "Cause when the host could not be asked to take in this session's latest file changes first (unreachable plumbing)."
+  },
+  "24facaacca442edea70b793ad135648c6a9a4932": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-unreachable-resync-remedy",
+    "name": "Tool Result: Dir Sync Unreachable Resync Remedy",
+    "desc": "Remedy on the unreachable pre-forward hold: the next user message resyncs, and an unreachable machine would not have received the command either."
+  },
+  "2f0d21faa60875a2c267160688a3aaeec73a064d": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-unreadable-sync-response",
+    "name": "Tool Result: Dir Sync Unreadable Sync Response",
+    "desc": "Cause when the host's Claude Code answered the sync request in a form this session cannot read (version mismatch)."
+  },
+  "898f338579e6d038dbfec8428bd668e606a42d07": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-host-stopped-syncing",
+    "name": "Tool Result: Dir Sync Host Stopped Syncing",
+    "desc": "go_with_note on the forwarded tool when the host has stopped syncing, so the command ran on files that may omit local edits."
+  },
+  "1826ac2f7202476573cdb4ac1fddf662f4fbfaff": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-could-not-take-in-failed",
+    "name": "Tool Result: Dir Sync Could Not Take In Failed",
+    "desc": "Cause when catch-up kind is failed: the host could not take in this session's latest file changes first."
+  },
+  "77e5c2491ca3ca1fc365572e82ab81cc5e271559": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-publish-refused",
+    "name": "Tool Result: Dir Sync Publish Refused",
+    "desc": "go_with_note when the sync service refuses further publishes, so local edits are not reaching the host."
+  },
+  "e19edb1e0625ec88005041516db79c56d72e32a9": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-could-not-send-first",
+    "name": "Tool Result: Dir Sync Could Not Send First",
+    "desc": "Default on() cause when this session's latest file changes could not be sent to the host first."
+  },
+  "c815a2d38513edd2c4775e561b10b01dddd8af3e": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-host-not-syncing",
+    "name": "Tool Result: Dir Sync Host Not Syncing",
+    "desc": "go_with_note when the host is not syncing (off, stopped, or another terminal owns the session)."
+  },
+  "ee07408ea00a2aa6b7d83b929937c0405439e83d": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-turn-boundary-only",
+    "name": "Tool Result: Dir Sync Turn Boundary Only",
+    "desc": "go_with_note when the host only syncs at turn boundaries, so the command ran on files as of the user's last message."
+  },
+  "25da9759e12786785bae617017e1d1be3683fa7a": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-could-not-take-in-refused",
+    "name": "Tool Result: Dir Sync Could Not Take In Refused",
+    "desc": "Cause when the host refused mid-turn catch-up (too many concurrent, cancelled, failed, or an unknown reason)."
+  },
+  "0ec2cb5fa5b0e491b67ca94f71eabe3a15605e5b": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-upload-only",
+    "name": "Tool Result: Dir Sync Upload Only",
+    "desc": "go_with_note when the host only sends files here and cannot take this session's changes back."
+  },
+  "c738cca7351e2c696b917abc2af115766bb47baa": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-branch-changed",
+    "name": "Tool Result: Dir Sync Branch Changed",
+    "desc": "Cause when the user switched the host checkout to another branch, so local edits are held back."
+  },
+  "ab40c54eec0bc13016cf9360475eee4426638cfb": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-switch-back-remedy",
+    "name": "Tool Result: Dir Sync Switch Back Remedy",
+    "desc": "Remedy on the branch-changed hold: it clears when the user switches back; tell them if the command must run there."
+  },
+  "620ec2b853221063682209a4def9df13eebfeded": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-next-sync-point-remedy",
+    "name": "Tool Result: Dir Sync Next Sync Point Remedy",
+    "desc": "Remedy when the host is serving another command: changes catch up at the next sync point before the next command there."
+  },
+  "ee5b196e075b92b4ef4392bd6bcdfd661191aaa7": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-changes-unapplied",
+    "name": "Tool Result: Dir Sync Changes Unapplied",
+    "desc": "Cause when the host left this session's latest changes unapplied and told the user why."
+  },
+  "38973a96a449bfc80387eeaa3797644db185e3dc": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-read-ran-on-stale-files",
+    "name": "Tool Result: Dir Sync Read Ran On Stale Files",
+    "desc": "Read-only go_with_note wrapping a sync cause: the read ran on the host's files without this session's latest edits."
+  },
+  "068588d5805388aba4b91a47b1c84eaf1b1a6666": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-stale-files-hold",
+    "name": "Tool Result: Dir Sync Stale Files Hold",
+    "desc": "sync_failed tool_result when a mutating command is held because it would have acted on stale host files."
+  },
+  "0a483d73f3959ff65dfeb0334043ead2772b5033": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-checkout-unready-cause",
+    "name": "Tool Result: Dir Sync Checkout Unready Cause",
+    "desc": "an() cause interpolated into the hold/note when the checkout is mid-merge, mid-rebase, or has unresolved conflicts."
+  },
+  "2361b1a4338520f1faf2f6b692c85e127d1a7cbc": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-overcap-remedy",
+    "name": "Tool Result: Dir Sync Overcap Remedy",
+    "desc": "dn() remedy telling the model to drop large files from what is synced so the next forwarded command can carry the rest."
+  },
+  "c2844152e56ce593c3eb7551f55f719325bc041e": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-momentary-retry-remedy",
+    "name": "Tool Result: Dir Sync Momentary Retry Remedy",
+    "desc": "dn() default remedy for momentary publish/snapshot failures: retry on the next forwarded command, and the user's next message resyncs."
+  },
+  "8da9634f39cc510f216164c77f73c03d797b4ada": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-peer-refused-reason",
+    "name": "Tool Result: Dir Sync Peer Refused Reason",
+    "desc": "un() reason interpolated into the take-in-failed cause when the host's Claude Code refused the files."
+  },
+  "47d62cdb03083d66a499fde8a99ae9bca4952e81": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-files-reach-next-message-clause",
+    "name": "Tool Result: Dir Sync Files Reach Next Message Clause",
+    "desc": "Shared clause on post-command dir-sync notes that host file changes reach this session with the user's next message."
+  },
+  "9ec10076431f0813963c2dcd0e189737a9bfe975": { "facing": "internal" },
+  "23091bfca2f7139b7c87c36fe409c836f9e7d346": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-unreadable-word",
+    "name": "Tool Result: Dir Sync Unreadable Word",
+    "desc": "After-forward sessionNote when the host's dir_sync word is malformed, so post-command files arrive with the next user message."
+  },
+  "5f915f88145177c9931b65e7cc22310a71f61093": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-kept-here",
+    "name": "Tool Result: Dir Sync Kept Here",
+    "desc": "After-forward sessionNote when post-command changes stay on the host; tells the model to read them there with the host argument."
+  },
+  "0d586db4faa1c753305b5741ce8d1dd12d7b01d6": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-push-failed",
+    "name": "Tool Result: Dir Sync Push Failed",
+    "desc": "After-forward sessionNote when the host could not send what that command changed."
+  },
+  "3b484668f5753dfba80555d158a397d2cca115a2": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-deferred-until-handoff",
+    "name": "Tool Result: Dir Sync Deferred Until Handoff",
+    "desc": "After-forward sessionNote when the host sent post-command files that are only written here after the task hands back to the main conversation."
+  },
+  "1c13a42223bd4752ff29de9d3ee210bbb6f389ea": {
+    "facing": "model",
+    "id": "agent-prompt-remote-machine-auto-mode-rules",
+    "name": "Agent Prompt: Remote machine auto mode rules",
+    "desc": "Adds host-declared deny, allow, and environment rules to the security monitor prompt for commands that will run on another machine"
+  },
+  "7ce1ab4d1191b926fc34f75bf7340be94e58e3f0": { "facing": "ui" },
+  "a468b1046af525be7cc73ffc0edbe3d6629f42aa": {
+    "facing": "model",
+    "id": "system-prompt-harness-instructions-2",
+    "name": "System Prompt: Harness instructions",
+    "desc": "Opening interactive-agent identity line (output-style, collaborative-goals, or software-engineering) plus the never-guess-URLs security instruction."
+  },
+  "f07e41865b882a6c453e34f61de7a319d3f8b161": {
+    "facing": "model",
+    "id": "system-prompt-instruct-worker-to-use-skill",
+    "name": "System Prompt: Instruct Worker To Use Skill",
+    "desc": "Skill-description fragment telling Claude how to instruct a worker to invoke a skill via its Agent prompt."
+  },
+  "1fc9524b2e366c92719cc34c75416ac1f247e6b6": {
+    "facing": "model",
+    "id": "system-reminder-cross-session-host-application-reply",
+    "name": "System Reminder: Host application reply",
+    "desc": "Mid-turn host-injected wrapper telling the model the from= id is a host session SendMessage cannot reach and to reply via the host messaging tool."
+  },
+  "b47951d9ff7033e734d11c6bcd9e1ba415ec28c6": {
+    "facing": "model",
+    "id": "system-prompt-coordinator-inherit-session-model",
+    "name": "System Prompt: Coordinator inherit session model",
+    "desc": "Coordinator-mode bullet forbidding opportunistic model downshifts so delegated workers inherit the session model unless the user names one."
+  },
+  "200dea55f84a3f384733d54d998eb5fdc791a98b": {
+    "facing": "model",
+    "id": "tool-description-bash-git-only-commit-prefer-named-files",
+    "name": "Tool Description: Bash git only-commit prefer named files",
+    "desc": "Bash-tool git fragment: commit only when the user asks and prefer naming specific files when staging."
+  },
+  "cb1e3b01261e7e7511cf18b2c690155aad40fb7f": {
+    "facing": "model",
+    "id": "data-artifact-comment-sent-to-claude-by-someone-else",
+    "name": "Data: Artifact comment sent to Claude by someone else",
+    "desc": "Attribution note interpolated into the artifact-comments dump telling the model to leave another person's Claude-sent thread unless asked."
+  },
+  "e1a02661fd042a09cccc3f37d1897d91fbc8a0d2": {
+    "facing": "model",
+    "id": "tool-description-mcp-tool-blocked-by-permissions-deny",
+    "name": "Tool Description: MCP tool blocked by permissions deny",
+    "desc": "Tool-error suffix: a permissions deny rule now blocks this MCP tool so it must not be called again."
+  },
+  "bab33dc4b807ce92b2ba4e73d17af1e8bf1d0869": {
+    "facing": "model",
+    "id": "tool-description-mcp-server-disconnected",
+    "name": "Tool Description: MCP server disconnected",
+    "desc": "Tool-error suffix: the tool's MCP server has disconnected and is only callable again if it reconnects."
+  },
+  "716888979614c80fb7be7014787f21d95ad539a3": {
+    "facing": "model",
+    "id": "tool-description-mcp-server-org-policy-blocked",
+    "name": "Tool Description: MCP server org policy blocked",
+    "desc": "Tool-error suffix: the MCP server is blocked by organization policy so the tool will not become available this session."
+  },
+  "8a5f4fb4f8a44dd5c080b3d54d6bdf952b81fe2b": {
+    "facing": "model",
+    "id": "tool-description-mcp-tool-not-available-in-context",
+    "name": "Tool Description: MCP tool not available in this context",
+    "desc": "Tool-error suffix used when an MCP tool is not offered in this context (needs_auth/disconnected with the context flag)."
+  },
+  "168b4cd6e680d34bb6bb85db4fd694b471b37e94": {
+    "facing": "model",
+    "id": "tool-description-mcp-server-still-connecting-retry",
+    "name": "Tool Description: MCP server still connecting retry",
+    "desc": "Tool-error suffix: the MCP server is still connecting and the model should retry shortly."
+  },
+  "b211aab3d0865d0585a233e616c586dc77a6f5e0": {
+    "facing": "model",
+    "id": "tool-description-mcp-server-needs-reauthorize",
+    "name": "Tool Description: MCP server needs reauthorize",
+    "desc": "Tool-error suffix: the MCP server needs the user to re-authorize before its tools work again."
+  },
+  "ca0d30780652c346ea6a7c7da7d807d253733d03": { "facing": "ui" },
+  "b65029e06bb277a544ab1532ba218fc17aeea75a": { "facing": "ui" },
+  "54e5d0c60bee92e792150852bcd19bb5c3cc5305": {
+    "facing": "model",
+    "id": "tool-description-mcp-auth-placeholder-real-tools-available",
+    "name": "Tool Description: MCP auth placeholder real tools available",
+    "desc": "Tool-error suffix: the auth placeholder is obsolete because the MCP server authenticated and real tools should be loaded instead."
+  },
+  "35cdff98ab69e0e07694a5c86bf7f4bb38fdbe18": {
+    "facing": "model",
+    "id": "tool-description-mcp-auth-placeholder-no-longer-needed",
+    "name": "Tool Description: MCP auth placeholder no longer needed",
+    "desc": "Tool-error suffix: this authentication placeholder is no longer needed and its tools are unavailable in this context."
+  },
+  "a55c539d29dab3947bbd8efd1013e69f3c25d0e1": {
+    "facing": "model",
+    "id": "tool-description-mcp-tool-org-admin-blocked",
+    "name": "Tool Description: MCP tool org admin blocked",
+    "desc": "Tool-error suffix: an organization administrator blocked this tool from the named MCP server for this session."
+  },
+  "daac5cdc95822178e126bf65fbbfc21b3fa09867": {
+    "facing": "model",
+    "id": "slash-command-mcp-server-disabled-in-another-session",
+    "name": "Slash Command: MCP server disabled in another session",
+    "desc": "Returned by the /mcp slash command when enabling a server that another session disabled; explains the server still works this session but will not reconnect on next launch."
+  },
+  "a4690c2ebf11eab1e3071880f435f35794f3f407": { "facing": "ui" },
+  "6f7c24c338da51a0a1df1dd04f30226d2a8480ea": {
+    "facing": "model",
+    "id": "system-reminder-artifact-follow-up-codelivered-to-editor",
+    "name": "System Reminder: Artifact follow-up co-delivered to editor",
+    "desc": "Tells the coordinator a thread follow-up was also delivered to the artifact editor worker, so it must not re-dispatch and should wait for that worker's next result."
+  },
+  "d79b527699907ad2c0b45144b66438a016eca5f2": {
+    "facing": "model",
+    "id": "data-memory-read-result-stale",
+    "name": "Data: Memory read result stale",
+    "desc": "Per-path stale note interpolated into the memory_updates block telling the model a prior memory_read is outdated and must be re-read."
+  },
+  "307571228252f9f5b75477415eb461ce3d573fc2": {
+    "facing": "model",
+    "id": "data-artifact-capability-roster-available-with-builtins",
+    "name": "Data: Artifact capability roster available with builtins",
+    "desc": "Artifact-capabilities skill fragment listing declareable names plus built-in capabilities that must not be passed in `capabilities`."
+  },
+  "94f6ae050f731880f0ac651f46cb74076a2c0b83": {
+    "facing": "model",
+    "id": "data-artifact-capability-roster-available",
+    "name": "Data: Artifact capability roster available",
+    "desc": "Interpolated into the artifact-capabilities skill guidance to enumerate the capability names this user may declare"
+  },
+  "d8650f80cafc09b5f1fc34e6b6840e2025537bee": { "facing": "ui" },
+  "165dbdebb49db9d6be242eb9a7998aa94c73e619": {
+    "facing": "model",
+    "id": "tool-description-bash-git-committing-changes",
+    "name": "Tool Description: Bash git committing changes",
+    "desc": "Bash-tool git-commit workflow: safety protocol, parallel status/diff/log, HEREDOC commit, and commit-only-when-asked rules."
+  },
+  "1ce5299ff26b9de11c4e8734d4505cd7006a31d9": {
+    "facing": "model",
+    "id": "data-dir-sync-file-sync-stopped-marker",
+    "name": "Data: Dir sync file sync stopped marker",
+    "desc": "Marker file written into a cloud session directory after file sync stops, explaining the project now lives only on the user's machine."
+  },
+  "39186e02dd3351411a1c8408e65c25fa6c7f3f54": {
+    "facing": "model",
+    "id": "system-prompt-reporting-outcomes",
+    "name": "System Prompt: Reporting outcomes",
+    "desc": "Requires reports to distinguish observed outcomes from intentions, lead with failures or incomplete work, and avoid overstating unverified completion"
+  },
+  "6db325faaf789cf1c273ff6e6e5ca91fc1815913": {
+    "facing": "model",
+    "id": "skill-workflow-authoring-reference",
+    "name": "Skill: Workflow authoring reference",
+    "desc": "Skill reference for authoring Workflow scripts, covering script persistence, metadata, agent hooks, isolation, concurrency, budgeting, quality patterns, and resume behavior"
+  },
+  "4a1350b69f388ee44cef2e37fe07a956d3a0386a": { "facing": "ui" },
+  "424ec52aa3a9f5c63e5f3f15dc52d84c629927eb": {
+    "facing": "model",
+    "id": "agent-prompt-quick-pr-creation",
+    "name": "Agent Prompt: Quick PR creation",
+    "desc": "Streamlined prompt for creating a commit and pull request with pre-populated context"
+  },
+  "b4fb1e30a438e7515fa966e2e16e1b69bebb51a1": {
+    "facing": "model",
+    "id": "agent-prompt-pull-request-creation",
+    "name": "Agent Prompt: Pull request creation",
+    "desc": "Prompt for creating a single GitHub pull request from existing commits with branch, template, attribution, shell-formatting, and git-safety guidance"
+  },
+  "4f100d368f620385378237b2cb8bcc444fcd1fb8": {
+    "facing": "model",
+    "id": "agent-prompt-quick-git-commit",
+    "name": "Agent Prompt: Quick git commit",
+    "desc": "Streamlined prompt for creating a single git commit with pre-populated context"
+  },
+  "3807e4f6d7b66819f06835a3138ddc0808858989": {
+    "facing": "model",
+    "id": "tool-description-artifact-thumbnail-html-link",
+    "name": "Tool Description: Artifact thumbnail HTML link",
+    "desc": "Artifact-tool description fragment explaining how a rel=artifact-thumbnail link tag sets the gallery/link-preview image."
+  },
+  "e5ba74226d725a4b00b6beab97481367c69945ea": {
+    "facing": "model",
+    "id": "data-command-failed-message",
+    "name": "Command-failed message",
+    "desc": "User-turn content injected into the model conversation reporting a failed local command."
+  },
+  "16f3b49c552faf35277fb2eab9ddaaef16d18d1d": {
+    "facing": "model",
+    "id": "system-reminder-memory-updates",
+    "name": "System Reminder: Memory updates",
+    "desc": "Introduces refreshed memory-file state, invalidates earlier reads, and forbids reproducing the machine-generated update block to the user"
+  },
+  "543d1f8f982442ecf0524a2ba8a2dc315b72b843": {
+    "facing": "model",
+    "id": "system-reminder-session-context",
+    "name": "System Reminder: Session context",
+    "desc": "Provides selected session context values, marks replacement updates, and directs the agent to use them only when highly relevant"
+  },
+  "66d2a7a8c83152c24a6cdf623e8cfeae60449d44": { "facing": "ui" },
+  "82b5eeebb4d5aa37120472a1c78d4e3ca7d8c328": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-doc-published",
+    "name": "Tool Result: Artifact live doc published",
+    "desc": "Artifact publish tool_result for a live-doc page, reporting path, URL, optional working copy, and live-subscription lines."
+  },
+  "646bd204dae607b7f7acfc5ae71845abfda8d062": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-doc-version",
+    "name": "Tool Result: Artifact live doc version",
+    "desc": "Artifact publish tool_result when liveDocVersion is set, using liveDocVersionLine plus subscription/collab suffixes."
+  },
+  "424fdc80127e08191ef9494637c929fa7163a80a": {
+    "facing": "model",
+    "id": "system-reminder-deferred-tools-readded",
+    "name": "System Reminder: Deferred tools available again",
+    "desc": "Reminder that deferred MCP tools are available again after a server reconnect."
+  },
+  "102e1a5545eac55dd5831bdaf77b818ee555da06": {
+    "facing": "model",
+    "id": "system-reminder-deferred-tools-removed-summary",
+    "name": "System Reminder: Deferred Tools Removed (Count Summary)",
+    "desc": "Meta user message injected when more than the display cap of deferred MCP tools disappear at once, telling Claude not to search for them via ToolSearch."
+  },
+  "86237b922d0ffaf303de1c6b4e62e70c6a2d6e72": {
+    "facing": "model",
+    "id": "system-reminder-deferred-tools-readded-non-mcp",
+    "name": "System Reminder: Deferred tools readded non-MCP",
+    "desc": "Reminder that deferred non-MCP tools announced earlier are available again in this session and should be loaded via ToolSearch."
+  },
+  "60721dba51803ca8daee802c3ffc9856d900a28f": { "facing": "ui" },
+  "9bf57a5816ad5ce71c73e74f0b9a0294512d9056": { "facing": "ui" },
+  "26770d3d1dedded3adfc76c031fa8625445ca6b3": { "facing": "internal" },
+  "c50cfe35ea452d8773c5271a02de80c041f58986": { "facing": "internal" },
+  "deb71b21b9dd147ecf6a62860f67023f9e84527c": {
+    "facing": "model",
+    "id": "agent-prompt-schedule-local-mcp-server-limitation",
+    "name": "Agent Prompt: Schedule local MCP server limitation",
+    "desc": "Explains that local Claude Code MCP servers cannot be attached to cloud routines and tailors Claude.ai connector guidance to why the connector list was unavailable"
+  },
+  "13a555731026fad6a9a1f4240e0256f157f400e2": {
+    "facing": "model",
+    "id": "tool-result-mcp-first-party-auth-no-usable-credential",
+    "name": "Tool Result: MCP first-party auth no usable credential",
+    "desc": "Failed MCP client .error when first-party auth has no usable claude.ai credential and /login or /design-login is required."
+  },
+  "0b21b53e67c64a6e7d007ec4fc35ca3b2a1bc1ec": {
+    "facing": "model",
+    "id": "system-reminder-artifact-editor-follow-up-failed-or-stopped",
+    "name": "System Reminder: Artifact editor follow-up failed or stopped",
+    "desc": "Correction to the coordinator that the artifact editor read a follow-up but failed or was stopped, so it should not wait for that worker."
+  },
+  "ad17b4f5b65a054ff0af683cd6049b1b3cf27d5b": {
+    "facing": "model",
+    "id": "tool-result-mcp-first-party-auth-rejected-design-login",
+    "name": "Tool Result: MCP first-party auth rejected design-login",
+    "desc": "Failed MCP client .error when api.anthropic.com rejects the /design-login credential with a non-403 status."
+  },
+  "b02eedbd3301a522df27fd8ac08b6161d42eba2b": {
+    "facing": "model",
+    "id": "tool-result-mcp-first-party-auth-rejected-design-login-403",
+    "name": "Tool Result: MCP first-party auth rejected design-login 403",
+    "desc": "Failed MCP client .error when /design-login credential is rejected with HTTP 403, pointing at Claude Design access or re-auth."
+  },
+  "2da07b822229ec276f2e5aae77e9a6cafc7db43a": {
+    "facing": "model",
+    "id": "tool-result-mcp-first-party-auth-rejected-claude-ai-login",
+    "name": "Tool Result: MCP first-party auth rejected claude.ai login",
+    "desc": "Failed MCP client .error when a claude.ai /login token is rejected with a non-403 status."
+  },
+  "de64cffafbb3aed3bd3e51b636167a5d7e36c5ce": {
+    "facing": "model",
+    "id": "tool-result-mcp-first-party-auth-rejected-login-403-missing-scope",
+    "name": "Tool Result: MCP first-party auth rejected login 403 missing scope",
+    "desc": "Failed MCP client .error when a /login token is HTTP 403, likely missing a required scope."
+  },
+  "526781dc7195d425defe0101046713909a530247": {
+    "facing": "model",
+    "id": "tool-result-mcp-first-party-auth-rejected-design-scoped-login-403",
+    "name": "Tool Result: MCP first-party auth rejected design-scoped login 403",
+    "desc": "Failed MCP client .error when a design-scoped /login that already includes Claude Design is still HTTP 403, implicating account/project access."
+  },
+  "6dcaabc4ddea206b9aaf9ba5381c18bdd548f09a": {
+    "facing": "model",
+    "id": "system-reminder-background-command-finished-not-user",
+    "name": "System Reminder: Background command finished not user",
+    "desc": "Harness note on a background-bash delivery that the result is not a user message and is not consent or approval."
+  },
+  "a3f208654dc6269b96b62d366ffb2b5da665e44f": {
+    "facing": "model",
+    "id": "tool-result-subagent-turn-limit-before-finishing",
+    "name": "Tool Result: Subagent turn limit before finishing",
+    "desc": "Harness note in a subagent's returned content that the agent hit its turn limit before finishing, with partial-output guidance."
+  },
+  "12f52e1ad31a2031e010553911623b0fbf2c321a": { "facing": "internal" },
+  "18404e5254593e0a64883f68a4cc84cee6fcf669": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-id-from-other-process",
+    "name": "Tool Result: Agent resume id from other process",
+    "desc": "Resume-agent tool_result when the id was never in this session (e.g. a lead's subagent seen from a teammate pane) and must be addressed via SendMessage instead."
+  },
+  "b2d02ac96a3e6560dda72ed1550c15e73da4015c": { "facing": "ui" },
+  "ba6a74902aac680492b25e4bf78583badfe95a73": { "facing": "internal" },
+  "440e6c0b8dffada8d74b2aaab438ecde6ba105e9": { "facing": "internal" },
+  "ce478a66df3e1227fd58468a6bb43c11f187e7d1": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-note",
+    "name": "Tool Parameter: Artifact Publish Note",
+    "desc": "Describes the optional publish-only version note shown beside label in the artifact version picker."
+  },
+  "e062ce2808e209cee4f8be7e5d0c4ad097a42ab7": {
+    "facing": "model",
+    "id": "tool-description-waitformcpservers-repl-ready-when",
+    "name": "Tool Description: WaitForMcpServers REPL Ready-When Clause",
+    "desc": "REPL-surface WaitForMcpServers clause that ready=true when servers are ready."
+  },
+  "861d6368aa0377ef5fce3ecd0e58b03dd303cb47": {
+    "facing": "model",
+    "id": "tool-description-refreshmcptools",
+    "name": "Tool Description: RefreshMcpTools",
+    "desc": "Describes when and how to refresh connected MCP servers tool lists to recover missing or stale tools"
+  },
+  "14f0dd574f08960681b13a80383dd38c97235d14": { "facing": "internal" },
+  "5e761d69323e520747ab986575d0b5e3f3d622fd": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-page-live-doc",
+    "name": "Tool Parameter: Artifact Page Live Doc",
+    "desc": "Describes the page flag on a LIVE DOC read: working-copy path by default, or the rendered page when page is true."
+  },
+  "17495b7bba1da33791d8aeec4350e600a0d88b58": {
+    "facing": "model",
+    "id": "slash-command-mcp-claudeai-session-token-rejected",
+    "name": "Slash Command: /mcp Reconnect Session Token Rejected",
+    "desc": "Tells the model a claude.ai reconnect succeeded but the session token was rejected, so /login is required before reconnecting."
+  },
+  "9b62e4d5a47fc4bb549c13106bf57f2b22a0a56e": {
+    "facing": "model",
+    "id": "skill-workflow-authoring-description",
+    "name": "Skill: Workflow Authoring Description",
+    "desc": "Description of the workflow-authoring skill: load the Workflow tool-script reference before authoring a script the user already opted into."
+  },
+  "03e74e261d3d5c26a350b4b2c9b89242e225cb2d": { "facing": "internal" },
+  "ec5a686022dd97d9216db3b1241db180dbd593a0": { "facing": "internal" },
+  "5dcd99a0372c987d861274bc8ce1ace7982d6e68": { "facing": "ui" },
+  "de963d5c766bef26f7ae4a74824fe48f0498a561": { "facing": "internal" },
+  "59a083e7ddcdd9db66cd8bf8e2091e890496c252": { "facing": "internal" },
+  "500b104d7c93a5d0e20b80f8bb8c252348a139f4": { "facing": "internal" },
+  "7207237a58815e7339da82390f551e8754ccf843": { "facing": "internal" },
+  "a06fe31954f2f0358cc61af9fe70c87c56de8a4a": { "facing": "internal" },
+  "6a3ddbfb4d5d0b42b701e9f43284bd02e6d918e1": { "facing": "internal" },
+  "9964c34ce1144101c0da8a6991a0b92528d923df": { "facing": "internal" },
+  "a1ec843c3fad9c1412de988713b5d453f1eb5f8d": { "facing": "internal" },
+  "c49881417e54e4217b783b75087c7d5dfbcbac45": {
+    "facing": "model",
+    "id": "tool-description-waitformcpservers-repl-servers-ready",
+    "name": "Tool Description: WaitForMcpServers REPL Servers-Ready Clause",
+    "desc": "REPL-surface WaitForMcpServers clause reporting ready=false when servers failed, need auth, or are disabled."
+  },
+  "04ccf3d89b4d3f4bf734d0badb396c1a120d45a0": { "facing": "internal" },
+  "e6713be808ec57f5894ad84f1238322fa29fffdb": { "facing": "ui" },
+  "f97d8693a452d7b64a70dda6d22d4fd3cdec856b": { "facing": "ui" },
+  "5e274ac58f8decbdc66226086b74a94d9890662f": { "facing": "ui" },
+  "bbd95040c9c44b558d6e90a0a3ab543d8eb01caf": {
+    "facing": "model",
+    "id": "system-reminder-cross-session-peer-message-authority-warning-note",
+    "name": "System Reminder: Cross-session peer message authority warning note",
+    "desc": "Authority-warning note appended to a relayed peer message, without a response prompt"
+  },
+  "74cb4c68e7615aa422ed69fabb81646901b074ac": { "facing": "internal" },
+  "1957ee794cefb9508bdb2fa78685ced70fc4c2c9": {
+    "facing": "model",
+    "id": "tool-result-artifact-thumbnail-unnamed",
+    "name": "Tool Result: Artifact Thumbnail Unnamed",
+    "desc": "Publish warning that a custom thumbnail was not sent because approval could not name the image."
+  },
+  "6acbe5ba4fefb41a850c5885614bdb3a153106c8": {
+    "facing": "model",
+    "id": "agent-prompt-plugin-eval-mcp-stop-conditions",
+    "name": "Agent Prompt: Plugin Eval MCP Stop Conditions",
+    "desc": "Tells the eval mock MCP stand-in to emit a STOP line only when the current call meets an author-listed off-the-rails condition."
+  },
+  "12eba8d5a3128f39eb95c14a17f380b8cd7528e6": {
+    "facing": "model",
+    "id": "system-reminder-deferred-tools-no-longer-available",
+    "name": "System Reminder: Deferred Tools No Longer Available In Session",
+    "desc": "Tells the model non-MCP deferred tools announced earlier are gone and ToolSearch will not match them."
+  },
+  "536abd444a81916b05ab26e41b529393fa11ed86": { "facing": "internal" },
+  "0c7110a0f18309283e97f25ea5a85fb397aea944": {
+    "facing": "model",
+    "id": "tool-description-mcp-oauth-flow-cancelled",
+    "name": "Tool Result: MCP OAuth flow cancelled",
+    "desc": "MCP authenticate tool_result when the OAuth flow was cancelled by a newer attempt"
+  },
+  "a6baad4ba7957f1f57e73a81ee8bc7bdbbad9378": {
+    "facing": "model",
+    "id": "system-prompt-output-style-reset-to-default",
+    "name": "System Prompt: Output Style Reset To Default",
+    "desc": "Meta attachment telling the model the output style was cleared and to respond in the usual style."
+  },
+  "20fabed077d994250f0edf7f3bdca242b1adf4f9": {
+    "facing": "model",
+    "id": "tool-result-artifact-thumbnail-declaration-unusable",
+    "name": "Tool Result: Artifact Thumbnail Declaration Unusable",
+    "desc": "Permission-deny message when a page's custom thumbnail tag cannot be published, so nothing was published."
+  },
+  "5ba4c7532ade74c5db6324ee481fbe18b472c530": { "facing": "ui" },
+  "04734a31a16e65897a34fa601a3c69163ed7ffa5": { "facing": "internal" },
+  "0dd810385168559cb37d944f579ca3ef6b967246": {
+    "facing": "model",
+    "id": "tool-description-waitformcpservers-repl-environment",
+    "name": "Tool Description: WaitForMcpServers REPL Environment Clause",
+    "desc": "REPL-surface WaitForMcpServers clause that connected MCP tools become callable inside the REPL."
+  },
+  "b0423f1dbc6fdaa111522bd98dcd55483504b6ee": {
+    "facing": "model",
+    "id": "tool-result-exitplanmode-team-lead-verdict-mismatch",
+    "name": "Tool Result: ExitPlanMode Team-Lead Verdict Mismatch",
+    "desc": "Plan-approval rejection feedback when the team lead answered a different request, telling the agent to resubmit via ExitPlanMode."
+  },
+  "44481ef8a298e71fe899e319ca47a46b33471c59": {
+    "facing": "model",
+    "id": "task-notification-ultraplan-do-not-respond",
+    "name": "Task Notification: Ultraplan Do Not Respond",
+    "desc": "Meta task-notification telling the model the ultraplan note is informational and to wait for the user's next message."
+  },
+  "74389d436c9e4c847c7e1a8c49319b718163a138": {
+    "facing": "model",
+    "id": "tool-result-claudeai-mcp-connector-authenticate",
+    "name": "Tool Result: claude.ai MCP connector authenticate",
+    "desc": "MCP tool_result asking the user to run /mcp and select the server to authenticate the claude.ai connector"
+  },
+  "cdaff3029a790a096fd650722f2d61a8e5a7340f": {
+    "facing": "model",
+    "id": "tool-description-artifact-nested-runtime-blocks-cleanup-error",
+    "name": "Tool Description: Artifact Nested Runtime Blocks Cleanup Error",
+    "desc": "Publish error when nested frame-runtime comment blocks or data-frame-runtime attributes cannot be stripped cleanly."
+  },
+  "8386060c9c3d4d8d8d6be4dc1f2bf02a1e869d42": {
+    "facing": "model",
+    "id": "tool-description-artifact-nested-runtime-cleanup-error",
+    "name": "Tool Description: Artifact nested runtime cleanup error",
+    "desc": "Formats the Artifact publish error for irreducibly nested runtime markers, base tags, or repeated page skeletons and directs publishing the innermost clean document"
+  },
+  "ff25b172d2a4fc515a2f619a1f099ceaa71a8875": {
+    "facing": "model",
+    "id": "tool-description-artifact-nested-skeleton-depth-error",
+    "name": "Tool Description: Artifact Nested Skeleton Depth Error",
+    "desc": "Publish error when a page is wrapped in more nested artifact skeletons than the repair cap allows."
+  },
+  "5b09119848aabfeef29d925d02ae205b6f774041": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-person-approval-required",
+    "name": "Tool Result: Remote Tool Person Approval Required",
+    "desc": "Remote-tool error when automatic approval is insufficient because only a person's approval counts, so the call did not run."
+  },
+  "6e89c772c4e47be43091c6ad632b4112e6868058": {
+    "facing": "model",
+    "id": "slash-command-skill-not-user-invocable",
+    "name": "Slash Command: Skill Not User Invocable",
+    "desc": "Command-dispatch reply that a skill can only be invoked by Claude, so the user should ask Claude to run it."
+  },
+  "fdb0da5463847039c6c3b23191cbd1bfb1bb6c36": { "facing": "ui" },
+  "fbc6c99e13d3a8ab2d09e3086d4a2e993357b1e3": {
+    "facing": "model",
+    "id": "tool-result-artifact-comment-thread-not-activated",
+    "name": "Tool Result: Artifact Comment Thread Not Activated",
+    "desc": "Resolve-thread tool_result when Claude is not activated on the comment thread, so the resolve is a no-op."
+  },
+  "bbc331a96ee4e3d7e921202514a264beaae8e45c": { "facing": "ui" },
+  "6c94f94437ff4bd08c41727904b37be1fe2bce40": {
+    "facing": "model",
+    "id": "tool-description-waitformcpservers-repl-callable-inside",
+    "name": "Tool Description: WaitForMcpServers REPL Callable-Inside Clause",
+    "desc": "REPL-surface WaitForMcpServers clause telling the model to call this tool to wait until a connecting server's tools are callable."
+  },
+  "9cb8ca37aa524b955e6e71f007a2293ca8726d4d": {
+    "facing": "model",
+    "id": "slash-command-mcp-claudeai-auth-reconnect-failed-restart",
+    "name": "Slash Command: /mcp — reconnect after auth failed, restart to retry",
+    "desc": "Sibling branch when no reason is available: tells the model the only remaining recovery is restarting Claude Code."
+  },
+  "94b2fa45c87cf894b8eb914b15b3a4eaef082bb5": {
+    "facing": "model",
+    "id": "slash-command-mcp-claudeai-auth-reconnect-failed-detail-withheld",
+    "name": "Slash Command: /mcp Reconnect Failed Detail Withheld",
+    "desc": "Reconnect-failed /mcp result that withholds the failure detail on connections that persist off-box and tells the model to restart."
+  },
+  "30e197c87553d36c59833f2fb2f5d3f191c07d4f": {
+    "facing": "model",
+    "id": "slash-command-mcp-claudeai-auth-still-unauthorized",
+    "name": "Slash Command: /mcp — still unauthorized after reconnect",
+    "desc": "Tells the model the browser sign-in did not take effect and that the user must complete it before retrying from /mcp, so it stops assuming the server is usable."
+  },
+  "7f659abe353e0621e2bb4aff9a035d018c2591de": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-github-not-connected",
+    "name": "Slash Command: Ultrareview GitHub Not Connected",
+    "desc": "Ultrareview launch error when no GitHub account is connected to the Claude account, with recovery steps."
+  },
+  "f0e809546f9763df45afede3d6e9f621e3a48a5e": {
+    "facing": "model",
+    "id": "tool-result-mcp-url-elicitation-required",
+    "name": "Tool Result: MCP URL elicitation required",
+    "desc": "Model-facing tool_result text returned when an MCP tool call requires URL elicitation, telling the model to open the URL and then retry."
+  },
+  "9437a9ea3be5be8caada0ad503af71eb7b8d2c33": {
+    "facing": "model",
+    "id": "tool-result-schedulewakeup-max-duration",
+    "name": "Tool Result: ScheduleWakeup Max Duration",
+    "desc": "ScheduleWakeup tool_result when scheduledFor is 0 because the loop hit its maximum duration, telling the model not to re-issue."
+  },
+  "8d1156ecacefa49d669ef2cf10b2ea05bad3bb93": { "facing": "internal" },
+  "8d7f78f1c7b8946ddcb3e0b929b0243301d3aabb": { "facing": "internal" },
+  "d83f499b62271823ffe69eb89250bca58d909001": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-files-updated-in-place",
+    "name": "System Reminder: Dir-Sync Files Updated In Place",
+    "desc": "Between-tools dir-sync notice that files changed on the user's machine were updated here and must be re-read before editing."
+  },
+  "0c4092da9fba3c0a55f1db66fb5689212742b661": {
+    "facing": "model",
+    "id": "system-prompt-interactive-agent-intro-output-style-below",
+    "name": "System Prompt: Interactive agent intro (output-style below)",
+    "desc": "Opening system-prompt line for dynamic-prompt sessions whose configured Output Style is included below"
+  },
+  "51c4d7ff4cd986b3aa97c582349552b9e435f4fe": {
+    "facing": "model",
+    "id": "slash-command-schedule-connectors-unlisted-still-connecting",
+    "name": "Slash Command: Schedule connectors unlisted still connecting",
+    "desc": "Schedule-prompt note that another claude.ai connector exists but is not listed because it is still connecting or failed client-side."
+  },
+  "a3fe851bc9680e741093d0a17cce866b5ed36f0a": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-private-app-card-gallery-hint",
+    "name": "Tool Result: Artifact publish private app card gallery hint",
+    "desc": "Post-publish tool result telling the model the page is private, to describe the app card in a sentence, and not to paste the URL."
+  },
+  "fbeef12115b3ad01047211f66bbcc311dff8a4f2": {
+    "facing": "model",
+    "id": "slash-command-schedule-connectors-optout",
+    "name": "Slash Command: Schedule connectors optout",
+    "desc": "Schedule-prompt empty-list branch when automatic claude.ai connector loading is opted out in this session."
+  },
+  "47c52fa9edf7d1a1d546e65c5d5f0b21c019407c": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-favicon",
+    "name": "Tool Parameter: Artifact favicon",
+    "desc": "Zod .describe() for the Artifact tool favicon parameter (browser-tab emoji icon on first publish)."
+  },
+  "f08106fcbb8a70c7a7949d19a5ddcd37bce228c8": { "facing": "ui" },
+  "2dfde4e75dcf94b8759c0b5ee019578707de2548": {
+    "facing": "model",
+    "id": "tool-result-artifact-create-from-type-ask",
+    "name": "Tool Result: Artifact create from type ask",
+    "desc": "Permission-ask message when creating a new private artifact from an artifact type, with no local file uploaded."
+  },
+  "69d5945d62e2cecdd9955b97e56044f4d659d83f": {
+    "facing": "model",
+    "id": "slash-command-schedule-connectors-restricted",
+    "name": "Slash Command: Schedule connectors restricted",
+    "desc": "Schedule-prompt empty-list branch when MCP is restricted to explicitly passed config (--strict-mcp-config/--bare)."
+  },
+  "d7689f62b91815789ab1d84da110b9f8c704a59c": {
+    "facing": "model",
+    "id": "slash-command-schedule-connectors-safe-mode",
+    "name": "Slash Command: Schedule connectors safe mode",
+    "desc": "Schedule-prompt empty-list branch when claude.ai connectors are not loaded because of safe mode."
+  },
+  "d49fa22e39026031b859fb394276067caacf1e66": {
+    "facing": "model",
+    "id": "slash-command-schedule-connectors-missing-scope",
+    "name": "Slash Command: Schedule connectors missing scope",
+    "desc": "Schedule-prompt empty-list branch when the login token lacks the MCP-connectors permission."
+  },
+  "7b630fd3c8a7af7f359115bbb05c70d9d621d93b": { "facing": "ui" },
+  "5d93512fffe3ef55ffb5e4642daaf005fbbb9e5c": {
+    "facing": "model",
+    "id": "tool-result-bash-backgrounded-to-deliver-message",
+    "name": "Tool Result: Bash backgrounded to deliver message",
+    "desc": "Bash tool result when a command was moved to the background so an incoming message could be delivered."
+  },
+  "d0e6e34f50140d893273f99d12d14466e48fdb23": { "facing": "internal" },
+  "1c354c60cd258c3ca3f3e9557b55ddce37a799fe": {
+    "facing": "model",
+    "id": "system-reminder-artifact-editor-follow-up-did-not-reach-worker",
+    "name": "System Reminder: Artifact editor follow-up did not reach worker",
+    "desc": "Coordinator correction that a thread follow-up did not reach the artifact editor worker, with instructions to dispatch or answer it."
+  },
+  "558511f86a3147dc47c3e8da722a0fbc2375faae": {
+    "facing": "model",
+    "id": "slash-command-mcp-toggle-couldnt-change-opaque",
+    "name": "Slash Command: MCP toggle couldn't change opaque",
+    "desc": "Headless /mcp enable-or-disable failure when detail is withheld on this connection."
+  },
+  "1cc9744732b69d4d6b5e0231eb170e9289a40e76": {
+    "facing": "model",
+    "id": "slash-command-design-consent-record-failed",
+    "name": "Slash Command: Design consent record failed",
+    "desc": "Type:text result of /design consent when recording Design agent access throws."
+  },
+  "56de0e1527440c09c38f048a34dded403b173094": {
+    "facing": "model",
+    "id": "slash-command-design-revoke-failed",
+    "name": "Slash Command: Design revoke failed",
+    "desc": "Type:text result of /design revoke when revoking Design agent access throws."
+  },
+  "5ec98f0cc2a3168f4a074bb5f3bfe6191deca705": { "facing": "ui" },
+  "5967434124f430583cd91a16deaa931c09d3f8e5": {
+    "facing": "model",
+    "id": "slash-command-org-policy-couldnt-verify-restart",
+    "name": "Slash Command: Org policy couldn't verify restart",
+    "desc": "Slash-command policy-gate reason when the org-policy cache missed, telling the model to restart Claude Code after checking the network."
+  },
+  "6998a746715a571d536dc30ae188a3c3dfa4a5d5": {
+    "facing": "model",
+    "id": "skill-multiplayer-whiteboard-description",
+    "name": "Skill: Multiplayer whiteboard description",
+    "desc": "Trigger description for the multiplayer Whiteboard skill, covering creation of a live shared canvas with synchronized strokes, cursors, session presence, pasted images, and Claude drawing"
+  },
+  "fa1cce3d554d121d8cb3103a567e4202c0a92989": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-db-collection",
+    "name": "Tool Parameter: Artifact DB Collection",
+    "desc": "Zod .describe() for the Artifact read_db/write_db collection path parameter, covering odd-length collection/document paths and per-user data/users/<id> layout."
+  },
+  "82e082964f674163c3effc1ff7b3680e3d306e73": {
+    "facing": "model",
+    "id": "system-reminder-directory-sync-stopped-for-session",
+    "name": "System Reminder: Directory sync stopped for session",
+    "desc": "Reports that directory sync permanently stopped, explains the local synced-copy disposition and any unsynced files, and directs all project work to the user's attached machine"
+  },
+  "07065b835d1d60f25a06e1e9f256721f1956890a": {
+    "facing": "model",
+    "id": "system-reminder-directory-sync-disabled-after-initial-checkout-failure",
+    "name": "System Reminder: Directory sync disabled after initial checkout failure",
+    "desc": "Reports that directory sync is disabled after the initial checkout failed, states that the cloud working directory lacks the user's files, and directs project work to the attached machine"
+  },
+  "a20f5de9788b92e6c5fa32bbef0ea36e569c362a": {
+    "facing": "model",
+    "id": "system-reminder-directory-sync-service-offline-this-turn",
+    "name": "System Reminder: Directory sync service offline this turn",
+    "desc": "Turn reminder that the cloud file service is not answering, so this turn runs on stale files and current work should go through the user's machine."
+  },
+  "a63dcb6ef1c474cac43e99477cf211951354e060": {
+    "facing": "model",
+    "id": "system-reminder-directory-sync-service-unreachable-no-user-files",
+    "name": "System Reminder: Directory sync service unreachable no user files",
+    "desc": "Turn reminder that the file service is not answering and user files may never have arrived, so current work should go through the user's machine."
+  },
+  "fe607d0ba9d192762816c5bdcb53afe2b3e721eb": {
+    "facing": "model",
+    "id": "system-reminder-directory-sync-user-files-now-in-place",
+    "name": "System Reminder: Directory sync user files now in place",
+    "desc": "Turn reminder that the user's files have arrived in the working directory and work can continue there as usual."
+  },
+  "d24acf3657693d162b8295d6ba876b0e83f378cd": {
+    "facing": "model",
+    "id": "system-reminder-directory-sync-upload-gone-quiet-before-start",
+    "name": "System Reminder: Directory sync upload gone quiet before start",
+    "desc": "Turn reminder that the user's machine announced files then went quiet, so this turn starts from session starting files."
+  },
+  "f15baec098846508d79e3da2dffc93d00fb09b2a": {
+    "facing": "model",
+    "id": "system-reminder-directory-sync-upload-abandoned-before-start",
+    "name": "System Reminder: Directory sync upload abandoned before start",
+    "desc": "Turn reminder that the user's machine gave up uploading before the turn began, so current files have not arrived yet."
+  },
+  "27aefe59d9d5a8d64931ef8e839400482a36d80e": {
+    "facing": "model",
+    "id": "system-reminder-directory-sync-turn-held-waiting-service",
+    "name": "System Reminder: Directory sync turn held waiting service",
+    "desc": "Turn reminder that the turn has been waiting over a minute for the file sync service to answer."
+  },
+  "a2d2e4676d03f1283e4c3651093e7b9be0595ec0": {
+    "facing": "model",
+    "id": "system-reminder-directory-sync-turn-held-waiting-upload",
+    "name": "System Reminder: Directory sync turn held waiting upload",
+    "desc": "Turn reminder that the turn has been waiting over a minute for the user's machine to finish uploading."
+  },
+  "3aaa933f1ccfb690ab269cf8e88e7836e35615db": {
+    "facing": "model",
+    "id": "system-reminder-directory-sync-checkout-cannot-snapshot",
+    "name": "System Reminder: Directory sync checkout cannot snapshot",
+    "desc": "Turn reminder that this turn's changes were not sent because the checkout cannot be snapshotted (merge/rebase/conflicts/unborn)."
+  },
+  "eb7ad5ff4284dd7a262349042a1afd539ec08812": {
+    "facing": "model",
+    "id": "system-reminder-directory-sync-working-directory-not-yet-user-files",
+    "name": "System Reminder: Directory sync working directory not yet user files",
+    "desc": "Turn reminder that the working directory does not yet hold the user's files and must not be used to create project files or commits."
+  },
+  "3a7f784a5e3a26cc99542d8180a03ca477d91e1f": { "facing": "internal" },
+  "e8d3fd04ad4c5e13776d6742eb3166608f119352": {
+    "facing": "model",
+    "id": "data-artifact-room-presence-treat-as-data",
+    "name": "Data: Artifact room presence treat as data",
+    "desc": "Disclaimer appended to artifact room presence rows so the model treats browser presence objects as data, not instructions."
+  },
+  "b58321c39596996903c4df6b1fec8957d666267b": { "facing": "internal" },
+  "8cdc023dcc30b13f69daad2bee8a29daef14864d": {
+    "facing": "model",
+    "id": "slash-command-config-expected-key-value",
+    "name": "Slash Command: Config expected key=value",
+    "desc": "Type:text result of /config when the argument is not key=value."
+  },
+  "7a4f2f487bda96a724029d3c6838e17156456b8a": { "facing": "internal" },
+  "8b0e9a2a1223eeebefd5667f00b3d010a0090385": { "facing": "ui" },
+  "597ce69062f611770ac81a32b2c3c5aff87e854b": {
+    "facing": "model",
+    "id": "tool-result-mcp-oauth-flow-failed",
+    "name": "Tool Result: MCP OAuth flow failed",
+    "desc": "Tool result when an MCP authenticate stub fails to start the OAuth flow, directing the user to /mcp."
+  },
+  "624f03b1c3f7432b7b8d9b379c1df756f2afcc30": { "facing": "ui" },
+  "f2cc3efde23e5a0b78c6e90d261d6fbdeca12ff0": { "facing": "ui" },
+  "7fb6099e58f04dc5fa6a8f35c588361f047c54d0": { "facing": "ui" },
+  "5844d8279d0f829ffcfa15014899bdb75eb1de3b": { "facing": "ui" },
+  "ab37624f1586c35a90c6d7dbd4caec01df783f54": { "facing": "ui" },
+  "3ea680374be9d01e4ee93eb5cbba78fc02e1c0c8": { "facing": "internal" },
+  "71db84db9413c7410896f568556feb43d44a922f": {
+    "facing": "model",
+    "id": "agent-prompt-artifact-editor-thread-follow-up",
+    "name": "Agent Prompt: Artifact editor thread follow-up",
+    "desc": "Delivers a tagged Artifact thread message to the active editor worker, requiring page-scoped edits and republishing for relevant requests and no changes for unrelated ones"
+  },
+  "e8076c272c72c174ac473f6baa5b77ee481f9573": {
+    "facing": "model",
+    "id": "slash-command-mcp-oauth-reconnect-failed-restart",
+    "name": "Slash Command: MCP OAuth reconnect failed restart",
+    "desc": "OnComplete message after MCP OAuth succeeded but reconnecting to the server failed, asking to restart Claude Code."
+  },
+  "477ddfba24879347d2d6b68a37527d54668db338": {
+    "facing": "model",
+    "id": "slash-command-mcp-oauth-reconnect-failed-restart-opaque",
+    "name": "Slash Command: MCP OAuth reconnect failed restart opaque",
+    "desc": "OnComplete message after MCP OAuth reconnect failed when detail is withheld on this connection."
+  },
+  "f87f0e7051ea736ef673dcc9d017a085c69d068f": {
+    "facing": "model",
+    "id": "tool-result-bash-final-response-wait-on-output-file",
+    "name": "Tool Result: Bash final response wait on output file",
+    "desc": "Bash tool result when a backgrounded command is still running at final-response time, telling the model to wait on the output file instead of polling."
+  },
+  "cc0bd3c123877b08ffb8ba60809c3a7d3e9b9250": {
+    "facing": "model",
+    "id": "data-review-upload-excluded-changes-error",
+    "name": "Data: Review upload excluded changes error",
+    "desc": "Error shown when a review upload has no new commits or uploadable changes because every uncommitted file was excluded from the git bundle"
+  },
+  "f16feba016556ebbc6309dae25f9ca7208819f96": {
+    "facing": "model",
+    "id": "slash-command-schedule-connectors-lockdown",
+    "name": "Slash Command: Schedule connectors lockdown",
+    "desc": "Schedule-prompt empty-list branch when managed MCP configuration disables loading of claude.ai connectors."
+  },
+  "2f9a58158cdb064abb48d73e49e47227a80a63cd": { "facing": "ui" },
+  "3cd204e2aa2921e0ec03f95d8c7c4b8be5666a0d": {
+    "facing": "model",
+    "id": "tool-result-mcp-session-expired-reconnect",
+    "name": "Tool Result: MCP session expired reconnect",
+    "desc": "Tool result when an MCP session expired during a call, instructing mcp_reconnect and retry."
+  },
+  "2af7c3b5604cc74642c0c507a941e68f6c86d630": { "facing": "internal" },
+  "0a53a1be6d419dc33ceb1e6b4940192588149544": { "facing": "internal" },
+  "9606b47c1d7b5844f7d55e36c8cd62f2114337cb": { "facing": "internal" },
+  "6cfa5aa9bb37138ff49a409d863d9eb147ee45be": {
+    "facing": "model",
+    "id": "tool-result-send-message-desktop-session-tool-unavailable",
+    "name": "Tool Result: Send message desktop session tool unavailable",
+    "desc": "SendMessage tool result when the target looks like a Claude Desktop session id but that messaging tool is not available."
+  },
+  "7b410eee4bc9be18b9d5e4a64e3d71def5e9d716": {
+    "facing": "model",
+    "id": "slash-command-schedule-connectors-none-still-connecting",
+    "name": "Slash Command: Schedule connectors none still connecting",
+    "desc": "Schedule-prompt empty-list branch when no connectors are connected but an unlisted claude.ai connector is still connecting or failed client-side."
+  },
+  "1a0bd5ec581d0a22c49955883efbb7bede775c9e": {
+    "facing": "model",
+    "id": "tool-result-send-message-desktop-hop-loop-paused",
+    "name": "Tool Result: Send message desktop hop loop paused",
+    "desc": "SendMessage tool result when desktop-session forwarding is paused as an automatic hop loop until the user types again."
+  },
+  "f3af81b291cbf50fbf7b6a9877380ee629c96991": { "facing": "ui" },
+  "5bcaa3a9d378a47ca1728dccd1c25e8519a2b210": {
+    "facing": "model",
+    "id": "slash-command-add-dir-null-character",
+    "name": "Slash Command: Add dir null character",
+    "desc": "Local-jsx /add-dir onDone message when the path contains a null character and cannot be used as a working directory."
+  },
+  "723792a818cdb0a50d540b8e73cd6b6555391b72": { "facing": "ui" },
+  "e0dc0d536596355ac6c788d037751ece960e784b": {
+    "facing": "model",
+    "id": "slash-command-model-switch-blocked-by-premodelswitch-hook",
+    "name": "Slash Command: /model — PreModelSwitch Hook Blocked The Switch",
+    "desc": "Reports that a PreModelSwitch hook blocked the requested model change, including the hook reason, as /model and /fast local-command-stdout."
+  },
+  "bf74f3337e3f207c75a7d24b8a27c9f4dc525be9": {
+    "facing": "model",
+    "id": "slash-command-model-availability-check-timed-out",
+    "name": "Slash Command: /model — Availability Check Timed Out",
+    "desc": "Tells the model the /model availability probe timed out, so the requested model was not applied and should be retried."
+  },
+  "58a6418e0689b65d458a46f9724306b075a77dcb": {
+    "facing": "model",
+    "id": "slash-command-usage-hipaa-transcript-scan-hidden",
+    "name": "Slash Command: /usage — HIPAA Transcript Scan Hidden",
+    "desc": "HIPAA denial reason interpolated into /usage stdout when usage-pattern transcript scanning is org-denied, explaining why the breakdown is omitted."
+  },
+  "295fd4c407982ed195f121f441084ed172b124c8": {
+    "facing": "model",
+    "id": "slash-command-skill-doctor-hipaa-transcript-scan-hidden",
+    "name": "Slash Command: /skill-doctor — HIPAA Token Scan Hidden",
+    "desc": "HIPAA denial reason shown as the 7d-tokens legend in /skill-doctor stdout when skill-token transcript scanning is org-denied."
+  },
+  "623f34b7ae1cbe7b291eebae3c2466f59f8a3ea8": {
+    "facing": "model",
+    "id": "slash-command-skill-doctor-unavailable-on-connection",
+    "name": "Slash Command: /skill-doctor — Unavailable On This Connection",
+    "desc": "Tells the model skill-usage reports cannot be produced on this connection (remote/thin), so /skill-doctor has no scan to interpret."
+  },
+  "d96e9ee07439e048ef5230be024f98eb03efa454": {
+    "facing": "model",
+    "id": "slash-command-fast-mode-stale-after-premodelswitch-hooks",
+    "name": "Slash Command: /fast — Stale After PreModelSwitch Hooks",
+    "desc": "Tells the model fast mode was not applied because the session model changed while PreModelSwitch hooks ran."
+  },
+  "78d53cf3fdeb897a5a568c008fb0feb727c67c10": {
+    "facing": "model",
+    "id": "slash-command-fast-mode-workspace-refused",
+    "name": "Slash Command: /fast — Workspace Refused The Change",
+    "desc": "Tells the model the workspace rejected applying fast mode, including the sanitized refusal reason."
+  },
+  "d2c8a55d61b469e4a8eb0017fd2573bb84e45c8d": {
+    "facing": "model",
+    "id": "slash-command-mcp-disabled-in-another-session",
+    "name": "MCP Server Disabled In Another Session",
+    "desc": "Returned by /mcp reconnect/enable when the named server was disabled in another session, so this session must disable and re-enable (or restart) to reconnect."
+  },
+  "fb28ad829543b9d5e2b1e4d2af7179a402426062": {
+    "facing": "model",
+    "id": "slash-command-mcp-disable-did-not-persist",
+    "name": "Slash Command: /mcp — Disable Did Not Persist",
+    "desc": "Sanitized /mcp disable result when another session re-enabled the server so this disable did not stick; the next launch will reconnect it."
+  },
+  "51cf2e61281cc72bba5789a2a8fa53e3001a5893": {
+    "facing": "model",
+    "id": "slash-command-mcp-unrecognized-action",
+    "name": "Slash Command: /mcp — Unrecognized Action",
+    "desc": "Tells the model the /mcp subcommand is not reconnect, enable, or disable, so no MCP control ran."
+  },
+  "a68c181e61e6f972bb0d9cae55050a7cbf3714a1": {
+    "facing": "model",
+    "id": "slash-command-mcp-named-server-not-configured",
+    "name": "Slash Command: /mcp — Named Server Not Configured",
+    "desc": "Tells the model there is no configured MCP server with that name, so reconnect/enable/disable cannot be targeted."
+  },
+  "ddc3dea7d3cc317fe502f91c90751c0c9e32461c": {
+    "facing": "model",
+    "id": "slash-command-mcp-disabled-enable-suffix",
+    "name": "Slash Command: /mcp — Disabled, Enable To Bring Back",
+    "desc": "Suffix concatenated onto the reconnect-disabled result telling the model to run /mcp enable for that server."
+  },
+  "9c2fbf414281516d132b46a2c0d9b010c5cbcdaf": {
+    "facing": "model",
+    "id": "slash-command-mcp-already-reconnecting",
+    "name": "Slash Command: /mcp — Already Reconnecting",
+    "desc": "Tells the model the named server is already in pending reconnect, so another reconnect is a no-op while retries continue."
+  },
+  "619d5ed94b737c2fda345fa53689fbaade65c6b2": {
+    "facing": "model",
+    "id": "slash-command-mcp-reconnect-pending-approval",
+    "name": "Slash Command: /mcp — Reconnect Blocked Pending Approval",
+    "desc": "Tells the model the server cannot be reconnected until the user approves it in the terminal /mcp panel."
+  },
+  "7271effc8bb483e88e07691355325a7ea6d254fc": {
+    "facing": "model",
+    "id": "slash-command-mcp-already-enabled-not-connected",
+    "name": "Slash Command: /mcp — Already Enabled But Not Connected",
+    "desc": "Tells the model the named server is already enabled yet still disconnected, so enable was a no-op."
+  },
+  "51ae5e29a2c203f4abdf358efd8cc64d9aaba134": {
+    "facing": "model",
+    "id": "slash-command-mcp-disable-failed",
+    "name": "MCP disable failed",
+    "desc": "/mcp disable failure when the server may have been removed or its config could not be read; returned as local-command-stdout."
+  },
+  "d999924cc190f0f1fdd1dedfb3ac84e3613155d6": {
+    "facing": "model",
+    "id": "slash-command-mcp-action-failed",
+    "name": "MCP Action Failed Result",
+    "desc": "Generic /mcp enable/disable/reconnect failure naming the action, server, and underlying error, returned as local-command-stdout."
+  },
+  "78bc6e6637e285748bf9d7952f9aae35d602aae5": {
+    "facing": "model",
+    "id": "slash-command-config-fast-mode-stale-after-hooks",
+    "name": "Slash Command: /config — Fast Mode Stale After Hooks",
+    "desc": "Error surfaced through /config key=value when enabling fast mode failed because the model changed while PreModelSwitch hooks ran."
+  },
+  "869be1f80f7b67bf12ed60972cd43c7802cdc58a": {
+    "facing": "model",
+    "id": "slash-command-config-boolean-takes-true-or-false",
+    "name": "Slash Command: /config — Boolean Expects True Or False",
+    "desc": "Refusal from /config key=value when a boolean setting was given a value other than true/false (or 1/0/on/off/yes/no)."
+  },
+  "09b9fda920377eed78f080ff5645e1c99d9e84a4": {
+    "facing": "model",
+    "id": "slash-command-config-save-failure-withheld-on-connection",
+    "name": "Slash Command: /config — Save Failure Withheld On Connection",
+    "desc": "Opaque /config save-failure stdout on this connection, replacing the underlying save error so the model knows the setting was not written."
+  },
+  "10127c3cee995423503c21bf681545626797d98d": { "facing": "internal" },
+  "337142df3c9051caa36e9cb0612eba807b56c3d1": { "facing": "internal" },
+  "f0b9f0d5e8940c5447d217c124a6cef5494d1697": {
+    "facing": "model",
+    "id": "tool-result-swarm-permission-tool-call-not-described",
+    "name": "Tool Result: Swarm Permission Tool Call Not Described",
+    "desc": "Permission-ask message used when a swarm leader verdict does not describe this tool call; on refuse it becomes the tool_result the model reads."
+  },
+  "942704a2af0e22e17e0c23ce5fc48d034971642f": { "facing": "internal" },
+  "e137c423754c83d9f3de4d286b980c4607d7d2a6": {
+    "facing": "model",
+    "id": "slash-command-failed-detail-withheld-on-connection",
+    "name": "Slash Command Failed — Detail Withheld On Connection",
+    "desc": "Opaque local-command-stderr when a slash command throws on this connection, so the model sees the failure without the underlying exception."
+  },
+  "d3a48eff454b5e9b4e3b1b1a8ae9fb56b9fc3724": {
+    "facing": "model",
+    "id": "data-slash-command-unavailable-headless",
+    "name": "Slash command unavailable stdout",
+    "desc": "local-command-stdout injected when a slash command is unavailable in a non-interactive/headless session."
+  },
+  "9a0c5500c7306b9c0cf0525064e641da07b82d22": {
+    "facing": "model",
+    "id": "tool-result-coordinator-mcp-prompt-not-invocable",
+    "name": "Coordinator MCP prompt not invocable",
+    "desc": "Meta message injected into the coordinator conversation when it tries to run an MCP prompt that cannot run in coordinator mode."
+  },
+  "0598974d32efd9bcf1cf30971585329dfb722cfc": {
+    "facing": "model",
+    "id": "tool-result-coordinator-skill-user-invocable-only",
+    "name": "Coordinator Skill User-Invocable-Only",
+    "desc": "Meta message injected when a coordinator tries to run a user-invocable-only skill that workers cannot invoke via the Skill tool."
+  },
+  "18c04ebf9266f547fbd5b1b21ab1db75edddaa29": {
+    "facing": "model",
+    "id": "tool-result-coordinator-subcommands-route-note",
+    "name": "Coordinator subcommands still route note",
+    "desc": "Meta note in the coordinator command-block message explaining that listed subcommands still route to their own dedicated commands when typed in the terminal."
+  },
+  "3a6a0c8d7dc15f04dddc1b1e265f7328b83a4ab2": {
+    "facing": "model",
+    "id": "system-reminder-skill-available-for-workers",
+    "name": "Skill available for workers note",
+    "desc": "Header of the skill-availability block injected into the coordinator's context describing a skill workers may invoke."
+  },
+  "288c0a8844d229fad6ed353824d792210b53761d": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-saved-viewed-once-clause",
+    "name": "Artifact Html Saved Viewed-Once Clause",
+    "desc": "Clause on the full-HTML-saved artifact-read path stating the version counts as viewed only after every line of that file has been Read."
+  },
+  "7b9183a09f6e2c82bd414a565617fdf22d5d4ae3": { "facing": "internal" },
+  "68efcbdd75cd7e1bf587615ad7675f30151d890e": { "facing": "internal" },
+  "7d2ac572cd6846aaccfcc184f664cc08e89a6594": { "facing": "internal" },
+  "27c8c1bcf76ad8ebf27cbf0598d38d21fd4d88b1": { "facing": "internal" },
+  "e869b7288e45996d9fcef5c2522f97f28ccfbf1c": { "facing": "internal" },
+  "8aae5103627105439c9f02f2cb9d41aa11a1f235": { "facing": "internal" },
+  "1a24ee722659dc91523ee8eea2e12882007e162e": { "facing": "internal" },
+  "b6a0ad54551270e7a821978256c77f370d1e645a": { "facing": "internal" },
+  "b1634c91b62757a06a145336710f603d01960d6f": { "facing": "internal" },
+  "1b7af3203c4996fde2dcca2265dbd4d525894d54": { "facing": "internal" },
+  "828c8ba54904fe1e67e142b6f2d1f7e0573ee75b": { "facing": "internal" },
+  "c15d49ba97673ab19ed7f094407fbed4e137cc23": { "facing": "internal" },
+  "c27e40694707a54f5fa2265cb9ddc5a2fbd9700f": { "facing": "internal" },
+  "30e33981d69f761fcdb266dd17420f21744e308a": { "facing": "internal" },
+  "1021a5d8350c1b77abf045132fa90018ebb50582": { "facing": "internal" },
+  "d2accd2422f5bcc37859d5c23b010af2d605a319": { "facing": "internal" },
+  "80353a356adc71e32ac9214805460773735059b6": { "facing": "ui" },
+  "f29b23c6724f987cae2dfcc7c5a906ae8206605c": { "facing": "ui" },
+  "766190011720374e4509d212b837dfb88fe752f3": { "facing": "ui" },
+  "ff6f48d1bb1bb42197aa0d24966b9e47a03d82bd": { "facing": "ui" },
+  "586e6b7b66d4f4c52bfe0920e7b769ac9d334e42": { "facing": "ui" },
+  "18e4c33bf511493f6fc399fde4aafc7eac1f382c": { "facing": "ui" },
+  "c584d4f7bd105bfacd669962517ade70abfc8e61": { "facing": "ui" },
+  "269c109cbe46b5c2d20575ce79409006402b1eb7": { "facing": "ui" },
+  "5a6eedf499419d4f17034b78d675d1d618219879": { "facing": "ui" },
+  "3a1dde9d5e7349393ef8a881f53b233d4b595faf": { "facing": "ui" },
+  "5f4f3820e100039eb9c7845585a6b9a7c0b43ab7": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-file-sync-offline-user-continued",
+    "name": "System Reminder: Dir Sync File Sync Offline, User Continued",
+    "desc": "Halt line published to the cloud journal when the user continues without file sync; interpolated into the worker's Directory-sync-has-STOPPED notice as what the user's machine reported."
+  },
+  "3749d83a1ae1aac2b4d316919f45103f85fa301f": { "facing": "ui" },
+  "03860dfb1df1337bb60c703458119552c617585e": { "facing": "ui" },
+  "8d4cb3960e020ce2c7634f2123912d7925603654": { "facing": "ui" },
+  "c52691b3e8b6bd8c311c1560ac6433fe4aa25a83": {
+    "facing": "model",
+    "id": "data-command-modified-read-files-reminder",
+    "name": "Command Modified Read Files Reminder",
+    "desc": "Reminder injected after a command edits files the model had already read, telling it to re-read them before editing."
+  },
+  "5ee144da327e42e7547d995d6331d1940df50a07": {
+    "facing": "model",
+    "id": "slash-command-mcp-auth-cleared",
+    "name": "MCP Auth Cleared",
+    "desc": "Reply confirming that stored authentication for an MCP server was cleared."
+  },
+  "d42288507f240396f9cd0c5bcd1859c8fa5f685e": {
+    "facing": "model",
+    "id": "slash-command-mcp-reconnect-success",
+    "name": "MCP Reconnect Success",
+    "desc": "Reply confirming an MCP server reconnected."
+  },
+  "e1a284c18c3dbaa0e4ac3d7e0107ceb2ae47f9ec": {
+    "facing": "model",
+    "id": "slash-command-mcp-toggle-pending-approval",
+    "name": "MCP Toggle Pending Approval",
+    "desc": "Reply refusing an MCP enable/disable because the server still needs approval."
+  },
+  "5f835cea4407423ab3af86f818bf01fff6db9e1f": {
+    "facing": "model",
+    "id": "system-reminder-artifact-editor-follow-up-withdrawn",
+    "name": "System Reminder: Artifact editor follow-up withdrawn",
+    "desc": "Reason clause explaining that a queued artifact-editor follow-up was withdrawn before the worker read it."
+  },
+  "2fc1328a5b3a43ce150730e90ac6e8d32c6511c1": {
+    "facing": "model",
+    "id": "system-reminder-artifact-editor-follow-up-stopped",
+    "name": "System Reminder: Artifact editor follow-up worker stopped",
+    "desc": "Reason clause: the artifact-editor worker stopped before reading the follow-up."
   }
 }

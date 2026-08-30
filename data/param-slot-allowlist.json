@@ -179,5 +179,35 @@
     "verdict": "catalogue",
     "id": "tool-result-remote-tool-unverified-refusal-reason-unknown-call",
     "why": "qs(e) call-site argument; BD[a.code] is consumed by jD() as the refused tool_result. The parent qs() template is catalogued; the reason clause is the only distinguishing content and tells the model whether a retry can help. Landed via a classification-cache model verdict (key probed with TWEAKCC_DUMP_CANDIDATES)."
+  },
+  "26d252cd778a9c61": {
+    "builder": "ga",
+    "param": "r",
+    "note": "REVIEW ME - replace with the verdict (catalogue|glue|not-a-slot) and its reason",
+    "text": "it stopped before reading it",
+    "verdict": "catalogue",
+    "id": "system-reminder-artifact-editor-follow-up-stopped",
+    "name": "System Reminder: Artifact editor follow-up worker stopped",
+    "desc": "Reason clause: the artifact-editor worker stopped before reading the follow-up. Cache verdict recorded so the extractor captures it."
+  },
+  "64ac6391f7b6e61b": {
+    "builder": "ga",
+    "param": "r",
+    "note": "REVIEW ME - replace with the verdict (catalogue|glue|not-a-slot) and its reason",
+    "text": "it was withdrawn before the worker read it",
+    "verdict": "catalogue",
+    "id": "system-reminder-artifact-editor-follow-up-withdrawn",
+    "name": "System Reminder: Artifact editor follow-up withdrawn",
+    "desc": "Reason clause explaining that a queued artifact-editor follow-up was withdrawn before the worker read it. Cache verdict recorded so the extractor captures it."
+  },
+  "a10cd96bc96a1f81": {
+    "builder": "Ml",
+    "param": "r",
+    "note": "REVIEW ME - replace with the verdict (catalogue|glue|not-a-slot) and its reason",
+    "text": "${} read that follow-up but ${} before finishing. Do not wait for its result \u2014 if the page still needs that change, dispatch a new worker or answer directly.",
+    "verdict": "catalogue",
+    "id": "system-reminder-artifact-editor-follow-up-failed-or-stopped",
+    "name": "Artifact Editor Follow-Up Failed Or Stopped",
+    "desc": "Tells the model an artifact-editor worker read a follow-up but failed or stopped, and to dispatch a new worker or answer directly instead of waiting. Named by the classify phase; cache verdict already recorded."
   }
 }

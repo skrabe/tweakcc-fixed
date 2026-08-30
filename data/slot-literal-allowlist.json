@@ -1183,5 +1183,90 @@
     "text": "a detached HEAD",
     "verdict": "glue",
     "why": "Null-branch of `e.to===null?\"a detached HEAD\":`branch ${qe(e.to)}`` in qa(); names the git ref substituted into `This checkout is back on the user's ${n}`. Noun phrase, no instruction."
+  },
+  "3ae64ac56e2a2a97": {
+    "promptId": "system-prompt-project-timeline-user-message-provenance",
+    "label": "VERIFIED_PROJECT_OWNER_MESSAGE_MARKER",
+    "text": "[Verified message from this session's user written",
+    "verdict": "catalogue",
+    "id": "system-prompt-project-timeline-verified-owner-message-marker",
+    "name": "Project Timeline: Verified Owner Message Marker",
+    "desc": "Marker prefix identifying a project-timeline row as a verified message from this session's user."
+  },
+  "35ef5a070cef5131": {
+    "promptId": "workflow-script-deep-research",
+    "label": "WORKFLOW_DESCRIPTION",
+    "text": "Deep research harness \u2014 fan-out web searches, fetch sources, adversarially verify claims, synthesize a cited report.",
+    "verdict": "catalogue",
+    "id": "data-workflow-deep-research-description",
+    "name": "Workflow: Deep Research Description",
+    "desc": "One-line description of the bundled deep-research workflow, shown to the model when it chooses a saved workflow."
+  },
+  "971ff1fb6261429a": {
+    "promptId": "tool-result-artifact-thumbnail-unnamed",
+    "label": "TOOL_RESULT_ARTIFACT_THUMBNAIL_UNNAMED_VAR_2",
+    "text": "the automatic screenshot is used instead",
+    "verdict": "catalogue",
+    "id": "tool-result-artifact-thumbnail-automatic-screenshot-used",
+    "name": "Artifact Thumbnail: Automatic Screenshot Used",
+    "desc": "Clause telling the model the automatic screenshot was used instead of a named thumbnail."
+  },
+  "586276a1f38a4bba": {
+    "promptId": "agent-prompt-eval-authoring-interview",
+    "label": "AGENT_PROMPT_EVAL_AUTHORING_INTERVIEW_VAR_4",
+    "text": "TODO: replace with the canned result this tool should return",
+    "verdict": "catalogue",
+    "id": "agent-prompt-eval-authoring-canned-tool-result-placeholder",
+    "name": "Eval Authoring: Canned Tool-Result Placeholder",
+    "desc": "Placeholder line instructing the model to replace it with the canned result the mocked tool should return."
+  },
+  "5ce5fc8c191581cd": {
+    "promptId": "system-reminder-directory-sync-checkout-cannot-snapshot",
+    "label": "SYSTEM_REMINDER_DIRECTORY_SYNC_CHECKOUT_CANNOT_SNAPSHOT_VAR_0",
+    "text": "it holds unresolved merge conflicts",
+    "verdict": "catalogue",
+    "id": "system-reminder-dir-sync-checkout-unready-unmerged",
+    "name": "Dir Sync Checkout Unready: Unresolved Merge Conflicts",
+    "desc": "Reason clause telling the model the checkout could not be snapshotted because it holds unresolved merge conflicts."
+  },
+  "811cbbc42b219a1a": {
+    "promptId": "system-reminder-directory-sync-checkout-cannot-snapshot",
+    "label": "SYSTEM_REMINDER_DIRECTORY_SYNC_CHECKOUT_CANNOT_SNAPSHOT_VAR_0",
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": "its branch has no commit yet",
+    "verdict": "catalogue",
+    "id": "system-reminder-directory-sync-checkout-unready-unborn-branch",
+    "name": "Directory Sync: Checkout Unready \u2014 Unborn Branch",
+    "desc": "Reason clause telling the model the checkout could not be snapshotted because its branch has no commit yet."
+  },
+  "18b6b57f5aaf3dde": {
+    "promptId": "system-reminder-directory-sync-checkout-cannot-snapshot",
+    "label": "SYSTEM_REMINDER_DIRECTORY_SYNC_CHECKOUT_CANNOT_SNAPSHOT_VAR_0",
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": "git could not read it just now",
+    "verdict": "catalogue",
+    "id": "system-reminder-directory-sync-checkout-unready-git-unreadable",
+    "name": "Directory Sync: Checkout Unready \u2014 Git Unreadable",
+    "desc": "Reason clause telling the model the checkout could not be snapshotted because git could not read it."
+  },
+  "cc49357f96d7d006": {
+    "promptId": "system-reminder-directory-sync-disabled-after-initial-checkout-failure",
+    "label": "SYNC_DISABLE_REASON",
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": "the user's first upload was sent in a form this build cannot read",
+    "verdict": "catalogue",
+    "id": "system-reminder-directory-sync-disabled-first-object-unreadable",
+    "name": "Directory Sync Disabled: First Upload Unreadable",
+    "desc": "Reason clause telling the model sync was disabled because the user's first upload arrived in a form this build cannot read."
+  },
+  "77113e974dd6b586": {
+    "promptId": "system-reminder-directory-sync-disabled-after-initial-checkout-failure",
+    "label": "SYNC_DISABLE_REASON",
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": "this environment was recreated empty and the user's machine only sends changes on top of what the earlier one had",
+    "verdict": "catalogue",
+    "id": "system-reminder-directory-sync-disabled-container-recreated",
+    "name": "Directory Sync Disabled: Container Recreated",
+    "desc": "Reason clause telling the model sync was disabled because the environment was recreated empty while the user only sends incremental changes."
   }
 }

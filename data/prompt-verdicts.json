@@ -29,6 +29,11 @@
     "version": "2.1.228",
     "why": "The role uniquely combines response decisions, reply composition, and optional artifact edits, then fixes the output to a decision JSON object. The analyst and reply-writer siblings have different responsibilities and output shapes."
   },
+  "agent-prompt-artifact-editor-thread-follow-up": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional editor-thread worker prompt. Unique mechanics and security/ordering contracts; frozen restrictive/ordering/tool text cannot be rewritten. Nothing unique is duplicated."
+  },
   "agent-prompt-artifact-read-default-summarizer": {
     "verdict": "pristine-keep",
     "version": "2.1.239",
@@ -163,6 +168,11 @@
     "version": "2.1.221",
     "why": "Read in full: \"For times without dates, use today's date.\" \u2014 42 chars, zero slop. Binary check places it in the same 8-line utility-parser prompt as the id above. Corpus scan for \"today's date\" returns only this id plus unrelated schedule/date-changed prompts. Its mirror system-prompt-nl-datetime-parser-date-only-rule ('For dates without times, do not include a time component.') is deployed pristi"
   },
+  "agent-prompt-eval-authoring-canned-tool-result-placeholder": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Six words of placeholder instruction inside the eval-authoring interview template. No slop, no sibling carries it; trimming it would delete the instruction."
+  },
   "agent-prompt-eval-authoring-interview-eval-dir-note": {
     "verdict": "pristine-keep",
     "version": "2.1.235",
@@ -219,6 +229,21 @@
     "verdict": "pristine-keep",
     "version": "2.1.234",
     "why": "Output-shape contract plus the only copy of the text-focus grader body. Frozen \u2014 'exactly one word' is a restrictive quantifier plus a count, and PASS/FAIL is an enum."
+  },
+  "agent-prompt-eval-mock-stand-in-author-description-follows": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique sequencing glue for the mock stand-in. Conditional; the sentence is the only copy of that handoff."
+  },
+  "agent-prompt-eval-mock-stand-in-error-format": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional eval-mock format the model cannot infer. Wipe would leave the stand-in without an ordinary-error encoding. Keep verbatim."
+  },
+  "agent-prompt-eval-mock-stand-in-never-abort": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Eval-mock stand-in mechanic: unique runtime cap on the ABORT: line when abort_when is empty. Conditional; verbatim-or-delete frozen Never."
   },
   "agent-prompt-explore-2": {
     "injectionPath": "Agent/tool-schema description for the built-in Explore agent when the standard, non-lean whenToUse variant is selected.",
@@ -364,6 +389,11 @@
     "version": "2.1.226",
     "why": "This concise routing description identifies the architect agent's trigger and expected product: an implementation strategy with steps, critical files, and architectural trade-offs. The architect's own prompt describes how to perform the work only after selection; it cannot replace the parent-facing selection signal. No slop or same-surface duplicate remains."
   },
+  "agent-prompt-plugin-eval-mcp-stop-conditions": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique eval-mock stop protocol: emit one line starting the interpolated STOP sentinel iff an author-listed condition matches. Conditional MCP eval surface; wiping would drop the only STOP formatter. Frozen verbatim."
+  },
   "agent-prompt-pr-follow-up-cron": {
     "injectionPath": "Stored scheduled-task prompt when the follow-up cron for a PR created in the session fires.",
     "verdict": "pristine-keep",
@@ -386,6 +416,11 @@
     "version": "2.1.231",
     "why": "Stage-3 refutation applied: The trim leaves interpolation glue but deletes unique state injection and shell-specific execution mechanics. Restore the context block and the complete IS_BASH_ENV_FN HEREDOC/here-string branch verbatim; then reassess the remaining deletions against exact per-set carriers. Restored to current pristine in all four maintained sets."
   },
+  "agent-prompt-remote-machine-auto-mode-rules": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional remote-auto-mode fragment. Unique instruction-injection and per-class application contract; every load-bearing sentence is frozen (ANY, ALLOW, each). Existence is the default."
+  },
   "agent-prompt-rename-auto-generate-session-name": {
     "verdict": "trim",
     "version": "2.1.228",
@@ -396,6 +431,11 @@
     "verdict": "wipe-merge",
     "version": "2.1.226",
     "why": "Its sole claim is an always-on user CTA to paste a report URL back into Claude Code. The general artifact result already explains URL-based continuation across conversations, so this footer adds spam rather than mechanics or unique behavior."
+  },
+  "agent-prompt-schedule-local-mcp-server-limitation": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Agent-facing composed limitation with the skip-reason matrix (lockdown/restricted/optout/safe-mode/missing-scope), ENABLE_CLAUDEAI_MCP_SERVERS, and https://claude.ai/customize/connectors. Different surface from the slash-command notes; unique interpolations. Keep verbatim."
   },
   "agent-prompt-security-monitor-for-autonomous-agent-actions-second-part": {
     "injectionPath": "Second portion of the Auto mode autonomous-action security monitor's system prompt, injected only when that classifier evaluates an action.",
@@ -696,6 +736,11 @@
     "version": "2.1.226",
     "why": "It uniquely distinguishes partial failure: guidance is missing but type definitions exist at a dynamic extracted path. Reading that file before declaring capability is a hard evidence rule supported by the Opus 5 card\u2019s warning against recalled API behavior. No sibling states this path or partial-success state."
   },
+  "data-artifact-capability-roster-available-with-builtins": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Different arm of the artifact-capabilities skill. Unique contract: builtins are called without declaring and must not appear in `capabilities`. Conditional reference; keep verbatim."
+  },
   "data-artifact-capability-roster-unfetched": {
     "injectionPath": "Conditional note appended to the artifact runtime-capabilities skill when the contract capability roster cannot be fetched.",
     "verdict": "pristine-keep",
@@ -721,6 +766,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.232",
     "why": "Wiping it leaves the notification reading 'the summary reply was withheld: .' with no reason, and drops the cross-user authority boundary that explains why the model must not follow another user's summon. Unique branch content."
+  },
+  "data-artifact-comment-sent-to-claude-by-someone-else": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditionally interpolated comments-dump note. Unique label semantics and leave-unless-asked rule. Leading '. ' is concatenation glue, not slop."
   },
   "data-artifact-comments-auto-classifier-input": {
     "verdict": "pristine-keep",
@@ -982,6 +1032,11 @@
     "version": "2.1.246",
     "why": "Conditional classifier fragment. Unique interpolations plus frozen cap 8 and 'file'. Nothing else names the files a publish would remove. Feature disuse is not a wipe."
   },
+  "data-artifact-publish-room-join-auto-classifier-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional auto-classifier input. Unique security contract: approving room joins this session so org page events can start turns without the user present, until room stop, leaving auto mode, or session end. Wiping would drop the only classifier copy."
+  },
   "data-artifact-read-asset-auto-classifier-input": {
     "verdict": "pristine-keep",
     "version": "2.1.234",
@@ -1046,6 +1101,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.234",
     "why": "Security contract at a distinct site; the 'whose watch was stopped earlier in this session' clause is the unique risk signal (resuming reverses a user stop). Frozen \u2014 an ordering word ('earlier'), a two-item enumeration of what the watch delivers, and an interpolated identifier."
+  },
+  "data-artifact-room-presence-treat-as-data": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique security contract for presence rows. Frozen (Each). Conditional data disclaimer; existence is the default."
   },
   "data-artifact-room-send-auto-classifier-input": {
     "verdict": "pristine-keep",
@@ -1657,6 +1717,11 @@
     "version": "2.1.226",
     "why": "The shared organization identity, thread/session mapping, configuration snapshot, plan availability, migration distinction, setup commands, owner controls, and documentation URLs are unique and stay. The four Answering style bullets only restate claims already made in the retained body or the deployed Claude Code docs guide: use fresh docs, owner-managed configuration applies to new threads, setup starts through /install-slack-app plus an owner, and old \u201cClaude in Slack\u201d terminology must be distinguished from Claude Tag."
   },
+  "data-cloud-environment-failed-to-start": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique interpolated error tag. Frozen error text; cannot rewrite."
+  },
   "data-cloud-session-hook-not-run-reason-in-reach": {
     "verdict": "pristine-keep",
     "version": "2.1.246",
@@ -1799,6 +1864,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.246",
     "why": "Conditional dir_sync_notice fragment naming how many deleted files were already trashed. Unique residue; siblings are other residue kinds. Frozen: file(s), session trash."
+  },
+  "data-dir-sync-file-sync-stopped-marker": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditionally written leftover-dir file. Unique mechanics: git history included, moved to session trash beside this directory \u2014 not deleted. Overlap with the stopped-sync reminder is a different surface. Frozen sentence cannot be rewritten."
   },
   "data-dir-sync-head-move-unconfirmed": {
     "verdict": "pristine-keep",
@@ -2230,6 +2300,11 @@
     "version": "2.1.226",
     "why": "The official documentation URLs, topic routing, extraction targets, managed-agents URLs, Anthropic CLI sources, SDK-repository URLs, exact repository search symbols, and network-failure fallback are unique and load-bearing. The opening explanation and four-item WebFetch trigger list duplicate the deployed `/claude-api` skill. The first SDK-repository instruction likewise duplicates that skill's explicit source-selection rule. Opus 5 still needs the surviving fallback because unverified-claim confidence is a measured regression. [stage-3 refutation applied: The justification says the entire four-item trigger list is duplicated, but the deployed sibling does not contain the specific-details/examples trigger. \u2014 the cut was reverted to pristine in opus-5, opus-4-8, fable-5, opus-4-7]"
   },
+  "data-local-command-failed-detail-withheld": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional tool-result/stderr for this emission site. Similar siblings do not cover this wrapper."
+  },
   "data-local-command-wrapper": {
     "injectionPath": "User-turn content generated when a local slash command is sent into the model conversation.",
     "verdict": "pristine-keep",
@@ -2354,6 +2429,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.224",
     "why": "Body in full: '... ${N-M} more memories not listed (showing the ${M} most recently modified).' Check 1 \u2014 no prose to cut: no CAPS, no exhortation, no CTA, no hedging, nothing restated. It is a rendered status line carrying two counts and the selection rule (most-recently-modified), neither of which the model can infer from an index that looks complete. Frozen on three counts (numbers, 'most recently modified' ordering, restrictive 'more/not listed'). Check 2 \u2014 corpus scan of every index/truncation sibling turns up a different failure: system-prompt-memory-index-truncation / -always-loaded / -t"
+  },
+  "data-memory-read-result-stale": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Per-path tool-result note: a prior memory_read is outdated; the fresh read is the only source. Unique mechanics; conditional on a stale memory_updates slot."
   },
   "data-memory-sync-content-too-large": {
     "injectionPath": "Conditional synced-memory failure reason: stored in the permanent-reason map, embedded in pause notices after repeated backend failures, and delivered as PostToolUse additionalContext on synced-memory Read/Edit/Write access.",
@@ -2731,6 +2811,11 @@
     "verdict": "trim",
     "version": "2.1.226",
     "why": "The opening stale-knowledge, live-command-authority, bundled-reference, and documentation-fetch instructions duplicate the Claude Code configuration skill. The removal/rename tables and every concrete correction about aliases, keybindings, permission modes, environment scrubbing, provider availability, and --bg are unique current mechanics and stay."
+  },
+  "data-review-upload-excluded-changes-error": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique review-upload empty-bundle error: leftover files are credentials/keys, Read-rule, hard-link, LFS, or still-being-written; stage/commit other work first. Frozen enumeration must stay verbatim."
   },
   "data-sandbox-install-ambient-write-deny-failed": {
     "verdict": "pristine-keep",
@@ -3681,6 +3766,11 @@
     "version": "2.1.232",
     "why": "A path-scoped anti-injection gate delivered at the payload site with the real directory bound in, plus the closing bracket of the parsed sentinel block. Both are load-bearing."
   },
+  "data-workflow-deep-research-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "One-line description of the bundled deep-research workflow, read when the model picks a saved workflow. Names the harness's four stages in a single sentence; nothing to cut."
+  },
   "data-workshop-artifact-html-template": {
     "injectionPath": "cli.js var Mda (~offset 11,425,452), exported as WORKSHOP_TEMPLATE and as SKILL_FILES[\"templates/artifact-workshop.html\"] of the bundled `workshop` skill. It is a file materialised on disk, not context-injected: it reach",
     "verdict": "pristine-keep",
@@ -4526,6 +4616,11 @@
     "version": "2.1.228",
     "why": "Proposed wipe-merge, reverted to pristine. verification rule was mis-specified (ccVersion is when a prompt last CHANGED, not a freshness stamp; no cited carrier moved in 2.1.228), so this cut is UNVERIFIED rather than refuted \u2014 held at pristine"
   },
+  "skill-loop-fixed-interval-cron-table": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional /loop skill fragment; unique cron mechanics and rounding disclosure. Feature disuse is not a wipe. Keep the frozen table and rounding sentence."
+  },
   "skill-mcp-directory-read-hint": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
@@ -4545,6 +4640,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique skill-loading trigger; frozen (before, type:). Conditional skill cost is zero when unused."
+  },
+  "skill-multiplayer-whiteboard-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique live-multiplayer mechanics (sync strokes, cursors, session presence, live draw, Send). Shared CREATING rule must stay here because the other skill is not on this path."
   },
   "skill-plan-artifact": {
     "injectionPath": "cli-2.1.224.js \u2014 registered by $sh() as Ou({name:'plan-artifact', isEnabled:bBt, \u2026}) and `function bBt(){return!1}`. Hard-disabled in 2.1.224: filtered out of the model's skills listing (Ttt/x3o) and not invocable, so th",
@@ -4638,6 +4738,16 @@
     "version": "2.1.228",
     "why": "This is executable helper code, not redundant behavioral coaching: the sibling whiteboard skill tells the model to invoke it but does not supply its title sanitization, state validation, authorship enforcement, collision placement, send-marker normalization, or safe serialization mechanics. The comments document non-obvious security and compatibility invariants without exhortation, duplicated exam"
   },
+  "skill-workflow-authoring-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Skill-listing description is the only place that says loading the authoring reference does not authorize running a workflow. Conditional skill metadata; unique contract."
+  },
+  "skill-workflow-authoring-reference": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Trimmed 29.4%, then reverted: the cut took the pipeline()/parallel()/args/budget/workflow() signatures, the PURE-LITERAL meta rule and the plain-JavaScript-not-TypeScript constraint. A scripting reference's signatures and constraints are the instruction, not padding."
+  },
   "skill-workshop-description": {
     "verdict": "pristine-keep",
     "version": "2.1.228",
@@ -4693,10 +4803,20 @@
     "version": "2.1.233",
     "why": "Tells the model the path resolved to a file rather than a directory and names the parent directory as the recovery target. One line carrying a single fact; nothing to trim and no other prompt supplies it."
   },
+  "slash-command-add-dir-null-character": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional local-jsx tool_result. Unique NUL-byte refusal; settings-entry remedy is load-bearing."
+  },
   "slash-command-add-dir-path-not-found": {
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Reports to the model that the requested directory does not exist on disk, so any plan that assumed that path is now accessible is invalid. One line carrying a single fact; nothing to trim and no other prompt supplies it."
+  },
+  "slash-command-add-dir-path-unresolved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Per-site local-jsx error. Unique resolve-failed contract. Keep."
   },
   "slash-command-advisor-disabled": {
     "verdict": "pristine-keep",
@@ -4854,6 +4974,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.224",
     "why": "Body is one status label plus a five-way source ternary: 'Auto-compact window: auto | N tokens (from CLAUDE_CODE_AUTO_COMPACT_WINDOW) | \u2026 (default for an unrecognized model) | \u2026 (default for this model) | \u2026 (from settings)'. Read in full: zero CAPS, zero exhortation, zero hedging \u2014 it is a numeric state readout whose entire content is a number and its provenance, and the sentence is frozen several times over (env var name, numbers, enum-valued source branches). Corpus scan for /auto.?compact/ across prompts-2.1.224.json and the deployed opus-5 + system-reminders bodies returned only `skill-dat"
+  },
+  "slash-command-background-couldnt-start-detail-withheld": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique /background spawn-failure stdout. Conditional local-command result; the withheld-detail family is a pattern, not full coverage."
   },
   "slash-command-batch-not-a-git-repo": {
     "verdict": "pristine-keep",
@@ -5030,10 +5155,30 @@
     "version": "2.1.224",
     "why": "Body read in full: 'Ignoring unrecognized effort \"${VAR_0}\"; valid: ${VAR_1.join(\", \")}. Using ${VAR_2}${VAR_3===VAR_2?\", the level the user typed last time\":\"\"}.' Check 1: no CAPS, no hedging, no moralizing, no restatement \u2014 three facts, each load-bearing (what was rejected, the closed set of valid levels, which level is actually running). Frozen on every axis: a quoted enum value, an enumeration via .join, and the level actually used. Check 2: corpus scan found one adjacent id, slash-command-code-review-reused-effort-notice (deployed pristine), which is the mutually exclusive `n!==void 0 && "
   },
+  "slash-command-config-boolean-takes-true-or-false": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional /config refusal. Frozen true/false enum. Unique load-bearing error."
+  },
   "slash-command-config-consent-gated-key-value-rejected": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Conditional command stdout with a unique validation contract (`key=value` vs panel) and the `/config` path. Frozen (command/param)."
+  },
+  "slash-command-config-expected-key-value": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique /config argument-shape contract. Conditional."
+  },
+  "slash-command-config-fast-mode-stale-after-hooks": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional /config error naming PreModelSwitch and the enabled outcome. Sibling is another setter, not coverage. Unique, frozen hook name, no slop."
+  },
+  "slash-command-config-save-failure-withheld-on-connection": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique /config save-failure stdout. Opaque detail is the error-tag contract for this connection. Conditional slash-command result."
   },
   "slash-command-context-remote-fetch-failed": {
     "verdict": "pristine-keep",
@@ -5079,6 +5224,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Tells the model the selected response or code block was saved to disk at the named path, which the model may then read or reference. One line carrying a single fact; nothing to trim and no other prompt supplies it."
+  },
+  "slash-command-design-consent-record-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique /design consent record-failure shape with the interpolated error and the authorize-Claude-Design remedy."
   },
   "slash-command-design-consent-revoke-row": {
     "verdict": "pristine-keep",
@@ -5129,6 +5279,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.239",
     "why": "User directive (CC 2.1.239): the entire /design surface stays pristine \u2014 no trim, no suppression. Recorded as an explicit verdict rather than left unaudited so the id does not re-enter the worklist every bump."
+  },
+  "slash-command-design-revoke-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique revoke-failure contract, frozen command /design-login and interpolated error. Conditional slash-command result."
   },
   "slash-command-design-status-row": {
     "verdict": "pristine-keep",
@@ -5185,6 +5340,11 @@
     "version": "2.1.233",
     "why": "Tells the model the invoked command no longer exists under that name and that /usage-credits is the current one, so it does not keep referring the user to a dead command. One line carrying a single fact; nothing to trim and no other prompt supplies it."
   },
+  "slash-command-failed-detail-withheld-on-connection": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique slash-command throw arm. Shared tag is not full coverage. Keep."
+  },
   "slash-command-fast-mode-disabled": {
     "verdict": "pristine-keep",
     "version": "2.1.233",
@@ -5195,10 +5355,20 @@
     "version": "2.1.233",
     "why": "Tells the model the session just switched to fast mode, optionally naming the model it was switched to and the per-Mtok rate, so it knows its own execution mode and cost profile changed mid-session. One line carrying a single fact; nothing to trim and no other prompt supplies it."
   },
+  "slash-command-fast-mode-stale-after-premodelswitch-hooks": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional command-result; unique interpolated verb plus /fast injection site. Feature-disuse is not a wipe."
+  },
   "slash-command-fast-mode-unavailable": {
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Tells the model the requested fast mode could not be enabled at all on this account or build, so it should not assume the mode change took effect. One line carrying a single fact; nothing to trim and no other prompt supplies it."
+  },
+  "slash-command-fast-mode-workspace-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique workspace-reject arm of /fast, including the sanitized reason."
   },
   "slash-command-feedback-description": {
     "verdict": "pristine-keep",
@@ -5209,6 +5379,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique command-listing description the claude-code-guide skill injects."
+  },
+  "slash-command-heapdump-failed-withheld-on-connection": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional /heapdump result. Unique named failure plus withheld-detail gate. Emptying it leaves this path silent."
   },
   "slash-command-ide-connect-failed": {
     "verdict": "pristine-keep",
@@ -5340,6 +5515,11 @@
     "version": "2.1.239",
     "why": "Addressing mechanic \u2014 without it the model sends to a shadowed bare name and the send fails. Zero bloat. Corpus check: No leads. Grepped the corpus for 'exact name only' and 'holds a variant': this file is the only carrier. It is a per-row qualifier inside /list-agents output, printed only when a subagent shadows a teammate name."
   },
+  "slash-command-list-agents-unnamed-sessions-withheld": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique listing footnote: unnamed session names/directories are withheld until /rename on the owning machine."
+  },
   "slash-command-loop-autonomous-instructions-header": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
@@ -5440,6 +5620,16 @@
     "version": "2.1.246",
     "why": "Unique cooloff contract with interpolated resume time and retry command. Conditional slash stdout; feature disuse is not a wipe. Nothing unique remains to cut."
   },
+  "slash-command-mcp-action-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Distinct enable/disable/reconnect rejection site. Unique action/server/error slots. Conditional local-command-stdout."
+  },
+  "slash-command-mcp-action-failed-withheld": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional off-box /mcp enable/disable failure. Unique verb+MCP-server shape plus withheld detail."
+  },
   "slash-command-mcp-actions-unavailable-in-session": {
     "verdict": "pristine-keep",
     "version": "2.1.224",
@@ -5449,6 +5639,16 @@
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Tells the model the agent-scoped MCP server is authenticated but deliberately stays unconnected until the agent runs, so it does not treat the absent tools as a failure. One line carrying a single fact; nothing to trim and no other prompt supplies it."
+  },
+  "slash-command-mcp-already-enabled-not-connected": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique /mcp enable no-op. Conditional."
+  },
+  "slash-command-mcp-already-reconnecting": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional /mcp result. Unique no-op-while-retries-continue contract."
   },
   "slash-command-mcp-auth-cleared": {
     "verdict": "pristine-keep",
@@ -5475,6 +5675,11 @@
     "version": "2.1.233",
     "why": "Reports that the post-authentication reconnect failed and carries the sanitized failure reason so the model can tell the user what went wrong. One line carrying a single fact; nothing to trim and no other prompt supplies it."
   },
+  "slash-command-mcp-claudeai-auth-reconnect-failed-detail-withheld": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Distinct /mcp reconnect arm for persisted-off-box connections. Conditional; unique withheld+restart contract."
+  },
   "slash-command-mcp-claudeai-auth-reconnect-failed-restart": {
     "verdict": "pristine-keep",
     "version": "2.1.233",
@@ -5485,15 +5690,40 @@
     "version": "2.1.233",
     "why": "Tells the model the browser sign-in did not take effect and that the user must complete it before retrying from /mcp, so it stops assuming the server is usable. One line carrying a single fact; nothing to trim and no other prompt supplies it."
   },
+  "slash-command-mcp-claudeai-session-token-rejected": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional /mcp claude.ai reconnect result. Unique token-reject diagnosis and ordered remedy."
+  },
+  "slash-command-mcp-disable-did-not-persist": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Different emission arm from the workaround-bearing sibling. Unique by omitting the stick recipe. Cannot wipe into the unsanitized site."
+  },
   "slash-command-mcp-disable-failed": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Conditional local-command stdout. Different code path and unique diagnostic; wiping would leave disable-without-error unexplained."
   },
+  "slash-command-mcp-disabled-enable-suffix": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique reconnect-disabled suffix: run /mcp enable <server> to restore that server."
+  },
+  "slash-command-mcp-disabled-in-another-session": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional /mcp reconnect/enable result for one named server disabled elsewhere. Unique quoted-name slot. opus-4-8/fable-5 copies are older slot shape, not coverage."
+  },
   "slash-command-mcp-enable-one-already-enabled": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique error + exact slash-command recovery. Frozen command name. Conditional stdout."
+  },
+  "slash-command-mcp-named-server-not-configured": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional `/mcp` error with a unique named-server miss and frozen `/mcp` command. Unique signal, no slop."
   },
   "slash-command-mcp-no-servers-configured": {
     "verdict": "pristine-keep",
@@ -5514,6 +5744,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Sibling branch with no reason available: tells the model restarting Claude Code is the remaining recovery step. One line carrying a single fact; nothing to trim and no other prompt supplies it."
+  },
+  "slash-command-mcp-oauth-reconnect-failed-restart-opaque": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Opaque OAuth-reconnect arm; wiping it loses the withheld variant and the restart instruction on that branch."
   },
   "slash-command-mcp-oauth-reconnected": {
     "verdict": "pristine-keep",
@@ -5540,10 +5775,25 @@
     "version": "2.1.241",
     "why": "Unique /mcp recovery instruction on the reconnect failure path. Conditional local-command-stdout. Keep."
   },
+  "slash-command-mcp-reconnect-error-withheld": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique reconnect-catch error tag on a conditional `/mcp` path. Same-family siblings are other actions. Keep."
+  },
   "slash-command-mcp-reconnect-failed": {
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Tells the model the server ended up cached/pending/failed/disabled rather than connected, so its tools are still unavailable. One line carrying a single fact; nothing to trim and no other prompt supplies it."
+  },
+  "slash-command-mcp-reconnect-failed-detail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "The detail-allowed /mcp reconnect result. Withheld siblings fire on the other branch and omit the detail slot. Keep the wrapper and both interpolations."
+  },
+  "slash-command-mcp-reconnect-failed-withheld": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique opaque /mcp reconnect onComplete. Conditional; detail vs withheld are opposite branches."
   },
   "slash-command-mcp-reconnect-needs-auth-agent-view-suffix": {
     "verdict": "pristine-keep",
@@ -5555,6 +5805,11 @@
     "version": "2.1.241",
     "why": "Background/detached reconnect path uniquely requires opening this session before /mcp."
   },
+  "slash-command-mcp-reconnect-needs-auth-headers-helper": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique /mcp reconnect needs-auth result when a headersHelper is configured: OAuth \u2192 Authenticate, helper \u2192 Reconnect."
+  },
   "slash-command-mcp-reconnect-needs-auth-terminal": {
     "verdict": "pristine-keep",
     "version": "2.1.233",
@@ -5564,6 +5819,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique none-configured reconnect result."
+  },
+  "slash-command-mcp-reconnect-pending-approval": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional reconnect gate with frozen `/mcp` + 'first'. Sibling covers toggle, not this injection."
   },
   "slash-command-mcp-reconnect-success": {
     "verdict": "pristine-keep",
@@ -5575,10 +5835,25 @@
     "version": "2.1.233",
     "why": "Reports that the reconnect attempt for a named server raised an exception and carries the sanitized reason, so the model knows the server is still down and why. One line carrying a single fact; nothing to trim and no other prompt supplies it."
   },
+  "slash-command-mcp-reconnect-tools-list-failed-withheld": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique reconnect+tools/list failure contract. Conditional slash-command result."
+  },
+  "slash-command-mcp-reconnect-unknown-result": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique fallback when client type is none of the named reconnect states. Conditional tool/slash result; cannot infer the unknown-result tag."
+  },
   "slash-command-mcp-server-disabled-enable-first": {
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Tells the model the named MCP server cannot be reconnected because it is disabled and that the fix is `/mcp enable` first, so it retries the right action instead of the same one. One line carrying a single fact; nothing to trim and no other prompt supplies it."
+  },
+  "slash-command-mcp-server-disabled-in-another-session": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional /mcp enable result. Unique cross-session disable + persist-via-/mcp recipe."
   },
   "slash-command-mcp-server-not-found": {
     "verdict": "pristine-keep",
@@ -5610,6 +5885,11 @@
     "version": "2.1.233",
     "why": "The bulk enable/disable result line, naming the direction and the count of servers affected. One line carrying a single fact; nothing to trim and no other prompt supplies it."
   },
+  "slash-command-mcp-toggle-couldnt-change-opaque": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional headless /mcp toggle opaque failure. Unique Couldn't+quoted-name shape and terminal /mcp remedy."
+  },
   "slash-command-mcp-toggle-pending-approval": {
     "verdict": "pristine-keep",
     "version": "2.1.233",
@@ -5625,10 +5905,20 @@
     "version": "2.1.233",
     "why": "Reports that enabling or disabling a named MCP server failed with an exception and carries the sanitized reason, so the model does not treat the toggle as applied. One line carrying a single fact; nothing to trim and no other prompt supplies it."
   },
+  "slash-command-mcp-unrecognized-action": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Frozen enumeration of the only recognized /mcp actions plus the interpolated unknown token."
+  },
   "slash-command-mcp-usage": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unrecognized-subcommand usage string; frozen command grammar. Conditional local-command stdout."
+  },
+  "slash-command-model-availability-check-timed-out": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique /model timeout contract. Conditional."
   },
   "slash-command-model-draws-from-usage-credits-suffix": {
     "verdict": "pristine-keep",
@@ -5685,6 +5975,11 @@
     "version": "2.1.233",
     "why": "Tells the model that a plan-mode session override is in force and separates the model actually running from the configured base model, so it does not misreport which model is active. One line carrying a single fact; nothing to trim and no other prompt supplies it."
   },
+  "slash-command-model-switch-blocked-by-premodelswitch-hook": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique PreModelSwitch deny path for /model and /fast."
+  },
   "slash-command-model-ultracode-session-only-suffix": {
     "verdict": "pristine-keep",
     "version": "2.1.246",
@@ -5694,6 +5989,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Tells the model the invoked command no longer exists on its own and names the /config tab that replaced it, which is what it must relay to the user. One line carrying a single fact; nothing to trim and no other prompt supplies it."
+  },
+  "slash-command-org-policy-couldnt-verify-restart": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique org-policy-cache-miss gate: verify failed, check network, restart Claude Code."
   },
   "slash-command-permissions-granted-retry": {
     "verdict": "pristine-keep",
@@ -6185,6 +6485,26 @@
     "version": "2.1.232",
     "why": "Distinct site, unique outcome report, zero slop."
   },
+  "slash-command-resume-background-session-agents-hint": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "/resume live-session-with-no-job-id arm. Unique discovery commands and ordering. Frozen tool names and first/then."
+  },
+  "slash-command-resume-background-session-attach-or-stop": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique /resume-live-job-id remedy. Conditional; keep verbatim."
+  },
+  "slash-command-resume-background-session-fork-hint": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique fork suffix on /resume of a running background session: pass --fork-session to branch a copy instead of attaching."
+  },
+  "slash-command-resume-background-session-running": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional /resume result. Unique already-running state plus live hint slots. Wrapper is load-bearing; empty slots would drop attach/stop/fork."
+  },
   "slash-command-resume-command-copied-to-clipboard": {
     "verdict": "pristine-keep",
     "version": "2.1.233",
@@ -6270,15 +6590,95 @@
     "version": "2.1.233",
     "why": "Names the supported platforms, which is what makes the refusal actionable."
   },
+  "slash-command-schedule-connector-list-unloaded": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional /schedule ConnectorsInfo. Unique unloaded-list warning; wiping it would leave the sibling's 'as explained above' with nothing above."
+  },
+  "slash-command-schedule-connectors-lockdown": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique managed-MCP-lockdown empty-list branch. Shared tail is required on this arm because no other arm fires with it."
+  },
+  "slash-command-schedule-connectors-missing-scope": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional schedule empty-list branch. Unique permission-scope cause on this surface. Keep."
+  },
+  "slash-command-schedule-connectors-none-still-connecting": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique empty-list branch. Conditional schedule prompt; unique architecture+false-CTA contract and https://claude.ai/customize/connectors."
+  },
+  "slash-command-schedule-connectors-optout": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique opt-out empty-list branch; setting and env var names are frozen mechanics."
+  },
+  "slash-command-schedule-connectors-restricted": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique empty-list branch that names the flags. Frozen (e.g., --strict-mcp-config, --bare). Conditional schedule prompt."
+  },
+  "slash-command-schedule-connectors-safe-mode": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique empty-list reason (safe mode). Note sibling is a different injection; wipe would empty this branch. Frozen names: claude.ai, safe mode."
+  },
+  "slash-command-schedule-connectors-unlisted-still-connecting": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "ConnectorsInfo arm when some connectors are listed and another is still connecting. Unique anti-false-connect claim for that arm. Conditional."
+  },
   "slash-command-schedule-description": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Load-bearing command-list routing, same class as other skill/command descriptions. Unique at this site."
   },
+  "slash-command-schedule-local-mcp-not-attachable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "ConnectorsInfo line uniquely names the CC CLI that cannot attach to cloud routines. Deleting it loses that command. Conditional."
+  },
   "slash-command-schedule-login-required": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Conditional /schedule stdout. Unique account-type and command-order contract."
+  },
+  "slash-command-schedule-note-connectors-connect-one": {
+    "verdict": "wipe-merge",
+    "version": "2.1.251",
+    "why": "Setup-note spliced into /schedule. Every claim is the parent's connect-if-missing instruction; wiping the fragment leaves that carrier. Conditional duplicate, not feature-disuse."
+  },
+  "slash-command-schedule-note-connectors-lockdown": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional schedule note; unique cause (organization manages MCP servers) and unique surface."
+  },
+  "slash-command-schedule-note-connectors-missing-scope": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Setup-note skip-reason for missing MCP-connectors permission. Conditional; unique permission name. Existence is default for a niche note; listing sibling does not replace this surface."
+  },
+  "slash-command-schedule-note-connectors-optout": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Compact setup-note for the optout skip reason, composed into other schedule notes (e.g. local-mcp VAR_2). Distinct from the listing prompt; unique slot."
+  },
+  "slash-command-schedule-note-connectors-restricted": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique setup-note reason for restricted MCP config. Conditional; do not fold into the empty-list prompt."
+  },
+  "slash-command-schedule-note-connectors-safe-mode": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional setup-note for the safe-mode skip. Unique on this host. Keep."
+  },
+  "slash-command-schedule-note-connectors-still-connecting": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional schedule note with unique remaining-available-to-routines fact. Frozen claude.ai/routines names. Not covered by the none/unlisted branches."
   },
   "slash-command-schedule-note-github-access-unverified": {
     "verdict": "pristine-keep",
@@ -6295,6 +6695,11 @@
     "version": "2.1.241",
     "why": "Unique not-connected predicate with owner/name slots, /web-setup, and the onboarding URL."
   },
+  "slash-command-schedule-note-local-mcp-not-attachable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Setup note that locally configured MCP cannot attach to cloud routines, with live count and a trailing reason slot. Conditional /schedule surface."
+  },
   "slash-command-schedule-note-no-git-repo": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
@@ -6310,10 +6715,20 @@
     "version": "2.1.238",
     "why": "Conditional /schedule setup note. Unique non-derivable contract for the preload-only arm. Nothing unique remains to cut; feature disuse is not a wipe reason."
   },
+  "slash-command-schedule-note-suppressed-twins": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional schedule setup note. Unique Claude Code-covers-same-service twins remain available to routines. Different site from the longer connectors note."
+  },
   "slash-command-schedule-prompt-question": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique /schedule prompt question. Conditional command context."
+  },
+  "slash-command-schedule-suppressed-twin-connectors": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique /schedule mechanics: local MCP twins suppress listing; attach at https://claude.ai/code/routines. Path is frozen. Conditional ConnectorsInfo, not always-on."
   },
   "slash-command-schedule-when-to-use": {
     "verdict": "pristine-keep",
@@ -6344,6 +6759,21 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique command-facing trigger enumeration. Frozen list. Conditional."
+  },
+  "slash-command-skill-doctor-hipaa-transcript-scan-hidden": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional /skill-doctor stdout clause. Unique to that legend. Keep."
+  },
+  "slash-command-skill-doctor-unavailable-on-connection": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique /skill-doctor connection contract. Conditional."
+  },
+  "slash-command-skill-not-user-invocable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique dispatch reply; frozen only-quantifier and interpolated skill name."
   },
   "slash-command-subtask-coordinator-unavailable": {
     "verdict": "pristine-keep",
@@ -6440,6 +6870,11 @@
     "version": "2.1.241",
     "why": "Unique ultrareview gate: counts, limits, and `${cmd} <branch>` remedy. Numbers/tool names are FROZEN. Conditional error."
   },
+  "slash-command-ultrareview-github-not-connected": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique ultrareview GitHub-link recovery contract. Keep verbatim."
+  },
   "slash-command-ultrareview-launched": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
@@ -6494,6 +6929,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Distinct unshallow arm (no explicit base arg) plus the unique 'if your base branch isn't ${base}, pass it explicitly' contract. Frozen command/path."
+  },
+  "slash-command-update-failed-withheld-on-connection": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional /update result. Unique restart-failure tag; withheld clause is the connection-privacy contract for this path."
   },
   "slash-command-update-refused-background-tasks": {
     "verdict": "pristine-keep",
@@ -6569,6 +7009,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Fallback when no browser could be opened: gives the model the org usage-credit URL to relay so the user can act on it. One line carrying a single fact; nothing to trim and no other prompt supplies it."
+  },
+  "slash-command-usage-hipaa-transcript-scan-hidden": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique /usage transcript-scan denial. Frozen HIPAA label. Conditional stdout interpolation."
   },
   "slash-command-web-setup-connected-and-opened": {
     "verdict": "pristine-keep",
@@ -6712,6 +7157,11 @@
     "version": "2.1.237",
     "why": "Every load-bearing claim already lives in the composer that interpolates this fragment. The example acks are the cut class Anthropic's own lean pass names. Emptying this id leaves the composer rules intact and turns the slot into an empty tail."
   },
+  "system-prompt-artifact-comment-reply-workshop-change-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Workshop-page reply-composer arm. Unique mechanic vs edit-capable auto-reply. Tripwire-frozen (NOT, one, workshop file); unique so retain verbatim."
+  },
   "system-prompt-artifact-comment-summoning-rows-guidance": {
     "verdict": "pristine-keep",
     "version": "2.1.224",
@@ -6767,6 +7217,16 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique success-path contract for @-mentioned audio. Sibling is the failed-transcription reminder, not coverage."
+  },
+  "system-prompt-auto-mode-classifier-remote-machine-allow": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique classifier interpolation of the remote host allow list plus the contract that those exceptions cannot clear HARD BLOCK or Always block. Conditional remote-host path."
+  },
+  "system-prompt-auto-mode-classifier-remote-machine-environment": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique remote-host env interpolation into the classifier. Conditional side-call context the model cannot infer."
   },
   "system-prompt-autonomous-loop-notification-guidance": {
     "verdict": "pristine-keep",
@@ -6928,10 +7388,20 @@
     "version": "2.1.224",
     "why": "Six claims. Claims 1-4 are duplicated near-verbatim by tool-description-sendmessage-cross-session-guidance, which is injected on the same iw() gate: 'each identified by a `name [ref]` \u2014 the name is the address' vs its 'Every row leads with the agent's `name [ref]` \u2014 the name IS the address; there is no separate address syntax'; 'Use `${LIST_AGENTS}` to discover them' vs its 'Use `${LIST_AGENTS}` to discover targets' plus two worked JSON examples; the `<cross-session-message from=\"...\">` wrapper; and 'Reply by copying the `from` attribute as your `to`' vs its bolded 'To reply to an incoming mes"
   },
+  "system-prompt-coordinator-inherit-session-model": {
+    "verdict": "trim",
+    "version": "2.1.251",
+    "why": "Keep the unique inherit-session-model policy and the frozen never-downshift sentence (mechanics). Cut only the motivational clause. Wipe would empty the coordinator-mode slot."
+  },
   "system-prompt-coordinator-mode": {
     "verdict": "pristine-keep",
     "version": "2.1.239",
     "why": "REVERTED from a 62% trim. The override bound ${SENDMESSAGE_TOOL_NAME} to the var our identifierMap calls slot 1, whose real binding is NjS \u2014 not a tool name but a whole Slack-comms note (\"Your bare assistant text does NOT reach the user...\"), so the tool list rendered \"- **Your bare assistant text does NOT reach the user...** - Continue an existing worker\". The map is mislabeled throughout: pristine labels the SendMessage slot WORKFLOW_CONDITIONAL_TOOL_NOTE, the documented off-by-one for this prompt. The trim had been INERT and therefore unvalidated \u2014 every apply skipped it on the unbound ${EVERY_MESSAGE_TO_USER_NOTE}; fixing that unbound label this run is what first made it apply and exposed the mis-bind. Reverting restores exactly the rendering users have always had. FOLLOW-UP: derive an honest CURATED_IDENTIFIER_MAPS entry from the binary, then re-trim against it; the old body is in git."
+  },
+  "system-prompt-coordinator-model-parameter-ignored": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional forced-inherit coordinator arm. Unique 'ignored, do not set' override of the live coordinator-mode 'set it when asked' bullet."
   },
   "system-prompt-coordinator-skill-tool": {
     "verdict": "pristine-keep",
@@ -6987,6 +7457,26 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Always-on (sub)agent env contract. Unique field set and slots. Intro is a header for that block, not corpus-duplicated slop."
+  },
+  "system-prompt-env-info-git-repo-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional environment-update delta after a git-repo change. Unique was-flip; wiping loses the only change signal."
+  },
+  "system-prompt-env-info-model-powered-by": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Fallback identity when no marketing name is set. Unique raw modelId line; wiping would blank identity on that arm."
+  },
+  "system-prompt-env-info-no-longer-worktree": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique environment-update when the primary cwd stops being a git worktree."
+  },
+  "system-prompt-env-info-working-directory-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique environment-update contract for a primary-cwd change."
   },
   "system-prompt-env-info-worktree-block": {
     "verdict": "pristine-keep",
@@ -7123,6 +7613,16 @@
     "version": "2.1.241",
     "why": "Keep the analyzer task, JSON schema, ONLY-JSON constraint, and 'Include 3 impressive workflows.' Delete the duplicate second-person sentence."
   },
+  "system-prompt-interactive-agent-intro-output-style-active": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Alternate output-style intro arm. Unique missing 'below' is load-bearing for the site that does not inline the style next. Conditional; do not wipe."
+  },
+  "system-prompt-interactive-agent-intro-output-style-below": {
+    "verdict": "trim",
+    "version": "2.1.251",
+    "why": "Keep the below-pointer verbatim (this arm's unique signal). Cut the tutorial which-clause; the style header and turn reminder already say to follow the style."
+  },
   "system-prompt-issue-title-generator-api-errors": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
@@ -7152,6 +7652,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Same text at different emission sites is not sibling coverage. Each site needs the cutoff line."
+  },
+  "system-prompt-language-preference-cleared": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "State-change the model cannot infer. Matching language is not a reason to drop the cleared signal; no sibling carries it."
   },
   "system-prompt-launching-agent-message-authority": {
     "verdict": "pristine-keep",
@@ -7197,6 +7702,11 @@
     "verdict": "trim",
     "version": "2.1.224",
     "why": "This is a near-total duplicate of a sibling that ships in the same tool definition. The deployed `tool-parameter-loop-wakeup-noop-gated` body reads 'true = nothing changed (you checked and there is nothing to report). false = something happened worth keeping (edited a file, posted a message, advanced state, surfaced a finding). Required unless `stop` is true.' \u2014 and the noop paragraph is included by Z5u() exactly when that parameter exists ('noop' in Xga().shape, both driven by Ogr()=ot('tengu_loop_noop_fold')), so the two ALWAYS co-occur. Claim by claim against the deployed sibling: 'Set `noo"
+  },
+  "system-prompt-mcp-auth-complete-repl-result": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique post-OAuth tool_result: this server's tools are now callable on the REPL surface. Keep the frozen sentence; the event is not covered by the always-on tool-description clause."
   },
   "system-prompt-mcp-auth-complete-result": {
     "verdict": "pristine-keep",
@@ -7897,6 +8407,11 @@
     "version": "2.1.241",
     "why": "Structural host for a non-default output style. Wiping it would drop the user's style. Conditional."
   },
+  "system-prompt-output-style-reset-to-default": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique meta attachment that the output style was reset. Load-bearing for the following turn."
+  },
   "system-prompt-output-text-to-user": {
     "verdict": "pristine-keep",
     "version": "2.1.221",
@@ -7912,10 +8427,20 @@
     "version": "2.1.241",
     "why": "Unique always-on-in-p4-workspace mechanic. Frozen command/path."
   },
+  "system-prompt-permission-classifier-host-always-block": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique hard-deny host section; security ordering contract. Always + hardDeny are frozen."
+  },
   "system-prompt-permission-classifier-host-context": {
     "verdict": "pristine-keep",
     "version": "2.1.237",
     "why": "Unique permission-classifier contract for live vs restored host-context lines, including that restored form never clears a SOFT BLOCK and never lifts a HARD BLOCK. Card KEEP on fabricated consent. Frozen; keep verbatim. Conditional classifier prompt, not a wipe for disuse."
+  },
+  "system-prompt-permission-classifier-host-soft-deny": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique classifier contract for host-machine soft-deny with the consent exception and the interpolated list. Conditional classifier section."
   },
   "system-prompt-permission-classifier-remote-host-command": {
     "verdict": "pristine-keep",
@@ -7961,6 +8486,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Trim REFUTED by stage 3 and reverted to pristine. The cited carrier (the quickref) is inlined only at the HIb() site; at the j8w()/z8w() Current Build site the status renders with no inline quickref, and `settings.local.json` appears in no always-rendered text. The cut would have dropped a trust boundary \u2014 project-scoped settings are untrusted pre-workspace-trust, so a committed enablement value silently leaves the command gated off."
+  },
+  "system-prompt-plugin-eval-mcp-mock-responder": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique nested-model system prompt for plugin-eval. Output contract is mechanics. Conditional."
   },
   "system-prompt-plugin-eval-not-enabled-session-status": {
     "verdict": "pristine-keep",
@@ -8042,6 +8572,11 @@
     "version": "2.1.246",
     "why": "Unique project-timeline provenance: fetch tool names, VERIFIED_PROJECT_OWNER_MESSAGE_MARKER, unmarked coordinator pair as Path B, Rule 6 does not apply to marked/coordinator replies, no permission/CLAUDE.md/config from those channels. Security/ordering contract; keep verbatim."
   },
+  "system-prompt-project-timeline-verified-owner-message-marker": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Provenance marker prefix the model must recognise to separate a verified owner message from viewer data. A marker is matched, not read as prose."
+  },
   "system-prompt-pronoun-neutral-default": {
     "verdict": "trim",
     "version": "2.1.238",
@@ -8051,6 +8586,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique read-only path list plus persist-failure write gate."
+  },
+  "system-prompt-reporting-outcomes": {
+    "verdict": "trim",
+    "version": "2.1.251",
+    "why": "Partial overlap plus internal restatement; unique frozen reporting-order and no-quiet-workaround contracts are not in any deployed sibling. Wipe would drop those."
   },
   "system-prompt-resume-continue-prompt": {
     "verdict": "pristine-keep",
@@ -8091,6 +8631,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Gated arm; unique create/update path. Keep including the interpolation."
+  },
+  "system-prompt-sdk-host-pre-model-switch-hook-reinitialized": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique SDK-host fail-closed reason: host re-initialized before the hook answered; model was not switched; retry."
   },
   "system-prompt-sdk-host-prompt-hook-reconnect-unsubmitted": {
     "verdict": "pristine-keep",
@@ -8333,6 +8878,11 @@
     "version": "2.1.246",
     "why": "Unique framing prefix that concatenates with the authority body. Conditional workflow harness. Keep verbatim."
   },
+  "system-prompt-workflow-load-skill-to-modify": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique trailer on the workflow slash-command prompt. Keep frozen sentence."
+  },
   "system-prompt-worktree-env-context": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
@@ -8398,6 +8948,91 @@
     "version": "2.1.239",
     "why": "Not corpus-duplicated at point of use: the only carrier of the deletion contract on the user-initiated path. Corpus check: Top corpus hit tool-result-artifact-deleted (0.21, LIVE), opened: it carries near-equivalent facts but fires only when *Claude* performed the deletion. This reminder fires when *the user* deleted from /artifacts, a turn in which the tool result never existed. Also checked tool-result-artifact-delete-record-unreadable and tool-result-artifact-delete-url-not-artifact \u2014 different failure modes. No other hit >0.15."
   },
+  "system-reminder-artifact-editor-codelivery-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Generic coordinator template with a situation-specific tail slot. Complementary to cancelled/withdrawn, not covered by them."
+  },
+  "system-reminder-artifact-editor-follow-up-cancelled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional coordinator contract with unique reached/withdrawn mechanics and frozen do-nots."
+  },
+  "system-reminder-artifact-editor-follow-up-did-not-reach-worker": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique coordinator correction + dispatch slot. Conditional. Keep verbatim."
+  },
+  "system-reminder-artifact-editor-follow-up-failed-or-stopped": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional coordinator reminder. Unique do-not-wait-for-a-dead-worker contract with failed/stopped discriminator."
+  },
+  "system-reminder-artifact-editor-follow-up-not-resumed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique coordinator-correction reason. Conditional fragment; wiping would lose the not-resumed/other-path distinction."
+  },
+  "system-reminder-artifact-editor-follow-up-not-resumed-action": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional action clause unique to resume-failed; wiping it empties that arm."
+  },
+  "system-reminder-artifact-editor-follow-up-page-deleted-after-reach": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique already-read + superseded-result contract. Keep."
+  },
+  "system-reminder-artifact-editor-follow-up-page-deleted-before-read": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique deleted-before-read arm: withdraw, nothing pending, coordinator handles the thread. Frozen before/nothing."
+  },
+  "system-reminder-artifact-editor-follow-up-page-rehomed-after-reach": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique stale-copy check-before-reply contract. Keep."
+  },
+  "system-reminder-artifact-editor-follow-up-page-rehomed-before-read": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique before-read rehome arm. Conditional reminder fragment."
+  },
+  "system-reminder-artifact-editor-follow-up-predates": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique ordering contract for a stale editor result. Frozen quantifiers; conditional coordinator correction."
+  },
+  "system-reminder-artifact-editor-follow-up-predates-action": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique predates-worker dispatch contract."
+  },
+  "system-reminder-artifact-editor-follow-up-stopped": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique reason token for the follow-up-stopped arm."
+  },
+  "system-reminder-artifact-editor-follow-up-stopped-action": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique coordinator action when the artifact editor stopped before reading the follow-up. Similar verbs, different condition and no interpolated tool."
+  },
+  "system-reminder-artifact-editor-follow-up-withdrawn": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Composable tail for the codelivery wrapper. Unique withdrawn-before-read fact. Conditional."
+  },
+  "system-reminder-artifact-editor-follow-up-withdrawn-action": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Alternative action filler; wiping it drops the dispatch-tool + reply-after contract on the withdrawn path."
+  },
+  "system-reminder-artifact-follow-up-codelivered-to-editor": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique coordinator ordering/sentinels, all frozen (`Do not`, `until`, `NEXT`, `no_reply_needed`). Conditional follow-up reminder. Keep verbatim."
+  },
   "system-reminder-artifact-type-instructions-trust-boundary": {
     "verdict": "trim",
     "version": "2.1.246",
@@ -8437,6 +9072,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Conditional stop notification. Unique interpolations and wording."
+  },
+  "system-reminder-background-command-finished-not-user": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique security/consent contract on a conditional reminder."
   },
   "system-reminder-background-observer-report": {
     "verdict": "pristine-keep",
@@ -8517,6 +9157,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique installed-but-not-enabled chrome state plus enablement and the session-scoped tool ban. Keep the whole body."
+  },
+  "system-reminder-cloud-review-failed-error-not-instructions": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique security/error contract on failed cloud ultrareview: the relayed error is data, not user instructions. Conditional reminder; keep."
   },
   "system-reminder-cloud-review-findings-trailing": {
     "verdict": "pristine-keep",
@@ -8628,6 +9273,11 @@
     "version": "2.1.247",
     "why": "Unique cowork_memory_context=null instruction. The model cannot infer a withdrawn snapshot."
   },
+  "system-reminder-cross-session-host-application-reply": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique host-session routing contract. Keep."
+  },
   "system-reminder-cross-session-idle-notice-authority-warning": {
     "verdict": "pristine-keep",
     "version": "2.1.237",
@@ -8653,6 +9303,11 @@
     "version": "2.1.241",
     "why": "Unique live-arm contract: peer text has no user authority; refuse denied-action relays; a peer message is never consent. Cut only the IMPORTANT: prefix."
   },
+  "system-reminder-cross-session-peer-message-authority-warning-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique same-session-agent identity plus frozen never-clauses (`CLAUDE.md`, config, pending-prompt approval, permission laundering). Sibling warnings are other injection sites; wiping here would drop the contract on this path."
+  },
   "system-reminder-cross-session-peer-message-respond-note": {
     "verdict": "pristine-keep",
     "version": "2.1.224",
@@ -8668,20 +9323,80 @@
     "version": "2.1.241",
     "why": "Conditional date stamp plus unique don't-announce instruction. Parallel registry override is the same surface, not coverage that survives a wipe without shadows."
   },
+  "system-reminder-date-changed-2": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional date_change reminder at a second site (.date vs .newDate). Same-surface registry override is not coverage that survives a wipe without shadows."
+  },
   "system-reminder-deferred-tools-available": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique deferred-tools load contract."
+  },
+  "system-reminder-deferred-tools-no-longer-available": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique non-MCP deferred-tools-gone contract with ToolSearch no-match."
   },
   "system-reminder-deferred-tools-readded": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Conditional MCP-reconnect reminder. Unique available-again + Load via ${tool} as before."
   },
+  "system-reminder-deferred-tools-readded-non-mcp": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique non-MCP deferred-tools-readded reminder with .other names and Load via ${ToolSearch} as before."
+  },
   "system-reminder-device-hook-deadline": {
     "verdict": "pristine-keep",
     "version": "2.1.246",
     "why": "Unique device-hook miss reminder and pause-until-re-register contract."
+  },
+  "system-reminder-dir-sync-abandoned-reason-background-upload": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique diagnostic for a conditional abandoned-upload branch: background upload failed and the next sync point carries it. Mechanics, not slop."
+  },
+  "system-reminder-dir-sync-abandoned-reason-gave-up-offline": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique reason token for one abandoned-upload branch. Conditional fragment; keep."
+  },
+  "system-reminder-dir-sync-after-command-applied-summary": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique successful applied-pull session note. Slot-heavy; frozen counts and rename/not-taken mechanics."
+  },
+  "system-reminder-dir-sync-after-command-bring-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique bring-failed cause on this after-command path. Keep the full sentence including the tail (this template does not concatenate the clause id)."
+  },
+  "system-reminder-dir-sync-after-command-changes-not-here-yet": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional forwarded-result note. Unique 'earlier changes are not all here yet'; sibling is the this-command-deferred arm. Keep verbatim."
+  },
+  "system-reminder-dir-sync-after-command-host-gave-up": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique after-command host-gave-up cause. Keep."
+  },
+  "system-reminder-dir-sync-after-command-not-seen": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional after-command notice: host sent command-changed files that have not landed; read them on the host via the named argument until they do. Frozen ordering. Keep."
+  },
+  "system-reminder-dir-sync-after-command-pull-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique pull-failed cause and host-read remedy."
+  },
+  "system-reminder-dir-sync-after-command-skipped-or-unsupported": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique skip/unsupported arm of after-command dir-sync. Kind/reason slots and the unsupported literal are mechanics."
   },
   "system-reminder-dir-sync-agent-commits-carried-along": {
     "verdict": "pristine-keep",
@@ -8703,6 +9418,16 @@
     "version": "2.1.246",
     "why": "Unique dir-sync reminder that the agent's staging was dropped to match the user's index. Conditional; unique mechanics."
   },
+  "system-reminder-dir-sync-announced-upload-abandoned": {
+    "verdict": "trim",
+    "version": "2.1.251",
+    "why": "Keep the unique abandoned-upload + quoted-reason + stale-files contract. Delete only the hedge clause."
+  },
+  "system-reminder-dir-sync-announced-upload-gone-quiet": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique mid-session gone-quiet arm: this turn uses files as they were; later turn gets the rest. Conditional."
+  },
   "system-reminder-dir-sync-checkout-back-on-user-branch": {
     "verdict": "pristine-keep",
     "version": "2.1.247",
@@ -8712,6 +9437,16 @@
     "verdict": "pristine-keep",
     "version": "2.1.247",
     "why": "Standing dir-sync branch-follow contract is unique. Both sentences are load-bearing and frozen."
+  },
+  "system-reminder-dir-sync-checkout-unready-mid-operation": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique interpolant for the unready-checkout reminder. Conditional."
+  },
+  "system-reminder-dir-sync-checkout-unready-unmerged": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "One of four reason clauses interpolated into the checkout-unready reminder; its three siblings are catalogued and none states this cause. Six words."
   },
   "system-reminder-dir-sync-checkout-update-unfinished": {
     "verdict": "pristine-keep",
@@ -8738,6 +9473,36 @@
     "version": "2.1.246",
     "why": "Unique cloud dir-sync resolution. Conditional. Keep."
   },
+  "system-reminder-dir-sync-empty-start-could-not-check-in": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional empty-start arm unique to check-in failure."
+  },
+  "system-reminder-dir-sync-empty-start-directory-not-empty": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique OFF-reminder reason. Frozen found-list interpolation."
+  },
+  "system-reminder-dir-sync-empty-start-files-not-delivered": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional empty-start contract: no copy, empty WD, files only on a later user message, do not create project files. Frozen `before`/`do not`. Keep verbatim."
+  },
+  "system-reminder-dir-sync-empty-start-first-upload-did-not-verify": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique Directory-sync-is-OFF reason. Conditional."
+  },
+  "system-reminder-dir-sync-empty-start-git-could-not-write-checkout": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional dir-sync empty-start reason. Unique git-checkout write failure with .step."
+  },
+  "system-reminder-dir-sync-file-sync-offline-user-continued": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Distinct halt-line interpolated into the STOPPED notice. Unique 'user chose to continue'. Conditional."
+  },
   "system-reminder-dir-sync-files-displaced": {
     "verdict": "pristine-keep",
     "version": "2.1.246",
@@ -8753,10 +9518,30 @@
     "version": "2.1.246",
     "why": "Conditional dir-sync notice. Unique trashed-path list and meaning."
   },
+  "system-reminder-dir-sync-files-updated-in-place": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional dir-sync notice. Unique re-read-before-edit ordering after host-side edits landed here."
+  },
   "system-reminder-dir-sync-from-stays-put": {
     "verdict": "pristine-keep",
     "version": "2.1.247",
     "why": "Separately catalogued inner phrase naming the parked from-branch. Wiping it would empty that interpolation; the parent does not emit this string."
+  },
+  "system-reminder-dir-sync-halt-line-layout-unserved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique file-sync-stop reason: this checkout layout is not one file sync serves. Conditional interpolation; keep."
+  },
+  "system-reminder-dir-sync-halt-line-offline": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional STOPPED-reminder halt-line. Unique told-and-continues fact, not the worker's chose-to-continue line."
+  },
+  "system-reminder-dir-sync-halt-line-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique STOPPED halt-line; verbatim if retained."
   },
   "system-reminder-dir-sync-head-fast-forwarded": {
     "verdict": "pristine-keep",
@@ -8777,6 +9562,21 @@
     "verdict": "pristine-keep",
     "version": "2.1.246",
     "why": "Unique recovery notice after a size-cap hold. Keep."
+  },
+  "system-reminder-dir-sync-host-abandoned-push": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional dir_sync_notice. Unique host-abandoned-push wording; the arrival clause is inline on this site, so deleting it would drop timing from this reminder."
+  },
+  "system-reminder-dir-sync-host-push-not-seen": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional host-push in-flight notice. Unique last-command-run-there + not-reached-yet + read-on-host until it lands."
+  },
+  "system-reminder-dir-sync-host-push-take-in-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique take-in-failed notice with host name and machine-arg slots. Frozen (until, then). Conditional reminder."
   },
   "system-reminder-dir-sync-index-not-mirrored": {
     "verdict": "pristine-keep",
@@ -8883,6 +9683,11 @@
     "version": "2.1.246",
     "why": "Unique cannot-recreate reasons. Frozen enumeration: a root commit, a message or author that is not UTF-8, or signing/identity. Conditional slot, not a wipe."
   },
+  "system-reminder-dir-sync-renamed-on-user-machine": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique rename-conflict listing, including kept-vs-stands-there. Frozen paths/count. Conditional checkout update."
+  },
   "system-reminder-dir-sync-restored-user-commits": {
     "verdict": "pristine-keep",
     "version": "2.1.246",
@@ -8898,10 +9703,60 @@
     "version": "2.1.246",
     "why": "Conditional dir-sync reminder for rewrite-left-uncommitted. Shared tail is frozen (git revert, NEW, enumeration); deleting the whole id would drop this branch's working-tree fact."
   },
+  "system-reminder-dir-sync-service-answering-again": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Distinct branch that must not imply resume-from-this-turn. Keep."
+  },
+  "system-reminder-dir-sync-service-answering-again-resumes-this-turn": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Distinct dir-sync recovery: service answering AND file sync with the user machine resumes this turn. Not a duplicate of the shorter sibling."
+  },
   "system-reminder-dir-sync-service-resumed": {
     "verdict": "pristine-keep",
     "version": "2.1.246",
     "why": "Unique resume event. Conditional; wiping would hide that sync is live again."
+  },
+  "system-reminder-dir-sync-stopped-could-not-empty-stale": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional stopped-sync reminder. Unique empty-failed + STALE-from-now-on prohibition on the session copy."
+  },
+  "system-reminder-dir-sync-stopped-emptied-except-unmoved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique leftover-stale-entries contract."
+  },
+  "system-reminder-dir-sync-stopped-emptied-only-marker-left": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique emptied-to-marker-only disposition interpolated into the stop reminder."
+  },
+  "system-reminder-dir-sync-stopped-no-checkout-to-empty": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique stopped-sync reminder: this environment is not the session checkout so nothing was emptied."
+  },
+  "system-reminder-dir-sync-stopped-redo-on-machine": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "No-set-aside stopped-sync suffix. Unique arm. Cannot wipe into the set-aside sibling."
+  },
+  "system-reminder-dir-sync-stopped-set-aside-redo-on-machine": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique set-aside location plus redo instruction. Frozen path interpolation."
+  },
+  "system-reminder-dir-sync-stopped-unsent-files-when-ended": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique stopped-sync unsent-file clause with count interpolation."
+  },
+  "system-reminder-dir-sync-too-large-on-laptop": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique laptop size-cap reminder. Conditional."
   },
   "system-reminder-dir-sync-turn-changes-too-large-to-send": {
     "verdict": "pristine-keep",
@@ -8922,6 +9777,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.246",
     "why": "Unique dir-sync reminder: this checkout followed the user's branch or detached HEAD, the old from-ref stays put, and a colliding previousTip is kept at a named ref. Parked-work sibling is a different event."
+  },
+  "system-reminder-dir-sync-user-changes-fetch-gave-up": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional dir-sync reminder. Unique fetch-gave-up + resend + checkout-stale disclosure."
   },
   "system-reminder-dir-sync-user-changes-gave-up-waiting": {
     "verdict": "pristine-keep",
@@ -8953,15 +9813,45 @@
     "version": "2.1.246",
     "why": "Unique consent-gated recovery contract (NOT on this branch; bring over only if asked; git cherry-pick / git checkout REF -- PATH). Frozen throughout. Cannot rewrite. Conditional reminder."
   },
+  "system-reminder-directory-sync-checkout-cannot-snapshot": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique snapshot-blocked sync reminder plus the required user-facing wording. Conditional."
+  },
   "system-reminder-directory-sync-checkout-recreated": {
     "verdict": "pristine-keep",
     "version": "2.1.246",
     "why": "Unique recreate-from-starting-state contract. CAPS cannot be rewritten: the sentence is frozen (NOT, until, before). Sibling live-sync guidance is a different situation. Conditional reminder \u2014 keep verbatim."
   },
+  "system-reminder-directory-sync-checkout-unready-git-unreadable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique checkout-unready reason: git could not read it just now. Wiping leaves the parent with an empty cause."
+  },
+  "system-reminder-directory-sync-checkout-unready-unborn-branch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique unborn-branch reason for checkout-unready. Conditional fragment; do not merge into the other unborn clause."
+  },
   "system-reminder-directory-sync-cloud-only-files": {
     "verdict": "pristine-keep",
     "version": "2.1.246",
     "why": "Unique this-turn withheld-file list plus extra categories. Parenthetical is frozen; deleting it would drop editor/temp and withheld-name rules."
+  },
+  "system-reminder-directory-sync-disabled-after-initial-checkout-failure": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique checkout-failure disable contract, frozen tool-name enumeration and `do not recreate`. Conditional. Keep verbatim."
+  },
+  "system-reminder-directory-sync-disabled-container-recreated": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique disable-reason interpolant. Conditional."
+  },
+  "system-reminder-directory-sync-disabled-first-object-unreadable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique disable branch: the user's first upload arrived in a form this build cannot read. Conditional; keep."
   },
   "system-reminder-directory-sync-first-upload-pending": {
     "verdict": "pristine-keep",
@@ -9008,10 +9898,55 @@
     "version": "2.1.246",
     "why": "Unique service-down reminder. Frozen: each turn, until. Conditional."
   },
+  "system-reminder-directory-sync-service-offline-this-turn": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional this-turn offline reminder. Unique: sync OFFLINE, turn runs on files as they were here, newer local changes may be missing, told when sync is back or has ended."
+  },
+  "system-reminder-directory-sync-service-unreachable-no-user-files": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique state: service not answering, files may never have arrived. Complementary to offline-this-turn, not a duplicate."
+  },
+  "system-reminder-directory-sync-stopped-for-session": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "This is the live stop-path routing contract (remote-machine field, absolute paths, scratch-only here, unreachable tell). Alternative disable path does not cover a mid-session stop. Conditional; keep verbatim."
+  },
+  "system-reminder-directory-sync-turn-held-waiting-service": {
+    "verdict": "trim",
+    "version": "2.1.251",
+    "why": "Keep the frozen one-minute service-wait + interrupt fact. Drop only the mention-if-it-matters hedge."
+  },
+  "system-reminder-directory-sync-turn-held-waiting-upload": {
+    "verdict": "trim",
+    "version": "2.1.251",
+    "why": "Keep the unique upload-wait contract verbatim. Delete the hedge; it is not a mechanic."
+  },
+  "system-reminder-directory-sync-upload-abandoned-before-start": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique abandoned-before-start state and later-message arrival rule."
+  },
+  "system-reminder-directory-sync-upload-gone-quiet-before-start": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional start-of-turn reminder. Unique gone-quiet-before-start file state; hedge sits inside a frozen sentence so verbatim-or-delete, and delete would drop the starting-files contract."
+  },
   "system-reminder-directory-sync-user-edits-won": {
     "verdict": "pristine-keep",
     "version": "2.1.246",
     "why": "Unique directory-sync conflict: user version won, some agent edits are gone, re-read before editing, git show BLOB prints the previous version. Frozen."
+  },
+  "system-reminder-directory-sync-user-files-now-in-place": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique arrival + coexistence contract."
+  },
+  "system-reminder-directory-sync-working-directory-not-yet-user-files": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique commit/placeholder gate for the not-yet-user-files arm."
   },
   "system-reminder-edited-file-changed-since-read": {
     "verdict": "shadowed",
@@ -9262,6 +10197,11 @@
     "verdict": "shadowed",
     "version": "2.1.234",
     "why": "Stage 1 ruled wipe-merge. The memory-update registry entry's defaultBody carries this sentence and splices the region, but the entry declared no shadows at all; added shadows: [this id] and removed the stub."
+  },
+  "system-reminder-memory-updates": {
+    "verdict": "trim",
+    "version": "2.1.251",
+    "why": "Keep the tag, supersede contract (any memory_read/memory_write), Never-reproduce enumeration, and at-most user-facing wording. Cut restatement and rationale only."
   },
   "system-reminder-memory-write-store-readonly": {
     "verdict": "pristine-keep",
@@ -9653,6 +10593,11 @@
     "version": "2.1.241",
     "why": "Keep the unique diff-view injection and slots. Delete only the hedging closer."
   },
+  "system-reminder-session-context": {
+    "verdict": "trim",
+    "version": "2.1.251",
+    "why": "Keep `${HAS_SESSION_CONTEXT_CHANGED}` / `${SESSION_CONTEXT_ENTRIES}` framing. Cut the IMPORTANT hedge; question-context already suppressed the same paragraph and cannot be cited as coverage."
+  },
   "system-reminder-session-continuation": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
@@ -9773,6 +10718,16 @@
     "version": "2.1.237",
     "why": "Delete the speed-rationale sentence (frozen, but redundant \u2014 delete outright). Keep the wrapper, the multiple-entries contract with both interpolations, and \"No action needed for this result.\""
   },
+  "system-reminder-tool-definitions-source-removed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique source-removed tool-definition contract."
+  },
+  "system-reminder-tool-hosts-add-machine-arg-to-call": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique attached-machines how-to with the parameter name slot and \"<name>\" placeholder. Frozen tool/parameter shape."
+  },
   "system-reminder-tool-hosts-detached": {
     "verdict": "pristine-keep",
     "version": "2.1.246",
@@ -9803,10 +10758,20 @@
     "version": "2.1.246",
     "why": "Alternative host-header arm with a unique default-omit contract. Keep verbatim so this arm stays self-contained."
   },
+  "system-reminder-tool-hosts-here-emptied-after-sync-stop": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique emptied-here host line: project is gone, scratch-only. Conditional."
+  },
   "system-reminder-tool-hosts-here-local-files": {
     "verdict": "pristine-keep",
     "version": "2.1.246",
     "why": "Exclusive two-way/upload-only HERE arm. Unique HERE-vs-session-environment split and the live-only-on-this-machine menu. Cannot drop the shared tail without losing it on this arm."
+  },
+  "system-reminder-tool-hosts-here-no-synced-copy": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique here-host scratch-only contract. Keep verbatim."
   },
   "system-reminder-tool-hosts-here-project-folder-only": {
     "verdict": "pristine-keep",
@@ -9817,6 +10782,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.246",
     "why": "Unique default-host description: current files arrive before each user message, toolchain lives here, edits are not written back. Frozen before/NOT/commit-and-push contract."
+  },
+  "system-reminder-tool-hosts-here-stale-after-sync-stop": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique here-machine bullet when the copy could not be emptied. Scratch-work clause is required on this arm when it fires."
   },
   "system-reminder-tool-hosts-here-synced-checkout": {
     "verdict": "pristine-keep",
@@ -9863,10 +10833,20 @@
     "version": "2.1.246",
     "why": "Unique off-sync tool_hosts_notice: Read/Edit/Grep/Glob hit this session's filesystem; current project files need Bash on the machine. Conditional and load-bearing."
   },
+  "system-reminder-tool-hosts-machine-files-absolute-path-permissions": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique short attached-machine file-tools sentence. Conditional reminder; absolute-path and permission-rules contract is load-bearing on its arm."
+  },
   "system-reminder-tool-hosts-machine-files-live-there": {
     "verdict": "pristine-keep",
     "version": "2.1.246",
     "why": "Unique attached-machine prefix for this host-description arm. Keep."
+  },
+  "system-reminder-tool-hosts-machine-files-synced-copy-work-here": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique synced-copy placement: edit here, do not send project work through the host tool. Prefix overlap is the other arm, not coverage. Pointer to File sync timing is a real section name."
   },
   "system-reminder-tool-hosts-machine-read-edit-search-there": {
     "verdict": "pristine-keep",
@@ -10087,6 +11067,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.246",
     "why": "Unique applied-trust arm of the cwd-change reminder. Keep."
+  },
+  "task-notification-ultraplan-do-not-respond": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique wait-for-user contract for the ultraplan status note. Do-not is mechanics. Conditional task-notification."
   },
   "task-notification-ultraplan-launch-error": {
     "verdict": "pristine-keep",
@@ -10335,6 +11320,21 @@
     "version": "2.1.241",
     "why": "Unique multi-file publish path contract. Keep."
   },
+  "tool-description-artifact-nested-runtime-blocks-cleanup-error": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique publish-error for nested `<!-- frame-runtime -->` / data-frame-runtime cleanup. Frozen comment/attribute names. Conditional tool error."
+  },
+  "tool-description-artifact-nested-runtime-cleanup-error": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Superset error with unique marker names and innermost-document repair. Cannot rewrite the frozen enumeration. Conditional publish error."
+  },
+  "tool-description-artifact-nested-skeleton-depth-error": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique cap + skeleton token + innermost publish recovery. Keep frozen."
+  },
   "tool-description-artifact-preview": {
     "verdict": "pristine-keep",
     "version": "2.1.247",
@@ -10344,6 +11344,11 @@
     "verdict": "trim",
     "version": "2.1.247",
     "why": "Partial overlap: drop the duplicated upload claim; keep the unique headless-browser + before-publishing sentence (frozen 'before')."
+  },
+  "tool-description-artifact-publish-named-thumbnails-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique 1-or-2 named-thumbnail interpolator. Frozen number."
   },
   "tool-description-artifact-publish-page-private-by-default-tail": {
     "verdict": "pristine-keep",
@@ -10429,6 +11434,16 @@
     "verdict": "pristine-keep",
     "version": "2.1.246",
     "why": "This fragment is the only live carrier of `files` map/list/null, `root` never changing published paths, one-file-per-entry, no leading slash `/x`, and the supporting-file byte/count/media-type limits. Parameter siblings cannot be cited. Conditional Artifact-tool description."
+  },
+  "tool-description-artifact-sync-dynamic": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique sync action: push local working copy and pull others. Live-edit sibling is a different action. Conditional tool description."
+  },
+  "tool-description-artifact-thumbnail-html-link": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional artifact-tool fragment. Unique thumbnail contract; siblings are validation errors, not this description."
   },
   "tool-description-artifact-type-discovery-guidance": {
     "verdict": "trim",
@@ -10559,6 +11574,16 @@
     "verdict": "pristine-keep",
     "version": "2.1.231",
     "why": "Stage-3 slot review refuted the trim: it dropped eight current runtime slots, rewrote frozen safety mechanics, and removed conditional PR guidance and templates. All maintained sets use the 2.1.231 pristine contract with every slot preserved."
+  },
+  "tool-description-bash-git-committing-changes": {
+    "verdict": "trim",
+    "version": "2.1.251",
+    "why": "Unique bash-tool commit workflow and slots remain (status/diff/log batch, -uall, HEREDOC, --amend-after-hook, -i, --no-edit, Task/Agent ban, attribution slot). Cut only redundant restatement and the parallel sermon. Keep every frozen mechanics sentence verbatim; prior trims of this family were refuted for rewriting those sentences and dropping slots."
+  },
+  "tool-description-bash-git-only-commit-prefer-named-files": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional concise bash-git fragment. Unique live-arm join prefix; first sentence frozen (Only); cannot delete without dropping the staging-prefer splice."
   },
   "tool-description-bash-monitor-streaming-bullet": {
     "verdict": "pristine-keep",
@@ -11694,6 +12719,16 @@
     "version": "2.1.241",
     "why": "Unique hover-empty tool_result. Sibling LSP empties do not cover hover."
   },
+  "tool-description-mcp-auth-placeholder-no-longer-needed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional MCP placeholder-error suffix. Unique 'placeholder no longer needed' signal."
+  },
+  "tool-description-mcp-auth-placeholder-real-tools-available": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional MCP placeholder-error suffix. Unique redirect to the real tool-finder after auth."
+  },
   "tool-description-mcp-authenticate-intro": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
@@ -11724,10 +12759,50 @@
     "version": "2.1.221",
     "why": "Middle operand of the mcp_call control-subtype describe(): \"UrlElicitationRequired (-32042) tries Elicitation hooks; if no hook \" + <this> + \"out-of-band, then retry mcp_call. \". Mid-clause \u2014 the two halves are meaningless apart. Tripwire: the sentence carries an error tag (-32042), an ordering word (`then retry`) and a tool name (mcp_call) \u2192 FROZEN. Corpus check: no other prompt describes the eli"
   },
+  "tool-description-mcp-repl-callable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Shared routing clause. Siblings do not replace this splice. Unique REPL-vs-top-level mechanic. Conditional."
+  },
+  "tool-description-mcp-server-disconnected": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique per-tool suffix: named MCP server has disconnected; callable again only if it reconnects."
+  },
+  "tool-description-mcp-server-needs-reauthorize": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique re-auth error plus continue-without-this-tool. Connecting sibling is another arm. Keep verbatim."
+  },
+  "tool-description-mcp-server-org-policy-blocked": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique per-call diagnosis (whole server blocked by policy). Session-level managed-policy list does not cover this tool-error suffix."
+  },
   "tool-description-mcp-server-still-connecting-call-wait": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique tool-error recovery with wait-tool interpolator."
+  },
+  "tool-description-mcp-server-still-connecting-retry": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique retry-shortly suffix when the wait tool is not the remedy."
+  },
+  "tool-description-mcp-tool-blocked-by-permissions-deny": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique tool-error suffix; security/retry contract."
+  },
+  "tool-description-mcp-tool-not-available-in-context": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional MCP tool-error suffix for needs_auth/disconnected-with-context-flag. Unique not-available-in-this-context wording; wiping either site blanks that path."
+  },
+  "tool-description-mcp-tool-org-admin-blocked": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique tool-level org-admin block for a named MCP server; will not return this session."
   },
   "tool-description-mcp-wait-intro": {
     "verdict": "pristine-keep",
@@ -12061,6 +13136,21 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique searchHint for the refresh-MCP-tools tool."
+  },
+  "tool-description-refreshmcptools": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional MCP tool description. Frozen triggers, error tag, call shapes, and slot. Prompt sibling does not replace planning-time description. Keep verbatim."
+  },
+  "tool-description-refreshmcptools-available-immediately": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique non-REPL access-timing sentence for RefreshMcpTools."
+  },
+  "tool-description-refreshmcptools-repl-callable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional RefreshMcpTools REPL access note. Unique 'refreshed tools become callable' remainder; parenthetical cannot be cut out of a frozen sentence."
   },
   "tool-description-release-full-control": {
     "verdict": "pristine-keep",
@@ -12490,6 +13580,26 @@
     "version": "2.1.241",
     "why": "Unique WaitForMcpServers result-shape clause. Neighbor fragments continue the sentence; they do not replace it."
   },
+  "tool-description-waitformcpservers-repl-callable-inside": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique REPL wait-for-connect continuation. Conditional on that surface."
+  },
+  "tool-description-waitformcpservers-repl-environment": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "WaitForMcpServers REPL splice; wiping it breaks that tool description mid-sentence."
+  },
+  "tool-description-waitformcpservers-repl-ready-when": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique REPL-arm fragment. Neighbor fragments continue the sentence; they do not replace it. Keep."
+  },
+  "tool-description-waitformcpservers-repl-servers-ready": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique REPL-surface quasi. Wiping it holes the assembled WaitForMcpServers description. Complementary to wait-for-servers-2."
+  },
   "tool-description-webfetch-concise": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
@@ -12514,6 +13624,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique Workflow tool_result: clone isolation plus where progress is visible. Conditional; nothing else names /workflows vs session URL."
+  },
+  "tool-description-workflow-load-authoring-skill": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique ordering: load the authoring-reference skill before a script. Frozen; not covered by the Workflow tool description."
   },
   "tool-description-workflow-size-guideline-configured-lead": {
     "verdict": "pristine-keep",
@@ -12579,6 +13694,16 @@
     "verdict": "pristine-keep",
     "version": "2.1.235",
     "why": "The resolution order (call param > agent-definition frontmatter > parent) and the fork exception are unique mechanics with no carrier anywhere in the corpus."
+  },
+  "tool-parameter-agent-model-override-explicit-only": {
+    "verdict": "wipe-merge",
+    "version": "2.1.251",
+    "why": "Coordinator-session suffix fully covered by the live coordinator bullet plus the base model-parameter description. Suppress; do not rewrite the frozen sentence."
+  },
+  "tool-parameter-agent-model-override-unavailable": {
+    "verdict": "wipe-merge",
+    "version": "2.1.251",
+    "why": "Coordinator-only Task model-parameter suffix fully restates the live coordinator system bullet. Wipe the suffix; the carrier keeps the constraint."
   },
   "tool-parameter-agent-model-override-user-explicit": {
     "verdict": "pristine-keep",
@@ -12950,6 +14075,11 @@
     "version": "2.1.237",
     "why": "All four claims are carried verbatim or verbatim-equivalent by a deployed sibling shipped in the same tool payload; nothing unique remains."
   },
+  "tool-parameter-artifact-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional Artifact parameter description. Unique note-vs-label publish contract."
+  },
   "tool-parameter-artifact-out-dir-read-asset": {
     "verdict": "pristine-keep",
     "version": "2.1.237",
@@ -12964,6 +14094,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.239",
     "why": "Path/approval contract the model cannot infer; unique per-branch. Corpus check: No corpus sibling above 0.62. Siblings tool-parameter-artifact-out-dir-read-db and tool-result-artifact-read-db-out-dir-consequence exist for the read_db branch; this is the read_file branch of the same parameter and states its own default and landing path."
+  },
+  "tool-parameter-artifact-page-live-doc": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique page-flag contract (LIVE DOC, Read/Edit, page: true). Frozen names. Conditional tool-parameter text."
   },
   "tool-parameter-artifact-path": {
     "verdict": "pristine-keep",
@@ -14707,6 +15842,31 @@
     "version": "2.1.233",
     "why": "Carries a filesystem path variable and an ordering imperative \u2014 frozen mechanics, and the only text telling the model where a completed agent's result lives."
   },
+  "tool-result-agent-proxy-command-failures": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique bash-stderr header for in-command proxy failures. Conditional tool_result. Keep."
+  },
+  "tool-result-agent-proxy-connect-rejected": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique bash-stderr kind label when the egress proxy denies CONNECT or cannot reach the destination."
+  },
+  "tool-result-agent-proxy-direct-blocked": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique proxy-refusal kind on a conditional stderr line. Keep."
+  },
+  "tool-result-agent-proxy-plain-http-request": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique protocol-error kind. Frozen 'only HTTPS CONNECT'. Keep."
+  },
+  "tool-result-agent-proxy-tls-to-relay": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique stderr kind label and the http:// URL constraint. Frozen env var. Conditional bash-error fragment."
+  },
   "tool-result-agent-resume-forked-skill-scoping-mismatch": {
     "verdict": "pristine-keep",
     "version": "2.1.233",
@@ -14716,6 +15876,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.234",
     "why": "Only copy of the sync-disabled/policy-denied diagnostic; a wipe would return an empty tool_result on that branch."
+  },
+  "tool-result-agent-resume-id-from-other-process": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional resume tool_result. Unique: id never ran in this session; reply through SendMessage or the sending session."
   },
   "tool-result-agent-resume-report-follows-json": {
     "verdict": "pristine-keep",
@@ -14782,10 +15947,25 @@
     "version": "2.1.233",
     "why": "Rule name, rule argument and \".source\" are enum/parameter mechanics the model needs to fix the permission \u2014 frozen and unique across all 3 emission sites."
   },
+  "tool-result-agent-type-denied-by-permission-rule": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional Task denial. Unique .agentType slot site; emptying it does not make the older site fire."
+  },
   "tool-result-agent-type-not-found": {
     "verdict": "pristine-keep",
     "version": "2.1.235",
     "why": "The recovery contract for the single most common Task-tool mistake \u2014 it echoes the bad value and lists the valid enum. Unique to its branch and entirely frozen text."
+  },
+  "tool-result-agent-type-not-offered": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional AgentTypeError. Unique property-access site; wiping it would leave the other site's different interpolation shape."
+  },
+  "tool-result-agent-type-not-offered-2": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique Task-tool result for this interpolator. Keep the site; do not merge into the .agentType sibling."
   },
   "tool-result-agent-worktree-isolation-guard": {
     "verdict": "pristine-keep",
@@ -15111,6 +16291,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Parameter name (`url`), enum action values and a two-item recovery enumeration \u2014 frozen; the tool-description carriers are not emitted at the rejection point."
+  },
+  "tool-result-artifact-agent-scoped-visibility": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional publish/result note. Unique: agent-scoped not private, Slack-channel visibility, share via page Share or copy."
   },
   "tool-result-artifact-asset-action-requires-asset-id": {
     "verdict": "pristine-keep",
@@ -15572,10 +16757,20 @@
     "version": "2.1.247",
     "why": "Unique error tag and recovery. Frozen parameter/enum names and first-write ordering. Conditional."
   },
+  "tool-result-artifact-capabilities-carried-forward": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional publish result. Unique carried-forward-from-previous-version provenance."
+  },
   "tool-result-artifact-capabilities-dual-spelling-fragment": {
     "verdict": "pristine-keep",
     "version": "2.1.232",
     "why": "This is the middle piece of one contiguous error message assembled from tool-result-artifact-capability-dual-spelling + this fragment + tool-result-artifact-capability-dual-spelling-remedy. Wiping it would emit a broken sentence ('capabilities declares both `artifact` and `self` \u2014 two Declare it once...'). No corpus carrier."
+  },
+  "tool-result-artifact-capabilities-from-type-immutable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique: stored capabilities declaration is type-owned and immutable at this publish. Conditional tool_result."
   },
   "tool-result-artifact-capability-change-hint": {
     "verdict": "pristine-keep",
@@ -15667,6 +16862,11 @@
     "version": "2.1.227",
     "why": "The analyst's read-only status, one-artifact/one-thread scope, denial of writes and other-thread reads, and permitted page-data read are already established by its deployed agent prompt. This denial result merely restates that existing allowlist."
   },
+  "tool-result-artifact-comment-thread-not-activated": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique resolve-path no-op: state unchanged, cannot distinguish never-sent vs revoked, do not retry. Conditional error contract; keep self-contained rather than trim frozen mixed sentence."
+  },
   "tool-result-artifact-comment-thread-not-found": {
     "injectionPath": "Tool result after either of two artifact-comment lookup sites fails to find the requested thread in the filtered result.",
     "verdict": "pristine-keep",
@@ -15723,10 +16923,20 @@
     "version": "2.1.231",
     "why": "Keep: those file/page mechanics and the associated data boundary are unique and load-bearing; the generic overlap does not replace them."
   },
+  "tool-result-artifact-comments-anchor-label-marker": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique label-marker mechanics. Frozen (only, or). Same family as prior held pristine-keeps; unique remainder is load-bearing."
+  },
   "tool-result-artifact-comments-anchor-path-data-warning": {
     "verdict": "pristine-keep",
     "version": "2.1.228",
     "why": "Proposed wipe-merge (The enclosing comments frame already tells the model to treat framed material as data, so this marker-specific restatement adds no behavior. Suppressing the whole conditional fragment preserves the surrounding concatenat) \u2014 held at pristine: not put through stage-3 adversarial verification this run, and 35 of 36 verified cuts were refuted. Re-propose next bump."
+  },
+  "tool-result-artifact-comments-anchor-snippet-follow-row": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique follow-row DATA contract. Conditional comments result."
   },
   "tool-result-artifact-comments-cursor-not-found-note": {
     "injectionPath": "Conditional Artifact comments tool-result note after a supplied cursor matches no thread on the current fetch.",
@@ -15760,6 +16970,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.226",
     "why": "This is compact runtime data, not behavioral scaffolding. It uniquely reports total threads, open threads, Claude-activated threads, threads with comments sent to Claude, and unreadable activation statuses, plus the dynamically appended result notes. Removing it would discard observable result state."
+  },
+  "tool-result-artifact-comments-notification-triggered-ask-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique checkPermissions reason. Conditional; model cannot infer the confirmation requirement."
   },
   "tool-result-artifact-comments-org-service-key-unreadable": {
     "verdict": "pristine-keep",
@@ -15826,6 +17041,16 @@
     "verdict": "pristine-keep",
     "version": "2.1.226",
     "why": "Unique validation mechanic: thread_id selects one thread while cursor continues a list, and the two cannot be combined. Parameter descriptions explain their separate purposes but do not state this mutual-exclusion constraint."
+  },
+  "tool-result-artifact-comments-thread-not-activated-open": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique open-thread dump label including resolve-blocked and stays-open. Wiping would remove the label from the comments dump."
+  },
+  "tool-result-artifact-comments-thread-not-activated-resolved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique resolved-thread unactivated label."
   },
   "tool-result-artifact-comments-threads-not-listed": {
     "injectionPath": "cli-2.1.224.js \u2014 Artifact tool `action:'comments'` result body; emitted into the tool_result the model reads. Artifact tool is enabled for this user.",
@@ -16228,6 +17453,11 @@
     "version": "2.1.224",
     "why": "Read in full: '`collection` must be a \"/\"-separated path of 1-31 segments and `doc_id` one segment \u2014 letters, digits and _ - . ~ : @ + per segment, not \".\" or \"..\".' Check 1: it is a pure grammar spec \u2014 no CAPS theater, no restatement, no filler. Check 2 is the awkward one and I am naming it plainly: the deployed `tool-parameter-artifact-db-collection.md` (183 ch) already ships '1-31 \"/\"-separated segments (letters, digits, _ - . ~ : @ + per segment)' with the tool schema on every turn, the deployed `tool-parameter-artifact-db-doc-id.md` (124 ch) ships 'Document id (one path segment)', and the"
   },
+  "tool-result-artifact-db-collection-parity-document-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique validation error; last live copy of collection/document parity and per-user path shape."
+  },
   "tool-result-artifact-db-credential-rejected": {
     "verdict": "pristine-keep",
     "version": "2.1.228",
@@ -16344,10 +17574,20 @@
     "version": "2.1.237",
     "why": "Unique skip-line template that interpolates the skip-* reason labels; recovery is path-specific."
   },
+  "tool-result-artifact-db-read-out-dir-moved-nothing-saved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique db_read save-start failure when out_dir moved after approval. Frozen out_dir/retry. siteCount 2, same body."
+  },
   "tool-result-artifact-db-read-out-dir-relocated": {
     "verdict": "pristine-keep",
     "version": "2.1.237",
     "why": "Same template class as the asset sibling but a different action, object, and slot. Full coverage fails; feature-disuse is not a wipe reason."
+  },
+  "tool-result-artifact-db-read-out-dir-write-error": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique ArtifactInputError. Keep."
   },
   "tool-result-artifact-db-read-record-unreadable": {
     "verdict": "pristine-keep",
@@ -16599,6 +17839,11 @@
     "version": "2.1.247",
     "why": "Unique relay-unconfirmed delete contract. Frozen action \"list\" and before. Conditional."
   },
+  "tool-result-artifact-delete-self-serve-claude-ai-menu": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique claude.ai-menu-only delete hint. Keep."
+  },
   "tool-result-artifact-delete-target-changed": {
     "verdict": "pristine-keep",
     "version": "2.1.239",
@@ -16608,6 +17853,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.247",
     "why": "This path is the only copy of the cloud-session delete deny plus do-not-retry. The how-to is needed here because the sibling clause is not joined."
+  },
+  "tool-result-artifact-delete-unavailable-cloud-session-2": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Second site of the unavailable-delete result with a function slot. Wipe would empty this site. Conditional."
   },
   "tool-result-artifact-delete-unconfirmed": {
     "verdict": "pristine-keep",
@@ -17402,6 +18652,11 @@
     "version": "2.1.232",
     "why": "Nothing to cut. Any override can only rearrange or drop `${}` slots and break the composed tool result \u2014 the collaboration line, capability note, warnings and privacy tail all ride slots 2-5."
   },
+  "tool-result-artifact-live-doc-version": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique live-doc-version tool_result layout with eight live slots. Keep."
+  },
   "tool-result-artifact-live-edit-certified-check-read-denied": {
     "verdict": "pristine-keep",
     "version": "2.1.224",
@@ -17511,6 +18766,31 @@
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Only copy of the transport-failure branch; the environment qualifier is the non-inferable part."
+  },
+  "tool-result-artifact-local-file-symlink-outside-read": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional permission-ask fragment (2 identical sites). Unique singular-file outside-read symlink clause."
+  },
+  "tool-result-artifact-local-file-user-must-approve": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique single-file askPath/256 contract."
+  },
+  "tool-result-artifact-local-files-all-user-must-approve": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "All-same-reason arm of the local-file copy ask. Single-file and mixed arms do not cover Both/All N. Conditional permission-ask."
+  },
+  "tool-result-artifact-local-files-mixed-user-must-approve": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique mixed-reason permission suffix. All-same-reason sibling is a different branch."
+  },
+  "tool-result-artifact-local-files-symlink-outside-read": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique plural symlink-outside-read qualifier. Keep."
   },
   "tool-result-artifact-login-blocked-by-credential": {
     "verdict": "pristine-keep",
@@ -17686,6 +18966,16 @@
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Only copy of the readback-failure branch and of the retry-vs-latest decision for it; the yanked-pin sibling does not cover an unreadable pin."
+  },
+  "tool-result-artifact-plan-mode-also-lasting-change": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional plan-mode permission suffix. Unique additive lasting-change fact."
+  },
+  "tool-result-artifact-plan-mode-lasting-change-only-you": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique plan-mode lasting-change + only-you approval. Also-lasting-change is the other suffix."
   },
   "tool-result-artifact-plan-mode-permission-check-failed": {
     "verdict": "pristine-keep",
@@ -18073,6 +19363,11 @@
     "version": "2.1.247",
     "why": "Unique measured publish-size checklist. Frozen MB math and included runtimes. Conditional."
   },
+  "tool-result-artifact-preview-page-over-publish-limit": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique preview mechanical check. Frozen MB/1024 path."
+  },
   "tool-result-artifact-preview-popup-on-load": {
     "verdict": "pristine-keep",
     "version": "2.1.247",
@@ -18178,6 +19473,11 @@
     "version": "2.1.238",
     "why": "Unique tail of the mid-upload-reset error: retry the reserved slug, not a fresh publish. Conditional tool_result. The slug interpolation and 'after the reset' ordering are frozen mechanics."
   },
+  "tool-result-artifact-publish-calltool-servers-not-in-manifest": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional publish warning. Unique: page callTool/watchTool names not in the MCP manifest fail for every viewer."
+  },
   "tool-result-artifact-publish-cannot-remove-index-html": {
     "verdict": "pristine-keep",
     "version": "2.1.246",
@@ -18254,6 +19554,16 @@
     "version": "2.1.246",
     "why": "Unique partial-create recovery: remaining files go to the created slug."
   },
+  "tool-result-artifact-publish-custom-thumbnail-rejected": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique publish outcome. Frozen server-reject + fallback."
+  },
+  "tool-result-artifact-publish-custom-thumbnails-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique both-files clause in the publish permission ask. Frozen [0]/[1]. Conditional fragment."
+  },
   "tool-result-artifact-publish-deploy-refused-prepare-rerun-failed": {
     "verdict": "pristine-keep",
     "version": "2.1.238",
@@ -18283,6 +19593,26 @@
     "verdict": "pristine-keep",
     "version": "2.1.246",
     "why": "Conditional publish validation with a unique empty-removal-path contract. Keep verbatim."
+  },
+  "tool-result-artifact-publish-eval-hard-link-denied": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional eval publish deny. Unique: hard link that an evaluation run does not publish."
+  },
+  "tool-result-artifact-publish-eval-source-unreadable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional eval publish deny. Unique source-outside-eval-read-set contract."
+  },
+  "tool-result-artifact-publish-favicon-unread": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique publish-nothing-unless-`favicon` error. Frozen param name. Conditional. Keep verbatim."
+  },
+  "tool-result-artifact-publish-files-changed-while-read": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique publish retry contract. Frozen files: prefix. Conditional validation error."
   },
   "tool-result-artifact-publish-files-over-version-entry-limit": {
     "verdict": "pristine-keep",
@@ -18379,6 +19709,11 @@
     "version": "2.1.238",
     "why": "Fragment of the mcp-manifest-rejected publish error. Unique mechanic: rename the reserved connector in claude.ai Settings. Deleting it drops the only copy of that repair; the trailing arrow is the join, not slop."
   },
+  "tool-result-artifact-publish-mcp-server-rewritten-to-display-name": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique publish rewrite: MCP server keys became connector display names that the page must pass to callTool/watchTool."
+  },
   "tool-result-artifact-publish-mcp-tool-name-not-connector": {
     "verdict": "pristine-keep",
     "version": "2.1.246",
@@ -18444,6 +19779,11 @@
     "version": "2.1.232",
     "why": "Keep pristine and fix the real defect elsewhere: /Users/batricperovic/.tweakcc/lobotomized-claude-code/system-prompts-opus-5/tool-result-artifact-publish-update-instructions.md (plus the opus-4-8 and fable-5 copies) must drop its trailing 'Artifacts are private unless shared\u2026' sentence during 2.1.232 realignment, which removes the double emission on the publish-success path without blanking the live-doc path."
   },
+  "tool-result-artifact-publish-private-app-card-gallery-hint": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional app-surface publish result. Unique app-card description and URL-paste ban; privacy sentence is the only copy on this path."
+  },
   "tool-result-artifact-publish-private-gallery-hint": {
     "verdict": "pristine-keep",
     "version": "2.1.237",
@@ -18488,6 +19828,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Warns that an existing page will be replaced at an address the session cannot identify \u2014 the riskier of the two replace warnings."
+  },
+  "tool-result-artifact-publish-required-new-artifact-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique validateInput suffix for file_path/favicon-required-on-create. Icon-kept contract is load-bearing."
   },
   "tool-result-artifact-publish-required-typed-update-url-hint": {
     "verdict": "pristine-keep",
@@ -18603,6 +19948,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.246",
     "why": "publish_target_gone remedy unique to type-created Artifacts. Frozen (`type_url`, `url`, enum branch)."
+  },
+  "tool-result-artifact-publish-thumbnail-href-not-image": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique thumbnail href contract. Frozen (.png, .jpg, .jpeg). Conditional publish error."
   },
   "tool-result-artifact-publish-to-typed-artifact-as-file-clause": {
     "verdict": "pristine-keep",
@@ -18970,10 +20320,20 @@
     "version": "2.1.239",
     "why": "decisionReason for a publicly visible post; sole carrier and a confirmation gate. Corpus check: No leads. Grepped for 'requires confirmation' across the set: other confirmation reasons name their own actions (room_send, asset delete); none names posting a reply to a comment thread or interpolates the audience."
   },
+  "tool-result-artifact-reply-confirmation-reason-named": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Named-comment reply-ask reason. Thread sibling interpolates a thread id, not the named-comment formatter."
+  },
   "tool-result-artifact-reply-duplicate-standing-reply": {
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Unique error-path contract with no slop: the comment id interpolation, the discarded-draft state, the read-before-resend ordering and the exact recovery parameter all appear only here. Every sentence trips the frozen tripwire, so nothing can be rewritten or compressed, and nothing is redundant enough to delete outright. The deployed opus-5 file is already verbatim pristine at ccVersion 2.1.233, so pristine-keep means no change to disk."
+  },
+  "tool-result-artifact-reply-permission-ask": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique checkPermissions ask for a comment-thread reply."
   },
   "tool-result-artifact-reply-thread-id-invalid": {
     "verdict": "pristine-keep",
@@ -19195,6 +20555,11 @@
     "version": "2.1.246",
     "why": "Unique confirmation contract for re-watching a deliberately stopped artifact, including auto-reply resume rules."
   },
+  "tool-result-artifact-room-open-tabs": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique live-room tool-result. Card keep for browser injection caution on raw browser data. Conditional."
+  },
   "tool-result-artifact-room-send-cowork-approval-reason": {
     "verdict": "pristine-keep",
     "version": "2.1.238",
@@ -19410,6 +20775,56 @@
     "verdict": "pristine-keep",
     "version": "2.1.233",
     "why": "Only copy of this encoding requirement as an emitted error."
+  },
+  "tool-result-artifact-sync-record-unreadable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique sync-record parse failure. Conditional tool_result; do not merge into live-edit."
+  },
+  "tool-result-artifact-thumbnail-automatic-screenshot-used": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Clause stating which artifact image was actually used. Six words, no sibling states the fallback."
+  },
+  "tool-result-artifact-thumbnail-bad-media": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique preview/publish error. Frozen allowed value `(prefers-color-scheme: dark)` and `rel=\"artifact-thumbnail\"`. Keep."
+  },
+  "tool-result-artifact-thumbnail-dark-needs-default": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique add-a-default-link problem with window/oversize exceptions. Complementary to the skip notice."
+  },
+  "tool-result-artifact-thumbnail-dark-skipped-no-default": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique dark-without-default skip. Conditional publish result."
+  },
+  "tool-result-artifact-thumbnail-declaration-unusable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique publish-blocked wrapper joining thumbnail problems. Conditional."
+  },
+  "tool-result-artifact-thumbnail-missing-href": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique missing-href error and remedy."
+  },
+  "tool-result-artifact-thumbnail-oversize-tag": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique size-gate error. Frozen 2 kB + rel/href/media. Keep."
+  },
+  "tool-result-artifact-thumbnail-past-window": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique thumbnail-tag window/svg ignore rule. Conditional preview/publish issue."
+  },
+  "tool-result-artifact-thumbnail-unnamed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique unnamed-thumbnail failure plus Read-folder remedy. Dark/declaration/reject siblings are other publish failures."
   },
   "tool-result-artifact-too-large-highlight-note": {
     "verdict": "pristine-keep",
@@ -19671,6 +21086,11 @@
     "version": "2.1.241",
     "why": "Unique publish-upgrade error. Keep."
   },
+  "tool-result-artifact-upload-asset-permission-ask-title": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique checkPermissions decisionReason lead for artifact file upload. Model-facing ask title; keep."
+  },
   "tool-result-artifact-upload-asset-requires-file-path": {
     "verdict": "pristine-keep",
     "version": "2.1.234",
@@ -19680,6 +21100,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.234",
     "why": "Action-specific validation string on a distinct branch; the sibling's differing recovery hint confirms it is not a substitute."
+  },
+  "tool-result-artifact-upload-asset-session-approval-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Consent-scope contract on its own composition site. Keep, matching the prior keep on the semicolon sibling."
   },
   "tool-result-artifact-upload-hash-not-staged": {
     "verdict": "pristine-keep",
@@ -19710,6 +21135,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Conditional status/watch/unwatch validation. Unique .env + trailing ${VAR_2} composition."
+  },
+  "tool-result-artifact-validation-steer-note-max-chars": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional publish validation steer. Unique note changelog cap and move-longer-text-into-page."
   },
   "tool-result-artifact-validation-steer-write-html-file": {
     "verdict": "pristine-keep",
@@ -20406,10 +21836,25 @@
     "version": "2.1.237",
     "why": "Conditional validateInput error for write_db file_path. Analog does not render on this path; wiping would empty the only write_db network-path contract. Frozen sentence cannot be rewritten; deleting it drops unique mechanics."
   },
+  "tool-result-artifact-write-db-permission-ask": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique permission-ask + visibility/persist contract. Keep verbatim (ternary slots are the binding)."
+  },
+  "tool-result-artifact-write-db-permission-ask-title": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique decisionReason lead for write_db permission. Conditional."
+  },
   "tool-result-artifact-write-db-requires-data-or-file-path": {
     "verdict": "pristine-keep",
     "version": "2.1.237",
     "why": "Conditional missing-document gate for write_db set/update. Unique error string and parameter names; sibling is the opposite both-supplied case. Frozen; keep."
+  },
+  "tool-result-artifact-write-db-session-approval-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique permission-ask note: approving covers data edits to any artifact for the rest of this session. Parallel variants are other sites, not coverage."
   },
   "tool-result-artifact-write-file-first": {
     "verdict": "pristine-keep",
@@ -20450,6 +21895,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique Attachment-prefixed validation error."
+  },
+  "tool-result-attachment-outside-working-directory-restricted": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique attachment-tool --restricted error."
   },
   "tool-result-attachment-unc-path": {
     "verdict": "pristine-keep",
@@ -20553,10 +22003,35 @@
     "version": "2.1.226",
     "why": "Unique parser diagnostic: adjacent same-line statements are interpreted as one Bash command, with the non-obvious detail that ! and shell keywords become plain words after an assignment. No sibling explains this permission-matching failure shape."
   },
+  "tool-result-bash-background-auto-deliver": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique auto-deliver result with the interpolated tool pointer. Conditional bash tool-result."
+  },
+  "tool-result-bash-background-delivery-window": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique shared Bash delivery-window contract. Frozen two-item enumeration."
+  },
+  "tool-result-bash-background-session-ending": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique bash tool-result for ending sessions. Conditional."
+  },
+  "tool-result-bash-backgrounded-by-user": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional bash result when the user backgrounded the command. Unique carry-on-without-waiting; wiping would drop that steer."
+  },
   "tool-result-bash-backgrounded-cwd-note": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique cwd contract for backgrounded bash. Frozen. Keep."
+  },
+  "tool-result-bash-backgrounded-to-deliver-message": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique background-reason + ID + output-path contract. Keep."
   },
   "tool-result-bash-cd-compound-cygwin-undeterminable-cwd": {
     "verdict": "pristine-keep",
@@ -20608,6 +22083,11 @@
     "version": "2.1.241",
     "why": "Unique SDK missing-command tool_result."
   },
+  "tool-result-bash-command-stopped-output-so-far": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional bash snapshot when the command is killed. Unique output-so-far payload."
+  },
   "tool-result-bash-command-timed-out": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
@@ -20648,6 +22128,11 @@
     "version": "2.1.241",
     "why": "Unique declare/typeset autoload-flag refusal. Keep verbatim."
   },
+  "tool-result-bash-double-bracket-non-numeric-operand-too-complex": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional bash ask-path result. Unique [[ non-numeric operand may run $(cmd) via arithmetic evaluation."
+  },
   "tool-result-bash-e2big-spawn-limit": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
@@ -20658,10 +22143,20 @@
     "version": "2.1.241",
     "why": "Unique worktree-deny-path growth diagnosis and remedies. Frozen commands/path. Conditional continuation."
   },
+  "tool-result-bash-exited-unknown-code": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique unknown-exit-code bash result. Full output path is the output contract."
+  },
   "tool-result-bash-final-response-background-process-warning": {
     "verdict": "pristine-keep",
     "version": "2.1.227",
     "why": "This sentence supplies two otherwise hidden lifecycle facts: the process is killed at final response, and a needed result must be awaited before that response. Sibling background guidance promises notifications or discourages polling but does not cover this final-response termination boundary, so the frozen ordering and runtime-cap guard remain verbatim."
+  },
+  "tool-result-bash-final-response-wait-on-output-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique no-poll / foreground-wait / timeout-minutes contract. Conditional; verbatim."
   },
   "tool-result-bash-input-redirection-deny-rule": {
     "verdict": "pristine-keep",
@@ -20683,6 +22178,16 @@
     "version": "2.1.241",
     "why": "Unique opening-tag delimiter. Emptying it would drop the framing tag."
   },
+  "tool-result-bash-integer-attribute-assignment-too-complex": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique ask-path diagnostic. Conditional. Keep."
+  },
+  "tool-result-bash-integer-attribute-env-prefix-too-complex": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique env-prefix integer-attribute refusal. Assignment sibling is the other bash shape. Keep verbatim."
+  },
   "tool-result-bash-interim-background-output-read-guidance": {
     "verdict": "pristine-keep",
     "version": "2.1.227",
@@ -20702,6 +22207,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.232",
     "why": "Unique security-review reason string with no corpus analogue. It is conditional and never fires on darwin, but a conditional prompt costs zero when off, so platform disuse is not a wipe reason."
+  },
+  "tool-result-bash-output-file-unverified-killed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique security kill reason spliced into stdout/stderr."
   },
   "tool-result-bash-path-blocked-deny-rule": {
     "verdict": "pristine-keep",
@@ -20732,6 +22242,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.246",
     "why": "Remote bash tool_result: extra file deny lists cannot be enforced here yet, so the command was not run. Unique sandbox-enforcement failure."
+  },
+  "tool-result-bash-spawn-failure-detail-withheld": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique bash spawn-failure opaque text. Keep."
   },
   "tool-result-bash-timed-out-backgrounded": {
     "verdict": "pristine-keep",
@@ -20887,6 +22402,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique worktree-git reason fragment. Keep slots."
+  },
+  "tool-result-bash-worktree-git-var-shared-checkout": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique git-var-to-shared-checkout refusal clause. Other worktree reasons are different mechanisms."
   },
   "tool-result-bash-worktree-git-wrapper-before-git": {
     "verdict": "pristine-keep",
@@ -23116,6 +24636,156 @@
     "version": "2.1.227",
     "why": "The result distinguishes a sandbox startup failure from disabled or unsupported sandboxing and gives the required `/sandbox`, fix, restart, then retry sequence. The OAuth startup-failure sibling concerns an unrelated subsystem, and no device-bash carrier covers this ordered recovery path."
   },
+  "tool-result-dir-sync-branch-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique hold cause."
+  },
+  "tool-result-dir-sync-changes-unapplied": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique dir-sync cause clause. Conditional."
+  },
+  "tool-result-dir-sync-checkout-unready-cause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional interpolated cause. Unique dirty-checkout reason; wiping removes the only copy the hold wraps."
+  },
+  "tool-result-dir-sync-could-not-ask-catch-up": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique ask-failed catch-up cause vs take-in failed/refused. Conditional hold/note."
+  },
+  "tool-result-dir-sync-could-not-send-first": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique on() cause. Conditional."
+  },
+  "tool-result-dir-sync-could-not-take-in-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique failed-kind take-in cause. Frozen first/ordering."
+  },
+  "tool-result-dir-sync-could-not-take-in-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique refused-catch-up cause. Conditional; not covered by the failed arm."
+  },
+  "tool-result-dir-sync-deferred-until-handoff": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique this-command deferred-write contract. Keep."
+  },
+  "tool-result-dir-sync-files-reach-next-message-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Shared constant for post-command dir-sync notes. Unique timing mechanic. Overlap is DRY/inlined copies; wipe would break interpolating hosts. Conditional fragment, keep."
+  },
+  "tool-result-dir-sync-host-not-syncing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique not-syncing cause set."
+  },
+  "tool-result-dir-sync-host-stopped-syncing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional forwarded-tool note. Unique host-has-stopped-syncing so the command ran without this session's edits."
+  },
+  "tool-result-dir-sync-kept-here": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique after-forward sessionNote. Conditional."
+  },
+  "tool-result-dir-sync-momentary-retry-remedy": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional dn() default remedy. Unique: usually momentary, next forwarded command retries, user's next message resyncs."
+  },
+  "tool-result-dir-sync-next-sync-point-remedy": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique interpolated remedy."
+  },
+  "tool-result-dir-sync-overcap-remedy": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "dn() remedy unique sequencing after overcap. Cannot delete the frozen sentence."
+  },
+  "tool-result-dir-sync-peer-refused-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional take-in-failed cause. Unique peer-refused reason."
+  },
+  "tool-result-dir-sync-peer-upload-did-not-go": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional dir-sync cause fragment. Unique peer-upload-hold discriminator."
+  },
+  "tool-result-dir-sync-pre-forward-internal-error": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique pre-forward throw cause for sync_failed/go_with_note. Keep verbatim."
+  },
+  "tool-result-dir-sync-publish-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique publish-refused note: local edits are not reaching that machine. Conditional forwarded-tool note."
+  },
+  "tool-result-dir-sync-push-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique push-failed cause; shared arrival clause is not full coverage."
+  },
+  "tool-result-dir-sync-read-ran-on-stale-files": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional read-only go_with_note. Unique this-read-ran-on-stale-host-files wrapper around a sync cause."
+  },
+  "tool-result-dir-sync-session-stream-closed-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique dir-sync session-stream closed clause."
+  },
+  "tool-result-dir-sync-stale-files-hold": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional mutating-command hold. Unique stale-files hold plus clearer."
+  },
+  "tool-result-dir-sync-switch-back-remedy": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique branch-changed hold remedy. Conditional. Frozen switch-back ordering."
+  },
+  "tool-result-dir-sync-turn-boundary-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique: host syncs only at turn boundaries, so the command ran on files as of the user's last message."
+  },
+  "tool-result-dir-sync-unreachable-resync-remedy": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique unreachable pre-forward remedy. Conditional fragment."
+  },
+  "tool-result-dir-sync-unreadable-sync-response": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique `go_with_note` cause. Conditional. Keep."
+  },
+  "tool-result-dir-sync-unreadable-word": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique malformed-word arm. Keep the inlined timing suffix; it is this note's user-visible consequence."
+  },
+  "tool-result-dir-sync-upload-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique upload-only host contract. Keep."
+  },
+  "tool-result-dir-sync-user-clears-on-machine-remedy": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique stale-files hold remedy."
+  },
   "tool-result-edit-all-occurrences-replaced": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
@@ -23251,6 +24921,11 @@
     "version": "2.1.241",
     "why": "Unique .message wrapper. Tag is the tool_result contract."
   },
+  "tool-result-eval-mock-relay-request-too-large": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique plugin-eval mock-relay size abort. Conditional."
+  },
   "tool-result-eval-mock-stand-in-abort": {
     "verdict": "pristine-keep",
     "version": "2.1.246",
@@ -23265,6 +24940,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique post-plan parallelization contract. Conditional; keep."
+  },
+  "tool-result-exitplanmode-team-lead-verdict-mismatch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique plan-approval mismatch + exact retry tool. Keep."
   },
   "tool-result-exitworktree-could-not-remove": {
     "verdict": "pristine-keep",
@@ -23320,6 +25000,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique file-not-found suggestion result."
+  },
+  "tool-result-file-permission-check-expired": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique file-tool retry contract with frozen read/write branch. Keep."
   },
   "tool-result-file-readonly-perforce": {
     "verdict": "pristine-keep",
@@ -23997,10 +25682,55 @@
     "version": "2.1.241",
     "why": "Unique disabled-feature error for this path; feature-disuse is not a wipe for a conditional result."
   },
+  "tool-result-mcp-first-party-auth-no-usable-credential": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique MCP first-party auth failure: no usable claude.ai credential; run /design-login or /login and retry."
+  },
+  "tool-result-mcp-first-party-auth-rejected-claude-ai-login": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique failed MCP client .error when a claude.ai /login token is rejected with a non-403 status; run /login and retry."
+  },
   "tool-result-mcp-first-party-auth-rejected-claude-design": {
     "verdict": "pristine-keep",
     "version": "2.1.247",
     "why": "Conditional MCP connect failure. Unique 403 /login-token/Claude Design contract; other /design-login strings are other failures."
+  },
+  "tool-result-mcp-first-party-auth-rejected-design-login": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique non-403 /design-login rejection. Frozen command. Two-site id; keep the body."
+  },
+  "tool-result-mcp-first-party-auth-rejected-design-login-403": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique /design-login HTTP 403: check Claude Design access or re-authorize with /design-login."
+  },
+  "tool-result-mcp-first-party-auth-rejected-design-scoped-login-403": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional MCP 403 (2 sites). Unique already-scoped-login still 403 diagnosis; hedge is inside a frozen sentence."
+  },
+  "tool-result-mcp-first-party-auth-rejected-login-403-missing-scope": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique missing-scope 403 prefix (siteCount 2). Wiping or rewriting would break runtime concatenation. Keep verbatim."
+  },
+  "tool-result-mcp-first-party-auth-rejected-missing-scope": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique scope-missing MCP 403 with frozen /login retry."
+  },
+  "tool-result-mcp-headers-helper-auth-rejected": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique MCP client error. Keep (including trailing space; it glues the continuation)."
+  },
+  "tool-result-mcp-headers-helper-oauth-fallback-disabled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique concatenated tail of the headersHelper auth-rejected error: OAuth fallback is disabled when the helper supplies Authorization. Wiping would drop the only copy of that gate."
   },
   "tool-result-mcp-not-directory-resource": {
     "verdict": "pristine-keep",
@@ -24141,6 +25871,16 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique MCP elicitation retry contract."
+  },
+  "tool-result-mcp-wait-cached-repl": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional MCP wait-for-servers result. Unique REPL-callable cached list; connects on first call."
+  },
+  "tool-result-mcp-wait-connected-repl": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique wait-connected REPL listing."
   },
   "tool-result-mcp-wait-server-unconfigured": {
     "verdict": "pristine-keep",
@@ -24606,6 +26346,11 @@
     "version": "2.1.241",
     "why": "Unique unchanged-catalog pointer; wiping it would hide where full schemas already live."
   },
+  "tool-result-org-compliance-policy-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique generic org-compliance unavailability result."
+  },
   "tool-result-orphaned-shell-stopped": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
@@ -24660,6 +26405,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique Read-tool PDF-render error with exact install commands."
+  },
+  "tool-result-pdf-too-large-to-return-whole-remote-call": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique whole-PDF transport-size refusal with wholePdfMaxRawBytes and pdfMaxPagesPerRead. Frozen numbers/pages/example. Do not strip the remedy; the sibling does not fire on this path."
   },
   "tool-result-pdf-too-many-pages": {
     "verdict": "pristine-keep",
@@ -25016,6 +26766,16 @@
     "version": "2.1.241",
     "why": "Unique OAuth-refresh lock error plus retry."
   },
+  "tool-result-prompt-shell-permission-denied-withheld": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique !-shell permission-check denial on a confined connection. Frozen pattern + withheld tag."
+  },
+  "tool-result-prompt-shell-substitution-failed-withheld": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique !-shell substitution failure on a confined connection. Permission-denied sibling is another pattern. Keep."
+  },
   "tool-result-proposegoal-awaiting-approval": {
     "verdict": "pristine-keep",
     "version": "2.1.227",
@@ -25146,6 +26906,11 @@
     "version": "2.1.241",
     "why": "Unique Read token-cap partial-view sentinel. Keep the prefix verbatim."
   },
+  "tool-result-read-symlink-resolution-changed-after-permission": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional Read tool error. Unique refuse-to-read when symlink resolution changed after the permission check."
+  },
   "tool-result-readmcpresourcedir-listing": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
@@ -25216,10 +26981,25 @@
     "version": "2.1.246",
     "why": "Unique safe-to-retry withdrawn arm. Keep."
   },
+  "tool-result-remote-host-approval-withdrawn-classifier-surface": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional slot of the withdrawn-approval tool_result. Unique person-approval retry on that path; wiping it would empty the parent's VAR_1 arm."
+  },
   "tool-result-remote-host-approval-withdrawn-race": {
     "verdict": "pristine-keep",
     "version": "2.1.246",
     "why": "Unique check-before-retry race. Security/ordering contract stays verbatim."
+  },
+  "tool-result-remote-host-approval-withdrawn-retry-safe": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Slot literal for the withdrawn-approval result. Wiping it empties the parent slot. Unique safe-to-retry on withdrawn."
+  },
+  "tool-result-remote-host-approval-withdrawn-unverified-surface": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Withdrawn-approval unverified-surface slot. Device-bridge siblings do not render here. Unique 'surface this session cannot verify' plus unedited resend."
   },
   "tool-result-remote-host-bound-machine-not-connected": {
     "verdict": "pristine-keep",
@@ -25240,6 +27020,16 @@
     "verdict": "pristine-keep",
     "version": "2.1.246",
     "why": "Unique remote per-call timeout + may-still-be-running + long-running-belong slot."
+  },
+  "tool-result-remote-host-classifier-approved-approval-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique classifier-approved + not-yet-run withdrawn-approval lead. Keep."
+  },
+  "tool-result-remote-host-classifier-approved-unverified-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique still-running remote tool_result cause. Conditional."
   },
   "tool-result-remote-host-disconnected-during-call": {
     "verdict": "pristine-keep",
@@ -25536,6 +27326,11 @@
     "version": "2.1.246",
     "why": "Unique error when this session's own permission prompt throws. Both sites share one body; keep it."
   },
+  "tool-result-remote-tool-person-approval-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique person-approval-required result with tool and host slots. Conditional remote-tool error."
+  },
   "tool-result-remote-tool-result-cut-to-session-limits": {
     "verdict": "pristine-keep",
     "version": "2.1.246",
@@ -25761,6 +27556,11 @@
     "version": "2.1.241",
     "why": "Unique request_teach_access pending result. Frozen tool name stays."
   },
+  "tool-result-restricted-path-outside-working-directory": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique --restricted file-tool deny. Attachment sibling is SendMessage/SendUserFile. Keep verbatim."
+  },
   "tool-result-routine-list-runs-none-recorded": {
     "verdict": "pristine-keep",
     "version": "2.1.227",
@@ -25806,6 +27606,11 @@
     "version": "2.1.241",
     "why": "Unique `/schedule` connection-failure tool_result. Conditional; keep verbatim."
   },
+  "tool-result-schedulewakeup-max-duration": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique loop-ended tool_result. Runtime cap plus no-retry. Conditional."
+  },
   "tool-result-screenshot-save-to-disk-dir-failed": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
@@ -25815,6 +27620,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Conditional screenshot note. Unique write-failed arm of the save_to_disk family."
+  },
+  "tool-result-search-symlink-resolution-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique Glob/Grep TOCTOU refusal. Security contract must stay on this tool path."
   },
   "tool-result-self-hosted-runner-auth-error-hint": {
     "verdict": "pristine-keep",
@@ -25866,6 +27676,16 @@
     "verdict": "pristine-keep",
     "version": "2.1.238",
     "why": "Conditional SendMessage result. Unique: target is already waking, message is queued for the next tool round, and it is not delivered if the agent turns out to have been stopped. Keep verbatim with the slot."
+  },
+  "tool-result-send-message-agent-main-conversation-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional SendMessage suffix for nested agents. Unique reply-routing contract."
+  },
+  "tool-result-send-message-agent-one-way-address-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique one-way session-address suffix. Conditional."
   },
   "tool-result-send-message-agent-resume-failed": {
     "verdict": "pristine-keep",
@@ -25994,6 +27814,31 @@
     "verdict": "pristine-keep",
     "version": "2.1.247",
     "why": "Unique SendMessage success caveat for older Remote Control peers."
+  },
+  "tool-result-send-message-desktop-hook-deferred": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique hook-deferred + no-resume contract. Keep."
+  },
+  "tool-result-send-message-desktop-hop-loop-paused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique desktop hop-loop pause with .forwards and until-next-user-message. Conditional SendMessage result."
+  },
+  "tool-result-send-message-desktop-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique Desktop refuse tool_result. Keep."
+  },
+  "tool-result-send-message-desktop-session-tool-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique Desktop-session-id-shape diagnosis."
+  },
+  "tool-result-send-message-desktop-structured-message": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique Desktop-session refusal. Conditional SendMessage result."
   },
   "tool-result-send-message-device-gated-reply-only": {
     "verdict": "pristine-keep",
@@ -26443,6 +28288,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique teammate-inbox queued success."
+  },
+  "tool-result-send-message-teammate-unclaimable-name": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique resume-teammate validation error. Keep."
   },
   "tool-result-send-message-teams-required": {
     "verdict": "pristine-keep",
@@ -26972,10 +28822,20 @@
     "version": "2.1.241",
     "why": "Unique zero-tool refusal piece naming tools not available to subagents."
   },
+  "tool-result-subagent-turn-limit-before-finishing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique wrapper; slots carry the branch-specific notes. Deleting it would drop the limit sentence."
+  },
   "tool-result-subagent-turn-limit-continue-hint": {
     "verdict": "pristine-keep",
     "version": "2.1.246",
     "why": "Unique continue-from-truncated-subagent mechanic. Concatenates after the partial-output note."
+  },
+  "tool-result-subagent-turn-limit-no-report": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique turn-limit branch: still calling tools, no report. Conditional slot."
   },
   "tool-result-subagent-turn-limit-partial-output": {
     "verdict": "pristine-keep",
@@ -26992,6 +28852,11 @@
     "version": "2.1.241",
     "why": "Unique Task/agent refusal prefix. Conditional. Keep verbatim."
   },
+  "tool-result-swarm-permission-tool-call-not-described": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique permission-ask/tool_result when a swarm leader verdict omits this call. Conditional."
+  },
   "tool-result-task-list-no-tasks-found": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
@@ -27001,6 +28866,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique task-not-running validation error shared by two emission sites. Both must keep the same frozen sentence."
+  },
+  "tool-result-task-output-file-removed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique missing task-output path. Conditional tool error."
   },
   "tool-result-task-output-omitted-disk-write-failed": {
     "verdict": "pristine-keep",
@@ -27111,6 +28981,26 @@
     "verdict": "pristine-keep",
     "version": "2.1.241",
     "why": "Unique unavailable-tool suffix. Keep including slots."
+  },
+  "tool-result-tool-unavailable-mcp-disabled-by-user": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique user-disabled MCP cause."
+  },
+  "tool-result-tool-unavailable-mcp-not-configured": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique no-such-tool branch for an unconfigured MCP tool. Conditional tool_result; keep."
+  },
+  "tool-result-tool-unavailable-mcp-not-connected-in-context": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique no-such-tool suffix for MCP not connected in this context. Conditional."
+  },
+  "tool-result-tool-unavailable-mcp-not-offered": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique no-such-tool suffix for a connected server that lacks the tool. Keep."
   },
   "tool-result-tool-unavailable-webfetch-agent-not-allowed": {
     "verdict": "pristine-keep",
@@ -27332,6 +29222,11 @@
     "version": "2.1.241",
     "why": "Partial overlap: drop the duplicated /workflows CTA; keep the Task ID line and the notification sentence."
   },
+  "tool-result-workflow-load-skill-and-retry": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique Workflow error suffix with the skill-name slot. Frozen load/fix/retry order. Conditional."
+  },
   "tool-result-workflow-meta-must-be-first-statement": {
     "verdict": "pristine-keep",
     "version": "2.1.233",
@@ -27397,6 +29292,11 @@
     "version": "2.1.233",
     "why": "Same parse-failure guidance but with the offending source line and a caret, giving the model the exact position to fix; it is the other branch of the same conditional as the no-location form. One line carrying a single fact; nothing to trim and no other prompt supplies it."
   },
+  "tool-result-workflow-script-path-must-be-returned-or-readable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique Workflow scriptPath validation error."
+  },
   "tool-result-workflow-script-path-network-path-rejected": {
     "verdict": "pristine-keep",
     "version": "2.1.234",
@@ -27451,6 +29351,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.224",
     "why": "Read in full: 'Refusing to use ${dir} as an isolation worktree: it contains the protected checkout ${checkout}, so adopting it would disarm every isolation check for that checkout.' One sentence, no CAPS, no hedging, no moralizing, no restatement. FROZEN ('every', plus two interpolated paths). The trailing clause is not rationale padding: every sibling in this family ends with an actionable remedy ('Recreate the worktree with git worktree add, then retry', 'Remove the redirect, restore the worktree's own .git', 'launch from the parent checkout') and this branch has none, so the consequence cla"
+  },
+  "tool-result-worktree-isolation-eval-confined": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Conditional isolation refusal. Unique plugin-evaluation-harness reason."
   },
   "tool-result-worktree-isolation-git-entry-unexaminable": {
     "verdict": "pristine-keep",
@@ -27586,6 +29491,11 @@
     "verdict": "pristine-keep",
     "version": "2.1.228",
     "why": "This is operation-specific runtime feedback: it explains that a Write failed because a Read deny rule covers the file. The Edit analogue cannot substitute for the Write result."
+  },
+  "tool-result-write-refusing-symbolic-link": {
+    "verdict": "pristine-keep",
+    "version": "2.1.251",
+    "why": "Unique Write-tool symlink refusal and recovery. Keep."
   },
   "workflow-simplify-cleanup-agents": {
     "verdict": "trim",
