@@ -235,3 +235,56 @@ describe('case sensitivity', () => {
     ).toEqual([]);
   });
 });
+
+// A bracket KEY on an interpolated object carries a minified identifier, and
+// minifiers pick a different letter per platform. Pinning the darwin name makes
+// the prompt unmatchable on Linux while every local gate stays green — which is
+// exactly what the cross-platform gate exists to catch. Both engines have to
+// generalize it, and identically, or `pnpm test:matcher` fails.
+describe('bracket keys on an interpolated object are platform-generalized', () => {
+  const bothEngines = async (pieces: string[], haystack: string) => {
+    const matcher = spec(pieces);
+    const viaRegex = await findAllMatchesWithStackFallback(
+      matcher.regex,
+      'sg',
+      haystack
+    );
+    const viaMatcher = await findAllPromptPieceMatches(matcher, haystack);
+    // The two engines must agree; `pnpm test:matcher` enforces the same
+    // property against the real bundle.
+    expect(viaMatcher.length).toBe(viaRegex.length);
+    return viaMatcher.length;
+  };
+
+  // `${o[P-1]}` — CC 2.1.251's two zsh `read` tool-results. `P` on darwin is
+  // `E` on linux-arm64.
+  it('matches an arithmetic key under either platform name', async () => {
+    const pieces = ["'read ${", "[P-1]}' operand is too complex"];
+    expect(
+      await bothEngines(pieces, `x='read \${o[P-1]}' operand is too complex;`)
+    ).toBe(1);
+    expect(
+      await bothEngines(pieces, `x='read \${q[E-1]}' operand is too complex;`)
+    ).toBe(1);
+  });
+
+  // `${OBJ[g.terminal]}` — CC 2.1.237's /terminal-setup pair. The leading
+  // identifier is minified; the property path is Anthropic's own.
+  it('matches a property-path key under either platform name', async () => {
+    const pieces = ['open ${', '[g.terminal]} to finish'];
+    expect(
+      await bothEngines(pieces, 'open ${M[G.terminal]} to finish now')
+    ).toBe(1);
+    expect(
+      await bothEngines(pieces, 'open ${M[q.terminal]} to finish now')
+    ).toBe(1);
+  });
+
+  // The plain member key was already generalized; keep it covered so a future
+  // edit to the arithmetic branch cannot break it.
+  it('matches a plain member key under either platform name', async () => {
+    const pieces = ['pick ${', '[f]} first'];
+    expect(await bothEngines(pieces, 'pick ${m[f]} first please')).toBe(1);
+    expect(await bothEngines(pieces, 'pick ${m[Z9]} first please')).toBe(1);
+  });
+});

@@ -1299,9 +1299,14 @@ export const buildSearchRegexFromPieces = (
       // /terminal-setup prompts unmatchable on linux-x64 while passing on the
       // Mac and on linux-arm64 — invisible to every local gate, which is exactly
       // what the cross-platform gate exists to catch.
+      // The same generalization covers a key that is an ARITHMETIC expression
+      // on a minified name — `${o[P-1]}` leaves "[P-1]}…" here, and `P` is `E`
+      // on linux-arm64. CC 2.1.251's two zsh `read` tool-results are exactly
+      // that shape, and pinning the Mac name made both unmatchable on Linux
+      // while every local gate stayed green.
       piece = piece.replace(
-        /^\[[A-Za-z_$][\w$]*((?:\.[\w$]+)+)\](?=\})/,
-        (_m, propPath) => `${MEMBER_PREFIX_SENTINEL}${propPath}]`
+        /^\[[A-Za-z_$][\w$]*((?:\.[\w$]+)+|\s*[-+*/%]\s*[^\]]*)\](?=\})/,
+        (_m, tail) => `${MEMBER_PREFIX_SENTINEL}${tail}]`
       );
     }
 

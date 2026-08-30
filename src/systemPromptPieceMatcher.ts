@@ -92,8 +92,11 @@ const tokensForPiece = (piece: string, pieceIndex: number): MatchToken[] => {
       // Mac name and the prompt is unmatchable on linux-x64 while passing on the
       // Mac and on linux-arm64. buildSearchRegexFromPieces does the same thing;
       // the two engines have to agree or test:matcher fails.
+      // Also covers an ARITHMETIC key on a minified name (`${o[P-1]}` ->
+      // "[P-1]}…", where `P` is `E` on linux-arm64). Same reason, same fix, and
+      // buildSearchRegexFromPieces has to agree or test:matcher fails.
       const memberPath = rest.match(
-        /^\[[A-Za-z_$][\w$]*((?:\.[\w$]+)+)\](?=\})/
+        /^\[[A-Za-z_$][\w$]*((?:\.[\w$]+)+|\s*[-+*/%]\s*[^\]]*)\](?=\})/
       );
       if (memberPath) {
         tokens.push({ kind: 'member', path: memberPath[1] });
