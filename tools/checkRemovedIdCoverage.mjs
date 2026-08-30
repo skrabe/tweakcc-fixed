@@ -80,6 +80,7 @@ const ALLOWLIST = path.join(
 
 const [cliPath, prevPath, curPath, ...flags] = process.argv.slice(2);
 const updateAllowlist = flags.includes('--update-allowlist');
+const RENAME_MAP = process.env.TWEAKCC_RENAME_MAP || '/tmp/removed-id-renames.json';
 
 if (!cliPath || !prevPath || !curPath) {
   console.error(
@@ -163,6 +164,17 @@ const cur = readPrompts(curPath);
 
 const curIds = new Set(cur.map(p => p.id).filter(Boolean));
 const curBlob = cur.map(reconstruct).join('\n');
+// Which CURRENT id carries the surviving text. `in-catalogue` alone tells the
+// operator a rename happened but not what to rename TO, and re-deriving that
+// with an ad-hoc fuzzy matcher is exactly the reimplementation that gets the
+// answer wrong. Report the successor.
+const curBodies = cur
+  .filter(p => p.id)
+  .map(p => ({ id: p.id, body: reconstruct(p) }));
+const successorOf = window => {
+  for (const { id, body } of curBodies) if (body.includes(window)) return id;
+  return null;
+};
 
 // The classify sidecar: a candidate awaiting a verdict this run is not a gap.
 const sidecarBlob = (() => {
@@ -210,30 +222,42 @@ const classify = id => {
       for (let off = 0; off + WINDOW <= run.length; off += STRIDE) {
         const w = run.slice(off, off + WINDOW);
         if (!isAscii(w)) continue;
-        if (curBlob.includes(w)) return 'in-catalogue';
-        if (sidecarBlob.includes(w)) return 'in-sidecar';
+        if (curBlob.includes(w)) return { bucket: 'in-catalogue', to: successorOf(w) };
+        if (sidecarBlob.includes(w)) return { bucket: 'in-sidecar' };
       }
     }
   }
   const probes = entries.flatMap(midBodyProbes);
   if (probes.length) {
-    return probes.some(pr => cli.includes(pr)) ? 'IN-BUNDLE' : 'gone';
+    return { bucket: probes.some(pr => cli.includes(pr)) ? 'IN-BUNDLE' : 'gone' };
   }
   for (const p of entries) {
     for (const run of literalRuns(p)) {
       for (let off = 0; off + WINDOW <= run.length; off += STRIDE) {
         const w = run.slice(off, off + WINDOW);
         if (!isAscii(w)) continue;
-        if (cli.includes(w)) return 'IN-BUNDLE';
+        if (cli.includes(w)) return { bucket: 'IN-BUNDLE' };
       }
     }
   }
-  return 'gone';
+  return { bucket: 'gone' };
 };
 
 const buckets = { 'in-catalogue': [], 'in-sidecar': [], 'IN-BUNDLE': [], gone: [] };
+const renamedTo = {};
 for (const id of [...prevById.keys()].filter(i => !curIds.has(i)).sort()) {
-  buckets[classify(id)].push(id);
+  const { bucket, to } = classify(id);
+  buckets[bucket].push(id);
+  if (to) renamedTo[id] = to;
+}
+// The rename map is what an operator has to act on — an override keyed by the
+// old id has to be re-mapped by CONTENT to the successor, and every set that
+// has the file has to move with it.
+if (buckets['in-catalogue'].length) {
+  fs.writeFileSync(
+    RENAME_MAP,
+    `${JSON.stringify(renamedTo, null, 2)}\n`
+  );
 }
 
 const removed = buckets['IN-BUNDLE'].length + buckets.gone.length;
