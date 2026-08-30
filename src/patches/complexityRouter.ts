@@ -318,10 +318,21 @@ const wrapEffortResolver = (
   helpers: ClassifierHelpers,
   sidFn: string | null
 ): string | null => {
-  // Three resolver shapes, tried newest-first. The two in-line shapes expose the
+  // Four resolver shapes, tried newest-first. The two in-line shapes expose the
   // same capture groups: 1=prefix (through `=ENV();`), 2=MODEL, 3=FALLBACK,
-  // 4=ENV result, 5=combined effort var, 6=maxGuard, 7=xhighGuard. The split
-  // shape carries its guards in a separate normalizer function, resolved below.
+  // 4=ENV result, 5=combined effort var, 6=maxGuard, 7=xhighGuard. Both split
+  // shapes carry their guards in a separate normalizer function, resolved below.
+  //
+  // Method 0 — CC >= 2.1.251: the resolver gained a third options arg
+  // `{honorLaunchPin:PIN=!0}={}` and the launch-pin binding became
+  // `PIN&&LAUNCH(MODEL)` instead of a bare `LAUNCH(MODEL)` call. Still a
+  // split shape: guards live in the tail-called normalizer; the wrap still
+  // rides right after `=ENV();`. Same capture groups as patternSplit.
+  //   function NAME(MODEL,FALLBACK,{honorLaunchPin:PIN=!0}={}){if(!dI(MODEL))return;
+  //     let A=PIN&&SOe(MODEL),B=LKe(MODEL),ENV=Sft();
+  //     if(ENV===null&&!A)return;return NORM(ENV??(A?B:void 0)??FALLBACK??B,MODEL)}
+  const patternHonorPin =
+    /(function [$\w]+\(([$\w]+),([$\w]+),\{honorLaunchPin:[$\w]+=!0\}=\{\}\)\{if\(![$\w]+\(\2\)\)return;let [$\w]+=[$\w]+&&[$\w]+\(\2\),[$\w]+=[$\w]+\(\2\),([$\w]+)=[$\w]+\(\);)if\(\4===null&&![$\w]+\)return;return ([$\w]+)\(\4\?\?\([$\w]+\?[$\w]+:void 0\)\?\?\3\?\?[$\w]+,\2\)\}/;
   //
   // CC 2.1.222+ (lQ/s_u shape): the normalization + both support guards moved
   // OUT of the resolver into a shared normalizer, so the resolver body ends at
@@ -352,7 +363,7 @@ const wrapEffortResolver = (
   const patternLegacy =
     /(function [$\w]+\(([$\w]+),([$\w]+)\)\{if\(![$\w]+\(\2\)\)return;let [$\w]+=[$\w]+\(\2\),[$\w]+=[$\w]+\(\2\),([$\w]+)=[$\w]+\(\);)if\(\4===null\)return [$\w]+\?[$\w]+:void 0;let ([$\w]+)=\4\?\?\([$\w]+\?[$\w]+:void 0\)\?\?\3\?\?[$\w]+;if\(\5==="max"&&!([$\w]+)\(\2\)\)return"high";if\(\5==="xhigh"&&!([$\w]+)\(\2\)\)return"high";return \5\}/;
 
-  const splitMatch = file.match(patternSplit);
+  const splitMatch = file.match(patternHonorPin) || file.match(patternSplit);
   const match =
     splitMatch || file.match(patternNew) || file.match(patternLegacy);
   if (!match || match.index === undefined) {

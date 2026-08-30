@@ -125,16 +125,29 @@ const patchPlanResolver = (
   config: FablePlanConfig,
   aliasToModel: string
 ): string | null => {
-  const pattern =
+  // Method 0 — CC >= 2.1.251: the inlined opusplan/haiku branches became a
+  // pairing table, and the selected-alias getter moved past an early
+  // `if(mode!=="plan")return main`. Call the getter ourselves so we still
+  // intercept before that return (exec-side resolution + effort).
+  const pattern0 =
+    /(function ([$\w]+)\(([$\w]+)\)\{let\{permissionMode:([$\w]+),mainLoopModel:([$\w]+),exceeds200kTokens:([$\w]+)=!1\}=\3;)(if\(\4!=="plan"\)return \5;let [$\w]+=([$\w]+)\(\),)/;
+  const match0 = file.match(pattern0);
+
+  const pattern1 =
     /(function ([$\w]+)\(([$\w]+)\)\{let\{permissionMode:([$\w]+),mainLoopModel:([$\w]+),exceeds200kTokens:([$\w]+)=!1\}=\3,([$\w]+)=([$\w]+)\(\);)/;
-  const match = file.match(pattern);
+  const match1 = match0 ? null : file.match(pattern1);
+
+  const match = match0 ?? match1;
   if (!match || match.index === undefined) {
     console.error(
       'patch: fablePlan: failed to find the plan-mode model resolver (uM shape)'
     );
     return null;
   }
-  const [, prefix, , , mode, , , selected] = match;
+  const prefix = match[1];
+  const mode = match[4];
+  const selected = match0 ? `${match[8]}()` : match[7];
+  const tail = match0 ? match[7] : '';
   // Both halves of the pairing come out of ONE branch. The global is cleared on
   // the way past for every other alias, so switching away from fableplan cannot
   // leave a stale effort pinned for the rest of the session.
@@ -143,7 +156,7 @@ const patchPlanResolver = (
     `${mode}==="plan"?"${config.planEffort}":"${config.execEffort}";` +
     `return ${aliasToModel}(${mode}==="plan"?"${config.planModel}":"${config.execModel}")}` +
     `${EFFORT_GLOBAL}=void 0;`;
-  const replacement = prefix + injection;
+  const replacement = prefix + injection + tail;
   const newFile =
     file.slice(0, match.index) +
     replacement +
@@ -283,9 +296,16 @@ const patchModelPicker = (
  * the selected alias, and the router keeps every other model.
  */
 const patchEffortResolver = (file: string): string | null => {
-  const pattern =
+  // Method 0 — CC >= 2.1.251: the resolver gained a third
+  // `{honorLaunchPin:PIN=!0}={}` arg and the first binding is
+  // `PIN&&launchPin(model)` instead of a bare helper call.
+  const pattern0 =
+    /(function ([$\w]+)\(([$\w]+),([$\w]+),\{honorLaunchPin:([$\w]+)=!0\}=\{\}\)\{)(if\(!([$\w]+)\(\3\)\)return;let [$\w]+=\5&&[$\w]+\(\3\),[$\w]+=[$\w]+\(\3\),[$\w]+=[$\w]+\(\);)/;
+  const match0 = file.match(pattern0);
+
+  const pattern1 =
     /(function ([$\w]+)\(([$\w]+),([$\w]+)\)\{)(if\(!([$\w]+)\(\3\)\)return;let [$\w]+=[$\w]+\(\3\),[$\w]+=[$\w]+\(\3\),[$\w]+=[$\w]+\(\);)/;
-  const match = file.match(pattern);
+  const match = match0 ?? file.match(pattern1);
   if (!match || match.index === undefined) {
     if (!file.includes('CLAUDE_CODE_EFFORT_LEVEL')) {
       debug('patch: fablePlan: effort resolver absent in this build — no-op');
@@ -295,7 +315,8 @@ const patchEffortResolver = (file: string): string | null => {
     return null;
   }
   const injection = `if(${EFFORT_GLOBAL}!==void 0)return ${EFFORT_GLOBAL};`;
-  const replacement = match[1] + injection + match[5];
+  const rest = match0 ? match[6] : match[5];
+  const replacement = match[1] + injection + rest;
   const newFile =
     file.slice(0, match.index) +
     replacement +

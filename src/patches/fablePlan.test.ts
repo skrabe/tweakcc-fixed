@@ -32,6 +32,23 @@ const cli = [
   'let p=it((yt)=>yt.settings.showClearContextOnPlanAccept)??!1,f=2;',
 ].join('');
 
+// CC 2.1.251: plan resolver is table-driven (getter after an early
+// `if(mode!=="plan")return`); effort resolver took `{honorLaunchPin}`.
+const cli251 = [
+  'pN=["sonnet","opus","haiku","fable","best","opusplan"],Cwt=["sonnet","opus","haiku","fable"]});',
+  'function hp(e){let{permissionMode:t,mainLoopModel:r,exceeds200kTokens:o=!1}=e;' +
+    'if(t!=="plan")return r;let u=lf(),d=qde(u);if(d===null)return r;return r}',
+  'function xs(e){let t=Pt();switch(e){case"opus":return Nt(t);case"sonnet":return Fs(t);' +
+    'case"haiku":return Su(t);case"fable":return Eu(t);case"opusplan":return Fs(t);default:return null}}',
+  'function Ot(e){let t=e.trim(),r=t.toLowerCase(),o=Cc(r),u=o?pn(r).trim():r;if(Bm(u))switch(u){' +
+    'case"fable":{let d=jSt();return XS(d)}case"opusplan":return o?XS(Xe(uf())):uf();' +
+    'case"sonnet":return o?XS(Xe(uf())):uf();case"haiku":return o?XS(Xe(MV())):MV();' +
+    'case"opus":return o?XS(Xe(bl())):bl();case"best":return Zyr();default:}return null}',
+  'function ln(e,o){let t=tn(e),s=a.ANTHROPIC_CUSTOM_MODEL_OPTION;return t}',
+  'function yT(e,o,{honorLaunchPin:t=!0}={}){if(!lg(e))return;let r=t&&LM(e),u=C(e),f=mH();return f}',
+  'let Fe=W((Qt)=>Qt.settings.showClearContextOnPlanAccept)??!1,Ve=2;',
+].join('');
+
 describe('writeFablePlan', () => {
   beforeEach(() => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -143,5 +160,27 @@ describe('writeFablePlan', () => {
     const out = writeFablePlan(withoutEffort, config());
     expect(out).not.toBeNull();
     expect(out).toContain('"value":"fableplan"');
+  });
+
+  it('applies against the CC 2.1.251 table-driven plan resolver', () => {
+    const out = writeFablePlan(cli251, config());
+    expect(out).not.toBeNull();
+    expect(out).toContain('"opusplan","fableplan"]');
+    expect(out).toContain('lf()==="fableplan"');
+    expect(out).toContain('Ot(t==="plan"?"fable":"opus")');
+    expect(out).toContain(
+      'if(t!=="plan")return r;let u=lf(),d=qde(u);if(d===null)return r;return r}'
+    );
+    expect(out).toContain(
+      'function yT(e,o,{honorLaunchPin:t=!0}={}){if(globalThis.__tweakccFablePlanEffort!==void 0)return globalThis.__tweakccFablePlanEffort;if(!lg(e))return;'
+    );
+    expect(out).toContain('case"fableplan":return o?XS(Xe(bl())):bl();');
+    expect(out).toContain('case"fableplan":return Nt(t);');
+  });
+
+  it('is idempotent on the CC 2.1.251 shape', () => {
+    const once = writeFablePlan(cli251, config())!;
+    const twice = writeFablePlan(once, config())!;
+    expect(twice).toBe(once);
   });
 });

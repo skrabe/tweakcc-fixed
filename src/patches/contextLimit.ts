@@ -12,8 +12,26 @@ export const writeContextLimit = (oldFile: string): string | null => {
   // Because the window is `min(o-from-fkt, KQ)`, RAISING the limit requires
   // overriding BOTH (overriding only one leaves the window capped by the other).
   // Env-unset → both stay 200000 → identical to stock CC.
-  // Method 1 — CC >= ~2.1.21x: the 20000 constant was dropped from the group
-  // and a 1e6 (the 1M-context ceiling) appended, so the declaration reads
+  // Method 0 — CC >= 2.1.251: the trailing 1e6 left the group too, so the
+  // declaration is back to four constants and reads
+  // `var q8e=200000,g$=200000,Q3=32000,Z3=128000;`. The leading pair keeps its
+  // roles (per-model default / `source:"model-default"` window); the trailing
+  // two are the max-output default and upper bound, preserved verbatim. Must
+  // be tried BEFORE method 3, whose four-constant shape has 20000 in slot 2 —
+  // that one cannot match this, but keeping the newest shape first is the rule.
+  const patternFour =
+    /var ([$\w]+)=200000,([$\w]+)=200000,([$\w]+)=(32000),([$\w]+)=(128000|64000);/;
+  const matchFour = oldFile.match(patternFour);
+  if (matchFour) {
+    return oldFile.replace(
+      patternFour,
+      () =>
+        `var ${matchFour[1]}=${OVERRIDE},${matchFour[2]}=${OVERRIDE},${matchFour[3]}=${matchFour[4]},${matchFour[5]}=${matchFour[6]};`
+    );
+  }
+
+  // Method 1 — CC ~2.1.21x-2.1.247: the 20000 constant was dropped from the
+  // group and a 1e6 (the 1M-context ceiling) appended, so the declaration reads
   // `var _er=200000,bRe=200000,$Rg=32000,URg=128000,jRg=1e6;`. The first two
   // keep their roles (per-model default / `source:"model-default"` window);
   // the trailing three are max-output-default, max-output-upper and the 1M cap

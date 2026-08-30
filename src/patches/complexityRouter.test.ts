@@ -71,6 +71,17 @@ const FILE = `var head=1;${GB_SHAPE}${VPT_SHAPE}${KM_SHAPE}${ZE_SHAPE}${COMPACT_
 // Same file but with the CC 2.1.201 (iQ) resolver instead of the legacy XQ one.
 const FILE_IQ = `var head=1;${GB_SHAPE}${VPT_SHAPE}${KM_SHAPE}${ZE_SHAPE}${COMPACT_SHAPE}${RESTORE_SHAPE}${IQ_SHAPE}${HMM_SHAPE}var tail=2;`;
 
+// CC 2.1.251: resolver gained `{honorLaunchPin:PIN=!0}={}` and the launch-pin
+// flag is `PIN&&LAUNCH(MODEL)`. Guards still live in the tail-called normalizer.
+const YT_SHAPE =
+  'function yT(e,o,{honorLaunchPin:t=!0}={}){if(!lg(e))return;' +
+  'let r=t&&LM(e),u=C(e),f=mH();' +
+  'if(f===null&&!r)return;return _(f??(r?u:void 0)??o??u,e)}' +
+  'function _(e,o){let t=e;if(typeof t==="string"&&qv(t))t=$F(t,o);' +
+  'if(t==="max"&&!K2(o))t="high";if(t==="xhigh"&&!X2(o))t="high";return t}';
+
+const FILE_YT = `var head=1;${GB_SHAPE}${VPT_SHAPE}${KM_SHAPE}${ZE_SHAPE}${COMPACT_SHAPE}${RESTORE_SHAPE}${YT_SHAPE}${HMM_SHAPE}var tail=2;`;
+
 const cfg = (
   over: Partial<ComplexityRouterConfig> = {}
 ): ComplexityRouterConfig => ({
@@ -201,6 +212,28 @@ describe('writeComplexityRouter', () => {
     expect(r).toContain('var tail=2;');
     // The heuristic scorer is gone entirely.
     expect(r).not.toContain('__tweakccRouterScore');
+  });
+
+  it('wraps the CC 2.1.251 honorLaunchPin resolver — split shape + PIN&&LAUNCH', () => {
+    const out = writeComplexityRouter(FILE_YT, cfg());
+    expect(out).not.toBeNull();
+    const r = out as string;
+    expect(r).toContain('function __tweakccRouterClassify');
+    expect(r).toContain('let __twkRE=__st.effort;');
+    // Wrap rides RIGHT AFTER the env read (=mH();), before CC's body.
+    expect(r).toContain('f=mH();var __st=__tweakccRouterState();');
+    expect(r).toContain('if(__twkRE&&f==null&&(o==null||o===__st.baseline))');
+    // Support guards captured from the tail-called normalizer (K2/X2).
+    expect(r).toContain('if(__twkRE==="max"&&!K2(e))__twkRE="high";');
+    expect(r).toContain('if(__twkRE==="xhigh"&&!X2(e))__twkRE="high";');
+    // Original honorLaunchPin signature + split tail survive after the wrap.
+    expect(r).toContain('function yT(e,o,{honorLaunchPin:t=!0}={})');
+    expect(r).toContain(
+      'if(f===null&&!r)return;return _(f??(r?u:void 0)??o??u,e)'
+    );
+    expect(r).toContain(
+      'await __tweakccRouterClassify(E,t,r.options.mainLoopModel);'
+    );
   });
 
   it('wraps the CC 2.1.201 (iQ) resolver — assignment guards + normalization line', () => {

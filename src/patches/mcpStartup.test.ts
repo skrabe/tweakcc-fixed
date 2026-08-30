@@ -12,6 +12,13 @@ import { writeMcpNonBlocking, writeMcpBatchSize } from './mcpStartup';
 const NONBLOCKING_FIXTURE =
   'a=1;if(!Q9(process.env.MCP_CONNECTION_NONBLOCKING)){await $blockOnMcp()}b=2;';
 
+// CC >=2.1.251: parsed settings object. `!==!1` is true unless the setting is
+// explicitly false (unset defaults to nonblocking). The export-map mention
+// must stay untouched. `$e` proves the object name is `[$\w]+`, not `\w+`.
+const NONBLOCKING_FIXTURE_251 =
+  'q=lr(),z=$e.MCP_CONNECTION_NONBLOCKING!==!1;Fkn(z);let se=z,' +
+  'MCP_CONNECTION_NONBLOCKING:()=>Vc,';
+
 // Old CC (<2.1.140): `||3` literal default after the parseInt expression.
 const BATCH_FIXTURE_OLD =
   'let $z=parseInt(process.env.MCP_SERVER_CONNECTION_BATCH_SIZE||"",10)||3;run($z);';
@@ -29,6 +36,15 @@ const BATCH_FIXTURE_HELPER =
   'function sKu(){let e=Bd(process.env.MCP_REMOTE_SERVER_CONNECTION_BATCH_SIZE);return e>0?e:20}' +
   'function OYu(){let $Rg=Bd(process.env.MCP_SERVER_CONNECTION_BATCH_SIZE);return $Rg>0?$Rg:3}';
 
+// CC >=2.1.251: nullish coalesce on a settings object; two copies of the
+// helper (both must be rewritten). Neighbouring remote helper (default 20)
+// and the export-map mention must stay untouched.
+const BATCH_FIXTURE_NULLISH =
+  'MCP_SERVER_CONNECTION_BATCH_SIZE:()=>gp,' +
+  'function Dr(){return a.MCP_SERVER_CONNECTION_BATCH_SIZE??3}' +
+  'function xr(){return a.MCP_REMOTE_SERVER_CONNECTION_BATCH_SIZE??20}' +
+  'function Ro(){return $a.MCP_SERVER_CONNECTION_BATCH_SIZE??3}';
+
 describe('writeMcpNonBlocking', () => {
   it('replaces the blocking guard call with the literal false', () => {
     const out = writeMcpNonBlocking(NONBLOCKING_FIXTURE);
@@ -41,9 +57,30 @@ describe('writeMcpNonBlocking', () => {
   it('is a no-op (returns the file unchanged) when the env var was removed (CC >=2.1.79)', () => {
     // No error/null here by design: non-blocking became the default upstream,
     // so the absence of the guard is expected, not a failure.
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
     const input = 'x=1;function unrelated(){return 1}y=2;';
     const out = writeMcpNonBlocking(input);
     expect(out).toBe(input);
+    expect(logSpy).toHaveBeenCalledWith(
+      'patch: mcp-non-blocking: feature already promoted in this CC build — no-op'
+    );
+    logSpy.mockRestore();
+  });
+
+  it('forces the CC >= 2.1.251 settings-object flag on', () => {
+    const out = writeMcpNonBlocking(NONBLOCKING_FIXTURE_251);
+    expect(out).not.toBeNull();
+    expect(out).toContain('q=lr(),z=true;Fkn(z);let se=z,');
+    // Export-map mention is not a check and must survive.
+    expect(out).toContain('MCP_CONNECTION_NONBLOCKING:()=>Vc,');
+  });
+
+  it('fails loud when the env name survives but no known check shape matches', () => {
+    const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    expect(
+      writeMcpNonBlocking('MCP_CONNECTION_NONBLOCKING:()=>Vc,other=1')
+    ).toBeNull();
+    errSpy.mockRestore();
   });
 });
 
@@ -113,5 +150,19 @@ describe('writeMcpBatchSize', () => {
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     expect(writeMcpBatchSize('x=1;function y(){return 2}', 10)).toBeNull();
     errSpy.mockRestore();
+  });
+
+  it('bumps the CC >= 2.1.251 nullish-coalesce default at every occurrence', () => {
+    const out = writeMcpBatchSize(BATCH_FIXTURE_NULLISH, 12);
+    expect(out).not.toBeNull();
+    expect(out).toContain(
+      'function Dr(){return a.MCP_SERVER_CONNECTION_BATCH_SIZE??12}'
+    );
+    expect(out).toContain(
+      'function Ro(){return $a.MCP_SERVER_CONNECTION_BATCH_SIZE??12}'
+    );
+    expect(out).toContain('a.MCP_REMOTE_SERVER_CONNECTION_BATCH_SIZE??20}');
+    expect(out).toContain('MCP_SERVER_CONNECTION_BATCH_SIZE:()=>gp,');
+    expect(out).not.toContain('??3}');
   });
 });

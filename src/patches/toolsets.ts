@@ -360,15 +360,45 @@ export const resolveNameAt = (
 export const getAppStateSelectorAndUseState = (
   fileContents: string
 ): AppStateFns | null => {
-  // Method 0 (CC >= 2.1.246): the app-state store is its own ESM module.
-  // useSyncExternalStore is an imported binding, so the old identifier hunt
-  // never sees it. Unique anchor is the provider error string. Shape:
-  //   function SEL(t){let e=STORE(),n=()=>{let i=e.getState();return t(i)};return HOOK(e.subscribe,n,n)}
-  //   function SET(){return STORE().setState}
   const appStateErr =
     'useAppState/useSetAppState cannot be called outside of an <AppStateProvider />';
   const errIdx = fileContents.indexOf(appStateErr);
   if (errIdx !== -1) {
+    // Method 0 — CC >= 2.1.251: the selector no longer inlines
+    // useSyncExternalStore. It delegates to an imported helper:
+    //   function SEL(t){let s=STORE();return HOOK(s,t)}
+    //   function SET(){return STORE().setState}
+    // Anchor on the unique provider error and search the enclosing module
+    // (or the rest of the file when there are no module sentinels) — do not
+    // require the pair to sit inside a fixed-size window.
+    const bounds = moduleBoundsAt(fileContents, errIdx);
+    const regionStart = bounds ? bounds.start : errIdx;
+    const regionEnd = bounds ? bounds.end : fileContents.length;
+    const moduleRegion = fileContents.slice(regionStart, regionEnd);
+    const selectorPat251 =
+      /function ([$\w]+)\(([$\w]+)\)\{let ([$\w]+)=([$\w]+)\(\);return [$\w]+\(\3,\2\)\}/;
+    const setPat251 = /function ([$\w]+)\(\)\{return ([$\w]+)\(\)\.setState\}/;
+    const sel251 = moduleRegion.match(selectorPat251);
+    const set251 = moduleRegion.match(setPat251);
+    if (
+      sel251 &&
+      sel251.index !== undefined &&
+      set251 &&
+      set251.index !== undefined
+    ) {
+      return {
+        appStateUseSelectorFn: sel251[1],
+        appStateSetState: set251[1],
+        selectorIndex: regionStart + sel251.index,
+        setStateIndex: regionStart + set251.index,
+      };
+    }
+
+    // Method 0 (CC >= 2.1.246): the app-state store is its own ESM module.
+    // useSyncExternalStore is an imported binding, so the old identifier hunt
+    // never sees it. Unique anchor is the provider error string. Shape:
+    //   function SEL(t){let e=STORE(),n=()=>{let i=e.getState();return t(i)};return HOOK(e.subscribe,n,n)}
+    //   function SET(){return STORE().setState}
     const start = Math.max(0, errIdx - 400);
     const region = fileContents.slice(start, errIdx + 1200);
     const selectorPat =
@@ -575,6 +605,69 @@ export const writeToolFetchingUseMemo = (
   toolsets: Toolset[],
   defaultToolset: string | null
 ): string | null => {
+  const toolsetsJSON = JSON.stringify(
+    Object.fromEntries(
+      toolsets.map(ts => [
+        ts.name,
+        ts.allowedTools === '*' ? '*' : ts.allowedTools,
+      ])
+    )
+  );
+  const fallback = defaultToolset
+    ? JSON.stringify(defaultToolset)
+    : 'undefined';
+
+  // Method 0 — CC >= 2.1.251: the React-side `let X=F(A,B.tools,C)` merge
+  // was promoted into the host class. The UI list is now
+  // `renderingTools:this.addDisplayOnlyTools(TOOLS)` inside derive().
+  // Anchor on that unique call and find derive()'s getState by search,
+  // not by a distance window.
+  const renderPat = /renderingTools:this\.addDisplayOnlyTools\(([$\w]+)\)/;
+  const renderMatch = oldFile.match(renderPat);
+  if (renderMatch && renderMatch.index !== undefined) {
+    const derivePat = /derive\(\)\{let ([$\w]+)=this\.store\.getState\(\)/g;
+    let deriveMatch: RegExpExecArray | null = null;
+    for (const candidate of oldFile.matchAll(derivePat)) {
+      if (
+        candidate.index !== undefined &&
+        candidate.index < renderMatch.index
+      ) {
+        deriveMatch = candidate;
+      } else {
+        break;
+      }
+    }
+    if (!deriveMatch || deriveMatch.index === undefined) {
+      console.error(
+        'patch: toolsets: toolFetchingMemo: failed to find derive() for renderingTools'
+      );
+      return null;
+    }
+    const stateVar = deriveMatch[1];
+    const toolsVar = renderMatch[1];
+    const helper =
+      `const __ts=${toolsetsJSON},__tf=(t,s)=>{` +
+      `const n=s.toolset??${fallback};` +
+      `globalThis.__tweakcc_toolset={name:n,tools:__ts[n]};` +
+      `if(__ts.hasOwnProperty(n)){const a=__ts[n];if(a==="*")return t;` +
+      `return t.filter(d=>a.includes(d.name))}return t};`;
+    const renderRepl = `renderingTools:this.addDisplayOnlyTools(__tf(${toolsVar},${stateVar}))`;
+    let newFile =
+      oldFile.slice(0, renderMatch.index) +
+      renderRepl +
+      oldFile.slice(renderMatch.index + renderMatch[0].length);
+    const insertAt = deriveMatch.index + 'derive(){'.length;
+    newFile = newFile.slice(0, insertAt) + helper + newFile.slice(insertAt);
+    showDiff(
+      oldFile,
+      newFile,
+      renderRepl,
+      renderMatch.index,
+      renderMatch.index
+    );
+    return newFile;
+  }
+
   const stateInfo = getAppStateSelectorAndUseState(oldFile);
   if (!stateInfo) {
     console.error(
@@ -606,23 +699,6 @@ export const writeToolFetchingUseMemo = (
 
   const toolAggregationVar = match[1];
   const toolAggregationCode = match[2];
-
-  // Create toolsets mapping: { "toolset-name": ["tool1", "tool2", ...] }
-  const toolsetsJSON = JSON.stringify(
-    Object.fromEntries(
-      toolsets.map(ts => [
-        ts.name,
-        ts.allowedTools === '*' ? '*' : ts.allowedTools,
-      ])
-    )
-  );
-
-  // When persisted app state is loaded it may not have a toolset field (saved before
-  // the toolset patch existed), causing currentToolset to be undefined. Fall back to
-  // defaultToolset so the restriction is active from the very first render.
-  const fallback = defaultToolset
-    ? JSON.stringify(defaultToolset)
-    : 'undefined';
 
   // Generate the replacement code
   const replacement = `let currentToolset = ${selectorFn}(state => state.toolset) ?? ${fallback};
@@ -685,6 +761,38 @@ export const writeComputeToolsFilter = (
     : 'undefined';
 
   const classFilterHelper = `globalThis.__tweakcc_appStore=this.store;const __ts=${toolsetsMapJSON},__tf=(t,s)=>{const n=s.toolset??${toolsetFallback};globalThis.__tweakcc_toolset={name:n,tools:__ts[n]};if(__ts.hasOwnProperty(n)){const a=__ts[n];if(a==="*")return t;return t.filter(d=>a.includes(d.name))}return t};`;
+
+  // Method 0 — CC >= 2.1.251: computeTools is a one-line delegate
+  //   computeTools=()=>this.computeToolPoolFresh().tools
+  // and the cache/assemble body moved into computeToolPool. Wrapping
+  // computeToolPoolFresh filters every public reader (computeTools and
+  // the getToolUseContext destructure) while the snapshot comparison
+  // still sees the unfiltered list. Anchor on the unique field name
+  // and walk the body — do not require a window to the cache returns.
+  const freshHead = oldFile.match(
+    /computeToolPoolFresh=\(\)=>\{let ([$\w]+)=this\.store\.getState\(\),/
+  );
+  if (freshHead && freshHead.index !== undefined) {
+    const braceIndex = freshHead.index + 'computeToolPoolFresh=()=>'.length;
+    const bodyEnd = matchDelimiter(oldFile, braceIndex);
+    if (bodyEnd !== null) {
+      const stateVar = freshHead[1];
+      const body = oldFile.slice(braceIndex + 1, bodyEnd);
+      const ret = body.match(/return ([$\w]+);?\s*$/);
+      if (ret && ret.index !== undefined) {
+        const pv = ret[1];
+        const patched =
+          classFilterHelper +
+          body.slice(0, ret.index) +
+          `return{...${pv},tools:__tf(${pv}.tools,${stateVar})}` +
+          body.slice(ret.index + ret[0].length);
+        const newFile =
+          oldFile.slice(0, braceIndex + 1) + patched + oldFile.slice(bodyEnd);
+        showDiff(oldFile, newFile, patched, freshHead.index, bodyEnd + 1);
+        return newFile;
+      }
+    }
+  }
 
   // Method 0 (CC >= 2.1.246): computeTools is a class field that reads the
   // store off `this`, not a useCallback closure. Both exits are wrapped; the
@@ -1496,6 +1604,17 @@ export const findStatusLineComponent = (
     if (comp) return comp;
   }
 
+  // Method 0 — CC >= 2.1.251: " on" was hoisted out of the children
+  // array into `const LABEL=BARE?"":" on"`.
+  const hoisted = findComponentsContaining(file, '?"":" on"');
+  if (hoisted.length) {
+    return (
+      hoisted.find(
+        c => file.slice(c.bodyStart, c.bodyEnd).indexOf(SHORTCUTS_LABEL) !== -1
+      ) ?? hoisted[0]
+    );
+  }
+
   const candidates: StatusLineComponent[] = [];
   for (const site of file.matchAll(modeLabelPattern())) {
     if (site.index === undefined) continue;
@@ -1676,6 +1795,8 @@ export const insertShiftTabAppStateVar = (
   const targets = [
     ...(comp ? [comp] : []),
     ...findComponentsContaining(oldFile, SHORTCUTS_LABEL),
+    ...findComponentsContaining(oldFile, '?"":" on"'),
+    ...findComponentsContaining(oldFile, '," on"'),
   ];
   const seen = new Set<number>();
   const points = targets
@@ -1724,6 +1845,30 @@ export const insertShiftTabAppStateVar = (
  * Append the toolset name to the mode display text
  */
 export const appendToolsetToModeDisplay = (oldFile: string): string | null => {
+  if (oldFile.includes('currentToolset?` on [')) return oldFile;
+
+  // Method 0 — CC >= 2.1.251: " on" was hoisted into
+  //   const LABEL=BARE?"":" on"
+  // instead of sitting inline in the children array. The memo guard
+  // already compares LABEL, so changing its value keeps /toolset live.
+  const onConstPat = /const ([$\w]+)=([$\w]+)\?"":" on"/;
+  const onConst = oldFile.match(onConstPat);
+  if (onConst && onConst.index !== undefined) {
+    const replacement = `const ${onConst[1]}=${onConst[2]}?"":(currentToolset?\` on [\${currentToolset}]\`:" on")`;
+    const newFile =
+      oldFile.slice(0, onConst.index) +
+      replacement +
+      oldFile.slice(onConst.index + onConst[0].length);
+    showDiff(
+      oldFile,
+      newFile,
+      replacement,
+      onConst.index,
+      onConst.index + onConst[0].length
+    );
+    return newFile;
+  }
+
   // Method 1 (CC >=2.1.204): the label lost its `.toLowerCase()` and is now
   // rendered from a memoized slot inside the status line component:
   //   Que(dne)," on",EWf]},"mode"):null,bm[35]=dne,...
@@ -1736,7 +1881,6 @@ export const appendToolsetToModeDisplay = (oldFile: string): string | null => {
   // Prefer a label-owning component that already carries the declaration (after
   // step 5 several components do, and only this one owns the label), but fall
   // back to the first label owner so the step still works called on its own.
-  if (oldFile.includes('currentToolset?` on [')) return oldFile;
   const labelComps = findComponentsContaining(oldFile, '," on"');
   const comp =
     labelComps.find(c =>

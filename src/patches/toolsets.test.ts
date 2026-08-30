@@ -41,6 +41,19 @@ const TS: Toolset[] = [
 ];
 
 describe('getAppStateSelectorAndUseState', () => {
+  it('finds the selector + setState fns in the CC >=2.1.251 helper-delegating store', () => {
+    const mod =
+      'function e(){let t=We(MP);if(!t)throw ReferenceError("useAppState/useSetAppState cannot be called outside of an <AppStateProvider />");return t}' +
+      'function W(t){let r=e();return Xe(r,t)}' +
+      'function At(){return e().setState}';
+    expect(getAppStateSelectorAndUseState(mod)).toEqual({
+      appStateUseSelectorFn: 'W',
+      appStateSetState: 'At',
+      selectorIndex: expect.any(Number),
+      setStateIndex: expect.any(Number),
+    });
+  });
+
   it('finds the selector + setState fns in the CC >=2.1.246 ESM store', () => {
     const mod =
       'function o(){let t=r(p);if(!t)throw ReferenceError("useAppState/useSetAppState cannot be called outside of an <AppStateProvider />");return t}' +
@@ -141,6 +154,20 @@ describe('writeToolFetchingUseMemo', () => {
     expect(writeToolFetchingUseMemo(APP_STATE, TS, 'readonly')).toBeNull();
     err.mockRestore();
   });
+
+  it('filters renderingTools inside derive() on the CC >=2.1.251 host class', () => {
+    const src =
+      'derive(){let S=this.store.getState(),x=FL(),de=[];' +
+      'return{tools:de,renderingTools:this.addDisplayOnlyTools(de)}}';
+    const out = writeToolFetchingUseMemo(src, TS, 'readonly')!;
+    expect(out).toContain(
+      'derive(){const __ts={"readonly":["Read","Grep"],"all":"*"}'
+    );
+    expect(out).toContain(
+      'renderingTools:this.addDisplayOnlyTools(__tf(de,S))'
+    );
+    expect(out).toContain('s.toolset??"readonly"');
+  });
 });
 
 describe('writeComputeToolsFilter', () => {
@@ -227,6 +254,19 @@ describe('writeComputeToolsFilter', () => {
   it('prefers the memoized shape but still handles the legacy closure', () => {
     const out = writeComputeToolsFilter(FIXTURE, TS, 'all')!;
     expect(out).toContain('if(!AG)return __tf(MG);');
+  });
+
+  it('wraps computeToolPoolFresh on the CC >=2.1.251 host class', () => {
+    const src =
+      'computeTools=()=>this.computeToolPoolFresh().tools;' +
+      'computeToolPoolFresh=()=>{let S=this.store.getState(),x=FL(),' +
+      'P=this.computeToolPool(S,this.combinedInitialToolsFor(S,x),x);' +
+      'if(P.tools!==this.snapshot.tools)this.refresh();return P};';
+    const out = writeComputeToolsFilter(src, TS, 'all')!;
+    expect(out).toContain('globalThis.__tweakcc_appStore=this.store');
+    expect(out).toContain('return{...P,tools:__tf(P.tools,S)}');
+    expect(out).toContain('if(P.tools!==this.snapshot.tools)this.refresh()');
+    expect(out).not.toContain('return P}');
   });
 });
 
@@ -388,6 +428,16 @@ describe('appendToolsetToModeDisplay', () => {
     const err = silenceErr();
     expect(appendToolsetToModeDisplay('nope')).toBeNull();
     err.mockRestore();
+  });
+
+  it('rewrites the hoisted CC >=2.1.251 " on" const', () => {
+    const src =
+      'function Dk(p){let c=_(14),{bare:B}=p;const L=B?"":" on";return L}';
+    const out = appendToolsetToModeDisplay(src)!;
+    expect(out).toContain(
+      'const L=B?"":(currentToolset?` on [${currentToolset}]`:" on")'
+    );
+    expect(out).not.toContain('const L=B?"":" on"');
   });
 });
 

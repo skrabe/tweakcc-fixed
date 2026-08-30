@@ -9,30 +9,45 @@
 
 import { showDiff, LocationResult } from './index';
 
+type NonBlockingLocation = LocationResult & { replacement: string };
+
 /**
  * Find the MCP non-blocking check location.
  *
- * Pattern: !someVar(process.env.MCP_CONNECTION_NONBLOCKING)
- * This check determines whether to block on MCP connections.
- * Replacing it with "false" forces non-blocking mode.
+ * The matched span is the expression that becomes the connect-nonblocking
+ * flag (truthy = run MCP connect fully async). Each method's `replacement`
+ * is the literal that forces that flag on for that shape.
  */
 const getNonBlockingCheckLocation = (
   oldFile: string
-): LocationResult | null => {
-  // Match: !VARNAME(process.env.MCP_CONNECTION_NONBLOCKING)
-  // The variable name changes between npm/native builds, so we match any identifier
-  const pattern = /![$\w]+\(process\.env\.MCP_CONNECTION_NONBLOCKING\)/;
-  const match = oldFile.match(pattern);
-
-  if (!match || match.index === undefined) {
-    // CC ≥2.1.79 removed this env var — non-blocking is now the default.
-    return null;
+): NonBlockingLocation | null => {
+  // Method 0 — CC >= 2.1.251: `!IDENT(process.env.MCP_CONNECTION_NONBLOCKING)`
+  // became `IDENT.MCP_CONNECTION_NONBLOCKING!==!1` on a parsed settings
+  // object (true = nonblocking; unset defaults to true). Replace the RHS
+  // with `true` so an explicit `false` in settings cannot re-enable blocking.
+  const method0 =
+    /=\s*[$\w]+\.MCP_CONNECTION_NONBLOCKING\s*!==?\s*(?:!1|false)/;
+  const match0 = oldFile.match(method0);
+  if (match0 && match0.index !== undefined) {
+    return {
+      startIndex: match0.index,
+      endIndex: match0.index + match0[0].length,
+      replacement: '=true',
+    };
   }
 
-  return {
-    startIndex: match.index,
-    endIndex: match.index + match[0].length,
-  };
+  // Method 1: !IDENT(process.env.MCP_CONNECTION_NONBLOCKING)
+  const method1 = /![$\w]+\(process\.env\.MCP_CONNECTION_NONBLOCKING\)/;
+  const match1 = oldFile.match(method1);
+  if (match1 && match1.index !== undefined) {
+    return {
+      startIndex: match1.index,
+      endIndex: match1.index + match1[0].length,
+      replacement: 'false',
+    };
+  }
+
+  return null;
 };
 
 /**
@@ -48,6 +63,10 @@ const getNonBlockingCheckLocation = (
  * one.
  */
 const BATCH_SIZE_PATTERNS: RegExp[] = [
+  // Method 0 — CC >= 2.1.251: parseInt/helper + `return X>0?X:N` clamp is
+  // gone. The default is now a nullish coalesce on a parsed settings object:
+  //   function Dr(){return a.MCP_SERVER_CONNECTION_BATCH_SIZE??3}
+  /MCP_SERVER_CONNECTION_BATCH_SIZE\s*\?\?\s*(\d+)/g,
   // Method 3 (CC ≥2.1.219): parseInt moved into a shared numeric-env helper.
   //   function iKu(){let e=Bd(process.env.MCP_SERVER_CONNECTION_BATCH_SIZE);return e>0?e:3}
   /MCP_SERVER_CONNECTION_BATCH_SIZE\)\s*;\s*return\s*[$\w]+\s*>\s*0\s*\?\s*[$\w]+\s*:\s*(\d+)/g,
@@ -85,18 +104,24 @@ const getBatchSizeLocations = (oldFile: string): LocationResult[] => {
 };
 
 /**
- * Apply non-blocking MCP startup by replacing the blocking check with "false".
+ * Apply non-blocking MCP startup by forcing the connect-nonblocking flag on.
  */
 export const writeMcpNonBlocking = (oldFile: string): string | null => {
   const location = getNonBlockingCheckLocation(oldFile);
   if (!location) {
-    // CC ≥2.1.79 removed MCP_CONNECTION_NONBLOCKING — non-blocking is now default.
-    // Return file unchanged (no-op) instead of failing.
-    return oldFile;
+    if (!oldFile.includes('MCP_CONNECTION_NONBLOCKING')) {
+      console.log(
+        'patch: mcp-non-blocking: feature already promoted in this CC build — no-op'
+      );
+      return oldFile;
+    }
+    console.error(
+      'patch: mcpStartup: failed to find MCP_CONNECTION_NONBLOCKING check'
+    );
+    return null;
   }
 
-  // Replace the check with "false" to force non-blocking mode
-  const newValue = 'false';
+  const newValue = location.replacement;
   const newFile =
     oldFile.slice(0, location.startIndex) +
     newValue +
