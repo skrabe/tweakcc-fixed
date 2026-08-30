@@ -266,17 +266,40 @@ const MODULE_SENTINEL_RE = /\n\/\*@@TWEAKCC_MODULE:(\d+):([^@]*)@@\*\/\n/g;
 export const moduleSentinel = (index: number, name: string): string =>
   `\n/*@@TWEAKCC_MODULE:${index}:${name}@@*/\n`;
 
+const UTF8_STRICT = new TextDecoder('utf-8', { fatal: true });
+
+/**
+ * True when every byte decodes as UTF-8. A `.js` name is not proof of JS
+ * source: CC 2.1.251 ships chart.umd.min.js, hljsBundle.generated.min.js and
+ * mermaid.min.js as compressed binary payloads. Those cannot survive the
+ * pipeline's `toString('utf8')` -> patch -> `Buffer.from(…, 'utf8')` round-trip
+ * (each invalid byte becomes U+FFFD and re-encodes as three), so they must
+ * never enter the virtual bundle in the first place.
+ */
+function isUtf8Text(contents: Buffer): boolean {
+  try {
+    UTF8_STRICT.decode(contents);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /**
  * True for a module whose contents tweakcc may patch. Assets (`.node`,
- * `.html.asset`, `.wasm`) are passed through untouched.
+ * `.html.asset`, `.wasm`) are passed through untouched, as is any `.js`-named
+ * module whose bytes are not UTF-8 text — pass `contents` wherever it is
+ * available so that check can run.
  */
 export function isPatchableJsModule(
   moduleName: string,
-  contentsLength: number
+  contentsLength: number,
+  contents?: Buffer
 ): boolean {
   if (contentsLength <= 0) return false;
   const n = moduleName.replaceAll('\\', '/');
-  return n.endsWith('.js') || isClaudeModule(n);
+  if (!n.endsWith('.js') && !isClaudeModule(n)) return false;
+  return contents === undefined || isUtf8Text(contents);
 }
 
 /**
@@ -285,7 +308,18 @@ export function isPatchableJsModule(
  * module), so the legacy path keeps working untouched.
  */
 export function parseSentinelBundle(buf: Buffer): Map<number, Buffer> | null {
-  const text = buf.toString('utf8');
+  // Scan and slice in LATIN-1, never UTF-8. Not every `.js` module is UTF-8
+  // text: CC 2.1.251 ships chart.umd.min.js, hljsBundle.generated.min.js and
+  // mermaid.min.js as compressed binary payloads. A `toString('utf8')` scan
+  // turns each invalid byte into U+FFFD, and re-encoding that as UTF-8 emits
+  // three bytes where one stood — mermaid went 785,820 -> 1,415,201 bytes. The
+  // corrupted buffer then fails the `override.equals(original)` check in
+  // rebuildBunDataAppendOnly, so it is appended as a "changed" module with its
+  // bytecode dropped, and the patched binary ships a broken vendor asset. Only
+  // the parse-oracle control caught it. Latin-1 is a total byte<->char
+  // bijection, so boundaries found in it index the buffer exactly and every
+  // slice round-trips whatever it held.
+  const text = buf.toString('latin1');
   if (!text.includes('/*@@TWEAKCC_MODULE:')) return null;
 
   const byIndex = new Map<number, Buffer>();
@@ -303,8 +337,8 @@ export function parseSentinelBundle(buf: Buffer): Map<number, Buffer> | null {
 
   for (let i = 0; i < marks.length; i++) {
     const from = marks[i].end;
-    const to = i + 1 < marks.length ? marks[i + 1].start : text.length;
-    byIndex.set(marks[i].index, Buffer.from(text.slice(from, to), 'utf8'));
+    const to = i + 1 < marks.length ? marks[i + 1].start : buf.length;
+    byIndex.set(marks[i].index, Buffer.from(buf.subarray(from, to)));
   }
   return byIndex;
 }
@@ -969,11 +1003,15 @@ export function extractClaudeJsFromNativeInstallation(
         bunOffsets,
         moduleStructSize,
         (module, moduleName, index) => {
-          if (!isPatchableJsModule(moduleName, module.contents.length)) {
+          if (module.contents.length <= 0) return undefined;
+          const contents = getStringPointerContent(bunData, module.contents);
+          if (
+            !isPatchableJsModule(moduleName, module.contents.length, contents)
+          ) {
             return undefined;
           }
           parts.push(Buffer.from(moduleSentinel(index, moduleName), 'utf8'));
-          parts.push(getStringPointerContent(bunData, module.contents));
+          parts.push(contents);
           moduleCount++;
           return undefined;
         }
@@ -1928,7 +1966,14 @@ export function repackNativeInstallation(
       bundle.bunOffsets,
       bundle.moduleStructSize,
       (module, moduleName, index) => {
-        if (isPatchableJsModule(moduleName, module.contents.length)) {
+        if (module.contents.length <= 0) return undefined;
+        if (
+          isPatchableJsModule(
+            moduleName,
+            module.contents.length,
+            getStringPointerContent(bundle.bunData, module.contents)
+          )
+        ) {
           expected.add(index);
         }
         return undefined;

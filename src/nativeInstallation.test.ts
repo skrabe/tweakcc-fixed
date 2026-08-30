@@ -173,6 +173,25 @@ describe('isPatchableJsModule (CC 2.1.246 code-split bundles)', () => {
   it('skips a module with no contents', () => {
     expect(isPatchableJsModule('/$bunfs/root/_1.js', 0)).toBe(false);
   });
+
+  // CC 2.1.251 ships chart.umd.min.js, hljsBundle.generated.min.js and
+  // mermaid.min.js as compressed binary payloads under a `.js` name. Letting
+  // one into the virtual bundle corrupts it on the pipeline's UTF-8 round-trip
+  // (mermaid measured 785,820 -> 1,415,201 bytes), and the patched binary then
+  // ships a broken vendor asset.
+  it('leaves a .js-named module whose bytes are not UTF-8 untouched', () => {
+    const binary = Buffer.from([0x1f, 0x8b, 0x08, 0xef, 0x1e, 0x2d, 0xff]);
+    expect(
+      isPatchableJsModule('/$bunfs/root/mermaid.min.js', binary.length, binary)
+    ).toBe(false);
+  });
+
+  it('still patches a .js module whose UTF-8 text has multi-byte characters', () => {
+    const text = Buffer.from('let s="an em dash — and a café";\n', 'utf8');
+    expect(isPatchableJsModule('/$bunfs/root/_444.js', text.length, text)).toBe(
+      true
+    );
+  });
 });
 
 describe('parseSentinelBundle', () => {
@@ -205,6 +224,23 @@ describe('parseSentinelBundle', () => {
     const src = 'let p=`a ${VAR} b`;\n';
     const got = parseSentinelBundle(bundle([[1, '/$bunfs/root/_1.js', src]]));
     expect(got!.get(1)!.toString()).toBe(src);
+  });
+
+  // Defence in depth for the same class: even if a non-UTF-8 module reached
+  // the bundle, splitting it must not change a byte. A UTF-8 scan turns each
+  // invalid byte into U+FFFD and re-encodes it as three, so the module fails
+  // the `override.equals(original)` check and is written back mangled.
+  it('round-trips a module body that is not valid UTF-8', () => {
+    const binary = Buffer.from([0x9f, 0xef, 0x1e, 0x00, 0xfe, 0xc3, 0x28]);
+    const buf = Buffer.concat([
+      Buffer.from(moduleSentinel(1, '/$bunfs/root/_1.js'), 'utf8'),
+      Buffer.from('let a=1;\n', 'utf8'),
+      Buffer.from(moduleSentinel(2, '/$bunfs/root/mermaid.min.js'), 'utf8'),
+      binary,
+    ]);
+    const got = parseSentinelBundle(buf);
+    expect(got!.get(1)!.toString('utf8')).toBe('let a=1;\n');
+    expect(got!.get(2)!.equals(binary)).toBe(true);
   });
 
   it('survives a patch that lengthened a module body', () => {
