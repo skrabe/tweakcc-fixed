@@ -133,8 +133,8 @@ if (propagate.length) {
 
 if (divergent.length) {
   console.log(`\ndivergent bodies (deliberate per-model trims — NOT auto-mirrored, decide each): ${divergent.length}`);
-  for (const d of divergent.slice(0, 40)) console.log(`  ${d.set.replace('system-prompts-', '').padEnd(9)} ${d.id}  ccVersion=${d.cc}`);
-  if (divergent.length > 40) console.log(`  … and ${divergent.length - 40} more`);
+  for (const d of divergent) console.log(`  ${d.set.replace('system-prompts-', '').padEnd(9)} ${d.id}  ccVersion=${d.cc}`);
+
 }
 
 if (FIX && stale.length) {
