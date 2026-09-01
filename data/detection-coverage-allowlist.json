@@ -186,6 +186,12 @@
     "shape": "array",
     "verdict": "internal"
   },
+  "46b76a821a337653": {
+    "excerpt": "organization network policy denies artifact storage reads for this session organization network policy could not be determined for this sess",
+    "note": "not model-facing: a Set of exact HTTP 403 response bodies, consumed by ce.has(e.data.trim()) to classify a gateway refusal. Never sent to a model.",
+    "shape": "array",
+    "verdict": "internal"
+  },
   "475fd77e044371ba": {
     "excerpt": "OAuth access token has expired. Re-authenticate to continue. OAuth access token has been revoked. OAuth access token is invalid. API key is ",
     "shape": "array",
@@ -289,6 +295,12 @@
   "5e380c50edb1fc5d": {
     "excerpt": "extract must contain at least one capturing group \u2014 group 1 is the credential value to mask (e.g. \"token:\\s*(\\S+)\").",
     "shape": "concat",
+    "verdict": "internal"
+  },
+  "5f363f38afe019d5": {
+    "excerpt": "organization network policy denies artifact reads for this session organization network policy could not be determined for this session",
+    "note": "not model-facing: a Set of exact HTTP 403 response bodies, consumed by ye.has(Buffer.from(n).toString(\"utf8\").trim()). Never sent to a model.",
+    "shape": "array",
     "verdict": "internal"
   },
   "607d7dee658cf925": {
@@ -427,6 +439,12 @@
     "note": "not model-facing: config schema / CLI help / operator error / TUI dialog",
     "shape": "concat",
     "verdict": "internal"
+  },
+  "7e788fa20e6d8dea": {
+    "excerpt": "plugin command source printed a network path plugin command source path resolves to a network path plugin command source printed a path thro",
+    "shape": "array",
+    "verdict": "internal",
+    "why": "Set of 25 plugin-command-source refusal reason CODES, membership-tested by G1() at 5996639 (Gje.has(r)) to map a reason to a telemetry category (\"policy\"/\"network\"); compared against, never rendered as prose."
   },
   "7f6576084354ecaf": {
     "excerpt": "macOS and Linux/WSL only: skip filesystem isolation entirely while keeping network and seccomp isolation. Ignored on native Windows, where t",
@@ -595,6 +613,12 @@
     "shape": "concat",
     "verdict": "internal",
     "why": "zod .describe() on settings.json sandbox.credentials awsPairs \u2014 config schema"
+  },
+  "bb7703d8e2f3b67b": {
+    "excerpt": "Your GitHub CLI token doesn't have the workflow scope. Without it, GitHub rejects pushes that change GitHub Actions workflow files, and push",
+    "shape": "array",
+    "verdict": "ui",
+    "why": "Ink warning banner at 30512145 \u2014 e(o,{marginTop:1,children:r(t,{color:\"warning\",children: \u2026}) \u2014 terminal-only guidance about a missing gh workflow scope."
   },
   "bcf5ea56640a222d": {
     "excerpt": "HTTPS URL of a zip archive containing the plugin. The plugin root (the directory holding .claude-plugin/) may be at the top of the archive o",
@@ -785,17 +809,5 @@
     "shape": "concat",
     "verdict": "internal",
     "why": "zod .describe() on the plugin archive source object \u2014 config schema"
-  },
-  "7e788fa20e6d8dea": {
-    "verdict": "internal",
-    "shape": "array",
-    "excerpt": "plugin command source printed a network path plugin command source path resolves to a network path plugin command source printed a path thro",
-    "why": "Set of 25 plugin-command-source refusal reason CODES, membership-tested by G1() at 5996639 (Gje.has(r)) to map a reason to a telemetry category (\"policy\"/\"network\"); compared against, never rendered as prose."
-  },
-  "bb7703d8e2f3b67b": {
-    "verdict": "ui",
-    "shape": "array",
-    "excerpt": "Your GitHub CLI token doesn't have the workflow scope. Without it, GitHub rejects pushes that change GitHub Actions workflow files, and push",
-    "why": "Ink warning banner at 30512145 \u2014 e(o,{marginTop:1,children:r(t,{color:\"warning\",children: \u2026}) \u2014 terminal-only guidance about a missing gh workflow scope."
   }
 }

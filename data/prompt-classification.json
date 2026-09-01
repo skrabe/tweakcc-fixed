@@ -54419,5 +54419,2566 @@
     "id": "system-reminder-instruction-files-changed-no-reason",
     "name": "System Reminder: Instruction files changed",
     "desc": "Header used when instruction files changed but no re-read reason is recorded."
+  },
+  "058520a212df403a6ced0a75dff1d43322c151a8": {
+    "facing": "model",
+    "id": "skill-code-review-posting-to-gitlab",
+    "name": "Skill: Code Review Posting To GitLab",
+    "desc": "Code-review skill block telling the model how to post findings to a GitLab MR when --comment is set."
+  },
+  "2bd8d10f96857602a04d8139c4fe508692eb95f0": {
+    "facing": "model",
+    "id": "data-task-notification-agent-resumed-from-transcript",
+    "name": "Data: Task Notification Agent Resumed From Transcript",
+    "desc": "Task-notification body telling the model a resumed agent is running again and not to treat it as cancelled."
+  },
+  "ffae48e8086e5539521843a1a1f320d6b0152b10": {
+    "facing": "model",
+    "id": "tool-description-tool-provider-disconnected",
+    "name": "Tool Description: Tool Provider Disconnected",
+    "desc": "Suffix on a listed tool's description when its provider has disconnected, telling the model to continue without it."
+  },
+  "ef95353247e9d8826569410eba1aea9a625c17c8": {
+    "facing": "model",
+    "id": "data-artifact-comment-sent-to-claude-by-someone-else",
+    "name": "Data: Artifact Comment Sent To Claude By Someone Else",
+    "desc": "Attribution note interpolated into the artifact-comments dump telling the model to leave another person's Claude-sent thread unless asked."
+  },
+  "dbb4d80f001a667d55b2bf47fd1180a180ebb67b": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-anchor-detail-marker",
+    "name": "Tool Result: Artifact Comments Anchor Detail Marker",
+    "desc": "Comments-dump note that rows starting with the anchor-detail marker are tool-emitted coverage data, not instructions."
+  },
+  "a8db441af5e322958417cb27ef7dd8b61af977d5": {
+    "facing": "model",
+    "id": "tool-description-artifact-asset-true-upload",
+    "name": "Tool Description: Artifact Asset True Upload",
+    "desc": "Artifact tool-description clause for uploading a local file into the artifact asset store via url, file_path, and asset:true."
+  },
+  "cbef26e7e6f5e8cd885a8f2d36fbb2a8f14f6b8a": { "facing": "internal" },
+  "c26cb6c677c306bf1f4f440edf43bdd8db7d11f6": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-comments-action",
+    "name": "Tool Parameter: Artifact Comments Action",
+    "desc": "Input-schema describe() for the comments-tool action enum covering read, reply, resolve, and watch."
+  },
+  "a4e25b4a9ab7a9b828684d2bd10fe6fa1df8dec1": { "facing": "ui" },
+  "8791cd9cbea9e5845e6b124e108d3857b92ebad9": { "facing": "internal" },
+  "500a5aad7ad0f861848c3dd47d9888b6224eeb9c": {
+    "facing": "model",
+    "id": "tool-description-artifact-database-guidance",
+    "name": "Tool Description: Artifact Database Guidance",
+    "desc": "Appended to the Artifact tool description when the artifact-database capability is live, explaining read_db/write_db ops and that stored rows are untrusted viewer data."
+  },
+  "268cbe1b637f120111d3968891392270ff0fed3b": {
+    "facing": "model",
+    "id": "tool-description-artifact-shared-with-user-list-scope",
+    "name": "Tool Description: Artifact Shared With User List Scope",
+    "desc": "Artifact tool-description section for list scope mine/shared/all and that shared titles are untrusted data."
+  },
+  "e5bd803859574bc6514e944540648310a9338ddc": {
+    "facing": "model",
+    "id": "tool-description-artifact-before-writing-load-design-skill",
+    "name": "Tool Description: Artifact Before Writing Load Design Skill",
+    "desc": "Artifact prompt clause requiring the design skill be loaded before writing a skill-instructed markdown page."
+  },
+  "8b51d3f62c99757364561c8e7422d29a3ff9374e": {
+    "facing": "model",
+    "id": "tool-description-artifact-before-writing-load-design-skill-contract",
+    "name": "Tool Description: Artifact Before Writing Load Design Skill Contract",
+    "desc": "Artifact prompt clause that the design skill carries the page contract and must be loaded before writing."
+  },
+  "fd6f3c48e7841c44abd477afa5806163fc9d7cec": {
+    "facing": "model",
+    "id": "tool-description-artifact-before-writing-inline-contract-no-skills",
+    "name": "Tool Description: Artifact Before Writing Inline Contract No Skills",
+    "desc": "Artifact prompt clause inlining the page contract when skills are unavailable in the session."
+  },
+  "d4e5f7829aa8eeb29f426df4465210661c6ecd31": {
+    "facing": "model",
+    "id": "tool-description-artifact-calls-section",
+    "name": "Tool Description: Artifact Calls Section",
+    "desc": "Artifact tool-description **Calls** section enumerating publish and the other actions."
+  },
+  "be9ea8d61f5ff382971a2ade21564b967291be41": {
+    "facing": "model",
+    "id": "tool-description-artifact-comments-section",
+    "name": "Tool Description: Artifact Comments Section",
+    "desc": "Appended to the Artifact tool's prompt() when comments are live; explains comments/reply actions, activation gating, and that viewer comment text is untrusted data."
+  },
+  "2d1a228f0f25a7874079d901a9111ec2f03817a3": {
+    "facing": "model",
+    "id": "tool-description-artifact-cdn-allowlist",
+    "name": "Tool Description: Artifact CDN Allowlist",
+    "desc": "Artifact page-contract section listing the CSP-enforced CDN allowlist for external scripts and styles."
+  },
+  "bf5ffc02a1e3229f51378c7ceb2882ac769eebf5": {
+    "facing": "model",
+    "id": "tool-description-artifact-files-you-did-not-write",
+    "name": "Tool Description: Artifact Files You Did Not Write",
+    "desc": "Artifact prompt rule to read a complete file before publishing it, even when asked not to."
+  },
+  "88878283b8b0bc5c5d2ba342a9d42150af91bd57": {
+    "facing": "model",
+    "id": "tool-description-artifact-format-html",
+    "name": "Tool Description: Artifact Format HTML",
+    "desc": "Artifact prompt format rule: author HTML and only publish .md when a loaded skill instructs it."
+  },
+  "c32f913fcc7c8adb78e19d6a618ba1ed5b67c183": {
+    "facing": "model",
+    "id": "tool-description-artifact-never-publish",
+    "name": "Tool Description: Artifact Never Publish",
+    "desc": "Artifact prompt prohibition on publishing impersonation, fabricated records, credential-harvesting pages, or content targeting a private individual."
+  },
+  "a2dbe67170897963e2c3e17e8b6713a532183a15": {
+    "facing": "model",
+    "id": "tool-description-artifact-responsive",
+    "name": "Tool Description: Artifact Responsive",
+    "desc": "Artifact page-contract responsive-layout rules for relative units, overflow, and no page-level horizontal scroll."
+  },
+  "389b1c1e033f5b5447bc4551e4a72a01bbd66434": {
+    "facing": "model",
+    "id": "tool-description-artifact-theme-aware",
+    "name": "Tool Description: Artifact Theme Aware",
+    "desc": "Artifact page-contract theming rules for data-theme, prefers-color-scheme, and :root tokens."
+  },
+  "bce8bdceef25aab30da5572e8b913a772e47fe62": {
+    "facing": "model",
+    "id": "tool-description-artifact-title",
+    "name": "Tool Description: Artifact Title",
+    "desc": "Artifact prompt title rule: a short noun-phrase <title>, not a summary."
+  },
+  "0b9044cb19d864db565fcde4a37efe6c263175dd": {
+    "facing": "model",
+    "id": "tool-description-artifact-title-first-8kb",
+    "name": "Tool Description: Artifact Title First 8KB",
+    "desc": "Artifact prompt title rule noting only the first 8KB is scanned for <title> and that it names the tab and gallery."
+  },
+  "8c195b6906f38b74a214726278f3040ce9175c5a": {
+    "facing": "model",
+    "id": "tool-description-artifact-find-from-earlier-sessions",
+    "name": "Tool Description: Artifact Find From Earlier Sessions",
+    "desc": "Artifact prompt section for listing earlier-session artifacts to recover a URL before updating."
+  },
+  "3a8a0f4471f1bd08988434a95f39857fdaa96ce5": {
+    "facing": "model",
+    "id": "tool-description-artifact-read-existing",
+    "name": "Tool Description: Artifact Read Existing",
+    "desc": "Artifact prompt section for action read on an existing artifact URL, including shared-vs-owned return shapes."
+  },
+  "04e3f3c59855c0c0a7cc3ad634f1f16b0f4e1b75": {
+    "facing": "model",
+    "id": "tool-description-artifact-verify",
+    "name": "Tool Description: Artifact Verify",
+    "desc": "Addendum to the Artifact tool description requiring action verify after publish and treating diagnostics as untrusted data."
+  },
+  "b0ebeead151a6ae93023d7d81db10f30e320e798": {
+    "facing": "model",
+    "id": "tool-description-artifact-watching-remote-durable-wake",
+    "name": "Tool Description: Artifact Watching Remote Durable Wake",
+    "desc": "Remote-session Artifact prompt section: watches are durable wake subscriptions, not a live connection."
+  },
+  "eb9641864a6cbee89e2fad6ee90adff33930bf5f": {
+    "facing": "model",
+    "id": "tool-description-artifact-watching-remote-durable-wake-status",
+    "name": "Tool Description: Artifact Watching Remote Durable Wake Status",
+    "desc": "Remote-session Artifact watching section that also documents status/unwatch and comment-wake re-read."
+  },
+  "8af8493d5cbc46a3b52e9a0c82a7dd6030864be5": {
+    "facing": "model",
+    "id": "tool-description-artifact-watching-unavailable-with-status",
+    "name": "Tool Description: Artifact Watching Unavailable With Status",
+    "desc": "Artifact prompt section when watching is unavailable, still documenting status/unwatch verbs."
+  },
+  "5121619084458ec0e50b65e4b1deea46e87e57a1": {
+    "facing": "model",
+    "id": "tool-description-artifact-watching-unavailable",
+    "name": "Tool Description: Artifact Watching Unavailable",
+    "desc": "Short Artifact prompt arm stating watching is unavailable in this session."
+  },
+  "826595ff865dff4ac0836156c153a0d3fc44017b": {
+    "facing": "model",
+    "id": "tool-description-artifact-watching-live-subscribe",
+    "name": "Tool Description: Artifact Watching Live Subscribe",
+    "desc": "Interactive-session Artifact watching section: publishing starts a live subscription and only the main loop holds a watch."
+  },
+  "f6ff92a115f56bd58225acb91820bdffd07eb36f": {
+    "facing": "model",
+    "id": "tool-description-artifact-watching-live-subscribe-compact",
+    "name": "Tool Description: Artifact Watching Live Subscribe Compact",
+    "desc": "Compact live-watch Artifact prompt arm for sessions that subscribe on publish."
+  },
+  "b83e511f589dc7bb2083e236dfe8ff92781916b0": { "facing": "internal" },
+  "ab93843d8003aed0116c10e43e4da60c308e37e0": {
+    "facing": "model",
+    "id": "system-prompt-saving-skills-unavailable-here",
+    "name": "System Prompt: Saving Skills Unavailable Here",
+    "desc": "Saving-skills notice; the model can't create/change skills in this session and should point the user to their claude.ai settings."
+  },
+  "44aff1570dd7179a6375c3658f2251af11497681": {
+    "facing": "model",
+    "id": "system-prompt-saving-skills-via-file-delivery",
+    "name": "System Prompt: Saving Skills Via File Delivery",
+    "desc": "Saving-skills notice; deliver a SKILL.md or .skill file to the user and report it as delivered, never as saved."
+  },
+  "fff5f2c381b43ae0076b242e5913f35fa2374c87": {
+    "facing": "model",
+    "id": "system-prompt-saving-skills-propose-via-tool",
+    "name": "System Prompt: Saving Skills Propose Via Tool",
+    "desc": "Saving-skills system-prompt notice to propose a create/change via the review-card tool rather than writing SKILL.md for the user to save."
+  },
+  "b2c36aa6f9aef8bffbb8564dc90cd1d659b17d0a": {
+    "facing": "model",
+    "id": "data-claude-code-changelog",
+    "name": "Data: Claude Code Changelog",
+    "desc": "Bundled changelog whose parsed recent-version bullets are assembled into the claude-code help skill context."
+  },
+  "17b18865b907f66d69f4709c19e80813463e6007": {
+    "facing": "model",
+    "id": "data-skill-tool-spelling-in-session",
+    "name": "Data: Skill Tool Spelling In Session",
+    "desc": "Preamble injected into a skill telling the model this session's tool spelling and to load it on first use."
+  },
+  "5b98fef7297cebc96eb40daf911813e7cbda9e19": {
+    "facing": "model",
+    "id": "data-fable-5-model-picker-description",
+    "name": "Data: Fable 5 Model-Picker descriptionForModel",
+    "desc": "descriptionForModel string for Fable 5 in the model picker, read by the model (most capable for hardest/longest-running tasks)."
+  },
+  "c7637d2674c49849204317e008cde709ba58d300": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-doc-version",
+    "name": "Tool Result: Artifact Live Doc Version",
+    "desc": "Artifact publish tool_result when liveDocVersion is set, using liveDocPublishVersionLine plus subscription/collab suffixes."
+  },
+  "6b02a96c05752afda62eacb11f194a863fdf51c7": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-doc-shim",
+    "name": "Tool Result: Artifact Live Doc Shim",
+    "desc": "Artifact publish tool_result for a live-doc shim publish, built by liveDocShimLine plus the shared suffix slots."
+  },
+  "e86fd531f2cd9ab02dd9c99a942fe4e1195e12f8": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-made-from-type",
+    "name": "Tool Result: Artifact List Made From Type",
+    "desc": "list tool_result header for Artifacts made from a type, with mine/shared rows and default marking."
+  },
+  "6c7660e0da15a87ed731c9eda2ff3c9d4734cd19": { "facing": "ui" },
+  "2d3b145cd1c8b460459b96fcbe5b2ddc53d8d849": {
+    "facing": "model",
+    "id": "tool-description-artifact-how-to-load-library",
+    "name": "Tool Description: Artifact How To Load A Library",
+    "desc": "Artifact page-contract section on pinning CDN UMD builds, blocked downloads, native mermaid, and browser storage."
+  },
+  "7faeee684759cba2b2bc6cd8aafad460efd15bdb": {
+    "facing": "model",
+    "id": "slash-command-add-dir-skills-not-loaded-unresolved",
+    "name": "Slash Command: Add-Dir Skills Not Loaded Unresolved",
+    "desc": "/add-dir local-jsx onDone text when a nested directory path cannot be resolved so its skills were not loaded."
+  },
+  "a509066d2679f96a6daac48404316d2ed6e15f2d": {
+    "facing": "model",
+    "id": "tool-result-remote-host-unresponsive",
+    "name": "Tool Result: Remote Host Unresponsive",
+    "desc": "Remote-host tool_result when the attached machine stopped answering health checks, telling the model not to retry non-idempotent commands."
+  },
+  "54519a0a87489992b8bf2c1f02ff5fc9fea3a0ac": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-batch-write-index-failed",
+    "name": "Tool Result: Artifact DB Batch Write Index Failed",
+    "desc": "write_db batch tool_result when one indexed write fails and later writes do not run."
+  },
+  "fde3ad43de3ab6d282fc31c148b2595aac14585e": {
+    "facing": "model",
+    "id": "tool-description-agent-available-types",
+    "name": "Tool Description: Agent Available Types",
+    "desc": "Agent tool description block listing that agent types appear in system-reminders and how to pass subagent_type including fork."
+  },
+  "96863a2c92a2ae016df6caa598af44bfbe451a2d": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-source-owned-no-auto-reply",
+    "name": "Data: Task Notification Artifact Source Owned No Auto Reply",
+    "desc": "Wake notice that no auto-reply or auto-edit ran because this session publishes the artifact from source, so changes belong there."
+  },
+  "608fb4fd0be7344244ee7dc6b4441266b4e382f9": {
+    "facing": "model",
+    "id": "slash-command-code-review-inline-assembly",
+    "name": "Slash Command: Code Review Inline Assembly",
+    "desc": "Template that assembles the inline /code-review prompt from the target header, base review text, cell-specific block and the optional guidance tails."
+  },
+  "9eaa9f07b8220cc0b954c6ef1683e4afede6a002": {
+    "facing": "model",
+    "id": "tool-description-artifact-deliverable-must-publish",
+    "name": "Tool Description: Artifact Deliverable Must Publish",
+    "desc": "Artifact prompt rule that an audience-facing deliverable is unfinished until published as an artifact or via a document connector."
+  },
+  "6a076a6c0c6a1a2ea96515ee85fa2b62574c6555": { "facing": "internal" },
+  "b7757967e343d7487ed329b6d7df0dbdf366ce52": {
+    "facing": "model",
+    "id": "tool-result-remote-host-approval-no-longer-covers",
+    "name": "Tool Result: Remote Host Approval No Longer Covers",
+    "desc": "Remote-host tool_result when a permission rule changed while the call was waiting, so nothing ran and the model must ask again."
+  },
+  "2d5cf097b92f64368e4195b5af16f6bb097e50d7": {
+    "facing": "model",
+    "id": "tool-result-artifact-capability-declaration-unread",
+    "name": "Tool Result: Artifact Capability Declaration Unread",
+    "desc": "Publish tool_result when stored capability declaration cannot be read, so a republish that declares capabilities is refused unless contract latest is passed."
+  },
+  "07f48fe43f810796f47d50638e2675c2ea24aab9": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-edit-foreign-grant-refused",
+    "name": "Data: Task Notification Artifact Auto-Edit Foreign Grant Refused",
+    "desc": "Auto-react notice that an automatic edit was refused because the thread's edit grant belongs to another user."
+  },
+  "63eeaf94cf01abb86e061264ceaaee55997f1924": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-version-label",
+    "name": "Tool Parameter: Artifact Version Label",
+    "desc": "The label input-schema param description for the Artifact tool, serialized into the model's tool list."
+  },
+  "3731d015695f043ec47045fad1f9fe729bdca92b": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-url-publish-or-act",
+    "name": "Tool Parameter: Artifact URL Publish Or Act",
+    "desc": "Input-schema describe() for the Artifact url param: in-place publish target or the artifact to read/delete/act on."
+  },
+  "ee7e1138776d13b01d4980b454c1d8e54db0a9b8": {
+    "facing": "model",
+    "id": "tool-result-artifact-not-found",
+    "name": "Artifact Not Found Error",
+    "desc": "Error returned to the model that the artifact was not found, deleted, or not shared with it."
+  },
+  "21c03b2cded02d2029d88d51299c2c4e8cbcdf8b": { "facing": "internal" },
+  "737fd6328fce10d1cc0beed99024e5063cd7c511": { "facing": "internal" },
+  "666cb7d7c11fdca815b9b34cd4209ae81d423e76": { "facing": "internal" },
+  "d6604f099402ae1a247587c017a60658f70a98f4": { "facing": "ui" },
+  "5711d3c7d712ba80abf8e533a6e6c5059fe5deeb": { "facing": "ui" },
+  "13714037cbdc3c7284910fa4228da137d108986b": { "facing": "ui" },
+  "2bb78583b218a5b4ffbe3762254775d5c87364b5": { "facing": "internal" },
+  "dedab6bcc40151ea57f953a1d06cdac80a718279": { "facing": "ui" },
+  "c4fc2c561167666497a3a8eb8fd7b62df7a3ac8e": { "facing": "internal" },
+  "f1c1db2e21d64e18ef4955f22399acb97f57cf4d": {
+    "facing": "model",
+    "id": "system-reminder-directory-sync-latest-not-uploaded",
+    "name": "System Reminder: Directory Sync Latest Not Uploaded",
+    "desc": "Reminds the agent that its latest checkout changes were not uploaded to the user's machine until a later upload succeeds."
+  },
+  "0ae6019340dff82ea85eb900f13c76bfaeabf0e3": { "facing": "ui" },
+  "b7b45f1af5e41c26311e89ea9c4b1d547c52a994": {
+    "facing": "model",
+    "id": "system-reminder-proactive-output-style-waiting-turn-reminder",
+    "name": "System Reminder: Proactive Output Style Waiting Turn",
+    "desc": "Built-in Proactive output-style waitingTurnReminder telling the model to end the turn instead of polling a background task."
+  },
+  "ace354920760a912a3c226286c21794ee07cbca0": {
+    "facing": "model",
+    "id": "data-fable-5-1-model-picker-description",
+    "name": "Data: Fable 5.1 Model-Picker descriptionForModel",
+    "desc": "Model-picker descriptionForModel for Claude Fable 5.1, hardcoded rather than templated from display_name as the Fable 5 entry is."
+  },
+  "a9cfe7b4a89639faa612b7002d4e9c8c8e75a589": { "facing": "ui" },
+  "ee59727cdfe07dd14d6bf6642c069dc8d8b995cf": { "facing": "internal" },
+  "be51aa4d4e337ec73cfec56637bc6741c32a5976": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-db-out-dir",
+    "name": "Tool Parameter: Artifact DB out_dir",
+    "desc": "Artifact DB tool out_dir schema text telling the model to dump get/list/query documents as JSON files instead of inline contents."
+  },
+  "a3ce26e0807e74e60552e1617b40149e94148f53": { "facing": "internal" },
+  "e447f82f8ec3233a2319d8132b726fd3dd882b0c": { "facing": "internal" },
+  "e8b99b3dcb124ddf23b550ea97c4923b64a2d84f": {
+    "facing": "model",
+    "id": "tool-description-artifact-after-publishing-app",
+    "name": "Tool Description: Artifact After Publishing (App)",
+    "desc": "Artifact tool description fragment for the in-app surface: gallery recovery and the post-publish card instead of a pasted URL."
+  },
+  "ba247083cf4910f6d23d6fba2692044bb9b11edd": {
+    "facing": "model",
+    "id": "tool-description-listplugins",
+    "name": "Tool Description: ListPlugins",
+    "desc": "Model-facing prompt of the ListPlugins tool that lists plugins enabled for this session and points to SearchPlugins/SuggestPluginInstall."
+  },
+  "2eff2a67bee16c797bf8ebe5965db4640a4da53b": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-limit",
+    "name": "Tool Parameter: Artifact List Limit",
+    "desc": "Artifact tool limit field schema: maximum artifacts to return on list."
+  },
+  "034087516df133007cae1790482006a5a0d69d87": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-list-type-from-types-listing",
+    "name": "Tool Parameter: Artifact List Type (Types Listing)",
+    "desc": "Unified Artifact tool `type` parameter: filter the listing to Artifacts made from a named type."
+  },
+  "2133dd3bbc3453c9ea3175c23f2ede4a440ca82b": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-list-type-from-list-types",
+    "name": "Tool Parameter: Artifact List Type (list_types)",
+    "desc": "Split-action Artifact schema `type` parameter: listing of Artifacts made from a type as list_types shows it."
+  },
+  "61302baf6a785d2ce5e214dc8ea36b8c0377984e": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-list-assets-after",
+    "name": "Tool Parameter: Artifact List Assets After",
+    "desc": "Artifact tool `after` cursor for continuing a scope:'assets' listing."
+  },
+  "9f9715a7d15b41c17427e59cc0e058dcd0d9c15b": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-list-types-query",
+    "name": "Tool Parameter: Artifact List Types Query",
+    "desc": "Artifact tool type_query parameter to narrow a scope:'types' listing."
+  },
+  "93cb2d336b0330fae73c2be670590400b58b311d": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-list-scope-mine-shared-all",
+    "name": "Tool Parameter: Artifact List Scope",
+    "desc": "Artifact tool scope enum description for list ('mine'/'shared'/'all', plus gated types/files/assets)."
+  },
+  "053cd132178c3cb9521d6306ae441fbbcbdd2c8f": { "facing": "internal" },
+  "0425abf0e572866dd534e7dc305f3ec9bb6b7927": {
+    "facing": "model",
+    "id": "tool-parameter-proposeskills-target",
+    "name": "Tool Parameter: ProposeSkills Target",
+    "desc": "ProposeSkills input-schema target field: existing skill slug required when kind is improvement."
+  },
+  "d4c0011384561f5f51e1886290ffd2e1979d1295": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-no-machine-files-not-here",
+    "name": "System Reminder: Tool Hosts No Machine Files Not Here",
+    "desc": "tool_hosts_notice header when no remote machine is attached and the user's current project files are not in this checkout."
+  },
+  "6f93a2be4eabfb5efcc9288c2586bee1928feeff": {
+    "facing": "model",
+    "id": "tool-result-remote-host-no-answer",
+    "name": "Tool Result: Remote Host No Answer",
+    "desc": "Error tool-result when a remote-host permission prompt times out without approval, telling the model nothing ran."
+  },
+  "4c9be3be9d58332a312eb2b3eb3a84b3fda2b817": { "facing": "ui" },
+  "74e08444beb318f975346214f5fb2a8daf430a66": {
+    "facing": "model",
+    "id": "tool-parameter-proposeskills-description",
+    "name": "Tool Parameter: ProposeSkills Description",
+    "desc": "ProposeSkills per-proposal description field: one line that becomes the saved skill's when-to-use text."
+  },
+  "d1677195c626f217cef777deebd467cb1caa6378": { "facing": "ui" },
+  "2568773628953a0b58e108174e043b6e6110d924": {
+    "facing": "model",
+    "id": "tool-result-artifact-opened",
+    "name": "Tool Result: Artifact Opened",
+    "desc": "Artifact open action tool_result content confirming the page was opened and nothing was published."
+  },
+  "c2160f1c1b91fa46c5c0b08f872348cc25836b1a": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-preview-file-path",
+    "name": "Tool Parameter: Artifact Preview File Path",
+    "desc": "Artifact verify/preview tool file_path schema: local HTML page to render for preview."
+  },
+  "1ced03d8a457c6abb187095b7e77da8fd4d5546e": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-publish-asset-flag",
+    "name": "Tool Parameter: Artifact Publish Asset Flag",
+    "desc": "Artifact tool `asset` flag: with url, upload file_path to the artifact asset store instead of publishing the page."
+  },
+  "4b9f522ff75396321ecb6deb3ed00177ee1beba3": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-publish-fallback-title",
+    "name": "Tool Parameter: Artifact Publish Fallback Title",
+    "desc": "Artifact tool title parameter used as fallback when the HTML file has no <title>."
+  },
+  "82a41eda679085468116a16d397060b383bccd94": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-publish-force-discard",
+    "name": "Tool Parameter: Artifact Publish Force Discard",
+    "desc": "Artifact tool force flag: last-resort overwrite that discards a newer published version."
+  },
+  "c60ed342c7adbb37d6f793e8502c4225476e7b94": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-publish-gallery-subtitle",
+    "name": "Tool Parameter: Artifact Publish Gallery Subtitle",
+    "desc": "Artifact tool description parameter: one sentence for the gallery card subtitle."
+  },
+  "5f2a7be87ddc12c08a1c9fe31ccb75035bc08e52": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-publish-runtime-version",
+    "name": "Tool Parameter: Artifact Publish Runtime Version",
+    "desc": "Artifact tool contract parameter: pin, upgrade, or keep the published page's runtime version."
+  },
+  "76e99f3f84753d8edd431042abbff5aebf17c90f": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-publish-file-path",
+    "name": "Tool Parameter: Artifact Publish File Path",
+    "desc": "Artifact tool file_path parameter for the local page (or type data file / asset) to publish."
+  },
+  "25d55f47486740ee3bf2da7820a00e81eee214c7": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-publish-capabilities",
+    "name": "Tool Parameter: Artifact Publish Capabilities",
+    "desc": "Artifact tool capabilities parameter: runtime capability map, requiring the artifact-capabilities skill."
+  },
+  "690850e2b2a8ce7e358ba0349354711c9413fb40": {
+    "facing": "model",
+    "id": "tool-result-artifact-published",
+    "name": "Tool Result: Artifact Published",
+    "desc": "Success tool_result template after publishing an artifact path to its hosted URL, plus trailing status clauses."
+  },
+  "d988f5b93f771abbf427a2a0588c34741a183aec": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-read-file-out-dir",
+    "name": "Tool Parameter: Artifact Read File out_dir",
+    "desc": "Artifact tool out_dir when reading a file path: default scratchpad vs approval-gated directory."
+  },
+  "79c75ece2745573a0af4417f1822f19d8614f72e": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-read-shared-prompt",
+    "name": "Tool Parameter: Artifact Read Shared Prompt",
+    "desc": "Artifact tool prompt parameter steering the isolated summary of an artifact shared with the user."
+  },
+  "b2208d2dcbf1e5e865a5be9e003b3c14e666fada": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-db-action",
+    "name": "Tool Parameter: Artifact DB Action",
+    "desc": "Artifact DB tool action enum describing get/list/query reads and set/update/delete/batch writes."
+  },
+  "cf515070eb2571ec853a544017b4e2c3dafd3cf4": { "facing": "internal" },
+  "a64fad28b4047fa788f6922c5d7b03f434356fb8": { "facing": "internal" },
+  "46803dbb2c3b2f1c0113ce98786b2400d47f5e1b": { "facing": "ui" },
+  "d875282754fd234338a23580bdc239fdf7038adf": {
+    "facing": "model",
+    "id": "tool-description-artifact-render-html",
+    "name": "Tool Description: Artifact Render HTML",
+    "desc": "Opening Artifact tool description paragraph: when to publish an HTML artifact and the private-by-default / harm exception."
+  },
+  "eeb0f3e3c100a2b646192165780ae97a6335c0a5": { "facing": "ui" },
+  "fe1c9fefa16d1ffc755c9ce3d7f7246ea3598b5f": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-db-file-path",
+    "name": "Tool Parameter: Artifact DB file_path",
+    "desc": "Artifact DB tool file_path alternative to inline data for set/update of large documents."
+  },
+  "67822e337354d5e2b61d5dc4f9fdd3ca855935d8": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-db-set-update-data",
+    "name": "Tool Parameter: Artifact DB Set/Update Data",
+    "desc": "Artifact DB tool data parameter: JSON object for set/update, exclusive with file_path."
+  },
+  "5b1ff339865e45087bccaade78a96929f37acfe1": { "facing": "internal" },
+  "4a58718d62a03956ff2f59fefd44fc756c7f4e47": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-comments-url",
+    "name": "Tool Parameter: Artifact Comments URL",
+    "desc": "Artifact comments/watch tool url parameter required except for a bare watch listing."
+  },
+  "dc3e57f606786506c10ab7b3656cb89542debef5": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-db-url",
+    "name": "Tool Parameter: Artifact DB URL",
+    "desc": "Artifact DB tool url parameter: the artifact's claude.ai URL, required for every action."
+  },
+  "dc9391429fd33dc85e5ea36e84cc8502489b83a8": {
+    "facing": "model",
+    "id": "tool-parameter-proposeskills-skill-md",
+    "name": "Tool Parameter: ProposeSkills skillMd",
+    "desc": "ProposeSkills skillMd field: the complete SKILL.md to save, replacing the existing file on an improvement."
+  },
+  "a7bd5844be663cc58ede8f3a0c04606251891e10": {
+    "facing": "model",
+    "id": "tool-description-artifact-html-skeleton",
+    "name": "Tool Description: Artifact HTML Skeleton",
+    "desc": "Artifact authoring instruction that publish wraps the file in a doctype/head/body skeleton, so the model must not emit those tags."
+  },
+  "8ecb5c131f38ca5e2a84b1ced4a5bd2a1a17290c": { "facing": "ui" },
+  "bc28314db5ccc66382c9e218c9483b8c7094c622": { "facing": "ui" },
+  "2dadce59f0271a73424c35123fcb409d00c6c1e7": { "facing": "internal" },
+  "007eefe74be446248a3c17272767e594ac90d0d9": { "facing": "ui" },
+  "758c753a68edd02f729bd7f6780609ddc1f012d2": { "facing": "internal" },
+  "6dbad8a48af89ad9157d3663ebd9fa16782b31dd": {
+    "facing": "model",
+    "id": "tool-result-artifact-content-egress-blocked-cowork-allow-network",
+    "name": "Artifact Content Egress Blocked Cowork Allow Network",
+    "desc": "Cowork cloud-session network-egress remedy interpolated into artifact read/publish tool results when the content host is blocked."
+  },
+  "1588835e5082eb93f0de06453bf2f546bd252983": { "facing": "ui" },
+  "d081020718095effe93d6d33ecff6baab9b9c221": {
+    "facing": "model",
+    "id": "tool-result-artifact-handlers-unreadable",
+    "name": "Artifact Handlers Unreadable",
+    "desc": "Fallback tool_result content when the artifact handlers module is unavailable in this build."
+  },
+  "6d82a2e76797de19243208073a1aefff47c415b8": {
+    "facing": "model",
+    "id": "system-reminder-team-shutdown-request-approve",
+    "name": "Team Shutdown Request Approve",
+    "desc": "Instructions appended onto a teammate shutdown_request so the model can approve or decline via SendMessage."
+  },
+  "06dcd4a3478c4b36f55a72f914ef109dbbb6768c": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-verify-url",
+    "name": "Artifact Verify URL",
+    "desc": "Tool-schema description for the Artifact verify action's optional claude.ai URL."
+  },
+  "a0da8f8cec03b3c943b06554ce2bd40bb5fda255": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-watch-on",
+    "name": "Artifact Watch On",
+    "desc": "Tool-schema description for the Artifact watch action's on flag (start vs stop)."
+  },
+  "448c9c7cd9418bc4cdb8bcc22721f4400a8fd057": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-watch-path",
+    "name": "Artifact Watch Path",
+    "desc": "Tool-schema description for the live file path required when watching a multi-file Artifact."
+  },
+  "40bcbdd6eaa115eb22a9d3c5cfc995bf880d5e65": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-watch-replies",
+    "name": "Artifact Watch Replies",
+    "desc": "Tool-schema description for re-enabling automatic comment replies on a watched artifact."
+  },
+  "804d3092a0f54d613f913fc3cce20004272cfa02": { "facing": "internal" },
+  "0643cd95c18c450863cf5968f7bb926f281eb141": { "facing": "internal" },
+  "0dec8b7785517f55a41534537dc612aa1719161e": {
+    "facing": "model",
+    "id": "system-reminder-truncated-response-subagent-rewrite",
+    "name": "Truncated Response Subagent Rewrite",
+    "desc": "Subagent recovery nudge telling the model to rewrite the cut-off reply from the start with no apology."
+  },
+  "bd633f83f6d41aa04b6c0ae5d3651f07647d1529": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-request-access",
+    "name": "Artifact Read Request Access",
+    "desc": "Artifact boot 403 tool error telling the model the user must request access from the owner in a browser."
+  },
+  "837efc8b967db9ed3a1abbcddaf655330d13cc68": { "facing": "ui" },
+  "974201fd695a4dbf72270de70a9f57379f7217b3": { "facing": "ui" },
+  "2cb6199454a06a693e5ec06e919b0ea6bea8a15e": { "facing": "ui" },
+  "f391d50642f6eb2d1b7ac69a89bdf811fb50cb4c": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-capabilities-omitted-would-revoke",
+    "name": "Artifact Publish Capabilities Omitted Would Revoke",
+    "desc": "Publish tool error refusing a capabilities declaration that would silently drop stored capabilities."
+  },
+  "e22c8b7798c3b2f96215ee3e461d02a74f43c876": { "facing": "ui" },
+  "c2f5bbc3ebc95d6eaf0c4d44e59c3c540c437ec6": { "facing": "ui" },
+  "66b116b3c002a04c44bbaad3018fc5b19c05a83f": {
+    "facing": "model",
+    "id": "system-reminder-truncated-response-subagent-next-only",
+    "name": "Truncated Response Subagent Next Only",
+    "desc": "Lead-in of the subagent truncated-response recovery telling the model only its next message is delivered."
+  },
+  "16372121b259832657a5ed99e3aaf3bad286b2b4": { "facing": "internal" },
+  "aa277cb7db05e1bc6f6d7c59974afe9ab5e05d88": { "facing": "internal" },
+  "3499a710002df904c9268f347d41e3145ddf08fc": {
+    "facing": "model",
+    "id": "tool-result-reads-outside-working-directories-blocked",
+    "name": "Reads Outside Working Directories Blocked",
+    "desc": "Permission ask/deny reason when blockReadsOutsideWorkingDirectories blocks a path outside the working directories."
+  },
+  "3da4fb7334efd25c7690f4fa34edfea5e61f221d": {
+    "facing": "model",
+    "id": "tool-result-bash-runtime-path-outside-reads-blocked",
+    "name": "Bash Runtime Path Outside Reads Blocked",
+    "desc": "checkPermissions ask message when a bash path is computed at runtime and cannot be checked against the read block."
+  },
+  "02b35a6d7ae97684742021a4d63c512f90a18994": {
+    "facing": "model",
+    "id": "tool-result-bash-unparsed-command-outside-reads-ask",
+    "name": "Bash Unparsed Command Outside Reads Ask",
+    "desc": "checkPermissions ask message when the shell parser cannot analyze a command under the outside-reads block."
+  },
+  "51a3676e807704564a1e0e81dfbf83f2c2a3e837": {
+    "facing": "model",
+    "id": "tool-result-bash-sed-script-outside-reads-blocked",
+    "name": "Bash Sed Script Outside Reads Blocked",
+    "desc": "checkPermissions ask message for a non-allowlisted sed script that can touch any file under the read block."
+  },
+  "69db07b588221860d9ea3c0ff69f3e60fb698f4e": { "facing": "ui" },
+  "70bc92cf2996749a9556d37423c7da2076e2dc9b": { "facing": "ui" },
+  "67c872b4aebc0b33db20775add5402380d4deaad": { "facing": "ui" },
+  "c44c07126f52e76a74a3148e7871bd1973412e05": { "facing": "ui" },
+  "36a28fc78c7904e5ac3c4bf650ae863beb107e9e": { "facing": "ui" },
+  "5df02a1d59a0b93d6f7247cac646fddabd0464b9": { "facing": "ui" },
+  "85c564e6f7c981db816cbf17338fb60126bbcb67": { "facing": "ui" },
+  "f9e6f634fa18d518c7234c1be3bca6e340399b85": { "facing": "ui" },
+  "bb3d5d0288817f65ce8e53b78e910bcdc91498b0": { "facing": "ui" },
+  "389fee83861ee5e8097eb7132be604dd1933c652": { "facing": "ui" },
+  "909c1240e09670ef9b97794580b5a79874c4b71b": { "facing": "ui" },
+  "84bff6b497808d8fd54536e8688898620313f777": { "facing": "ui" },
+  "c5d3c52499ad416b3e022d642d5c449431916820": { "facing": "ui" },
+  "0b619aa5b6faf991798b60ab76392c7b6fcd32e1": { "facing": "ui" },
+  "b5218ff5fdfbfd3f8376ca8fee71acc199bf2b96": { "facing": "ui" },
+  "becdf8b6a53533b148493ecff790f4715a28291c": { "facing": "ui" },
+  "72fd857aa1210cb7e8968e90ca53ca4570f5c148": { "facing": "ui" },
+  "246474a7010b81744f4bdb93a5dbf88c90e38230": { "facing": "ui" },
+  "be886f934add8b27a1130adbc69d9726cc67875b": { "facing": "ui" },
+  "cfe7dd9c82cf8d2d8bffdc4a39d6ab66cfbcde0a": { "facing": "ui" },
+  "2d26481e5f80066645b0e950696dedb94637b017": { "facing": "ui" },
+  "d000e1b4377bf478bed953f1119e931e08296b4a": { "facing": "internal" },
+  "074b6182275d363fdfd150b53aed4b4eaacc38df": { "facing": "internal" },
+  "3ac98143f70ac6d4802c0344370b5f361ff8876a": { "facing": "internal" },
+  "d4fbe1ab928447eece864ea973cd65d67e869712": { "facing": "internal" },
+  "d65ec86b53810c7369f9bdfb50e7784da5a2eb87": { "facing": "internal" },
+  "3c62e39e57220bdc88232d2cadee992b1da26fc6": { "facing": "internal" },
+  "afa6b0d716031f4346b39a8f80af2984c3a62c13": { "facing": "internal" },
+  "644a105aef1ecd3144a2be136411ed8eb51fdff5": { "facing": "internal" },
+  "9c4b909e30bd1defae87c4c88857823ff2411bfe": { "facing": "internal" },
+  "65eb5c467ff11a2f4355e58ea655c1738b7cadb3": { "facing": "internal" },
+  "da0a7703538e3ecb67a4264d99b82d91cdf9c13b": { "facing": "internal" },
+  "f08ee0d1bdcf82e3fd3ba21bd772c7f613a672a8": { "facing": "ui" },
+  "73faf089dfed4f688df95ff1053ad2b8149af9b4": { "facing": "internal" },
+  "3265d81435e7763849a5f3c40074463c7bf5a079": { "facing": "internal" },
+  "c39ecd1793795d5fb83205f075a1aaa10b45e111": { "facing": "internal" },
+  "c2c6bc21f6181fe531c9472201d4731c66c203e3": { "facing": "internal" },
+  "89c4ae82da8587db0a109a021d8153e80fd54e78": { "facing": "internal" },
+  "8d7f34e0eefa765a9428e343cde722ec59fde4b1": { "facing": "internal" },
+  "ce4e934009465134bc222e5268e39b6546be6fc5": { "facing": "internal" },
+  "77e2f0aaf0999e38a88a86cfd1ba1f36108cca3a": { "facing": "internal" },
+  "fab074c25719b1eccb366bd2284b29492ea153b1": { "facing": "internal" },
+  "5fc8de470e9ac4f8f27371d2b09e40db6c44463c": { "facing": "internal" },
+  "5b21c68849cc9bd257ffd508817512aa63c1c93a": { "facing": "internal" },
+  "6b9a174a9f4cb69a5c8a63f336ffb714844dd7c9": {
+    "facing": "model",
+    "id": "tool-result-bash-zsh-read-non-numeric-operand-too-complex",
+    "name": "Tool Result: Bash Zsh Read Non-Numeric Operand Too Complex",
+    "desc": "Ask-path tool_result when zsh read's numeric operand may arith-eval a subscript and run command substitution."
+  },
+  "af1ef5371338ce9b296a6851b0b51cef44725e63": {
+    "facing": "model",
+    "id": "tool-result-bash-zsh-read-prompt-subscript-too-complex",
+    "name": "Tool Result: Bash Zsh Read Prompt Subscript Too Complex",
+    "desc": "Ask-path tool_result when zsh read -p's operand is a subscripted NAME that may arith-eval and run $(cmd)."
+  },
+  "a3a9106fb842ec1b897255bf5f594028738fb13e": {
+    "facing": "model",
+    "id": "tool-result-permission-denied-profile-store",
+    "name": "Permission Denied Profile Store",
+    "desc": "Denies writing the Anthropic profile store because it holds the sign-in that selects organization policy."
+  },
+  "6460a41b9feb3e0cf16346b5f3d9d1283a9fc40b": {
+    "facing": "model",
+    "id": "tool-result-restricted-path-outside-working-directory",
+    "name": "Tool Result: Restricted Path Outside Working Directory",
+    "desc": "Deny tool_result when --restricted confines file tools to the working directory and the path is outside it."
+  },
+  "eedfc5c1f47092f886a73070d7aac1159ffcaced": {
+    "facing": "model",
+    "id": "tool-result-block-reads-outside-working-directories",
+    "name": "Block Reads Outside Working Directories",
+    "desc": "Deny/ask suffix when permissions.blockReadsOutsideWorkingDirectories blocks a path outside the working directories."
+  },
+  "ba12ab7550868a6e33e5bedc0e4c9012c7a80d7f": {
+    "facing": "model",
+    "id": "tool-result-network-automount-browse-read-ask",
+    "name": "Network Automount Browse Read Ask",
+    "desc": "Permission-ask message when a read path sits under the /Network automount browse surface."
+  },
+  "8859871823f60c5c00eae402fe7c4a7f094d0d8c": {
+    "facing": "model",
+    "id": "tool-result-network-automount-browse-glob-ask",
+    "name": "Network Automount Browse Glob Ask",
+    "desc": "Permission-ask message when a glob pattern sits under the /Network automount browse surface."
+  },
+  "3f44ef75f5189d6408bc2d47b719dabc4b0a817e": { "facing": "internal" },
+  "7d15c3fd9779f3e72ea5d61d22d21f5be0120d91": { "facing": "internal" },
+  "e79b00bd67cf02038b589fff5f445420e7b729ca": { "facing": "internal" },
+  "9e820ff9be2072771ec2d4f76cd3db75021494cb": { "facing": "internal" },
+  "51edd5ceac20a7652bc9386694e9cc180b355b52": { "facing": "internal" },
+  "69cb16be111f360973aee57a760a0a73fddc559b": { "facing": "internal" },
+  "3bc7a5f0e1b18c718c1a70846f4ef2ccab0ecd8f": { "facing": "internal" },
+  "8250f2cc44c2690b17c99a7c38d1268428c89bce": {
+    "facing": "model",
+    "id": "system-reminder-teammate-shutdown-request",
+    "name": "Teammate Shutdown Request",
+    "desc": "Appends shutdown-approval instructions onto a teammate mailbox shutdown_request before it is passed to the model."
+  },
+  "6de8332f96c93d77b5bc7436e6fbbd72b931f13c": { "facing": "internal" },
+  "4542d7ee56990a2a5b8f40305cf1ce7d4fa1c1eb": {
+    "facing": "model",
+    "id": "tool-result-attachment-outside-working-directories-read-block",
+    "name": "Attachment Outside Working Directories Read Block",
+    "desc": "SendMessage/SendUserFile validateInput error returned to the model when permissions.blockReadsOutsideWorkingDirectories blocks an attachment outside the working directories."
+  },
+  "678ea6e9067fc589f608891a2be6cf8750504570": {
+    "facing": "model",
+    "id": "tool-result-tool-call-did-not-complete-turn-ended",
+    "name": "Tool Call Did Not Complete Turn Ended",
+    "desc": "Synthetic tool_result when a turn abort ends a tool that already started running."
+  },
+  "a6206f047e0a1c7bbb37c0c20f932641e3d05772": {
+    "facing": "model",
+    "id": "tool-result-tool-call-skipped-turn-ended",
+    "name": "Tool Call Skipped Turn Ended",
+    "desc": "Synthetic tool_result when a turn ends before a queued tool call runs (fizzy_grove interrupt path)."
+  },
+  "75977a479854db39dc8c340bfad16c2679d5a952": { "facing": "internal" },
+  "8a353ca4b98c8ae4b484a4af66cc504c2eb79dec": { "facing": "internal" },
+  "ba5daa20188cf5c76a915bd209b4dc7eca49e58a": { "facing": "internal" },
+  "f0a95840e196113374905f78f5264f4d51f2a265": { "facing": "internal" },
+  "75a15a79b4166a4288f55db3f9ef49a35c30a31d": { "facing": "internal" },
+  "cb47571e5b00a9d907dae9e4e808e8336c7e6a84": { "facing": "internal" },
+  "26495b2fa08db65ced6cee2cf872a542647e86e6": { "facing": "internal" },
+  "c283c96bd3f9fc68c8af75fe2e7825e4d4ebf6c2": { "facing": "internal" },
+  "a5ea644fabb494d8db2995224291670c4a35677e": { "facing": "internal" },
+  "5ee0e52a0aaf0a83b9dc1def3b6d963af100361d": {
+    "facing": "model",
+    "id": "tool-result-cloud-hook-request-past-deadline",
+    "name": "Cloud Hook Request Past Deadline",
+    "desc": "PreToolUse deny reason when a cloud hook request arrived after its deadline so the host answers retry."
+  },
+  "c336a90b3d0a28b76b844c8fe5e27ddcb722ccfd": { "facing": "internal" },
+  "5366534b1a4786b8a68a2cd1e2a217da5b01e701": { "facing": "internal" },
+  "6e59b86e769b3ce95b98e7d4f0d77076534e1592": { "facing": "internal" },
+  "90c1a728b69852b5171eb2cf90e850019aefb6f9": { "facing": "internal" },
+  "8eac779f34cf965b08703343327af03acd7ffdd4": { "facing": "internal" },
+  "f5c1d704167594528ac886450dee5b37b2dc4016": {
+    "facing": "model",
+    "id": "slash-command-advisor-bills-usage-credits",
+    "name": "Slash Command: /advisor — Advisor Bills Usage Credits",
+    "desc": "Local-jsx /advisor onDone fragment telling the model the chosen advisor bills usage credits that need to be set up."
+  },
+  "5f2fdca3f81f32e3c16bac790c8c69a6f116643d": { "facing": "internal" },
+  "de17680ef7c64670f19309bba997621fb7bf6d85": { "facing": "ui" },
+  "32ac52ba9d442d5cb83443b951bd7769e1a597df": { "facing": "ui" },
+  "211f5d411dc18dc58a7c438b61590e82a9f54cc3": {
+    "facing": "model",
+    "id": "system-reminder-prefix-ledger-changed-since-sent",
+    "name": "Prefix Ledger Changed Since Sent",
+    "desc": "Lead-in telling the model that prefix sites changed since they were first sent in this conversation."
+  },
+  "5a4397c1f33d23a3f63b412a469333b162f6c595": {
+    "facing": "model",
+    "id": "system-reminder-prefix-ledger-tool-updated",
+    "name": "Prefix Ledger Tool Updated",
+    "desc": "Prefix-ledger notice that a non-MCP tool description or schema field changed since it was first sent."
+  },
+  "8e40983796ba98ee41037e057a6db85de05a5eea": {
+    "facing": "model",
+    "id": "system-reminder-prefix-ledger-tool-updated-mcp",
+    "name": "Prefix Ledger Tool Updated Mcp",
+    "desc": "Prefix-ledger notice that an MCP server updated a tool's documentation, framed as server-supplied docs rather than user/Claude Code instructions."
+  },
+  "e50a6ba984e3c73f47a4cc2cc9de28c3054a4588": {
+    "facing": "model",
+    "id": "system-reminder-prefix-ledger-instructions-updated",
+    "name": "Prefix Ledger Instructions Updated",
+    "desc": "Prefix-ledger notice that a system-instruction section changed since it was first sent."
+  },
+  "d226bf8825ee75e74561b942f3fbd399833800d3": { "facing": "internal" },
+  "2b8bbeb278be5cd8f029ae2ed4b3b69c7b5ba72f": { "facing": "internal" },
+  "338785efdb8a3e94712e231df63667586f872a75": { "facing": "internal" },
+  "6f9023bd7d4e17c40a230ab1d7d5bcf5842898e9": { "facing": "internal" },
+  "79d1b184086f1b486fed4c7dc7ac7db545246f1e": {
+    "facing": "model",
+    "id": "tool-result-bash-chdir-outside-working-directories-read-block-ask",
+    "name": "Bash Chdir Outside Working Directories Read Block Ask",
+    "desc": "Permission-ask when pushd/env -C would move later reads outside working directories under the read block."
+  },
+  "232e8a7e4ab67c665f1e16da51bbaf9088327928": {
+    "facing": "model",
+    "id": "tool-result-path-outside-working-directories-read-block-ask",
+    "name": "Path Outside Working Directories Read Block Ask",
+    "desc": "Permission-ask when ln/cp/mv (and the PowerShell sibling) name a path outside working directories under the read block."
+  },
+  "af8a0e47cdd0d06e1f8dadc5424d093bdbf7e260": {
+    "facing": "model",
+    "id": "tool-result-bash-cd-compound-relative-read-ask",
+    "name": "Tool Result: Bash Cd Compound Relative Read Ask",
+    "desc": "Permission-ask message when a compound command cds then reads a relative path that cannot be resolved while a Read() deny rule is configured."
+  },
+  "a6a63d4b429bb32e35ff59d04fa96ec67f83cd73": { "facing": "internal" },
+  "8293d4fa2c3bcd2dcc2d62f4908dbf71b963cd20": {
+    "facing": "model",
+    "id": "tool-result-bash-input-redirect-deny-rule",
+    "name": "Tool Result: Bash Input Redirect Deny Rule",
+    "desc": "Permission-deny message when stdin redirection from a resolved path is blocked by a deny rule."
+  },
+  "d84749a6d12e6325ef35038088041eb74913c070": {
+    "facing": "model",
+    "id": "tool-result-bash-input-redirect-glob-or-cd-ask",
+    "name": "Tool Result: Bash Input Redirect Glob Or Cd Ask",
+    "desc": "Permission-ask message when an input-redirection target depends on glob expansion or a directory change in the same command."
+  },
+  "c21b80d54b6194f445553214d4718671bed97f0a": {
+    "facing": "model",
+    "id": "tool-result-bash-input-redirect-outside-working-directories",
+    "name": "Tool Result: Bash Input Redirect Outside Working Directories",
+    "desc": "Permission-ask message when input redirection targets a path outside the session working directories."
+  },
+  "aa43d02917936936d79e346c9c158645c79dd0b0": {
+    "facing": "model",
+    "id": "tool-result-bash-path-blocked-by-deny-rule",
+    "name": "Tool Result: Bash Path Blocked By Deny Rule",
+    "desc": "Shared deny-rule formatter used as checkPermissions message for blocked redirections (h9(kind, from/to, path))."
+  },
+  "cf98f2b899610c5e4f325e25ef9704a0e90f97ee": {
+    "facing": "model",
+    "id": "tool-result-bash-read-block-outside-working-directories-ask",
+    "name": "Tool Result: Bash Read Block Outside Working Directories Ask",
+    "desc": "Permission-ask message when a command names a path outside working directories under permissions.blockReadsOutsideWorkingDirectories."
+  },
+  "6ffc2691f8af5712280ff0ebdd16e34fdb6dea09": {
+    "facing": "model",
+    "id": "tool-result-bash-read-block-stdin-code",
+    "name": "Tool Result: Bash Read Block Stdin Code",
+    "desc": "Permission-ask via zU when a command would run code from stdin that cannot be checked against the read block."
+  },
+  "a8e8054aeb36cde8fda687a828dc1c57ec0e720c": {
+    "facing": "model",
+    "id": "tool-result-bash-read-block-inline-code",
+    "name": "Tool Result: Bash Read Block Inline Code",
+    "desc": "Permission-ask via zU when a command would run inline code that cannot be checked against the read block."
+  },
+  "a0b8809dcadcf4d6a19c6fa3ee27f9eab48e7dac": {
+    "facing": "model",
+    "id": "tool-result-bash-read-block-uncheckable-path",
+    "name": "Tool Result: Bash Read Block Uncheckable Path",
+    "desc": "Permission-ask message when a named path cannot be checked against the read block."
+  },
+  "df0fdb81368c1c7d13d9e9631735b4754556dcd2": { "facing": "internal" },
+  "920cb67c057ac47de56323c4a71b2eebf41196c2": { "facing": "internal" },
+  "1b1a9099558e46a47255469661980febe413575d": { "facing": "internal" },
+  "d11bc487dca06353e575c7999f5dc14c1db01dba": { "facing": "internal" },
+  "9ab7fa618c8d62dd25c0b5eae90c52af61ea41cd": { "facing": "internal" },
+  "c4b00007b0b01746cea58066f0708f4d5e025eb0": { "facing": "internal" },
+  "804d343d892c219ae0ef49e955c8a40b385bcf0e": { "facing": "internal" },
+  "cd838e509ffffe8db9763568bae6921e73a5ab77": {
+    "facing": "model",
+    "id": "system-prompt-saving-skills-via-save-skill-tool",
+    "name": "System Prompt: Saving Skills Via Save Skill Tool",
+    "desc": "System-prompt arm telling the model to create or update skills with the save_skill tool because on-disk skill files are a read-only cache."
+  },
+  "745d5460a9eb857935edff55c699e9b57542cd19": { "facing": "internal" },
+  "6b7d384c1acdc60943a2e7a286c1035657cfa3f4": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-off-settings-unreadable",
+    "name": "System Reminder: Dir Sync Off Settings Unreadable",
+    "desc": "Directory-sync stopped/off line telling the model file sync is off because in-tree settings.json could not be parsed."
+  },
+  "4061f4e320c9eb8fba3db5948dcfc77da5ebb401": {
+    "facing": "model",
+    "id": "tool-result-cloud-session-local-changes-too-large",
+    "name": "Tool Result: Cloud Session Local Changes Too Large",
+    "desc": "Cloud-session create-fail message when local changes are too large to upload and the working tree cannot be bundled instead."
+  },
+  "367d410e2c22ebcb2da5aec5aabed06ac6933d4a": {
+    "facing": "model",
+    "id": "tool-result-cloud-session-local-changes-bundle-failed-detail",
+    "name": "Tool Result: Cloud Session Local Changes Bundle Failed Detail",
+    "desc": "Cloud-session create-fail message when working-tree upload fails and a detail string is available."
+  },
+  "dfc0ce99e611a9dea8c0ab818c0648bf80ada5d0": {
+    "facing": "model",
+    "id": "tool-result-cloud-session-local-changes-bundle-failed",
+    "name": "Tool Result: Cloud Session Local Changes Bundle Failed",
+    "desc": "Cloud-session create-fail message when working-tree upload fails without a detail string, including the unsupported_layout recovery."
+  },
+  "68afa647fe2eebf82449df56ed9ca24deb9d39a8": {
+    "facing": "model",
+    "id": "tool-result-worktree-create-pr-fetch-failed",
+    "name": "Tool Result: Worktree Create Pr Fetch Failed",
+    "desc": "Error text from worktree create when fetching PR/MR head from origin fails, surfaced as the tool result."
+  },
+  "59d2e1806f66ea41ed567a4e76e1381c2cf9c02a": { "facing": "internal" },
+  "3f2fbc7ae321bc10174250bf5b7a2254d71e9db8": {
+    "facing": "model",
+    "id": "tool-result-webfetch-artifact-other-org-nothing-read",
+    "name": "Tool Result: Webfetch Artifact Other Org Nothing Read",
+    "desc": "Permission-deny message when WebFetch targets another organization's artifact; nothing was read."
+  },
+  "3462e33b04921bee807901577e0a60b246dae327": {
+    "facing": "model",
+    "id": "slash-command-add-dir-network-path",
+    "name": "Slash Command: /add-dir — Network Path",
+    "desc": "/add-dir local-jsx onDone text when the path is a network share that cannot be added as a working directory."
+  },
+  "d583a40b720d8a4bea74f86192a0d43b0cd384a5": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-isolation-uses-construct-too-complex",
+    "name": "Tool Result: Bash Worktree Isolation Uses Construct Too Complex",
+    "desc": "Worktree-isolation refusal fragment interpolated when the command uses a construct too complex to verify it stays in the worktree."
+  },
+  "49db57242df52eb18ae8c789c7569bdd00cf8f97": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-isolation-runs-construct-not-git",
+    "name": "Tool Result: Bash Worktree Isolation Runs Construct Not Git",
+    "desc": "Worktree-isolation refusal fragment when what a command runs cannot be shown not to be git."
+  },
+  "a9e84d91df22e05a12fdea231e96592e93ef7d06": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-isolation-arithmetic-hidden-command",
+    "name": "Tool Result: Bash Worktree Isolation Arithmetic Hidden Command",
+    "desc": "Worktree-isolation refusal fragment when arithmetic evaluation can hide a command in a variable."
+  },
+  "fd8bda2a48fb95cd8402cb933658759881338f75": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-assign-redirect-unverified",
+    "name": "Tool Result: Bash Worktree Git Assign Redirect Unverified",
+    "desc": "Worktree git-guard refusal when an assignment redirects git or its configuration to an unverifiable location."
+  },
+  "20f28140ae9ba9e2e46519f17de7cb1d9b912007": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-export-inherited-dynamic-value",
+    "name": "Tool Result: Bash Worktree Git Export Inherited Dynamic Value",
+    "desc": "Worktree git-guard refusal when export assigns a dynamic value every later program inherits."
+  },
+  "c3091047361620cfeea797bccb59184118355a13": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-loop-builtin-bind-unscreenable",
+    "name": "Tool Result: Bash Worktree Git Loop Builtin Bind Unscreenable",
+    "desc": "Worktree git-guard refusal when a loop or builtin binds a name whose value steers the shell and cannot be screened."
+  },
+  "c2585e55a4847328cde17d653b7d0f8be2ba5177": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-value-shell-acts-on",
+    "name": "Tool Result: Bash Worktree Git Value Shell Acts On",
+    "desc": "Worktree git-guard refusal when an assignment value is one the shell or another program acts on."
+  },
+  "ae37fd38c7ca2eb322fad3feabf1361fd50ecdab": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-export-redirect-unverified",
+    "name": "Tool Result: Bash Worktree Git Export Redirect Unverified",
+    "desc": "Worktree git-guard refusal when exporting a name that redirects git to an unverifiable location."
+  },
+  "2b213736ef8446348cfa4587cc700c51aebe387b": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-operand-expand-or-evaluate",
+    "name": "Tool Result: Bash Worktree Git Operand Expand Or Evaluate",
+    "desc": "Worktree git-guard refusal when declare/export has an operand that would expand or evaluate."
+  },
+  "d9d9813057b2694ac4819d393013cc941bc1b9e3": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-isolation-runs-unshown-git",
+    "name": "Tool Result: Bash Worktree Isolation Runs Unshown Git",
+    "desc": "Worktree-isolation refusal when a known runner's stdin/shell text cannot be shown not to run git."
+  },
+  "d99115e795eb2017db4874bf51b552c148fe9f82": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-isolation-runtime-command-name",
+    "name": "Tool Result: Bash Worktree Isolation Runtime Command Name",
+    "desc": "Worktree-isolation refusal when the command name is computed at runtime so it cannot be shown not to be git."
+  },
+  "b5510badcab080ea2bd73c6b070b1415fca6b1a5": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-isolation-feeds-assembled-input",
+    "name": "Tool Result: Bash Worktree Isolation Feeds Assembled Input",
+    "desc": "Worktree-isolation refusal when a command feeds input assembled by the pipeline that an unknown program may run."
+  },
+  "1b2d8a787abcaefa0afa2ef958c36bd53865c57b": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-name-would-evaluate",
+    "name": "Tool Result: Bash Worktree Git Name Would Evaluate",
+    "desc": "Worktree git-guard refusal when a builtin is given a name it would evaluate."
+  },
+  "d5ae68df1990b219320d178fa5f874f2f1155dfb": { "facing": "internal" },
+  "71148b9749fdaf8a0a00eedd1d6dda376199960c": {
+    "facing": "model",
+    "id": "tool-result-bash-diskless-no-shell",
+    "name": "Tool Result: Bash Diskless No Shell",
+    "desc": "SandboxPolicyRefusalError message when shell exec is unavailable in a diskless session, rethrown into the bash/powershell tool result."
+  },
+  "b00c8534502d8f94b37c8c3f37d1f9ba8ec35720": {
+    "facing": "model",
+    "id": "skill-keybindings-context-agents",
+    "name": "Skill Keybindings Context Agents",
+    "desc": "Keybindings-help skill Available Contexts row describing when the agents view (claude agents) is open."
+  },
+  "b37ecc65acf3362beaf3dbde5643b23530052281": { "facing": "internal" },
+  "b39e0f39f6041204328b0841bb1a661aaf4b0e5b": {
+    "facing": "model",
+    "id": "system-reminder-tool-batching-list-then-request",
+    "name": "System Reminder: Tool Batching List Then Request",
+    "desc": "Default toasty-thimble ephemeral reminder telling the model to list needed items privately then request independent ones in one response."
+  },
+  "45d193c11a5bc28d9bf12ccfea82282f79a2650f": {
+    "facing": "model",
+    "id": "system-reminder-remote-session-git-attribution",
+    "name": "System Reminder: Remote Session Git Attribution",
+    "desc": "Meta attachment text that replaces git/PR attribution guidance with explicit commit and PR trailer lines."
+  },
+  "6ac905d09a34446a3faecf48d6a6c6188c41186c": {
+    "facing": "model",
+    "id": "system-reminder-remote-session-git-attribution-none",
+    "name": "System Reminder: Remote Session Git Attribution None",
+    "desc": "Meta attachment text that replaces earlier attribution guidance with an instruction to add no git/PR attribution lines."
+  },
+  "c905384d1b393feff9c2d46b94d1eb322b203851": {
+    "facing": "model",
+    "id": "system-reminder-remote-session-send-file-hint",
+    "name": "System Reminder: Remote Session Send File Hint",
+    "desc": "Optional ZUn suffix telling the model to send files to the user's other device with the send-file tool."
+  },
+  "11bc0438ef9d6493902525decf4d4ff31a8d2c06": { "facing": "ui" },
+  "c46548f9f93929febd4a472e2da68aea3de32fc7": { "facing": "ui" },
+  "54ce75c05a1728c41ddf09243a096831e6d0a0b4": { "facing": "ui" },
+  "5470d952d572b9c85f52727b8d4757adc72dbb04": { "facing": "internal" },
+  "411837550548997d8750b70a81221c949f063647": { "facing": "internal" },
+  "c4d934fd1348d01bcd3d65e88d3fe0876b85b684": { "facing": "internal" },
+  "ac523c107f08fd482f141b998c18cbf99846f1d6": { "facing": "internal" },
+  "a8dddd36d3fc1958ccdf0f5f74cc45aead184d85": { "facing": "internal" },
+  "b162189bd4107f9eb2fcaaa123ac90a3147223e5": { "facing": "ui" },
+  "d241b5fe0a8a281cb18d143c1f32086dfd40ed79": { "facing": "ui" },
+  "503f8de5819e29e695f8de2e031be615fac9e1c2": { "facing": "ui" },
+  "c66a436d2f8ea6678e3edb28d19ac5973a87059b": {
+    "facing": "model",
+    "id": "system-prompt-opus5-reduced-delegation",
+    "name": "System Prompt: Opus5 Reduced Delegation",
+    "desc": "Opus 4.5/slate-bittern system-prompt appendix forbidding the named tool, workflows, and deep-research unless the user, CLAUDE.md, or a skill asks."
+  },
+  "93c31c8979c30b7809c2536d856636cd8dc19c6c": { "facing": "internal" },
+  "a3f66ae39da335175122801541c0cfeb2bba1d02": { "facing": "internal" },
+  "4be1774412042571fbb7e49a74d685054df63536": {
+    "facing": "model",
+    "id": "system-reminder-hook-guard-no-single-verdict",
+    "name": "Hook Guard No Single Verdict",
+    "desc": "Reason interpolated into a blocking hook error when runner re-runs disagreed or the result/exit line was malformed."
+  },
+  "faa7eee59a398a82c308a61bebeab7211514e4e4": {
+    "facing": "model",
+    "id": "system-reminder-hook-guard-stderr-hidden",
+    "name": "Hook Guard Stderr Hidden",
+    "desc": "Reason interpolated into a blocking hook error when the launcher swallowed the hook's stderr so no verdict arrived."
+  },
+  "6ed12d6c2508d55df6ec5a6b26d7c90aa8a031c3": {
+    "facing": "model",
+    "id": "system-reminder-hook-guard-did-not-run",
+    "name": "Hook Guard Did Not Run",
+    "desc": "Blocking-error body when a script guard hook (SessionStart/Setup/etc.) cannot run and therefore blocks."
+  },
+  "2a0fb7fc20e9326f4637da91dab7294c171dbfe7": {
+    "facing": "model",
+    "id": "system-reminder-hook-blocked-exit-2-unprocessed",
+    "name": "Hook Blocked Exit 2 Unprocessed",
+    "desc": "Blocking-error body when an exit-2 hook block could not parse the hook's output."
+  },
+  "877b81e1e9973248baa99bf3701ae8ee36457523": {
+    "facing": "model",
+    "id": "system-reminder-tools-just-became-available",
+    "name": "Tools Just Became Available",
+    "desc": "Lead-in for already-surfaced tool names announced on a deferred_tools_delta attachment."
+  },
+  "2320ae9b52323cb0fce0bfa25ae5a3e7f6ee60ca": { "facing": "internal" },
+  "cb34e0cbbe46842083cba149eee9c1d31279ecb7": { "facing": "ui" },
+  "b78e71bd5bc6b58703d466a0d75520973c5d3bdc": { "facing": "ui" },
+  "781be02c859e51c44f062e8df192b607c482780d": { "facing": "internal" },
+  "9b0c3dff90b079f9c6b25d4af3e4ee8e7bb665aa": { "facing": "internal" },
+  "29abdedf75abfbbb95f49aebba6ebdba706941c7": { "facing": "internal" },
+  "9f3c4704ddcd7813f6c99c48f8eed384c9c4db3f": { "facing": "internal" },
+  "abd9114c4cd227c76de0706f3e0db0dd489727fa": { "facing": "internal" },
+  "7852c11f61ea4a6dc0505d1de66820e6028e53ee": { "facing": "internal" },
+  "26baa33f0895d2315ea57f4a7f58ea5984c29315": { "facing": "internal" },
+  "382873a7ddb398145010326b4042a20e02a4374e": { "facing": "internal" },
+  "c4750e502c928d968ab00e458e6800a0c41d3215": { "facing": "internal" },
+  "8d53eb043d600edfae0954ab82618b11c037a145": { "facing": "internal" },
+  "5f245278e3bbdbc6d7006306116254d65008873c": { "facing": "ui" },
+  "c67abab01a1054bd79de09d25ce1786c69b0b109": { "facing": "internal" },
+  "872c063a8a2f3f9b382d80af0c9ffc68fd9f7506": { "facing": "ui" },
+  "812ec80640579557d190cdd22c185c6de7183ead": { "facing": "ui" },
+  "0dd468542916e5864dcca60abf10227def56de15": { "facing": "internal" },
+  "20660abce34b60647bfee18ed20994b61461938c": { "facing": "ui" },
+  "5939bc4047c45cfa94966e8f52dbf4e1b9d4d4e1": { "facing": "ui" },
+  "e48065190b028720bf08b856e2e5771b2e5e2515": { "facing": "ui" },
+  "0fcbcb0a970e017dfaadb0a6372f7fca485b26b1": { "facing": "ui" },
+  "1cf09515c6bfe5503b5927ca0e0e81b4080cfefd": { "facing": "ui" },
+  "6183f7de6a6a2cce58238d6bb9eacb0032d972a1": { "facing": "ui" },
+  "f37c217866cb8debd99aa94a3b3d152208f1f3a7": { "facing": "ui" },
+  "94bdcde0d009313bd9b33ff1d4b746f640c12208": { "facing": "ui" },
+  "b4e2c2696505d79f6c7f6f1664b875bcabc09946": { "facing": "internal" },
+  "4a33007c56e61cefae357dcfc3a6ff469acae8a5": { "facing": "ui" },
+  "f1bad79abf53f107beb8f3d7912b1fa3c72089b7": { "facing": "ui" },
+  "8a8be225fcaeb0d74b04ac7264c78186ee10eecc": { "facing": "ui" },
+  "d9d8a05b92ee42568f3cc054cbb68789dd4ef220": { "facing": "internal" },
+  "63854ac828738a47e470f9c7cff1942dec634921": { "facing": "internal" },
+  "fcf9713defa987ed762d9e587f56aa309736bfde": { "facing": "internal" },
+  "ccf503dc300268cdf4b76cc60a62b20c1cb40c7d": {
+    "facing": "model",
+    "id": "tool-result-artifact-session-gateway-network-off",
+    "name": "Artifact Session Gateway Network Off",
+    "desc": "Artifact tool error when org network policy turns off this cloud session's gateway so pages and files cannot be served."
+  },
+  "4a970566afa2b331fa20a611193fe1e641edfe02": {
+    "facing": "model",
+    "id": "tool-result-artifact-content-host-blocked-session",
+    "name": "Artifact Content Host Blocked Session",
+    "desc": "Publish/watch remedy when this session cannot read or hand over live artifact content because the content host is blocked."
+  },
+  "9d53df08e665f9cc8c57f3d424507a1be491ba17": { "facing": "internal" },
+  "ae0532e1c9235fc7ea8e820f36353d28977239a8": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-content-not-stored-retry-failed",
+    "name": "Artifact Publish Content Not Stored Retry Failed",
+    "desc": "Suffix on a publish tool error stating the automatic retry ran and still did not store content."
+  },
+  "7423ff0576d7444c607d76a4257322e984d13d17": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-content-not-stored-retry-unanswered",
+    "name": "Artifact Publish Content Not Stored Retry Unanswered",
+    "desc": "Suffix on a publish tool error when the automatic retry was sent but got no answer."
+  },
+  "89ad4cfecff2d32d0bacf18696b503321bfa1b99": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-content-not-stored",
+    "name": "Artifact Publish Content Not Stored",
+    "desc": "Publish tool error when a new version was recorded but its content was not stored, with an optional retry suffix."
+  },
+  "a8a6e5e6137a33f8be987ad9415510413a360b6e": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-kind-content-not-stored",
+    "name": "Artifact Publish Kind Content Not Stored",
+    "desc": "Publish tool error when the server created a typed artifact but could not store content, so republishing would create a new artifact."
+  },
+  "c8fae15e00f1e46e3434d8b20698381ca8c0e8f1": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-stranded-first-attempt",
+    "name": "Artifact Publish Stranded First Attempt",
+    "desc": "Publish tool error naming the slug the first attempt created without storing content (conflict arm)."
+  },
+  "ffc5f95032e10fe604e163d8e7efdc97605e7029": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-content-not-stored-with-retry",
+    "name": "Artifact Publish Content Not Stored With Retry",
+    "desc": "Publish tool error when the server created a slug but could not store content, including the retry-status suffix."
+  },
+  "093110b7bb4535a162183a0f489bb5ee8cf76d10": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-mcp-local-host-unavailable",
+    "name": "Artifact Publish MCP Local Host Unavailable",
+    "desc": "Publish capabilities error when a locally-configured MCP server is named but host servers are unavailable in this session."
+  },
+  "3b60755028a25acf3616d49bb692c48b0d1ba1f1": {
+    "facing": "model",
+    "id": "data-artifact-read-share-add-channel",
+    "name": "Artifact Read Share Add Channel",
+    "desc": "Share-dialog instruction fragment telling the owner to paste the Slack/Teams channel ID under Add people, groups, or Claude Tags."
+  },
+  "1dc3f56d0b7c3ad261e9cde3aa5d311a022bcb26": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-share-person-misses-channel",
+    "name": "Artifact Read Share Person Misses Channel",
+    "desc": "Artifact-read error explaining that sharing with a person or service account does not reach a channel's Claude."
+  },
+  "af8674c0863e5ecf2e0f6234887b56265c9a4723": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-never-published",
+    "name": "Artifact Read Never Published",
+    "desc": "Artifact-read error when the artifact exists but has no published version yet."
+  },
+  "08f826de8283f35111e2bd718d5c28c4309facb9": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-agent-not-added",
+    "name": "Artifact Read Agent Not Added",
+    "desc": "Artifact-read 403 error when the artifact is restricted to specific people and this channel's Claude is not among them."
+  },
+  "61dbeb9731a8e26b672015d920c7656edd8c74b2": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-agent-owned",
+    "name": "Artifact Read Agent Owned",
+    "desc": "Artifact-read 403 error when the artifact belongs to a chat channel's Claude and has not been shared with the user."
+  },
+  "483351fc720310cea67325ef62771060d2dd8769": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-agent-owned-channel",
+    "name": "Artifact Read Agent Owned Channel",
+    "desc": "Artifact-read 403 error when the artifact belongs to another channel's Claude and has not been shared with this one."
+  },
+  "50c4a504788c759ba52e4644c7fce57c8cc662b4": {
+    "facing": "model",
+    "id": "data-artifact-comments-tool-load-hint",
+    "name": "Artifact Comments Tool Load Hint",
+    "desc": "How to name and ToolSearch-load the artifact comments tool when the artifact toolset latch is on."
+  },
+  "4e0d23b608fb27215abe9b8f288a6bd95ac02dc2": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-hourly-cap",
+    "name": "Data: Artifact Auto-Reply Paused (Hourly Cap)",
+    "desc": "Task-notification detail when auto-reply is held back by the hourly cap and the model should read/reply with the comments tool."
+  },
+  "4c6e15b462f79e825ff8b37d141cbf22bbffe68d": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-plan-mode",
+    "name": "Data: Artifact Auto-Reply Paused (Plan Mode)",
+    "desc": "Task-notification detail when auto-reply is paused because the session is in plan mode."
+  },
+  "c7e66fffe209c2a95978eb1ff2157c4e506fb766": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-notify-only",
+    "name": "Data: Artifact Auto-Reply Notify-Only",
+    "desc": "Task-notification detail when auto-reply is notify-only in the current permission mode."
+  },
+  "9435b817a448d6bfbf3d0dddca3954334d003938": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-tool-absent",
+    "name": "Data: Artifact Auto-Reply Tool Absent",
+    "desc": "Task-notification detail when no comment-reply tool is present, so nothing was posted and the session should tell the user about the comment."
+  },
+  "7065cc9bc64fc639cc48705db2361b4c629c2795": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-auto-mode-declined",
+    "name": "Data: Artifact Auto-Reply Auto-Mode Declined",
+    "desc": "Task-notification detail when auto mode did not approve an unattended auto-reply, so the reply was not posted."
+  },
+  "06d00def887ed2714a05dc3575147d8af2dd374f": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-source-path-thread-activation",
+    "name": "Data: Artifact Source-Path Comment Activation",
+    "desc": "Task-notification lead when this session is activated on a comment thread of an artifact it publishes from a source path."
+  },
+  "060294da6ae061d123f20beeee782a4685ae000c": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-edit-thread-followup",
+    "name": "Data: Task Notification Artifact Auto-Edit Thread Followup",
+    "desc": "Injected for the model after an automatic artifact edit completes without a confirmed thread resolution and follow-up may be needed."
+  },
+  "8fb66bfcafcfa351ebc41ef1524f9b6f55bc8234": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-replied-foreign-edit-grant",
+    "name": "Data: Artifact Auto-Replied Foreign Edit Grant",
+    "desc": "Task-notification detail when an auto-reply acknowledgement was posted but the thread's edit grant belongs to another user, so the artifact was not changed."
+  },
+  "b0c38f28dbe5826ced60601bd5154b971575245d": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-act-then-reply-and-resolve-tail",
+    "name": "Data: Task Notification Artifact Act Then Reply And Resolve Tail",
+    "desc": "Tail instructing the session, once it has acted on an artifact comment thread, to check the thread first, post a brief reply saying what it did unless one already stands, and resolve the thread."
+  },
+  "5b99d777dec4bc5bcdbdc9e8d652d1ff24e87bf1": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-resolve-after-promised-reply-tail",
+    "name": "Data: Task Notification Artifact Resolve After Promised Reply Tail",
+    "desc": "Tail instructing the session to resolve the artifact comment thread once the promised reply is posted, and when to leave it open instead."
+  },
+  "d458873d444a1de21b6c02922feb3b60af5a779a": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-thread-resolve-after-acting-tail",
+    "name": "Data: Task Notification Artifact Thread Resolve After Acting Tail",
+    "desc": "Second half of the auto-posted-reply tail, telling the session to resolve the thread with the Artifact tool once it has finished acting and when to leave it open."
+  },
+  "a293c8225b009399160ca7b35cf7271eabe122a6": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-comment-wake-clause",
+    "name": "Tool Result: Artifact Live Subscription Comment Wake Clause",
+    "desc": "Optional clause appended to live-subscription tool results explaining that to-Claude comments also reach this session while the status row says auto-replies are armed."
+  },
+  "ba92c0fabca5919aa0eb54cd6b5cfbc767e92b26": { "facing": "ui" },
+  "5b3c788d3133b9d6df2ef628ed0c05d00df5928a": { "facing": "internal" },
+  "e943956ed95e4f388f42fd90958d8386ba92ab32": { "facing": "internal" },
+  "461a9c7c3d90b0b8561d00d097e4c798b85bb144": { "facing": "ui" },
+  "5269bde74026b9d25048970b9dcd75d891ef09c6": { "facing": "ui" },
+  "2d18f24e85ed5dc63174d09f1527367ab1f297d9": {
+    "facing": "model",
+    "id": "tool-result-artifact-type-forbidden-nothing-to-retry",
+    "name": "Tool Result: Artifact Type Forbidden Nothing To Retry",
+    "desc": "Shared HTTP 403 formatter for list_types/describe_type/type-instance listing telling the model the type is not available to this session and not to retry."
+  },
+  "01d0ca174a916f8f57fb5036bf0ebc956b4631ae": {
+    "facing": "model",
+    "id": "tool-result-artifact-type-instances-oversize-body",
+    "name": "Tool Result: Artifact Type Instances Oversize Body",
+    "desc": "list-of-artifacts-from-type tool result when the instances response exceeded the client's accepted size."
+  },
+  "76c6e749340739c2ef4dee42732be4fe9d0eed68": {
+    "facing": "model",
+    "id": "tool-result-artifact-type-instances-network-error",
+    "name": "Tool Result: Artifact Type Instances Network Error",
+    "desc": "list-of-artifacts-from-type tool result when the instances request fails at the network layer."
+  },
+  "097761f8d25aa07b48ac8f556d5b61e0772f3024": {
+    "facing": "model",
+    "id": "tool-result-artifact-type-instances-malformed-response",
+    "name": "Tool Result: Artifact Type Instances Malformed Response",
+    "desc": "list-of-artifacts-from-type tool result when the instances body fails schema parse."
+  },
+  "475e024b2d581cea19b623d85b5d072a325ccfa2": {
+    "facing": "model",
+    "id": "tool-result-artifact-type-instances-unreadable-rows",
+    "name": "Tool Result: Artifact Type Instances Unreadable Rows",
+    "desc": "list-of-artifacts-from-type tool result when every instance row fails to parse."
+  },
+  "190379ce9ef6bdfa81fa456a6547bad13d769102": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-cloud-unavailable",
+    "name": "Tool Result: Artifact DB Cloud Unavailable",
+    "desc": "read_db/write_db error when artifact data is not available in this cloud session, directing the model not to treat it as an access/existence answer."
+  },
+  "f6ea2d36982e98b8379469238704ba103dfa29b4": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-network-off-read",
+    "name": "Tool Result: Artifact DB Network-Off Read",
+    "desc": "read_db error when the cloud session's network access is off, so reads cannot run here while writes may still work."
+  },
+  "385712685f6f35021dabb470a9e9744a7e08c8b5": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-network-off-write",
+    "name": "Tool Result: Artifact DB Network-Off Write",
+    "desc": "write_db error when cloud network access is off and the gateway did not accept the write; do not retry here."
+  },
+  "79bfe83b4048d6ab0cc62e1c2d769c6ad9082950": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-read-not-found-session-scoped",
+    "name": "Tool Result: Artifact DB Read Not Found Session-Scoped",
+    "desc": "db read error when a not_found is session-scoped because org cloud network access is off, so this session can only read artifacts it published itself."
+  },
+  "7cbb4788cd360b3adf455c8547706fbfc01bf8cd": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-action-types",
+    "name": "Tool Parameter: Artifact Action list_types / describe_type",
+    "desc": "Action-enum addendum describing list_types and describe_type and listing Artifacts made from a type."
+  },
+  "6b455147d8a374ded8543783168166dbcd22e298": {
+    "facing": "model",
+    "id": "tool-description-artifact-open-existing",
+    "name": "Tool Description: Artifact Open Existing",
+    "desc": "Artifact tool-description paragraph telling the model to pass action open with a url when another tool created an artifact the user should look at."
+  },
+  "1936f48718a97aad73140bcd69ff90704affca86": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-action-open",
+    "name": "Tool Parameter: Artifact Action Open",
+    "desc": "Action-enum clause describing action open: show the existing artifact at url without publishing."
+  },
+  "5729db55d43d6aa1adb64194a7d33274b5ac4522": {
+    "facing": "model",
+    "id": "tool-description-artifact-scratchpad-file-location",
+    "name": "Tool Description: Artifact Scratchpad File Location",
+    "desc": "Artifact tool-description sentence directing the model to put the file in the scratchpad directory unless the user names a location."
+  },
+  "9249c0149b8d505fa689d7aa33b6e45ba3d28dd2": {
+    "facing": "model",
+    "id": "tool-result-artifact-network-off-no-retry",
+    "name": "Tool Result: Artifact Network-Off No Retry",
+    "desc": "Suffix on asset-read/file-read network_off errors: the cloud session gateway is not serving artifact bytes, so retrying from here will not help."
+  },
+  "f11d88fd7744bc2adb27795bdd583932bb833c6e": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-scope-type-default-all",
+    "name": "Tool Parameter: Artifact Scope Type Default All",
+    "desc": "scope .describe() addendum: with type or type_url the default is all (owned plus org-shared)."
+  },
+  "837ccc6a6079c9478be1d051a121ea45a4483412": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-type-url-describe-or-list",
+    "name": "Tool Parameter: Artifact type_url Describe Or List",
+    "desc": "type_url .describe() addendum covering describe_type and list (and that create-from-type may be unavailable)."
+  },
+  "c74de7c3722e0ac159bd9fe25399654e6aa087d1": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-type-url-create-unavailable-clause",
+    "name": "Tool Parameter: Artifact type_url Create Unavailable Clause",
+    "desc": "Clause appended to the type_url parameter description when creating an Artifact from a type is not available in this session."
+  },
+  "914fc70d99cda3d51440a49fbd04bbca6edb17c9": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-path-watch",
+    "name": "Tool Parameter: Artifact Path Watch",
+    "desc": "path .describe() when watch is on: read_file plus the live file to listen to, required when the Artifact has more than one file."
+  },
+  "39606ccbfe3729060e916f3aa51591ebe5f15f89": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-path",
+    "name": "Tool Parameter: Artifact Path",
+    "desc": "Artifact-tool path parameter naming the file's published path inside the artifact exactly as list_files printed it, with index.html being the page."
+  },
+  "141c7a6e0335bffc1a99fc54c9165a91447a4757": {
+    "facing": "model",
+    "id": "tool-description-artifact-how-to-reopen-terminal",
+    "name": "Tool Description: Artifact How To Reopen Terminal",
+    "desc": "Terminal-session Artifact tool-description fragment explaining /artifacts, o/c keys, ctrl+], and the web gallery when the user asks how to get back to their artifacts."
+  },
+  "2bd411516a9f4870c90425c4932c16bc34e08570": {
+    "facing": "model",
+    "id": "skill-artifact-design-page-contract",
+    "name": "Skill: Artifact Design Page Contract",
+    "desc": "Page-contract section prepended to the artifact-design skill prompt before the first publish."
+  },
+  "4fb20223ec183f210b613c0025635e6ece2c3822": {
+    "facing": "model",
+    "id": "tool-description-artifact-page-contract-skill-unavailable",
+    "name": "Tool Description: Artifact Page Contract Skill Unavailable",
+    "desc": "Page-contract block inlined into the Artifact tool description when the artifact-design skill is not available in this session."
+  },
+  "0e3eebc46074f5b756255974088af45aa8d7d41e": {
+    "facing": "model",
+    "id": "skill-artifact-design-tool-spelling-data",
+    "name": "Skill: Artifact Design Tool Spelling Data",
+    "desc": "artifact-design skill substitution mapping Artifact read_db/write_db onto the dedicated db tool's db_op actions."
+  },
+  "32854f59f774cfb83a5372590eb4c75a46ae7378": {
+    "facing": "model",
+    "id": "skill-artifact-design-tool-spelling-comments",
+    "name": "Skill: Artifact Design Tool Spelling Comments",
+    "desc": "artifact-design skill substitution mapping Artifact watch/status/unwatch and comment verbs onto the dedicated watch tool."
+  },
+  "0fe979a0e143c4cc523543b154c0082f9afd4f82": {
+    "facing": "model",
+    "id": "skill-artifact-design-tool-spelling-check",
+    "name": "Skill: Artifact Design Tool Spelling Check",
+    "desc": "artifact-design skill substitution mapping Artifact verify/preview onto the dedicated check tool."
+  },
+  "c159c41dca7b21ef86284b47dc328ce57a6f04c7": {
+    "facing": "model",
+    "id": "slash-command-code-review-comment-gitlab-mr-note",
+    "name": "Slash Command: Code Review Comment GitLab MR Note",
+    "desc": "getPromptForCommand fragment when --comment is set and the target is a GitLab merge request: findings post as one general MR note via glab."
+  },
+  "e7ad2f3968e01c476740147888da74c468b4cbe7": {
+    "facing": "model",
+    "id": "slash-command-code-review-comment-github-inline",
+    "name": "Slash Command: Code Review Comment GitHub Inline",
+    "desc": "getPromptForCommand fragment when --comment is set and the target is a GitHub PR: findings post as inline PR comments."
+  },
+  "fde0cf8903320062b17d6a40c10112a3f3eaf955": {
+    "facing": "model",
+    "id": "slash-command-code-review-comment-flag-gitlab",
+    "name": "Slash Command: Code Review Comment Flag GitLab",
+    "desc": "getPromptForCommand fragment when --comment was not passed and the target is GitLab: local review will not post; --comment is the flag that would."
+  },
+  "9684f62da230129d3da15da1f296338435f9c2be": {
+    "facing": "model",
+    "id": "slash-command-code-review-comment-flag-github",
+    "name": "Slash Command: Code Review Comment Flag GitHub",
+    "desc": "getPromptForCommand fragment when --comment was not passed and the target is GitHub: local review will not post; --comment is the flag that would."
+  },
+  "9b514ebf1821e1abc64fb22880664369ba0a1aeb": {
+    "facing": "model",
+    "id": "slash-command-code-review-post-ignored-pr-comment-guidance",
+    "name": "Slash Command: Code Review Post Ignored PR Comment Guidance",
+    "desc": "Tells the model that --post was ignored for a local review and that --comment is what posts findings (GitHub inline comments or a GitLab MR note)."
+  },
+  "462831839dc7a0a09adb9a51586459022ee72d5c": { "facing": "internal" },
+  "fb5a97746f45d135869e64574983b1e450a41dda": { "facing": "internal" },
+  "97932831b99aa47d6c46a7d021d5a5f3b4752493": { "facing": "internal" },
+  "b917d0a7cffcf98534ad682724e586f2b16abcf3": { "facing": "internal" },
+  "54982194a1f527ab7998635897302b17e293f5e8": { "facing": "internal" },
+  "4c9cde771275b81ae58fd70783a1d28bb238b13b": { "facing": "internal" },
+  "d8aad761c96c1ce6e46dddd9f4fb20e13fbde63e": {
+    "facing": "model",
+    "id": "tool-result-mcp-server-project-not-approved",
+    "name": "Tool Result: MCP Server Project Not Approved",
+    "desc": "MCP authenticate tool result when a project-scope .mcp.json server is not approved for this project, telling the model to wait for the user to approve it."
+  },
+  "66a7191938cf22c5873b967f7ebc064fcb53e3f0": { "facing": "ui" },
+  "c6f6a31a101422d1d1304396f57e79a46ff4498e": { "facing": "ui" },
+  "b8dd8fcef94cb8a7f7a7d8577f2da00e5d3a6297": { "facing": "internal" },
+  "bfeb7fc6136af852a155004f5d3b5e36a5018893": { "facing": "internal" },
+  "0a2c6d85451ba911a11fee0944b35f6b24259ba8": { "facing": "internal" },
+  "a787dd36d3ed55711611a22e63f8c28f35971f75": { "facing": "internal" },
+  "ce2ea92145a2340df68f8b8a1be88b650b667b4d": { "facing": "internal" },
+  "0f19c6488a608b5fc77417765469bf1a228a7b81": { "facing": "internal" },
+  "8508d2c34fbee3e4ab978232e4c027e1ca550e23": { "facing": "internal" },
+  "f3fd189a3231fefa7fd009a4fb94b12502adfb3c": { "facing": "internal" },
+  "a3f60e381659c3fe863690494dbd9b716ec66c4c": { "facing": "internal" },
+  "f037119c6dbaa4311d4d6c382bfabc6bcd0c5fc3": { "facing": "internal" },
+  "fda5af04b282edc8cb6e6abf25159c23e1238f6d": { "facing": "internal" },
+  "b13b826e133cb5e7fc218f6c1f29ebd8f82f2140": { "facing": "internal" },
+  "8f1bb49e13d36c12c2bb81e43fbbffdfa8eb4a28": { "facing": "ui" },
+  "9519909470413f551b849ff58a2a2140e19327ff": { "facing": "internal" },
+  "4092f29e26857d9d753491f054efb081adbadb3e": { "facing": "internal" },
+  "9ae271926a59e661deb3b8c38b6dc193371ab98c": { "facing": "ui" },
+  "421d1622b5450d0e82ca896cfbaad4c495e456d7": { "facing": "ui" },
+  "8f35ebec2b6401423f487d8aa6bee565d37a5f32": { "facing": "ui" },
+  "e0760039e160ebc56568c730253e9919c0453a92": { "facing": "internal" },
+  "6276f9c4d9567e63db4705f7d8815fbef79393b4": { "facing": "internal" },
+  "784d21ef657205a5de3f339fe23ebb38195d7665": { "facing": "internal" },
+  "a9a63c1424641b1736de522563f9bd5d069e7b16": { "facing": "ui" },
+  "9908e2b96fe39d652786dfedad6aa485907d006a": { "facing": "internal" },
+  "56b53523faf4d831bda11a3597a3cf9fcc2acef8": { "facing": "ui" },
+  "180cb28b68981f82a3a4f4575eca1c20a55c171c": {
+    "facing": "model",
+    "id": "slash-command-config-locked-withheld-on-connection",
+    "name": "Slash Command: /config — Locked Setting Withheld On Connection",
+    "desc": "Opaque /config stdout when a trusted policy owns the key, replacing the lock detail so the model knows the setting was not written."
+  },
+  "97f98197a6ea50e61ad2014cda7cb5784a6c086f": { "facing": "ui" },
+  "5573728cf40f2a61f7c56e33aae93477830e652d": { "facing": "ui" },
+  "18285ec7b0112078e742a68864e024381eacb1b1": { "facing": "ui" },
+  "cd4961956b4e20def5f34e5d5a3e3f1b5910df2c": { "facing": "ui" },
+  "22fecadd34081a457e5f2a34d9ec80f179a47304": { "facing": "ui" },
+  "fc7037e574e2afa5698e3f1a69eac4f4367491ae": { "facing": "ui" },
+  "39f53eb8d5cb53f294958a1cb4ce8c4056aaa18d": { "facing": "ui" },
+  "926e57addda72bdc50d71e1dfdc6c7084bd64764": { "facing": "ui" },
+  "159105df3b5e7265156121b94752ad332f6aec1a": { "facing": "ui" },
+  "8c26de1f8f379a3aee95d76c91d961d67f0e9a72": { "facing": "ui" },
+  "770fc92e7aee42a1eb1d63be514588ad5e202406": { "facing": "ui" },
+  "03f6984762e75ee53fdc3579d3406b0b6ea43b8c": { "facing": "ui" },
+  "be35f6b63acf1b486652c860e3cc173504f93dca": { "facing": "ui" },
+  "9eed85fc6632e2c53deacf8d8388ea1433a6cee5": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-saved-viewed-once-clause",
+    "name": "Artifact HTML Saved Viewed-Once Clause",
+    "desc": "Clause on a saved-HTML artifact tool result that the version counts as viewed only after Read of every line of that file."
+  },
+  "514930f5b36988999e7abb4d072a7159d2f1eeb7": {
+    "facing": "model",
+    "id": "tool-description-artifact-room-status-lists-rooms",
+    "name": "Artifact Room Status Lists Rooms",
+    "desc": "Artifact tool-description paragraph that action status lists this session's rooms and in-page presence."
+  },
+  "dee2680e0b04a02f8cb6c67775ca786936066da6": {
+    "facing": "model",
+    "id": "tool-description-artifact-room-no-session-list-tool",
+    "name": "Artifact Room No Session List Tool",
+    "desc": "Replacement room-listing paragraph when this session has no tool that lists rooms."
+  },
+  "d997fe8fe32575ced9cdf9329a58f168ccd32316": { "facing": "internal" },
+  "1f44635dceb764f78cb9cd58044ec32138414784": {
+    "facing": "model",
+    "id": "tool-description-artifact-watch-via-watch-action",
+    "name": "Artifact Watch Via Watch Action",
+    "desc": "Artifact tool-description clause routing watch/list/stop of a not-just-published artifact through the comments tool watch action."
+  },
+  "3ca6c157aa78eae53996c8c9d5ab4523368fe576": {
+    "facing": "model",
+    "id": "tool-description-artifact-watch-not-available-in-session",
+    "name": "Artifact Watch Not Available In Session",
+    "desc": "Artifact tool-description clause that watching an artifact you did not just publish is unavailable in this session."
+  },
+  "d802441f113bce41e067f954d83404bab7ed6eae": {
+    "facing": "model",
+    "id": "tool-description-artifact-comments-read-via-tool",
+    "name": "Artifact Comments Read Via Tool",
+    "desc": "Artifact tool-description clause that comments on an artifact are read and answered with the comments tool."
+  },
+  "cd021bcdc891148b5716bb3711dbee59da392742": {
+    "facing": "model",
+    "id": "tool-description-artifact-list-files-scope-option",
+    "name": "Artifact List Files Scope Option",
+    "desc": "list action scope option in the Artifact tool description for a multi-file artifact's published files."
+  },
+  "06806a94c4a4662027a2241f2101d9161d0f4cc6": {
+    "facing": "model",
+    "id": "tool-description-artifact-list-assets-scope-option",
+    "name": "Artifact List Assets Scope Option",
+    "desc": "list action scope option in the Artifact tool description for an artifact's asset store."
+  },
+  "e9384fb32875472e40316119f146a0e4b00032f5": {
+    "facing": "model",
+    "id": "tool-description-artifact-list-types-scope-option",
+    "name": "Artifact List Types Scope Option",
+    "desc": "list action scope option in the Artifact tool description for published Artifact types, narrowed by type_query."
+  },
+  "f037bf781d828b9c92dc98dc19e00c3d0a39afb1": {
+    "facing": "model",
+    "id": "tool-description-artifact-read-path-saves-local-file",
+    "name": "Artifact Read Path Saves Local File",
+    "desc": "Artifact tool-description clause that path on read saves the chosen content to a local file and reports where."
+  },
+  "765a007615fe75adaa73fc4263bfb5796b39db84": {
+    "facing": "model",
+    "id": "tool-description-artifact-describe-type-via-type-url",
+    "name": "Artifact Describe Type Via Type Url",
+    "desc": "Artifact tool-description clause that type_url with no url describes one Artifact type's files, instructions and capabilities."
+  },
+  "d562fb299b5b65869adf128208ddf3000657f483": {
+    "facing": "model",
+    "id": "tool-description-artifact-delete-irreversible-user-asks",
+    "name": "Artifact Delete Irreversible User Asks",
+    "desc": "Artifact tool-description delete action: permanently unpublish only when the user asks, after they confirm."
+  },
+  "e355a0acb9c09c0cc7c292077db54c1196dd2483": {
+    "facing": "model",
+    "id": "tool-description-artifact-delete-asset-when-unreferenced",
+    "name": "Artifact Delete Asset When Unreferenced",
+    "desc": "Artifact tool-description delete clause for removing one uploaded asset by url and path when nothing references it."
+  },
+  "92a01680dc8b0912bbea719bb304dc29ffe07f32": {
+    "facing": "model",
+    "id": "tool-description-artifact-find-earlier-session-via-list",
+    "name": "Artifact Find Earlier Session Via List",
+    "desc": "Artifact tool-description guidance to list for an earlier-session URL, while same-path republish covers this session."
+  },
+  "d8d72caa8dd810990ff7049f592b62dd868c5b16": {
+    "facing": "model",
+    "id": "tool-description-artifact-separate-tools-comments",
+    "name": "Artifact Separate Tools Comments Item",
+    "desc": "Separate-tools bullet naming comment threads on a published artifact and the comments tool."
+  },
+  "35689c649090b0eefc76b86c89cb391bdc15b316": {
+    "facing": "model",
+    "id": "tool-description-artifact-separate-tools-load-hint",
+    "name": "Artifact Separate Tools Load Hint",
+    "desc": "Artifact tool-description **Separate tools** sentence telling the model to load a sibling tool when needed."
+  },
+  "bc5c951b0a0b0e2959e6d95df4624a1654472bf4": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-batch-write-deny-rule",
+    "name": "Artifact DB Batch Write Deny Rule",
+    "desc": "checkPermissions deny message when a batch write matches a deny rule, so nothing in the batch was written."
+  },
+  "0b837f89233b5f65da3fdb5c4c39559c628f54ab": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-batch-write-ask-rule",
+    "name": "Artifact DB Batch Write Ask Rule",
+    "desc": "checkPermissions ask message when a batch write matches an ask rule and the full check could not complete, so approval covers only this call."
+  },
+  "f95c664a69d555a3f92d969b35bef47bafb86a9b": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-sent-to-claude-clause",
+    "name": "Artifact Comments Sent To Claude Clause",
+    "desc": "Comments listing phrase counting threads with comments sent to Claude versus only to the user."
+  },
+  "8b53e352226174058ce79b04ba4e8be27fcfea2a": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-anchor-snippet-follow-row",
+    "name": "Artifact Comments Anchor Snippet Follow Row",
+    "desc": "Comments tool-result note that snippet-marker rows follow an element or region marker and quote page-source text as DATA."
+  },
+  "3215dade9d19dcbb829fe59ba09e74312908dd3a": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-region-inside-follow-row",
+    "name": "Artifact Comments Region Inside Follow Row",
+    "desc": "Comments tool-result note that region-inside rows quote child elements covered by a drawn rectangle as DATA."
+  },
+  "7158444fc86ffc2d352d9a8058a3d452fb6c82c5": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-sent-threads-listed-first",
+    "name": "Artifact Comments Sent Threads Listed First",
+    "desc": "Comments listing ordering note when some threads carry comments sent to Claude: those threads are listed first."
+  },
+  "f09795312bee77452f10f690360e26abd6217f69": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-thread-count-header",
+    "name": "Artifact Comments Thread Count Header",
+    "desc": "Opening header of the comments tool result summarizing thread counts, activation, and unreadable status."
+  },
+  "9ff295de937051a8ea43ad9e4c57be410b3f86b4": {
+    "facing": "model",
+    "id": "tool-description-artifact-write-db-batch-ask-rule",
+    "name": "Artifact Write DB Batch Ask Rule",
+    "desc": "write_db description clause that a batch matching an ask rule asks on its own and approval covers only that call."
+  },
+  "152a5099ed2af1dda1e95e7aa191c2a24e76414c": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-read-not-saved-line",
+    "name": "Artifact DB Read Not-Saved Line",
+    "desc": "read_db tool-result line listing returned documents that were not saved to out_dir, with the skip reason."
+  },
+  "55895db875dcb320e266c5e6cd70b899807a665e": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-type-empty-name",
+    "name": "Artifact List Type Empty Name",
+    "desc": "list-by-type validation error when type is empty, telling the model to pass a name or type_url."
+  },
+  "2bef18831052515f8b417c63c99e825c4385b456": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-type-name-unread",
+    "name": "Artifact List Type Name Unread",
+    "desc": "list-by-type error when no listed type matches the name exactly and the type listing could not be read completely."
+  },
+  "b89adc772a1c9c9694bfe2fddea7075fcd1781d0": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-type-name-ambiguous",
+    "name": "Artifact List Type Name Ambiguous",
+    "desc": "list-by-type error when several published Artifact types share the given name, requiring type_url."
+  },
+  "2f330fa96cff055df10306467db79d4a37aa9d5d": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-by-type-extra-params-error",
+    "name": "Artifact List-By-Type Extra-Params Error",
+    "desc": "validateInput rejection when action list with type or type_url is passed fields other than scope and limit."
+  },
+  "18ac7ce1d15bfa48403fd538ecbb8aa23f608435": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-by-type-create-hint",
+    "name": "Artifact List-By-Type Extra-Params Create Hint",
+    "desc": "Optional suffix on the list-by-type extra-params error telling the model to omit action and pass type_url to start a new Artifact."
+  },
+  "7dafd56e2fefeca5a72151c2be1fd2d8f1d71cce": {
+    "facing": "model",
+    "id": "tool-description-artifact-list-by-type-org-titles-disclosure",
+    "name": "Artifact List-By-Type Org Titles Disclosure",
+    "desc": "Disclosure interpolated into the list-by-type tool description and permission-ask that org-published titles, descriptions and links will be read into the conversation."
+  },
+  "060191e05cfbc3b9b8975eab102bd546abf69779": {
+    "facing": "model",
+    "id": "data-artifact-list-by-type-auto-classifier-input",
+    "name": "Artifact List-By-Type Auto-Classifier Input",
+    "desc": "toAutoClassifierInput string for listing Artifacts made from a type, including the non-mine titles-and-descriptions note."
+  },
+  "e886ec14340c18744f8291c4ad587943c0f4f4a3": {
+    "facing": "model",
+    "id": "tool-description-artifact-list-by-type-mine-dynamic",
+    "name": "Artifact List-By-Type Description (Mine)",
+    "desc": "Dynamic tool description (and permission-ask message) for listing the user's own Artifacts made from one type."
+  },
+  "e033c4c140d0e5a9e9ff83aac2d00b538b3197a3": {
+    "facing": "model",
+    "id": "tool-description-artifact-list-by-type-shared-dynamic",
+    "name": "Artifact List-By-Type Description (Shared/Open)",
+    "desc": "Dynamic tool description (and permission-ask message) for listing Artifacts made from a type that others published or that the user can open."
+  },
+  "583a3bd05ef10d415bb4127791b22c371abcd6e4": { "facing": "ui" },
+  "df0069fa22253f1273c6029c9d607ff5bbb646a0": { "facing": "ui" },
+  "82eb0ceff1790ba377c24d0af9c2c3b47c7b0973": {
+    "facing": "model",
+    "id": "data-artifact-list-by-type-titles-are-data",
+    "name": "Artifact List-By-Type Titles Are Data",
+    "desc": "Data-not-instructions note interpolated into the list-by-type tool_result header warning that published titles and descriptions are data."
+  },
+  "22c5bd2009190cb193ef1ecad9dcd141d64896b3": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-by-type-record-unreadable",
+    "name": "Artifact List-By-Type Record Unreadable",
+    "desc": "list-by-type tool_result when the type_instances record is unreadable, telling the model to re-run action list."
+  },
+  "1b37e344e542d79663fd6de454de9b4976a38eb4": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-by-type-unavailable",
+    "name": "Artifact List-By-Type Unavailable",
+    "desc": "Empty list-by-type tool_result when the type is not in the account catalog or listing is not enabled."
+  },
+  "c8970e26d030b4a70da5d6eb848cefc89537a25e": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-by-type-overflow-empty",
+    "name": "Artifact List-By-Type Overflow Empty Page",
+    "desc": "Empty list-by-type tool_result when the newest page has nothing to show but older Artifacts may exist."
+  },
+  "098674e72dad3033bcf27acb269dc430b8e69c9f": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-by-type-curated-empty-clause",
+    "name": "Artifact List-By-Type Curated Empty Clause",
+    "desc": "Parenthetical on the empty list-by-type result when the organization lists none for new artifacts."
+  },
+  "ba335266bacaafd0eb82859afc4bf9da004fd796": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-by-type-rows-unshown",
+    "name": "Artifact List-By-Type Rows Unshown",
+    "desc": "Footer note on a list-by-type tool_result that some rows of the record could not be shown."
+  },
+  "4531058768bee1ec8ce6f7817493a0dd509e854d": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-by-type-higher-limit",
+    "name": "Artifact List-By-Type Higher Limit Note",
+    "desc": "list-by-type tool_result note to pass a higher limit when more rows are listed than shown."
+  },
+  "ceee8c2bd4acead4a307725c5ecc5c71b209a79e": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-by-type-overflow-oldest-missing",
+    "name": "Artifact List-By-Type Overflow Oldest-Missing Note",
+    "desc": "list-by-type tool_result note that one listing page may omit the oldest Artifacts."
+  },
+  "a6e22582758ad0f815dc5e6625ec3d75d7d299eb": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-by-type-result",
+    "name": "Artifact List-By-Type Result Body",
+    "desc": "Successful list-by-type tool_result body listing rows and instructing the model to read an Artifact by link before applying anything."
+  },
+  "a9235f4e5a238ca3ca84a1c1951971b2bce17246": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-by-type-scope-all-denied",
+    "name": "Artifact List-By-Type Scope-All Denied",
+    "desc": "checkPermissions deny message when a listing by type (implicit scope all) matches a deny rule."
+  },
+  "2753f06355f3003add91db55f3ed27cfe269f9c5": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-extra-params-error",
+    "name": "Artifact List Extra-Params Error",
+    "desc": "validateInput rejection when action list is passed fields other than limit and scope, with an optional type-catalog clause."
+  },
+  "27881b648a62245ba0682cf1b297f7ed3d8675c6": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-extra-params-type-catalog-clause",
+    "name": "Artifact List Extra-Params Type-Catalog Clause",
+    "desc": "Parenthetical on the list extra-params error noting type or type_url can list Artifacts made from a type."
+  },
+  "a239ec39872bec899b3f6e51df366f8f44239952": {
+    "facing": "model",
+    "id": "tool-description-artifact-open-dynamic",
+    "name": "Artifact Open Action Description",
+    "desc": "Dynamic tool description for action open, telling the model it shows the artifact where the user views artifacts."
+  },
+  "f42591998c41ff4a0f6a946ed700e85bc2f3f1a8": {
+    "facing": "model",
+    "id": "tool-result-artifact-open-unpublished",
+    "name": "Artifact Open Unpublished",
+    "desc": "ArtifactInputError tool_result when open hits boot_404 because nothing has been published at the url yet."
+  },
+  "c23868f9d6ec56f3525ea8112a727da6c98161b5": {
+    "facing": "model",
+    "id": "tool-result-artifact-open-not-found",
+    "name": "Artifact Open Not Found",
+    "desc": "ArtifactInputError tool_result when open hits boot_404 for an Artifact the user cannot see."
+  },
+  "fb063b9ec77c3c40163684417409f99fc6d2ac37": {
+    "facing": "model",
+    "id": "tool-result-artifact-open-public-outside-org",
+    "name": "Artifact Open Public Outside Org",
+    "desc": "ArtifactInputError tool_result when open is asked to show a public Artifact from outside the user's organization."
+  },
+  "d7f29a7d6fb3465bc028b417ec3484a600eae3a0": {
+    "facing": "model",
+    "id": "tool-result-artifact-watch-reconnect-note",
+    "name": "Tool Result: Artifact Watch Reconnect Note",
+    "desc": "Clause appended to a live-watch tool_result explaining the watch reconnects if the connection or credential drops."
+  },
+  "c2440abf2b4375724480a49e7786d313ead31d69": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-action-one-of",
+    "name": "Tool Parameter: Artifact Action One-Of",
+    "desc": "Dynamic Zod .describe() for the Artifact action enum listing enabled verbs and pointing at Calls."
+  },
+  "be4f96d03d51a9a75d0ff0ab6fb018d96d953525": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-list-scope-assets-clause",
+    "name": "Tool Parameter: Artifact List Scope Assets Clause",
+    "desc": "Assets alternative appended to the list scope enum schema description."
+  },
+  "7ff4907668117869770a585e70a6b2c83a29e583": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-type-url-list-or-read",
+    "name": "Tool Parameter: Artifact Type URL List Or Read",
+    "desc": "type_url schema description when the type catalog is on: read describes a type, list lists its Artifacts, with a create-unavailable caveat."
+  },
+  "96ae3cad0cd0ea16bf6c3645aa9c3d394805f238": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-out-dir-read-with-asset-id",
+    "name": "Tool Parameter: Artifact out_dir Read With Asset Id",
+    "desc": "out_dir schema description for reading an uploaded asset by path id into a local file."
+  },
+  "69efdc735f4eaafb036d6d617ca2c72907d784d0": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-path-read-file",
+    "name": "Tool Parameter: Artifact Path Read File",
+    "desc": "path schema description for reading a published file by its files-listing path."
+  },
+  "9373b755e9ccedc7953b72bd0a985de6fc6be01a": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-path-read-asset",
+    "name": "Tool Parameter: Artifact Path Read Asset",
+    "desc": "path schema description for reading (and optionally deleting) an uploaded asset by 32-hex id."
+  },
+  "1239b790d10200e3194dcc6734605be78ba3086e": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-path-delete-asset-clause",
+    "name": "Tool Parameter: Artifact Path Delete Asset Clause",
+    "desc": "Delete clause on the path schema description naming the asset id to remove."
+  },
+  "92c8ced68f2e234bcbb7830c7b44a58e89936273": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-action-watch-replies-resume-clause",
+    "name": "Tool Parameter: Artifact Action Watch Replies Resume Clause",
+    "desc": "Live-rail clause on the comments-tool action enum describing replies:true to re-enable automatic comment replies."
+  },
+  "6010b3c2b9df4f62740fbf337e36e722905a89b4": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-db-collection-except-batch",
+    "name": "Tool Parameter: Artifact DB Collection Except Batch",
+    "desc": "Rewritten collection schema description requiring collection for every data-tool action except batch."
+  },
+  "ca68f54bf6b584eecc50c321de2326aeda030d55": {
+    "facing": "model",
+    "id": "tool-result-artifact-delete-unavailable-asset-path",
+    "name": "Artifact Delete Unavailable Use Asset Path",
+    "desc": "core-verb-unavailable deny/validate/throw message when delete means remove one uploaded asset rather than a whole Artifact."
+  },
+  "292aa2d3feb20f3dafe773c2086d38797c08cfa7": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-asset-unavailable-use-file-path",
+    "name": "Artifact Read Asset Unavailable Use File Path",
+    "desc": "core-verb-unavailable message when path looks like an asset id but this session cannot read the asset store."
+  },
+  "ae631c92af4e20d3352fead4ce20ad419212f6c0": {
+    "facing": "model",
+    "id": "tool-result-artifact-delete-asset-unavailable",
+    "name": "Artifact Delete Asset Unavailable",
+    "desc": "core-verb-unavailable message when path looks like an asset id but this session cannot change the asset store."
+  },
+  "3c55aba46a289293a585e55edc19b7e790bfddbb": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-file-unavailable-use-asset-id",
+    "name": "Artifact Read File Unavailable Use Asset Id",
+    "desc": "core-verb-unavailable message when reading a published file by path is off and path instead takes an asset id."
+  },
+  "c9cf90a2c3eb3ad490f3004e9da06713de374ecb": {
+    "facing": "model",
+    "id": "tool-result-artifact-action-belongs-to-sibling-tool",
+    "name": "Artifact Action Belongs To Sibling Tool",
+    "desc": "validationErrorSteer telling the model a legacy action lives on a sibling Artifact tool and how to load it."
+  },
+  "693ae3a32d1efaba8c78575e94c65dd24f0208a8": {
+    "facing": "model",
+    "id": "tool-result-artifact-permission-denied-by-rule",
+    "name": "Artifact Permission Denied By Rule",
+    "desc": "checkPermissions deny message when a permission rule matches, including the Artifact family wrapper and batch-write deny sites."
+  },
+  "e3704a72a30222c961b24b4034e705f7b0df152c": {
+    "facing": "model",
+    "id": "tool-result-artifact-ask-rule-incomplete-check",
+    "name": "Artifact Ask Rule Incomplete Check",
+    "desc": "checkPermissions ask message when an ask rule covers the call but the full permission check could not complete."
+  },
+  "de82ebe78091e6da3cb1b7a3714d074233a49c85": {
+    "facing": "model",
+    "id": "tool-result-artifact-design-skill-not-loaded",
+    "name": "Artifact Design Skill Not Loaded",
+    "desc": "validateInput rejection requiring the design skill (page contract) to be loaded before publishing HTML."
+  },
+  "2a3c5cb4b46c4752c1daebd6ef2bbf6b70f4bfb3": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-save-consent-ask",
+    "name": "Artifact read_file/read_asset save — consent ask",
+    "desc": "Verb phrase of the permission ask for saving one published file or asset to a local path, including the outside-working-paths / protected-name / outside-scratchpad qualifiers."
+  },
+  "674ee8433a86d5ff6adc6bb21275238d9b6eaeef": {
+    "facing": "model",
+    "id": "data-artifact-version-auto-classifier-input",
+    "name": "Artifact Version Auto-Classifier Input",
+    "desc": "Fallback toAutoClassifierInput for action version when the live-edit module is absent."
+  },
+  "cf53f028e5c7a0c087f1ff587109126bb0012dda": {
+    "facing": "model",
+    "id": "tool-description-artifact-version-dynamic",
+    "name": "Artifact Version Action Description",
+    "desc": "Fallback dynamic tool description for action version when the live-edit module is absent."
+  },
+  "fc249481b9a7f0625f7e10b4a2c16c28c61370e6": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-extra-params-error",
+    "name": "Artifact Read Extra-Params Error",
+    "desc": "validateInput rejection when action read is passed fields other than url, prompt, and optionally page."
+  },
+  "b03da50dccb992be3a2e7a6eb7d99a064686ed8b": {
+    "facing": "model",
+    "id": "tool-result-artifact-type-applies-only-to-list",
+    "name": "Artifact Type Applies Only To List",
+    "desc": "validateInput rejection when type is passed on a non-list call; create-from-type must use type_url."
+  },
+  "badc23e9f9275934a94d6af6134de32d55b943a8": {
+    "facing": "model",
+    "id": "tool-result-artifact-path-applies-only-to-file-actions",
+    "name": "Artifact Path Applies Only To File Actions",
+    "desc": "validateInput rejection when path is passed on a publish instead of listing supporting files in files."
+  },
+  "4feb0e3e8d0ece9276d44b9193cc6bf2cb1f0bdb": {
+    "facing": "model",
+    "id": "tool-result-artifact-version-record-unreadable",
+    "name": "Artifact Version Record Unreadable",
+    "desc": "mapToolResult content when a stored version record fails to parse, telling the model to refetch the artifact url."
+  },
+  "cf4df7ef760c93dfd39f4adaa7a85ca40f7f8d34": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-stranded-pr-review",
+    "name": "Artifact Publish Stranded PR Review",
+    "desc": "Suffix on a publish ArtifactInputError telling the model a review page cannot be completed in place."
+  },
+  "7efe4482b1be900143708bd63c260cb71565e4e0": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-stranded-no-visible",
+    "name": "Artifact Publish Stranded Nothing Visible",
+    "desc": "Suffix on a publish ArtifactInputError when a stranded mint left nothing visible."
+  },
+  "87298542e1211a1b3e19818dcfee9eda75f68c5b": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-stranded-retry-with-url",
+    "name": "Artifact Publish Stranded Retry With Url",
+    "desc": "Suffix on a publish ArtifactInputError telling the model to republish with the stranded slug and a favicon."
+  },
+  "a5c5f672a80fe9bf576a51a1a4cf3e94ba7c72d4": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-stranded-cannot-complete",
+    "name": "Artifact Publish Stranded Cannot Complete",
+    "desc": "Fallback suffix on a publish ArtifactInputError when a stranded mint cannot be completed in place."
+  },
+  "31d540601e8b8df385214365ecd45c2427962098": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-types-create-from-type-footer",
+    "name": "Tool Result: Artifact List Types Create-From-Type Footer",
+    "desc": "list_types footer explaining how to start a new Artifact from a type when type-create is on."
+  },
+  "40f99ef994b0e850363e202795744aaea8d258fb": {
+    "facing": "model",
+    "id": "tool-result-artifact-describe-type-create-steps",
+    "name": "Tool Result: Artifact Describe Type Create Steps",
+    "desc": "describe_type how-to line: publish with type_url and no files first (passing auto_open after_first_write when filling next), then publish data files to the returned url."
+  },
+  "0c42b1aa90f76d4169ee50763f176b78fd0e08c1": {
+    "facing": "model",
+    "id": "tool-result-artifact-data-read-db-action-spelling",
+    "name": "Artifact Data read_db Action Spelling",
+    "desc": "validationErrorSteer spelling for read_db on the data addon, interpolated as how that action is spelled."
+  },
+  "32df2533fe350e23138b65160b27fe0510fdd54f": {
+    "facing": "model",
+    "id": "tool-result-artifact-data-write-db-action-spelling",
+    "name": "Artifact Data write_db Action Spelling",
+    "desc": "validationErrorSteer spelling for write_db on the data addon, interpolated as how that action is spelled."
+  },
+  "71c3e1929916549441e39a8cbacfcdcd93804999": {
+    "facing": "model",
+    "id": "tool-description-artifact-comments-watch-off-with-url",
+    "name": "Artifact Comments Watch-Off With Url",
+    "desc": "Replacement wording in the comments-tool prompt rewrite that maps unwatch to watch with on:false and its url."
+  },
+  "1f6606fd7d6bf5e144b5e1334bc989285c9c41b2": {
+    "facing": "model",
+    "id": "tool-description-artifact-comments-unwatch-to-watch-off",
+    "name": "Artifact Comments Unwatch To Watch-Off Rewrite",
+    "desc": "Comments-tool prompt replaceAll pair rewriting unwatch-with-url into watch with on:false."
+  },
+  "6839e3250e29bd0ab79f37fe5c515ec86aa16229": {
+    "facing": "model",
+    "id": "tool-description-artifact-comments-status-row-as-listing-row",
+    "name": "Artifact Comments Status Row As Listing Row",
+    "desc": "Comments-tool prompt replaceAll pair rewriting a status-row phrase into a listing-row phrase."
+  },
+  "3d82f002b5af46606fed219ce4e48385c6d46664": {
+    "facing": "model",
+    "id": "data-artifact-comments-watch-listing-rewrite",
+    "name": "ArtifactComments Watch Listing Rewrite",
+    "desc": "Find/replace pair in comments-addon table d that rewrites the watch paragraph from `status` wording to listing wording before it is joined into ArtifactComments' prompt."
+  },
+  "f15d3b70bbb7cf68c8ed5e27b1a60bdf02873e19": {
+    "facing": "model",
+    "id": "tool-description-artifact-comments-addon",
+    "name": "Tool Description: ArtifactComments Addon",
+    "desc": "Opening prompt of the standalone ArtifactComments tool: read/reply to comment threads and manage watches, naming the artifact by url."
+  },
+  "83eafac7fd69bb13be257ee63a9b46f27ed82d12": {
+    "facing": "model",
+    "id": "tool-description-artifact-comments-addon-resume-auto-replies",
+    "name": "Tool Description: ArtifactComments Resume Auto-Replies",
+    "desc": "Live-rail paragraph pushed into ArtifactComments' prompt explaining action watch with replies:true to resume automatic comment replies."
+  },
+  "effe437326312ee0ed8596e8f0f6dce3e80bb50b": {
+    "facing": "model",
+    "id": "data-artifact-data-read-action-core-spelling",
+    "name": "ArtifactData Read Action Core Spelling",
+    "desc": "Core-prompt spelling of the artifact-database read intro used as the o3e search key when lifting dqe into the ArtifactData addon prompt."
+  },
+  "5947e1ebde5b58f5d179cc5f106a04dfc0cba7ec": {
+    "facing": "model",
+    "id": "data-artifact-data-read-action-addon-spelling",
+    "name": "ArtifactData Read Action Addon Spelling",
+    "desc": "Replacement spelling of the database-read intro after o3e rewrites dqe for the ArtifactData addon tool prompt."
+  },
+  "6bdefbdf5d70ac6d325190389ab9d88cf8dc095a": {
+    "facing": "model",
+    "id": "data-artifact-data-read-action-rewrite",
+    "name": "ArtifactData Read Action Rewrite Pair",
+    "desc": "Both sides of the o3e rewrite that turns the core read_db/db_op intro into ArtifactData's per-call action spelling."
+  },
+  "522a04b8804f423a93a4a31e20b3fc2d8afcdaf0": {
+    "facing": "model",
+    "id": "data-artifact-data-write-action-rewrite",
+    "name": "ArtifactData Write Action Rewrite Pair",
+    "desc": "Both sides of the o3e rewrite that turns Pass action write_db with db_op into ArtifactData's To write, pass action spelling."
+  },
+  "122749bd4e9401b00a0f22d49260b45a397b5a81": {
+    "facing": "model",
+    "id": "tool-description-artifact-data-addon",
+    "name": "Tool Description: ArtifactData Addon",
+    "desc": "Standalone ArtifactData tool prompt: this tool is the published page's shared database; the parent tool publishes/reads the artifact."
+  },
+  "3981e2a127ed2f008617bab4dc70ffcbe0c2f9b4": {
+    "facing": "model",
+    "id": "tool-description-artifact-check-addon",
+    "name": "Tool Description: ArtifactCheck Addon",
+    "desc": "Standalone ArtifactCheck tool prompt telling the model to check a page before or after publishing it with the parent artifact tool."
+  },
+  "c5de15f9785a2cb7ea55dfec603d0c520be792fd": {
+    "facing": "model",
+    "id": "tool-result-artifact-addon-action-spelling-steer",
+    "name": "Tool Result: Artifact Addon Action Spelling Steer",
+    "desc": "validationErrorSteer suffix on ArtifactComments/Data/Check mapping a parent-tool action name to this addon's spelling, appended onto the invalid-input tool_result."
+  },
+  "b7b11eab69e79e4ac54c09fe844b54da6b5adbf4": {
+    "facing": "model",
+    "id": "tool-description-artifact-comments-addon-searchhint",
+    "name": "ArtifactComments Addon Search Hint",
+    "desc": "searchHint for ArtifactComments, surfaced to the model as anthropic/searchHint and as the deferred-tool listing stand-in for prompt()."
+  },
+  "2f29a7899e4f0a109f3c6f1cca2a389df2b603bd": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-watch-on-replies-contradiction",
+    "name": "Tool Result: ArtifactComments Watch On/Replies Contradiction",
+    "desc": "validateInput contradiction when watch sets on:false and replies:true together; returned as {result:false,message} and becomes the tool_result."
+  },
+  "52d13b3ae27ee47d2c9fe5cd9e87a5d3a5f318b9": { "facing": "internal" },
+  "6f575d04227fabce9ea476fbf40a9d27fa4c9705": {
+    "facing": "model",
+    "id": "data-listplugins-subject",
+    "name": "ListPlugins Subject",
+    "desc": "Subject phrase interpolated into ListPlugins' searchHint, description, and prompt naming the plugins enabled for this session (or the channel)."
+  },
+  "4c04f2376baafb2af32bd6fa238f8b788d2b27dd": {
+    "facing": "model",
+    "id": "tool-result-proposeskills-existing-skillmd-unread",
+    "name": "Tool Result: ProposeSkills Existing SKILL.md Unread",
+    "desc": "ProposeSkills validateInput failure telling the model to read the current SKILL.md before proposing a full replacement."
+  },
+  "e0f68a177cb47213d5b9062b16c735fd957bd24e": { "facing": "internal" },
+  "0a9ade51cde7a1ce49678fc69cd9f07eb55e0f31": {
+    "facing": "model",
+    "id": "tool-result-permission-approval-withdrawn",
+    "name": "Tool Result: Permission Approval Withdrawn",
+    "desc": "Permission checkPermissions ask message used when the prompt already ended, so the answer applied to nothing and is returned as a tool_result."
+  },
+  "c689ce9014428ac1be589470ffddeb0517666408": {
+    "facing": "model",
+    "id": "tool-result-permission-block-reads-outside-working-directories",
+    "name": "Tool Result: Block Reads Outside Working Directories",
+    "desc": "checkPermissions deny message when the user opts into permissions.blockReadsOutsideWorkingDirectories; becomes the tool_result on deny."
+  },
+  "94049892ae2f07ce2e28e21d7db6e3fe76d28865": {
+    "facing": "model",
+    "id": "tool-result-permission-block-reads-outside-settings-save-failed",
+    "name": "Tool Result: Block-Outside-Reads Settings Save Failed",
+    "desc": "Suffix concatenated into the deny tool_result when the block-outside-reads setting could not be written to user settings."
+  },
+  "929fde18387eec14fb9b9f2ea12ce173101a91e0": {
+    "facing": "model",
+    "id": "tool-result-permission-block-reads-outside-sandbox-not-yet-fenced",
+    "name": "Tool Result: Block-Outside-Reads Sandbox Not Yet Fenced",
+    "desc": "Suffix concatenated into the deny tool_result when the setting saved but sandboxed commands may not be fenced yet."
+  },
+  "f34627ce5ed78652e2ae6861fdad75ed02d9e4e9": {
+    "facing": "model",
+    "id": "tool-result-permission-outside-read-declined-with-feedback",
+    "name": "Tool Result: Outside Read Declined With Feedback",
+    "desc": "checkPermissions ask message when the user declines an outside-working-directory read and leaves feedback; becomes the tool_result if they do not allow it."
+  },
+  "c8d22caf48e66c005cbc9d5696f30f776b4818e8": {
+    "facing": "model",
+    "id": "tool-result-permission-outside-read-declined",
+    "name": "Tool Result: Outside Read Declined",
+    "desc": "checkPermissions ask message when the user declines an outside-working-directory read with no feedback."
+  },
+  "ef9f6e97ac9639d6d438f2e669a9c4dd51b0d44e": { "facing": "internal" },
+  "4e2527c43c294226c7929d6bafe1c86ac313a6d0": { "facing": "internal" },
+  "f5858bb685ab44b77570a1a1a2ae2b5433b18b27": { "facing": "internal" },
+  "aa980675d4bd4c20130aea12d3c4f45fb99bdb43": { "facing": "internal" },
+  "510477ae579ef6e836e181920f8aaa9ec3408937": { "facing": "internal" },
+  "3c74d4f318c37134047ec1a68735d01630d2e0df": { "facing": "internal" },
+  "f8b46083309623b66677281ee868ded2ff257384": { "facing": "internal" },
+  "87b1bd4ad3c91825229c1911297f36a306f0ad94": { "facing": "ui" },
+  "d0204289a6d7217c158d87b7616d4ef24ddc6308": { "facing": "ui" },
+  "06802a007dc8a795ffa6973aa4822f2102f626c1": { "facing": "ui" },
+  "16804da553a257e5429a228c007242df840a2bdc": { "facing": "ui" },
+  "0c6968eed09737a98560657b2b227bd466d79041": { "facing": "ui" },
+  "003245ad4de4682cf9a2786341338584a2737e43": { "facing": "ui" },
+  "2532636bfaec600b345cd598a087cc3db609f845": { "facing": "ui" },
+  "f356e7d1794b7b2b1547b9708c7257f5e74d543d": {
+    "facing": "model",
+    "id": "system-reminder-fork-source-live-parent",
+    "name": "System Reminder: Fork Source Live Parent",
+    "desc": "Task-notification system reminder that this session forked a still-running parent and how to coordinate with it."
+  },
+  "cbd2c9ccaba89bf22403fe4a6b39f10816e01cbc": {
+    "facing": "model",
+    "id": "tool-result-mcp-authenticate-managed-policy",
+    "name": "MCP Authenticate: Managed Policy",
+    "desc": "MCP authenticate tool call() error result when the server is blocked by managed policy; only an org admin can change it."
+  },
+  "a857ad3a0ccad285af84323c3f04f781ca31f522": {
+    "facing": "model",
+    "id": "tool-result-mcp-authenticate-disabled",
+    "name": "MCP Authenticate: Server Disabled",
+    "desc": "MCP authenticate tool call() error result when the server is disabled; asks the user to enable it in /mcp."
+  },
+  "07c269277540286c59731832f26ab2b6ba3922d4": {
+    "facing": "model",
+    "id": "tool-result-mcp-authenticate-project-approval",
+    "name": "MCP Authenticate: Project Approval Required",
+    "desc": "MCP authenticate tool call() error result when the server still needs project approval; do not retry until the user approves."
+  },
+  "1913b5632351ec5dbaa92c4301ff8858cee132c1": { "facing": "internal" },
+  "344fc1908a673df3aaeae6177744de22ace1ec0c": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-unverified-refusal-reason-too-many-in-flight",
+    "name": "Tool Result: Remote-Tool Unverified Refusal Reason - Too Many In Flight",
+    "desc": "Reason clause wrapped by vr() into an unverified-sender remote-tool refusal when the host is at in-flight/session capacity."
+  },
+  "f0db2289121769a6bb13aa2ef08a5b85ac8ac73d": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-unverified-refusal-reason-stale",
+    "name": "Tool Result: Remote-Tool Unverified Refusal Reason - Stale",
+    "desc": "Reason clause wrapped by vr() into an unverified-sender remote-tool refusal when the call or permission answer missed the host's delivery window."
+  },
+  "f3723fa79c9389bbb40b7e8ba93f9b9d30aa7401": { "facing": "internal" },
+  "9c9d8f6e97c9c759bdcdfd0cf1a97975ff0025d4": { "facing": "internal" },
+  "3e2e1a6fc4afb1ebb7939a23b8fd4dba90a91493": { "facing": "internal" },
+  "b92d944052aa15fe453d5a5a6770de5ba40daba8": { "facing": "internal" },
+  "fea9ffc8d1f0594b4f3f4512265338358388376a": { "facing": "internal" },
+  "ff89b9e407895fccc376e7070ef51dbe0b7f8de7": { "facing": "internal" },
+  "5f71d6e2f1bb92a884aae0a6f10e922876992066": { "facing": "internal" },
+  "d2424f67c33cec8405730e4fa0836f462fc570bd": { "facing": "internal" },
+  "3c3e995ceef3f4b7da3e3984030aa64e4a848841": { "facing": "ui" },
+  "d2a13339df9c8cff09723cd3ae024315d3599e6c": { "facing": "ui" },
+  "fc072cae2c495e1853deeb7451b3b0e897013388": { "facing": "ui" },
+  "f4588b0c28b8612898379e97623c8180e854773e": { "facing": "ui" },
+  "2b980b812454c8e681706b26b523a2e9a7fd08a0": { "facing": "ui" },
+  "7aedd000790c93002122f53a63b903753333e11d": { "facing": "ui" },
+  "14906c266862915038f1aecabaee79914b466587": { "facing": "internal" },
+  "3e4cd1b2fda32dbbb9aeb89711f87b782f451480": { "facing": "internal" },
+  "a81ef18d3be8540bccc0407d9fd61a35cb9e8f85": { "facing": "internal" },
+  "4f140565f25518cf3f0f4bdc1ec668c0f0be8966": { "facing": "internal" },
+  "0984aa98de9bf59353da10a3202556cbd71c0dfb": { "facing": "internal" },
+  "7acf19504e80d5031a9b6b95d32cc0dfd8dd5ccb": { "facing": "internal" },
+  "ffe0f8e5dc44c8ef757662b0c283cc0135a6f3c3": { "facing": "internal" },
+  "7622a80dca495b7c7b4da716cd7b8f0019b216c5": { "facing": "internal" },
+  "26f0ecfa966cbe5bba6bdfea6e73adee38a2c4f1": { "facing": "internal" },
+  "d47b22d037bd2af2fc195bc3a9d6bf3fc91cbdc1": { "facing": "internal" },
+  "67cac8cfde3334b4f535bf0cd1ecbe92cad7ac05": {
+    "facing": "model",
+    "id": "agent-prompt-narration-digest-user-request",
+    "name": "Agent Prompt: Narration Digest User Request",
+    "desc": "Digest heading and truncated user-turn text assembled by RXe into the narration model's user message."
+  },
+  "9959a9731519bd8f529c467db544c4c5f3503720": {
+    "facing": "model",
+    "id": "agent-prompt-narration-digest-previous-reply",
+    "name": "Agent Prompt: Narration Digest Previous Reply",
+    "desc": "Optional digest clause appending the end of the previous assistant reply into the narration user message."
+  },
+  "8c4648aa982e87d71a100b83e6ab568c7d5cfb46": {
+    "facing": "model",
+    "id": "agent-prompt-narration-digest-how-started",
+    "name": "Agent Prompt: Narration Digest How Started",
+    "desc": "Digest block of how the assistant opened this turn, included in the narration model user message."
+  },
+  "08c1d3e416f48a3bee3fdd8347e4a8a15d3f06b7": {
+    "facing": "model",
+    "id": "agent-prompt-narration-digest-just-now",
+    "name": "Agent Prompt: Narration Digest Just Now",
+    "desc": "Digest of the latest assistant text and still-running tool calls sent to the narration model."
+  },
+  "8bf1356a98c213ee1d3503946c9cb4f357e6a16c": {
+    "facing": "model",
+    "id": "agent-prompt-narration-status-line-system",
+    "name": "Agent Prompt: Narration Status Line System",
+    "desc": "System prompt for the narration query that writes the terminal status line in the agent's voice."
+  },
+  "868fc90b4514a8ff4af42851c6dabf712a6901d8": {
+    "facing": "model",
+    "id": "agent-prompt-narration-status-line-one-sentence",
+    "name": "Agent Prompt: Narration Status Line One Sentence",
+    "desc": "First OWt instruction telling the narration model to emit one unlabeled sentence of at most 20 words."
+  },
+  "aa3f7645624d4b8dd95c14d9d4ddbda481d706aa": {
+    "facing": "model",
+    "id": "agent-prompt-narration-status-line-running-tools",
+    "name": "Agent Prompt: Narration Status Line Running Tools",
+    "desc": "OWt instruction to phrase in-flight tool calls as present-participle outcomes, optionally leading with a just-finished result."
+  },
+  "93101e8c55a218897154b9b7d21b009da1a18654": {
+    "facing": "model",
+    "id": "agent-prompt-narration-sub-goal-definition",
+    "name": "Agent Prompt: Narration Sub-Goal Definition",
+    "desc": "Narration instruction that the status line names user-facing outcomes rather than mechanics, with contrasting examples."
+  },
+  "00b5e12a6a405e4aa3b3892d9c1065bc0fec0991": {
+    "facing": "model",
+    "id": "agent-prompt-narration-status-line-instructions",
+    "name": "Agent Prompt: Narration Status Line Instructions",
+    "desc": "Full OWt.join user-message instructions for writing the one-sentence terminal status line."
+  },
+  "94d1aa20e27dcf6f2cba2cd5b601b63e50092965": { "facing": "ui" },
+  "4b5591a108415018ff3f6ce86ce52c462a53f5f4": { "facing": "ui" },
+  "194b07e1c8f4e896d2a74af1f4ea44ff18260775": { "facing": "ui" },
+  "36de91df2d30d90550bc362f81a9636ac41abcd6": { "facing": "ui" },
+  "4450b5ca51801b17905c3cf032c68ac31e7e2b95": { "facing": "ui" },
+  "33744e633122676c129c3edf8047e51b222b8ae1": { "facing": "ui" },
+  "0c937da6b5d8916f2b7925b08601801150aba6e2": { "facing": "internal" },
+  "16677956e8e39eda5ca50a353d977dbc1004ca36": { "facing": "internal" },
+  "3c724cc56948d64ed75b34598f29eb67cc7e3e1a": { "facing": "internal" },
+  "61f1fff21f731391802d40a5e3c8fbf24d01e364": { "facing": "ui" },
+  "3245614bbc118d4e10ceb51625ec99edc275d2d5": { "facing": "ui" },
+  "60f8c259c7236056db42b9f6ea27b0a33afc7582": { "facing": "internal" },
+  "046f67f67d3d957b1dbbaca8969ce5a11390235b": { "facing": "internal" },
+  "1805c17f625ee5696e11504896b1dabb5871b08c": { "facing": "internal" },
+  "06b9916ddb39526e10799de9b52af5bb55f3c6d2": { "facing": "internal" },
+  "b79ac27ec93baf39b1ca2a2ffa1c7b13c3284247": { "facing": "ui" },
+  "6c63354edea32f1aff8ab00c2750baa64ab0c7f0": { "facing": "ui" },
+  "7342713d5b4d113233a0d4e51c69c13e7237f82d": { "facing": "internal" },
+  "191cb454ccd997cf82d8ab3f234f2a9da656d1b1": { "facing": "internal" },
+  "96ede8ade3b468cc5b4f0e5ac946f3f1cbdf674d": { "facing": "internal" },
+  "56eccbc6cc1ec902b6136e3121036d89b67fb5b7": { "facing": "internal" },
+  "6457fc9ee9fe951142b10a1f5f6272788142db44": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-timed-out-left-standing",
+    "name": "Tool Result: Remote Tool Timed Out Left Standing",
+    "desc": "timed_out tool_result when the host did not answer and the request was left running there, telling the model to check effects before retrying."
+  },
+  "106816fb54e7de45df81c72056bea1f75d5f5300": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-timed-out-withdrawn",
+    "name": "Tool Result: Remote Tool Timed Out Withdrawn",
+    "desc": "timed_out tool_result when the unanswered call was withdrawn on the host and may have partially run."
+  },
+  "061e21cc5241e797af26cd1750f915d2578c508e": { "facing": "internal" },
+  "392a99884dc6002b66751f8babe9ba726291e603": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-personal-machine-command-timeout",
+    "name": "System Reminder: Tool Hosts Personal Machine Command Timeout",
+    "desc": "Clause in the personal_machine tool_hosts_notice line stating per-command limits or that the host's own Bash timeout applies."
+  },
+  "be8a054bffb88829f2b385ae797ec9ea2ba723f6": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-session-asks-before-host-tools",
+    "name": "Remote Tool: Session Asks Before Host Tools",
+    "desc": "ask_first permission message when a session rule asks before using the host's tools; on decline it is the tool_result the model reads."
+  },
+  "e30fe246ac4af6700cfcb5232ace552f03056202": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-ask-first-cannot-ask",
+    "name": "Tool Result: Remote Tool Ask-First Cannot Ask",
+    "desc": "denied_by_session_rule tool_result when an ask-first host rule applies but this context cannot prompt."
+  },
+  "df3cf558cd9ae17fcbc36f119e9aaee4d25083ce": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-plan-mode-entered-while-asking",
+    "name": "Tool Result: Remote Tool Plan Mode Entered While Asking",
+    "desc": "late_refusal tool_result when plan mode starts while a state-changing remote call is still awaiting approval."
+  },
+  "0c86602bb6ede006ff4c52068b2508619a3ab1aa": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-unverified-refusal-call-phase",
+    "name": "Tool Result: Remote Tool Unverified Refusal Call Phase",
+    "desc": "host_unresponsive tool_result when an unverifiable reply says the session is no longer paired with the host, including whether the command may still be running."
+  },
+  "e7d15e21ad29bbadc53fa9333b5a3cfe19e0b583": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-unverified-refusal-was-running",
+    "name": "Tool Result: Remote Tool Unverified Refusal Was Running",
+    "desc": "Call-phase clause interpolated when the unverifiable unpair happens while a command is already running on the host."
+  },
+  "8c05756469b29d07553333919c5cf2695d27f065": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-unverified-refusal-run-unknown",
+    "name": "Tool Result: Remote Tool Unverified Refusal Run Unknown",
+    "desc": "Call-phase clause interpolated when the command may or may not have run on the unpaired host."
+  },
+  "ea0e23c4cd922a17d4649ea342d78f75aa5f27ea": { "facing": "ui" },
+  "4c07cecd821ad5b893b47fb785d9f739210df070": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-request-withdrawn",
+    "name": "Tool Result: Remote Tool Request Withdrawn",
+    "desc": "withdrawn/unanswerable message telling the model nothing ran on the host and not to retry without asking the user."
+  },
+  "7d58bd7f01b5501dabe6e3eb960d6bf487e753d5": { "facing": "ui" },
+  "0c996553e7f5ef0121089b27aa80128f03408e0e": { "facing": "internal" },
+  "0b338842c0b85455bb8d553f3bc13218e5af552f": { "facing": "internal" },
+  "356504be42f6063a6a4f8307e28b723d9af58475": { "facing": "internal" },
+  "60566de373f21408be908c0e23cc643fdf4b49c6": { "facing": "internal" },
+  "39189455e018d15838becb57e235d3b199b34ee3": { "facing": "internal" },
+  "fd860923a57051b24c9bdf6c16536bba345de54d": { "facing": "internal" },
+  "aec1e76aa8cf2ad495594abb4c79d0446a36480a": { "facing": "internal" },
+  "f760915ea8768eb18d48916690178ab601e98123": { "facing": "internal" },
+  "447e9c9a61bc91c9eb9be9c7ca498e5e990bceb9": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-uploads-going-through-again",
+    "name": "System Reminder: Dir Sync Uploads Going Through Again",
+    "desc": "Cloud dir-sync notice that previously failed uploads went up with the latest one and the user's machine will take them in."
+  },
+  "c0761005077faef8ad0a464c49b45375a43bafc9": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-claude-changes-did-not-reach-machine",
+    "name": "System Reminder: Dir Sync Claude Changes Did Not Reach Machine",
+    "desc": "User-machine dir-sync report that this turn's cloud changes stayed in the session until an upload goes through."
+  },
+  "7e4d7c65cdde25e843509ac18c84ecb1cade4b87": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-conflicts-resolved-on-laptop",
+    "name": "Dir Sync Conflicts Resolved On Laptop",
+    "desc": "Model reminder that laptop-side merge conflicts were resolved or aborted, so files in this checkout no longer hold conflict markers."
+  },
+  "c64da01f181451652463b209307fd50997256cc6": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-unresolved-conflicts-on-laptop",
+    "name": "Dir Sync Unresolved Conflicts On Laptop",
+    "desc": "Model reminder that the user's machine has unresolved merge/rebase/cherry-pick/revert/stash conflicts whose markers are present in this checkout."
+  },
+  "af10fceaa4c953928a9b10dec00bd681513e2800": { "facing": "ui" },
+  "0faff1e933de31ff10d133b66c29576d8cba9e72": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-not-uploaded-reason-git-error",
+    "name": "Dir Sync Not-Uploaded Reason Git Error",
+    "desc": "Reason interpolated into the not-uploaded Directory-sync reminder when git could not pack the checkout, quoting git's output as data and telling the model the cloud checkout needs repair."
+  },
+  "a422a0abe2ffdf0b39525c6e5ac13139a0f7a11c": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-not-uploaded-reason-prerequisites-missing",
+    "name": "Dir Sync Not-Uploaded Reason Prerequisites Missing",
+    "desc": "Reason interpolated into the not-uploaded Directory-sync reminder when a commit the user's machine holds is missing from this checkout."
+  },
+  "2df589e332dfa99c11c0111f4ec49e7c9196c5b1": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-not-uploaded-reason-too-many-prerequisites",
+    "name": "Dir Sync Not-Uploaded Reason Too Many Prerequisites",
+    "desc": "Reason interpolated into the not-uploaded Directory-sync reminder when the history to send has more merge points than one upload can name."
+  },
+  "cea99ace8464ac91fd28643f4e7328370e69a6c8": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-announced-upload-refused",
+    "name": "Dir Sync Announced Upload Refused",
+    "desc": "Model reminder that an announced laptop upload could not be waited for because the sync service is refusing this session, so this turn runs on the files as they were."
+  },
+  "18cd6a263d4277da202d129d45ef40500d221917": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-stopped-repository-left-stale",
+    "name": "Dir Sync Stopped Repository Left Stale",
+    "desc": "Stopped-sync reminder clause that the session copy was emptied except the repository itself, which is stale until a later worker finishes the move."
+  },
+  "2c9bdbfa2b4ed232d693f28bc6cc4cabb7055518": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-stopped-set-aside-redo-on-machine",
+    "name": "Dir Sync Stopped Set Aside Redo On Machine",
+    "desc": "Stopped-sync suffix pointing at the set-aside copy and telling the model to redo unsent changes on the user's machine."
+  },
+  "37ec0ca1c54cf239e250ec82e97d99b78336531e": { "facing": "ui" },
+  "6faea55a4b76c3926a8707f6fe4164260f0bb6e4": { "facing": "ui" },
+  "c55b71adae83653099627aaea6a7ce2f14ac0610": { "facing": "ui" },
+  "fd3f97c67fe9ed7029e6950c20662d68383b2724": {
+    "facing": "model",
+    "id": "slash-command-add-dir-leads-outside-working-directory",
+    "name": "Slash Command: /add-dir — path leads outside the working directory",
+    "desc": "Tells the model the directory leads outside the working directory so its skills, commands, and agents were not loaded, and that /add-dir would grant access."
+  },
+  "bcd63923bf9b75a5d76bb5941e06292b96f51f80": {
+    "facing": "model",
+    "id": "slash-command-add-dir-leads-outside-through-link",
+    "name": "Slash Command: /add-dir — path leads outside through a link",
+    "desc": "Tells the model the path is a link resolving outside the working directory, so nested skills were not loaded, and names the /add-dir target that would grant access."
+  },
+  "76bed45624cdd9c7700d8f7cfd2e96a8ac6ce3fa": {
+    "facing": "model",
+    "id": "slash-command-add-dir-additional-directories-skills-disabled",
+    "name": "Slash Command: /add-dir — additional-directory skills disabled",
+    "desc": "Tells the model the path is inside cwd but skills, commands, and agents from additional directories are disabled, so nothing was loaded."
+  },
+  "855b0d8ce65d59c49ba2f913e709ad02945417e2": {
+    "facing": "model",
+    "id": "slash-command-add-dir-loading-skills-for-session",
+    "name": "Slash Command: /add-dir — loading nested skills for this session",
+    "desc": "Tells the model a nested directory inside cwd is now loading its skills, commands, and agents for this session."
+  },
+  "1ef383d07eae30693a42f7d6eab401e735983eb3": {
+    "facing": "model",
+    "id": "slash-command-add-dir-skills-already-included",
+    "name": "Slash Command: /add-dir — nested skills already included",
+    "desc": "Tells the model the nested directory's skills, commands, and agents are already included for this session."
+  },
+  "fb0336c8f52d887de4dbd6b947d50d4baaeb65f9": {
+    "facing": "model",
+    "id": "slash-command-advisor-fable-needs-usage-credits",
+    "name": "Slash Command: /advisor — Fable 5 advisor needs usage credits",
+    "desc": "Tells the model the advisor was not set because Fable 5 bills to usage credits that are not enabled, and gives the exact command that fixes it."
+  },
+  "74e7cbc80008878d60be55003173e49a14fd529c": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-db-collection-required-action-variant",
+    "name": "Tool Parameter: Artifact db collection — action-phrasing variant",
+    "desc": "Replacement text for the artifact db `collection` parameter description in the action-phrased tool variant, stating it is required for every action except 'batch'."
+  },
+  "27906b567134f27fa81b1b1d4ead066a030b708a": {
+    "facing": "model",
+    "id": "tool-description-artifact-watch-listing-row-phrase-variant",
+    "name": "Tool Description: Artifact watch — listing-row phrasing variant",
+    "desc": "Replacement phrase used when the artifact tool description is rewritten to describe the watch listing rather than a status action."
+  },
+  "2d57c7d3d24868e6af2c8cdee7ba40cd02ade1bf": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-requested-thread-only-note",
+    "name": "Tool Result: Artifact comments — requested-thread-only note",
+    "desc": "Note appended to an artifact comments listing when a single thread was requested, saying how many other threads carry comments and how to list them all."
   }
 }
