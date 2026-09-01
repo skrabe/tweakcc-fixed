@@ -140,7 +140,26 @@ const main = () => {
       // and leaves an empty pane that reads exactly like a boot crash. Move to
       // "Yes, I trust this folder" first. Verified on CC 2.1.251: the marker
       // sits on the No row at first paint.
-      key('Down');
+      //
+      // Pressing Down once and trusting it is a RACE: the pane matches the
+      // question text while the dialog is still painting, so an early Down can
+      // be swallowed and the following Enter then confirms "No, exit". On CC
+      // 2.1.252 that produced `[EXIT=` and a "process exited" verdict against a
+      // binary whose interface was fine. Drive the marker onto the Yes row and
+      // read it back before committing.
+      const YES_SELECTED = /❯\s*Yes, I trust this folder/;
+      let onYes = false;
+      for (let i = 0; i < 12 && !onYes; i += 1) {
+        key('Down');
+        const pane = capture();
+        if (pane.includes('[EXIT=')) break;
+        onYes = YES_SELECTED.test(pane);
+      }
+      if (!onYes) {
+        note(false, 'boot: could not move the trust dialog onto "Yes, I trust this folder"');
+        console.log(capture().split('\n').slice(-25).join('\n'));
+        return 1;
+      }
       key('Enter');
     }
 
