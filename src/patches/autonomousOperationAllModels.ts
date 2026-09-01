@@ -49,6 +49,18 @@ export const writeAutonomousOperationAllModels = (
     oldFile.match(pattern195) ||
     oldFile.match(pattern257);
 
+  // CC 2.1.257 also reads this gate in refusal-fallback routing (`Men`/`VF`:
+  // `!$f(n,"refusal_fallback",e)&&!Zfe(n)&&!xoe(n,e)&&…` is the early return
+  // that declines to compute a fallback model). Flipped true, the early
+  // return no longer fires for a model WITHOUT the `refusal_fallback`
+  // capability, so such a model becomes fallback-eligible on a refusal. For
+  // models that ship the capability (opus-5, fable-5, fable-5-1) the flip
+  // changes nothing on that path. Verified 2026-09-02 with a live turn on
+  // fable-5-1 through the flipped build: main-loop request sent, 200, reply.
+  // (An earlier no-op here blamed this flip for the 0-token turns of that
+  // night; the cause was an unresolved placeholder in the lean system-prompt
+  // builder, not this gate.)
+
   if (!match || match.index === undefined) {
     // Already flipped (fallback is now !0).
     if (
