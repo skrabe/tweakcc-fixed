@@ -1294,9 +1294,7 @@
         "\n\nTo update: republish the same file path in this conversation (keeps this URL), or pass the URL as `url` from any other conversation — publishing without `url` from a conversation that didn't publish this artifact creates a separate artifact rather than updating this one."
       ],
       "identifiers": [],
-      "identifierMap": {
-        "0": "TOOL_RESULT_ARTIFACT_PUBLISH_UPDATE_INSTRUCTIONS_VAR_0"
-      },
+      "identifierMap": {},
       "version": "2.1.232"
     },
     {
@@ -2605,9 +2603,9 @@
       ],
       "identifierMap": {
         "0": "OUTPUT_STYLE_CONFIG",
-        "1": "SECURITY_NOTE",
-        "2": "SYSTEM_REMINDER_TAG_GUIDANCE_FN",
-        "3": "TOOL_CONTEXT",
+        "1": "OUTPUT_STYLE_AGENT_INTRO_FN",
+        "2": "USE_COLLABORATIVE_AGENT_INTRO_FN",
+        "3": "COLLABORATIVE_AGENT_INTRO",
         "4": "SECURITY_POLICY_INSTRUCTIONS",
         "5": "SYSTEM_REMINDER_TAG_GUIDANCE_FN",
         "6": "TOOL_CONTEXT"
@@ -3217,9 +3215,7 @@
         "\nReads a specific resource from an MCP server, identified by server name and resource URI.\n\nParameters:\n- server (required): The name of the MCP server from which to read the resource\n- uri (required): The URI of the resource to read\n"
       ],
       "identifiers": [],
-      "identifierMap": {
-        "0": "TOOL_DESCRIPTION_READ_MCP_RESOURCE_VAR_0"
-      },
+      "identifierMap": {},
       "version": "2.1.187"
     },
     {
@@ -15439,22 +15435,6 @@
       "version": "2.1.178"
     },
     {
-      "name": "Tool Parameter: Chrome coordinate",
-      "id": "tool-parameter-claude-in-chrome-coordinate",
-      "description": "Claude-in-Chrome click action coordinate param description (interpolated).",
-      "pieces": [
-        "(x, y): ${",
-        ".x}"
-      ],
-      "identifiers": [
-        0
-      ],
-      "identifierMap": {
-        "0": "TOOL_PARAMETER_CLAUDE_IN_CHROME_COORDINATE_VAR_0"
-      },
-      "version": "2.1.178"
-    },
-    {
       "name": "Tool Parameter: Computer start_coordinate",
       "id": "tool-parameter-computer-start-coordinate",
       "description": "Computer tool start_coordinate for left_click_drag param description.",
@@ -15632,24 +15612,6 @@
       "version": "2.1.246"
     },
     {
-      "name": "Onboarding share-link tool result line",
-      "id": "tool-result-onboarding-guide-share-link-status",
-      "description": "tool_result content template formatting the onboarding-guide share-link status/message back to the model; model-facing.",
-      "pieces": [
-        "[${",
-        ".status}] ${",
-        ".message}"
-      ],
-      "identifiers": [
-        0,
-        0
-      ],
-      "identifierMap": {
-        "0": "TOOL_RESULT_ONBOARDING_GUIDE_SHARE_LINK_STATUS_VAR_0"
-      },
-      "version": "2.1.191"
-    },
-    {
       "name": "Tool Result: MCP Task Content Block Save Failed",
       "id": "tool-result-mcp-task-block-save-failed",
       "description": "Placeholder text substituted into an MCP task result when a binary content block could not be persisted to disk.",
@@ -15820,37 +15782,6 @@
       "identifierMap": {
         "0": "TOOL_RESULT_DEVICE_HOOK_TIMEOUT_ON_ATTACHED_MACHINE_VAR_0",
         "1": "TOOL_RESULT_DEVICE_HOOK_TIMEOUT_ON_ATTACHED_MACHINE_VAR_1"
-      },
-      "version": "2.1.246"
-    },
-    {
-      "name": "Tool Result: Computer Use Batch Step Prefix",
-      "id": "tool-result-computer-use-batch-step-prefix",
-      "description": "Prefixes each display-scope batch action's tool-result text with an [i/n] action status line.",
-      "pieces": [
-        "[${",
-        "+1}/${",
-        "}] ${",
-        "}: ${",
-        "}${",
-        "}${",
-        "}"
-      ],
-      "identifiers": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5
-      ],
-      "identifierMap": {
-        "0": "TOOL_RESULT_COMPUTER_USE_BATCH_STEP_PREFIX_VAR_0",
-        "1": "TOOL_RESULT_COMPUTER_USE_BATCH_STEP_PREFIX_VAR_1",
-        "2": "TOOL_RESULT_COMPUTER_USE_BATCH_STEP_PREFIX_VAR_2",
-        "3": "TOOL_RESULT_COMPUTER_USE_BATCH_STEP_PREFIX_VAR_3",
-        "4": "TOOL_RESULT_COMPUTER_USE_BATCH_STEP_PREFIX_VAR_4",
-        "5": "TOOL_RESULT_COMPUTER_USE_BATCH_STEP_PREFIX_VAR_5"
       },
       "version": "2.1.246"
     },
@@ -17141,7 +17072,7 @@
         0
       ],
       "identifierMap": {
-        "0": "TOOL_DESCRIPTION_ARTIFACT_DATABASE_GUIDANCE_VAR_0"
+        "0": "MAX_BATCH_DATABASE_WRITES"
       },
       "version": "2.1.257"
     },
@@ -18026,14 +17957,7 @@
         "**To update**: Edit the file, then call Artifact again with the same file path — it redeploys to the same URL. A different file path claims a new URL so only use a different path if you intend to create a separate new Artifact.\n\n**To update an artifact from an earlier conversation** — whenever the user wants an existing artifact updated or its link kept, not only when they paste a URL: pass the artifact's URL as `url`, finding it with `action: \"list\"` or by asking the user for the link when you don't have it. Before publishing to it, read it (`action: \"read\"` with that `url`) and build your update on the version that comes back — a publish to an artifact this conversation has not read or published is refused and hands you the live version to build on. Publishing without `url` creates a separate artifact rather than updating the existing one, so recover its URL instead of announcing a new link."
       ],
       "identifiers": [],
-      "identifierMap": {
-        "0": "TOOL_DESCRIPTION_ARTIFACT_UPDATE_AND_LIST_GUIDANCE_VAR_0",
-        "1": "TOOL_DESCRIPTION_ARTIFACT_UPDATE_AND_LIST_GUIDANCE_VAR_1",
-        "2": "TOOL_DESCRIPTION_ARTIFACT_UPDATE_AND_LIST_GUIDANCE_VAR_2",
-        "3": "TOOL_DESCRIPTION_ARTIFACT_UPDATE_AND_LIST_GUIDANCE_VAR_3",
-        "4": "TOOL_DESCRIPTION_ARTIFACT_UPDATE_AND_LIST_GUIDANCE_VAR_4",
-        "5": "TOOL_DESCRIPTION_ARTIFACT_UPDATE_AND_LIST_GUIDANCE_VAR_5"
-      },
+      "identifierMap": {},
       "version": "2.1.257"
     },
     {
@@ -18624,11 +18548,7 @@
         "5": "ANGLE_SIMPLIFICATION",
         "6": "ANGLE_EFFICIENCY",
         "7": "ANGLE_ALTITUDE",
-        "8": "ANGLE_CONVENTIONS",
-        "9": "CLEANUP_CANDIDATES_NOTE",
-        "10": "PHASE_2_VERIFY_3_STATE",
-        "11": "PHASE_3_SWEEP",
-        "12": "OUTPUT_FORMAT_FN"
+        "8": "ANGLE_CONVENTIONS"
       },
       "version": "2.1.218"
     },
@@ -18844,11 +18764,7 @@
         "3": "ANGLE_REUSE",
         "4": "ANGLE_SIMPLIFICATION",
         "5": "ANGLE_EFFICIENCY",
-        "6": "ANGLE_ALTITUDE",
-        "7": "ANGLE_CONVENTIONS",
-        "8": "CLEANUP_CANDIDATES_NOTE",
-        "9": "PHASE_2_VERIFY_RECALL_BIASED",
-        "10": "OUTPUT_FORMAT_FN"
+        "6": "ANGLE_ALTITUDE"
       },
       "version": "2.1.218"
     },
@@ -18941,11 +18857,7 @@
         "3": "ANGLE_REUSE",
         "4": "ANGLE_SIMPLIFICATION",
         "5": "ANGLE_EFFICIENCY",
-        "6": "ANGLE_ALTITUDE",
-        "7": "ANGLE_CONVENTIONS",
-        "8": "CLEANUP_CANDIDATES_NOTE",
-        "9": "PHASE_2_VERIFY_3_STATE",
-        "10": "OUTPUT_FORMAT_FN"
+        "6": "ANGLE_ALTITUDE"
       },
       "version": "2.1.218"
     },
@@ -19095,10 +19007,7 @@
         "6": "ANGLE_EFFICIENCY",
         "7": "ANGLE_ALTITUDE",
         "8": "ANGLE_CONVENTIONS",
-        "9": "CLEANUP_CANDIDATES_NOTE",
-        "10": "PHASE_2_VERIFY_3_STATE",
-        "11": "PHASE_3_SWEEP",
-        "12": "OUTPUT_FORMAT_FN"
+        "9": "CLEANUP_CANDIDATES_NOTE"
       },
       "version": "2.1.218"
     },
@@ -19847,8 +19756,7 @@
       "identifierMap": {
         "0": "SYSTEM_PROMPT_GIT_GUIDANCE_BLOCK_VAR_0",
         "1": "SYSTEM_PROMPT_GIT_GUIDANCE_BLOCK_VAR_1",
-        "2": "SYSTEM_PROMPT_GIT_GUIDANCE_BLOCK_VAR_2",
-        "3": "SYSTEM_PROMPT_GIT_GUIDANCE_BLOCK_VAR_3"
+        "2": "SYSTEM_PROMPT_GIT_GUIDANCE_BLOCK_VAR_2"
       },
       "version": "2.1.257"
     },
@@ -20157,7 +20065,7 @@
         0
       ],
       "identifierMap": {
-        "0": "SYSTEM_PROMPT_SAVING_SKILLS_VIA_FILE_DELIVERY_VAR_0"
+        "0": "SEND_USER_FILE_TOOL_NAME"
       },
       "version": "2.1.257"
     },
@@ -20257,21 +20165,21 @@
         0
       ],
       "identifierMap": {
-        "0": "ONE_OFF_ENABLED_FN",
+        "0": "USER_REQUEST",
         "1": "ASK_USER_QUESTION_TOOL_NAME",
-        "2": "ADDITIONAL_INFO_BLOCK",
-        "3": "REMOTE_TRIGGER_TOOL_NAME",
-        "4": "DEFAULT_GIT_REPO_URL",
-        "5": "MCP_CONNECTORS_LIST",
-        "6": "ENVIRONMENTS_LIST",
-        "7": "NEW_ENVIRONMENT_OBJECT",
-        "8": "USER_TIMEZONE",
-        "9": "NOW_LOCAL_TIME",
-        "10": "NOW_UTC_ISO",
-        "11": "IS_GITHUB_REMINDER_ENABLED",
-        "12": "IS_TRUTHY_FN",
-        "13": "CHECK_FEATURE_FLAG_FN",
-        "14": "USER_REQUEST"
+        "2": "JSON_STRINGIFY_FN",
+        "3": "INITIAL_ACTION_QUESTION",
+        "4": "SETUP_NOTES_BLOCK",
+        "5": "REMOTE_TRIGGER_TOOL_NAME",
+        "6": "DEFAULT_GIT_REPO_URL",
+        "7": "MCP_CONNECTORS_LIST",
+        "8": "ENVIRONMENTS_LIST",
+        "9": "NEW_ENVIRONMENT_OBJECT",
+        "10": "USER_TIMEZONE",
+        "11": "NOW_LOCAL_TIME",
+        "12": "NOW_UTC_ISO",
+        "13": "IS_GITHUB_REMINDER_ENABLED",
+        "14": "CHECK_FEATURE_FLAG_FN"
       },
       "version": "2.1.257"
     },
@@ -22119,8 +22027,7 @@
         "6": "SYSTEM_REMINDER_ORPHANED_AGENTS_AGGREGATE_VAR_6",
         "7": "SYSTEM_REMINDER_ORPHANED_AGENTS_AGGREGATE_VAR_7",
         "8": "SYSTEM_REMINDER_ORPHANED_AGENTS_AGGREGATE_VAR_8",
-        "9": "SYSTEM_REMINDER_ORPHANED_AGENTS_AGGREGATE_VAR_9",
-        "10": "SYSTEM_REMINDER_ORPHANED_AGENTS_AGGREGATE_VAR_10"
+        "9": "SYSTEM_REMINDER_ORPHANED_AGENTS_AGGREGATE_VAR_9"
       },
       "version": "2.1.210"
     },
@@ -22229,30 +22136,6 @@
         "3": "DATA_TASK_NOTIFICATION_COALESCED_COMPLETED_FRAME_VAR_3"
       },
       "version": "2.1.235"
-    },
-    {
-      "name": "Local command message wrapper",
-      "id": "data-local-command-wrapper",
-      "description": "Template wrapping a local slash-command's text in tags, injected as user-turn content into the model conversation.",
-      "pieces": [
-        "<${",
-        "}>${",
-        "(",
-        ".command)}</${",
-        "}>"
-      ],
-      "identifiers": [
-        0,
-        1,
-        2,
-        0
-      ],
-      "identifierMap": {
-        "0": "PROMPT_VAR_0",
-        "1": "PROMPT_VAR_1",
-        "2": "PROMPT_VAR_2"
-      },
-      "version": "2.1.206"
     },
     {
       "name": "System Prompt: Local-command caveat",
@@ -25178,48 +25061,6 @@
       "version": "2.1.257"
     },
     {
-      "name": "Tool Result: Artifact Live Doc Version",
-      "id": "tool-result-artifact-live-doc-version",
-      "description": "Artifact publish tool_result when liveDocVersion is set, using liveDocPublishVersionLine plus subscription/collab suffixes.",
-      "pieces": [
-        "${",
-        ".liveDocPublishVersionLine(",
-        ".version,",
-        ".url)}${",
-        "}${",
-        "}${",
-        "}${",
-        "}${",
-        "}${",
-        "}\n\n${",
-        "}"
-      ],
-      "identifiers": [
-        0,
-        1,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8
-      ],
-      "identifierMap": {
-        "0": "TOOL_RESULT_ARTIFACT_LIVE_DOC_VERSION_VAR_0",
-        "1": "TOOL_RESULT_ARTIFACT_LIVE_DOC_VERSION_VAR_1",
-        "2": "TOOL_RESULT_ARTIFACT_LIVE_DOC_VERSION_VAR_2",
-        "3": "TOOL_RESULT_ARTIFACT_LIVE_DOC_VERSION_VAR_3",
-        "4": "TOOL_RESULT_ARTIFACT_LIVE_DOC_VERSION_VAR_4",
-        "5": "TOOL_RESULT_ARTIFACT_LIVE_DOC_VERSION_VAR_5",
-        "6": "TOOL_RESULT_ARTIFACT_LIVE_DOC_VERSION_VAR_6",
-        "7": "TOOL_RESULT_ARTIFACT_LIVE_DOC_VERSION_VAR_7",
-        "8": "TOOL_RESULT_ARTIFACT_LIVE_DOC_VERSION_VAR_8"
-      },
-      "version": "2.1.257"
-    },
-    {
       "name": "Tool Result: Artifact Live Doc Shim",
       "id": "tool-result-artifact-live-doc-shim",
       "description": "Artifact publish tool_result for a live-doc shim publish, built by liveDocShimLine plus the shared suffix slots.",
@@ -26052,32 +25893,6 @@
       "version": "2.1.247"
     },
     {
-      "name": "Data: Auto Mode Projects Owner Ask Reply Wrapper",
-      "id": "data-auto-mode-projects-owner-ask-reply-wrapper",
-      "description": "Formats a reconstructed coordinator ask/reply pair as assistant API text when auto-mode project owner rows are folded into the transcript.",
-      "pieces": [
-        "${",
-        "(",
-        ".ask,",
-        ".reply)}\n${",
-        "(",
-        ".ask.text)}"
-      ],
-      "identifiers": [
-        0,
-        1,
-        1,
-        2,
-        1
-      ],
-      "identifierMap": {
-        "0": "DATA_AUTO_MODE_PROJECTS_OWNER_ASK_REPLY_WRAPPER_VAR_0",
-        "1": "DATA_AUTO_MODE_PROJECTS_OWNER_ASK_REPLY_WRAPPER_VAR_1",
-        "2": "DATA_AUTO_MODE_PROJECTS_OWNER_ASK_REPLY_WRAPPER_VAR_2"
-      },
-      "version": "2.1.246"
-    },
-    {
       "name": "System Reminder: Dir Sync User Branch Followed",
       "id": "system-reminder-dir-sync-user-branch-followed",
       "description": "Tells the cloud agent the checkout followed the user's branch (or detached HEAD), including any previous tip kept under a ref.",
@@ -26306,34 +26121,6 @@
       "version": "2.1.246"
     },
     {
-      "name": "Tool Result: Memory List Entries Wrapper",
-      "id": "tool-result-memory-list-entries-wrapper",
-      "description": "Wraps a successful memory-store list tool result with the store kind, entry lines, and optional continuation cursor.",
-      "pieces": [
-        "${",
-        "(",
-        ".store_kind)}\n\n${",
-        ".map(",
-        ").join(`\n`)}${",
-        "}"
-      ],
-      "identifiers": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ],
-      "identifierMap": {
-        "0": "TOOL_RESULT_MEMORY_LIST_ENTRIES_WRAPPER_VAR_0",
-        "1": "TOOL_RESULT_MEMORY_LIST_ENTRIES_WRAPPER_VAR_1",
-        "2": "TOOL_RESULT_MEMORY_LIST_ENTRIES_WRAPPER_VAR_2",
-        "3": "TOOL_RESULT_MEMORY_LIST_ENTRIES_WRAPPER_VAR_3",
-        "4": "TOOL_RESULT_MEMORY_LIST_ENTRIES_WRAPPER_VAR_4"
-      },
-      "version": "2.1.246"
-    },
-    {
       "name": "Tool Result: Memory Read Document Wrapper",
       "id": "tool-result-memory-read-document-wrapper",
       "description": "Wraps a successful memory-store read tool result with store kind, update date, version, and document content.",
@@ -26380,8 +26167,8 @@
         1
       ],
       "identifierMap": {
-        "0": "OUTPUT_STYLE_CONFIG",
-        "1": "OUTPUT_STYLE_TURN_REMINDER"
+        "0": "ESCAPE_UNTRUSTED_TEXT_FN",
+        "1": "OUTPUT_STYLE_CONFIG"
       },
       "version": "2.1.238"
     },
@@ -26645,28 +26432,6 @@
         "1": "AGENT_PROMPT_OBSERVER_FRESH_START_NOTE_VAR_1"
       },
       "version": "2.1.206"
-    },
-    {
-      "name": "Tool Result: SendMessage Inline Handoff Resumed Report",
-      "id": "tool-result-sendmessage-inline-handoff-resumed-report",
-      "description": "Prefixes a resumed agent's first report block onto the SendMessage success payload when an inline handback is present.",
-      "pieces": [
-        "${",
-        "(",
-        ")}\n${",
-        "[0].text}"
-      ],
-      "identifiers": [
-        0,
-        1,
-        2
-      ],
-      "identifierMap": {
-        "0": "TOOL_RESULT_SENDMESSAGE_INLINE_HANDOFF_RESUMED_REPORT_VAR_0",
-        "1": "TOOL_RESULT_SENDMESSAGE_INLINE_HANDOFF_RESUMED_REPORT_VAR_1",
-        "2": "TOOL_RESULT_SENDMESSAGE_INLINE_HANDOFF_RESUMED_REPORT_VAR_2"
-      },
-      "version": "2.1.246"
     },
     {
       "name": "WebFetch artifact link names a published file",
@@ -27504,91 +27269,6 @@
       "version": "2.1.246"
     },
     {
-      "name": "ReadMcpResourceDir listing tool_result",
-      "id": "tool-result-readmcpresourcedir-listing",
-      "description": "tool_result content joining the directory listing with serialized resource JSON for the ReadMcpResourceDir tool; model-facing.",
-      "pieces": [
-        "${",
-        "}\n\n${",
-        "(",
-        ")}"
-      ],
-      "identifiers": [
-        0,
-        1,
-        2
-      ],
-      "identifierMap": {
-        "0": "TOOL_RESULT_READMCPRESOURCEDIR_LISTING_VAR_0",
-        "1": "TOOL_RESULT_READMCPRESOURCEDIR_LISTING_VAR_1",
-        "2": "TOOL_RESULT_READMCPRESOURCEDIR_LISTING_VAR_2"
-      },
-      "version": "2.1.257"
-    },
-    {
-      "name": "ReadMcpResourceDir listing tool_result",
-      "id": "tool-result-readmcpresourcedir-listing",
-      "description": "tool_result content joining the directory listing with serialized resource JSON for the ReadMcpResourceDir tool; model-facing.",
-      "pieces": [
-        "${",
-        "}\n\n${",
-        "(",
-        ")}"
-      ],
-      "identifiers": [
-        0,
-        1,
-        2
-      ],
-      "identifierMap": {
-        "0": "TOOL_RESULT_READMCPRESOURCEDIR_LISTING_VAR_0",
-        "1": "TOOL_RESULT_READMCPRESOURCEDIR_LISTING_VAR_1",
-        "2": "TOOL_RESULT_READMCPRESOURCEDIR_LISTING_VAR_2"
-      },
-      "version": "2.1.257"
-    },
-    {
-      "name": "ReadMcpResourceDir listing tool_result",
-      "id": "tool-result-readmcpresourcedir-listing",
-      "description": "tool_result content joining the directory listing with serialized resource JSON for the ReadMcpResourceDir tool; model-facing.",
-      "pieces": [
-        "${",
-        "}\n\n${",
-        "(",
-        ")}"
-      ],
-      "identifiers": [
-        0,
-        1,
-        2
-      ],
-      "identifierMap": {
-        "0": "TOOL_RESULT_READMCPRESOURCEDIR_LISTING_VAR_0",
-        "1": "TOOL_RESULT_READMCPRESOURCEDIR_LISTING_VAR_1",
-        "2": "TOOL_RESULT_READMCPRESOURCEDIR_LISTING_VAR_2"
-      },
-      "version": "2.1.257"
-    },
-    {
-      "name": "ReadMcpResourceDir listing tool_result",
-      "id": "tool-result-readmcpresourcedir-listing",
-      "description": "tool_result content joining the directory listing with serialized resource JSON for the ReadMcpResourceDir tool; model-facing.",
-      "pieces": [
-        "${",
-        "}\n\n${",
-        "()}"
-      ],
-      "identifiers": [
-        0,
-        1
-      ],
-      "identifierMap": {
-        "0": "TOOL_RESULT_READMCPRESOURCEDIR_LISTING_VAR_0",
-        "1": "TOOL_RESULT_READMCPRESOURCEDIR_LISTING_VAR_1"
-      },
-      "version": "2.1.257"
-    },
-    {
       "name": "Agent prompt: Eval judge image focus intro",
       "id": "agent-prompt-eval-judge-image-focus-intro",
       "description": "Prefix of the eval judge's user message when the graded agent output is an attached image rather than text",
@@ -27865,28 +27545,6 @@
       "version": "2.1.257"
     },
     {
-      "name": "Data: Auto Mode Projects Owner Comment Prefix Wrapper",
-      "id": "data-auto-mode-projects-owner-comment-prefix-wrapper",
-      "description": "Prefixes a harness line onto an owner-row comment body when folding auto-mode project comments into user API messages.",
-      "pieces": [
-        "${",
-        "}\n${",
-        "(",
-        ".text)}"
-      ],
-      "identifiers": [
-        0,
-        1,
-        2
-      ],
-      "identifierMap": {
-        "0": "DATA_AUTO_MODE_PROJECTS_OWNER_COMMENT_PREFIX_WRAPPER_VAR_0",
-        "1": "DATA_AUTO_MODE_PROJECTS_OWNER_COMMENT_PREFIX_WRAPPER_VAR_1",
-        "2": "DATA_AUTO_MODE_PROJECTS_OWNER_COMMENT_PREFIX_WRAPPER_VAR_2"
-      },
-      "version": "2.1.246"
-    },
-    {
       "name": "Tool Description: Agent usage notes",
       "id": "tool-description-agent-usage-notes",
       "description": "Agent tool usage notes — always include a short description, the agent returns a single result not visible to the user, and guidance on stateless invocation and trusting agent output",
@@ -27956,28 +27614,6 @@
         "15": "TOOL_DESCRIPTION_AGENT_USAGE_NOTES_VAR_15"
       },
       "version": "2.1.257"
-    },
-    {
-      "name": "Tool result: Artifact asset list composition",
-      "id": "tool-result-artifact-asset-list-composition",
-      "description": "Line-joining template that assembles the list_assets tool result from its usage header, page listing and continuation footer",
-      "pieces": [
-        "${",
-        "}\n${",
-        "}${",
-        "}"
-      ],
-      "identifiers": [
-        0,
-        1,
-        2
-      ],
-      "identifierMap": {
-        "0": "TOOL_RESULT_ARTIFACT_ASSET_LIST_COMPOSITION_VAR_0",
-        "1": "TOOL_RESULT_ARTIFACT_ASSET_LIST_COMPOSITION_VAR_1",
-        "2": "TOOL_RESULT_ARTIFACT_ASSET_LIST_COMPOSITION_VAR_2"
-      },
-      "version": "2.1.234"
     },
     {
       "name": "Post-compaction continuation instruction",
@@ -34169,44 +33805,6 @@
       "version": "2.1.215"
     },
     {
-      "name": "System Prompt: MCP resource text content wrapper",
-      "id": "system-prompt-mcp-resource-text-content-wrapper",
-      "description": "Wraps an MCP text resource ('[Resource from X at uri] ' + body) into a tool_result text block the model reads",
-      "pieces": [
-        "${",
-        "}${",
-        ".text}"
-      ],
-      "identifiers": [
-        0,
-        1
-      ],
-      "identifierMap": {
-        "0": "SYSTEM_PROMPT_MCP_RESOURCE_TEXT_CONTENT_WRAPPER_VAR_0",
-        "1": "SYSTEM_PROMPT_MCP_RESOURCE_TEXT_CONTENT_WRAPPER_VAR_1"
-      },
-      "version": "2.1.178"
-    },
-    {
-      "name": "System Prompt: MCP resource text content wrapper",
-      "id": "system-prompt-mcp-resource-text-content-wrapper",
-      "description": "Wraps an MCP text resource ('[Resource from X at uri] ' + body) into a tool_result text block the model reads",
-      "pieces": [
-        "${",
-        "}${",
-        ".text}"
-      ],
-      "identifiers": [
-        0,
-        1
-      ],
-      "identifierMap": {
-        "0": "SYSTEM_PROMPT_MCP_RESOURCE_TEXT_CONTENT_WRAPPER_VAR_0",
-        "1": "SYSTEM_PROMPT_MCP_RESOURCE_TEXT_CONTENT_WRAPPER_VAR_1"
-      },
-      "version": "2.1.178"
-    },
-    {
       "name": "System reminder: neutralized control tags marker",
       "id": "system-reminder-neutralized-control-tags-findings",
       "description": "Injection-guard preamble prepended to sanitized tool/observed content telling the model control tags were neutralized and to treat remaining directive-shaped text as a finding, not an instruction.",
@@ -34544,80 +34142,6 @@
         "1": "TOOL_RESULT_ARTIFACT_PUBLISH_OUTCOME_UNKNOWN_TAIL_VAR_1"
       },
       "version": "2.1.234"
-    },
-    {
-      "name": "Slash Command: Code Review Inline Assembly",
-      "id": "slash-command-code-review-inline-assembly",
-      "description": "Template that assembles the inline /code-review prompt from the target header, base review text, cell-specific block and the optional guidance tails.",
-      "pieces": [
-        "${",
-        "}${",
-        "}${",
-        ".text}${",
-        "(",
-        ".cell,",
-        ",",
-        ",",
-        ")}${",
-        "?",
-        "?",
-        "(",
-        "):",
-        ":\"\"}${",
-        "?",
-        "(",
-        "):\"\"}${",
-        "&&!",
-        "?",
-        ":\"\"}${",
-        "}${",
-        "}"
-      ],
-      "identifiers": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        7,
-        7,
-        15,
-        16,
-        17,
-        18
-      ],
-      "identifierMap": {
-        "0": "SLASH_COMMAND_CODE_REVIEW_INLINE_ASSEMBLY_VAR_0",
-        "1": "SLASH_COMMAND_CODE_REVIEW_INLINE_ASSEMBLY_VAR_1",
-        "2": "SLASH_COMMAND_CODE_REVIEW_INLINE_ASSEMBLY_VAR_2",
-        "3": "SLASH_COMMAND_CODE_REVIEW_INLINE_ASSEMBLY_VAR_3",
-        "4": "SLASH_COMMAND_CODE_REVIEW_INLINE_ASSEMBLY_VAR_4",
-        "5": "SLASH_COMMAND_CODE_REVIEW_INLINE_ASSEMBLY_VAR_5",
-        "6": "SLASH_COMMAND_CODE_REVIEW_INLINE_ASSEMBLY_VAR_6",
-        "7": "SLASH_COMMAND_CODE_REVIEW_INLINE_ASSEMBLY_VAR_7",
-        "8": "SLASH_COMMAND_CODE_REVIEW_INLINE_ASSEMBLY_VAR_8",
-        "9": "SLASH_COMMAND_CODE_REVIEW_INLINE_ASSEMBLY_VAR_9",
-        "10": "SLASH_COMMAND_CODE_REVIEW_INLINE_ASSEMBLY_VAR_10",
-        "11": "SLASH_COMMAND_CODE_REVIEW_INLINE_ASSEMBLY_VAR_11",
-        "12": "SLASH_COMMAND_CODE_REVIEW_INLINE_ASSEMBLY_VAR_12",
-        "13": "SLASH_COMMAND_CODE_REVIEW_INLINE_ASSEMBLY_VAR_13",
-        "14": "SLASH_COMMAND_CODE_REVIEW_INLINE_ASSEMBLY_VAR_14",
-        "15": "SLASH_COMMAND_CODE_REVIEW_INLINE_ASSEMBLY_VAR_15",
-        "16": "SLASH_COMMAND_CODE_REVIEW_INLINE_ASSEMBLY_VAR_16",
-        "17": "SLASH_COMMAND_CODE_REVIEW_INLINE_ASSEMBLY_VAR_17",
-        "18": "SLASH_COMMAND_CODE_REVIEW_INLINE_ASSEMBLY_VAR_18"
-      },
-      "version": "2.1.257"
     },
     {
       "name": "Data: Artifact MCP connector guidance",
@@ -39878,8 +39402,7 @@
         0
       ],
       "identifierMap": {
-        "0": "TOOL_RESULT_ARTIFACT_PUBLISH_PRIVATE_GALLERY_HINT_VAR_0",
-        "1": "TOOL_RESULT_ARTIFACT_PUBLISH_PRIVATE_GALLERY_HINT_VAR_1"
+        "0": "TOOL_RESULT_ARTIFACT_PUBLISH_PRIVATE_GALLERY_HINT_VAR_0"
       },
       "version": "2.1.251"
     },
@@ -45017,8 +44540,7 @@
       ],
       "identifierMap": {
         "0": "TOOL_RESULT_ARTIFACT_DB_BATCH_WRITE_ASK_RULE_VAR_0",
-        "1": "TOOL_RESULT_ARTIFACT_DB_BATCH_WRITE_ASK_RULE_VAR_1",
-        "2": "TOOL_RESULT_ARTIFACT_DB_BATCH_WRITE_ASK_RULE_VAR_2"
+        "1": "TOOL_RESULT_ARTIFACT_DB_BATCH_WRITE_ASK_RULE_VAR_1"
       },
       "version": "2.1.257"
     },
@@ -45881,8 +45403,7 @@
         "0": "TOOL_RESULT_BASH_TIMED_OUT_BACKGROUNDED_VAR_0",
         "1": "TOOL_RESULT_BASH_TIMED_OUT_BACKGROUNDED_VAR_1",
         "2": "TOOL_RESULT_BASH_TIMED_OUT_BACKGROUNDED_VAR_2",
-        "3": "TOOL_RESULT_BASH_TIMED_OUT_BACKGROUNDED_VAR_3",
-        "4": "TOOL_RESULT_BASH_TIMED_OUT_BACKGROUNDED_VAR_4"
+        "3": "TOOL_RESULT_BASH_TIMED_OUT_BACKGROUNDED_VAR_3"
       },
       "version": "2.1.227"
     },
@@ -49781,9 +49302,7 @@
         "Deleting Artifacts isn't available in this cloud session right now, so nothing was deleted; do not retry here. If the Artifact is the user's own, they can delete it themselves on claude.ai from the Artifact's own menu, or with `/artifacts` in Claude Code on their own machine (press d on the selected one)."
       ],
       "identifiers": [],
-      "identifierMap": {
-        "0": "TOOL_RESULT_ARTIFACT_DELETE_UNAVAILABLE_CLOUD_SESSION_2_VAR_0"
-      },
+      "identifierMap": {},
       "version": "2.1.251"
     },
     {
@@ -53076,11 +52595,7 @@
         0
       ],
       "identifierMap": {
-        "0": "WORKFLOW_INVOCATION_QUALIFIER",
-        "1": "WORKFLOW_RESEND_NOTE",
-        "2": "WORKFLOW_ISOLATION_TYPE",
-        "3": "WORKFLOW_WORKTREE_NOTE",
-        "4": "WORKFLOW_GROUP_GLYPH"
+        "0": "AGENT_TOOL_NAME"
       },
       "version": "2.1.251"
     },
@@ -67217,8 +66732,8 @@
         2
       ],
       "identifierMap": {
-        "0": "ATTACHMENT_OBJECT",
-        "1": "READ_TOOL_OBJECT",
+        "0": "ESCAPE_UNTRUSTED_TEXT_FN",
+        "1": "ATTACHMENT_OBJECT",
         "2": "READ_TOOL_NAME"
       },
       "version": "2.1.239"
@@ -67421,9 +66936,9 @@
         3
       ],
       "identifierMap": {
-        "0": "ATTACHMENT_OBJECT",
-        "1": "MAX_LINES_CONSTANT",
-        "2": "READ_TOOL_OBJECT",
+        "0": "ESCAPE_UNTRUSTED_TEXT_FN",
+        "1": "ATTACHMENT_OBJECT",
+        "2": "MAX_LINES_CONSTANT",
         "3": "READ_TOOL_NAME"
       },
       "version": "2.1.239"
@@ -71168,12 +70683,7 @@
         "Plan mode is active. The user indicated that they do not want you to execute yet -- you MUST NOT make any edits (with the exception of the plan file mentioned below), run any non-readonly tools (including changing configs or making commits), or otherwise make any changes to the system. This supercedes any other instructions you have received."
       ],
       "identifiers": [],
-      "identifierMap": {
-        "0": "SYSTEM_REMINDER",
-        "1": "EDIT_TOOL",
-        "2": "WRITE_TOOL",
-        "3": "ASK_USER_QUESTION_TOOL_NAME"
-      },
+      "identifierMap": {},
       "version": "2.1.178"
     },
     {
@@ -85912,8 +85422,7 @@
         0
       ],
       "identifierMap": {
-        "0": "TOOL_SEARCH_TOOL_NAME",
-        "1": "ADDED_DEFERRED_TOOL_LINES"
+        "0": "TOOL_SEARCH_TOOL_NAME"
       },
       "version": "2.1.257"
     },
@@ -90752,7 +90261,7 @@
       ],
       "identifierMap": {
         "0": "ATTACHMENT_OBJECT",
-        "1": "TRUNCATED_CONTENT",
+        "1": "ESCAPE_UNTRUSTED_TEXT_FN",
         "2": "TRUNCATE_CONTENT_FN"
       },
       "version": "2.1.234"
@@ -99478,9 +98987,7 @@
         "When the user wants to schedule a recurring cloud agent, set up automated tasks, create a cron job for Claude Code, or manage their scheduled agents/routines. Also use when the user wants a one-time scheduled run (\"run this once at 3pm\", \"remind me to check X tomorrow\")."
       ],
       "identifiers": [],
-      "identifierMap": {
-        "0": "SLASH_COMMAND_SCHEDULE_WHEN_TO_USE_VAR_0"
-      },
+      "identifierMap": {},
       "version": "2.1.246"
     },
     {
@@ -101264,8 +100771,7 @@
         0
       ],
       "identifierMap": {
-        "0": "ICONS_OBJECT",
-        "1": "INSIGHTS_INSTRUCTIONS"
+        "0": "ICONS_OBJECT"
       },
       "version": "2.1.178"
     },
@@ -101385,18 +100891,18 @@
         3
       ],
       "identifierMap": {
-        "0": "AGENT_TOOL_NAME",
-        "1": "SENDMESSAGE_TOOL_NAME",
-        "2": "TASKSTOP_TOOL_NAME",
-        "3": "WORKFLOW_CONDITIONAL_TOOL_NOTE",
-        "4": "LISTAGENTS_TOOL_NAME",
-        "5": "WORKER_TOOLS_INTRO_TEXT",
+        "0": "IS_COMMS_TOOL_CHANNEL_FLAG",
+        "1": "COMMS_TOOL_CHANNEL_NOTE",
+        "2": "AGENT_TOOL_NAME",
+        "3": "SENDMESSAGE_TOOL_NAME",
+        "4": "TASKSTOP_TOOL_NAME",
+        "5": "WORKFLOW_CONDITIONAL_TOOL_NOTE",
         "6": "SKILL_TOOL_CONDITIONAL_NOTE",
         "7": "CROSS_SESSION_PEERS_NOTE",
-        "8": "LAUNCH_ANNOUNCE_NOTE",
-        "9": "SYSTEM_REMINDER_OPENING_TEXT",
-        "10": "WORKER_TOOLS_INTRO_TEXT",
-        "11": "SYSTEM_PROMPT_COORDINATOR_MODE_VAR_11"
+        "8": "WORKER_MODEL_PARAMETER_NOTE",
+        "9": "COMMS_TOOL_LAUNCH_ANNOUNCE_NOTE",
+        "10": "SYSTEM_REMINDER_OPENING_TEXT",
+        "11": "WORKER_TOOLS_INTRO_TEXT"
       },
       "version": "2.1.251"
     },
@@ -101695,19 +101201,7 @@
         "You are reviewing for **precision** at medium effort: every finding you surface\nshould be one a maintainer would act on."
       ],
       "identifiers": [],
-      "identifierMap": {
-        "0": "PHASE_0_GATHER_DIFF",
-        "1": "AGENT_TOOL_NAME",
-        "2": "ANGLES_LINE_BY_LINE",
-        "3": "ANGLE_REUSE",
-        "4": "ANGLE_SIMPLIFICATION",
-        "5": "ANGLE_EFFICIENCY",
-        "6": "ANGLE_ALTITUDE",
-        "7": "ANGLE_CONVENTIONS",
-        "8": "CLEANUP_CANDIDATES_NOTE",
-        "9": "PHASE_2_VERIFY_3_STATE",
-        "10": "OUTPUT_FORMAT_FN"
-      },
+      "identifierMap": {},
       "version": "2.1.218"
     },
     {
@@ -101722,13 +101216,7 @@
         0
       ],
       "identifierMap": {
-        "0": "EFFORT_LEVEL",
-        "1": "PHASE_0_GATHER_DIFF",
-        "2": "AGENT_TOOL_NAME",
-        "3": "HIGH_EFFORT_ANGLES",
-        "4": "PHASE_2_VERIFY_3_STATE",
-        "5": "PHASE_3_SWEEP",
-        "6": "OUTPUT_FORMAT_FN"
+        "0": "EFFORT_LEVEL"
       },
       "version": "2.1.218"
     },
@@ -101740,19 +101228,7 @@
         "You are reviewing for **recall** at high effort: catch every real bug a careful\nreviewer would catch in one sitting. At this level, catching real bugs matters\nmore than avoiding false positives. Err on the side of surfacing."
       ],
       "identifiers": [],
-      "identifierMap": {
-        "0": "PHASE_0_GATHER_DIFF",
-        "1": "AGENT_TOOL_NAME",
-        "2": "ANGLES_LINE_BY_LINE",
-        "3": "ANGLE_REUSE",
-        "4": "ANGLE_SIMPLIFICATION",
-        "5": "ANGLE_EFFICIENCY",
-        "6": "ANGLE_ALTITUDE",
-        "7": "ANGLE_CONVENTIONS",
-        "8": "CLEANUP_CANDIDATES_NOTE",
-        "9": "PHASE_2_VERIFY_RECALL_BIASED",
-        "10": "OUTPUT_FORMAT_FN"
-      },
+      "identifierMap": {},
       "version": "2.1.218"
     },
     {
@@ -101763,19 +101239,7 @@
         "You are reviewing for **recall** at high effort: catch every real bug a careful\nreviewer would catch in one sitting. At this level, catching real bugs matters\nmore than avoiding false positives. Err on the side of surfacing."
       ],
       "identifiers": [],
-      "identifierMap": {
-        "0": "PHASE_0_GATHER_DIFF",
-        "1": "AGENT_TOOL_NAME",
-        "2": "ANGLES_LINE_BY_LINE",
-        "3": "ANGLE_REUSE",
-        "4": "ANGLE_SIMPLIFICATION",
-        "5": "ANGLE_EFFICIENCY",
-        "6": "ANGLE_ALTITUDE",
-        "7": "ANGLE_CONVENTIONS",
-        "8": "CLEANUP_CANDIDATES_NOTE",
-        "9": "PHASE_2_VERIFY_RECALL_BIASED",
-        "10": "OUTPUT_FORMAT_FN"
-      },
+      "identifierMap": {},
       "version": "2.1.218"
     },
     {
