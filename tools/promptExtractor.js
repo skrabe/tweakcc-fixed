@@ -551,6 +551,17 @@ const NEW_PROMPT_ASSIGNMENTS = [
       6: 'TOOL_CONTEXT',
     },
   },
+  // 2.1.257 — the region-anchor row of the artifact comment list. Its text is a
+  // near-copy of the path-anchor row, so fuzzy carryover binds it to that
+  // sibling's id and mints a positional `-2` suffix; name it for what it is.
+  {
+    matcher: t =>
+      t.includes('over part of which the commenter drew a rectangle'),
+    name: 'Tool Result: Artifact Comment Anchor Region Data Warning',
+    id: 'tool-result-artifact-comments-anchor-region-data-warning',
+    description:
+      'Marks anchor-region rows (a rectangle the commenter drew over part of an element) in artifact comment results as viewer-influenced data rather than instructions.',
+  },
   // 2.1.211 — fuzzy-carryover misses. Both prompts are still in the binary with
   // a bound override; Anthropic only edited their OPENING (inside FUZZY_PREFIX's
   // first 100 chars), so the carried name dropped and the classification cache

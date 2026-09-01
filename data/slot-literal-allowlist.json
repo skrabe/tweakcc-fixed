@@ -3,7 +3,7 @@
     "desc": "States the exact object a permission callback must return, which is what the model is told when it returns something else.",
     "id": "data-permission-callback-expected-return-shape",
     "label": "DATA_PERMISSION_PROMPT_TOOL_INVALID_DENY_VAR_0",
-    "name": "Data: Permission callback \u2014 expected return shape",
+    "name": "Data: Permission callback — expected return shape",
     "promptId": "data-permission-prompt-tool-invalid-deny",
     "reason": "states the exact return shape a permission callback must produce",
     "text": "Expected {behavior: 'allow', updatedInput?: object} or {behavior: 'deny', message: string}.",
@@ -13,7 +13,7 @@
     "desc": "Documents the id field returned by TaskList and the tools that consume it, TaskGet and TaskUpdate.",
     "id": "tool-description-task-list-id-field",
     "label": "TOOL_DESCRIPTION_TASK_LIST_VAR_1",
-    "name": "Tool Description: TaskList \u2014 the id field",
+    "name": "Tool Description: TaskList — the id field",
     "promptId": "tool-description-task-list",
     "reason": "documents the id field and the tools that consume it",
     "text": "- **id**: Task identifier (use with TaskGet, TaskUpdate)",
@@ -47,7 +47,7 @@
     "verdict": "catalogue"
   },
   "07bc35aadc61f6aa": {
-    "desc": "Noun phrase naming the read target inside `Reading or listing ${Nn} needs a consent surface\u2026` @13574873. The constraint is the surrounding sentence.",
+    "desc": "Noun phrase naming the read target inside `Reading or listing ${Nn} needs a consent surface…` @13574873. The constraint is the surrounding sentence.",
     "text": "files that co-writers may have published to this artifact",
     "verdict": "glue"
   },
@@ -57,7 +57,7 @@
     "label": "FORMATTED_NOTIFICATIONS",
     "name": "System Reminder: No notifications remain queued",
     "promptId": "system-reminder-queued-notifications-delivery",
-    "reason": "states the queue is empty \u2014 a fact the model reports on",
+    "reason": "states the queue is empty — a fact the model reports on",
     "text": "\n\n0 notifications remain queued.",
     "verdict": "catalogue"
   },
@@ -65,7 +65,7 @@
     "desc": "Warns that a token set in a shell profile or a Claude Code settings file keeps being used by new sessions until it is removed there.",
     "id": "data-login-success-env-token-shell-profile-warning",
     "label": "DATA_LOGIN_SUCCESS_ENV_TOKEN_WARNING_VAR_0",
-    "name": "Data: Login success \u2014 a shell-profile token overrides the new one",
+    "name": "Data: Login success — a shell-profile token overrides the new one",
     "promptId": "data-login-success-env-token-warning",
     "reason": "explains that a shell-profile token overrides the new one and must be removed",
     "text": "but if that variable is set in your shell profile or a Claude Code settings file, new `claude` sessions will keep using the old token until you remove it there.",
@@ -116,7 +116,7 @@
     "desc": "The reason clause explaining why a peer could not be verified before sending: the account session list could not be checked.",
     "id": "tool-result-send-message-account-list-unchecked-reason",
     "label": "TOOL_RESULT_SEND_MESSAGE_UNVERIFIED_PEER_APPROVAL_VAR_1",
-    "name": "Tool Result: SendMessage \u2014 account session list could not be checked",
+    "name": "Tool Result: SendMessage — account session list could not be checked",
     "promptId": "tool-result-send-message-unverified-peer-approval",
     "reason": "the other reason the peer could not be verified",
     "text": "the account session list could not be checked",
@@ -127,7 +127,7 @@
     "desc": "Why the live artifact source could not be handed over: the content host could not be reached from this network (read_egress_blocked).",
     "id": "tool-result-artifact-conflict-host-unreachable-from-network",
     "label": "TOOL_RESULT_ARTIFACT_CONFLICT_SOURCE_NOT_HANDED_OVER_LEAD_VAR_0",
-    "name": "Tool Result: Artifact conflict \u2014 content host unreachable from this network",
+    "name": "Tool Result: Artifact conflict — content host unreachable from this network",
     "promptId": "tool-result-artifact-conflict-source-not-handed-over-lead",
     "reason": "names the network-egress failure the model must not retry around by resending old content",
     "text": "the content host could not be reached from this network"
@@ -158,10 +158,10 @@
   },
   "1c0d81e77fda581d": {
     "verdict": "catalogue",
-    "desc": "Consequence clause on the publish-upload permission-ask: other files already published on the artifact stay. behavior:ask \u2014 if the user declines, this message is the tool_result.",
+    "desc": "Consequence clause on the publish-upload permission-ask: other files already published on the artifact stay. behavior:ask — if the user declines, this message is the tool_result.",
     "id": "tool-result-artifact-publish-other-published-files-stay",
     "label": "TOOL_RESULT_ARTIFACT_PUBLISH_UPLOAD_CONSENT_ASK_VAR_4",
-    "name": "Tool Result: Artifact publish \u2014 its other published files stay",
+    "name": "Tool Result: Artifact publish — its other published files stay",
     "promptId": "tool-result-artifact-publish-upload-consent-ask",
     "reason": "states that a declined or partial publish leaves the artifact's other files in place",
     "text": " (its other published files stay)"
@@ -177,7 +177,7 @@
     "desc": "The Get-Content/ConvertFrom-Json equivalent offered on Windows for reading an individual notebook cell whose outputs were too large to return.",
     "id": "tool-result-notebook-outputs-too-large-powershell-recovery",
     "label": "TOOL_RESULT_NOTEBOOK_OUTPUTS_TOO_LARGE_VAR_0",
-    "name": "Tool Result: Notebook outputs too large \u2014 PowerShell recovery command",
+    "name": "Tool Result: Notebook outputs too large — PowerShell recovery command",
     "promptId": "tool-result-notebook-outputs-too-large",
     "reason": "the PowerShell recovery command, same purpose",
     "text": " with: Get-Content <notebook_path> | ConvertFrom-Json | Select-Object -ExpandProperty cells | Select-Object -Index ",
@@ -194,10 +194,10 @@
     "desc": "Explains that the returned next_cursor continues with events older than the current page, which is what makes paging through a run log correct.",
     "id": "tool-result-routine-run-log-next-cursor-note",
     "label": "TOOL_RESULT_ROUTINE_RUN_LOG_EVENT_TOO_LARGE_VAR_1",
-    "name": "Tool Result: Routine run log \u2014 what next_cursor continues with",
+    "name": "Tool Result: Routine run log — what next_cursor continues with",
     "promptId": "tool-result-routine-run-log-event-too-large",
     "reason": "explains what next_cursor continues with",
-    "text": " \u2014 next_cursor continues with events older than this page",
+    "text": " — next_cursor continues with events older than this page",
     "verdict": "catalogue"
   },
   "2c1bb6d327328bd5": {
@@ -224,7 +224,7 @@
     "desc": "Remedy interpolated into the cloud-session local-changes bundle-failed tool result: start from GitHub with --ref and file sync off, then claude --cloud again.",
     "id": "tool-result-cloud-session-pass-ref-github-file-sync-off",
     "label": "TOOL_RESULT_CLOUD_SESSION_LOCAL_CHANGES_BUNDLE_FAILED_VAR_2",
-    "name": "Tool Result: Cloud session \u2014 pass --ref to start from GitHub with file sync off",
+    "name": "Tool Result: Cloud session — pass --ref to start from GitHub with file sync off",
     "promptId": "tool-result-cloud-session-local-changes-bundle-failed",
     "reason": "names the exact flags the model must use to start from GitHub instead",
     "text": ", or pass --ref <branch> to start from GitHub as it is there, with file sync off; then run claude --cloud again."
@@ -243,9 +243,9 @@
     "desc": "Warns that the existing page's share status could not be confirmed, which is what makes the publish consent decision uncertain.",
     "id": "tool-result-artifact-publish-share-status-unconfirmed",
     "label": "TOOL_RESULT_ARTIFACT_PUBLISH_COWORK_USER_APPROVAL_REQUIRED_VAR_0",
-    "name": "Tool Result: Artifact publish \u2014 share status unconfirmed",
+    "name": "Tool Result: Artifact publish — share status unconfirmed",
     "promptId": "tool-result-artifact-publish-cowork-user-approval-required",
-    "reason": "states that share status is unconfirmed \u2014 affects the consent decision",
+    "reason": "states that share status is unconfirmed — affects the consent decision",
     "text": "; its share status could not be confirmed",
     "verdict": "catalogue"
   },
@@ -254,7 +254,7 @@
     "desc": "Supporting-files HTTP-refused outcome when debris is present: this publish didn't finish, so the model must not treat the artifact as updated.",
     "id": "tool-result-artifact-publish-supporting-files-didnt-finish",
     "label": "TOOL_RESULT_ARTIFACT_PUBLISH_SUPPORTING_FILES_HTTP_REFUSED_VAR_2",
-    "name": "Tool Result: Artifact publish supporting files \u2014 this publish didn't finish",
+    "name": "Tool Result: Artifact publish supporting files — this publish didn't finish",
     "promptId": "tool-result-artifact-publish-supporting-files-http-refused",
     "reason": "states the publish did not complete",
     "text": " This publish didn't finish."
@@ -274,7 +274,7 @@
     "promptId": "tool-result-artifact-read-db-plan-mode-user-approval-required",
     "text": "saves collaborator-written rows as JSON files at ",
     "verdict": "glue",
-    "why": "Second quasi of the SAME template literal as fd5e3e7c94cbb9e8 \u2014 the false branch of At is one node, `saves collaborator-written rows as JSON files at ${} rather than into the conversation`, and the gate reports its two quasis separately. The template is catalogued once as tool-result-artifact-read-db-out-dir-consequence; a second catalogue entry for the other quasi mints an id no extraction can produce."
+    "why": "Second quasi of the SAME template literal as fd5e3e7c94cbb9e8 — the false branch of At is one node, `saves collaborator-written rows as JSON files at ${} rather than into the conversation`, and the gate reports its two quasis separately. The template is catalogued once as tool-result-artifact-read-db-out-dir-consequence; a second catalogue entry for the other quasi mints an id no extraction can produce."
   },
   "3efd56ec20b042f7": {
     "label": "TOOL_DESCRIPTION_EDIT_CONCISE_VAR_1",
@@ -307,7 +307,7 @@
     "desc": "Why the live artifact source could not be handed over: the content host did not return it (read_failed).",
     "id": "tool-result-artifact-conflict-host-did-not-return",
     "label": "TOOL_RESULT_ARTIFACT_CONFLICT_SOURCE_NOT_HANDED_OVER_LEAD_VAR_0",
-    "name": "Tool Result: Artifact conflict \u2014 content host did not return it",
+    "name": "Tool Result: Artifact conflict — content host did not return it",
     "promptId": "tool-result-artifact-conflict-source-not-handed-over-lead",
     "reason": "names the host-miss failure the model must re-read rather than resend",
     "text": "the content host did not return it"
@@ -323,7 +323,7 @@
     "desc": "Single-file branch of the call-contract instruction in data-artifact-mcp-call-contract-guidance: tells the model to Read the extracted mcp.d.ts before writing any code that calls the `mcp` capability. The two-file branch is the sibling arm of the same ternary at cli.js@21220179.",
     "id": "data-artifact-mcp-call-contract-read-single-definition-file",
     "name": "Artifact mcp call contract: read the single definition file",
-    "text": "` before writing any code that calls the `mcp` capability \u2014 it is",
+    "text": "` before writing any code that calls the `mcp` capability — it is",
     "verdict": "catalogue"
   },
   "4ce5d58abe2b2202": {
@@ -344,7 +344,7 @@
     "label": "SYSTEM_REMINDER_MEMORY_PROJECT_SWITCH_STALE_CONTEXT_CAVEAT_VAR_1",
     "promptId": "system-reminder-memory-project-switch-stale-context-caveat",
     "reason": "joiner before an interpolated timestamp",
-    "text": " \u2014 most recently ",
+    "text": " — most recently ",
     "verdict": "glue"
   },
   "4e477c7fd52fc3b1": {
@@ -368,7 +368,7 @@
     "desc": "The Explore agent's instruction for searching file contents with regex, in the variant that routes `grep` through the Bash tool rather than naming a dedicated tool.",
     "id": "agent-prompt-explore-grep-via-bash-line",
     "label": "GREP_TOOL_NAME",
-    "name": "Agent Prompt: Explore \u2014 content search tool line",
+    "name": "Agent Prompt: Explore — content search tool line",
     "promptId": "agent-prompt-explore",
     "reason": "half of the Grep instruction line",
     "text": "- Use `grep` via ",
@@ -376,7 +376,7 @@
   },
   "5305af285a8dff02": {
     "desc": "Closing tail of the artifact read header `[Artifact ${slug}${Eei}` (Eei @3045433). Labels which version the payload is; the header it closes is tool-result-artifact-read-summary-header.",
-    "text": " \u2014 live version; raw HTML follows]",
+    "text": " — live version; raw HTML follows]",
     "verdict": "glue"
   },
   "5402364cdc66287f": {
@@ -416,7 +416,7 @@
     "desc": "The Explore agent's instruction for broad file pattern matching, in the variant that routes `find` through the Bash tool rather than naming a dedicated tool.",
     "id": "agent-prompt-explore-glob-via-bash-line",
     "label": "GLOB_TOOL_NAME",
-    "name": "Agent Prompt: Explore \u2014 file pattern matching tool line",
+    "name": "Agent Prompt: Explore — file pattern matching tool line",
     "promptId": "agent-prompt-explore",
     "reason": "tail of the same Glob instruction line",
     "text": " for broad file pattern matching",
@@ -441,7 +441,7 @@
     "desc": "Supporting-files HTTP-refused outcome when no slug was reserved: nothing was published.",
     "id": "tool-result-artifact-publish-supporting-files-nothing-published",
     "label": "TOOL_RESULT_ARTIFACT_PUBLISH_SUPPORTING_FILES_HTTP_REFUSED_VAR_2",
-    "name": "Tool Result: Artifact publish supporting files \u2014 nothing was published",
+    "name": "Tool Result: Artifact publish supporting files — nothing was published",
     "promptId": "tool-result-artifact-publish-supporting-files-http-refused",
     "reason": "states that the artifact was not created",
     "text": " Nothing was published."
@@ -461,7 +461,7 @@
     "desc": "Why the live artifact source could not be handed over: reading it timed out (read_timeout).",
     "id": "tool-result-artifact-conflict-host-read-timeout",
     "label": "TOOL_RESULT_ARTIFACT_CONFLICT_SOURCE_NOT_HANDED_OVER_LEAD_VAR_0",
-    "name": "Tool Result: Artifact conflict \u2014 reading the content host timed out",
+    "name": "Tool Result: Artifact conflict — reading the content host timed out",
     "promptId": "tool-result-artifact-conflict-source-not-handed-over-lead",
     "reason": "names the timeout the model must re-read rather than resend",
     "text": "reading it timed out"
@@ -470,8 +470,8 @@
     "desc": "Clause stating that the session will not be woken on republish or on a comment sent to Claude when the durable wake subscription did not register.",
     "id": "data-task-notification-artifact-durable-wake-not-woken-condition",
     "label": "DATA_TASK_NOTIFICATION_ARTIFACT_DURABLE_WAKE_NOT_REGISTERED_VAR_1",
-    "name": "Data: Artifact Durable Wake \u2014 Not-Woken Condition",
-    "note": "Whole template node `This session will NOT be woken when ${cond?\"it is republished or a comment on it is sent to Claude\":\"it is republished\"}` \u2014 a constraint the model must not contradict, delivered next to \"do not claim to be subscribed to it meanwhile\". Branch text at c4dcff2887bcf116 is glue.",
+    "name": "Data: Artifact Durable Wake — Not-Woken Condition",
+    "note": "Whole template node `This session will NOT be woken when ${cond?\"it is republished or a comment on it is sent to Claude\":\"it is republished\"}` — a constraint the model must not contradict, delivered next to \"do not claim to be subscribed to it meanwhile\". Branch text at c4dcff2887bcf116 is glue.",
     "promptId": "data-task-notification-artifact-durable-wake-not-registered",
     "text": "This session will NOT be woken when ",
     "verdict": "catalogue"
@@ -512,7 +512,7 @@
     "desc": "The example request the statusline-setup agent is shown, asking it to build a statusLine from the shell PS1 configuration.",
     "id": "tool-description-statusline-setup-ps1-example-request",
     "label": "TOOL_DESCRIPTION_STATUSLINE_SETUP_PROMPT_RESULT_VAR_1",
-    "name": "Tool Description: Statusline setup \u2014 PS1 example request",
+    "name": "Tool Description: Statusline setup — PS1 example request",
     "promptId": "tool-description-statusline-setup-prompt-result",
     "reason": "a seeded instruction the model is asked to carry out",
     "text": "Configure my statusLine from my shell PS1 configuration",
@@ -534,7 +534,7 @@
     "desc": "Specifies the full date-time-with-timezone output format for a parsed datetime.",
     "id": "system-prompt-nl-datetime-parser-full-datetime-format",
     "label": "SYSTEM_PROMPT_NL_DATETIME_PARSER_USER_CONTEXT_VAR_4",
-    "name": "System Prompt: Datetime parser \u2014 full date-time output format",
+    "name": "System Prompt: Datetime parser — full date-time output format",
     "promptId": "system-prompt-nl-datetime-parser-user-context",
     "reason": "specifies the full date-time output format",
     "text": " (full date-time with timezone)",
@@ -548,7 +548,7 @@
     "text": " (title withheld)"
   },
   "74ec6a16844e716f": {
-    "desc": "Reason label inside the unwatch task-notification summary `Stopped watching ${n} (\u2026)` @13275406. The actionable guidance (\"do not re-watch just to resume listening unless the user asks\") is in the separate body string.",
+    "desc": "Reason label inside the unwatch task-notification summary `Stopped watching ${n} (…)` @13275406. The actionable guidance (\"do not re-watch just to resume listening unless the user asks\") is in the separate body string.",
     "text": "the signed-in account changed",
     "verdict": "glue"
   },
@@ -556,7 +556,7 @@
     "desc": "The reason clause explaining why a peer could not be verified before sending: the cloud session list was unreachable.",
     "id": "tool-result-send-message-cloud-list-unfetchable-reason",
     "label": "TOOL_RESULT_SEND_MESSAGE_UNVERIFIED_PEER_APPROVAL_VAR_1",
-    "name": "Tool Result: SendMessage \u2014 cloud session list could not be fetched",
+    "name": "Tool Result: SendMessage — cloud session list could not be fetched",
     "promptId": "tool-result-send-message-unverified-peer-approval",
     "reason": "names why the peer could not be verified",
     "text": "the cloud session list could not be fetched",
@@ -601,10 +601,10 @@
     "desc": "Default /cloud-plugins consent state when no pin is stored: cloud sessions from this machine keep loading only the repository's and the organization's plugins. Renders into the local-jsx onDone string.",
     "id": "slash-command-cloud-plugins-org-and-repo-plugins-only",
     "label": "SLASH_COMMAND_CLOUD_PLUGINS_NOTHING_DECIDED_VAR_0",
-    "name": "Slash Command: /cloud-plugins \u2014 org and repo plugins only",
+    "name": "Slash Command: /cloud-plugins — org and repo plugins only",
     "promptId": "slash-command-cloud-plugins-nothing-decided",
     "reason": "states the default plugin-forwarding policy the model reports when nothing is decided",
-    "text": "cloud sessions from this machine keep loading only the repository\u2019s and your organization\u2019s plugins"
+    "text": "cloud sessions from this machine keep loading only the repository’s and your organization’s plugins"
   },
   "7daf3642552ce1fc": {
     "label": "SYSTEM_PROMPT_LOCAL_COMMAND_STDOUT_FRAMING_TAG_5_VAR_0",
@@ -614,7 +614,7 @@
     "verdict": "glue"
   },
   "7e48c9f0b79f8aca": {
-    "text": "shared \u2014 loadable by ",
+    "text": "shared — loadable by ",
     "verdict": "glue",
     "why": "status label prefix joined to an interpolated audience"
   },
@@ -679,7 +679,7 @@
     "desc": "The clause extending what TaskCreate does when task tools are shared with teammates: the task may also be picked up and assigned to one of them.",
     "id": "tool-description-taskcreate-teammate-assignment-note",
     "label": "CONDTIONAL_TEAMMATES_NOTE",
-    "name": "Tool Description: TaskCreate \u2014 tasks may be assigned to teammates",
+    "name": "Tool Description: TaskCreate — tasks may be assigned to teammates",
     "promptId": "tool-description-taskcreate",
     "reason": "adds the teammate-assignment consequence to what the tool does",
     "text": " and potentially assigned to teammates",
@@ -703,7 +703,7 @@
     "desc": "States that the artifact stays private to the user until they choose to share it.",
     "id": "tool-result-artifact-publish-private-until-shared",
     "label": "TOOL_RESULT_ARTIFACT_PUBLISH_COWORK_USER_APPROVAL_REQUIRED_VAR_0",
-    "name": "Tool Result: Artifact publish \u2014 private until shared",
+    "name": "Tool Result: Artifact publish — private until shared",
     "promptId": "tool-result-artifact-publish-cowork-user-approval-required",
     "reason": "states the private-until-shared consequence",
     "text": ", private to you until you share it",
@@ -713,14 +713,14 @@
     "label": "DATA_TASK_NOTIFICATION_ARTIFACT_AUTO_REPLY_NAME_CHORD_RECEIPT_VAR_6",
     "note": "Second quasi of the same template node as 9cb8ee10318d5747, which carries the catalogue verdict for the whole sentence.",
     "promptId": "data-task-notification-artifact-auto-reply-name-chord-receipt",
-    "text": " for good with \u2715 on the watch in the tasks list or the kill-all-agents gesture",
+    "text": " for good with ✕ on the watch in the tasks list or the kill-all-agents gesture",
     "verdict": "glue"
   },
   "986590c740ba1d03": {
     "desc": "Warns that the publish will replace the page already at the named address.",
     "id": "tool-result-artifact-publish-replacing-existing-page",
     "label": "TOOL_RESULT_ARTIFACT_PUBLISH_COWORK_USER_APPROVAL_REQUIRED_VAR_1",
-    "name": "Tool Result: Artifact publish \u2014 replacing an existing page",
+    "name": "Tool Result: Artifact publish — replacing an existing page",
     "promptId": "tool-result-artifact-publish-cowork-user-approval-required",
     "reason": "states that an existing page will be replaced",
     "text": ", replacing the existing page at ",
@@ -730,18 +730,18 @@
     "desc": "Warns that the publish will replace an existing page whose address the session does not recognize.",
     "id": "tool-result-artifact-publish-replacing-unrecognized-address",
     "label": "TOOL_RESULT_ARTIFACT_PUBLISH_COWORK_USER_APPROVAL_REQUIRED_VAR_1",
-    "name": "Tool Result: Artifact publish \u2014 replacing a page at an unrecognized address",
+    "name": "Tool Result: Artifact publish — replacing a page at an unrecognized address",
     "promptId": "tool-result-artifact-publish-cowork-user-approval-required",
     "reason": "the unrecognized-address variant of the replace warning",
     "text": ", replacing an existing page (unrecognized address)",
     "verdict": "catalogue"
   },
   "9cb8ee10318d5747": {
-    "desc": "Clause naming the gesture that stops an artifact watch for good \u2014 the tasks-list watch X or the kill-all-agents gesture.",
+    "desc": "Clause naming the gesture that stops an artifact watch for good — the tasks-list watch X or the kill-all-agents gesture.",
     "id": "data-task-notification-artifact-auto-reply-permanent-stop-gesture",
     "label": "DATA_TASK_NOTIFICATION_ARTIFACT_AUTO_REPLY_NAME_CHORD_RECEIPT_VAR_6",
     "name": "Data: Artifact Auto-Reply Permanent Stop Gesture",
-    "note": "Whole template node `the user can stop ${n} for good with X on the watch in the tasks list or the kill-all-agents gesture` \u2014 names the exact gesture that permanently stops auto-replies, which the model relays to the user. Reported as two quasis (see 980e41d677e0d393); catalogued once here.",
+    "note": "Whole template node `the user can stop ${n} for good with X on the watch in the tasks list or the kill-all-agents gesture` — names the exact gesture that permanently stops auto-replies, which the model relays to the user. Reported as two quasis (see 980e41d677e0d393); catalogued once here.",
     "promptId": "data-task-notification-artifact-auto-reply-name-chord-receipt",
     "text": "the user can stop ",
     "verdict": "catalogue"
@@ -759,7 +759,7 @@
     "label": "ATTACHMENT_OBJECT",
     "name": "System Reminder: Attachment is the user's auto-memory",
     "promptId": "system-reminder-nested-memory-contents",
-    "reason": "states the provenance and persistence of an attached file \u2014 changes how the model weighs it",
+    "reason": "states the provenance and persistence of an attached file — changes how the model weighs it",
     "text": " (user's auto-memory, persists across conversations)",
     "verdict": "catalogue"
   },
@@ -767,7 +767,7 @@
     "desc": "The Get-Content/ConvertFrom-Json equivalent offered on Windows for reading an individual notebook cell whose outputs were too large to return.",
     "id": "tool-result-notebook-outputs-too-large-powershell-recovery",
     "label": "TOOL_RESULT_NOTEBOOK_OUTPUTS_TOO_LARGE_VAR_0",
-    "name": "Tool Result: Notebook outputs too large \u2014 PowerShell recovery command",
+    "name": "Tool Result: Notebook outputs too large — PowerShell recovery command",
     "promptId": "tool-result-notebook-outputs-too-large",
     "reason": "tail of the PowerShell recovery command",
     "text": " | Select-Object -ExpandProperty outputs",
@@ -777,7 +777,7 @@
     "desc": "The constraint listing names already in use, which the generated agent name must avoid.",
     "id": "system-prompt-agent-namer-avoid-taken-names",
     "label": "PROMPT_VAR_2",
-    "name": "System Prompt: Agent namer \u2014 names already taken",
+    "name": "System Prompt: Agent namer — names already taken",
     "promptId": "system-prompt-agent-namer",
     "reason": "a constraint on the name to generate",
     "text": "\n\nAvoid these (already taken): ",
@@ -787,7 +787,7 @@
     "desc": "States the visibility consequence of publishing over a shared artifact: everyone it is shared with sees the change at once.",
     "id": "tool-result-artifact-publish-viewers-see-updates",
     "label": "TOOL_RESULT_ARTIFACT_PUBLISH_COWORK_USER_APPROVAL_REQUIRED_VAR_0",
-    "name": "Tool Result: Artifact publish \u2014 viewers see updates immediately",
+    "name": "Tool Result: Artifact publish — viewers see updates immediately",
     "promptId": "tool-result-artifact-publish-cowork-user-approval-required",
     "reason": "states the visibility consequence of publishing",
     "text": " (viewers see updates immediately)",
@@ -841,7 +841,7 @@
     "desc": "Tells the model that validation does follow symlinks here, so the real paths behind them have to be validated on their own.",
     "id": "slash-command-plugin-validate-symlink-validate-real-paths",
     "label": "SLASH_COMMAND_PLUGIN_VALIDATE_COMPONENT_NOT_REGULAR_FILE_TAIL_VAR_0",
-    "name": "Slash Command: Plugin validate \u2014 validate symlink targets separately",
+    "name": "Slash Command: Plugin validate — validate symlink targets separately",
     "promptId": "slash-command-plugin-validate-component-not-regular-file-tail",
     "reason": "states the symlink consequence and the action it requires",
     "text": " does follow them, so validate the real paths separately.",
@@ -850,7 +850,7 @@
   "aee19dce4fb96371": {
     "label": "SLASH_COMMAND_RESUME_SESSION_NOT_FOUND_VAR_1",
     "promptId": "slash-command-resume-session-not-found",
-    "reason": "inside a process.stderr.write template at 18893483 \u2014 written to the terminal, never to the model, and not part of this prompt's slot",
+    "reason": "inside a process.stderr.write template at 18893483 — written to the terminal, never to the model, and not part of this prompt's slot",
     "text": "it crashed repeatedly",
     "verdict": "not-a-slot"
   },
@@ -858,7 +858,7 @@
     "desc": "Specifies the YYYY-MM-DD output format for a parsed date carrying no time.",
     "id": "system-prompt-nl-datetime-parser-date-only-format",
     "label": "SYSTEM_PROMPT_NL_DATETIME_PARSER_USER_CONTEXT_VAR_4",
-    "name": "System Prompt: Datetime parser \u2014 date-only output format",
+    "name": "System Prompt: Datetime parser — date-only output format",
     "promptId": "system-prompt-nl-datetime-parser-user-context",
     "reason": "specifies the output date format",
     "text": "YYYY-MM-DD (date only, no time)",
@@ -868,7 +868,7 @@
     "desc": "The Explore agent's instruction for broad file pattern matching, in the variant that routes `find` through the Bash tool rather than naming a dedicated tool.",
     "id": "agent-prompt-explore-glob-via-bash-line",
     "label": "GLOB_TOOL_NAME",
-    "name": "Agent Prompt: Explore \u2014 file pattern matching tool line",
+    "name": "Agent Prompt: Explore — file pattern matching tool line",
     "promptId": "agent-prompt-explore",
     "reason": "half of the Glob instruction line; the conditional sibling of the non-embedded wording",
     "text": "- Use `find` via ",
@@ -917,7 +917,7 @@
     "desc": "The Explore agent's instruction for searching file contents with regex, in the variant that routes `grep` through the Bash tool rather than naming a dedicated tool.",
     "id": "agent-prompt-explore-grep-via-bash-line",
     "label": "GREP_TOOL_NAME",
-    "name": "Agent Prompt: Explore \u2014 content search tool line",
+    "name": "Agent Prompt: Explore — content search tool line",
     "promptId": "agent-prompt-explore",
     "reason": "tail of the same Grep instruction line",
     "text": " for searching file contents with regex",
@@ -973,7 +973,7 @@
     "desc": "The task-list path listed among the team resources, shown only when task tools are available. Its sibling branch is system-reminder-team-coordination-task-list-upkeep.",
     "id": "system-reminder-team-coordination-task-list-resource-line",
     "label": "TASK_LIST_RESOURCE_LINE",
-    "name": "System Reminder: Team coordination \u2014 task list resource line",
+    "name": "System Reminder: Team coordination — task list resource line",
     "promptId": "system-reminder-team-coordination",
     "reason": "the founding case: the task-list resource line, whose sibling branch IS catalogued as system-reminder-team-coordination-task-list-upkeep",
     "text": "\n- Task list: ",
@@ -990,7 +990,7 @@
     "desc": "States that viewers are pinned to an earlier version, so a publish will not be what they see.",
     "id": "tool-result-artifact-publish-viewers-see-pinned-version",
     "label": "TOOL_RESULT_ARTIFACT_PUBLISH_COWORK_USER_APPROVAL_REQUIRED_VAR_0",
-    "name": "Tool Result: Artifact publish \u2014 viewers see a pinned earlier version",
+    "name": "Tool Result: Artifact publish — viewers see a pinned earlier version",
     "promptId": "tool-result-artifact-publish-cowork-user-approval-required",
     "reason": "states the pinned-version consequence",
     "text": " (viewers see a pinned earlier version)",
@@ -1023,7 +1023,7 @@
     "desc": "Why the live artifact source could not be handed over: reading it failed (read_threw).",
     "id": "tool-result-artifact-conflict-host-read-failed",
     "label": "TOOL_RESULT_ARTIFACT_CONFLICT_SOURCE_NOT_HANDED_OVER_LEAD_VAR_0",
-    "name": "Tool Result: Artifact conflict \u2014 reading the content host failed",
+    "name": "Tool Result: Artifact conflict — reading the content host failed",
     "promptId": "tool-result-artifact-conflict-source-not-handed-over-lead",
     "reason": "names the thrown-read failure the model must re-read rather than resend",
     "text": "reading it failed"
@@ -1047,7 +1047,7 @@
     "desc": "The `cat | jq` command offered to the model for reading an individual notebook cell whose outputs were too large to return.",
     "id": "tool-result-notebook-outputs-too-large-posix-recovery",
     "label": "TOOL_RESULT_NOTEBOOK_OUTPUTS_TOO_LARGE_VAR_0",
-    "name": "Tool Result: Notebook outputs too large \u2014 POSIX recovery command",
+    "name": "Tool Result: Notebook outputs too large — POSIX recovery command",
     "promptId": "tool-result-notebook-outputs-too-large",
     "reason": "the POSIX recovery command for oversized notebook outputs",
     "text": " with: cat <notebook_path> | jq '.cells[",
@@ -1101,7 +1101,7 @@
     "desc": "Tells the model to use Read on the saved output file to retrieve the portion truncated out of the tool result.",
     "id": "tool-result-mcp-task-output-read-truncated-remainder",
     "label": "TOOL_RESULT_MCP_TASK_OUTPUT_SAVED_HINT_VAR_2",
-    "name": "Tool Result: MCP task output \u2014 read the truncated remainder",
+    "name": "Tool Result: MCP task output — read the truncated remainder",
     "promptId": "tool-result-mcp-task-output-saved-hint",
     "reason": "instructs the model to Read the truncated remainder",
     "text": "use Read to retrieve the portion truncated above",
@@ -1171,7 +1171,6 @@
   "39199fe7daf5bb6a": {
     "promptId": "tool-result-artifact-preview-popup-on-load",
     "label": "TOOL_RESULT_ARTIFACT_PREVIEW_POPUP_ON_LOAD_VAR_0",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": "this page again",
     "verdict": "glue",
     "why": "One branch of the 4-way ternary naming WHICH page a popup targets; substituted into `the page opens a new window (${f}) on load - blocked in preview; the published viewer allows pop-ups only from a click`. Labels a value, carries no instruction."
@@ -1179,7 +1178,6 @@
   "94739b9fa635500d": {
     "promptId": "system-reminder-dir-sync-user-switched-checkout-followed",
     "label": "SYSTEM_REMINDER_DIR_SYNC_USER_SWITCHED_CHECKOUT_FOLLOWED_VAR_0",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": "a detached HEAD",
     "verdict": "glue",
     "why": "Null-branch of `e.to===null?\"a detached HEAD\":`branch ${qe(e.to)}`` in qa(); names the git ref substituted into `This checkout is back on the user's ${n}`. Noun phrase, no instruction."
@@ -1196,7 +1194,7 @@
   "35ef5a070cef5131": {
     "promptId": "workflow-script-deep-research",
     "label": "WORKFLOW_DESCRIPTION",
-    "text": "Deep research harness \u2014 fan-out web searches, fetch sources, adversarially verify claims, synthesize a cited report.",
+    "text": "Deep research harness — fan-out web searches, fetch sources, adversarially verify claims, synthesize a cited report.",
     "verdict": "catalogue",
     "id": "data-workflow-deep-research-description",
     "name": "Workflow: Deep Research Description",
@@ -1232,27 +1230,24 @@
   "811cbbc42b219a1a": {
     "promptId": "system-reminder-directory-sync-checkout-cannot-snapshot",
     "label": "SYSTEM_REMINDER_DIRECTORY_SYNC_CHECKOUT_CANNOT_SNAPSHOT_VAR_0",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": "its branch has no commit yet",
     "verdict": "catalogue",
     "id": "system-reminder-directory-sync-checkout-unready-unborn-branch",
-    "name": "Directory Sync: Checkout Unready \u2014 Unborn Branch",
+    "name": "Directory Sync: Checkout Unready — Unborn Branch",
     "desc": "Reason clause telling the model the checkout could not be snapshotted because its branch has no commit yet."
   },
   "18b6b57f5aaf3dde": {
     "promptId": "system-reminder-directory-sync-checkout-cannot-snapshot",
     "label": "SYSTEM_REMINDER_DIRECTORY_SYNC_CHECKOUT_CANNOT_SNAPSHOT_VAR_0",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": "git could not read it just now",
     "verdict": "catalogue",
     "id": "system-reminder-directory-sync-checkout-unready-git-unreadable",
-    "name": "Directory Sync: Checkout Unready \u2014 Git Unreadable",
+    "name": "Directory Sync: Checkout Unready — Git Unreadable",
     "desc": "Reason clause telling the model the checkout could not be snapshotted because git could not read it."
   },
   "cc49357f96d7d006": {
     "promptId": "system-reminder-directory-sync-disabled-after-initial-checkout-failure",
     "label": "SYNC_DISABLE_REASON",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": "the user's first upload was sent in a form this build cannot read",
     "verdict": "catalogue",
     "id": "system-reminder-directory-sync-disabled-first-object-unreadable",
@@ -1262,11 +1257,41 @@
   "77113e974dd6b586": {
     "promptId": "system-reminder-directory-sync-disabled-after-initial-checkout-failure",
     "label": "SYNC_DISABLE_REASON",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": "this environment was recreated empty and the user's machine only sends changes on top of what the earlier one had",
     "verdict": "catalogue",
     "id": "system-reminder-directory-sync-disabled-container-recreated",
     "name": "Directory Sync Disabled: Container Recreated",
     "desc": "Reason clause telling the model sync was disabled because the environment was recreated empty while the user only sends incremental changes."
+  },
+  "40509d3912c31a94": {
+    "promptId": "tool-result-bash-worktree-isolation-runtime-command-name",
+    "label": "TOOL_RESULT_BASH_WORKTREE_ISOLATION_RUNTIME_COMMAND_NAME_VAR_0",
+    "text": "inside a construct too complex to verify",
+    "verdict": "glue",
+    "reason": "reason clause naming why the worktree guard could not verify a command; the instruction is the surrounding tool result, which is catalogued"
+  },
+  "9f57113aea2e5d17": {
+    "promptId": "data-task-notification-artifact-auto-edit-foreign-grant-refused",
+    "label": "DATA_TASK_NOTIFICATION_ARTIFACT_AUTO_EDIT_FOREIGN_GRANT_REFUSED_VAR_3",
+    "text": " beyond the acknowledgement",
+    "verdict": "glue",
+    "reason": "trailing qualifier on the acknowledgement clause of a catalogued notification; no instruction of its own"
+  },
+  "1ec5a95893833cb2": {
+    "promptId": "system-prompt-artifact-comment-list-framing",
+    "label": "ARTIFACT_ANCHOR_REGION_GUIDANCE",
+    "text": "\": only that marker is emitted by the tool — it names the element in the artifact over part of which the commenter drew a rectangle; everything after it is view",
+    "verdict": "catalogue",
+    "id": "tool-result-artifact-comments-anchor-region-data-warning",
+    "name": "Tool Result: Artifact Comment Anchor Region Data Warning",
+    "desc": "Marks anchor-region rows (a rectangle the commenter drew over part of an element) in artifact comment results as viewer-influenced data rather than instructions.",
+    "reason": "the same data-not-instructions rule the sibling anchor-path/label/detail rows carry, for the new region anchor; it must be reachable by an override like its siblings"
+  },
+  "3a69207e41c585b9": {
+    "promptId": "tool-result-artifact-open-not-found",
+    "label": "TOOL_RESULT_ARTIFACT_OPEN_NOT_FOUND_VAR_1",
+    "text": "Nothing was opened.",
+    "verdict": "glue",
+    "reason": "status statement appended to the catalogued open-failure results; the instruction (what to do next) is in the enclosing prompt"
   }
 }

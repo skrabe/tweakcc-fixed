@@ -57,7 +57,7 @@
   },
   "b298a0a8ab610ffb": {
     "builder": "wRl",
-    "note": "Remedy instruction supplied as the third argument of the wRl() stale-version builder and interpolated into \"Re-read it (\u2026), ${remedy} \u2014 do not resend your previous content unchanged.\" Its sibling call site supplies \"merge your edits on top, then publish again\" into the same slot and is already catalogued as tool-result-artifact-conflict-merge-remedy-phrase. Catalogued via a classification-cache model verdict (this gate has no extractor hook of its own); see data/prompt-classification.json.",
+    "note": "Remedy instruction supplied as the third argument of the wRl() stale-version builder and interpolated into \"Re-read it (…), ${remedy} — do not resend your previous content unchanged.\" Its sibling call site supplies \"merge your edits on top, then publish again\" into the same slot and is already catalogued as tool-result-artifact-conflict-merge-remedy-phrase. Catalogued via a classification-cache model verdict (this gate has no extractor hook of its own); see data/prompt-classification.json.",
     "param": "r",
     "text": "reapply your edits, then publish",
     "verdict": "catalogue"
@@ -78,9 +78,9 @@
   },
   "ef708f7ddb6cf3da": {
     "builder": "f",
-    "note": "Instruction prefix rendered into slash-command-code-review-effort-notice-{fork,inline} through f=(p)=>. Call f(`No effort level given \u2014 ${p}.`) @16136649 when /code-review has no explicit effort and reuses the last typed level. The wrapping templates tell the model to say this to the user in one short line. Catalogue via classification-cache on the next extraction.",
+    "note": "Instruction prefix rendered into slash-command-code-review-effort-notice-{fork,inline} through f=(p)=>. Call f(`No effort level given — ${p}.`) @16136649 when /code-review has no explicit effort and reuses the last typed level. The wrapping templates tell the model to say this to the user in one short line. Catalogue via classification-cache on the next extraction.",
     "param": "p",
-    "text": "No effort level given \u2014 ${}.",
+    "text": "No effort level given — ${}.",
     "verdict": "catalogue"
   },
   "fe2646082aab8196": {
@@ -93,7 +93,6 @@
   "c4331ff99b5af491": {
     "builder": "qs",
     "param": "e",
-    "note": "REVIEW ME - replace with the verdict (catalogue|glue|not-a-slot) and its reason",
     "text": "this session is not bound to that machine",
     "verdict": "catalogue",
     "id": "tool-result-remote-tool-unverified-refusal-reason-unbound",
@@ -102,7 +101,6 @@
   "bc0c19ca51693743": {
     "builder": "qs",
     "param": "e",
-    "note": "REVIEW ME - replace with the verdict (catalogue|glue|not-a-slot) and its reason",
     "text": "the call's protocol version was not accepted",
     "verdict": "catalogue",
     "id": "tool-result-remote-tool-unverified-refusal-reason-unsupported-protocol",
@@ -111,7 +109,6 @@
   "2bb4a09f4a966771": {
     "builder": "qs",
     "param": "e",
-    "note": "REVIEW ME - replace with the verdict (catalogue|glue|not-a-slot) and its reason",
     "text": "the call was not acceptable as sent",
     "verdict": "catalogue",
     "id": "tool-result-remote-tool-unverified-refusal-reason-invalid-request",
@@ -120,7 +117,6 @@
   "a456a712678c232b": {
     "builder": "qs",
     "param": "e",
-    "note": "REVIEW ME - replace with the verdict (catalogue|glue|not-a-slot) and its reason",
     "text": "that machine does not serve this tool to the session",
     "verdict": "catalogue",
     "id": "tool-result-remote-tool-unverified-refusal-reason-not-served",
@@ -129,7 +125,6 @@
   "2ccb50f759c95b4e": {
     "builder": "qs",
     "param": "e",
-    "note": "REVIEW ME - replace with the verdict (catalogue|glue|not-a-slot) and its reason",
     "text": "that machine could not tell which session the call came from",
     "verdict": "catalogue",
     "id": "tool-result-remote-tool-unverified-refusal-reason-no-session",
@@ -138,7 +133,6 @@
   "ac0636a50e785037": {
     "builder": "qs",
     "param": "e",
-    "note": "REVIEW ME - replace with the verdict (catalogue|glue|not-a-slot) and its reason",
     "text": "that machine is connected on behalf of a different session",
     "verdict": "catalogue",
     "id": "tool-result-remote-tool-unverified-refusal-reason-session-mismatch",
@@ -147,7 +141,6 @@
   "d952f30464e506e4": {
     "builder": "qs",
     "param": "e",
-    "note": "REVIEW ME - replace with the verdict (catalogue|glue|not-a-slot) and its reason",
     "text": "that machine already has as many calls under way as it accepts",
     "verdict": "catalogue",
     "id": "tool-result-remote-tool-unverified-refusal-reason-too-many-in-flight",
@@ -156,7 +149,6 @@
   "b524b596f4e5fe9d": {
     "builder": "qs",
     "param": "e",
-    "note": "REVIEW ME - replace with the verdict (catalogue|glue|not-a-slot) and its reason",
     "text": "one of the call's input fields is not accepted on that machine",
     "verdict": "catalogue",
     "id": "tool-result-remote-tool-unverified-refusal-reason-refused-field",
@@ -165,7 +157,6 @@
   "12b97a40ff9549f4": {
     "builder": "qs",
     "param": "e",
-    "note": "REVIEW ME - replace with the verdict (catalogue|glue|not-a-slot) and its reason",
     "text": "that machine serves no tools while its sandbox is off or not fully confining",
     "verdict": "catalogue",
     "id": "tool-result-remote-tool-unverified-refusal-reason-sandbox-unavailable",
@@ -174,7 +165,6 @@
   "57bf4a1065e108ca": {
     "builder": "qs",
     "param": "e",
-    "note": "REVIEW ME - replace with the verdict (catalogue|glue|not-a-slot) and its reason",
     "text": "that machine has no record of the call asked about",
     "verdict": "catalogue",
     "id": "tool-result-remote-tool-unverified-refusal-reason-unknown-call",
@@ -183,7 +173,6 @@
   "26d252cd778a9c61": {
     "builder": "ga",
     "param": "r",
-    "note": "REVIEW ME - replace with the verdict (catalogue|glue|not-a-slot) and its reason",
     "text": "it stopped before reading it",
     "verdict": "catalogue",
     "id": "system-reminder-artifact-editor-follow-up-stopped",
@@ -193,7 +182,6 @@
   "64ac6391f7b6e61b": {
     "builder": "ga",
     "param": "r",
-    "note": "REVIEW ME - replace with the verdict (catalogue|glue|not-a-slot) and its reason",
     "text": "it was withdrawn before the worker read it",
     "verdict": "catalogue",
     "id": "system-reminder-artifact-editor-follow-up-withdrawn",
@@ -203,11 +191,202 @@
   "a10cd96bc96a1f81": {
     "builder": "Ml",
     "param": "r",
-    "note": "REVIEW ME - replace with the verdict (catalogue|glue|not-a-slot) and its reason",
-    "text": "${} read that follow-up but ${} before finishing. Do not wait for its result \u2014 if the page still needs that change, dispatch a new worker or answer directly.",
+    "text": "${} read that follow-up but ${} before finishing. Do not wait for its result — if the page still needs that change, dispatch a new worker or answer directly.",
     "verdict": "catalogue",
     "id": "system-reminder-artifact-editor-follow-up-failed-or-stopped",
     "name": "Artifact Editor Follow-Up Failed Or Stopped",
     "desc": "Tells the model an artifact-editor worker read a follow-up but failed or stopped, and to dispatch a new worker or answer directly instead of waiting. Named by the classify phase; cache verdict already recorded."
+  },
+  "7dfede1de384cc5a": {
+    "builder": "Pb",
+    "param": "e",
+    "text": "string content the parser did not tokenize",
+    "verdict": "catalogue",
+    "id": "tool-result-bash-worktree-guard-reason-untokenized-string",
+    "why": "Pb(e) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "f1151126b06a4480": {
+    "builder": "Pb",
+    "param": "e",
+    "text": "a backtick substitution it cannot tokenize",
+    "verdict": "catalogue",
+    "id": "tool-result-bash-worktree-guard-reason-backtick-substitution",
+    "why": "Pb(e) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "0e7020d608bc1491": {
+    "builder": "Pb",
+    "param": "e",
+    "text": "syntax the parser could not recover",
+    "verdict": "catalogue",
+    "id": "tool-result-bash-worktree-guard-reason-unrecoverable-syntax",
+    "why": "Pb(e) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "ea40ce2d232bf5b1": {
+    "builder": "Pb",
+    "param": "e",
+    "text": "a function named like a program this guard knows",
+    "verdict": "catalogue",
+    "id": "tool-result-bash-worktree-guard-reason-function-shadows-program",
+    "why": "Pb(e) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "6cfe0c0c21512136": {
+    "builder": "Pb",
+    "param": "e",
+    "text": "a here-document whose delimiter it cannot match the way bash does",
+    "verdict": "catalogue",
+    "id": "tool-result-bash-worktree-guard-reason-heredoc-delimiter",
+    "why": "Pb(e) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "b5c25e8d7d8b941a": {
+    "builder": "Pb",
+    "param": "e",
+    "text": "a here-document body it did not tokenize",
+    "verdict": "catalogue",
+    "id": "tool-result-bash-worktree-guard-reason-heredoc-body",
+    "why": "Pb(e) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "f6eac4ab29e29f88": {
+    "builder": "Pb",
+    "param": "e",
+    "text": "an assignment whose name is not a plain word",
+    "verdict": "catalogue",
+    "id": "tool-result-bash-worktree-guard-reason-assignment-name",
+    "why": "Pb(e) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "8141dfd63728ccba": {
+    "builder": "Pb",
+    "param": "e",
+    "text": "a command name it cannot read",
+    "verdict": "catalogue",
+    "id": "tool-result-bash-worktree-guard-reason-unreadable-command-name",
+    "why": "Pb(e) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "326b04eb7bec80f8": {
+    "builder": "Pb",
+    "param": "e",
+    "text": "a pipeline nested in a redirect",
+    "verdict": "catalogue",
+    "id": "tool-result-bash-worktree-guard-reason-pipeline-in-redirect",
+    "why": "Pb(e) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "0c188bd2ef7d6c87": {
+    "builder": "B_",
+    "param": "n",
+    "text": "with an operand that is not a plain name",
+    "verdict": "catalogue",
+    "id": "tool-result-bash-worktree-guard-operand-not-plain-name",
+    "why": "B_(n) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "5113f87bbb7cb03a": {
+    "builder": "B_",
+    "param": "n",
+    "text": "with a string it would re-parse as an array assignment",
+    "verdict": "catalogue",
+    "id": "tool-result-bash-worktree-guard-operand-array-assignment-string",
+    "why": "B_(n) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "9f294ef61a940371": {
+    "builder": "B_",
+    "param": "n",
+    "text": "with a separator other than whitespace",
+    "verdict": "catalogue",
+    "id": "tool-result-bash-worktree-guard-operand-non-whitespace-separator",
+    "why": "B_(n) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "0dc9641703cbbac8": {
+    "builder": "B_",
+    "param": "n",
+    "text": "with a locale it cannot verify",
+    "verdict": "catalogue",
+    "id": "tool-result-bash-worktree-guard-operand-unverifiable-locale",
+    "why": "B_(n) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "72bb13f30711f506": {
+    "builder": "B_",
+    "param": "n",
+    "text": "with a program that can execute commands or that it cannot read",
+    "verdict": "catalogue",
+    "id": "tool-result-bash-worktree-guard-operand-executing-or-unreadable-program",
+    "why": "B_(n) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "97e8d2e67a72ca7a": {
+    "builder": "B_",
+    "param": "n",
+    "text": "with a program computed at runtime",
+    "verdict": "catalogue",
+    "id": "tool-result-bash-worktree-guard-operand-runtime-program",
+    "why": "B_(n) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "39d4494d41209682": {
+    "builder": "B_",
+    "param": "n",
+    "text": "${} with a program it cannot verify",
+    "verdict": "catalogue",
+    "id": "tool-result-bash-worktree-guard-operand-unverifiable-program",
+    "why": "B_(n) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "7e1e03314756925b": {
+    "builder": "B_",
+    "param": "n",
+    "text": "from a find -exec or xargs slot",
+    "verdict": "catalogue",
+    "id": "tool-result-bash-worktree-guard-operand-find-exec-xargs",
+    "why": "B_(n) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "6999540e6e8e7699": {
+    "builder": "ie",
+    "param": "se",
+    "text": "no reply could be composed",
+    "verdict": "catalogue",
+    "id": "data-task-notification-artifact-auto-reply-reason-none-composed",
+    "why": "ie(se) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "c3101ebd1d6033dd": {
+    "builder": "ie",
+    "param": "se",
+    "text": "its reply was not posted",
+    "verdict": "catalogue",
+    "id": "data-task-notification-artifact-auto-reply-reason-not-posted",
+    "why": "ie(se) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "0d8c92f41e70ca0f": {
+    "builder": "vr",
+    "param": "e",
+    "text": "that machine was at one of its capacity limits",
+    "verdict": "catalogue",
+    "id": "tool-result-remote-tool-failure-reason-capacity-limit",
+    "why": "vr(e) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "0d99afabc90be16c": {
+    "builder": "vr",
+    "param": "e",
+    "text": "that machine's call budget for this session was spent",
+    "verdict": "catalogue",
+    "id": "tool-result-remote-tool-failure-reason-call-budget-spent",
+    "why": "vr(e) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "de027bceec448e96": {
+    "builder": "vr",
+    "param": "e",
+    "text": "that machine had already received a call with this id",
+    "verdict": "catalogue",
+    "id": "tool-result-remote-tool-failure-reason-duplicate-call-id",
+    "why": "vr(e) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "05c727c0e69144b3": {
+    "builder": "vr",
+    "param": "e",
+    "text": "the permission request the call was waiting on there ended unanswered",
+    "verdict": "catalogue",
+    "id": "tool-result-remote-tool-failure-reason-permission-unanswered",
+    "why": "vr(e) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
+  },
+  "608aadc99648f3d6": {
+    "builder": "vr",
+    "param": "e",
+    "text": "that machine no longer holds the result of the call",
+    "verdict": "catalogue",
+    "id": "tool-result-remote-tool-failure-reason-result-gone",
+    "why": "vr(e) call-site argument rendering into a catalogued tool-result template; the reason clause is the distinguishing content and tells the model whether and how to retry. Catalogued via a classification-cache model verdict."
   }
 }
