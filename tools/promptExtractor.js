@@ -88,6 +88,38 @@ const WORKFLOW_SCRIPT_IDENTIFIER_MAP = {
 //   [5] i  = cross-session peers bullet (mentions ${cy}=ListAgents inside it)
 //   [6] l  = e?TW_:"briefly tell the user what you launched"
 //   [7] o  = "Workers have access to …" intro text
+// system-prompt-coordinator-mode on CC 2.1.257 (37 uses, 12 distinct vars),
+// re-derived from `Yxr(e)`:
+//   [0] e   = comms-tool channel flag  `${e?Se:"Every message you send is to the user."}`
+//   [1] Se  = the comms-tool channel note (bare text does not reach the user)
+//   [2] yt  = Agent          "- **${yt}** - Spawn a new worker"
+//   [3] eo  = SendMessage    "- **${eo}** - Continue an existing worker"
+//   [4] dy  = TaskStop       "- **${dy}** - Stop a running worker"
+//   [5] h   = Workflow bullet (vc() gated)
+//   [6] l   = Skill bullet (F3t() gated)
+//   [7] p   = cross-session peers bullet (Vo() gated)
+//   [8] f   = worker model-parameter guidance
+//   [9] Ae  = comms-tool "launched X" note  `${e?Ae:"briefly tell the user…"}`
+//   [10] ibt = "[SYSTEM NOTIFICATION - NOT USER INPUT]"
+//   [11] d  = "Workers have access to …" intro
+// The 2.1.252 catalogue carried a map shifted by two from this (AGENT_TOOL_NAME
+// on the flag, TASKSTOP on Agent, …) and named BOTH [5] and [10]
+// WORKER_TOOLS_INTRO_TEXT, so the override could not address them apart.
+const COORDINATOR_MODE_2_1_257_MAP = {
+  0: 'IS_COMMS_TOOL_CHANNEL_FLAG',
+  1: 'COMMS_TOOL_CHANNEL_NOTE',
+  2: 'AGENT_TOOL_NAME',
+  3: 'SENDMESSAGE_TOOL_NAME',
+  4: 'TASKSTOP_TOOL_NAME',
+  5: 'WORKFLOW_CONDITIONAL_TOOL_NOTE',
+  6: 'SKILL_TOOL_CONDITIONAL_NOTE',
+  7: 'CROSS_SESSION_PEERS_NOTE',
+  8: 'WORKER_MODEL_PARAMETER_NOTE',
+  9: 'COMMS_TOOL_LAUNCH_ANNOUNCE_NOTE',
+  10: 'SYSTEM_REMINDER_OPENING_TEXT',
+  11: 'WORKER_TOOLS_INTRO_TEXT',
+};
+
 const CURATED_IDENTIFIER_MAPS = {
   'system-prompt-memory-instructions': [
     {
@@ -147,6 +179,11 @@ const CURATED_IDENTIFIER_MAPS = {
     },
   ],
   'system-prompt-coordinator-mode': [
+    {
+      // 2.1.257 shape — see COORDINATOR_MODE_2_1_257_MAP.
+      identifiers: [0, 1, 2, 3, 4, 5, 6, 7, 2, 8, 3, 0, 9, 2, 10, 3, 2, 11, 3, 4, 2, 3, 2, 4, 3, 2, 2, 2, 3, 2, 3, 3, 3, 2, 2, 10, 3],
+      identifierMap: COORDINATOR_MODE_2_1_257_MAP,
+    },
     {
       // CC 2.1.239 inserted the comms-mode gate's SECOND use — the launch-announce
       // ternary `${e?FjS:"briefly tell the user what you launched"}` — which adds
@@ -490,9 +527,10 @@ const NEW_PROMPT_ASSIGNMENTS = [
   // merged prompt extracts anonymous (its opening is now the intro ternary, not
   // "# Harness", so fuzzy carryover misses). Piebald keeps the id
   // `system-prompt-harness-instructions` for it; we match, so the harness override
-  // stays bound. identifiers [0,1,2,3] == Piebald's, so adopt their full map
-  // (OUTPUT_STYLE_CONFIG / SECURITY_NOTE / SYSTEM_REMINDER_TAG_GUIDANCE_FN /
-  // TOOL_CONTEXT). This is the opus-4-8 live arm (lean gate true).
+  // stays bound. The map below is the 2.1.251+ seven-slot shape (intro
+  // ternary: config / output-style intro fn / collaborative gate fn /
+  // collaborative intro; then security policy, reminder-guidance fn, tool
+  // context). overlayAssignmentMap refuses it if the live shape moves again.
   {
     matcher: t =>
       t.includes('# Harness') &&
@@ -505,9 +543,12 @@ const NEW_PROMPT_ASSIGNMENTS = [
       'Core interactive-agent identity and harness instructions for the lean system-prompt arm: terminal Markdown output, permission modes, hook feedback, parallel tools, clickable file refs.',
     identifierMap: {
       0: 'OUTPUT_STYLE_CONFIG',
-      1: 'SECURITY_NOTE',
-      2: 'SYSTEM_REMINDER_TAG_GUIDANCE_FN',
-      3: 'TOOL_CONTEXT',
+      1: 'OUTPUT_STYLE_AGENT_INTRO_FN',
+      2: 'USE_COLLABORATIVE_AGENT_INTRO_FN',
+      3: 'COLLABORATIVE_AGENT_INTRO',
+      4: 'SECURITY_POLICY_INSTRUCTIONS',
+      5: 'SYSTEM_REMINDER_TAG_GUIDANCE_FN',
+      6: 'TOOL_CONTEXT',
     },
   },
   // 2.1.211 — fuzzy-carryover misses. Both prompts are still in the binary with
@@ -2595,14 +2636,7 @@ const NEW_PROMPT_ASSIGNMENTS = [
     id: 'system-prompt-coordinator-mode',
     description:
       'Top-level CC system prompt when coordinator mode is active — orchestrates worker subagents through Agent/SendMessage/TaskStop, with optional cross-session peer discovery and workflow tool guidance',
-    identifierMap: {
-      0: 'AGENT_TOOL_NAME',
-      1: 'SENDMESSAGE_TOOL_NAME',
-      2: 'TASKSTOP_TOOL_NAME',
-      3: 'WORKFLOW_CONDITIONAL_TOOL_NOTE',
-      4: 'LISTAGENTS_TOOL_NAME',
-      5: 'WORKER_TOOLS_INTRO_TEXT',
-    },
+    identifierMap: COORDINATOR_MODE_2_1_257_MAP,
   },
   {
     matcher: t =>
@@ -2678,6 +2712,54 @@ const NEW_PROMPT_ASSIGNMENTS = [
       'Requires confirmation for irreversible or outward-facing actions, checking targets before destructive edits, and truthful reporting of outcomes',
   },
 ];
+
+// Overlay a NEW_PROMPT_ASSIGNMENTS identifierMap onto a carried/generated one,
+// but only when the result still names every live slot once. An assignment
+// map is written against ONE shape of a prompt and rots when Anthropic adds
+// slots: on CC 2.1.257 `system-prompt-harness-instructions` carried the
+// correct 7-slot map from 2.1.252, and a stale 4-slot assignment overlaid
+// slots 1–3 with names that belonged to the 2.1.216 shape. The result named
+// two slots `SYSTEM_REMINDER_TAG_GUIDANCE_FN` and two `TOOL_CONTEXT`, the
+// override's `OUTPUT_STYLE_AGENT_INTRO_FN()` no longer resolved, the raw
+// identifier shipped into a template literal, and every interactive turn
+// ended with 0 tokens on a swallowed ReferenceError. A stale assignment must
+// lose to a complete carried map, loudly.
+function overlayAssignmentMap(base, assigned, identifiers, label) {
+  if (!assigned) return base;
+  const merged = { ...(base || {}), ...assigned };
+  const slots = [...new Set((identifiers || []).map(String))];
+  const dupes = duplicateSlotNames(merged, slots);
+  // A partial assignment that RENAMES a slot the carried map already names is
+  // written against another shape; one that only fills blanks or agrees is
+  // fine. A complete assignment is trusted for this shape (it is the fix).
+  const renames = Object.keys(assigned).filter(
+    k => base && base[k] && base[k] !== assigned[k]
+  );
+  const partial = Object.keys(assigned).length < slots.length;
+  if (dupes.length > 0 || (partial && renames.length > 0)) {
+    console.warn(
+      `Warning: NEW_PROMPT_ASSIGNMENTS identifierMap for "${label}" is stale ` +
+        `(${Object.keys(assigned).length} named vs ${slots.length} live slots` +
+        (dupes.length ? `; overlay would duplicate ${dupes.join(', ')}` : '') +
+        (renames.length ? `; would rename slot(s) ${renames.join(', ')}` : '') +
+        `) — keeping the ${base ? 'carried' : 'generated'} map. Update the assignment.`
+    );
+    return base;
+  }
+  return merged;
+}
+
+// Names that would label more than one DISTINCT slot. Two slots sharing a name
+// cannot both be addressed by an override, so this is always a catalogue bug.
+function duplicateSlotNames(map, slots) {
+  const seen = new Map();
+  for (const k of new Set(slots)) {
+    const n = map && map[k];
+    if (!n) continue;
+    seen.set(n, (seen.get(n) || 0) + 1);
+  }
+  return [...seen].filter(([, c]) => c > 1).map(([n]) => n);
+}
 
 function lookupNewPromptAssignment(content) {
   for (const a of NEW_PROMPT_ASSIGNMENTS) {
@@ -3110,7 +3192,62 @@ function classifyByCache(body) {
 // that ARE model-facing but can never be independently overridden, so
 // cataloguing them only manufactures "Could not find" warnings at --apply).
 // Everything here is also the first gate inside validateInput.
+// The template's text with every `${…}` slot replaced by the contents of the
+// string literals inside it. Balanced-brace walk; nested templates recurse.
+function proseOutsideSlots(text) {
+  let out = '';
+  let i = 0;
+  while (i < text.length) {
+    if (text[i] === '$' && text[i + 1] === '{' && text[i - 1] !== '\\') {
+      let depth = 1;
+      let j = i + 2;
+      while (j < text.length && depth > 0) {
+        const c = text[j];
+        if (c === "'" || c === '"') {
+          let k = j + 1;
+          while (k < text.length && text[k] !== c) k += text[k] === '\\' ? 2 : 1;
+          out += ' ' + text.slice(j + 1, k) + ' ';
+          j = k + 1;
+          continue;
+        }
+        if (c === '`') {
+          let k = j + 1;
+          while (k < text.length && text[k] !== '`') k += text[k] === '\\' ? 2 : 1;
+          out += ' ' + proseOutsideSlots(text.slice(j + 1, k)) + ' ';
+          j = k + 1;
+          continue;
+        }
+        if (c === '{') depth += 1;
+        else if (c === '}') depth -= 1;
+        j += 1;
+      }
+      i = j;
+      continue;
+    }
+    out += text[i];
+    i += 1;
+  }
+  return out;
+}
+
 function isHardExcluded(text) {
+  // No prose at all — a template that is only interpolation scaffolding
+  // (`${x}\n\n${y()}`, `${a}, ${b}`). Nothing model-facing is authored here,
+  // so an override can only ever be "unchanged", while the regex built from
+  // punctuation-only pieces matches EVERY site of that shape in the bundle:
+  // on CC 2.1.257 the four-site `tool-result-readmcpresourcedir-listing`
+  // entry absorbed the Workflow tool description's `${t}\n\n${ain()}` and
+  // the shared override spliced `ain(…_VAR_2)` — a bare identifier — into it.
+  // `text` is the raw template source. Prose counts outside the `${…}`
+  // slots and inside any string literal within them (`${x??"rejected as too
+  // large…"}` is model-facing); identifiers and operators inside a slot do
+  // not (`ain`, `content`, `command` are not prose).
+  // A lone glyph prefix (`⚠ ${e.content}`, stored as `\u26a0` in the Bun
+  // bundle) is still authored text; keep it.
+  if (
+    !/[A-Za-z]{3,}|[^ -~\s]|\\u[0-9a-fA-F]{4}/.test(proseOutsideSlots(text))
+  )
+    return true;
   // Bundled skill build-tooling / spawned-subprocess scripts — executable
   // JS/MJS source shipped inside a skill, not prompt text.
   if (text.startsWith('#!/usr/bin/env node')) return true;
@@ -4547,10 +4684,12 @@ function mergeWithExisting(newData, oldData, currentVersion) {
       // post-rename JSONs. Without this, a report/greenfield extraction seeded
       // from an older JSON silently resurrects the old id.
       const assignedFromMap = lookupNewPromptAssignment(newContent);
-      const overlaidIdentifierMap =
-        assignedFromMap && assignedFromMap.identifierMap
-          ? { ...matchingOld.identifierMap, ...assignedFromMap.identifierMap }
-          : matchingOld.identifierMap;
+      const overlaidIdentifierMap = overlayAssignmentMap(
+        matchingOld.identifierMap,
+        assignedFromMap && assignedFromMap.identifierMap,
+        newItem.identifiers,
+        (assignedFromMap && assignedFromMap.id) || matchingOld.id
+      );
       return {
         ...newItem,
         name: (assignedFromMap && assignedFromMap.name) || matchingOld.name,
@@ -4577,10 +4716,12 @@ function mergeWithExisting(newData, oldData, currentVersion) {
         `Fuzzy-matched item ${idx} to "${fuzzyOld.name || fuzzyOld.id}" (${oldLen} → ${newContent.length} chars)`
       );
       const assignedFromMap = lookupNewPromptAssignment(newContent);
-      const overlaidIdentifierMap =
-        assignedFromMap && assignedFromMap.identifierMap
-          ? { ...fuzzyOld.identifierMap, ...assignedFromMap.identifierMap }
-          : fuzzyOld.identifierMap;
+      const overlaidIdentifierMap = overlayAssignmentMap(
+        fuzzyOld.identifierMap,
+        assignedFromMap && assignedFromMap.identifierMap,
+        newItem.identifiers,
+        (assignedFromMap && assignedFromMap.id) || fuzzyOld.id
+      );
       return {
         ...newItem,
         name: (assignedFromMap && assignedFromMap.name) || fuzzyOld.name,
@@ -4625,9 +4766,12 @@ function mergeWithExisting(newData, oldData, currentVersion) {
       // If the assignment provides identifierMap (semantic names for the
       // ${var.field} interpolations), use it. Override files reference these
       // semantic names — without them, syncPrompt falls back to UNKNOWN_<idx>.
-      const finalIdentifierMap = assigned.identifierMap
-        ? { ...newItem.identifierMap, ...assigned.identifierMap }
-        : newItem.identifierMap;
+      const finalIdentifierMap = overlayAssignmentMap(
+        newItem.identifierMap,
+        assigned.identifierMap,
+        newItem.identifiers,
+        assigned.id
+      );
       return {
         ...newItem,
         name: assigned.name,
@@ -4784,6 +4928,28 @@ if (require.main === module) {
   // prompts (upstream lacks them) keep our carried/curated names. This is what
   // keeps an override's `${NAME}` landing on the slot it means. Point
   // TWEAKCC_UPSTREAM_JSON at upstream's prompts-<ver>.json.
+  //
+  // The step is NOT optional. A run without it regenerates every adopted map
+  // from carried/generated names — on CC 2.1.257 that silently moved the slot
+  // names of eight prompts whose shape had not changed, and every override
+  // written against the adopted names stopped resolving. Refuse to run without
+  // an upstream JSON unless the caller says so explicitly (TWEAKCC_NO_UPSTREAM=1,
+  // for a greenfield extraction with nothing to adopt from).
+  if (
+    !process.env.TWEAKCC_NO_UPSTREAM &&
+    !(
+      process.env.TWEAKCC_UPSTREAM_JSON &&
+      fs.existsSync(process.env.TWEAKCC_UPSTREAM_JSON)
+    )
+  ) {
+    console.error(
+      'FATAL: TWEAKCC_UPSTREAM_JSON is unset or missing. Point it at the newest ' +
+        'upstream prompts-<ver>.json (git show upstream/main:data/prompts/…) so ' +
+        'shared identifierMaps are adopted; set TWEAKCC_NO_UPSTREAM=1 only for a ' +
+        'deliberate extraction with no upstream to adopt from.'
+    );
+    process.exit(1);
+  }
   if (
     process.env.TWEAKCC_UPSTREAM_JSON &&
     fs.existsSync(process.env.TWEAKCC_UPSTREAM_JSON)
@@ -4867,11 +5033,32 @@ if (require.main === module) {
     for (const lbl of p.identifiers || []) {
       if (!(lbl in p.identifierMap)) p.identifierMap[lbl] = '';
     }
+    // The reverse case: a slot that LEFT the prompt keeps its carried name
+    // otherwise, and the sync then writes a phantom `variables:` entry that an
+    // override can reference with nothing behind it (git-guidance-block on
+    // 2.1.257 carried a VAR_3 for a fourth slot that no longer existed).
+    const live = new Set((p.identifiers || []).map(String));
+    for (const k of Object.keys(p.identifierMap)) {
+      if (!live.has(String(k))) delete p.identifierMap[k];
+    }
     for (const k of Object.keys(p.identifierMap)) {
       if (!p.identifierMap[k]) {
         p.identifierMap[k] = `${slug}_VAR_${k}`;
       }
     }
+  }
+
+  // A name that labels two distinct slots of one prompt is unaddressable from an
+  // override and has already shipped a ReferenceError once (2.1.257). Refuse to
+  // write a catalogue that carries one.
+  const dupReport = mergedResult.prompts
+    .map(p => [p.id, duplicateSlotNames(p.identifierMap, (p.identifiers || []).map(String))])
+    .filter(([, d]) => d.length > 0);
+  if (dupReport.length > 0) {
+    for (const [id, d] of dupReport) {
+      console.error(`FATAL: "${id}" names ${d.join(', ')} on more than one slot`);
+    }
+    process.exit(1);
   }
 
   // Sort prompts by lexicographic order of pieces joined together (without interpolated vars)
