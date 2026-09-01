@@ -32,9 +32,10 @@ const latestCommittedVer = () => {
 const VER = process.env.CC_VER || latestCommittedVer();
 const ourJson = process.argv[2] || `data/prompts/prompts-${VER}.json`;
 const upstreamJson = process.argv[3] || `/tmp/pieb-${VER}.json`;
+// Default to whatever the live symlink names, not a set that may be retired.
 const overridesDir =
   process.argv[4] ||
-  `${process.env.HOME}/.tweakcc/lobotomized-claude-code/system-prompts-opus-4-8`;
+  fs.realpathSync(`${process.env.HOME}/.tweakcc/system-prompts`);
 
 const OURS = JSON.parse(fs.readFileSync(ourJson, 'utf8'));
 // Upstream reference is required. On a box without the `upstream` remote (e.g. a

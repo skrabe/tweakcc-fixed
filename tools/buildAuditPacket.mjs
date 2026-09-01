@@ -39,12 +39,18 @@ const activeSet = fs.realpathSync(
   path.join(os.homedir(), '.tweakcc', 'system-prompts')
 );
 const activeName = path.basename(activeSet);
+// Discover the maintained sets from disk rather than naming them: the roster
+// changes (three legacy sets were retired on 2026-09-01), and a hardcoded list
+// silently stops covering a set the moment one is added or removed.
 const allSets = [
   activeName,
-  ...['system-prompts-opus-4-8', 'system-prompts-fable-5', 'system-prompts-opus-4-7'].filter(
-    s => s !== activeName
-  ),
-].filter(s => fs.existsSync(path.join(LCC, s)));
+  ...fs
+    .readdirSync(LCC, { withFileTypes: true })
+    .filter(d => d.isDirectory() && d.name.startsWith('system-prompts-'))
+    .map(d => d.name)
+    .filter(s => s !== activeName)
+    .sort(),
+];
 
 const prompts = JSON.parse(fs.readFileSync(jsonPath, 'utf8')).prompts;
 // The realign workflow's prompt tells the agent to read "the complete old
