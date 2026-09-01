@@ -54360,5 +54360,64 @@
     "id": "system-reminder-artifact-editor-follow-up-stopped",
     "name": "System Reminder: Artifact editor follow-up worker stopped",
     "desc": "Reason clause: the artifact-editor worker stopped before reading the follow-up."
+  },
+  "0d940ef3e16ed390934dba1c6b75feddf3ebada7": {
+    "facing": "model",
+    "id": "system-reminder-session-context",
+    "name": "System Reminder: Session context",
+    "desc": "Provides selected session context values, marks replacement updates, and directs the agent to use them only when highly relevant"
+  },
+  "abde2687c8d7349bf8189f59e51068996de15138": {
+    "facing": "model",
+    "id": "system-prompt-env-info-scratchpad-directory",
+    "name": "Environment Info Scratchpad Directory",
+    "desc": "Environment-info line naming the session scratchpad and directing the model to use it for temporary files instead of /tmp."
+  },
+  "32d83c36a02a91b08b9fe12987a1438f15adbd6a": { "facing": "internal" },
+  "1b6e5a58712530750384a4599ab997dc2e4c4aec": { "facing": "internal" },
+  "418189fc103354f213c1213e788359b5dbefb8ba": { "facing": "internal" },
+  "55440713d1e7bc0f0d6656cde376c6b81867b422": {
+    "facing": "model",
+    "id": "system-prompt-env-info-scratchpad-no-longer-available",
+    "name": "Environment Info Scratchpad No Longer Available",
+    "desc": "Environment-update line telling the model the previously announced scratchpad directory is gone and must not be used."
+  },
+  "1b16847be0f73c9798e2f7967e23fea92d4296a9": {
+    "facing": "model",
+    "id": "system-reminder-session-context-no-longer-apply",
+    "name": "System Reminder: Session context no longer applies",
+    "desc": "Empty-fields branch of the session_context reminder: after a re-read, earlier account/project/git values no longer apply."
+  },
+  "de9667375e9aa1eec59e1dd24e1f0aa0a9226894": { "facing": "internal" },
+  "5a58d258dd0f1fa8745296af689ad75d5e629ee3": { "facing": "ui" },
+  "7e28477540ce1c24ae11e5af120e558294586634": {
+    "facing": "model",
+    "id": "system-reminder-instruction-files-reread",
+    "name": "System Reminder: Instruction files re-read",
+    "desc": "Header on a changed instructions attachment stating the files were re-read and differ from earlier copies."
+  },
+  "274f2b45c0797996100b74cc0e86f9c4bcd72fa2": {
+    "facing": "model",
+    "id": "system-reminder-instruction-files-replace-earlier-copies",
+    "name": "System Reminder: Instruction files replace earlier copies",
+    "desc": "Preamble joining re-read instruction files, stating each copy replaces the earlier one and the instructions header still applies."
+  },
+  "3ea00b453843c2e63da94b174fe6c91a59157c81": {
+    "facing": "model",
+    "id": "system-reminder-instruction-files-reread-removals-only",
+    "name": "System Reminder: Instruction files re-read (removals only)",
+    "desc": "Re-read header naming the reason, emitted when instruction files were removed and no file bodies changed."
+  },
+  "9468d586aaa908264b5557bd385be6eed79a6752": {
+    "facing": "model",
+    "id": "system-reminder-instruction-files-no-longer-present",
+    "name": "System Reminder: Instruction file no longer present",
+    "desc": "Names an instruction file that is gone since the previous read; one line per removed path."
+  },
+  "a4e1d9782d60d02766165f67665e690529fe4475": {
+    "facing": "model",
+    "id": "system-reminder-instruction-files-changed-no-reason",
+    "name": "System Reminder: Instruction files changed",
+    "desc": "Header used when instruction files changed but no re-read reason is recorded."
   }
 }

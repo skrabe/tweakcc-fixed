@@ -7473,6 +7473,16 @@
     "version": "2.1.251",
     "why": "Unique environment-update when the primary cwd stops being a git worktree."
   },
+  "system-prompt-env-info-scratchpad-directory": {
+    "verdict": "pristine-keep",
+    "version": "2.1.252",
+    "why": "Announces the session scratchpad path and the use-it-instead-of-/tmp rule inside the environment attachment. Looks duplicated by system-prompt-scratchpad-directory, but the two gates are independent \u2014 the env block needs Ll() (tengu_carved_slate) while the carrier block is skipped on suppressScratchpad/isolatedContext \u2014 so cutting the shared sentence leaves a surface with no copy."
+  },
+  "system-prompt-env-info-scratchpad-no-longer-available": {
+    "verdict": "pristine-keep",
+    "version": "2.1.252",
+    "why": "Sole revocation signal for a previously announced scratchpad path; emitted only on the environment-delta branch. Nothing unique to cut."
+  },
   "system-prompt-env-info-working-directory-changed": {
     "verdict": "pristine-keep",
     "version": "2.1.251",
@@ -10043,6 +10053,31 @@
     "version": "2.1.241",
     "why": "Unique hook-success reminder shape. Keep."
   },
+  "system-reminder-instruction-files-changed-no-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.252",
+    "why": "The no-reason arm of the header ternary; it is the subject of the supersession sentence, so wiping it breaks the assembled line."
+  },
+  "system-reminder-instruction-files-no-longer-present": {
+    "verdict": "pristine-keep",
+    "version": "2.1.252",
+    "why": "Per-path removal line; the only string that names a removed instruction file. Cannot be inferred from the reason header."
+  },
+  "system-reminder-instruction-files-replace-earlier-copies": {
+    "verdict": "pristine-keep",
+    "version": "2.1.252",
+    "why": "Carries the supersession contract and the preamble pointer around the changed-file payload slot. Only statement of either; wiping empties the payload."
+  },
+  "system-reminder-instruction-files-reread": {
+    "verdict": "trim",
+    "version": "2.1.252",
+    "why": "Kept the re-read header and its reason slot; cut the trailing restatement of difference. The header binds to a local that is interpolated exactly once, inside the sibling that already states the supersession, so there is no path where it renders alone."
+  },
+  "system-reminder-instruction-files-reread-removals-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.252",
+    "why": "Header for the removals-only branch, the only copy of the re-read reason when no file bodies remain. The sibling header does not render on that branch."
+  },
   "system-reminder-interrupted-response-continuation": {
     "verdict": "pristine-keep",
     "version": "2.1.241",
@@ -10595,8 +10630,13 @@
   },
   "system-reminder-session-context": {
     "verdict": "trim",
-    "version": "2.1.251",
-    "why": "Keep `${HAS_SESSION_CONTEXT_CHANGED}` / `${SESSION_CONTEXT_ENTRIES}` framing. Cut the IMPORTANT hedge; question-context already suppressed the same paragraph and cannot be cited as coverage."
+    "version": "2.1.252",
+    "why": "Reproduce the leading conditional verbatim against the 2.1.252 nested-ternary slot; cut the IMPORTANT hedge about relevance."
+  },
+  "system-reminder-session-context-no-longer-apply": {
+    "verdict": "pristine-keep",
+    "version": "2.1.252",
+    "why": "Invalidation notice for the empty-field branch, naming account/project/git status. Mutually exclusive with the session-context reminder, which states the opposite case."
   },
   "system-reminder-session-continuation": {
     "verdict": "pristine-keep",
