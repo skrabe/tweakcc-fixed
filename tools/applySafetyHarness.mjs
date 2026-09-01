@@ -147,6 +147,84 @@ export const introducedUnresolvedSlots = (orig, patched) => {
   return out;
 };
 
+// Human-shaped placeholder names (UPPER_SNAKE, or a bare all-caps word of 4+)
+// used as identifiers INSIDE `${…}` expressions. dangerousSlots skips these on
+// purpose ("checked elsewhere"), and the apply-time check used to read only
+// the token directly after `${` — so `${e!==null?OUTPUT_STYLE_AGENT_INTRO_FN():…}`
+// passed every gate on CC 2.1.257 and ReferenceError'd every interactive turn.
+// Counted per name and compared against the pristine, because the pristine
+// legitimately carries a few (`${CLAUDE_PLUGIN_ROOT}` docs text inside plain
+// strings, env-var names in embedded workflow scripts); only growth is ours.
+//
+// Deliberately NOT a parser. A balanced-brace walk over 32 MB of minified JS
+// desyncs on the first stray backtick inside a quoted string and then swallows
+// megabytes, which is how the Artifact-description survivors on 2.1.257 went
+// unreported. The scan is local instead: a name counts when it sits within
+// 300 characters after an unescaped `${` with no `}` in between — enough for
+// any ternary an override writes, and impossible to desync.
+const humanNameSlots = (s) => {
+  const out = new Map();
+  const re = /(?<!\\)\$\{[^}]{0,300}/g;
+  for (const m of s.matchAll(re)) {
+    for (const t of m[0].matchAll(/(?<![\w$.])([A-Z][A-Z0-9_]{3,})(?![\w$])/g)) {
+      const name = t[1];
+      if (JS_GLOBALS.has(name)) continue;
+      out.set(name, (out.get(name) || 0) + 1);
+    }
+  }
+  return out;
+};
+const JS_GLOBALS = new Set(['JSON', 'MATH', 'NULL', 'TRUE', 'FALSE']);
+
+// `knownNames` is the catalogue's placeholder vocabulary (every identifierMap
+// value of the version being applied). Restricting to it is what makes this
+// specific: the pristine bundle carries thousands of ALL_CAPS tokens inside
+// `${…}` — env-var names, embedded workflow-script source, docs text — and a
+// text-level scan cannot tell a template literal from a plain string; but a
+// catalogue name is never the binary's own, so any growth is an override's
+// unresolved placeholder.
+export const introducedHumanNames = (orig, patched, knownNames) => {
+  const o = humanNameSlots(orig);
+  const p = humanNameSlots(patched);
+  const out = [];
+  for (const [name, n] of p) {
+    if (knownNames && !knownNames.has(name)) continue;
+    const delta = n - (o.get(name) || 0);
+    if (delta > 0) out.push(`${name}(+${delta})`);
+  }
+  return out;
+};
+
+// The catalogue's names alone are not enough: a prompt that LOST its
+// interpolations between versions (tool-description-artifact-update-and-list-
+// guidance went from 6 slots to none on 2.1.257) drops its names from the
+// catalogue while the override still authors them — and those are exactly
+// the survivors this backstop exists to see. So the vocabulary is the
+// catalogue's names plus every name the override set writes inside `${…}`.
+export const placeholderVocabulary = (promptsJsonPath, setDirs = []) => {
+  const names = new Set();
+  try {
+    const data = JSON.parse(fs.readFileSync(promptsJsonPath, 'utf8'));
+    for (const prompt of data.prompts || [])
+      for (const v of Object.values(prompt.identifierMap || {})) if (v) names.add(v);
+  } catch {
+    /* absent catalogue: the override set still supplies its vocabulary */
+  }
+  for (const dir of setDirs) {
+    let files = [];
+    try {
+      files = fs.readdirSync(dir).filter((f) => f.endsWith('.md'));
+    } catch {
+      continue;
+    }
+    for (const f of files) {
+      const md = fs.readFileSync(path.join(dir, f), 'utf8');
+      for (const [name] of humanNameSlots(md)) names.add(name);
+    }
+  }
+  return names.size ? names : null;
+};
+
 // Raw (unescaped) non-ASCII the patch INTRODUCED. Compared per codepoint against
 // the pristine rather than absolute-counted: the pristine binary carries plenty
 // of its own non-ASCII, so only a codepoint whose count GREW can have come from
@@ -191,6 +269,7 @@ export const harnessVerdict = ({
   cnf,
   cannotApply,
   introduced,
+  humanNames = [],
   rawNonAscii,
   parses,
   wfScriptErrors,
@@ -199,6 +278,7 @@ export const harnessVerdict = ({
   cnf === 0 &&
   cannotApply === 0 &&
   introduced.length === 0 &&
+  humanNames.length === 0 &&
   rawNonAscii.length === 0 &&
   parses &&
   wfScriptErrors.length === 0;
@@ -276,6 +356,14 @@ try {
     introduced.push(`${v}(+${n})`);
   }
 
+  const humanNames = introducedHumanNames(
+    orig,
+    patched,
+    placeholderVocabulary(
+      path.join(REPO, 'data', 'prompts', `prompts-${VERSION}.json`),
+      [path.join(tmpHome, '.tweakcc', 'system-prompts'), path.join(tmpHome, '.tweakcc', 'system-reminders')]
+    )
+  );
   const rawNonAscii = introducedRawNonAscii(orig, patched);
 
   // Syntax check. The check must use a parser capable of the language features
@@ -405,6 +493,7 @@ try {
     console.log(`  ${line.trim()}`);
   console.log(`cannot apply safely (warns): ${cannotApply}`);
   console.log(`introduced minified \${var}: ${introduced.length}  ${introduced.slice(0, 12).join(' ')}`);
+  console.log(`introduced unresolved \${NAME}: ${humanNames.length}  ${humanNames.slice(0, 12).join(' ')}`);
   console.log(`introduced raw non-ASCII: ${rawNonAscii.length}  ${rawNonAscii.slice(0, 12).join(' ')}`);
   console.log(`patched parses:    ${parses}  [${parseMode}]`);
   console.log(`workflow-script JS: ${wfScriptErrors.length === 0 ? 'ok' : wfScriptErrors.join(' | ')}`);
@@ -413,6 +502,7 @@ try {
     cnf,
     cannotApply,
     introduced,
+    humanNames,
     rawNonAscii,
     parses,
     wfScriptErrors,

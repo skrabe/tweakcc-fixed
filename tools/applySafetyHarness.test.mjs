@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   harnessVerdict,
+  introducedHumanNames,
   introducedRawNonAscii,
   introducedUnresolvedSlots,
 } from './applySafetyHarness.mjs';
@@ -17,6 +18,12 @@ const clean = {
 describe('applySafetyHarness: harnessVerdict', () => {
   it('passes only when every check is clean', () => {
     expect(harnessVerdict(clean)).toBe(true);
+  });
+
+  it('fails on an unresolved placeholder name the patch introduced', () => {
+    expect(
+      harnessVerdict({ ...clean, humanNames: ['OUTPUT_STYLE_AGENT_INTRO_FN(+1)'] })
+    ).toBe(false);
   });
 
   it('fails on a "cannot apply safely" warning', () => {
@@ -186,5 +193,42 @@ describe('applySafetyHarness: introducedUnresolvedSlots byte-shift immunity', ()
     const orig = 'return `plain head tail`;';
     const patched = 'return `plain head ${w} brand new tail`;';
     expect(flags(orig, patched)).toEqual(['w(+1)']);
+  });
+});
+
+describe('applySafetyHarness: introducedHumanNames', () => {
+  const known = new Set(['OUTPUT_STYLE_AGENT_INTRO_FN', 'LISTING_VAR_2', 'VERSION']);
+
+  it('flags a catalogue name anywhere inside a ${…} expression', () => {
+    // CC 2.1.257: neither `${e…` (bound, not a slot) nor the ALLCAPS filter in
+    // dangerousSlots could see the leak inside the ternary.
+    const orig = 'f(e){return`\n${e!==null?m3n():"x"}`}';
+    const patched = 'f(e){return`\n${e!==null?OUTPUT_STYLE_AGENT_INTRO_FN():"x"}`}';
+    expect(introducedHumanNames(orig, patched, known)).toEqual([
+      'OUTPUT_STYLE_AGENT_INTRO_FN(+1)',
+    ]);
+  });
+
+  it('flags an unresolved call argument', () => {
+    expect(
+      introducedHumanNames('`${t}\n\n${ain()}`', '`${t}\n\n${ain(LISTING_VAR_2)}`', known)
+    ).toEqual(['LISTING_VAR_2(+1)']);
+  });
+
+  it('ignores a name the pristine already carried at the same count', () => {
+    const s = "d:'${VERSION} of the CLI'";
+    expect(introducedHumanNames(s, s, known)).toEqual([]);
+  });
+
+  it('ignores env-var and script tokens outside the catalogue vocabulary', () => {
+    expect(
+      introducedHumanNames('x', '`${CLAUDE_PLUGIN_ROOT}/${HOME}`', known)
+    ).toEqual([]);
+  });
+
+  it('ignores a backslash-escaped literal opener', () => {
+    expect(
+      introducedHumanNames('x', '`docs \\${OUTPUT_STYLE_AGENT_INTRO_FN}`', known)
+    ).toEqual([]);
   });
 });
