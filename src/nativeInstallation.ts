@@ -1800,26 +1800,37 @@ function repackELFSection(
     const vaddrBytes = Buffer.alloc(8);
     vaddrBytes.writeBigUInt64LE(oldBunSectionVaddr);
 
-    let bunCompiledVaddr: bigint | null = null;
     const rwContent = rwSegment.content;
     const rwVaddrStart = rwSegment.virtualAddress;
-    const firstAligned = alignBigInt(
-      rwVaddrStart,
-      BigInt(BLOB_HEADER_ALIGNMENT)
-    );
-    const lastCandidate = rwVaddrStart + BigInt(rwContent.length) - 8n;
+    // Stop at the .bun section start when it maps inside this segment so
+    // payload bytes cannot alias the marker.
+    const rwVaddrEnd = rwVaddrStart + BigInt(rwContent.length);
+    const scanEnd =
+      oldBunSectionVaddr > rwVaddrStart && oldBunSectionVaddr < rwVaddrEnd
+        ? oldBunSectionVaddr
+        : rwVaddrEnd;
 
-    for (
-      let va = firstAligned;
-      va <= lastCandidate;
-      va += BigInt(BLOB_HEADER_ALIGNMENT)
-    ) {
-      const off = Number(va - rwVaddrStart);
-      if (rwContent.subarray(off, off + 8).equals(vaddrBytes)) {
-        bunCompiledVaddr = va;
-        break;
+    const findMarker = (alignment: bigint): bigint | null => {
+      for (
+        let off = rwContent.indexOf(vaddrBytes);
+        off !== -1;
+        off = rwContent.indexOf(vaddrBytes, off + 1)
+      ) {
+        const va = rwVaddrStart + BigInt(off);
+        if (va + 8n > scanEnd) {
+          return null;
+        }
+        if (va % alignment === 0n) {
+          return va;
+        }
       }
-    }
+      return null;
+    };
+
+    // Current builds emit BUN_COMPILED at pointer alignment (sh_addralign =
+    // 8) despite declaring BLOB_HEADER_ALIGNMENT; retry at 8 when needed.
+    const bunCompiledVaddr =
+      findMarker(BigInt(BLOB_HEADER_ALIGNMENT)) ?? findMarker(8n);
 
     if (bunCompiledVaddr === null) {
       throw new Error(
