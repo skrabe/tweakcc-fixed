@@ -8,7 +8,6 @@ vi.mock('../systemPromptSync', async () => {
   return {
     ...actual,
     loadSystemPromptsWithRegex: vi.fn(),
-    loadIdentifierMapUnion: vi.fn(),
   };
 });
 
@@ -96,9 +95,6 @@ function setupMocks(
 describe('systemPrompts.ts', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Default: empty union (no known human-names) → guard never skips.
-    // Tests exercising the guard set their own union explicitly.
-    vi.mocked(promptSync.loadIdentifierMapUnion).mockResolvedValue(new Set());
   });
 
   describe('applySystemPrompts', () => {
@@ -325,9 +321,6 @@ describe('systemPrompts.ts', () => {
       // ${VERSION} has no underscore, so the old ALL_CAPS_WITH_UNDERSCORE
       // grammar regex missed it. The union check catches it because VERSION is
       // a member of the leaf's identifierMap vocabulary.
-      vi.mocked(promptSync.loadIdentifierMapUnion).mockResolvedValue(
-        new Set(['VERSION'])
-      );
       const mockPromptData = buildMockPromptData({
         prompt: { content: 'before ${VERSION} after' },
         regex: 'before \\$\\{VERSION\\} after',
@@ -352,9 +345,6 @@ describe('systemPrompts.ts', () => {
       // getInterpolatedContent leaves it verbatim. Embedding it into a `${...}`
       // template-literal slot would ReferenceError at launch, so the guard skips
       // the prompt and keeps CC's original blob.
-      vi.mocked(promptSync.loadIdentifierMapUnion).mockResolvedValue(
-        new Set(['STALE_VAR_NAME'])
-      );
       const mockPromptData = buildMockPromptData({
         prompt: { content: 'before ${STALE_VAR_NAME} after' },
         regex: 'before \\$\\{STALE_VAR_NAME\\} after',
@@ -373,34 +363,31 @@ describe('systemPrompts.ts', () => {
       expect(result.results[0].details).toContain('unresolved placeholder');
     });
 
-    it('should NOT skip an underscored ${NAME} that is not a human-name (real runtime binding, absent from the union)', async () => {
-      // The old grammar regex flagged any ALL_CAPS_WITH_UNDERSCORE token,
-      // false-positiving on a genuine runtime interpolation. The union check
-      // only skips known human-names, so a real binding absent from the union
-      // is applied normally.
-      vi.mocked(promptSync.loadIdentifierMapUnion).mockResolvedValue(
-        new Set(['GLOB_TOOL_NAME'])
-      );
+    it('should skip when a human-name placeholder survives inside an expression, not just after ${', async () => {
+      // CC 2.1.257: `${e!==null?OUTPUT_STYLE_AGENT_INTRO_FN():…}` shipped into
+      // the lean system-prompt builder because the old check only read the
+      // token directly after `${` and saw a resolved `e`.
       const mockPromptData = buildMockPromptData({
-        prompt: { content: 'wait ${MAX_RETRY_COUNT} ms then stop' },
-        regex: 'wait \\$\\{MAX_RETRY_COUNT\\} ms then go',
-        getInterpolatedContent: () => 'wait ${MAX_RETRY_COUNT} ms then stop',
+        prompt: {
+          content:
+            '${OUTPUT_STYLE_CONFIG!==null?OUTPUT_STYLE_AGENT_INTRO_FN():"You are an agent."} # Harness',
+        },
+        regex: '\\$\\{e!==null\\?m3n\\(\\):"You are an agent."\\} # Harness',
+        getInterpolatedContent: () =>
+          '${e!==null?OUTPUT_STYLE_AGENT_INTRO_FN():"You are an agent."} # Harness',
         pieces: [],
       });
 
       setupMocks(mockPromptData);
 
-      const cliContent = 'desc:`wait ${MAX_RETRY_COUNT} ms then go`';
+      const cliContent =
+        'desc:`${e!==null?m3n():"You are an agent."} # Harness`';
 
       const result = await applySystemPrompts(cliContent, '1.0.0', false);
 
-      expect(result.results[0].applied).toBe(true);
-      expect(result.results[0].details ?? '').not.toContain(
-        'unresolved placeholder'
-      );
-      expect(result.newContent).toBe(
-        'desc:`wait ${MAX_RETRY_COUNT} ms then stop`'
-      );
+      expect(result.newContent).toBe(cliContent);
+      expect(result.results[0].applied).toBe(false);
+      expect(result.results[0].details).toContain('unresolved placeholder');
     });
 
     it('should NOT skip when an ALL_CAPS placeholder is backslash-escaped (literal env-var docs)', async () => {
@@ -408,9 +395,6 @@ describe('systemPrompts.ts', () => {
       // interpolation slots. Even when the name IS a union member, the
       // backslash-escape (negative lookbehind) keeps the guard from flagging it
       // -- so the escape, not mere absence from the union, is what protects it.
-      vi.mocked(promptSync.loadIdentifierMapUnion).mockResolvedValue(
-        new Set(['CLAUDE_PLUGIN_ROOT'])
-      );
       const mockPromptData = buildMockPromptData({
         prompt: { content: 'use \\${CLAUDE_PLUGIN_ROOT} now' },
         regex: 'use \\\\\\$\\{CLAUDE_PLUGIN_ROOT\\} here',
@@ -441,9 +425,6 @@ describe('systemPrompts.ts', () => {
       // "${PEER_MESSAGE_HEADER}" as literal text into the binary (the
       // cross-session reminder corruption, 2.1.170). The plain entry must
       // skip and leave its site pristine, without the loud drift warning.
-      vi.mocked(promptSync.loadIdentifierMapUnion).mockResolvedValue(
-        new Set(['PEER_MESSAGE_HEADER'])
-      );
       const md = '${PEER_MESSAGE_HEADER}\nIMPORTANT: stay safe edited';
       const wrapperEntry = buildMockPromptData({
         promptId: 'peer-warning',
@@ -490,9 +471,6 @@ describe('systemPrompts.ts', () => {
       // a union member, but the prompt is a quoted string where the token is
       // inert literal text — and no same-id sibling names it. Behavior must
       // stay inject-as-is, not skip.
-      vi.mocked(promptSync.loadIdentifierMapUnion).mockResolvedValue(
-        new Set(['VERSION'])
-      );
       const mockPromptData = buildMockPromptData({
         prompt: { content: 'run with ${VERSION} flag now' },
         regex: 'run with \\$\\{VERSION\\} flag',

@@ -6,7 +6,6 @@ import {
   reconstructContentFromPieces,
   encodeReplacementForDelimiter,
   needsDelimiterAwareEscaping,
-  loadIdentifierMapUnion,
 } from '../systemPromptSync';
 import {
   detectUnicodeEscaping,
@@ -104,7 +103,6 @@ export const applySystemPrompts = async (
   // placeholder, unioned across all bundled prompt JSONs. Used below to detect
   // a leaked (unsubstituted) human-name surviving into a backtick template
   // literal. Loaded once per apply.
-  const identifierMapUnion = await loadIdentifierMapUnion();
 
   // Per-id union of identifierMap names across same-id entries. A prompt that
   // exists at multiple code-sites yields one entry per site sharing one id and
@@ -282,23 +280,22 @@ export const applySystemPrompts = async (
       const matchIndex = match.index;
       const delimiter = working.charAt(matchIndex - 1);
 
-      // Guard: a tweakcc human-name placeholder that survives interpolation into
-      // a `${...}` template-literal slot is invalid JS and ReferenceErrors at
-      // launch (or when the prompt's code path first runs). This happens when the
-      // prompt-data identifierMap vocabulary changed between CC versions (e.g.
-      // PROMPT_VAR_N -> *_TOOL_NAME at 2.1.168, or a renamed semantic name like
-      // OPTIONAL_TAIL_NOTE) while the markdown still references the old name, so
-      // applyIdentifierMapping finds nothing to substitute and leaves the
-      // placeholder verbatim. Detect a surviving `${NAME}` whose NAME is a member
-      // of the identifierMap union (the set of every human-name the leaf has ever
-      // used as a placeholder) and that appears unchanged in BOTH the markdown
-      // source and the interpolated output. Validating against the union -- rather
-      // than guessing an ALL_CAPS_WITH_UNDERSCORE grammar -- catches single-word
-      // names like ${VERSION} the grammar missed and never false-positives on real
-      // minified vars (e.g. `${HL7}`), which are never human-names. Only dangerous
-      // inside backtick template literals; the same token in a plain '...'/"..."
-      // string is inert. Skip the prompt and keep CC's original blob rather than
-      // shipping a binary that won't boot.
+      // Guard: a tweakcc human-name placeholder that survives interpolation.
+      // Substitution rewrites every name the prompt's identifierMap knows into
+      // its minified identifier; one that survives is a name the map no
+      // longer has — the vocabulary moved between CC versions (a renamed slot,
+      // a slot that left, a catalogue entry that lost its interpolations). The
+      // detector reads the WHOLE `${…}` expression, not just its first token:
+      // CC 2.1.257 shipped `${e!==null?OUTPUT_STYLE_AGENT_INTRO_FN():…}` into
+      // the lean system-prompt builder past a first-token check, and every
+      // interactive turn then ended on a swallowed ReferenceError.
+      //
+      // Inside a backtick template literal the survivor is invalid JS. Inside
+      // a '…'/"…" string it is inert JS but still WRONG: the model reads
+      // `${…_VAR_0?\`If the user asks…` as prose (the Artifact description on
+      // 2.1.257 rendered exactly that). The only legitimate survivor is a
+      // literal the pristine text itself carries (`${VERSION}` in the
+      // data-anthropic-cli docs) — pass-through of Anthropic's own text.
       {
         // Only UNescaped `${NAME}` is dangerous: a backslash-escaped
         // `\${NAME}` is intentional literal text (e.g. the env-var docs
@@ -313,8 +310,7 @@ export const applySystemPrompts = async (
         // ||"(no text output)"}` into the binary because of it.
         const leaked = leakedPromptPlaceholders(
           interpolatedContent,
-          prompt.content,
-          identifierMapUnion
+          prompt.content
         );
 
         // Every leaked name resolvable by a same-id sibling entry (and none by
@@ -342,12 +338,22 @@ export const applySystemPrompts = async (
         }
 
         // A leaked name this entry should have resolved (or that no sibling
-        // can): genuine vocabulary drift. Inside a backtick template literal
-        // it is invalid JS that ReferenceErrors at launch — skip loudly. In
-        // '…'/"…" strings the same token is inert text and can be intentional
-        // (e.g. data-anthropic-cli's literal ${VERSION}), so it passes through
-        // unchanged there.
-        if (delimiter === '`' && leaked.length > 0) {
+        // can): genuine vocabulary drift. Skip loudly — unless every survivor
+        // is a literal the pristine span carries verbatim, which is Anthropic's
+        // own text passing through (data-anthropic-cli's `${VERSION}`).
+        // In a backtick host every survivor is live code, so nothing passes.
+        const pristineSpan = match[0];
+        const driftedNames =
+          delimiter === '`'
+            ? leaked
+            : leaked.filter(
+                name =>
+                  !new RegExp(
+                    '(?<!\\\\)\\$\\{' + name + '(?![A-Za-z0-9_])'
+                  ).test(pristineSpan)
+              );
+        if (driftedNames.length > 0) {
+          leaked.splice(0, leaked.length, ...driftedNames);
           console.log(
             chalk.red(
               `Unresolved placeholder \${${leaked[0]}} in "${prompt.name}" (markdown vocabulary out of sync with CC ${version} prompt data) - skipping`

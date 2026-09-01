@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
+  leakedPromptPlaceholders,
+  placeholderExpressionIdentifiers,
   changedSpan,
   delimiterBefore,
   introducedRawNonAscii,
@@ -308,5 +310,76 @@ describe('delimiterBefore', () => {
   it('reads the character immediately before the match', () => {
     expect(delimiterBefore('x=`body`', 3)).toBe('`');
     expect(delimiterBefore('body', 0)).toBe('');
+  });
+});
+
+describe('placeholderExpressionIdentifiers', () => {
+  it('reads every identifier in an expression, not just the first', () => {
+    const ids = placeholderExpressionIdentifiers(
+      '${A!==null?INTRO_FN():USE_ALT_FN()?ALT_INTRO:"You are an agent."}'
+    );
+    expect([...ids].sort()).toEqual(
+      ['A', 'ALT_INTRO', 'INTRO_FN', 'USE_ALT_FN', 'null'].sort()
+    );
+  });
+  it('reads call arguments and member roots but not property names', () => {
+    const ids = placeholderExpressionIdentifiers(
+      '${FN(ARG)} ${OBJ.finalText||"(none)"} ${JSON.stringify(x)}'
+    );
+    expect([...ids].sort()).toEqual(['ARG', 'FN', 'JSON', 'OBJ', 'x'].sort());
+  });
+  it('ignores string literals and escaped \\${ openers', () => {
+    const ids = placeholderExpressionIdentifiers(
+      'docs: \\${CLAUDE_PLUGIN_ROOT} and ${a?"NOT_AN_IDENT":`t ${B}`}'
+    );
+    expect([...ids].sort()).toEqual(['B', 'a']);
+  });
+});
+
+describe('leakedPromptPlaceholders', () => {
+  it('flags a human name surviving anywhere inside an expression', () => {
+    // CC 2.1.257: the catalogue renamed slots 1-3, substitution rewrote only
+    // ${OUTPUT_STYLE_CONFIG -> ${e, and the old first-token check saw `e`.
+    const md =
+      '${OUTPUT_STYLE_CONFIG!==null?OUTPUT_STYLE_AGENT_INTRO_FN():USE_COLLAB_FN()?COLLAB_INTRO:"You are an agent."}';
+    const out =
+      '${e!==null?OUTPUT_STYLE_AGENT_INTRO_FN():USE_COLLAB_FN()?COLLAB_INTRO:"You are an agent."}';
+    expect(leakedPromptPlaceholders(out, md).sort()).toEqual([
+      'COLLAB_INTRO',
+      'OUTPUT_STYLE_AGENT_INTRO_FN',
+      'USE_COLLAB_FN',
+    ]);
+  });
+  it('flags an unresolved call argument', () => {
+    expect(
+      leakedPromptPlaceholders(
+        '${t}\n\n${ain(LISTING_VAR_2)}',
+        '${LISTING_VAR_0}\n\n${LISTING_VAR_1(LISTING_VAR_2)}'
+      )
+    ).toEqual(['LISTING_VAR_2']);
+  });
+  it('is clean once every authored name resolved', () => {
+    expect(
+      leakedPromptPlaceholders(
+        '${e!==null?m3n():f3n()?p3n:"x"}',
+        '${A!==null?B():C()?D:"x"}'
+      )
+    ).toEqual([]);
+  });
+  it('flags a bare all-caps word too, and never a JS global', () => {
+    expect(
+      leakedPromptPlaceholders(
+        'v ${VERSION} ${JSON.stringify(a)}',
+        'v ${VERSION} ${JSON.stringify(a)}'
+      )
+    ).toEqual(['VERSION']);
+  });
+  it('does not flag a backslash-escaped literal placeholder', () => {
+    expect(
+      leakedPromptPlaceholders(
+        'use \\${CLAUDE_PLUGIN_ROOT}',
+        'use \\${CLAUDE_PLUGIN_ROOT}'
+      )
+    ).toEqual([]);
   });
 });

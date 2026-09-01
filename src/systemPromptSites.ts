@@ -41,25 +41,121 @@ const JS_GLOBAL_NAMES = new Set([
   'Function',
 ]);
 
+/**
+ * The shape of a tweakcc placeholder name: UPPER_SNAKE (`OUTPUT_STYLE_CONFIG`,
+ * `PROMPT_VAR_0`) or a bare all-caps word of four or more (`VERSION`, `MODEL`).
+ * Minified identifiers never take this shape, and the JS globals an override
+ * expression may legitimately call (`JSON.stringify`) are excluded by name.
+ */
 export const isTweakccHumanName = (name: string): boolean =>
-  name.length > 3 && !JS_GLOBAL_NAMES.has(name);
+  /^[A-Z][A-Z0-9_]{3,}$/.test(name) && !JS_GLOBAL_NAMES.has(name);
 
+const isIdentStart = (c: string): boolean => /[A-Za-z_$]/.test(c);
+const isIdentChar = (c: string): boolean => /[\w$]/.test(c);
+
+/**
+ * Scan one `${…}` expression body starting at `i` (just past the `${`),
+ * collecting every identifier token that is not a property name, and return
+ * the index just past the closing `}`. String literals inside the expression
+ * are skipped; a nested template literal is skipped too, except that its own
+ * `${…}` slots are scanned the same way.
+ */
+const scanExpression = (
+  text: string,
+  start: number,
+  out: Set<string>
+): number => {
+  let i = start;
+  let depth = 1;
+  let lastSignificant = '';
+  while (i < text.length) {
+    const c = text[i];
+    if (c === "'" || c === '"') {
+      i += 1;
+      while (i < text.length && text[i] !== c) {
+        if (text[i] === '\\') i += 1;
+        i += 1;
+      }
+      i += 1;
+      lastSignificant = c;
+      continue;
+    }
+    if (c === '`') {
+      i += 1;
+      while (i < text.length && text[i] !== '`') {
+        if (text[i] === '\\') {
+          i += 2;
+          continue;
+        }
+        if (text[i] === '$' && text[i + 1] === '{') {
+          i = scanExpression(text, i + 2, out);
+          continue;
+        }
+        i += 1;
+      }
+      i += 1;
+      lastSignificant = c;
+      continue;
+    }
+    if (c === '{') {
+      depth += 1;
+    } else if (c === '}') {
+      depth -= 1;
+      if (depth === 0) return i + 1;
+    } else if (isIdentStart(c)) {
+      let j = i + 1;
+      while (j < text.length && isIdentChar(text[j])) j += 1;
+      if (lastSignificant !== '.') out.add(text.slice(i, j));
+      lastSignificant = 'x';
+      i = j;
+      continue;
+    }
+    if (!/\s/.test(c)) lastSignificant = c;
+    i += 1;
+  }
+  return i;
+};
+
+/**
+ * Every identifier referenced inside an unescaped `${…}` expression of
+ * `text`, wherever it sits in the expression: `${NAME}`, `${NAME()}`,
+ * `${NAME.x||"y"}` and `${a!==null?NAME():OTHER?B:"c"}` all yield NAME.
+ * A backslash-escaped `\${…}` is literal text and is not scanned.
+ */
+export const placeholderExpressionIdentifiers = (text: string): Set<string> => {
+  const out = new Set<string>();
+  let i = 0;
+  while (i < text.length) {
+    const open = text.indexOf('${', i);
+    if (open === -1) break;
+    if (open > 0 && text[open - 1] === '\\') {
+      i = open + 2;
+      continue;
+    }
+    i = scanExpression(text, open + 2, out);
+  }
+  return out;
+};
+
+/**
+ * Placeholder names the override authored that survived interpolation
+ * unresolved. Substitution rewrites every name the prompt's identifierMap
+ * knows into its minified identifier, so a human-shaped name still present as
+ * a token inside a `${…}` expression of the output is one the map did not
+ * resolve — inside a backtick template literal that is a ReferenceError the
+ * moment CC evaluates the prompt. CC 2.1.257 shipped
+ * `${e!==null?OUTPUT_STYLE_AGENT_INTRO_FN():…}` this way after the catalogue
+ * renamed the slot; the old check only read the identifier directly after
+ * `${` and saw `e`.
+ */
 export const leakedPromptPlaceholders = (
   interpolatedContent: string,
-  markdownContent: string,
-  identifierMapUnion: Set<string>
+  markdownContent: string
 ): string[] => {
-  const placeholderRe = /(?<!\\)\$\{([A-Za-z_][A-Za-z0-9_]*)/g;
-  const inOutput = new Set(
-    [...interpolatedContent.matchAll(placeholderRe)].map(match => match[1])
-  );
-  return [...inOutput].filter(
-    name =>
-      isTweakccHumanName(name) &&
-      identifierMapUnion.has(name) &&
-      new RegExp('(?<!\\\\)\\$\\{' + name + '(?![A-Za-z0-9_])').test(
-        markdownContent
-      )
+  const authored = placeholderExpressionIdentifiers(markdownContent);
+  const surviving = placeholderExpressionIdentifiers(interpolatedContent);
+  return [...authored].filter(
+    name => isTweakccHumanName(name) && surviving.has(name)
   );
 };
 
