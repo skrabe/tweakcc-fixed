@@ -2117,6 +2117,48 @@ export const writeSlashCommandDefinition = (
 export const findToolChangeComponentScope = (
   fileContents: string
 ): number | null => {
+  // Method 0 (CC >= 2.1.257): the React Compiler dropped the useCallback
+  // wrapper entirely — the handler is a bare arrow assigned straight into a
+  // memo-cache slot, guarded by a brace-less if/else:
+  //   if(is[257]!==Ur.cursorOffset||...)nno=(fYn)=>{s("tengu_ext_at_mentioned",
+  //     {}),$T(Z6e(fYn,Ur.value[Ur.cursorOffset-1]))},is[257]=Ur.cursorOffset,
+  //     is[258]=Ur.value,is[259]=$T,is[260]=nno;else nno=is[260];
+  // The consequent is a single (comma-expression) statement with no braces, so
+  // splicing a `const` between it and `else` is a SyntaxError — the true
+  // statement boundary is after the alternate too. Confirm the match is an
+  // if's brace-less consequent by walking back to the `if(` and matching its
+  // condition parens, then walk past the consequent AND (if present) the
+  // else clause before returning an insertion point.
+  const compilerArrowPattern =
+    /[$\w]+=\([$\w]+\)=>\{[$\w]+\("tengu_ext_at_mentioned",\{\}\)[,;]/;
+  const compilerMatch = fileContents.match(compilerArrowPattern);
+  if (compilerMatch && compilerMatch.index !== undefined) {
+    let end = findStatementEnd(fileContents, compilerMatch.index);
+    if (end !== null) {
+      const lookbackStart = Math.max(0, compilerMatch.index - 500);
+      const lookback = fileContents.slice(lookbackStart, compilerMatch.index);
+      const ifRel = lookback.lastIndexOf('if(');
+      if (ifRel !== -1) {
+        const ifAbs = lookbackStart + ifRel;
+        const condClose = matchDelimiter(fileContents, ifAbs + 2);
+        if (condClose !== null && condClose + 1 === compilerMatch.index) {
+          if (fileContents.startsWith('else', end)) {
+            let afterElse = end + 'else'.length;
+            if (fileContents[afterElse] === ' ') afterElse++;
+            if (fileContents[afterElse] === '{') {
+              const blockEnd = matchDelimiter(fileContents, afterElse);
+              if (blockEnd !== null) end = blockEnd + 1;
+            } else {
+              const elseEnd = findStatementEnd(fileContents, afterElse);
+              if (elseEnd !== null) end = elseEnd;
+            }
+          }
+        }
+      }
+      return end;
+    }
+  }
+
   // Method 1 (CC >= 2.1.247): the handler became an arrow passed to useCallback
   // and assigned inside a comma-declarator chain, so there is no longer a
   // statement boundary at the match:

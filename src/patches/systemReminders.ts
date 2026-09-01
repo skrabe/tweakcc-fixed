@@ -146,11 +146,15 @@ export const writeSuppressDeferredTools = (oldFile: string): string | null => {
     console.error('patch: suppress-deferred-tools: failed to find case header');
     return null;
   }
-
-  const lookahead = oldFile.slice(headerIdx, headerIdx + 2048);
-  if (!lookahead.includes(DEFERRED_TOOLS_ANCHOR)) {
+  // CC 2.1.257+ hoists the reminder text into a shared top-level string
+  // constant (referenced by variable inside the case body), tens of KB away
+  // from the case header — a fixed-distance "is the anchor nearby" check no
+  // longer holds. The case's registry key string is already a unique,
+  // minifier-stable anchor on its own (string literals aren't renamed), so
+  // require only that it appears exactly once in the file.
+  if (oldFile.indexOf(caseHeader, headerIdx + 1) >= 0) {
     console.error(
-      'patch: suppress-deferred-tools: case header found but anchor text not nearby'
+      'patch: suppress-deferred-tools: case header is ambiguous (multiple matches)'
     );
     return null;
   }

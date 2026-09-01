@@ -10,9 +10,17 @@ export const writeClearScreen = (oldFile: string): string | null => {
     return oldFile;
   }
 
-  const redrawPattern =
+  // CC >=2.1.257: the terminal-state map accessor became a factory call
+  // (`ui()`) instead of a bare variable reference (`Io`), e.g.
+  // `function c$t(){ui().get(process.stdout)?.forceRedraw()}`.
+  const redrawPatternV2 =
+    /([,;{}])(function [$\w]+\(\)\{)([$\w]+\(\))\.get\(process\.stdout\)\?\.forceRedraw\(\)\}/;
+  // CC <=2.1.252: bare variable reference, e.g.
+  // `function cDe(){Io.get(process.stdout)?.forceRedraw()}`.
+  const redrawPatternV1 =
     /([,;{}])(function [$\w]+\(\)\{)([$\w]+)\.get\(process\.stdout\)\?\.forceRedraw\(\)\}/;
-  const redrawMatch = oldFile.match(redrawPattern);
+  const redrawMatch =
+    oldFile.match(redrawPatternV2) || oldFile.match(redrawPatternV1);
   if (!redrawMatch || redrawMatch.index === undefined) {
     debug('patch: clearScreen: failed to find forceRedraw function');
     return null;

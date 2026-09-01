@@ -44,8 +44,15 @@ export const writeMaxEffortDefault = (oldFile: string): string | null => {
     for (const id of ['claude-opus-4-8', 'claude-opus-4-7']) {
       // Non-greedy gap → the NEAREST default_effort after the id, i.e. this
       // model's own field (it precedes any later model's within the catalog).
+      // The gap is bounded by the ENTRY, not by a byte count: a fixed window is
+      // a countdown, and every capability flag Anthropic adds to a model record
+      // spends it. Measured on CC 2.1.257 against the old 900-byte budget, the
+      // targeted records sat at 813 (opus-4-8) and 747 (opus-4-7), and the
+      // longest record in the catalog had reached 857. Refusing to cross into
+      // the next `id:"claude-` cannot be outgrown, and keeps the match inside
+      // this model's own record.
       const re = new RegExp(
-        `(id:"${id}"[\\s\\S]{0,900}?default_effort:)"(?:high|xhigh)"`
+        `(id:"${id}"(?:(?!id:"claude-)[\\s\\S]){0,4000}?default_effort:)"(?:high|xhigh)"`
       );
       const m = workingFile.match(re);
       if (m && m.index !== undefined) {
@@ -68,7 +75,7 @@ export const writeMaxEffortDefault = (oldFile: string): string | null => {
     if (catalogApplied) return workingFile;
     // Catalog present but nothing left to flip → already "max" (idempotent).
     if (
-      /id:"claude-opus-4-[78]"[\s\S]{0,900}?default_effort:"max"/.test(
+      /id:"claude-opus-4-[78]"(?:(?!id:"claude-)[\s\S]){0,4000}?default_effort:"max"/.test(
         workingFile
       )
     ) {

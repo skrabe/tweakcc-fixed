@@ -258,12 +258,21 @@ const patchModelPicker = (
 ): string | null => {
   const pattern =
     /(function [$\w]+\(([$\w]+),([$\w]+)\)\{let ([$\w]+)=[$\w]+\(\2\),([$\w]+)=[$\w]+\.ANTHROPIC_CUSTOM_MODEL_OPTION;)/;
-  const match = file.match(pattern);
+  // CC 2.1.257 shape: the builder resolves a bootstrap list first and the
+  // pickable array became the SECOND declarator, so the list to push onto is no
+  // longer the first binding:
+  //   function eXr(e,n){let r=X9r(e,n),o=r??V9r(e),d=a.ANTHROPIC_CUSTOM_MODEL_OPTION;
+  const pattern257 =
+    /(function [$\w]+\(([$\w]+),([$\w]+)\)\{let ([$\w]+)=[$\w]+\(\2,\3\),([$\w]+)=\4\?\?[$\w]+\(\2\),([$\w]+)=[$\w]+\.ANTHROPIC_CUSTOM_MODEL_OPTION;)/;
+  const match257 = file.match(pattern257);
+  const match = match257 ?? file.match(pattern);
   if (!match || match.index === undefined) {
     console.error('patch: fablePlan: failed to find the model picker options');
     return null;
   }
-  const list = match[4];
+  // The pickable array is capture 5 on the 2.1.257 shape and capture 4 on the
+  // older one; reading the wrong group silently pushes onto the bootstrap list.
+  const list = match257 ? match[5] : match[4];
   const label = `${title(config.planModel)} Plan Mode`;
   const description = `Use ${title(config.planModel)} in plan mode, ${title(config.execModel)} otherwise`;
   const option = JSON.stringify({ value: ALIAS, label, description });

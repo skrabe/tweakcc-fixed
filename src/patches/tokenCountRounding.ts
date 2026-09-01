@@ -91,6 +91,82 @@ const matchJsxRuntimeShape = (
   };
 };
 
+/**
+ * CC >=2.1.257 hoisted the spinner state (including the formatted token
+ * count) into a helper that returns an object, which the render function
+ * then destructures under a *different* local name:
+ *
+ * ```
+ * function Co(...){...,Pt=Qo(ut),...;return{...,tokenCount:Pt,...}}
+ * function Wo(...){let{...,tokenCount:ue,...}=Co(...),...;
+ *   ...children:[ue," tokens"]...
+ * ```
+ *
+ * The count variable no longer keeps the same name between its formatter
+ * assignment (`Pt`) and its use at the render site (`ue`) — they're linked
+ * only by the shared property key (`tokenCount`) at the return/destructure
+ * boundary. Chase that link: anchor on the render var, find what property
+ * it was destructured from, then find that property's producer assignment.
+ */
+const matchDestructuredJsxRuntimeShape = (
+  oldFile: string,
+  simpleExpression: string
+): SpliceParts | null => {
+  const anchor = oldFile.match(
+    /children:\[([$\w]+)," tokens"\][^]{0,80}?,"tokens"\)/
+  );
+  if (!anchor || anchor.index === undefined) return null;
+
+  const varName = anchor[1];
+  const escapedVar = varName.replace(/\$/g, '\\$');
+  const regionStart = Math.max(0, anchor.index - 6000);
+  const region = oldFile.slice(regionStart, anchor.index + anchor[0].length);
+
+  const destructureMatches = [
+    ...region.matchAll(new RegExp(`([$\\w]+):${escapedVar}(?=[,}])`, 'g')),
+  ];
+  if (destructureMatches.length === 0) return null;
+  const destructureMatch = destructureMatches[destructureMatches.length - 1];
+  const propName = destructureMatch[1];
+  const escapedProp = propName.replace(/\$/g, '\\$');
+  const destructurePos = destructureMatch.index ?? 0;
+
+  const producerMatches = [
+    ...region
+      .slice(0, destructurePos)
+      .matchAll(new RegExp(`${escapedProp}:([$\\w]+)(?=[,}])`, 'g')),
+  ].filter(pm => pm[1] !== varName);
+  if (producerMatches.length === 0) return null;
+  const producerMatch = producerMatches[producerMatches.length - 1];
+  const localVar = producerMatch[1];
+  const escapedLocal = localVar.replace(/\$/g, '\\$');
+  const producerPos = producerMatch.index ?? 0;
+
+  const assignMatches = [
+    ...region
+      .slice(0, producerPos)
+      .matchAll(new RegExp(`(?<![$\\w])${escapedLocal}=[$\\w]+\\(`, 'g')),
+  ];
+  if (assignMatches.length === 0) return null;
+  const assignStart = assignMatches[assignMatches.length - 1].index ?? 0;
+
+  const shape = new RegExp(
+    `(${escapedLocal}=[$\\w]+\\()(${simpleExpression})(\\))`,
+    'y'
+  );
+  shape.lastIndex = assignStart;
+  const m = shape.exec(region);
+  if (!m) return null;
+
+  return {
+    fullMatch: m[0],
+    pre: m[1],
+    partToWrap: m[2],
+    post: m[3],
+    startIndex: regionStart + m.index,
+  };
+};
+
 export const writeTokenCountRounding = (
   oldFile: string,
   roundingBaseConfig: number | { threshold?: number }
@@ -108,11 +184,16 @@ export const writeTokenCountRounding = (
   // a TDZ crash where `M$` is referenced while initializing itself.
   const simpleExpression = '[$\\w]+(?:\\?\\.[$\\w]+)*(?:\\([^()]*\\))?';
 
+  // Pattern -1 (CC >=2.1.257): the spinner state helper now returns an
+  // object and the render site destructures the token count under a
+  // different local name (see matchDestructuredJsxRuntimeShape above).
+  const mNeg1 = matchDestructuredJsxRuntimeShape(oldFile, simpleExpression);
+
   // Pattern 0 (CC >=2.1.186): React's createElement->jsx() migration turned the
   // element key into a positional argument, so `key:"tokens"` is gone and the
   // children are inlined. Shape (verified 2.1.219 / 2.1.220):
   //   VAR=FUNC(EXPR),...jsxs(h,{dimColor:!0,children:[VAR," tokens"]})]},"tokens")
-  const m0 = matchJsxRuntimeShape(oldFile, simpleExpression);
+  const m0 = mNeg1 ?? matchJsxRuntimeShape(oldFile, simpleExpression);
 
   if (m0) {
     ({ fullMatch, pre, partToWrap, post, startIndex } = m0);

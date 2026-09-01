@@ -37,7 +37,17 @@ export const writeAutonomousOperationAllModels = (
   //   function Bte(e){if(tU(e,"fable_5_mitigations")||e==="claude-mythos-5")return!0;return!1}
   const pattern195 =
     /function\s+([$\w]+)\s*\(\s*([$\w]+)\s*\)\s*\{\s*if\s*\(\s*[$\w]+\s*\(\s*\2\s*,\s*"fable_5_mitigations"\s*\)\s*\|\|\s*\2\s*===\s*"claude-mythos-5"\s*\)\s*return\s*!0\s*;\s*return\s*!1\s*\}/;
-  const match = oldFile.match(pattern) || oldFile.match(pattern195);
+  // CC 2.1.257 shape: the predicate gained a SECOND parameter and the gate call
+  // a third argument, while the anchor literals are unchanged:
+  //   function xoe(o,e){if($f(o,"fable_5_mitigations",e)||o==="claude-mythos-5")return!0;return!1}
+  // Tolerate both the 1-arg/2-arg predicate and the 2-arg/3-arg gate call, so a
+  // further argument does not break this again.
+  const pattern257 =
+    /function\s+([$\w]+)\s*\(\s*([$\w]+)\s*(?:,\s*[$\w]+\s*)?\)\s*\{\s*if\s*\(\s*[$\w]+\s*\(\s*\2\s*,\s*"fable_5_mitigations"\s*(?:,\s*[$\w]+\s*)?\)\s*\|\|\s*\2\s*===\s*"claude-mythos-5"\s*\)\s*return\s*!0\s*;\s*return\s*!1\s*\}/;
+  const match =
+    oldFile.match(pattern) ||
+    oldFile.match(pattern195) ||
+    oldFile.match(pattern257);
 
   if (!match || match.index === undefined) {
     // Already flipped (fallback is now !0).
