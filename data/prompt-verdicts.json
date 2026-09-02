@@ -31251,5 +31251,10 @@
     "verdict": "trim",
     "version": "2.1.258",
     "why": "2026-09-02: the three-branch prompt-cache-TTL explanation replaced by one paragraph of delay guidance; PROMPT_CACHE_TTL_CLASSIFICATION slot dropped with it (it only selected among the three explanations)."
+  },
+  "tool-description-end-conversation-deferred": {
+    "verdict": "wipe-merge",
+    "version": "2.1.258",
+    "why": "2026-09-02: the always-on EndConversation line (sustained abuse) is never relevant in a solo coding harness; the tool stays loadable via ToolSearch."
   }
 }
