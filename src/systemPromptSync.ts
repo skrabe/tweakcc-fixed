@@ -82,6 +82,13 @@ export interface StringsPrompt {
   identifiers: number[]; // Can be numbers in JSON or strings when parsed
   identifierMap: Record<string, string>;
   version: string;
+  /**
+   * Platforms (Node `process.platform` values) whose build carries this
+   * prompt, when it is NOT in every build. Anthropic ships the macOS
+   * computer-use tool family in the darwin binary only; on 2.1.258 that was
+   * 566 catalogued prompts a Linux apply could never find. Absent = all.
+   */
+  platforms?: string[];
 }
 
 /**
@@ -1903,6 +1910,7 @@ export const loadSystemPromptsWithRegex = async (
     pieces: string[];
     identifiers: (number | string)[];
     identifierMap: Record<string, string>;
+    platforms?: string[];
   }>
 > => {
   // Check if strings file was preloaded - if not, return empty array
@@ -1920,6 +1928,7 @@ export const loadSystemPromptsWithRegex = async (
     pieces: string[];
     identifiers: (number | string)[];
     identifierMap: Record<string, string>;
+    platforms?: string[];
   }> = [];
 
   const shadowSet = await loadShadowSet();
@@ -1978,6 +1987,7 @@ export const loadSystemPromptsWithRegex = async (
       pieces: jsonPrompt.pieces,
       identifiers: jsonPrompt.identifiers,
       identifierMap: jsonPrompt.identifierMap,
+      platforms: jsonPrompt.platforms,
     });
   }
 

@@ -544,6 +544,27 @@ export const applySystemPrompts = async (
         continue;
       }
 
+      // A prompt this platform's build does not carry (the darwin-only
+      // computer-use family): expected, not drift. Skip quietly.
+      if (
+        Array.isArray(entry.platforms) &&
+        entry.platforms.length > 0 &&
+        !entry.platforms.includes(process.platform)
+      ) {
+        debug(
+          `"${prompt.name}": not in the ${process.platform} build (platforms: ${entry.platforms.join(', ')}) — skipping`
+        );
+        results.push({
+          id: promptId,
+          name: prompt.name,
+          group: PatchGroup.SYSTEM_PROMPTS,
+          applied: false,
+          skipped: true,
+          details: `not in the ${process.platform} build`,
+        });
+        continue;
+      }
+
       // Genuine drift — a regex anchor that no longer matches the binary
       // shape. Surface it so the owning override can be fixed.
       if (

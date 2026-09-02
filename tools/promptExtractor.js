@@ -4712,6 +4712,9 @@ function mergeWithExisting(newData, oldData, currentVersion) {
           (assignedFromMap && assignedFromMap.description) ||
           matchingOld.description,
         identifierMap: overlaidIdentifierMap,
+        // Platform tags (tools/tagPlatforms.mjs) carry over until the next
+        // tagging run re-derives them from the other platforms' bundles.
+        ...(matchingOld.platforms ? { platforms: matchingOld.platforms } : {}),
         version: matchingOld.version || currentVersion,
       };
     }
@@ -4744,6 +4747,7 @@ function mergeWithExisting(newData, oldData, currentVersion) {
           (assignedFromMap && assignedFromMap.description) ||
           fuzzyOld.description,
         identifierMap: overlaidIdentifierMap,
+        ...(fuzzyOld.platforms ? { platforms: fuzzyOld.platforms } : {}),
         version: currentVersion,
       };
     }
