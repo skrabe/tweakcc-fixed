@@ -184,9 +184,11 @@ const main = async () => {
     await key('Enter');
 
     const mainLoopSent = () => requests.some(r => r.kind === 'main-loop');
-    const replied = await waitFor(
-      p => /PONG/.test(p.replace(PROMPT, '')) || /\bError\b|API Error|error/i.test(p),
-      TIMEOUT, 'a reply');
+    // Wait for the reply itself, not for the first error text: CC retries a
+    // transport error or a 429 on its own, and the pane shows "API Error"
+    // for a moment while it does. Stopping on that text turned a successful
+    // retried turn into a FAIL on 2026-09-02 (ERR then 200, reply pending).
+    const replied = await waitFor(p => /PONG/.test(p.replace(PROMPT, '')), TIMEOUT, 'a reply');
     // Give any trailing side-call (title generation) a moment to land.
     await sleep(2500);
 
@@ -202,8 +204,14 @@ const main = async () => {
     note(mainLoopSent(), mainLoopSent()
       ? 'main-loop request (tools + system) was sent'
       : 'NO main-loop request left the process — the turn ended before request assembly');
-    const mainOk = requests.filter(r => r.kind === 'main-loop').every(r => r.status === 200);
-    if (mainLoopSent()) note(mainOk, mainOk ? 'main-loop request(s) returned 200' : `main-loop request rejected: ${requests.filter(r => r.kind === 'main-loop').map(r => r.status).join(', ')}`);
+    // One main-loop 200 is the bar: a transport ERR or a 429 followed by a
+    // retried 200 is CC working as designed, not a rejected build. Only a
+    // main-loop that NEVER got a 200 (4xx on every attempt) is a failure.
+    const mainStatuses = requests.filter(r => r.kind === 'main-loop').map(r => r.status);
+    const mainOk = mainStatuses.includes(200);
+    if (mainLoopSent()) note(mainOk, mainOk
+      ? `main-loop request returned 200${mainStatuses.length > 1 ? ` (after ${mainStatuses.slice(0, -1).join(', ')} — retried by CC)` : ''}`
+      : `main-loop request rejected: ${mainStatuses.join(', ')}`);
     note(gotPong, gotPong ? 'reply rendered in the TUI' : `no reply rendered${errorText ? ` — ${errorText.trim()}` : replied.ok ? '' : ` — ${replied.reason}`}`);
     if (!gotPong) console.log(pane.split('\n').filter(l => l.trim()).slice(-20).join('\n'));
     fs.writeFileSync(path.join(outDir, 'pane.txt'), pane);
