@@ -1800,30 +1800,45 @@ function repackELFSection(
     const vaddrBytes = Buffer.alloc(8);
     vaddrBytes.writeBigUInt64LE(oldBunSectionVaddr);
 
+    // BUN_COMPILED is a u64 in the RW data segment holding the .bun vaddr.
+    // Up to CC 2.1.252 the symbol sat at a BLOB_HEADER_ALIGNMENT (16 KiB)
+    // boundary and the .bun data lived in its own PT_LOAD. CC 2.1.257/258
+    // link the .bun section INTO the RW segment and place the symbol at an
+    // 8-byte boundary (0x5310758 on linux-arm64), so a 16 KiB-strided walk
+    // never lands on it and the whole Linux apply died with "Could not find
+    // original BUN_COMPILED location". Walk at u64 granularity, but only the
+    // part of the segment BEFORE the .bun data: the symbol precedes the blob,
+    // and the blob itself (the JS payload) is full of arbitrary bytes that
+    // can spell the same value (five such false hits on 2.1.258).
     let bunCompiledVaddr: bigint | null = null;
     const rwContent = rwSegment.content;
     const rwVaddrStart = rwSegment.virtualAddress;
-    const firstAligned = alignBigInt(
-      rwVaddrStart,
-      BigInt(BLOB_HEADER_ALIGNMENT)
-    );
-    const lastCandidate = rwVaddrStart + BigInt(rwContent.length) - 8n;
-
-    for (
-      let va = firstAligned;
-      va <= lastCandidate;
-      va += BigInt(BLOB_HEADER_ALIGNMENT)
-    ) {
+    const rwVaddrEnd = rwVaddrStart + BigInt(rwContent.length);
+    const searchEnd =
+      oldBunSectionVaddr > rwVaddrStart && oldBunSectionVaddr < rwVaddrEnd
+        ? oldBunSectionVaddr
+        : rwVaddrEnd;
+    const firstAligned = alignBigInt(rwVaddrStart, 8n);
+    const lastCandidate = searchEnd - 8n;
+    const hits: bigint[] = [];
+    for (let va = firstAligned; va <= lastCandidate; va += 8n) {
       const off = Number(va - rwVaddrStart);
-      if (rwContent.subarray(off, off + 8).equals(vaddrBytes)) {
-        bunCompiledVaddr = va;
-        break;
-      }
+      if (rwContent.subarray(off, off + 8).equals(vaddrBytes)) hits.push(va);
     }
+    // Prefer the historical 16 KiB-aligned placement when both shapes exist.
+    bunCompiledVaddr =
+      hits.find(va => va % BigInt(BLOB_HEADER_ALIGNMENT) === 0n) ??
+      hits[0] ??
+      null;
 
     if (bunCompiledVaddr === null) {
       throw new Error(
-        `Could not find original BUN_COMPILED location in binary (searched for 0x${oldBunSectionVaddr.toString(16)})`
+        `Could not find original BUN_COMPILED location in binary (searched for 0x${oldBunSectionVaddr.toString(16)} in the RW segment before the .bun data)`
+      );
+    }
+    if (hits.length > 1) {
+      debug(
+        `repackELFSection: ${hits.length} candidates for BUN_COMPILED (${hits.map(h => '0x' + h.toString(16)).join(', ')}); using 0x${bunCompiledVaddr.toString(16)}`
       );
     }
 

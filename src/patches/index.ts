@@ -710,6 +710,10 @@ const applyPatchImplementations = (
 };
 
 const assertNativeBinaryStarts = (binaryPath: string) => {
+  // A cross-platform repack (TWEAKCC_ALLOW_CROSS_PLATFORM, the darwin
+  // checkout repacking a Linux ELF for the pre-publish gate) cannot run the
+  // result here; the box that receives it runs its own smoke.
+  if (process.env.TWEAKCC_ALLOW_CROSS_PLATFORM === '1') return;
   const result = spawnSync(binaryPath, ['--version'], {
     encoding: 'utf8',
     timeout: 15000,
