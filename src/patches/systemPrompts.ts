@@ -546,13 +546,17 @@ export const applySystemPrompts = async (
 
       // A prompt this platform's build does not carry (the darwin-only
       // computer-use family): expected, not drift. Skip quietly.
+      // TWEAKCC_TARGET_PLATFORM lets a gate on one platform apply against
+      // another platform's bundle (the cross-platform gate on a Mac).
+      const targetPlatform =
+        process.env.TWEAKCC_TARGET_PLATFORM || process.platform;
       if (
         Array.isArray(entry.platforms) &&
         entry.platforms.length > 0 &&
-        !entry.platforms.includes(process.platform)
+        !entry.platforms.includes(targetPlatform)
       ) {
         debug(
-          `"${prompt.name}": not in the ${process.platform} build (platforms: ${entry.platforms.join(', ')}) — skipping`
+          `"${prompt.name}": not in the ${targetPlatform} build (platforms: ${entry.platforms.join(', ')}) — skipping`
         );
         results.push({
           id: promptId,
@@ -560,7 +564,7 @@ export const applySystemPrompts = async (
           group: PatchGroup.SYSTEM_PROMPTS,
           applied: false,
           skipped: true,
-          details: `not in the ${process.platform} build`,
+          details: `not in the ${targetPlatform} build`,
         });
         continue;
       }
