@@ -36,6 +36,14 @@
 //            pristine bodies; coverage is checked against the whole set.
 //     --json <path>  write findings for a downstream repair packet.
 //
+// A fact the model never has to reproduce — pristine's own prose shorthand for
+// a verdict, an internal field name that appears in neither the model's input
+// nor its output contract — is justified in data/fact-coverage-allowlist.json,
+// keyed `<id>` -> `{ <fact>: <reason> }`. Without that file the tool asked for
+// a justification and gave it nowhere to live, so `shouldBlock` re-fired on
+// every run after it had been ruled on. An entry whose fact is reachable again
+// is reported as stale so the file cannot accumulate dead rows.
+//
 // Exit 0 = every fact still reachable, 1 = findings, 2 = could not run.
 
 import fs from 'node:fs';
@@ -113,6 +121,16 @@ const main = () => {
   if (!fs.existsSync(setDir)) die(`no override set at ${setDir}`);
   if (!fs.existsSync(idsFile)) die(`no ids file at ${idsFile}`);
 
+  const allowPath = path.join(
+    path.dirname(url.fileURLToPath(import.meta.url)),
+    '..',
+    'data',
+    'fact-coverage-allowlist.json'
+  );
+  const allow = fs.existsSync(allowPath)
+    ? JSON.parse(fs.readFileSync(allowPath, 'utf8'))
+    : {};
+
   const prompts = JSON.parse(fs.readFileSync(jsonPath, 'utf8')).prompts || [];
   const pristine = new Map();
   for (const p of prompts) {
@@ -149,11 +167,25 @@ const main = () => {
   }
 
   const findings = [];
+  const justified = [];
+  const stale = [];
   for (const id of ids) {
     if (!pristine.has(id)) continue;
-    const uncovered = uncoveredFacts(pristine.get(id), deployed);
+    const rules = allow[id] || {};
+    const all = uncoveredFacts(pristine.get(id), deployed);
+    const uncovered = all.filter(f => !(f in rules));
+    for (const f of all)
+      if (f in rules) justified.push({ id, fact: f, reason: rules[f] });
+    for (const f of Object.keys(rules))
+      if (!all.includes(f)) stale.push({ id, fact: f });
     if (uncovered.length) findings.push({ id, uncovered });
   }
+  for (const j of justified)
+    console.log(`  ✓ ${j.id}: ${j.fact} — justified: ${j.reason}`);
+  for (const st of stale)
+    console.log(
+      `  ! ${st.id}: allowlist row for ${st.fact} is stale — the fact is reachable again; delete the row`
+    );
 
   if (outPath) fs.writeFileSync(outPath, JSON.stringify(findings, null, 1));
 

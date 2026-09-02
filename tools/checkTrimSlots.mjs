@@ -36,8 +36,18 @@
 //     --all  every override that differs from pristine. Report mode, exits 0.
 //     --json <path>  write the findings for a downstream verifier packet.
 //
+// A drop that was reviewed and ruled correct (the sentence carrying the slot
+// was itself justified to cut, or a suppressed example whose slot only named
+// a callee) is recorded in data/trim-slot-allowlist.json, keyed
+// `<id>` -> `{ <token>: <reason> }`. Until that file existed a ruled-on drop
+// re-entered the worklist every time its id was touched, and the review that
+// settled it lived only in a run transcript. The allowlist row is keyed on
+// the deployed body's hash so a later edit to the override re-opens the
+// question; a row for a token that is present again is reported as stale.
+//
 // Exit 0 = no findings (or --all), 1 = findings, 2 = could not run.
 
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import url from 'node:url';
@@ -170,14 +180,34 @@ const main = () => {
       setTemplates.add(t);
   }
 
+  const allowPath = path.join(
+    path.dirname(url.fileURLToPath(import.meta.url)),
+    '..',
+    'data',
+    'trim-slot-allowlist.json'
+  );
+  const allow = fs.existsSync(allowPath) ? JSON.parse(fs.readFileSync(allowPath, 'utf8')) : {};
+  const bodyHash = b => crypto.createHash('sha1').update(b.trim()).digest('hex').slice(0, 12);
+
   const findings = [];
+  const justified = [];
+  const stale = [];
   for (const id of ids) {
     if (!pristine.has(id) || !fs.existsSync(path.join(setDir, `${id}.md`))) continue;
     const body = bodyOf(id);
-    const lost = lostTokens(pristine.get(id), body, setTemplates);
+    const all = lostTokens(pristine.get(id), body, setTemplates);
+    const rule = allow[id];
+    const live = rule && rule.bodyHash === bodyHash(body) ? rule.tokens || {} : {};
+    if (rule && rule.bodyHash !== bodyHash(body))
+      stale.push({ id, why: `override body changed (now ${bodyHash(body)}); re-review and re-key the row` });
+    for (const t of Object.keys(live)) if (!all.includes(t)) stale.push({ id, why: `${t} is present again; delete the row` });
+    const lost = all.filter(t => !(t in live));
+    for (const t of all) if (t in live) justified.push({ id, token: t, reason: live[t] });
     if (lost.length)
       findings.push({ id, suppressed: body.trim() === '', lost, remaining: [...tokensOf(body)] });
   }
+  for (const j of justified) console.log(`  ✓ ${j.id}: ${j.token} — justified: ${j.reason}`);
+  for (const st of stale) console.log(`  ! ${st.id}: allowlist row is stale — ${st.why}`);
 
   if (outPath) fs.writeFileSync(outPath, JSON.stringify(findings, null, 1));
 
