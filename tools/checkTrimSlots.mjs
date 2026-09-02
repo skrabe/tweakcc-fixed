@@ -161,6 +161,27 @@ const main = () => {
 
   const bodyOf = id => stripFrontmatter(fs.readFileSync(path.join(setDir, `${id}.md`), 'utf8'));
 
+  // Ids the system-reminder registry shadows are owned by that surface: the
+  // apply never iterates them from the prompt set, so a prompt-set file for
+  // one — empty or not — renders nothing and its tokens are not "lost" here.
+  // Three such ids (question-context, lines-selected-in-ide, large-pdf) sat in
+  // this inventory and drew a "CLAUDE.md delivery deleted" finding on
+  // 2026-09-02 that a look at system-reminders/claudemd-context.md refuted.
+  // `shadows:` is honoured from BOTH dirs by loadShadowSet in the patcher: a
+  // prompt-set override can own another id too (tool-description-agent-
+  // simple-usage-notes shadows tool-description-agent-usage-notes, whose
+  // empty file therefore renders nothing — the full branch stays pristine).
+  const shadowed = new Set();
+  for (const dir of [setDir, path.join(path.dirname(setDir), 'system-reminders')]) {
+    if (!fs.existsSync(dir)) continue;
+    for (const f of fs.readdirSync(dir)) {
+      if (!f.endsWith('.md')) continue;
+      const fm = fs.readFileSync(path.join(dir, f), 'utf8').split('-->')[0];
+      const m = fm.match(/^shadows:\n((?:\s+-\s+.*\n?)+)/m);
+      if (m) for (const line of m[1].split('\n')) { const id = line.replace(/^\s+-\s+/, '').trim(); if (id) shadowed.add(id); }
+    }
+  }
+
   const ids = idsFile
     ? fs.readFileSync(idsFile, 'utf8').split('\n').map(s => s.trim()).filter(Boolean)
     : [...pristine.keys()].filter(id => {
@@ -192,8 +213,10 @@ const main = () => {
   const findings = [];
   const justified = [];
   const stale = [];
+  let shadowSkipped = 0;
   for (const id of ids) {
     if (!pristine.has(id) || !fs.existsSync(path.join(setDir, `${id}.md`))) continue;
+    if (shadowed.has(id)) { shadowSkipped++; continue; }
     const body = bodyOf(id);
     const all = lostTokens(pristine.get(id), body, setTemplates);
     const rule = allow[id];
@@ -208,6 +231,7 @@ const main = () => {
   }
   for (const j of justified) console.log(`  ✓ ${j.id}: ${j.token} — justified: ${j.reason}`);
   for (const st of stale) console.log(`  ! ${st.id}: allowlist row is stale — ${st.why}`);
+  if (shadowSkipped) console.log(`  · ${shadowSkipped} id(s) owned by another override skipped (shadows: in system-prompts or system-reminders frontmatter)`);
 
   if (outPath) fs.writeFileSync(outPath, JSON.stringify(findings, null, 1));
 

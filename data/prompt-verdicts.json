@@ -2522,10 +2522,9 @@
     "why": "Uniquely identifies the server-side per-file-size rejection. Its split-into-smaller-files remedy is the surviving concise carrier of that recovery behavior after data-memory-sync-size-limit-remedy is suppressed in this batch. No rhetoric, hedging, or internal repetition."
   },
   "data-memory-sync-currently-paused-notice": {
-    "injectionPath": "Conditional PostToolUse additionalContext after Edit/Write to a synced-memory file whose store remains suppressed for an unclassified/repeated failure; the retained fragment is concatenated with either data-memory-sync-paused-notice-tail or the shared/server-memory fallback tail.",
-    "verdict": "trim",
-    "version": "2.1.226",
-    "why": "The first sentence merely repeats the already-deployed tool-result-memory-sync-paused-after-failures statement, which says: \"Memory sync is paused for one of your memory stores after repeated failures (${TOOL_RESULT_MEMORY_SYNC_PAUSED_AFTER_FAILURES_VAR_0}).\" Keep the second fragment because it makes an assertion about this specific write and provides the grammatical lead-in for data-memory-sync-paused-notice-tail's unique eventual-push mechanics."
+    "verdict": "pristine-keep",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier trim dropped runtime slot(s) DATA_MEMORY_SYNC_CURRENTLY_PAUSED_NOTICE_VAR_0 that only this prompt delivers (body back to pristine). Previous rationale: The first sentence merely repeats the already-deployed tool-result-memory-sync-paused-after-failures statement, which says: \"Memory sync is paused for one of yo"
   },
   "data-memory-sync-empty-files-restored": {
     "verdict": "pristine-keep",
@@ -2594,10 +2593,9 @@
     "why": "Uniquely distinguishes a recent failure under active retry from both a confirmed pause and a confirmed recovery, preserves the validated failure reason or sync_error sentinel, and warns that recovery is not yet confirmed. data-memory-sync-unpersisted-notice supplies the separate persistence clause concatenated after it; it does not duplicate this status. No slop."
   },
   "data-memory-sync-size-limit-notice": {
-    "injectionPath": "Conditional immediate PostToolUse persistence warning after Edit/Write when a synced-memory file's local stat exceeds the sync limit. The covering sibling is queued by the oversized-path sync scan and delivered on the same synced-memory PostToolUse surface. This is after the dynamic system-prompt boundary, so emptying it is cache-safe.",
-    "verdict": "wipe-merge",
-    "version": "2.1.226",
-    "why": "Every claim is carried more completely by deployed sibling data-memory-sync-oversize-file-conflict-notice: \"The memory file ${DATA_MEMORY_SYNC_OVERSIZE_FILE_CONFLICT_NOTICE_VAR_0(DATA_MEMORY_SYNC_OVERSIZE_FILE_CONFLICT_NOTICE_VAR_1.path)} is ${DATA_MEMORY_SYNC_OVERSIZE_FILE_CONFLICT_NOTICE_VAR_2(DATA_MEMORY_SYNC_OVERSIZE_FILE_CONFLICT_NOTICE_VAR_1.size)}, over the ${DATA_MEMORY_SYNC_OVERSIZE_FILE_CONFLICT_NOTICE_VAR_2(DATA_MEMORY_SYNC_OVERSIZE_FILE_CONFLICT_NOTICE_VAR_3)} per-file sync limit — it is saved locally but is NOT synced to shared memory...\" That sibling names the file, reports the same measured size and limit, and adds the persistence consequence. This entire variable-bearing limit fragment is frozen, so deletion—not compression—is the valid operation."
+    "verdict": "pristine-keep",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier wipe-merge dropped runtime slot(s) DATA_MEMORY_SYNC_SIZE_LIMIT_NOTICE_VAR_0 that only this prompt delivers (body back to pristine). Previous rationale: Every claim is carried more completely by deployed sibling data-memory-sync-oversize-file-conflict-notice: \"The memory file ${DATA_MEMORY_SYNC_OVERSIZE_FILE_CON"
   },
   "data-memory-sync-size-limit-remedy": {
     "injectionPath": "Conditional continuation of data-memory-sync-size-limit-notice in the immediate PostToolUse warning after an oversized synced-memory Edit/Write. It is after the dynamic boundary and can be safely emptied.",
@@ -2956,9 +2954,9 @@
     "why": "Body read in full: '# HELP ${PREFIX}_poll_errors_total PollWork request failures by error kind (transport=no HTTP response; timeout=client deadline; 5xx/429/4xx by status). All five series present from process start so rate() works and absent() means process-down.' Slop check: zero — no CAPS, no hedging, no exhortation; every token is a fact an operator or a PromQL author cannot derive. Tripwire: FROZEN twice over — a five-way enum of error kinds (transport/timeout/5xx/429/4xx), a count ('All five series'), and two PromQL function names (rate(), absent()). Corpus scan (all 3634 pristine bodies"
   },
   "data-self-hosted-runner-session-idle-metric-help": {
-    "verdict": "wipe-merge",
-    "version": "2.1.224",
-    "why": "Body read in full: '# HELP ${VAR_0}_session_idle_seconds Seconds since the session went idle (turn-end or awaiting-action); 0 while a turn is running, background work is pending, or the session is initializing. One series per active session; disappears at session end.' Slop check: clean — no CAPS, no hedging, no rhetoric; every clause is gauge semantics (the zero-value enumeration and the series lifetime are genuinely non-inferable), and the sentence is frozen (a number 0, a three-item enumeration, 'One series per active session'). Cut is on the unused-feature prong only, identical to the orch"
+    "verdict": "pristine-keep",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier wipe-merge dropped runtime slot(s) DATA_SELF_HOSTED_RUNNER_SESSION_IDLE_METRIC_HELP_VAR_0 that only this prompt delivers (body back to pristine). Previous rationale: Body read in full: '# HELP ${VAR_0}_session_idle_seconds Seconds since the session went idle (turn-end or awaiting-action); 0 while a turn is running, backgroun"
   },
   "data-self-hosted-runner-session-metrics-help": {
     "verdict": "pristine-keep",
@@ -3670,9 +3668,9 @@
     "why": "The server status value and warning that the move may have committed are distinct, load-bearing HTTP-5xx error mechanics. The body is already minimal and must remain intact."
   },
   "data-teleport-not-available-in-session": {
-    "verdict": "wipe-merge",
-    "version": "2.1.224",
-    "why": "BODY. Three claims: (1) '/teleport pulls a cloud session into a terminal on your own machine, so it can't run from inside this session'; (2) 'run claude --teleport ${SESSION_ID} from a checkout of this repository'; (3) 'On claude.ai you can also choose Open in → Terminal from the session menu, which copies that command.' No CAPS, no hedging — read on its own merits this is clean prose, and (3) is arguably useful rather than a restatement (it saves the user transcribing a UUID). CORPUS SCAN. Its two switch-siblings in `q0b` (`session`, `remote-control`) fire on different command names, so no co"
+    "verdict": "trim",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier wipe-merge dropped runtime slot(s) DATA_TELEPORT_NOT_AVAILABLE_IN_SESSION_VAR_0 that only this prompt delivers (slot(s) re-inserted in the trimmed body). Previous rationale: BODY. Three claims: (1) '/teleport pulls a cloud session into a terminal on your own machine, so it can't run from inside this session'; (2) 'run claude --telep"
   },
   "data-teleport-remote-control-required": {
     "verdict": "pristine-keep",
@@ -5317,13 +5315,13 @@
   },
   "slash-command-code-review-effort-notice-fork": {
     "verdict": "trim",
-    "version": "2.1.224",
-    "why": "Check 1: the instruction sentence is a mandatory narration CTA plus a product tip. \"Open your report with one short line telling the user this, and that typing a level (for example `/code-review high`) changes it\" forces the model to relay a CLI how-to every time the effort level defaults — textbook \"always-on CTA\" from the cut list (\"4.7 follows literal CTAs and they become spam\"), and Opus-5-digest §4 is independently against effort-level pushes. The user already sees the effort level in the TUI. The clause \"that opening line reaches them with the findings\" is the only load-bearing part (in "
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier trim dropped runtime slot(s) SLASH_COMMAND_CODE_REVIEW_EFFORT_NOTICE_FORK_VAR_1 that only this prompt delivers (slot(s) re-inserted in the trimmed body). Previous rationale: Check 1: the instruction sentence is a mandatory narration CTA plus a product tip. \"Open your report with one short line telling the user this, and that typing "
   },
   "slash-command-code-review-effort-notice-inline": {
     "verdict": "trim",
-    "version": "2.1.224",
-    "why": "Same defect as the fork variant with less to salvage: \"Tell the user this in one short line as you begin, including that typing a level (for example `/code-review high`) changes it\" is a forced opening-line narration carrying a CLI product tip — an always-on CTA, and unlike the fork branch there is not even a delivery-constraint clause worth keeping (an inline run's narration reaches the user by default, so the instruction is pure ceremony). Check 1 also flags \"as you begin\" as scaffolding an Opus-5-class model does not need. Check 2: FROZEN under the tripwire (\"one short line\" quantifier; \"th"
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier trim dropped runtime slot(s) SLASH_COMMAND_CODE_REVIEW_EFFORT_NOTICE_INLINE_VAR_1 that only this prompt delivers (slot(s) re-inserted in the trimmed body). Previous rationale: Same defect as the fork variant with less to salvage: \"Tell the user this in one short line as you begin, including that typing a level (for example `/code-revi"
   },
   "slash-command-code-review-end-with-marker-line": {
     "verdict": "pristine-keep",
@@ -7336,9 +7334,7 @@
     "why": "The exact two-value `lane` JSON schema and the prohibition on prose or code fences are the classifier's output contract. The paired triage prompt names `act` and `pipeline` but does not specify the `lane` key or complete JSON shape, and Opus 5 cannot infer an application-specific schema by default."
   },
   "system-prompt-artifact-comment-edit-composer": {
-    "coveredBy": [
-      "system-prompt-artifact-comment-edit-composer-source-fence"
-    ],
+    "coveredBy": ["system-prompt-artifact-comment-edit-composer-source-fence"],
     "injectionPath": "cli.js lzb() (~offset 12,894,235), the edit-capable artifact-comment composer. Fires only when the artifact-comments autoreact pipeline runs AND a writer activated Claude with edit capability AND the source read succeede",
     "verdict": "trim",
     "version": "2.1.224",
@@ -8238,16 +8234,9 @@
     "why": "Read in full — two sentences. Sentence 2 is the folded `${\"...\"}` constant 'Your personal memory directory already exists — write to it directly with the Write tool (do not run mkdir or check for its existence).' Corpus scan turned up a real overlap I had to weigh: inside the SAME rendered lean block, system-prompt-memory-connected-stores-all-read-only ('Every connected store is read-only in this session: memory_write calls are refused and nothing written to a shared store will persist.'), system-prompt-memory-read-shared-persist-personal ('...persist new learnings to your personal memory dire"
   },
   "system-prompt-memory-private-alongside-team-scopes": {
-    "coveredBy": [
-      "system-prompt-memory-shared-not-mirrored-locally",
-      "system-prompt-memory-save-team-scoped-writable-store",
-      "system-prompt-memory-shared-stores-intro",
-      "system-prompt-memory-type-definitions-line"
-    ],
-    "injectionPath": "cli.js iSu(e,t) (~offset 2,855,689), non-lean branch, `...p?[]:[<this>]` — the \"# Memory\" system-prompt block for CONNECTED shared memory stores (MemoryList/MemoryRead/MemoryWrite). Requires at least one connected store ",
-    "verdict": "wipe-merge",
-    "version": "2.1.224",
-    "why": "Feature the user does not have, and every claim is duplicated inside its own rendered block even if he did. Verified on disk: there is no ~/.claude/memory, no team directory anywhere under ~/.claude or ~/.claude/projects, and no memory-store connection in ~/.claude.json. His memory is the per-project file store (~/.claude/projects/<proj>/memory/ with MEMORY.md and `metadata: type: feedback` frontmatter), which is built by gSu(), not by iSu(). This prompt is the `...p?[]:[...]` arm of iSu() — it renders only when connected SHARED memory stores exist AND at least one is writable. That arm cannot"
+    "verdict": "trim",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier wipe-merge dropped runtime slot(s) SYSTEM_PROMPT_MEMORY_PRIVATE_ALONGSIDE_TEAM_SCOPES_VAR_0, SYSTEM_PROMPT_MEMORY_PRIVATE_ALONGSIDE_TEAM_SCOPES_VAR_1.id that only this prompt delivers (slot(s) re-inserted in the trimmed body). Previous rationale: Feature the user does not have, and every claim is duplicated inside its own rendered block even if he did. Verified on disk: there is no ~/.claude/memory, no t"
   },
   "system-prompt-memory-private-belongs-in-personal-dir": {
     "verdict": "pristine-keep",
@@ -8331,17 +8320,9 @@
     "why": "Unique local-vs-machine memory-writing constraint."
   },
   "system-prompt-memory-scope-privacy-defaults": {
-    "coveredBy": [
-      "system-prompt-memory-type-privacy-defaults",
-      "system-prompt-memory-team-only-all-types-no-secrets",
-      "system-prompt-memory-no-secrets-in-team",
-      "system-prompt-memory-no-sensitive-data-in-shared",
-      "system-prompt-memory-private-belongs-in-personal-dir"
-    ],
-    "injectionPath": "cli.js gSu(e) (~offset 2,868,465), the `m` slot of the file-based \"# Memory\" system-prompt block, arm `d.length>0` (private autoDir plus team mounts). Renders inline between ${MEMORY_TYPE_DESCRIPTIONS} and the index-poin",
-    "verdict": "wipe-merge",
-    "version": "2.1.224",
-    "why": "Two claims; one is already suppressed to empty by the corpus, the other is a feature the user does not have. The body is ` ${VAR_0(\"team\")} Never write secrets or credentials to the team directory.` VAR_0 resolves to cli.js Ayo(e) — which IS the whole body of the sibling id system-prompt-memory-type-privacy-defaults (\"`user` memories are always private; default `feedback` to private, `project` and `reference` to ${e}.\"), and that override is ALREADY an empty body on disk. So the first half renders as nothing today, leaving exactly one sentence: \"Never write secrets or credentials to the team d"
+    "verdict": "pristine-keep",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier wipe-merge dropped runtime slot(s) SYSTEM_PROMPT_MEMORY_SCOPE_PRIVACY_DEFAULTS_VAR_0 that only this prompt delivers (body back to pristine). Previous rationale: Two claims; one is already suppressed to empty by the corpus, the other is a feature the user does not have. The body is ` ${VAR_0(\"team\")} Never write secrets "
   },
   "system-prompt-memory-scope-project": {
     "verdict": "pristine-keep",
@@ -8470,9 +8451,9 @@
     "why": "This uniquely selects private versus team scope for feedback memories and supplies the project-wide-convention threshold. The example pair is compact and disambiguates the classification boundary."
   },
   "system-prompt-memory-type-privacy-defaults": {
-    "verdict": "wipe-merge",
-    "version": "2.1.224",
-    "why": "Body: '`user` memories are always private; default `feedback` to private, `project` and `reference` to ${DEST}.' Check 1 — terse, no theater; the problem is not slop, it is that the sentence is a routing table already published elsewhere. Check 2 — three of its four claims have explicit corpus siblings: `user`->private is system-prompt-memory-private-alongside-team-scopes ('save `user`-type memories (and anything else private) there [the personal dir], and team-scoped memories to the writable store'); `feedback`->private is system-prompt-memory-type-feedback-scope ('<scope>default to private. "
+    "verdict": "pristine-keep",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier wipe-merge dropped runtime slot(s) SYSTEM_PROMPT_MEMORY_TYPE_PRIVACY_DEFAULTS_VAR_0 that only this prompt delivers (body back to pristine). Previous rationale: Body: '`user` memories are always private; default `feedback` to private, `project` and `reference` to ${DEST}.' Check 1 — terse, no theater; the problem is not"
   },
   "system-prompt-memory-types-intro": {
     "verdict": "pristine-keep",
@@ -13672,9 +13653,7 @@
     "why": "w3b[1], the '## Version tokens' section spread into k3p — memory_write's prompt(), model-facing. Owner of the version-token contract: if_version is required, the literal word new for a document that does not exist, read-first-then-pass ordering with the reason (the listing shows paths, not tokens), and never invent a token. Its two cited siblings cannot take the claim: tool-description-memorywrite-prompt is C3p (description(), never reaches the model), and tool-parameter-memory-write-if-version is scoped to one field. Four sentences, all frozen ('Every', the `new` enum, an ordering word, 'Neve"
   },
   "tool-description-memory-when-to-access-call-list-early": {
-    "coveredBy": [
-      "tool-description-memorylist-call-early-guidance"
-    ],
+    "coveredBy": ["tool-description-memorylist-call-early-guidance"],
     "ringResolved": true,
     "verdict": "wipe-merge",
     "version": "2.1.224",
@@ -13701,9 +13680,7 @@
     "why": "Newly catalogued and never ruled on; every one of its three claims is carried by a deployed sibling on the same gate, and the feature is unused. Body: 'Never write secrets or credentials into a memory — the store is shared with every collaborator on the project, and such writes are refused.' (1) The prohibition is stated three times over in the same `# Memory` block that renders whenever memory stores are connected — deployed `system-prompt-memory-private-belongs-in-personal-dir`: 'Never save secrets, credentials or other sensitive data to the shared stores.'; deployed `system-prompt-memory-no"
   },
   "tool-description-memory-write-store": {
-    "coveredBy": [
-      "tool-parameter-memory-write-content"
-    ],
+    "coveredBy": ["tool-parameter-memory-write-content"],
     "verdict": "trim",
     "version": "2.1.224",
     "why": "S1 is k3p's lead — memory_write's purpose plus the store-id contract, stated nowhere else on a rendering surface, and it is what covers the wiped `tool-parameter-memory-write-store`. S2 goes, but ONLY because ownership of the whole-document-replacement rule is now explicitly pinned to `tool-parameter-memory-write-content`, which is upgraded to pristine-keep in this resolution. The first pass had this trim citing write-content (which was itself deleting the same sentence) and C3p (wiped, and non-rendering) — that combination left the rule with zero live owners and would have produced an agent t"
@@ -14685,9 +14662,7 @@
     "why": "The output restriction and the out-of-contract refusal exist only here, and the overlap with the `schema` param sits inside an unsplittable frozen sentence."
   },
   "tool-parameter-artifact-action-read-write-db": {
-    "coveredBy": [
-      "tool-description-artifact-database-guidance"
-    ],
+    "coveredBy": ["tool-description-artifact-database-guidance"],
     "ringResolved": true,
     "verdict": "trim",
     "version": "2.1.224",
@@ -14800,9 +14775,7 @@
     "why": "Action-phrased DB collection requiredness except batch. Watch-listing sibling is another tool. Slop check: One required-except sentence. Frozen every/'batch'. Duplicate check: comments-url deployed body is 'The artifact's claude.ai URL. Required for every action except a bare \\'watch\\' listing.' — different parameter and different exception. JSON has this exact 'except \\'batch\\'' string once."
   },
   "tool-parameter-artifact-db-data": {
-    "coveredBy": [
-      "tool-result-artifact-db-data-too-large"
-    ],
+    "coveredBy": ["tool-result-artifact-db-data-too-large"],
     "ringResolved": true,
     "verdict": "trim",
     "version": "2.1.224",
@@ -15775,9 +15748,7 @@
     "why": "Frozen enumeration of enum values with their thresholds; sole definition of the LOW/MEDIUM/HIGH contract."
   },
   "tool-parameter-feedback-details": {
-    "coveredBy": [
-      "tool-description-sendfeedback-drafting-guidance"
-    ],
+    "coveredBy": ["tool-description-sendfeedback-drafting-guidance"],
     "injectionPath": "cli.js g4b (~offset 12,555,740), the zod .describe() on the SendFeedback input schema's `details` field. Reaches the model as part of the tool's input_schema in every API request that carries the SendFeedback tool (gated",
     "verdict": "trim",
     "version": "2.1.224",
@@ -15976,9 +15947,7 @@
     "why": "CHANGED FROM TRIM — this is the fix for the family's worst zero-owner hole. The whole-document-replacement rule was being deleted from all three of its carriers at once (`tool-description-memory-write-store` S2 → cited here and C3p; here → cited C3p; C3p → wiped, and it never rendered anyway), which would have shipped an agent that treats memory_write as an append and silently deletes every line it does not restate. This id is the right home: the rule is ABOUT the `content` field, it reaches the model in the memory_write inputSchema (cli-2.1.224.js:12538435, serialized into tools[]) at the exa"
   },
   "tool-parameter-memory-write-if-version": {
-    "coveredBy": [
-      "tool-description-memory-version-token-requirement"
-    ],
+    "coveredBy": ["tool-description-memory-version-token-requirement"],
     "ringResolved": true,
     "verdict": "trim",
     "version": "2.1.224",
@@ -16464,9 +16433,9 @@
     "why": "Check 1 — five words, no slop; it is not size that condemns it. Check 2 — it is a same-corpus restatement twice over. tool-parameter-selfhosted-runner-health-port is the identical parameter description with one synonym swapped: 'Default ${VAR_0}. 0 means disabled.' vs 'Default ${VAR_0}. 0 disables /healthz.' And the 0-sentinel plus the /healthz path are both spelled out in the tool that consumes them, tool-description-self-hosted-runner-read-health: 'GET http://127.0.0.1:{health_port}/healthz on the local runner (2s timeout). Returns the health JSON, or {disabled:true} when health_port is 0, o"
   },
   "tool-parameter-selfhosted-runner-log-bytes": {
-    "verdict": "wipe-merge",
-    "version": "2.1.224",
-    "why": "Body is one sentence plus a variable contract (${...VAR_0} binds the 65536 default) - no CAPS, no hedging, nothing internally repeated, and like the capacity field the zod schema carries no `.default()`, so the describe is the only statement of the default. Corpus scan found no sibling that states a tail-log byte default. Cut solely because the feature is unreachable: same `C9p()` evidence as the other self-hosted-runner entries (whole tool family missing from the live deferred-tool listing, first-party-provider + operator-OAuth-only API)."
+    "verdict": "trim",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier wipe-merge dropped runtime slot(s) TOOL_PARAMETER_SELFHOSTED_RUNNER_LOG_BYTES_VAR_0 that only this prompt delivers (slot(s) re-inserted in the trimmed body). Previous rationale: Body is one sentence plus a variable contract (${...VAR_0} binds the 65536 default) - no CAPS, no hedging, nothing internally repeated, and like the capacity fi"
   },
   "tool-parameter-selfhosted-runner-log-path": {
     "verdict": "pristine-keep",
@@ -18551,9 +18520,9 @@
     "why": "BODY. One sentence: the rule ('an ordered query is a single page'), the mechanical consequence ('`query.cursor` is not accepted with `query.order_by`'), and one two-branch remedy ('drop one of the two (narrow with `query.where` if one ordered page is not enough)'). No CAPS, no hedging, no restatement — the parenthetical is a different action, not a paraphrase of 'drop one of the two'. Frozen end to end: three parameter names, an enumeration, a restrictive negative. CORPUS SCAN. Checked every co-delivered description and every sibling refusal in the same validator. tool-parameter-artifact-db-qu"
   },
   "tool-result-artifact-db-data-too-large": {
-    "verdict": "wipe-merge",
-    "version": "2.1.224",
-    "why": "Feature the user does not use, checked against the live schema: the Artifact tool loaded in this session accepts action `publish|list` only and has no `db_op`, `collection`, `doc_id`, `data` or `query` properties, so `Pya()` is false and no db_op can ever be validated. On content the body is already tight - two variable contracts carrying the actual and permitted byte counts plus a three-word remedy - and its only near-neighbour, tool-result-artifact-db-quota-or-rate ('over a rate or storage limit - retry later or write less'), covers the same 'write less' remedy for the sibling failure. Note "
+    "verdict": "trim",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier wipe-merge dropped runtime slot(s) TOOL_RESULT_ARTIFACT_DB_DATA_TOO_LARGE_VAR_0, TOOL_RESULT_ARTIFACT_DB_DATA_TOO_LARGE_VAR_1 that only this prompt delivers (slot(s) re-inserted in the trimmed body). Previous rationale: Feature the user does not use, checked against the live schema: the Artifact tool loaded in this session accepts action `publish|list` only and has no `db_op`, "
   },
   "tool-result-artifact-db-databases-per-org": {
     "verdict": "pristine-keep",
@@ -18632,9 +18601,9 @@
     "why": "Unique total-save-failure result; slots must survive. Conditional, so disuse is not a wipe reason."
   },
   "tool-result-artifact-db-not-found": {
-    "verdict": "wipe-merge",
-    "version": "2.1.224",
-    "why": "Feature not used - the Artifact tool actually loaded in this session exposes action `publish|list` with no db_op/collection/doc_id parameters, so `Pya(){return ee.CLAUDE_CODE_ARTIFACT_DB ?? ot(\"tengu_umber_lattice\",false)}` is off and this error table is unreachable. Content-wise the body is not slop: '(or no access - the two are deliberately indistinguishable)' is a real constraint the model cannot infer, and it is what stops it from concluding a document does not exist and creating a duplicate; no sibling in the JSON, system-prompts-opus-5/ or system-reminders/ states it (tool-result-artifac"
+    "verdict": "pristine-keep",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier wipe-merge dropped runtime slot(s) TOOL_RESULT_ARTIFACT_DB_NOT_FOUND_VAR_0 that only this prompt delivers (body back to pristine). Previous rationale: Feature not used - the Artifact tool actually loaded in this session exposes action `publish|list` with no db_op/collection/doc_id parameters, so `Pya(){return "
   },
   "tool-result-artifact-db-op-not-valid-for-action": {
     "verdict": "pristine-keep",
@@ -27738,10 +27707,9 @@
     "why": "Read in full: '${VAR_0} It currently exists at version ${VAR_1}.' Six words plus the token; read rather than triaged as a constant. No slop of any kind, and frozen (it carries a version token — a sentinel value). Check 2: the lead ${VAR_0} is catalogued as tool-result-memory-write-bad-version-token (375 ch, DEPLOYED PRISTINE) and tells the model the token was malformed and what shape a real one has; the sibling tool-result-memory-write-bad-version-missing-doc (175 ch, deployed pristine) is the mutually exclusive r===null branch ('does not exist yet, so pass if_version=new'). Neither supplies t"
   },
   "tool-result-memory-write-bad-version-missing-doc": {
-    "ringResolved": true,
-    "verdict": "wipe-merge",
-    "version": "2.1.224",
-    "why": "Owns no claim. Post-failure by construction, and the remedy it gives is stated pre-failure by the kept tool-description-memory-version-token-requirement ('Pass the literal word new for a document that does not yet exist'). Both of its post-failure covers are outside this ring and untouched: tool-result-memory-write-path-missing carries the same remedy verbatim, and tool-result-memory-write-bad-version-token — the very error this tail is appended to — is strictly fuller, adding the 12-character width and where to obtain a token. The sentence is frozen (the if_version=new enum value), so the onl"
+    "verdict": "pristine-keep",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier wipe-merge dropped runtime slot(s) TOOL_RESULT_MEMORY_WRITE_BAD_VERSION_MISSING_DOC_VAR_0, TOOL_RESULT_MEMORY_WRITE_BAD_VERSION_MISSING_DOC_VAR_1 that only this prompt delivers (body back to pristine). Previous rationale: Owns no claim. Post-failure by construction, and the remedy it gives is stated pre-failure by the kept tool-description-memory-version-token-requirement ('Pass "
   },
   "tool-result-memory-write-bad-version-token": {
     "verdict": "pristine-keep",
@@ -29410,9 +29378,9 @@
     "why": "Read in full: 'Requeue session ${VAR_0.session_id} off runner ${VAR_0.runner_id}? This re-launches the session on another runner in the pool.' Sentence 1 is the ask itself and carries both interpolated ids — keep. Sentence 2 restates the tool description that is on the same turn: the DEPLOYED `tool-description-self-hosted-runner-requeue-session.md` (546 ch, non-empty, verified from disk) opens 'Requeue an assigned session onto a different runner.' and goes further ('Appends the observed runner to the session's excluded_runner_ids so the queue pop doesn't immediately hand it back'), so the seco"
   },
   "tool-result-self-hosted-runner-spawn-local-ask": {
-    "verdict": "wipe-merge",
-    "version": "2.1.224",
-    "why": "Two grounds, either sufficient. (1) Feature the user does not use: the self-hosted runner wizard suite never registers on any of this user's three installs, so the dialog never renders — same family and same precedent as `data-managed-agents-*`. (2) Emission site is the permission dialog, not model context: on an auto-mode session the tool returns `{behavior:\"passthrough\"}` with a different string, and a denied ask returns the generic rejection result, so this text does not reach the model at all. Body itself is clean and non-duplicative apart from sharing the ask-message shape with `tool-resu"
+    "verdict": "pristine-keep",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier wipe-merge dropped runtime slot(s) TOOL_RESULT_SELF_HOSTED_RUNNER_SPAWN_LOCAL_ASK_VAR_0.secret_file_path, TOOL_RESULT_SELF_HOSTED_RUNNER_SPAWN_LOCAL_ASK_VAR_0.base_dir that only this prompt delivers (body back to pristine). Previous rationale: Two grounds, either sufficient. (1) Feature the user does not use: the self-hosted runner wizard suite never registers on any of this user's three installs, so "
   },
   "tool-result-send-file-cloud-sessions-unavailable": {
     "verdict": "pristine-keep",
@@ -30099,10 +30067,9 @@
     "why": "Unique security/validation gate: refuse a send when no running session has a live inbox at the target pipe. Conditional; wiping drops the only refusal text on that throw."
   },
   "tool-result-send-message-use-listing-hint": {
-    "ringResolved": true,
-    "verdict": "wipe-merge",
-    "version": "2.1.224",
-    "why": "Owns no claim. Its single sentence is the enumeration claim, and the gate that produces it -- `f=t.options.tools.some(S=>el(S,cy))`, cy=\"ListAgents\" -- is the ListAgents tool being offered, which mechanically guarantees tool-description-listagents ('Lists agents you can ${SEND_MESSAGE_TOOL_NAME} to ... Names are the address') is in the same context window at the moment the error fires. That is co-delivery by construction, not by coincidence, and the description is deployed pristine. tool-description-sendmessage-cross-session-guidance ('Use `${LIST_AGENTS_TOOL_NAME}` to discover targets', gated"
+    "verdict": "pristine-keep",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier wipe-merge dropped runtime slot(s) TOOL_RESULT_SEND_MESSAGE_USE_LISTING_HINT_VAR_0 that only this prompt delivers (body back to pristine). Previous rationale: Owns no claim. Its single sentence is the enumeration claim, and the gate that produces it -- `f=t.options.tools.some(S=>el(S,cy))`, cy=\"ListAgents\" -- is the L"
   },
   "tool-result-send-message-wrong-endpoint": {
     "verdict": "pristine-keep",
@@ -30384,9 +30351,9 @@
     "why": "Unique plan-reject SendMessage result."
   },
   "tool-result-sendmessage-plan-rejection-inbox-write-failed": {
-    "verdict": "wipe-merge",
-    "version": "2.1.224",
-    "why": "Body in full: 'Failed to write the plan rejection to ${name}'s inbox — nothing was sent. Try again.' Check 2 — the corpus carries this exact sentence six times with only the noun swapped: tool-result-sendmessage-inbox-write-failed ('Failed to write to ${X}'s inbox — nothing was sent. Try again, or message the lead.' — the generic, and the only one with an escalation path), tool-result-sendmessage-plan-approval-inbox-write-failed, tool-result-sendmessage-shutdown-rejection-inbox-write-failed, tool-result-send-message-shutdown-request-write-failed, tool-result-send-message-teammate-inbox-write-f"
+    "verdict": "pristine-keep",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier wipe-merge dropped runtime slot(s) TOOL_RESULT_SENDMESSAGE_PLAN_REJECTION_INBOX_WRITE_FAILED_VAR_0 that only this prompt delivers (body back to pristine). Previous rationale: Body in full: 'Failed to write the plan rejection to ${name}'s inbox — nothing was sent. Try again.' Check 2 — the corpus carries this exact sentence six times "
   },
   "tool-result-sendmessage-shutdown-rejection-inbox-write-failed": {
     "verdict": "pristine-keep",
@@ -31283,5 +31250,45 @@
     "verdict": "trim",
     "version": "2.1.241",
     "why": "Keep the unique 4-agent protocol. Delete the restated opener. Do not cite the inline-mode or code-review-fix siblings as coverage; they are other commands/arms."
+  },
+  "skill-init-claude-md-and-skill-setup-new-version": {
+    "verdict": "trim",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier trim dropped runtime slot(s) IS_IMPORT_ENABLED_FN, IMPORT_OFFER_NOTE that only this prompt delivers (slot(s) re-inserted in the trimmed body)."
+  },
+  "agent-prompt-background-observer-worker-activity-digest-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier trim dropped runtime slot(s) AGENT_PROMPT_BACKGROUND_OBSERVER_WORKER_ACTIVITY_DIGEST_NOTE_VAR_0.observedEnvelopeName that only this prompt delivers (body back to pristine)."
+  },
+  "skill-code-review-output-format": {
+    "verdict": "trim",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier trim dropped runtime slot(s) SKILL_CODE_REVIEW_OUTPUT_FORMAT_VAR_1 that only this prompt delivers (slot(s) re-inserted in the trimmed body)."
+  },
+  "skill-code-review-phase-2-verify-3-state": {
+    "verdict": "trim",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier trim dropped runtime slot(s) VERIFY_VOTE_DEFINITIONS that only this prompt delivers (slot(s) re-inserted in the trimmed body)."
+  },
+  "skill-code-review-phase-2-verify-recall-biased": {
+    "verdict": "trim",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier trim dropped runtime slot(s) RECALL_BIASED_RUBRIC that only this prompt delivers (slot(s) re-inserted in the trimmed body)."
+  },
+  "system-prompt-autonomous-loop-tick-dynamic": {
+    "verdict": "pristine-keep",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier trim dropped runtime slot(s) SCHEDULE_WAKEUP_TOOL_NAME, AUTONOMOUS_LOOP_DYNAMIC_SENTINEL, MONITOR_FALLBACK_HEARTBEAT_GUIDANCE_BLOCK, LOOP_NOTIFICATION_GUIDANCE_FN that only this prompt delivers (body back to pristine)."
+  },
+  "system-prompt-background-session-worktree-persistence-guidance": {
+    "verdict": "trim",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier trim dropped runtime slot(s) GIT_PUSH_SAFETY_NOTE that only this prompt delivers (slot(s) re-inserted in the trimmed body)."
+  },
+  "system-prompt-memory-read-only-session-2": {
+    "verdict": "trim",
+    "version": "2.1.258",
+    "why": "Restored 2026-09-02 by the whole-set trim-slot review: the earlier trim dropped runtime slot(s) SYSTEM_PROMPT_MEMORY_READ_ONLY_SESSION_2_VAR_0, SYSTEM_PROMPT_MEMORY_READ_ONLY_SESSION_2_VAR_2 that only this prompt delivers (slot(s) re-inserted in the trimmed body)."
   }
 }

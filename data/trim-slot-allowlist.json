@@ -43,5 +43,296 @@
     "tokens": {
       "EDIT_TOOL_NAME": "Single occurrence sat in a stage direction of a deleted few-shot example (\"Uses the Edit tool to add a comment\"); the examples were replaced by their rules. ${EDIT_TOOL_NAME} stays live in write-read-existing-file-first."
     }
+  },
+  "skill-code-review-task-tool-unavailable-inline-angles": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "SKILL_CODE_REVIEW_TASK_TOOL_UNAVAILABLE_INLINE_ANGLES_VAR_0": "Identical content with its own live tool-name slot in deployed skill-code-review-no-task-tool-single-pass (same no-Task-tool branch); single-pass-disclosure adds the disclosure."
+    }
+  },
+  "slash-command-code-review-ultrareview-tip": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "SLASH_COMMAND_CODE_REVIEW_ULTRAREVIEW_TIP_VAR_0": "Product-awareness upsell line (tengu_ultrareview_awareness, shown ≤5 times); the slot only decorates it with a free-quota count. No review behaviour depends on it."
+    }
+  },
+  "system-prompt-explore-usage": {
+    "bodyHash": "d23080cfd4de",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "SYSTEM_PROMPT_EXPLORE_USAGE_VAR_0": "A bare integer threshold; the rewrite swaps it for the delegation rule carried by deployed tool-description-agent-simple-usage-notes on the same Agent-tool gate; the three load-bearing slots are kept."
+    }
+  },
+  "system-prompt-memory-check-each-reply-and-save": {
+    "bodyHash": "41413a9c936b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "SYSTEM_PROMPT_MEMORY_CHECK_EACH_REPLY_AND_SAVE_VAR_1": "Save/read halves survive in the inline-memory-* siblings under the same gate; the tool name reaches the model from the tool definition and the kept ${VAR_0} deferred-tools hint."
+    }
+  },
+  "system-prompt-memory-index-document-loaded": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "SYSTEM_PROMPT_MEMORY_INDEX_DOCUMENT_LOADED_VAR_0.indexPath": "Index path stated by the unconditional connected-stores list line in the same section and by deployed memory-save-team-scoped-writable-store; the 'loaded into context' fact survives in memory-index-truncation-store.",
+      "SYSTEM_PROMPT_MEMORY_INDEX_DOCUMENT_LOADED_VAR_1": "Cross-reference to the memory_write prompt, which is deployed non-empty with the index-maintenance procedure."
+    }
+  },
+  "system-prompt-memory-read-only-session-2": {
+    "bodyHash": "f1f64fc16755",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "SYSTEM_PROMPT_MEMORY_READ_ONLY_SESSION_2_VAR_1": "Splices system-prompt-memory-recalled-reminders-are-context, which is deliberately suppressed (empty) in both sets, so the slot renders nothing; un-suppressing that sibling would require this slot back."
+    }
+  },
+  "system-prompt-memory-store-index-empty-writable": {
+    "bodyHash": "c6faaee4f65a",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "SYSTEM_PROMPT_MEMORY_STORE_INDEX_EMPTY_WRITABLE_VAR_2": "Two-step save procedure delivered verbatim by the memory_write tool prompt (memory-save-step1-store, memory-store-index-pointer-instructions, memory-version-token-requirement), deployed non-empty."
+    }
+  },
+  "system-prompt-memory-store-index-pointer-instructions": {
+    "bodyHash": "bf3031c4c851",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "SYSTEM_PROMPT_MEMORY_STORE_INDEX_POINTER_INSTRUCTIONS_VAR_1": "Index-path discovery stated by deployed tool-description-memorylist(-prompt) and by the per-store 'index' line.",
+      "SYSTEM_PROMPT_MEMORY_STORE_INDEX_POINTER_INSTRUCTIONS_VAR_2": "Covered verbatim by the co-rendered '## Version tokens' section (memory-version-token-requirement) of the same tool prompt."
+    }
+  },
+  "system-prompt-memory-tools-deferred-load": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "SYSTEM_PROMPT_MEMORY_TOOLS_DEFERRED_LOAD_VAR_0": "Generic deferred-tools reminder (system-reminder-deferred-tools-available, undiscovered-tool-schemas) states the same select: mechanism with the actual deferred names.",
+      "SYSTEM_PROMPT_MEMORY_TOOLS_DEFERRED_LOAD_VAR_1": "Same sentence; the reminder enumerates the real deferred names."
+    }
+  },
+  "system-prompt-plan-mode-what-happens": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "SYSTEM_PROMPT_PLAN_MODE_WHAT_HAPPENS_VAR_2": "Suppressed section; explore step and tool names carried by deployed plan-mode-is-active and plan-mode-workflow.",
+      "SYSTEM_PROMPT_PLAN_MODE_WHAT_HAPPENS_VAR_3": "Same enumeration.",
+      "SYSTEM_PROMPT_PLAN_MODE_WHAT_HAPPENS_VAR_4": "Same enumeration.",
+      "SYSTEM_PROMPT_PLAN_MODE_WHAT_HAPPENS_VAR_5": "${ASK_USER_QUESTION_TOOL_NAME} live in plan-mode-is-active and plan-mode-workflow.",
+      "SYSTEM_PROMPT_PLAN_MODE_WHAT_HAPPENS_VAR_6": "${EXIT_PLAN_MODE_TOOL_NAME} live in plan-mode-is-active, plan-mode-workflow, plan-mode-sparse-end-turn-tools."
+    }
+  },
+  "system-prompt-prefer-dedicated-tools-default-cli": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "SYSTEM_PROMPT_PREFER_DEDICATED_TOOLS_DEFAULT_CLI_VAR_0": "The set is bash-first: Anthropic's auto-mode prompt (system-prompt-bash-first-tool-preference, kept) tells the model to work through Bash; 'Prefer dedicated tools over Bash' contradicts it, so its suppression is policy, consistent with the grep/bash-alt verdicts. The inline-blob duplicate override of the same literal was emptied for consistency (it was inert: the suppression won).",
+      "SYSTEM_PROMPT_PREFER_DEDICATED_TOOLS_DEFAULT_CLI_VAR_1": "Same sentence."
+    }
+  },
+  "system-prompt-tool-usage-subagent-guidance-trimmed": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "SYSTEM_PROMPT_TOOL_USAGE_SUBAGENT_GUIDANCE_TRIMMED_VAR_0": "Both clauses survive with ${AGENT_TOOL_NAME} in deployed tool-description-agent-simple-usage-notes ('Once you've delegated a search, wait for the result rather than running it yourself too')."
+    }
+  },
+  "system-prompt-tool-usage-subagent-guidance": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "AGENT_TOOL_NAME": "Every clause maps onto deployed tool-description-agent-simple-usage-notes, which keeps ${AGENT_TOOL_NAME}; mutually exclusive experiment branch with the -trimmed id."
+    }
+  },
+  "system-reminder-peer-mention-sendmessage-tool-reference": {
+    "bodyHash": "e67e95f404e5",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "SYSTEM_REMINDER_PEER_MENTION_SENDMESSAGE_TOOL_REFERENCE_VAR_1": "Deployed body keeps ${VAR_0} and the do-not-substitute rule; the how-to-load clause is covered by deployed system-reminder-undiscovered-tool-schemas (query \"select:<name>\") which fires under the same condition."
+    }
+  },
+  "tool-description-agent-simple-usage-notes": {
+    "bodyHash": "c8d89ea56077",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "FORK_CONTEXT_NOTE": "Splices tool-description-agent-fork-background-delegation-note, deliberately empty in both sets; its substance is in agent-subagents-background-default, fork-usage-guidelines and agent-available-types; the retained bullet keeps ${CAN_FORK_CONTEXT?…}."
+    }
+  },
+  "tool-description-artifact-publish-lang-parameter": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "TOOL_DESCRIPTION_ARTIFACT_PUBLISH_LANG_PARAMETER_VAR_1": "Directive and the same runtime-gated exclusion live in deployed tool-parameter-artifact-lang and tool-parameter-artifact-lang-type-created-page-caveat (slot kept)."
+    }
+  },
+  "tool-description-bash-alt-content-search": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "GREP_TOOL_NAME": "Bash-first policy (auto-mode prompt kept); CC itself strips this entry under bash-first; tool-description-grep deployed non-empty."
+    }
+  },
+  "tool-description-bash-alt-edit-files": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "EDIT_TOOL_NAME": "Deliberate divergence consistent with the kept bash-first prompt ('make file changes with sed, heredocs…'); tool-description-edit deployed non-empty."
+    }
+  },
+  "tool-description-bash-alt-file-search": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "GLOB_TOOL_NAME": "Same basis as content-search; bash find guidance overrides presuppose find is allowed; tool-description-glob deployed non-empty."
+    }
+  },
+  "tool-description-bash-alt-read-files": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "READ_TOOL_NAME": "Set deliberately bash-first; the Read-before-Edit/Write mechanic is stated by the Edit/Write descriptions (write-read-existing-file-first keeps ${READ_TOOL_NAME}); auto-mode's own prompt inverts this line."
+    }
+  },
+  "tool-description-bash-built-in-tools-note": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "BASH_TOOL_NAME": "Rationale prose; the rule survives in bash-prefer-dedicated-tools-bullet and the permission/UX justification in grep-concise."
+    }
+  },
+  "tool-description-bash-pre-ship-verify-missing-skill": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "TOOL_DESCRIPTION_BASH_PRE_SHIP_VERIFY_MISSING_SKILL_VAR_0": "skill-verify-description carries the bootstrap fact; pre-commit-skill-checks keeps ${MISSING_PROJECT_VERIFY_SKILL_NOTE} and the no-skip rule; the command name reaches the model via pre-ship-verify-test-only-skip's slot."
+    }
+  },
+  "tool-description-bash-prefer-dedicated-tools": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "READ_ONLY_SEARCHING_BASH_COMMANDS": "Legacy (2.1.71) shape of the sentence; the current shape is deployed in bash-prefer-dedicated-tools-bullet with the same computed slot."
+    }
+  },
+  "tool-description-glob-open-ended-search-use-agent": {
+    "bodyHash": "750a0fca8e28",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "TOOL_DESCRIPTION_GLOB_OPEN_ENDED_SEARCH_USE_AGENT_VAR_1": "Self-gated on the Agent tool, whose deployed description (agent-simple-usage-notes) carries the routing rule; slot is the tool name."
+    }
+  },
+  "tool-description-memory-read-document": {
+    "bodyHash": "018b2e95b9bb",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "TOOL_DESCRIPTION_MEMORY_READ_DOCUMENT_VAR_0": "if_version contract stated in full by memory-version-token-requirement, memory-write-if-version and memory-version-conflict-merge with live slots."
+    }
+  },
+  "tool-description-memory-when-to-access-call-list-early": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "TOOL_DESCRIPTION_MEMORY_WHEN_TO_ACCESS_CALL_LIST_EARLY_VAR_0": "Near-verbatim variant deployed in memorylist-call-early-guidance with its own live slots.",
+      "TOOL_DESCRIPTION_MEMORY_WHEN_TO_ACCESS_CALL_LIST_EARLY_VAR_1": "Same sibling carries the read-tool pointer with its slot."
+    }
+  },
+  "tool-description-sendmessage-worker-recipient-rows": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "TOOL_DESCRIPTION_SENDMESSAGE_WORKER_RECIPIENT_ROWS_VAR_0": "Rows' content incl. the listing-tool slot and [ref] form carried by sendmessage-recipient-cross-session and sendmessage-cross-session-guidance on the same gate."
+    }
+  },
+  "tool-description-task-when-not-to-use": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "TOOL_DESCRIPTION_TASK_WHEN_NOT_TO_USE_VAR_0": "Clause carried by deployed tool-description-agent-simple-usage-notes ('For a single-fact lookup where you already know the file, symbol, or value, search directly'); slot only names Read, present in the tool list.",
+      "TOOL_DESCRIPTION_TASK_WHEN_NOT_TO_USE_VAR_1": "Same clause; slot only names Grep."
+    }
+  },
+  "tool-description-webfetch-private-url-warning": {
+    "bodyHash": "753a36b552f8",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "IS_ARTIFACT_TOOL_ENABLED": "Same gate kept live in deployed tool-description-webfetch-concise; and when the Artifact tool exists, tool-description-artifact-read-existing carries the better route (action: read)."
+    }
+  },
+  "tool-description-write-read-existing-file-fragment": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "TOOL_DESCRIPTION_WRITE_READ_EXISTING_FILE_FRAGMENT_VAR_0": "Read-before-overwrite gate kept with live slots in write-read-existing-file-first (${READ_TOOL_NAME}), write-overwrite-unread-fails and write-read-existing-file-outside-workdir."
+    }
+  },
+  "tool-parameter-artifact-capabilities": {
+    "bodyHash": "976560cae75e",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "TOOL_PARAMETER_ARTIFACT_CAPABILITIES_VAR_0": "Both facts in deployed tool-description-artifact-runtime-capabilities-guidance with the slot live (${ARTIFACT_CAPABILITIES_SKILL_NAME}); serialized with this parameter."
+    }
+  },
+  "tool-parameter-cron-create-recurring": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "TOOL_PARAMETER_CRON_CREATE_RECURRING_VAR_0": "Semantics and the day count live in deployed tool-description-croncreate (${CANCEL_TIMEFRAME_DAYS}, recurring true/false sections). Limit: shorter croncreate variants would carry the true/false meaning but not the day count."
+    }
+  },
+  "tool-parameter-memory-read-store": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "TOOL_PARAMETER_MEMORY_READ_STORE_VAR_0": "Store-discovery mechanic kept with live slot in tool-description-memorywrite-prompt (${MEMORY_LIST_TOOL_NAME}) and in tool-description-memorylist, same toolset."
+    }
+  },
+  "tool-parameter-memory-write-store": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "TOOL_PARAMETER_MEMORY_WRITE_STORE_VAR_0": "Verbatim duplicate of the clause tool-description-memorywrite-prompt keeps with its slot."
+    }
+  },
+  "tool-parameter-selfhosted-runner-health-port-healthz": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "TOOL_PARAMETER_SELFHOSTED_RUNNER_HEALTH_PORT_HEALTHZ_VAR_0": "Sibling tool-parameter-selfhosted-runner-health-port keeps 'Default ${…VAR_0}. 0 means disabled.' live; read-health describes {disabled:true}. Residual: the start tool's health_port parameter carries no description."
+    }
+  },
+  "tool-parameter-sendfile-recipient": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "TOOL_PARAMETER_SENDFILE_RECIPIENT_VAR_0": "Deployed tool-description-sendfile carries the same sentence with a live ${LIST_AGENTS_TOOL_NAME} slot and the uds:/bridge: grammar; description and schema register together."
+    }
+  },
+  "tool-result-memory-conflict-merge-and-retry": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "TOOL_RESULT_MEMORY_CONFLICT_MERGE_AND_RETRY_VAR_0": "Same instruction with a live slot in deployed tool-description-memory-version-conflict-merge (part of the memory_write description).",
+      "TOOL_RESULT_MEMORY_CONFLICT_MERGE_AND_RETRY_VAR_1": "Every lead that reaches this tail already prints the same version token (stale-version, if-version-new-exists, bad-version-current), and currentVersion is a structured field."
+    }
+  },
+  "tool-result-memory-unknown-store": {
+    "bodyHash": "76ceafa82c90",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "TOOL_RESULT_MEMORY_UNKNOWN_STORE_VAR_3": "The kept 'Available stores: ${VAR_2}' already lists every store id; memory_list remains discoverable via its deployed schema."
+    }
+  },
+  "tool-result-memory-version-token-hint": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "TOOL_RESULT_MEMORY_VERSION_TOKEN_HINT_VAR_0": "Parenthetical suffix; the token reaches the model via the deployed read-document wrapper and the instruction via memory-write-if-version + memory-version-token-requirement."
+    }
+  },
+  "tool-result-webfetch-overflow-summary-unavailable-2": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "tokens": {
+      "TOOL_RESULT_WEBFETCH_OVERFLOW_SUMMARY_UNAVAILABLE_2_VAR_0.length": "Co-emitted from the same z.length in the same branch as the deployed sibling tool-result-webfetch-overflow-summary-unavailable, which keeps the count, the cause and the disclosure duty; this piece is the size-line restatement. Verified in the 2.1.258 bundle."
+    }
   }
 }
