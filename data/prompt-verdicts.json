@@ -8801,9 +8801,9 @@
     "why": "Provenance marker prefix the model must recognise to separate a verified owner message from viewer data. A marker is matched, not read as prose."
   },
   "system-prompt-pronoun-neutral-default": {
-    "verdict": "trim",
-    "version": "2.1.238",
-    "why": "RESTORED. The CC 2.1.221 audit suppressed this in opus-5 as a competing copy, but it is the only catalogued prompt that carries the rule and no other opus-5 override states it — verified against every override body AND against a live wire capture, where \"they/them\" and \"pronoun\" both count 0 in the system array and in tools[].description. That is a deleted copy with no surviving owner. Restored to the 277-char trim the other three sets already share."
+    "verdict": "wipe-merge",
+    "version": "2.1.258",
+    "why": "Wiped 2026-09-02 on the user's instruction: a they/them defaulting rule is not load-bearing in a solo coding harness."
   },
   "system-prompt-read-only-team-memory-pointer": {
     "verdict": "pristine-keep",
@@ -11795,14 +11795,8 @@
   },
   "tool-description-artifact-how-to-load-library": {
     "verdict": "trim",
-    "version": "2.1.257",
-    "why": "Keep the unique page-contract mechanics verbatim. Delete only the three-example conveniences sentence; that claim is already stated next door. Slop check: CDN/UMD/download/mermaid/storage/size/favicon are load-bearing and densely frozen (URLs, tags, MUST-size, never, e.g., enumerations). Internal bloat: three examples of the same per-viewer-convenience principle. Duplicate check: cdn-allowlist is CSP hosts only, not UMD pinning or mermaid/storage/size. tool-parameter-artifact-favicon covers first-publish/omit-on-redeploy but not 'no SVG' or native mermaid. runtime-capabilities-guidance deployed says '`localStorage` stays the fallback for per-viewer conveniences' but not origin isolation, try/catch, or the size cap. No other body has cdnjs UMD path, `<a download>`, or the MB cap slot.",
-    "coveredBy": [
-      {
-        "carrierId": "tool-description-artifact-runtime-capabilities-guidance",
-        "quote": "When a capability that keeps state is available, prefer it over browser storage for that kind of state; `localStorage` stays the fallback for per-viewer conveniences."
-      }
-    ]
+    "version": "2.1.258",
+    "why": "Trimmed 2026-09-02: the UMD/cdnjs/pinned-version loading sentence is in artifact-design; the CSP allowlist slot, inert downloads, mermaid, storage, size and favicon stay (not in any skill)."
   },
   "tool-description-artifact-how-to-reopen-terminal": {
     "verdict": "pristine-keep",
@@ -12041,9 +12035,9 @@
     "why": "The prompt gives the pre-action effect, Claude attribution, target audience, and reversibility of resolving a single thread. A later tool result cannot substitute for this decision-time consequence, while the deployed comments description does not carry the same resolve semantics."
   },
   "tool-description-artifact-responsive": {
-    "verdict": "pristine-keep",
-    "version": "2.1.257",
-    "why": "Unique artifact page-contract. Cannot compress frozen units/enums. Slop check: Bold 'Responsive' is a heading, not CAPS theater. Body is layout mechanics: relative units, flexbox/grid, max-width:100%, overflow-x:auto, no page-level horizontal scroll. Frozen must/never/enumeration. Duplicate check: Only other max-width:100% hit is the publish-skeleton img reset, which does not state overflow-x:auto or 'the page body must never scroll horizontally'. No inline/reminder copy."
+    "verdict": "wipe-merge",
+    "version": "2.1.258",
+    "why": "Wiped 2026-09-02: artifact-design covers overflow-x containers and image max-width; verified against the captured skill body."
   },
   "tool-description-artifact-room-no-session-list-tool": {
     "verdict": "pristine-keep",
@@ -12066,9 +12060,9 @@
     "why": "Standalone status/presence paragraph. Claims are mechanics (action name, when presence is shared). Alternative-arm/site risk if wiped against live-room-guidance. Slop check: Single frozen sentence: action status, rooms this session is in, presence while the user has the page open. No padding. Duplicate check: tool-description-artifact-live-room-guidance inlines the same clause then continues with keys, <presence>, and room_send. That is a longer room-capability section, not proof this fragment's own site is dead; comments-action only says watch with no url lists watches and rooms."
   },
   "tool-description-artifact-runtime-capabilities-guidance": {
-    "verdict": "pristine-keep",
-    "version": "2.1.231",
-    "why": "Stage-3 slot review refuted the wipe: the pristine prompt uniquely requires loading the capability skill before authoring or passing capabilities and distinguishes omission (preserve) from an empty object (clear). No deployed carrier preserves those runtime semantics, so all maintained sets use pristine."
+    "verdict": "trim",
+    "version": "2.1.258",
+    "why": "Trimmed 2026-09-02: the capability tour shortened to a trigger list; the MUST-load rule, redeploy semantics and the self-saving-page note stay."
   },
   "tool-description-artifact-scratchpad-file-location": {
     "verdict": "pristine-keep",
@@ -12112,9 +12106,9 @@
     "why": "Unique sync action: push local working copy and pull others. Live-edit sibling is a different action. Conditional tool description."
   },
   "tool-description-artifact-theme-aware": {
-    "verdict": "pristine-keep",
-    "version": "2.1.257",
-    "why": "Unique CSS/theme mechanics the model cannot infer. Frozen selectors and never-only-in-media stay verbatim. Slop check: Page-contract theming: three viewer states, exact `data-theme` / `:root` / `@media (prefers-color-scheme: dark)` / `:root:not([data-theme=\"light\"])` / `:root[data-theme=\"dark\"]` rules, never-only-in-media, explicit `body` token background, single-look exception. Almost every sentence is tripwire-frozen (numbers, ONLY, Never, selectors, enumerations). No CAPS theater beyond headings, no redundant examples. Duplicate check: No other override or reminder states this token/cascade contract. tool-result-artifact-preview-theme-only-color is a preview error when colors are only inside media/data-theme blocks, not the authoring rules. tool-parameter-artifact-preview-themes is preview input. skill-artifact-design has no data-theme/`prefers-color-scheme` body."
+    "verdict": "wipe-merge",
+    "version": "2.1.258",
+    "why": "Wiped 2026-09-02: the artifact-design skill (mandatory load before writing the file, per the same description) carries the identical three-state theme guidance; verified against the skill body captured on the wire."
   },
   "tool-description-artifact-thumbnail-html-link": {
     "verdict": "pristine-keep",
@@ -12128,18 +12122,8 @@
   },
   "tool-description-artifact-title-first-8kb": {
     "verdict": "trim",
-    "version": "2.1.257",
-    "why": "Trim restatement and the param-covered fill-in/Markdown/gallery-subtitle elaboration. Keep 8KB scan, frozen taste, name-vs-generic rule, and 'explanation belongs in description'. Slop check: Load-bearing frozen mechanics: first 8KB scan for `<title>`; two-to-four-word noun phrase; never generic category / never name+explainer after dash or colon; name-vs-generic-word trim; trim only actual explainers; description parameter is the gallery subtitle; keep title stable. Intra-body restatement/rationale: 'so the reader can pick it out of a gallery of many — the way an app or a document gets named' and 'keeping the generic half and dropping the identity makes the title worse, not shorter'. Duplicate check: tool-description-artifact-title is a shorter Title-section arm without 8KB or the name-vs-generic rule — treat as an alternate arm, so this arm must still carry its frozen taste. Deployed tool-parameter-artifact-title already states the title parameter fills in only when the file lacks a tag in the first 8KB, never overrides the tag, HTML-only, Markdown keeps filename identity. Deployed tool-parameter-artifact-publish-gallery-subtitle already states the gallery-card subtitle contract. Thumbnail prompt only reuses 'the same first 8KB as the title' for a different tag.",
-    "coveredBy": [
-      {
-        "carrierId": "tool-parameter-artifact-title",
-        "quote": "Prefer a <title> tag at the top of the HTML itself; this parameter fills in only when the file lacks one in the first 8KB of the file, and never overrides the tag. HTML publishes only — Markdown pages keep their filename identity."
-      },
-      {
-        "carrierId": "tool-parameter-artifact-publish-gallery-subtitle",
-        "quote": "publish: one sentence for the gallery card's subtitle."
-      }
-    ]
+    "version": "2.1.258",
+    "why": "Trimmed 2026-09-02 to the 8KB scan window, the description-carries-the-explanation rule and title stability; naming rules are in artifact-design."
   },
   "tool-description-artifact-type-discovery-guidance": {
     "verdict": "trim",
@@ -14372,9 +14356,9 @@
     "why": "Unique live WebSearch tool description for opus-5."
   },
   "tool-description-workflow": {
-    "verdict": "pristine-keep",
-    "version": "2.1.231",
-    "why": "Stage-3 slot review refuted the trim: every maintained set lost a current runtime slot, while some lost most of the Workflow API, its dynamic limit, overflow behavior, nested-workflow hook, and group prefix. All maintained sets use pristine."
+    "verdict": "trim",
+    "version": "2.1.258",
+    "why": "Trimmed 2026-09-02: meta/script-API paragraph and the example script are in the workflow-authoring skill (skill-workflow-authoring-reference, catalogued, deployed); the opt-in gate is kept verbatim."
   },
   "tool-description-workflow-args-json-string-warning": {
     "verdict": "pristine-keep",
