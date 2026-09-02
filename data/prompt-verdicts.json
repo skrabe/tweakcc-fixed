@@ -11808,15 +11808,9 @@
     "why": "Unique URL-recovery section: optional limit/scope, listed columns, when the URL is missing, and same-session redeploy without list/url. Slop check: 'Use it when…' is a short trigger, not hedging or anti-laziness. limit/scope, field enumeration, action:list, url, and THIS-session ordering are frozen. Duplicate check: find-earlier-session-via-list is the compressed sibling (same ternary slots): action list, then update flow, THIS-session same-path redeploy — no limit, scope, or title/URL/favicon/last-updated. Calls list enumerates those fields as the list action catalog, not the earlier-session URL-recovery flow. Likely lean/verbose arms, not co-delivered duplicates."
   },
   "tool-description-artifact-format-html": {
-    "verdict": "trim",
+    "verdict": "pristine-keep",
     "version": "2.1.257",
-    "why": "Delete the redundant Always/.html/.md-skill lines (covered). Keep the frozen conversion sentence verbatim. Slop check: 'Always' is CAPS theater on a format rule the design-skill contract already states. The markdown-to-HTML conversion sentence is not slop. Duplicate check: before-writing-load-design-skill-contract already says author HTML, Markdown only when a loaded skill instructs it. validation-steer and inline-contract-no-skills say write HTML but omit the markdown-conversion rule. That conversion sentence is unique.",
-    "coveredBy": [
-      {
-        "carrierId": "tool-description-artifact-before-writing-load-design-skill-contract",
-        "quote": "it carries the page contract — author HTML (Markdown only when a loaded skill instructs it), the publish-time skeleton, the title, which libraries a page may load, browser storage, the size cap, responsive layout, theming and the favicon — and calibrates how much design investment this particular request warrants; Markdown is never a shortcut past it."
-      }
-    ]
+    "why": "Stage-3 refuted the trim: the .html-default / .md-only-on-skill-instruction gate has no carrier in the long-prose Artifact arm where this paragraph renders (the cited carrier lives in the mutually exclusive compact arm), and the co-rendered before-writing paragraph points at \"the Format rule above\". Restored to pristine."
   },
   "tool-description-artifact-how-to-load-library": {
     "verdict": "trim",
@@ -12113,7 +12107,7 @@
   "tool-description-artifact-shared-with-user-list-scope": {
     "verdict": "trim",
     "version": "2.1.257",
-    "why": "Keep the scope enum and update-target rule (parameter description is wiped). Delete the overlap with the deployed Calls list bullet. Slop check: No CAPS theater. After the scope enum, rows-labeled / read-never-update / empty-listing / untrusted-titles restates the Calls list bullet. Duplicate check: tool-parameter-artifact-list-scope is an empty suppression (covers nothing). list-empty-not-proof-shared is a weaker result-path note. calls-section already states shared never updated, (mine)/(shared) labels, data-not-instructions, nothing listed vs nothing was shared, org-wide may not appear. Unique residue: mine default, mine-only update targets, shared vs all definitions.",
+    "why": "Trim keeps the scope enum, the empty-listing reporting rule and the rows-are-data injection rule (stage-3 found no long-arm carrier for the latter two; the cited calls-section is compact-arm only); drops the (mine)/(shared) row-label description and the shared-never-updated restatement, which the retained first sentence already states.",
     "coveredBy": [
       {
         "carrierId": "tool-description-artifact-calls-section",
@@ -19736,9 +19730,9 @@
     "why": "Output-shape string with three scope branches and an ordering contract. Frozen: enum values (\"shared\"/\"all\"/mine), ordering word, and it is the header the listing rows are read against."
   },
   "tool-result-artifact-list-empty-not-proof-shared": {
-    "verdict": "trim",
-    "version": "2.1.233",
-    "why": "Partial overlap: the conclusion is carried by an always-present sibling, the mechanism is unique. The sentence trips no tripwire item — no restrictive quantifier from the list, no enumeration, no number, no path/enum/tool name, no ordering word — so it is trimmable."
+    "verdict": "pristine-keep",
+    "version": "2.1.257",
+    "why": "Restored the second half of the note (\"an empty listing does not prove nothing was shared\") — an earlier-round trim had removed it, and stage-3 of the 2.1.257 audit found the rule then reachable nowhere."
   },
   "tool-result-artifact-list-empty-truncated": {
     "verdict": "pristine-keep",
