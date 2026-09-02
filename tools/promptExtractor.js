@@ -2658,7 +2658,10 @@ const NEW_PROMPT_ASSIGNMENTS = [
     id: 'system-prompt-worker-agent',
     description:
       'System prompt for a worker subagent in coordinator mode — scoped execution, reports back to the coordinator (not the user) via task-note output',
-    identifierMap: { 0: 'AGENT_TOOL_NAME' },
+    // Slot 0 is the max-spawn-depth predicate (`db()>1?`), NOT the tool
+    // name; slot 1 is the Agent tool name. Upstream carries this prompt under
+    // a different id, so the shared-id map adoption never corrected it.
+    identifierMap: { 0: 'MAX_SUBAGENT_SPAWN_DEPTH_FN', 1: 'AGENT_TOOL_NAME' },
   },
 
   // 2.1.151/2.1.152 — /code-review --fix extension. The --fix flag appends
