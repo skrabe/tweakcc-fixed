@@ -1225,7 +1225,16 @@ export const buildSearchRegexFromPieces = (
     // bracketed key so the final step matches ANY minified key; otherwise the
     // literal Mac key fails on the Linux native build ("Could not find ...").
     if (i > 0) {
-      piece = piece.replace(/^\[[A-Za-z_$][\w$]*\](?=\})/, MEMBER_SENTINEL);
+      // The lookahead also accepts a property access or a closing paren, not
+      // only `}`: CC 2.1.259's worktree-guard results interpolate
+      // `${Mh(me[K].value)}`, which leaves "[K].value)}" at a piece start. The
+      // `}`-only form left `K` — a minified name that differs Mac<->Linux —
+      // pinned, so both prompts were unmatchable on linux-arm64 while every
+      // local gate stayed green. Same class as the [g.terminal] and [P-1] rows.
+      piece = piece.replace(
+        /^\[[A-Za-z_$][\w$]*\](?=\}|\.[A-Za-z_$][\w$]*|\))/,
+        MEMBER_SENTINEL
+      );
       // The same shape with a PROPERTY path on the key — `${OBJ[g.terminal]}`
       // leaves "[g.terminal]}…" here. Only the leading identifier is minified
       // (`G` on darwin and linux-arm64, `q` on linux-x64), while the property
@@ -1240,7 +1249,7 @@ export const buildSearchRegexFromPieces = (
       // that shape, and pinning the Mac name made both unmatchable on Linux
       // while every local gate stayed green.
       piece = piece.replace(
-        /^\[[A-Za-z_$][\w$]*((?:\.[\w$]+)+|\s*[-+*/%]\s*[^\]]*)\](?=\})/,
+        /^\[[A-Za-z_$][\w$]*((?:\.[\w$]+)+|\s*[-+*/%]\s*[^\]]*)\](?=\}|\.[A-Za-z_$][\w$]*|\))/,
         (_m, tail) => `${MEMBER_PREFIX_SENTINEL}${tail}]`
       );
     }

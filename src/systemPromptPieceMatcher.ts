@@ -79,7 +79,9 @@ const tokensForPiece = (piece: string, pieceIndex: number): MatchToken[] => {
   const tokens: MatchToken[] = [];
   let rest = piece;
   if (pieceIndex > 0) {
-    const member = rest.match(/^\[[A-Za-z_$][\w$]*\](?=\})/);
+    const member = rest.match(
+      /^\[[A-Za-z_$][\w$]*\](?=\}|\.[A-Za-z_$][\w$]*|\))/
+    );
     if (member) {
       tokens.push({ kind: 'member' });
       rest = rest.slice(member[0].length);
@@ -96,7 +98,7 @@ const tokensForPiece = (piece: string, pieceIndex: number): MatchToken[] => {
       // "[P-1]}…", where `P` is `E` on linux-arm64). Same reason, same fix, and
       // buildSearchRegexFromPieces has to agree or test:matcher fails.
       const memberPath = rest.match(
-        /^\[[A-Za-z_$][\w$]*((?:\.[\w$]+)+|\s*[-+*/%]\s*[^\]]*)\](?=\})/
+        /^\[[A-Za-z_$][\w$]*((?:\.[\w$]+)+|\s*[-+*/%]\s*[^\]]*)\](?=\}|\.[A-Za-z_$][\w$]*|\))/
       );
       if (memberPath) {
         tokens.push({ kind: 'member', path: memberPath[1] });

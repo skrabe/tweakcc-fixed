@@ -287,4 +287,25 @@ describe('bracket keys on an interpolated object are platform-generalized', () =
     expect(await bothEngines(pieces, 'pick ${m[f]} first please')).toBe(1);
     expect(await bothEngines(pieces, 'pick ${m[Z9]} first please')).toBe(1);
   });
+
+  // `${Mh(me[K].value)}` — CC 2.1.259's worktree-guard results. The key is
+  // followed by `.value)` rather than `}`, so a `}`-only lookahead left `K`
+  // pinned to the darwin name and both prompts were unmatchable on linux-arm64
+  // while every darwin gate stayed green. The cross-platform gate caught it.
+  it('generalizes a bracket key followed by a property access, not just }', async () => {
+    const pieces = ['with ${', '(', '[K].value) here'];
+    expect(await bothEngines(pieces, 'x=`with ${Mh(me[K].value) here`;')).toBe(
+      1
+    );
+    expect(await bothEngines(pieces, 'x=`with ${Aq(zz[Q7].value) here`;')).toBe(
+      1
+    );
+  });
+
+  // The same key closing a call directly (`[K])`) rather than a property.
+  it('generalizes a bracket key followed by a closing paren', async () => {
+    const pieces = ['run ${', '(', '[K]) now'];
+    expect(await bothEngines(pieces, 'x=`run ${f(a[K]) now`;')).toBe(1);
+    expect(await bothEngines(pieces, 'x=`run ${f(a[W3]) now`;')).toBe(1);
+  });
 });
