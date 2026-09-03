@@ -42,6 +42,12 @@
     "shape": "concat",
     "verdict": "internal"
   },
+  "1645f5ad0156dadd": {
+    "excerpt": "Controls how the managed settings sources compose. \"first-wins\" (default): the highest-priority source present (server-managed > MDM (manage",
+    "shape": "concat",
+    "verdict": "internal",
+    "why": "zod .describe() text on a settings.json schema field (managed-settings composition / model behavesAs alias); rendered to settings validation and docs surfaces, never sent to the model"
+  },
   "168e22a5a43b3c57": {
     "excerpt": "memory content appears to contain a credential or API key; remove it before writing. If the credential is real, rotate it. content_secret",
     "note": "model-facing; fragments captured via the composite evidence path",
@@ -186,6 +192,12 @@
     "shape": "array",
     "verdict": "internal"
   },
+  "467741954fb20139": {
+    "excerpt": "Controls how the managed settings sources compose. \"first-wins\" (default): the highest-priority source present (server-managed > MDM (manage",
+    "shape": "concat",
+    "verdict": "internal",
+    "why": "zod .describe() on the managedSourcesBehavior field of the managed-settings schema (neighbours: strictKnownMarketplaces, forceLoginMethod, forceLoginOrgUUID, forceRemoteSettingsRefresh) — settings validation and docs surfaces, never sent to the model. Re-keyed sibling of 1645f5ad0156dadd, whose composite assembly changed this bump."
+  },
   "46b76a821a337653": {
     "excerpt": "organization network policy denies artifact storage reads for this session organization network policy could not be determined for this sess",
     "note": "not model-facing: a Set of exact HTTP 403 response bodies, consumed by ce.has(e.data.trim()) to classify a gateway refusal. Never sent to a model.",
@@ -314,6 +326,12 @@
     "note": "not model-facing: config schema / CLI help / operator error / TUI dialog",
     "shape": "concat",
     "verdict": "internal"
+  },
+  "64607ce86b737b05": {
+    "excerpt": "For a model this version of Claude Code does not know: the ID of a model it does know (e.g. \"claude-opus-4-8\") whose client-side handling — ",
+    "shape": "concat",
+    "verdict": "internal",
+    "why": "zod .describe() text on a settings.json schema field (managed-settings composition / model behavesAs alias); rendered to settings validation and docs surfaces, never sent to the model"
   },
   "649b00f31c7c8ec4": {
     "excerpt": "Managed-org allowlist of channel plugins. When set, replaces the default Anthropic allowlist — admins decide which plugins may push inbound ",
@@ -750,6 +768,12 @@
     "shape": "concat",
     "verdict": "internal"
   },
+  "e8065d82120b0ea5": {
+    "excerpt": "ide the session runs in a cloud container that can't reach your IDE",
+    "shape": "array",
+    "verdict": "ui",
+    "why": "Map of per-command reasons rendered by addNotification({kind:'feedback',priority:'medium'}) at the remote-session slash-command guard: `/${cmd} isn't available in cloud sessions - ${reason}`. A TUI toast queue, never a tool_result or system block."
+  },
   "eb17e31f022cb8cf": {
     "excerpt": "Every address for a gateway host must be private — if this is a dual-stack DNS name, publish only private records for it (for example, remov",
     "note": "not model-facing: config schema / CLI help / operator error / TUI dialog",
@@ -809,17 +833,5 @@
     "shape": "concat",
     "verdict": "internal",
     "why": "zod .describe() on the plugin archive source object — config schema"
-  },
-  "64607ce86b737b05": {
-    "verdict": "internal",
-    "shape": "concat",
-    "excerpt": "For a model this version of Claude Code does not know: the ID of a model it does know (e.g. \"claude-opus-4-8\") whose client-side handling — ",
-    "why": "zod .describe() text on a settings.json schema field (managed-settings composition / model behavesAs alias); rendered to settings validation and docs surfaces, never sent to the model"
-  },
-  "1645f5ad0156dadd": {
-    "verdict": "internal",
-    "shape": "concat",
-    "excerpt": "Controls how the managed settings sources compose. \"first-wins\" (default): the highest-priority source present (server-managed > MDM (manage",
-    "why": "zod .describe() text on a settings.json schema field (managed-settings composition / model behavesAs alias); rendered to settings validation and docs surfaces, never sent to the model"
   }
 }
