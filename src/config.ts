@@ -308,6 +308,12 @@ const normalizeConfig = (config: TweakccConfig): void => {
   // In 3.2.6 hideCtrlGToEditPrompt was renamed to hideCtrlGToEdit.
   migrateHideCtrlGToEditPrompt(config);
 
+  // The adhdOutputStyle toggle was removed in 2.8.7; drop it from old configs.
+  if (config.settings.misc) {
+    delete (config.settings.misc as unknown as Record<string, unknown>)
+      .adhdOutputStyle;
+  }
+
   // Remove launchText if it exists in the config; it was removed in v3.0.0.
   delete (config.settings as Settings & { launchText: unknown }).launchText;
 };

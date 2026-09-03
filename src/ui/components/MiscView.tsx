@@ -91,7 +91,6 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     enableChannelsMode: false,
     maxEffortDefault: false,
     autonomousOperationAllModels: false,
-    adhdOutputStyle: false,
     outputStyleTurnReminder: false,
     autoModeClassifierModel: 'default' as AutoModeClassifierModel,
     suppressDeferredTools: false,
@@ -785,19 +784,6 @@ export function MiscView({ onSubmit }: MiscViewProps) {
             ensureMisc();
             settings.misc!.autonomousOperationAllModels =
               !settings.misc!.autonomousOperationAllModels;
-          });
-        },
-      },
-      {
-        id: 'adhdOutputStyle',
-        title: 'ADHD-friendly output style (experimental)',
-        description:
-          'EXPERIMENTAL, and it may not visibly change your output. Prompt wording is a weak and inconsistent lever: Claude can ignore it, the effect varies between one reply and the next, and on some tasks nothing measurable changes. Picked by blind ranking over roughly 900 generated replies, where it came last in 1 of 16 comparisons and the unmodified prompt came last in 10 - an average, not a promise about any single reply. Rewrites the always-on "# Communicating with the user" prompt for skim-first reading, with no word limit anywhere in it: answer in the first line; show the command, path or value rather than describing it; say each thing once; keep both sides of a count and every qualifier such as "in the browser only"; bold the key terms and keep paragraphs short. Removes the three clauses that drive Claude-speak: the "load-bearing" update cue, the "readable matters more" ranking, and the "in prose, not headers and sections" rule. Also restates the rules in the per-turn CLAUDE.md reminder, where recency makes them stick, and drops that reminder\'s "may or may not be relevant" hedge.',
-        getValue: () => settings.misc?.adhdOutputStyle ?? false,
-        toggle: () => {
-          updateSettings(settings => {
-            ensureMisc();
-            settings.misc!.adhdOutputStyle = !settings.misc!.adhdOutputStyle;
           });
         },
       },

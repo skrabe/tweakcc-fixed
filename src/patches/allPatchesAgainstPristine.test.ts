@@ -61,7 +61,6 @@ import { writeSuppressNativeInstallerWarning } from './suppressNativeInstallerWa
 import { writeScrollEscapeSequenceFilter } from './scrollEscapeSequenceFilter';
 import { writeMaxEffortDefault } from './maxEffortDefault';
 import { writeAutonomousOperationAllModels } from './autonomousOperationAllModels';
-import { writeAdhdOutputStyle } from './adhdOutputStyle';
 import { writeOutputStyleTurnReminder } from './outputStyleTurnReminder';
 import { writeAutoModeClassifierModel } from './autoModeClassifierModel';
 import { writeComplexityRouter } from './complexityRouter';
@@ -308,7 +307,6 @@ const TEST_HIGHLIGHTERS = [
  * here is a `tsc --noEmit` failure — the coverage is enforced, not aspirational.
  */
 const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
-  'adhd-output-style': c => writeAdhdOutputStyle(c),
   'output-style-turn-reminder': c => writeOutputStyleTurnReminder(c),
   'verbose-property': c => writeVerboseProperty(c),
   'read-default-lines': c => writeReadDefaultLines(c),

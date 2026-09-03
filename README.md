@@ -59,7 +59,7 @@ The biggest difference is coverage. Its extractor pulls over eight times the pro
 | ---------------------------- | :-----------: | :-------: |
 | Prompt sites (CC 2.1.258)    |   **6,721**   |    683    |
 | Unique prompt IDs            |   **6,364**   |    683    |
-| Patches                      |    **61**     |    45     |
+| Patches                      |    **60**     |    45     |
 | Overrides on native installs |    **yes**    | gated off |
 
 That reach shows up in a few mechanisms the base doesn't have. The `<system-reminder>` injections that fire per turn — and never surface as named prompts — become editable: blank one out to drop it, or rewrite it. Each connected MCP server's instruction block can be dropped or rewritten the same way. And where upstream gates system-prompt overrides off for native installs, this fork applies them. It pairs with [lobotomized-claude-code](https://github.com/skrabe/lobotomized-claude-code), a set of per-model override packs tuned against exactly this extraction.

@@ -746,7 +746,6 @@ export const DEFAULT_SETTINGS: Settings = {
     enableChannelsMode: false,
     maxEffortDefault: false,
     autonomousOperationAllModels: false,
-    adhdOutputStyle: false,
     outputStyleTurnReminder: false,
     autoModeClassifierModel: 'default',
     suppressDeferredTools: false,

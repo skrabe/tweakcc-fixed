@@ -13,7 +13,6 @@ const MODEL_FACING_IDS = [
   'max-effort-default',
   'output-style-turn-reminder',
   'autonomous-operation-all-models',
-  'adhd-output-style',
   'auto-mode-classifier-model',
   'complexity-router',
   'fable-plan',

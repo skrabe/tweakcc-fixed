@@ -148,7 +148,6 @@ export interface MiscConfig {
   enableChannelsMode: boolean;
   maxEffortDefault: boolean;
   autonomousOperationAllModels: boolean;
-  adhdOutputStyle: boolean;
   outputStyleTurnReminder: boolean;
   autoModeClassifierModel: AutoModeClassifierModel;
   suppressDeferredTools: boolean;
