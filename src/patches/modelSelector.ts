@@ -32,8 +32,17 @@ const findCustomModelListInsertionPoint = (
   // punctuation (`;`, ` `, `{`, `,`, …). The sibling opus[1m] helper push wraps its
   // arg as `.push(gda(s)??{value:...})`, so requiring `.push({value:` right after
   // the paren keeps this matching only the real model-list assembly site.
+  //
+  // `label:` and `description:` are EXPRESSIONS, not literals. CC 2.1.261 started
+  // resolving a friendly label first, so the entry became
+  // `{value:F,label:re??F,description:re===void 0?"Custom model":`Custom model (${F})`}`
+  // — the old `label:[$\w]+,description:"Custom model"` pinned both to their 2.1.259
+  // shapes and matched nothing. Anchor on the property NAMES plus the "Custom model"
+  // literal wherever it appears in the description expression, and stop there rather
+  // than matching to `})`: a template branch can contain `}` (`${F}`), so a
+  // closing-brace anchor is a countdown, not a match.
   const pushPattern =
-    /(?<![$\w])([$\w]+)\.push\(\{value:[$\w]+,label:[$\w]+,description:"Custom model"\}\)/;
+    /(?<![$\w])([$\w]+)\.push\(\{value:[$\w]+,label:[^,]{1,40},description:[^"]{0,40}"Custom model"/;
   const pushMatch = fileContents.match(pushPattern);
   if (!pushMatch || pushMatch.index === undefined) {
     console.error(

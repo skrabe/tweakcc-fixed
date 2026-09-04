@@ -314,8 +314,18 @@ const CLAUDEMD_INJECTION: ReminderInjection = {
 
       IMPORTANT: this context may or may not be relevant to your tasks. You should not respond to this context unless it is highly relevant to your task.`,
   apply(content, body, isSuppressed) {
+    // The `content:` value is an EXPRESSION, not a literal. CC 2.1.261 hoisted
+    // the reminder's prefix and suffix out of the wrapper into two module-level
+    // constants and now concatenates them
+    // (`content:vQn+Object.entries(t).map(…).join(`\n`)+RQn`), so a pattern
+    // spelling out the `<system-reminder>…</system-reminder>` template matched
+    // nothing. The wrapper's SHAPE — the empty-context early return, the builder
+    // call, `isMeta:!0`, and the `,...msgs]` spread — is what identifies it, and
+    // it stays unique (exactly one match on darwin, linux-arm64 and linux-x64 on
+    // both the 2.1.259 inline shape and the 2.1.261 hoisted one). The replacement
+    // never reads the captured expression, so capturing it generically is safe.
     const pattern =
-      /function ([$\w]+)\(([$\w]+),([$\w]+)\)\{if\(Object\.entries\(\3\)\.length===0\)return \2;return\[([$\w]+)\(\{content:`<system-reminder>\n[\s\S]*?\n<\/system-reminder>\n`,isMeta:!0\}\),\.\.\.\2\]\}/;
+      /function ([$\w]+)\(([$\w]+),([$\w]+)\)\{if\(Object\.entries\(\3\)\.length===0\)return \2;return\[([$\w]+)\(\{content:[\s\S]{0,600}?,isMeta:!0\}\),\.\.\.\2\]\}/;
     const match = content.match(pattern);
     if (!match || match.index === undefined) {
       if (/function [$\w]+\([$\w]+,[$\w]+\)\{return [$\w]+;\}/.test(content)) {
