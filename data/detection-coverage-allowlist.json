@@ -72,6 +72,12 @@
     "shape": "concat",
     "verdict": "internal"
   },
+  "1aea900a1576d162": {
+    "excerpt": "statusline run it in a local `claude` session; the status line it sets up shows in cloud terminals too",
+    "note": "not model-facing: the Z6t Map of per-command reasons a slash command is unavailable in a cloud session, rendered by be({kind:\"feedback\", text:`/${cmd} isn't available in cloud sessions — ${reason}`}) — a TUI feedback row, not a tool result",
+    "shape": "array",
+    "verdict": "ui"
+  },
   "1cc646a273d690b4": {
     "excerpt": "telemetry.forward_to is configured but listen.public_url is not — clients will not be told to export OTLP. Set listen.public_url so /managed",
     "note": "not model-facing: config schema / CLI help / operator error / TUI dialog",
@@ -102,6 +108,12 @@
     "shape": "array",
     "verdict": "internal"
   },
+  "2b7f17b0247224d6": {
+    "excerpt": "For inference providers without native web search (Bedrock, custom gateways). On Anthropic API and Vertex, the model’s built-in web search is available without this.",
+    "note": "not model-facing: settings-schema longDescription, id \"McpBuiltinWebSearchProviderHint2\" — /config copy",
+    "shape": "concat",
+    "verdict": "ui"
+  },
   "2df6127dd307e666": {
     "excerpt": "[EXPERIMENTAL] Enable in-process TLS termination so the per-request filter can see HTTPS request bodies. Provide a CA cert+key, or omit both",
     "shape": "concat",
@@ -112,6 +124,12 @@
     "shape": "concat",
     "verdict": "internal",
     "why": ".describe() on the additionalMarketplaces settings-schema alias; validation/JSON-schema metadata"
+  },
+  "33a1364a2c55aa3c": {
+    "excerpt": "Per-user bootstrap configuration response. Nested subset of managed-config-v2 (bootstrapable keys only). Structural reference for editor autocomplete",
+    "note": "not model-facing: assigned to s.definitions.BootstrapConfig.description in the generated managed-config JSON schema",
+    "shape": "concat",
+    "verdict": "internal"
   },
   "367140252562af45": {
     "excerpt": "Could not verify the gateway's TLS certificate. If your gateway uses a private CA or self-signed certificate: Claude Code reads your OS trus",
@@ -272,6 +290,12 @@
   "5604fedd01e10677": {
     "excerpt": "Glob patterns (e.g. [\"Engine/Source/Runtime/Renderer/**\"]) — the plugin is relevant when the session's working directory is at or under a di",
     "note": "not model-facing: config schema / CLI help / operator error / TUI dialog",
+    "shape": "concat",
+    "verdict": "internal"
+  },
+  "564d7efad3d8ca0a": {
+    "excerpt": "The subset of Claude Desktop managed configuration an Anthropic-hosted (hybrid) config server may store — generated from buildHybridServableSchema()",
+    "note": "not model-facing: JSON-schema `description` written onto FlatManagedConfig for editor autocomplete, never sent to the model",
     "shape": "concat",
     "verdict": "internal"
   },

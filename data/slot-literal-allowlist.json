@@ -1293,5 +1293,95 @@
     "text": "Nothing was opened.",
     "verdict": "glue",
     "reason": "status statement appended to the catalogued open-failure results; the instruction (what to do next) is in the enclosing prompt"
+  },
+  "35ec0f7f8ae0bfbd": {
+    "desc": "Validation branch in Xnt() @7036600, rendered as `option \"${value}\" is listed twice; values are unique`. States the uniqueness constraint on Select option values, which is what a rejected AskUserQuestion call is told.",
+    "id": "tool-result-askuserquestion-select-option-value-duplicate",
+    "label": "TOOL_RESULT_ARTIFACT_PR_REVIEW_UNVERIFIABLE_DECIDED_ITEM_OPTION_VAR_1",
+    "name": "Tool Result: AskUserQuestion — duplicate Select option value",
+    "promptId": "tool-result-artifact-pr-review-unverifiable-decided-item-option",
+    "reason": "states the uniqueness rule the rejected call violated",
+    "text": "is listed twice; values are unique",
+    "verdict": "catalogue"
+  },
+  "11d18a397672c221": {
+    "desc": "Else branch of the agent-type list in MDn() @7634771, interpolated into the deny for a hook naming an undispatchable subagentType. Names the rule that a fork exposes no agent types at all.",
+    "id": "tool-result-subagent-spawn-hook-fork-names-no-agent-types",
+    "label": "TOOL_RESULT_SUBAGENT_SPAWN_HOOK_UNKNOWN_AGENT_TYPE_VAR_1",
+    "name": "Tool Result: subagent spawn hook — a fork names no agent types",
+    "promptId": "tool-result-subagent-spawn-hook-unknown-agent-type",
+    "reason": "states why no agent type is available, which the model cannot derive",
+    "text": "a fork names none",
+    "verdict": "catalogue"
+  },
+  "482816212be80e14": {
+    "desc": "Scope suffix on the /advisor result @15438174, chosen when the change is session-only. Carries the action that makes it permanent.",
+    "id": "slash-command-advisor-session-only-suffix",
+    "label": "SLASH_COMMAND_ADVISOR_SET_VAR_1",
+    "name": "Slash Command: /advisor — session-only scope suffix",
+    "promptId": "slash-command-advisor-set",
+    "reason": "names the command that changes the default, not just the scope",
+    "text": " for this session — run /advisor in the terminal to change your default",
+    "verdict": "catalogue"
+  },
+  "f0ce27aa66194127": {
+    "desc": "Branch of the raw-HTML save status @17064375 in the artifact read result. States that no on-disk copy exists this session, which governs whether a later republish can cite one.",
+    "id": "tool-result-artifact-read-raw-file-not-saved",
+    "label": "TOOL_RESULT_ARTIFACT_READ_WRITER_FILE_DATA_NOT_INSTRUCTIONS_VAR_3",
+    "name": "Tool Result: Artifact read — raw file not saved this session",
+    "promptId": "tool-result-artifact-read-writer-file-data-not-instructions",
+    "reason": "states session state the model must respect before referencing a saved path",
+    "text": "the raw file is not saved in this session",
+    "verdict": "catalogue"
+  },
+  "078702bd81bcc0d5": {
+    "desc": "Consequence clause @18672664 interpolated into the first-read confirmation for another person's artifact database. States how far one approval reaches.",
+    "id": "tool-result-artifact-read-db-approval-covers-conversation",
+    "label": "TOOL_RESULT_ARTIFACT_READ_DB_PLAN_MODE_USER_APPROVAL_REQUIRED_VAR_1",
+    "name": "Tool Result: Artifact read_db — approval covers the conversation",
+    "promptId": "tool-result-artifact-read-db-plan-mode-user-approval-required",
+    "reason": "states the scope an approval grants, which changes what the model may retry",
+    "text": "approval covers reads of this artifact for the rest of the conversation",
+    "verdict": "catalogue"
+  },
+  "a5310ffb89f4b4bc": {
+    "desc": "True branch of the ask-rule attribution @18942599, appended to the artifact read/save and list_files consent asks. Names which rule produced the ask.",
+    "id": "tool-result-artifact-consent-ask-rule-covers-artifact-reads",
+    "label": "TOOL_RESULT_ARTIFACT_READ_SAVE_CONSENT_ASK_VAR_8",
+    "name": "Tool Result: Artifact consent ask — rule covers artifact reads",
+    "promptId": "tool-result-artifact-read-save-consent-ask",
+    "reason": "explains why the ask fired, which determines whether retrying can succeed",
+    "text": " — your ask rule covers artifact reads",
+    "verdict": "catalogue"
+  },
+  "ae1c142ddf5f10bf": {
+    "desc": "False branch of the same ask-rule attribution @18942651: the rule is scoped to this url rather than to artifact reads generally.",
+    "id": "tool-result-artifact-consent-ask-rule-covers-this-url",
+    "label": "TOOL_RESULT_ARTIFACT_READ_SAVE_CONSENT_ASK_VAR_8",
+    "name": "Tool Result: Artifact consent ask — rule covers this url",
+    "promptId": "tool-result-artifact-read-save-consent-ask",
+    "reason": "explains why the ask fired and how narrowly the rule applies",
+    "text": " — your ask rule covers this url",
+    "verdict": "catalogue"
+  },
+  "234692e564266019": {
+    "desc": "Role descriptor substituted into the artifact-read result @17058862 (`${role===\"owner\"?\"an artifact you own\":…}`). The constraint is the surrounding sentence.",
+    "text": "an artifact you own",
+    "verdict": "glue"
+  },
+  "6efbc895e03dbbcd": {
+    "desc": "Sibling role descriptor in the same ternary @17058952.",
+    "text": "an artifact shared with you as a writer",
+    "verdict": "glue"
+  },
+  "ce776129686bb8e1": {
+    "desc": "Final role descriptor in the same ternary @17058994.",
+    "text": "an artifact shared with you",
+    "verdict": "glue"
+  },
+  "95343e00596c07bf": {
+    "desc": "Label prefixing the interpolated server-side copy list @19020112. The rule the model acts on (\"These are this artifact's own files now…\") follows the list and is already catalogued.",
+    "text": "\n\nCopied into this version server side: ",
+    "verdict": "glue"
   }
 }

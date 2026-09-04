@@ -341,6 +341,21 @@ const CURATED_IDENTIFIER_MAPS = {
       10: 'PR_COMMON_OPERATIONS_NOTE',
     },
   },
+  'tool-parameter-artifact-supporting-files-2': [
+    {
+      // New in CC 2.1.261: the Artifact `files` parameter grew a second, longer
+      // description for the copy-from surface, and its one slot is the cap on
+      // how many source Artifact versions a single publish may copy from
+      // (`at most ${xfe} source Artifact versions per publish`, @13389301).
+      // The generated map came back EMPTY for it, so `syncPrompt` stubbed the
+      // override with `${UNKNOWN_0}` — an unbound label, which makes the whole
+      // override inert (the apply skips the file). Named from the binary site.
+      identifiers: [0],
+      identifierMap: {
+        0: 'MAX_SOURCE_ARTIFACT_VERSIONS_PER_PUBLISH',
+      },
+    },
+  ],
 };
 
 const NEW_PROMPT_ASSIGNMENTS = [
