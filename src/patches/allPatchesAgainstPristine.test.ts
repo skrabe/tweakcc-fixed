@@ -71,6 +71,8 @@ import { writeSessionMemory } from './sessionMemory';
 import { writeSwapRipgrepForFff } from './swapRipgrepForFff';
 import { writeDreamMode } from './dreamMode';
 import { writeLeanMemoryTypes } from './leanMemoryTypes';
+import { writeIgnoreWhitespaceEdit } from './ignoreWhitespaceEdit';
+import { applyThinkingTextTransition } from './thinkingTextTransition';
 import { writeToolsets } from './toolsets';
 import { writeMcpNonBlocking, writeMcpBatchSize } from './mcpStartup';
 import { writeUserMessageDisplay } from './userMessageDisplay';
@@ -390,6 +392,8 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
   'swap-ripgrep-for-fff': c => writeSwapRipgrepForFff(c, FFF_WRAPPER_PATH),
   'dream-mode': c => writeDreamMode(c),
   'lean-memory-types': c => writeLeanMemoryTypes(c),
+  'ignore-whitespace-edit': c => writeIgnoreWhitespaceEdit(c),
+  'thinking-text-transition': c => applyThinkingTextTransition(c),
   toolsets: c => writeToolsets(c, TEST_TOOLSETS, 'minimal', 'minimal'),
   'mcp-non-blocking': c => writeMcpNonBlocking(c),
   // Native default is 3; passing 3 is a same-token no-op the sweep would

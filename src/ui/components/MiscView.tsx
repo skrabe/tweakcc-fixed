@@ -95,6 +95,8 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     autoModeClassifierModel: 'default' as AutoModeClassifierModel,
     suppressDeferredTools: false,
     claudemdContextOncePerConversation: true,
+    enableIgnoreWhitespaceEdit: false,
+    enableThinkingTextTransition: false,
   };
 
   const ensureMisc = () => {
@@ -648,6 +650,34 @@ export function MiscView({ onSubmit }: MiscViewProps) {
             ensureMisc();
             settings.misc!.enableRememberSkill =
               !settings.misc!.enableRememberSkill;
+          });
+        },
+      },
+      {
+        id: 'enableIgnoreWhitespaceEdit',
+        title: 'Enable ignore whitespace in edit tool',
+        description:
+          'Add line-by-line trimmed-match fallback to the FileEditTool matching chain and mirror quote normalization onto new_string so indentation is preserved.',
+        getValue: () => settings.misc?.enableIgnoreWhitespaceEdit ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.enableIgnoreWhitespaceEdit =
+              !settings.misc!.enableIgnoreWhitespaceEdit;
+          });
+        },
+      },
+      {
+        id: 'enableThinkingTextTransition',
+        title: 'Enable thinking-to-text transition (v234 fix)',
+        description:
+          'Replace throw-based "Content block is not a thinking block" handlers with break in signature_delta and thinking_delta cases to handle mid-stream reasoning transitions gracefully.',
+        getValue: () => settings.misc?.enableThinkingTextTransition ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.enableThinkingTextTransition =
+              !settings.misc!.enableThinkingTextTransition;
           });
         },
       },
