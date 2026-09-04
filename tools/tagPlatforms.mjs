@@ -22,6 +22,7 @@
 // a prompt missing from either is treated as missing from the platform.
 import fs from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
@@ -71,10 +72,39 @@ for (const b of bundles) {
   }
 }
 
+// `applySafetyHarness` applies through the ACTIVE override set, so the name it
+// prints is the OVERRIDE's front-matter `name:` — which drifts from the
+// catalogue name, because `syncPrompt` never rewrites an existing file's header.
+// Keying the lookup on `p.name` alone therefore silently skips those prompts:
+// on CC 2.1.261 two darwin-only computer-use results stayed untagged that way and
+// only the cross-platform gate caught them, one step before publishing. Map every
+// override's front-matter name to its id as a second key.
+const overrideNameToId = new Map();
+try {
+  const activeSet = fs.realpathSync(
+    path.join(os.homedir(), '.tweakcc', 'system-prompts')
+  );
+  for (const f of fs.readdirSync(activeSet)) {
+    if (!f.endsWith('.md')) continue;
+    const head = fs.readFileSync(path.join(activeSet, f), 'utf8').slice(0, 4000);
+    const m = /^name:\s*'?"?(.*?)'?"?\s*$/m.exec(head);
+    if (m) overrideNameToId.set(m[1], f.slice(0, -3));
+  }
+} catch {
+  /* no active set: the catalogue name is the only key we have */
+}
+const missingById = new Map();
+for (const [n, plats] of missing) {
+  const id = overrideNameToId.get(n);
+  if (!id) continue;
+  if (!missingById.has(id)) missingById.set(id, new Set());
+  for (const pl of plats) missingById.get(id).add(pl);
+}
+
 let tagged = 0;
 let cleared = 0;
 for (const p of data.prompts) {
-  const miss = missing.get(p.name);
+  const miss = missing.get(p.name) ?? missingById.get(p.id);
   const carried = platforms.filter(pl => !miss || !miss.has(pl));
   if (miss && carried.length < platforms.length) {
     if (carried.length === 0) {

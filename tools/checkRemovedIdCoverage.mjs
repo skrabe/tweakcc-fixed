@@ -121,6 +121,40 @@ const isAscii = s => !/[^\x20-\x7e]/.test(s);
 const literalRuns = p =>
   (p.pieces || []).filter(x => typeof x === 'string' && x.length >= WINDOW);
 
+// A prompt built almost entirely of slots has no run this long and therefore no
+// probe surface at all: every WINDOW pass and `midBodyProbes` come back empty
+// and the id falls through to `gone`, which tells the operator to archive a live
+// override. CC 2.1.261 had two — `Published ${.path)} at ${.url)}${}…` and the
+// computer-use background-element result — both still in the bundle and both
+// already sitting in the classify sidecar. Same blind spot the shingle-continuity
+// pass has on short prompts, one gate over.
+//
+// The fallback probes the SHORT pieces, and requires EVERY usable one to be
+// present rather than any single one. A 12-character fragment matching by
+// coincidence is ordinary; all of a prompt's fragments matching is not, so the
+// stricter form is what keeps this from becoming a gate people ignore.
+// A piece carrying a BRACKET KEY holds a minified name that differs per build
+// and per platform (`[_.kind]` on one, `[k.kind]` on the next), so its absence
+// is evidence about the minifier, not about the prompt. Requiring it is how the
+// computer-use background-element result still read as removed after the short
+// pass was added. The match engines generalize exactly this shape; here it is
+// cheaper to drop such a piece from the required set than to rebuild a matcher.
+const MINIFIED_BRACKET_KEY = /\[[$\w]{1,3}[.\]-]/;
+const SHORT_PIECE_MIN = 8;
+const shortRuns = p =>
+  (p.pieces || [])
+    .map(x => (typeof x === 'string' ? x.trim() : ''))
+    .filter(
+      s =>
+        s.length >= SHORT_PIECE_MIN &&
+        isAscii(s) &&
+        /[A-Za-z]{3,}/.test(s) &&
+        !MINIFIED_BRACKET_KEY.test(s)
+    );
+
+const allPresent = (runs, haystack) =>
+  runs.length > 0 && runs.every(s => haystack.includes(s));
+
 const asciiRunsOnLine = line => {
   const runs = [];
   let cur = '';
@@ -177,8 +211,10 @@ const successorOf = window => {
 };
 
 // The classify sidecar: a candidate awaiting a verdict this run is not a gap.
+// The directory is overridable so a test can be hermetic — reading the real
+// `/tmp` would let whatever bump is in flight decide the answer.
 const sidecarBlob = (() => {
-  const dir = '/tmp';
+  const dir = process.env.TWEAKCC_CLASSIFY_DIR || '/tmp';
   let blob = '';
   let files = [];
   try {
@@ -240,10 +276,26 @@ const classify = id => {
       }
     }
   }
+  // Nothing above had a run to probe with. Fall back to the short pieces before
+  // concluding a removal, and when even those are unusable say so instead of
+  // recommending an archive the gate never actually tested.
+  const shorts = entries.flatMap(shortRuns);
+  if (allPresent(shorts, curBlob)) {
+    return { bucket: 'in-catalogue', to: successorOf(shorts[0]) };
+  }
+  if (allPresent(shorts, sidecarBlob)) return { bucket: 'in-sidecar' };
+  if (allPresent(shorts, cli)) return { bucket: 'IN-BUNDLE' };
+  if (!shorts.length) return { bucket: 'no-probe-surface' };
   return { bucket: 'gone' };
 };
 
-const buckets = { 'in-catalogue': [], 'in-sidecar': [], 'IN-BUNDLE': [], gone: [] };
+const buckets = {
+  'in-catalogue': [],
+  'in-sidecar': [],
+  'IN-BUNDLE': [],
+  'no-probe-surface': [],
+  gone: [],
+};
 const renamedTo = {};
 for (const id of [...prevById.keys()].filter(i => !curIds.has(i)).sort()) {
   const { bucket, to } = classify(id);
@@ -260,14 +312,32 @@ if (buckets['in-catalogue'].length) {
   );
 }
 
-const removed = buckets['IN-BUNDLE'].length + buckets.gone.length;
+// `no-probe-surface` needs a decision too: the gate could not test it, and
+// leaving it out of this count is what makes an untested id read as settled.
+const removed =
+  buckets['IN-BUNDLE'].length +
+  buckets.gone.length +
+  buckets['no-probe-surface'].length;
 console.log(
   `removed-id coverage: ${prevById.size - curIds.size >= 0 ? '' : ''}` +
     `${buckets['in-catalogue'].length} renamed/reshuffled, ` +
     `${buckets['in-sidecar'].length} pending classify, ` +
     `${buckets['IN-BUNDLE'].length} STILL IN BUNDLE, ` +
+    `${buckets['no-probe-surface'].length} no probe surface, ` +
     `${buckets.gone.length} truly removed (${removed} need a decision)`
 );
+
+if (buckets['no-probe-surface'].length) {
+  console.log(
+    '\nNO PROBE SURFACE — too few literal characters to test either way:'
+  );
+  for (const id of buckets['no-probe-surface']) console.log(`  ${id}`);
+  console.log(
+    '\nThe gate could not run on these. Resolve each by hand at the emission\n' +
+      'site before archiving anything — a slot-only prompt reads as removed by\n' +
+      'default, and archiving one retires an override that is still live.'
+  );
+}
 
 if (updateAllowlist) {
   for (const id of [...buckets['IN-BUNDLE'], ...buckets.gone]) {
