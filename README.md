@@ -6,7 +6,7 @@
 
 [![npm](https://img.shields.io/npm/v/tweakcc-fixed?color=cb3837&label=npm&logo=npm&style=flat-square)](https://www.npmjs.com/package/tweakcc-fixed)
 [![downloads](https://img.shields.io/npm/dt/tweakcc-fixed?color=cb3837&style=flat-square)](https://www.npmjs.com/package/tweakcc-fixed)
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-2.0.98%20%E2%86%92%202.1.259-d97757?style=flat-square)](https://github.com/anthropics/claude-code)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-2.0.98%20%E2%86%92%202.1.261-d97757?style=flat-square)](https://github.com/anthropics/claude-code)
 [![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#credit--license)
 
 **[Install](#install) · [Customize](#what-you-can-customize) · [The fork](#what-this-fork-adds) · [How it works](#how-it-works)**
@@ -53,12 +53,12 @@ It works the same on npm and native (Bun-compiled) installs, every change is a t
 
 tweakcc-fixed is a strict superset of the original: everything above still applies, on the same latest Claude Code target. What it adds is reach.
 
-The biggest difference is coverage. Its extractor pulls over eight times the prompt surface upstream does — every model-facing string at any length: tool results, system reminders, utility-agent prompts, slash-command descriptions, and the short fragments the base skips. Every candidate string is classified by its emission site (model-facing vs UI vs internal) with verdicts cached content-addressed, so coverage is complete by construction, not by heuristic. That is what makes serious prompt editing possible in the first place.
+The biggest difference is coverage. Its extractor pulls over ten times the prompt surface upstream does — every model-facing string at any length: tool results, system reminders, utility-agent prompts, slash-command descriptions, and the short fragments the base skips. Every candidate string is classified by its emission site (model-facing vs UI vs internal) with verdicts cached content-addressed, so coverage is complete by construction, not by heuristic. That is what makes serious prompt editing possible in the first place.
 
 |                              | tweakcc-fixed | upstream  |
 | ---------------------------- | :-----------: | :-------: |
-| Prompt sites (CC 2.1.259)    |   **6,815**   |    688    |
-| Unique prompt IDs            |   **6,455**   |    688    |
+| Prompt sites (CC 2.1.261)    |   **7,063**   |    693    |
+| Unique prompt IDs            |   **6,695**   |    693    |
 | Patches                      |    **60**     |    45     |
 | Overrides on native installs |    **yes**    | gated off |
 
