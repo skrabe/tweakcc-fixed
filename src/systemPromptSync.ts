@@ -1231,8 +1231,19 @@ export const buildSearchRegexFromPieces = (
       // `}`-only form left `K` — a minified name that differs Mac<->Linux —
       // pinned, so both prompts were unmatchable on linux-arm64 while every
       // local gate stayed green. Same class as the [g.terminal] and [P-1] rows.
+      // The lookahead accepts ANY expression continuation, not a fixed
+      // shortlist. A piece at index > 0 begins INSIDE the `${...}` the previous
+      // capture opened -- the capture consumed the identifier, so a leading
+      // `[key]` there is a member access by construction and can never be prose
+      // (prose cannot start before the closing `}`). CC 2.1.266's
+      // getTask-stopped result is `${a?b[E]:"stopped before it completed"}`,
+      // where the key is followed by a ternary `:`; the old `}`/`.prop`/`)`
+      // shortlist left `E` -- a name that differs Mac<->Linux -- pinned, so the
+      // prompt was unmatchable on linux-x64 while every local gate stayed green.
+      // Fourth instance of this family after [g.terminal], [P-1] and [K].value,
+      // so this widens for the CLASS rather than for one more shape.
       piece = piece.replace(
-        /^\[[A-Za-z_$][\w$]*\](?=\}|\.[A-Za-z_$][\w$]*|\))/,
+        /^\[[A-Za-z_$][\w$]*\](?=\}|\.[A-Za-z_$][\w$]*|[):,;?\]]|$)/,
         MEMBER_SENTINEL
       );
       // The same shape with a PROPERTY path on the key — `${OBJ[g.terminal]}`
@@ -1249,7 +1260,7 @@ export const buildSearchRegexFromPieces = (
       // that shape, and pinning the Mac name made both unmatchable on Linux
       // while every local gate stayed green.
       piece = piece.replace(
-        /^\[[A-Za-z_$][\w$]*((?:\.[\w$]+)+|\s*[-+*/%]\s*[^\]]*)\](?=\}|\.[A-Za-z_$][\w$]*|\))/,
+        /^\[[A-Za-z_$][\w$]*((?:\.[\w$]+)+|\s*[-+*/%]\s*[^\]]*)\](?=\}|\.[A-Za-z_$][\w$]*|[):,;?\]]|$)/,
         (_m, tail) => `${MEMBER_PREFIX_SENTINEL}${tail}]`
       );
     }

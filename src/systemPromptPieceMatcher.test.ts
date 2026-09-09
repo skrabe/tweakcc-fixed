@@ -308,4 +308,30 @@ describe('bracket keys on an interpolated object are platform-generalized', () =
     expect(await bothEngines(pieces, 'x=`run ${f(a[K]) now`;')).toBe(1);
     expect(await bothEngines(pieces, 'x=`run ${f(a[W3]) now`;')).toBe(1);
   });
+
+  // `${a?b[E]:"stopped before it completed"}` — CC 2.1.266's getTask-stopped
+  // tool result. The key is followed by a ternary `:`, which the previous
+  // shortlist did not admit, so `E` stayed pinned to the darwin name and the
+  // prompt was unmatchable on linux-x64 while every darwin gate stayed green.
+  // Fourth instance of this family, so the lookahead now takes any expression
+  // continuation rather than another enumerated shape.
+  it('generalizes a bracket key followed by a ternary colon', async () => {
+    const pieces = ['was ${', '?', '[E]:"stopped" }. done'];
+    expect(
+      await bothEngines(pieces, 'x=`was ${p?q[E]:"stopped" }. done`;')
+    ).toBe(1);
+    expect(
+      await bothEngines(pieces, 'x=`was ${p?q[Vt]:"stopped" }. done`;')
+    ).toBe(1);
+  });
+
+  // Same class, comma and closing-bracket continuations.
+  it('generalizes a bracket key followed by a comma or a closing bracket', async () => {
+    const comma = ['call ${', '(', '[K], 2) end'];
+    expect(await bothEngines(comma, 'x=`call ${f(a[K], 2) end`;')).toBe(1);
+    expect(await bothEngines(comma, 'x=`call ${f(a[Zz], 2) end`;')).toBe(1);
+    const close = ['idx ${', '[', '[K]] end'];
+    expect(await bothEngines(close, 'x=`idx ${o[a[K]] end`;')).toBe(1);
+    expect(await bothEngines(close, 'x=`idx ${o[a[Q9]] end`;')).toBe(1);
+  });
 });

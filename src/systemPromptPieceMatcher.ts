@@ -79,8 +79,19 @@ const tokensForPiece = (piece: string, pieceIndex: number): MatchToken[] => {
   const tokens: MatchToken[] = [];
   let rest = piece;
   if (pieceIndex > 0) {
+    // The lookahead accepts ANY expression continuation, not a fixed
+    // shortlist. A piece at index > 0 begins INSIDE the `${...}` the previous
+    // capture opened -- the capture consumed the identifier, so a leading
+    // `[key]` there is a member access by construction and can never be prose
+    // (prose cannot start before the closing `}`). CC 2.1.266's
+    // getTask-stopped result is `${a?b[E]:"stopped before it completed"}`,
+    // where the key is followed by a ternary `:`; the old `}`/`.prop`/`)`
+    // shortlist left `E` -- a name that differs Mac<->Linux -- pinned, so the
+    // prompt was unmatchable on linux-x64 while every local gate stayed green.
+    // Fourth instance of this family after [g.terminal], [P-1] and [K].value,
+    // so this widens for the CLASS rather than for one more shape.
     const member = rest.match(
-      /^\[[A-Za-z_$][\w$]*\](?=\}|\.[A-Za-z_$][\w$]*|\))/
+      /^\[[A-Za-z_$][\w$]*\](?=\}|\.[A-Za-z_$][\w$]*|[):,;?\]]|$)/
     );
     if (member) {
       tokens.push({ kind: 'member' });
@@ -98,7 +109,7 @@ const tokensForPiece = (piece: string, pieceIndex: number): MatchToken[] => {
       // "[P-1]}…", where `P` is `E` on linux-arm64). Same reason, same fix, and
       // buildSearchRegexFromPieces has to agree or test:matcher fails.
       const memberPath = rest.match(
-        /^\[[A-Za-z_$][\w$]*((?:\.[\w$]+)+|\s*[-+*/%]\s*[^\]]*)\](?=\}|\.[A-Za-z_$][\w$]*|\))/
+        /^\[[A-Za-z_$][\w$]*((?:\.[\w$]+)+|\s*[-+*/%]\s*[^\]]*)\](?=\}|\.[A-Za-z_$][\w$]*|[):,;?\]]|$)/
       );
       if (memberPath) {
         tokens.push({ kind: 'member', path: memberPath[1] });
