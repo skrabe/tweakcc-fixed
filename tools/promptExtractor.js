@@ -724,7 +724,12 @@ const NEW_PROMPT_ASSIGNMENTS = [
       'Model-facing SendUserFile tool_result confirming N file(s) were delivered to the user. 2.1.204 emission-shape change (subset-shadowed by the message-delivered result) dropped it from capture; force-restore.',
   },
   {
-    matcher: t => t.includes('File unchanged since last read'),
+    // Anchored at the start, not `includes`: the release-notes changelog quotes
+    // this exact phrase in a /rewind bug-fix note, and a curated assignment
+    // outranks every other gate, so a bare `includes` force-captured a 95KB
+    // document under this id. Any assignment whose phrase Anthropic might quote
+    // in release notes needs the same treatment.
+    matcher: t => t.startsWith('File unchanged since last read'),
     name: 'Read File-Unchanged Result',
     id: 'tool-result-read-file-unchanged',
     description:
@@ -3286,6 +3291,28 @@ function isHardExcluded(text) {
     !/[A-Za-z]{3,}|[^ -~\s]|\\u[0-9a-fA-F]{4}/.test(proseOutsideSlots(text))
   )
     return true;
+  // The release-notes changelog (`Inn()` -> computeUpdateSummary -> the startup
+  // "what's new" notice). It is a DOCUMENT, not a prompt: no system prompt, tool
+  // schema or tool result ever carries it, and at 95KB it is by far the largest
+  // string in the bundle.
+  //
+  // It is hard-excluded rather than left to a cache verdict because it is the one
+  // string guaranteed to QUOTE other prompts: release notes describe prompt-level
+  // fixes by quoting the prompt. On CC 2.1.266 the note `Fixed /rewind leaving
+  // stale file-read tracking … which caused "File unchanged since last read"
+  // stubs` made it match the NEW_PROMPT_ASSIGNMENTS matcher for
+  // `tool-result-read-file-unchanged` — and a curated assignment outranks both the
+  // classification cache and the prose gate, so a `ui` verdict could not suppress
+  // it. It was captured under that prompt's id, pushed the real 154-char prompt to
+  // a `-2` suffix, and shipped a 95KB "override" nobody could have meant.
+  //
+  // Keyed on the shape, not on any one release's text: a leading `## <semver>`
+  // heading plus several more of them. No prompt looks like that.
+  if (
+    /^## \d+\.\d+\.\d+\s*\n/.test(text) &&
+    (text.match(/\n## \d+\.\d+\.\d+\s*\n/g) || []).length >= 5
+  )
+    return true;
   // Bundled skill build-tooling / spawned-subprocess scripts — executable
   // JS/MJS source shipped inside a skill, not prompt text.
   if (text.startsWith('#!/usr/bin/env node')) return true;
@@ -5164,6 +5191,9 @@ module.exports.ADMIT_FLOOR = ADMIT_FLOOR;
 module.exports.shouldCapture = shouldCapture;
 module.exports.looksLikeEnglishProse = looksLikeEnglishProse;
 module.exports.isHardExcluded = isHardExcluded;
+// Exposed so a test can assert that no curated assignment claims a document that
+// merely QUOTES a prompt — the failure mode that force-captured the changelog.
+module.exports.lookupNewPromptAssignment = lookupNewPromptAssignment;
 module.exports.setCcVersionForCacheLookups = setCcVersionForCacheLookups;
 module.exports._setClassificationCacheForTests =
   _setClassificationCacheForTests;
