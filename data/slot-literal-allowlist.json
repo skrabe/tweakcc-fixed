@@ -1383,5 +1383,107 @@
     "desc": "Label prefixing the interpolated server-side copy list @19020112. The rule the model acts on (\"These are this artifact's own files now…\") follows the list and is already catalogued.",
     "text": "\n\nCopied into this version server side: ",
     "verdict": "glue"
+  },
+  "47c16f88e2c901ea": {
+    "promptId": "system-prompt-project-timeline-user-message-provenance",
+    "label": "PROJECT_COORDINATION_MCP_SERVER_NAME",
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": "[Coordinator session's relay",
+    "verdict": "glue",
+    "desc": "Label prefix on the relayed-message provenance line; the constraint is the surrounding sentence."
+  },
+  "6fedc18ce2c9700d": {
+    "promptId": "tool-result-artifact-read-shared-consent-ask",
+    "label": "TOOL_RESULT_ARTIFACT_READ_SHARED_CONSENT_ASK_VAR_0",
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": "another person's artifact",
+    "verdict": "glue",
+    "desc": "Noun phrase naming the read target in the consent ask; the rule is the surrounding sentence."
+  },
+  "6f9055578fd64926": {
+    "promptId": "system-reminder-deferred-tools-no-longer-available",
+    "label": "SYSTEM_REMINDER_DEFERRED_TOOLS_NO_LONGER_AVAILABLE_VAR_1",
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": "Do not call them",
+    "verdict": "catalogue",
+    "id": "system-reminder-deferred-tools-no-longer-available-do-not-call",
+    "name": "System Reminder: Deferred tools no longer available - do not call",
+    "desc": "toolSearchAbsent arm of I=E?...:... @10252140. Tells the model not to call the removed tools at all; the sibling arm instead tells it not to search. Instruction, so it needs its own id."
+  },
+  "ee506d1bbdf1f928": {
+    "promptId": "system-reminder-deferred-tools-no-longer-available",
+    "label": "SYSTEM_REMINDER_DEFERRED_TOOLS_NO_LONGER_AVAILABLE_VAR_1",
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": "Do not search for them — ",
+    "verdict": "catalogue",
+    "id": "system-reminder-deferred-tools-no-longer-available-do-not-search",
+    "name": "System Reminder: Deferred tools no longer available - do not search",
+    "desc": "Deferred-tool arm of I=E?...:... @10252159, the whole template `Do not search for them - ${TOOL} will return no match`. Instruction plus its consequence."
+  },
+  "448d2c95521f01de": {
+    "promptId": "system-reminder-deferred-tools-no-longer-available",
+    "label": "SYSTEM_REMINDER_DEFERRED_TOOLS_NO_LONGER_AVAILABLE_VAR_1",
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": " will return no match",
+    "verdict": "glue",
+    "desc": "Second quasi of the ONE template node catalogued as system-reminder-deferred-tools-no-longer-available-do-not-search (ee506d1bbdf1f928). Cataloguing it separately would mint an id no extraction can produce."
+  },
+  "4413363ad7d4f935": {
+    "promptId": "tool-result-artifact-public-change-unknown-owner-permission-ask",
+    "label": null,
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": "Let Claude read it",
+    "verdict": "glue",
+    "desc": "Label of a permission choice offered to the user, not an instruction to the model."
+  },
+  "b0f8762dc0666b17": {
+    "promptId": "tool-result-artifact-read-writer-file-data-not-instructions",
+    "label": "TOOL_RESULT_ARTIFACT_READ_WRITER_FILE_DATA_NOT_INSTRUCTIONS_VAR_5",
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": "an artifact shared with you from another organization",
+    "verdict": "glue",
+    "desc": "Noun phrase naming the artifact's provenance inside the surrounding untrusted-data sentence."
+  },
+  "72462cbe51f6b683": {
+    "promptId": "tool-result-artifact-comments-untrusted-header",
+    "label": "TOOL_RESULT_ARTIFACT_COMMENTS_UNTRUSTED_HEADER_VAR_1",
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": ", who may be outside your organization",
+    "verdict": "glue",
+    "desc": "Qualifier on the interpolated comment author; the untrusted-data framing is the enclosing header."
+  },
+  "4eecc2bfe59802bf": {
+    "promptId": "tool-result-artifact-read-db-documents-saved-not-into-conversation",
+    "label": "TOOL_RESULT_ARTIFACT_READ_DB_DOCUMENTS_SAVED_NOT_INTO_CONVERSATION_VAR_0",
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": " — outside this session's working paths",
+    "verdict": "glue",
+    "desc": "Qualifier on an interpolated out_dir path; the consent requirement is the surrounding sentence."
+  },
+  "156485b9837b1c2d": {
+    "promptId": "data-artifact-write-db-auto-classifier-input",
+    "label": "DATA_ARTIFACT_WRITE_DB_AUTO_CLASSIFIER_INPUT_VAR_5",
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": " (only if still at version ",
+    "verdict": "glue",
+    "desc": "Joins an interpolated version number in the auto-classifier input; carries no instruction alone."
+  },
+  "26104f5f0202b345": {
+    "promptId": "tool-result-artifact-created-from-type",
+    "label": "TOOL_RESULT_ARTIFACT_CREATED_FROM_TYPE_VAR_9",
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": "This type's instructions fill it through its own store, not with its page or data files: write it ",
+    "verdict": "catalogue",
+    "desc": "mcp/data/write_db arm @19401173: the whole template telling the model to fill the Artifact through the type's own store and never to publish index.html or the type's files as content. The verdict is what bypasses the prose gate for this branch; fuzzy carryover then restores the previous release's id, which keeps its overrides bound.",
+    "id": "tool-result-artifact-created-from-type-fill-via-store-write",
+    "name": "Tool Result: Artifact created from type - fill via store write"
+  },
+  "95a8f7cf41fccb53": {
+    "promptId": "tool-result-artifact-created-from-type",
+    "label": "TOOL_RESULT_ARTIFACT_CREATED_FROM_TYPE_VAR_9",
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": ", as those instructions below describe (they cover only this Artifact's own content). Do not publish `file_path`/`files` to it as its content — a file only wher",
+    "verdict": "glue",
+    "desc": "Second quasi of the same template node, catalogued as tool-result-artifact-created-from-type-fill-via-store-write."
   }
 }

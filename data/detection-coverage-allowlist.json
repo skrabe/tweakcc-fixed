@@ -857,5 +857,11 @@
     "shape": "concat",
     "verdict": "internal",
     "why": "zod .describe() on the plugin archive source object — config schema"
+  },
+  "59f0218abbaee141": {
+    "verdict": "internal",
+    "shape": "concat",
+    "excerpt": "Controls how the managed settings sources compose. \"first-wins\" (default): the highest-priority source present (server-managed > MDM (manage",
+    "why": "Managed-settings schema field: zod .describe() on managedSourcesBehavior, beside forceLoginGatewayUrl and parentSettingsBehavior in the admin policy tier (MDM / managed-settings.json / policy helper). Admin configuration documentation, never assembled into a system prompt or a tool schema."
   }
 }
