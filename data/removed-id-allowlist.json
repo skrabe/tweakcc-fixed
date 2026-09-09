@@ -971,5 +971,10 @@
     "verdict": "archived",
     "version": "2.1.265",
     "why": "Absent from prompts-2.1.265.json. The gate's 25-char window pointed at \"tool-result-artifact-type-lock-publish-data-files\", but full-body similarity does not support a rename, so the override was archived rather than re-pointed; the successor id is audited on its own. Archived to ~/.tweakcc/orphans-removed-for-2.1.265/."
+  },
+  "tool-result-read-file-unchanged-2": {
+    "verdict": "archived",
+    "version": "2.1.266",
+    "why": "Never a real prompt. The release-notes changelog was force-captured under this collision id because a NEW_PROMPT_ASSIGNMENTS matcher used a bare includes() on \"File unchanged since last read\", which a 2.1.266 release note quotes verbatim in a /rewind bug-fix entry; a curated assignment outranks both the classification cache and the prose gate, so no verdict could suppress it. The changelog is now hard-excluded by shape and the matcher is anchored at the start, so the real 154-char prompt keeps the unsuffixed id. Archived to ~/.tweakcc/orphans-removed-for-2.1.266/."
   }
 }
