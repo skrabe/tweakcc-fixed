@@ -122,6 +122,79 @@ export const matchEvidence = (src, lit) => {
   return [...new Set(found)];
 };
 
+// A SECOND needle shape, new in CC 2.1.265: a rewrite table. CC passes a
+// description through `FN(text, [[needle, replacement], ...])` to restate it for
+// another tool surface (the artifact tool's MCP variant restates every
+// "write_db with db_op 'update' ... only:" prefix as "action 'update' ... only:").
+//
+// This is strictly harsher than the `.startsWith(CONST)` case above. There both
+// sides come from the same const, so an override that rewrites the prompt
+// rewrites the predicate with it and the match still holds. Here the needle is a
+// SEPARATE literal in the binary, compared against text the override controls —
+// so ANY edit that drops the needle, not just blanking, silently makes the
+// rewrite a no-op and ships the un-restated wording to the other surface. No
+// other gate sees it: the literal is still in the bundle, the prompt still
+// applies, and nothing errors.
+const jsString = (src, i) => {
+  const out = [];
+  const q = src[i];
+  i += 1;
+  while (i < src.length) {
+    const c = src[i];
+    if (c === '\\') {
+      out.push(src[i + 1]);
+      i += 2;
+      continue;
+    }
+    if (c === q) return [out.join(''), i + 1];
+    out.push(c);
+    i += 1;
+  }
+  return [null, i];
+};
+
+// Every `[[ "needle", "replacement" ], ...]` table passed as a call argument.
+export const rewriteTableNeedles = src => {
+  const needles = new Set();
+  const re = /\b[$\w]+\(\s*(?:[$\w]+\.)?[$\w]+\s*,\s*\[\[/g;
+  let m;
+  while ((m = re.exec(src)) !== null) {
+    const open = src.indexOf('[[', m.index);
+    let depth = 0;
+    let k = open;
+    for (; k < src.length; k += 1) {
+      const c = src[k];
+      if (c === '"' || c === "'") {
+        [, k] = jsString(src, k);
+        k -= 1;
+        continue;
+      }
+      if (c === '[') depth += 1;
+      else if (c === ']') {
+        depth -= 1;
+        if (depth === 0) break;
+      }
+    }
+    if (depth !== 0) continue;
+    const seg = src.slice(open, k + 1);
+    const strings = [];
+    for (let p = 0; p < seg.length; p += 1) {
+      if (seg[p] === '"' || seg[p] === "'") {
+        const [v, next] = jsString(seg, p);
+        if (v === null) break;
+        strings.push(v);
+        p = next - 1;
+      }
+    }
+    // A table is pairs; a short marker is not a prose needle worth guarding.
+    if (strings.length < 2 || strings.length % 2 !== 0) continue;
+    for (let a = 0; a < strings.length; a += 2) {
+      if (strings[a].length >= 12) needles.add(strings[a]);
+    }
+  }
+  return [...needles];
+};
+
 const main = () => {
   const args = process.argv.slice(2);
   const sets = args
@@ -181,6 +254,37 @@ const main = () => {
     }
   }
 
+  // Rewrite-table needles: the override must still CONTAIN the needle, because
+  // the binary matches it against the override's own text (see rewriteTableNeedles).
+  const brokenRewrites = [];
+  const needles = rewriteTableNeedles(src);
+  for (const needle of needles) {
+    for (const p of prompts) {
+      if (!p.id) continue;
+      const body = (p.pieces || [])
+        .filter(x => typeof x === 'string')
+        .join('');
+      if (!body.includes(needle)) continue;
+      for (const set of sets) {
+        const file = path.join(set, `${p.id}.md`);
+        if (!fs.existsSync(file)) continue;
+        const ov = bodyOf(fs.readFileSync(file, 'utf8'));
+        if (!ov.trim()) continue; // a deliberate suppression emits nothing at all
+        if (ov.includes(needle)) continue;
+        brokenRewrites.push({ id: p.id, set: path.basename(set), needle });
+      }
+    }
+  }
+  for (const r of brokenRewrites) {
+    console.error(
+      `BROKEN REWRITE     ${r.set}/${r.id}\n` +
+        `   needle  : ${JSON.stringify(r.needle.slice(0, 100))}\n` +
+        `   effect  : the binary rewrites this text for another tool surface by ` +
+        `matching that needle; the override no longer contains it, so the rewrite ` +
+        `silently no-ops and the un-restated wording ships`
+    );
+  }
+
   for (const r of blanked) {
     console.error(
       `BLANKED PREDICATE  ${r.set}/${r.id}\n` +
@@ -200,14 +304,17 @@ const main = () => {
     fs.writeFileSync(jsonOut, JSON.stringify({ blanked, edited }, null, 2));
   }
 
-  if (blanked.length) {
+  if (blanked.length || brokenRewrites.length) {
     console.error(
-      `\nscanned literals: ${blanked.length} blanked predicate(s), ${edited.length} rewritten`
+      `\nscanned literals: ${blanked.length} blanked predicate(s), ` +
+        `${brokenRewrites.length} broken rewrite(s), ${edited.length} rewritten`
     );
     process.exit(1);
   }
   console.log(
-    `✓ scanned literals: 0 blanked predicates (${edited.length} rewritten, ${seen.size} literals examined)`
+    `✓ scanned literals: 0 blanked predicates, 0 broken rewrites ` +
+      `(${edited.length} rewritten, ${seen.size} literals examined, ` +
+      `${needles.length} rewrite-table needle(s))`
   );
 };
 
