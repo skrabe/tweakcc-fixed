@@ -976,5 +976,30 @@
     "verdict": "archived",
     "version": "2.1.266",
     "why": "Never a real prompt. The release-notes changelog was force-captured under this collision id because a NEW_PROMPT_ASSIGNMENTS matcher used a bare includes() on \"File unchanged since last read\", which a 2.1.266 release note quotes verbatim in a /rewind bug-fix entry; a curated assignment outranks both the classification cache and the prose gate, so no verdict could suppress it. The changelog is now hard-excluded by shape and the matcher is anchored at the start, so the real 154-char prompt keeps the unsuffixed id. Archived to ~/.tweakcc/orphans-removed-for-2.1.266/."
+  },
+  "tool-description-artifact-separate-tools-endpoints-mcp": {
+    "verdict": "archived",
+    "version": "2.1.267",
+    "why": "The MCP-server surface for artifact endpoints is gone; the data-tool action form (tool-description-artifact-separate-tools-data) already existed and carries the surviving guidance. Pristine stub, archived. Archived to ~/.tweakcc/orphans-removed-for-2.1.267/."
+  },
+  "tool-result-artifact-fix-declaration-fragment": {
+    "verdict": "archived",
+    "version": "2.1.267",
+    "why": "The declaration-fix clause was folded into the reworked contract/capability publish results (tool-result-artifact-publish-correct-declaration and siblings). Pristine stub, archived. Archived to ~/.tweakcc/orphans-removed-for-2.1.267/."
+  },
+  "tool-result-artifact-mcp-check-superseded": {
+    "verdict": "archived",
+    "version": "2.1.267",
+    "why": "MCP-surface artifact argument checks were removed with the MCP tools; no successor text in the bundle. Pristine stub, archived. Archived to ~/.tweakcc/orphans-removed-for-2.1.267/."
+  },
+  "tool-result-artifact-mcp-endpoints-inexact-keys": {
+    "verdict": "archived",
+    "version": "2.1.267",
+    "why": "MCP-surface endpoints key check removed with the MCP tools. Pristine stub, archived. Archived to ~/.tweakcc/orphans-removed-for-2.1.267/."
+  },
+  "tool-result-org-compliance-policy-unavailable": {
+    "verdict": "archived",
+    "version": "2.1.267",
+    "why": "Compliance-policy gating became the HIPAA latch (tool-result-hipaa-latched-feature-disabled-for-session) and the Projects policy result; the generic clause is gone. Pristine stub, archived. Archived to ~/.tweakcc/orphans-removed-for-2.1.267/."
   }
 }

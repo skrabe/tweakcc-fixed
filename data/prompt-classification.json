@@ -62659,5 +62659,915 @@
     "desc": "Reason clause passed as $9(e,n)'s n argument at 7086913, rendering into the catalogued deny message \"Only the auto-mode classifier can allow ${tool}: ${reason}\". A behavior:\"deny\" message is returned to the model as the tool_result."
   },
   "ace69e9f886c221917e7e5b6b8d40769007e26aa": { "facing": "internal" },
-  "1a9b0914d7edb51dd927083a3881551642920d0b": { "facing": "ui" }
+  "1a9b0914d7edb51dd927083a3881551642920d0b": { "facing": "ui" },
+  "f6c68980ac8a478f587252f36d72fef2cfac463a": {
+    "facing": "model",
+    "id": "data-artifact-write-db-batch-entry-auto-classifier",
+    "name": "Artifact write_db Batch Entry Auto-Classifier",
+    "desc": "toAutoClassifierInput line for one write_db batch entry (op, collection, document, optional if_version pin)."
+  },
+  "9786f2f10cd9ce303745037285f52f9a5a664fdd": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-action-write-db-batch",
+    "name": "Tool Parameter: Artifact Action write_db Batch",
+    "desc": "Continuation of the action-enum description after the batch size concat, covering all-or-nothing batch writes and the untrusted shared-db caveat."
+  },
+  "e0ae9d46da37e1133c3a58eaf5875278d2f5fb75": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-classifier-server-returned-none-for-action",
+    "name": "Tool Result: Auto Mode Classifier Server Returned None For Action",
+    "desc": "Parenthetical reason interpolated into auto-mode no-verdict tool results when the server returned none for this action."
+  },
+  "002d182fa27bfc8f4c7852f967dcf3e66a67dc2c": {
+    "facing": "model",
+    "id": "tool-description-artifact-database-if-version",
+    "name": "Tool Description: Artifact database version pinning guidance",
+    "desc": "Instructs Claude to pin writes to the last-read document version with if_version and to re-read and retry after conflicts instead of overwriting concurrent changes"
+  },
+  "be9154a16aa0f54befee35022e34e43fb8110bd0": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-store-write-it-guidance",
+    "name": "Artifact Read Store Write-It Guidance",
+    "desc": "Artifact-read fill guidance telling the model how to write the store via write_db (or the data helper) rather than publishing page files."
+  },
+  "5690573fde602424f396c152bb58721682cd999e": { "facing": "internal" },
+  "5df48adb1b03a68bc9067c14b2b24227924b2bc6": { "facing": "internal" },
+  "1c4711325df3b562fd5e802c00649fb1759f3587": { "facing": "ui" },
+  "05e529a90dd6bd0e24b02011457b01817c81e5e0": { "facing": "internal" },
+  "86cfebe3ae38af6f1d12d3fea5c0dd93a93b91d9": { "facing": "ui" },
+  "63713edd62659e44a4418e98b64e354522d9e228": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-source-pin-stale-build",
+    "name": "Artifact Publish Source Pin Stale Build",
+    "desc": "Publish tool error when the approval was recorded under an earlier Claude Code version and must be re-approved."
+  },
+  "f0afefc99ead4c906a4ddafba17c131fc495f916": {
+    "facing": "model",
+    "id": "tool-result-subagent-handback-caller-no-longer-running",
+    "name": "Tool Result: Subagent Handback Caller No Longer Running",
+    "desc": "SubagentHandback tool result when the spawning agent is no longer in the task registry."
+  },
+  "24df6d3956b70b8cdf8a2a5d39f6a719a09fdaaf": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-rest-parameter-holds-next",
+    "name": "Plugin Validate: Hook Rest Parameter Would Hold Next",
+    "desc": "Hooks-module scan refusal when $, e, or next is taken into a rest parameter."
+  },
+  "367435a1550acc8201347ca91b0c3e9c72b279c0": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-next-bound-to-another-name",
+    "name": "Plugin Validate: Next Bound To Another Name",
+    "desc": "Hooks-module scan refusal when the hook's next identifier is bound to another name."
+  },
+  "5f9838d1eea33bff9cacc3cbbb3d541565c59392": {
+    "facing": "model",
+    "id": "tool-result-send-message-identity-contested",
+    "name": "Tool Result: Send Message Identity Contested",
+    "desc": "SendMessage note that another live session record claims this session identity, warning before sending anything sensitive."
+  },
+  "e03c5bc904c14c2fabca4371ce69a22348a3ac25": { "facing": "internal" },
+  "a85db105c16ef9c7c3285866b88fac093fba7160": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-correct-declaration",
+    "name": "Artifact Publish Correct The Declaration",
+    "desc": "Default capability_refused tool result telling the model to correct the declaration and publish again."
+  },
+  "6309e2c2d39d78513a79d86c75109092ae1472e1": {
+    "facing": "model",
+    "id": "tool-result-artifact-write-db-permission-ask-batch-clause",
+    "name": "Artifact Write-Db Permission Ask Batch Clause",
+    "desc": "Batch clause inside the write_db permission-ask message naming the batch size, host apply mode, and matched ask-rule."
+  },
+  "01e127605a8ba4fbde25f860c1998bf59c738e59": { "facing": "internal" },
+  "3122db4571b91785e7fd36e67663d2abb411dd6f": {
+    "facing": "model",
+    "id": "tool-result-subagent-handback-report-delivered-flagged",
+    "name": "Tool Result: Subagent Handback Report Delivered Flagged",
+    "desc": "Agent-tool harness note that a flagged auto-mode handback report was delivered as a named message and is not repeated here."
+  },
+  "cb140c6f19aa2f667f3d3d022f48af70f3c5c342": { "facing": "internal" },
+  "d1fcf15281faecb4f26c85950ba60bb70f68affe": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-source-pin-unmatched",
+    "name": "Artifact Publish Source Pin Unmatched",
+    "desc": "Publish tool error when the approval cannot be matched to the source file because another build, hook, or SDK host rewrote it."
+  },
+  "1ef222c71cfff09ba196f1e95fb5871e12c54949": { "facing": "internal" },
+  "378e404829e0cbc2e319a9557fda2d596cf8cb88": { "facing": "internal" },
+  "7f8f5c98fbd33d813bf5a6c1f30ba240bbb5f7a6": { "facing": "ui" },
+  "86592e64feb9cf8bf1f6bbb8885912e256ce317d": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-published-at",
+    "name": "Tool Result: Artifact Published At Url",
+    "desc": "Success Artifact publish tool_result naming the published path, url, sequence, and follow-up hints."
+  },
+  "59cbc87cf29131e19876a56eaba1f88da867b35e": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-catch-followed-by-member",
+    "name": "Plugin Validate: Catch Followed By Another Member",
+    "desc": "Hooks-module scan refusal when .catch(...) is followed by another member access."
+  },
+  "23fade7d935f4b1daae25bf98795ebe71dbf9e6a": { "facing": "ui" },
+  "d3aadb8edfc664358a5cc8ad6b541d364db28989": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-source-pin-retry-once",
+    "name": "Artifact Publish Source Pin Retry Once",
+    "desc": "Suffix appended to source-pin publish errors telling the model to retry once, then stop and tell the user."
+  },
+  "237dff00c89c2a599343c9e09763c7cfd39fa256": {
+    "facing": "model",
+    "id": "tool-result-subagent-handback-sendmessage-to-deliver-report",
+    "name": "Subagent Handback SendMessage To Deliver Report",
+    "desc": "Optional Cln suffix telling the parent to SendMessage the agent so it will deliver its report."
+  },
+  "7636f5095716da6dfd156b5fe4b2267227a7bb4d": { "facing": "internal" },
+  "758a2ca3af9eb2caeb7e96e8815adf119f6e8ee9": { "facing": "internal" },
+  "cc025f9c32b7eda2ea4177389fb95f354b1d907c": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-next-to-used-as-value",
+    "name": "Slash Command: Plugin Validate Hooks Module Next To Used As Value",
+    "desc": "Hooks-module scan refusal when next.to is bound, passed, or read instead of called."
+  },
+  "212a4fc2100cb2419b2456bde6f119477c7cf0c3": {
+    "facing": "model",
+    "id": "tool-result-artifact-contract-echo-rejected",
+    "name": "Artifact Contract Echo Rejected",
+    "desc": "Publish tool result when a republish echoed the artifact's stored contract pin and nothing was published."
+  },
+  "886b28725d8dc6da2f9df55f939d01622dd25c06": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-value-kept-except-catch",
+    "name": "Slash Command: Plugin Validate Hooks Module Value Kept Except Catch",
+    "desc": "Hooks-module scan refusal: a call's value is kept (assigned/passed/read/returned) instead of only using .catch at the call site."
+  },
+  "2baa1880062890f6a0247d2544b2094304378d70": { "facing": "internal" },
+  "cffa650d7a5ee5c534ec95a84e7b120cd3de14b6": {
+    "facing": "model",
+    "id": "tool-description-artifact-publish-hot-deadline",
+    "name": "Tool Description: Artifact Publish Hot Deadline",
+    "desc": "Artifact tool prompt sentence (HOT_DEADLINE_SENTENCE) explaining optional republish deadline windows and that the earliest declaration wins."
+  },
+  "daba56d193eb8018f33a8d38394f03e3cd880b50": { "facing": "ui" },
+  "46d2505e6a2b2d6788d7379b4aac8dd758b70f11": { "facing": "ui" },
+  "3945c75c42195cc162faac3daaf0749baf0bfe2f": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-correct-capabilities",
+    "name": "Artifact Publish Correct Capabilities",
+    "desc": "capability_refused tool result telling the model to correct capabilities.${name} and publish again."
+  },
+  "092174dbd8d9a2bfc9bcb80a448e5a808b6c6ab0": { "facing": "internal" },
+  "f244bd350563b94685a7350f45e78b7772cfeca1": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-denied-not-owner",
+    "name": "Artifact Publish Denied Not Owner",
+    "desc": "publish_denied tool result when this account can open the artifact but is not allowed to publish to it."
+  },
+  "01da1e435042da20c57d8ed7839d6ca3e0cf4fe9": { "facing": "internal" },
+  "864220762af228890c4aeb30474d9b279b24d415": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-publish-deadline",
+    "name": "Tool Parameter: Artifact Publish Deadline",
+    "desc": "Zod describe for the optional Artifact publish deadline: omit for ordinary edits; set only to stop older open copies."
+  },
+  "cf6a02ebcf5e6c47586d105ae56ddfc1154c288a": { "facing": "internal" },
+  "f5968bcdf85ec494fcc64226f1bc78067d2a168a": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-next-to-tier-not-literal",
+    "name": "Slash Command: Plugin Validate Hooks Module Next To Tier Not Literal",
+    "desc": "Hooks-module scan refusal when next.to's tier is not a string literal."
+  },
+  "540130239143919373a5b003dc61b8e8065f6ff5": { "facing": "ui" },
+  "165add322a4cc98ce834573b6d56a44632f4257a": { "facing": "internal" },
+  "cb26fe127ebea3ff35224068813fdd7f79e7f7a1": { "facing": "internal" },
+  "5e06487ffd6fd90dc812f48030cb3beee0b205ad": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-html-intended-fffd-entity",
+    "name": "Artifact Publish HTML Intended FFFD Entity",
+    "desc": "HTML-only suffix on artifact-publish files_invalid / source-replacement tool results telling the model how to write an intended U+FFFD."
+  },
+  "457460d79f0ab3ea1e4f897cf44de266580c2a22": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-action-write-db-batch-entry-shape",
+    "name": "Tool Parameter: Artifact Action write_db Batch Entry Shape",
+    "desc": "Middle fragment of the write_db batch action-enum description naming each writes[] entry as {op, collection, doc_id, data or file_path}."
+  },
+  "76cdb14812a4f45fd7712d42094b33a1e3b52c08": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-next-to-extra-args",
+    "name": "Slash Command: Plugin Validate Hooks Module Next To Extra Args",
+    "desc": "Hooks-module scan refusal when next.to is called with more than (e, tier)."
+  },
+  "86548793fa72b2ac98b77c1cf4231a6d63dd3351": { "facing": "ui" },
+  "09f5fd500bcb988902f6aaf06223737e0df376b4": { "facing": "internal" },
+  "ab31f5d5f539ef53ccfd0ed5957bafa0f52e1967": {
+    "facing": "model",
+    "id": "tool-description-artifact-assets-guidance",
+    "name": "Tool Description: Artifact Assets Guidance",
+    "desc": "Instructs the Artifact tool how to upload, list, read, and delete page assets, including when deletion is allowed."
+  },
+  "a4bb0fc61b8992f457d96b5b3541711d184c861b": { "facing": "ui" },
+  "0a31219dcba18901fad87503ad817271292ad7a6": {
+    "facing": "model",
+    "id": "skill-keybindings-context-above-prompt",
+    "name": "Skill Keybindings Context Above Prompt",
+    "desc": "keybindings-help Available Contexts row describing when a plugin panel above the prompt has keyboard focus."
+  },
+  "2859a21dee5d1d9de425a7ef393d9ba3bd364acd": { "facing": "ui" },
+  "eb806f60a180eb12b814fa8ed0c5694552a0a583": { "facing": "internal" },
+  "28b21a5fa70ef594b85db791a1d099a1e05c5ccb": { "facing": "internal" },
+  "c9d6ef330b25d6d46df4f0c5337b1cd8ae28d2b1": {
+    "facing": "model",
+    "id": "data-artifact-write-db-if-version-auto-classifier-suffix",
+    "name": "Artifact write_db if_version Auto-Classifier Suffix",
+    "desc": "toAutoClassifierInput suffix noting a write is pinned to a document version."
+  },
+  "44ecbfbc6469e8b41d394f1389cea908c43d42a2": {
+    "facing": "model",
+    "id": "tool-parameter-subagent-handback-message",
+    "name": "Tool Parameter: Subagent Handback Message",
+    "desc": "Zod describe for SubagentHandback's message field: the full report for the caller."
+  },
+  "580cbf7be58e6d2443094729b0f9a3b58ac3dab6": { "facing": "internal" },
+  "5c2f4639cf1ebb77f44f77a93b3719fc61dae649": {
+    "facing": "model",
+    "id": "tool-result-send-message-no-agent-reachable",
+    "name": "SendMessage target not reachable",
+    "desc": "SendMessage failure result stating no agent by that name is reachable, with per-source unavailability notes appended."
+  },
+  "abb92bdc00e1ad707fd87bc13de3c8e6c48c0c56": { "facing": "internal" },
+  "178a84e561124acf616f254eda4ce5d2a1857a10": {
+    "facing": "model",
+    "id": "tool-result-subagent-handback-auto-mode-blocked-warning",
+    "name": "Tool Result: Subagent Handback Auto Mode Blocked Warning",
+    "desc": "Security warning prepended to a handback report when auto mode blocked the subagent's report."
+  },
+  "fae1ce7413f3bd1554a41cb9a687820cf14581ee": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-dollar-first-arg-not-literal",
+    "name": "Slash Command: Plugin Validate Hooks Module Dollar First Arg Not Literal",
+    "desc": "Hooks-module scan refusal when $.noun is not given a literal name as its first argument."
+  },
+  "22d6e184bb3d919101f79bd2afce4181473bee20": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-files-unpaired-surrogate",
+    "name": "Artifact Publish Files Unpaired Surrogate",
+    "desc": "files_invalid publish tool result when a text file holds an unpaired surrogate."
+  },
+  "081b947edfcd8966e0e383d1658f7d37cb61f229": { "facing": "internal" },
+  "a1ddb336e354cf5283751f862f05ed5a1d3a5817": { "facing": "internal" },
+  "87948fd42d6bd5444e822b33cd0933688dd63ba9": { "facing": "internal" },
+  "7e516e16460b218ae2dfd582c2d6c9700ff786de": {
+    "facing": "model",
+    "id": "tool-description-artifact-write-db-version-pinned-someone-elses-asks-until-read",
+    "name": "Artifact write_db Version-Pinned Someone Else's Asks Until Read",
+    "desc": "write_db description() clause when a version-pinned write targets someone else's artifact before this conversation has read its data."
+  },
+  "1034ab21e4b60866ab6bd3af0769640bf47de2fc": { "facing": "internal" },
+  "4c0b96d809d15badc44dcbb06a9c9249eac2842d": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-capability-unavailable-here",
+    "name": "Artifact Publish Capability Unavailable Here",
+    "desc": "capability_refused tool result when capabilities.${name} is not available to this account here."
+  },
+  "ce6a7cfa941d4a0b004fdd38a25fcdd8ccff5dc1": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-batch-write-unsupported-if-version",
+    "name": "Tool Result: Artifact DB Batch Write Unsupported if_version",
+    "desc": "Suffix on an artifact_db_write batch invalid_argument error when the batch was pinned, telling the model the server may not accept if_version on batch writes and to resend without pins only if unconditional writes are acceptable."
+  },
+  "4c8c525cc94f4c8132605c05af68d250760c56e9": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-read-not-saved-line",
+    "name": "Artifact DB Read Not-Saved Line",
+    "desc": "read_db tool-result line listing returned documents that were not saved to out_dir, with the skip reason."
+  },
+  "5337af9935ebe5484b0432ecefdebafd6c9ad92e": { "facing": "ui" },
+  "34f75bc68e85ebfb66450791d30243c5609d5352": {
+    "facing": "model",
+    "id": "slash-command-list-agents-self-session-token",
+    "name": "/list-agents self - session token",
+    "desc": "Line in the /list-agents output naming this session's own token as other sessions address it."
+  },
+  "58d3fdfb7bdd8e9955831bd13220ea1ab432fb91": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-408-upload-wait-retry",
+    "name": "Artifact Publish 408 Upload Wait Retry",
+    "desc": "Remedy clause of the deploy 408 tool result telling the model to retry the upload once."
+  },
+  "6fd4d09b78e2a5e91eb9da6e014426330c28d3fa": { "facing": "internal" },
+  "f26065184a4de98d54e04f0730be64a118e574be": { "facing": "internal" },
+  "a1d075e4d6a0869b0febad7a85ed7b9e37832624": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-capability-drop-unavailable",
+    "name": "Artifact Publish Capability Drop Unavailable",
+    "desc": "capability_refused tool result when an earlier version declares a capability that cannot be dropped now."
+  },
+  "3c63496011f4a7b17ea2db6bbdb2f9011615af48": { "facing": "internal" },
+  "75a6b1b94fce252b053753a73f69b5a1ccdb5f2b": { "facing": "internal" },
+  "1e7823f9e90369f4121a7b98e70d791d5ae4e9fb": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-catch-spread-argument",
+    "name": "Plugin Validate: Catch Called With A Spread Argument",
+    "desc": "Hooks-module scan refusal when .catch() is called with a spread argument."
+  },
+  "c43063161c5aa9b6b0f521815cfc37aecc85c40b": { "facing": "internal" },
+  "0bf5b0fcaa1289f95115597f74fee519890cfd73": {
+    "facing": "model",
+    "id": "tool-result-gettask-cancelled-output-so-far",
+    "name": "Tool Result: GetTask Cancelled Output So Far",
+    "desc": "GetTask statusMessage when a background shell was killed, including output-so-far path."
+  },
+  "313740911727b925fecbd71732fbdf675cf09224": { "facing": "internal" },
+  "4018ac53064a8d56274d178a843e5cd4bee5772f": { "facing": "internal" },
+  "43c725c2c6c0c1d25e8e9645837febecdc604781": {
+    "facing": "model",
+    "id": "tool-result-subagent-handback-not-active",
+    "name": "Tool Result: Subagent Handback Not Active",
+    "desc": "SubagentHandback call() failure when the tool is not active for this agent, telling it to write the report as plain text."
+  },
+  "8c77d070ec41e86673c05765190d738d895a61fd": { "facing": "internal" },
+  "870793c64bfab2a8aa4b03d6f2e86e574650297e": { "facing": "internal" },
+  "42daa555012524ea78ac8d82ad51998ce59e1009": { "facing": "internal" },
+  "61bb355f53209a81de4a150b1fce2092817e6414": { "facing": "internal" },
+  "db86ad80cc23a3a739ee1a84a982baaa775574eb": {
+    "facing": "model",
+    "id": "tool-description-artifact-write-db-batch-apply-mode-version-pinned",
+    "name": "Artifact write_db Batch Apply Mode Version-Pinned",
+    "desc": "write_db description/ask clause for a version-pinned batch: all-or-nothing if the server takes batches, otherwise refused whole."
+  },
+  "2d1c82bf58dd214c65f90c1177668746582a3261": { "facing": "internal" },
+  "ba5e12383a73a4fbd687748d1aadba0bc9f6ecbc": { "facing": "internal" },
+  "e7efc8f0588f87452cef22c68db3fc80ea410e06": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-next-assigned-to-another-name",
+    "name": "Plugin Validate: Next Assigned To Another Name",
+    "desc": "Hooks-module scan refusal when the hook's next identifier is assigned to another name."
+  },
+  "35965d03fb479d3d12a8f83cdf8e19ae1464084b": { "facing": "ui" },
+  "a9de93f32c31deb4803fd3bc3f87e525dcd3cfae": {
+    "facing": "model",
+    "id": "tool-result-artifact-write-db-batch-entry-if-version-must-be-positive-integer",
+    "name": "Artifact write_db Batch Entry if_version Must Be Positive Integer",
+    "desc": "validateInput error when a batch entry's if_version is present but is not a positive integer."
+  },
+  "5e6f6a31d0e2c9a69c98f2de34c1b183dac2b07e": { "facing": "internal" },
+  "39283774be521be36363e1cce50fcd7177367ba2": { "facing": "internal" },
+  "4a56445d7798f5a6979e237cbf1cb75ce11defb2": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-batch-write-atomic-nothing-written",
+    "name": "Tool Result: Artifact DB Batch Write Atomic Nothing Written",
+    "desc": "write_db batch error telling the model the batch is atomic so none of the writes applied."
+  },
+  "38d20017c837606e8a9f873a72c7ebb27a084275": {
+    "facing": "model",
+    "id": "tool-result-subagent-handback-ended-without-report",
+    "name": "Subagent Handback Ended Without Report",
+    "desc": "Agent-tool harness note that the subagent ended without delivering a report through SendMessage."
+  },
+  "d4234753f5309207ef9cff92496138daae4e71ba": { "facing": "ui" },
+  "d006555f8ca7b00efd4a44ac8f0f2e8e550b0ae3": { "facing": "internal" },
+  "6a30bc2c48d00ab444084b0b2572b7d2c26da5a7": {
+    "facing": "model",
+    "id": "data-subagent-handback-auto-classifier-untrusted-output",
+    "name": "Data: Subagent Handback Auto Classifier Untrusted Output",
+    "desc": "toAutoClassifierInput prefix for SubagentHandback: the report is agent-authored untrusted output with no user authority."
+  },
+  "8614e6636860492bd039cddf9d90f787ab50c879": {
+    "facing": "model",
+    "id": "system-reminder-subagent-handback-unreviewed-filter-refused",
+    "name": "System Reminder: Subagent Handback Unreviewed Filter Refused",
+    "desc": "Security warning prepended to a parent-bound handback report when the auto-mode safety review was refused by an upstream filter."
+  },
+  "844fa1b5f3cc43deac6104727e19918ec6b19103": { "facing": "internal" },
+  "8e7b0cf18d8d7a289e982c56098a3dff41050e2f": { "facing": "internal" },
+  "1b5829bd3db5079433f1c95d0d905cc133ecec17": { "facing": "internal" },
+  "8e5b12fda0030d2e23e9d2789f5faa6ba124325f": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-source-undecodable",
+    "name": "Tool Result: Artifact Publish Source Undecodable",
+    "desc": "Publish error when the source file is not valid UTF-8/UTF-16 text, asking the model to rewrite it as UTF-8 and republish."
+  },
+  "237f53365375acfb35deedd746f9c2371162951a": { "facing": "internal" },
+  "2c2e167c3846af2609f62c497f125f7dc23c298b": { "facing": "internal" },
+  "15bee4460978aac9dabc6390b23a4a94bd24aace": {
+    "facing": "model",
+    "id": "tool-result-artifact-label-too-long",
+    "name": "Artifact Label Too Long",
+    "desc": "Artifact validationErrorSteer returned to the model when label exceeds 60 characters."
+  },
+  "c03e7d424bd1e0a455e18af513d3eb7759bf7718": { "facing": "internal" },
+  "da09030537eb5e16323c192ea7db9b0ed17ded84": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-no-verdict-stream-ended",
+    "name": "Tool Result: Auto Mode No Verdict Stream Ended",
+    "desc": "Denies a tool call in auto mode when the classifier stream ended before a verdict, telling the model to retry once then continue."
+  },
+  "d8177f7d7b40205c36bca2f19e11b006fa4c8c41": { "facing": "internal" },
+  "b55f6eaeca222820cf6395cff88d12fdd839d2f2": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-next-computed-member-access",
+    "name": "Plugin Validate: Computed Member Access On Next",
+    "desc": "Hooks-module scan refusal when a computed member access on the continuation may reach next.to."
+  },
+  "0fa081df6d005caea35f9cda2fbac6dc42e18cbc": { "facing": "internal" },
+  "25d1afe5a7c8d100ab59b891eee58da3a5cea848": { "facing": "ui" },
+  "e8f9d2e4658d48961a2ad108432e8c6b1643381e": {
+    "facing": "model",
+    "id": "slash-command-plugin-marketplace-entry-path-outside-directory",
+    "name": "Plugin Marketplace Entry Path Outside Directory",
+    "desc": "Refusal reason when a marketplace entry path does not stay inside the marketplace directory."
+  },
+  "b985050a6ade323ac436921c59ea82882f436c7b": {
+    "facing": "model",
+    "id": "tool-result-subagent-handback-report-delivered",
+    "name": "Tool Result: Subagent Handback Report Delivered",
+    "desc": "Agent-tool harness note that the subagent's report was delivered as a named SubagentHandback message and is not repeated here."
+  },
+  "58dc2d2fdbdc9506a469836f7f70fa1296cacb03": { "facing": "internal" },
+  "9d0fcef39f74307bef1c7f67004ef7959f4c3258": { "facing": "ui" },
+  "129d218bd0b0bfb861f6c22a73e92db0fab248c2": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-batch-write-stale-pin-now-at-version",
+    "name": "Tool Result: Artifact DB Batch Write Stale Pin Now At Version",
+    "desc": "version_mismatch tool result when a pinned document now has a known newer version."
+  },
+  "e0d396ff5417dbdf7727c9c3a4bb1149e05deeab": {
+    "facing": "model",
+    "id": "system-reminder-subagent-handback-send-enforce",
+    "name": "System Reminder: Subagent Handback Send Enforce",
+    "desc": "Meta reminder that forces a subagent to call SubagentHandback with its full report when requiresHandback is set and no report was delivered."
+  },
+  "0420df16b572e4ba0c24164895ec1e79919ad20f": { "facing": "internal" },
+  "be7c9aef2e41db9fe7c15e624efa8aac2e532fed": {
+    "facing": "model",
+    "id": "tool-result-listagents-self-session-token",
+    "name": "ListAgents Self - Session Token",
+    "desc": "ListAgents tool result line naming this session's own token and noting a message to it would be a message to yourself."
+  },
+  "247b59c90c51abbee60a1134d5a588ce513bb444": { "facing": "internal" },
+  "1585fb4afc94ad314d2155b44a255bcc7ee2001c": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-host-mcp-connectors-not-publishable",
+    "name": "Artifact Publish Host MCP Connectors Not Publishable",
+    "desc": "capability_refused tool result when the connectors declaration names host: MCP servers this session cannot publish."
+  },
+  "8632c37a9c623dc6ef9334e0402d91f8fa5a02bc": {
+    "facing": "model",
+    "id": "tool-result-artifact-write-db-if-version-not-accepted-in-session",
+    "name": "Artifact write_db if_version Not Accepted In Session",
+    "desc": "validateInput error when if_version is passed in a session that does not accept optimistic concurrency pins."
+  },
+  "6502aa9b7c4dc0827e1179c3863e86cdb04dca68": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-then-publish-again",
+    "name": "Tool Result: Artifact Publish Then Publish Again",
+    "desc": "Publish-branch suffix telling the model to rewrite invalid source text and publish again because nothing was published."
+  },
+  "a7d6ce0b1480fecf37abecd771d52b023a7a1f26": { "facing": "internal" },
+  "9b9bf518da42e95e6d417328360263f21ab4f534": { "facing": "internal" },
+  "56d4ae7e06c15d9813040816967d55d56a205b55": { "facing": "internal" },
+  "92cf5d7f2477cec978bb5d4616e16d6a6b5c22ab": { "facing": "internal" },
+  "bb15fa4d5ad447d2372ca786a62599ee05f53b78": { "facing": "internal" },
+  "9527e80d1ad6853247a7454c6de138b27d8ecf36": { "facing": "internal" },
+  "1540c6b008126c3ea48bf3fa1c488e1794f6eb2e": { "facing": "internal" },
+  "79f92164f107c9b45d0d6a570457e1873b141bee": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-files-preflight-reserved",
+    "name": "Tool Parameter: Artifact Files Preflight Reserved",
+    "desc": "files parameter description sentence reserving preflight.js at the artifact root as a small default-export ES module."
+  },
+  "26641fb4506157b7992f25acfdb77bb63ec6d198": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-version-label",
+    "name": "Tool Parameter: Artifact Publish Label",
+    "desc": "Optional Zod describe for the Artifact publish label field: a short max-60-char name, not a description."
+  },
+  "e7962512a6415ecfcb18427b9cc2d79ed4ccb436": {
+    "facing": "model",
+    "id": "tool-result-subagent-handback-already-delivered",
+    "name": "Tool Result: Subagent Handback Already Delivered",
+    "desc": "SubagentHandback call() failure when a report was already delivered, steering further traffic to SendMessage."
+  },
+  "0f6dd128f48cc9626e63c1a242891de0efd527b1": {
+    "facing": "model",
+    "id": "slash-command-effort-ultracode-above-cap",
+    "name": "Slash Command: Effort Ultracode Above Cap",
+    "desc": "/effort ultracode rejection when xhigh is above the settings or organization effort cap, listing valid options."
+  },
+  "d142de821c37e4e81cf6efd5a5e96c6fe56f888e": { "facing": "ui" },
+  "0f2ca20c155c2793ab1b65428ccc52d99f883a4c": { "facing": "ui" },
+  "1c9b8762bf16b06083e1b1bc9c1230a51014fa50": { "facing": "internal" },
+  "c57b5a3c33cd51f45f2142cecee9e609349806bd": { "facing": "internal" },
+  "2a95720b731b4114e9a09fe1a68145953c10487c": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-next-to-called-without-args",
+    "name": "Slash Command: Plugin Validate Hooks Module Next To Called Without Args",
+    "desc": "Hooks-module scan refusal when next.to is called without (e, tier) or with a spread."
+  },
+  "5600a2d037a715637cec1d663edfea9497be6625": { "facing": "internal" },
+  "8b81e627300f709c40e5b590eab87487e2b77e3f": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-batch-write-first-stale-pin",
+    "name": "Tool Result: Artifact DB Batch Write First Stale Pin",
+    "desc": "Note that only the first stale if_version pin was checked; later pinned entries were not."
+  },
+  "8b44b624c66591ff592e09a3c4a366d589757068": {
+    "facing": "model",
+    "id": "data-task-notification-queued-remote-notifications-nudge",
+    "name": "Data: Queued remote notifications task-notification nudge",
+    "desc": "Task-notification wrapper telling the model that remote notifications are pending and to call the notification-reading tool until the queue is empty."
+  },
+  "2c04ae5522221b45263a57cd2641d7f19e9cd5c7": {
+    "facing": "model",
+    "id": "tool-result-subagent-handback-main-did-not-accept",
+    "name": "Tool Result: Subagent Handback Main Did Not Accept",
+    "desc": "SubagentHandback tool result when enqueueReportingAdmission to the main conversation is not admitted."
+  },
+  "49504b13d19c19efd74cbafccd9fc4e1d470a572": { "facing": "ui" },
+  "ceac8f23ab4da56038e43972e13d2ff7d9896842": { "facing": "internal" },
+  "84787a89744a0fdd2097faf4a2ce4bbd2818c018": {
+    "facing": "model",
+    "id": "tool-description-projects-error-policy-disabled",
+    "name": "Tool Result: Projects Policy Disabled",
+    "desc": "Projects tool precondition error when organization policy disables project read/write uploads to claude.ai."
+  },
+  "519406f858087cd464b0d2ccb37758f4a695b021": { "facing": "internal" },
+  "b7e86b2f70d1f4f71f529bc9b75a96d474b4d46b": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-path-read-asset",
+    "name": "Tool Parameter: Artifact Path Read Asset",
+    "desc": "path schema description for reading (and deleting) an uploaded asset by 32-hex id."
+  },
+  "a931f150d91c0c60c99cb5e1f1784e409334760f": { "facing": "internal" },
+  "05e36d28c4ef6d6c1e0259cb81173d4790a703fc": { "facing": "ui" },
+  "ec8fe419dc152ff5ef37a78203f8c7b28197eca7": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-source-replacement-char",
+    "name": "Artifact Publish Source Replacement Character",
+    "desc": "Publish tool error when the source file contains U+FFFD and must be rewritten as UTF-8 before publishing."
+  },
+  "405ec9c15bd43b7951d29fc807f635c2bcfbf3f0": { "facing": "internal" },
+  "1a17f9e7f16abf61af9edb506947a43d778a553a": { "facing": "internal" },
+  "96c818f5f456e6cd4d9bea617286eda1dd22c399": { "facing": "internal" },
+  "20dd2b340e45d8b50e43d6b2fe40e647931a9370": {
+    "facing": "model",
+    "id": "tool-result-listagents-self-main-session-token",
+    "name": "ListAgents Self - Main Session Token",
+    "desc": "ListAgents tool result line naming this process's main session token for other sessions, shown when the caller is a subagent."
+  },
+  "c2a76a55a66e694906d477f656e4a26736509f1b": {
+    "facing": "model",
+    "id": "system-prompt-project-timeline-owner-message-provenance",
+    "name": "Project Timeline Owner Message Provenance",
+    "desc": "Spawn-time provenance prefix telling a subagent that quoted text is the project owner's timeline, background only."
+  },
+  "2e1c7fda0d58183a7b3c29da862a930ed6f540be": {
+    "facing": "model",
+    "id": "system-prompt-permission-classifier-forwarded-slack-thread-standing",
+    "name": "System Prompt: Permission Classifier Forwarded Slack Thread Standing",
+    "desc": "Permission-classifier rule that Slack-relayed human messages have the same standing as a transcript user turn, with the listed exclusions."
+  },
+  "a1a147be875d919f196beb81871767a62f734c02": { "facing": "internal" },
+  "e07c027a1650d4d47295e32f6cb3b15bc4791f32": {
+    "facing": "model",
+    "id": "tool-description-artifact-responsive",
+    "name": "Tool Description: Artifact responsive page contract",
+    "desc": "Requires Artifact pages to fit phone widths with preserved side gutters, wrapping layouts, bounded media, and horizontal scrolling confined to oversized tables, diagrams, and code blocks"
+  },
+  "12ef33e56a4273235b0e660b0affad24c85aecd7": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-source-path-mismatch",
+    "name": "Tool Result: Artifact Publish Source Path Mismatch",
+    "desc": "Publish refusal when file_path changed after approval (hook or SDK host), telling the model not to retry the same call."
+  },
+  "a0f6fb7378b0f32eece7b26a0ccd4037f90371b0": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-continuation-shadowed",
+    "name": "Slash Command: Plugin Validate Hooks Module Continuation Shadowed",
+    "desc": "Hooks-module scan refusal when the continuation binding (next) is shadowed by an inner declaration."
+  },
+  "df176f330fbeefeda46e5c511757a46b2c66a31d": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-source-redirected-on-resume",
+    "name": "Tool Result: Artifact Publish Source Redirected On Resume",
+    "desc": "Publish error when the source is a symlink/hard link whose approval came from another process, so the path cannot be verified."
+  },
+  "5df9b41ba2cc0a5ec44666b9e12d74b72ae81aaf": { "facing": "internal" },
+  "814c43753f46a4b00d56448cbf6927700a8ff06e": { "facing": "internal" },
+  "062438cfc9accadca0b61a882f842b6d1e9a5b3d": {
+    "facing": "model",
+    "id": "tool-result-listagents-session-names-stable",
+    "name": "ListAgents Session Names Stable",
+    "desc": "ListAgents tool-result note that session names and [ref]s normally stay stable across restart/resume."
+  },
+  "90cdabeba67c7d3322beb794aa126b7cad248599": { "facing": "internal" },
+  "b29d9addadb56fcf5877bd20675f2c5609a4a14e": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-registration-read-not-catch",
+    "name": "Plugin Validate: Registration Read For Something Other Than Catch",
+    "desc": "Hooks-module scan refusal when a registration identifier is read for something other than .catch(handler)."
+  },
+  "4bea5c1d94b904284ebd99718eb88d0fe2c12a53": { "facing": "internal" },
+  "07235adaea9ae05b7f5c37ebcf815e08527be510": {
+    "facing": "model",
+    "id": "tool-description-bash-sandbox-clipboard-copy-command",
+    "name": "Tool Description: Bash Sandbox Clipboard Copy Command",
+    "desc": "Sandbox bash-tool description: if pbcopy/xclip/wl-copy fail, emit a fenced block and tell the user to run /copy."
+  },
+  "112fb55f01a68a2fb31392766bad8d36aa6df2c6": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-source-pin-evicted",
+    "name": "Artifact Publish Source Pin Evicted",
+    "desc": "Publish tool error when the session dropped its record of the approval so the source file cannot be verified."
+  },
+  "140ec5d6649e99fab63e1e419444410b7d321a9b": { "facing": "ui" },
+  "75b6f69741ca5258377f4e77228d27b18bca179c": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-batch-pinned-unsupported",
+    "name": "Tool Result: Artifact Db Batch Pinned Unsupported",
+    "desc": "write_db batch error when the server cannot take batch writes or if_version pins, so nothing was applied."
+  },
+  "b765af41d8b0eb87695f61f8430ebeb1186a8812": { "facing": "ui" },
+  "357a8710cc4bd1f340eae5e22e12d9549e9b9ca5": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-source-bare-url-no-path-fragment",
+    "name": "Artifact files Source Bare URL No Path Fragment",
+    "desc": "files-map validation error telling the model to pass a bare Artifact URL as artifact and name the file with path (and ver)."
+  },
+  "f09b44c2fffd09c1e90bb35dcf4a726b889fa65e": {
+    "facing": "model",
+    "id": "tool-result-memory-write-tombstone-identical-recreate-refused",
+    "name": "Tool Result: Memory Write Tombstone Identical Recreate Refused",
+    "desc": "Memory write tool result naming the path that was not saved because of a shared-memory tombstone."
+  },
+  "4d1292a5ec6d74cf57385e2a4e0ff5deabedf5dc": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-408-read-timeout",
+    "name": "Artifact Publish 408 Read Timeout",
+    "desc": "Deploy 408 tool result when the server stopped waiting for the upload."
+  },
+  "50695278e69decf7711f9fea2c7886ee913b2c9c": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-source-check-failed",
+    "name": "Artifact Publish Source Check Failed",
+    "desc": "Publish tool error when the permission check hit an internal error before recording the file."
+  },
+  "f4376e5041766de326572c8faf0948b7d5070a4f": { "facing": "internal" },
+  "612fff333f1ef204310d6baca4bf08eef33731b8": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-next-to-unknown-tier",
+    "name": "Slash Command: Plugin Validate Hooks Module Next To Unknown Tier",
+    "desc": "Hooks-module scan refusal when next.to names a tier that dispatch does not continue at."
+  },
+  "19a48689aa03dc6abf56b5b354b27e56eb7a8adb": {
+    "facing": "model",
+    "id": "tool-result-artifact-updated-from-type",
+    "name": "Tool Result: Artifact Updated Type Created Page Immutable",
+    "desc": "Success tool_result after updating a type-created Artifact: own files kept, page comes from the type and cannot be changed here."
+  },
+  "f980ee929337491369555f786071aeb1345c71a7": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-deadline-dropped",
+    "name": "Artifact Publish Deadline Dropped",
+    "desc": "Publish tool-result note that the server or a proxy dropped the deadline and the version was published without it."
+  },
+  "976bef82ee05c79bfd620cf8508e2761d6c6eaf2": { "facing": "internal" },
+  "276767497208654473ee8914d88a19b3d7028954": {
+    "facing": "model",
+    "id": "system-reminder-subagent-handback-countermand",
+    "name": "System Reminder: Subagent Handback Countermand",
+    "desc": "Tells a subagent that an earlier SubagentHandback instruction no longer applies and to write the final report as plain text."
+  },
+  "ec958adb69102ced7d7cef73b75f03133727179c": { "facing": "internal" },
+  "baa2b7fede1a2a991fce1ef1548883d546d8e803": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-next-to-destructured",
+    "name": "Slash Command: Plugin Validate Hooks Module Next To Destructured",
+    "desc": "Hooks-module scan refusal when next.to is destructured from next instead of called as next.to(e, tier)."
+  },
+  "5177b47eadbc44d7b5c21f53329554eb66898abe": {
+    "facing": "model",
+    "id": "tool-result-hipaa-latched-feature-disabled-for-session",
+    "name": "HIPAA Latched Feature Disabled For Session",
+    "desc": "Policy-denial tool result when a HIPAA-regulated organization was signed in earlier, so the named feature stays off until restart."
+  },
+  "cef83a2a71986143f882dfc2b4711aebb5f14460": { "facing": "ui" },
+  "5cca7d29c065945cd2c129f6394340f051649659": {
+    "facing": "model",
+    "id": "data-memory-sync-tombstone-identical-recreate-refused",
+    "name": "Data: Memory Sync Tombstone Identical Recreate Refused",
+    "desc": "Remainder of that notice: identical content cannot be written back after a shared-memory deletion."
+  },
+  "639504787f39624a634818065c44c096429fe25a": {
+    "facing": "model",
+    "id": "tool-description-subagent-handback-handoff-instructions",
+    "name": "Tool Description: Subagent Handback Handoff Instructions",
+    "desc": "Full SubagentHandback tool prompt: deliver the report once via the tool as the last call; plain text is not delivered."
+  },
+  "99cd91029675cc88ecdd7b855082b837dea22828": { "facing": "internal" },
+  "23d3881a77337b0b131e1615fb08dc0d60ebb6ef": { "facing": "internal" },
+  "e18ddc2a50b69f49bdeff0ca5a2aac39326eeaba": { "facing": "internal" },
+  "450d0d22707cc0f606f13e79d9e6ab032e788221": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-write-db-if-version",
+    "name": "Tool Parameter: Artifact database version precondition",
+    "desc": "Defines the optional if_version precondition for Artifact database writes, directing Claude to supply the last-read document version and pin batch entries individually"
+  },
+  "23b04321dead1b2c7443ead5bafc1d6a7a6314d2": { "facing": "internal" },
+  "e9d093e436927c03b7519801599295ab66fc9993": { "facing": "internal" },
+  "e8de08add126f50c4173ece077ea5e16587356d0": {
+    "facing": "model",
+    "id": "tool-result-subagent-handback-waiting-background-work",
+    "name": "Subagent Handback Waiting On Background Work",
+    "desc": "Agent-tool harness note that the subagent has not reported yet because it is waiting on its own background work."
+  },
+  "80b02544c70fbfe1d1ef19962efbacc0e1d27078": {
+    "facing": "model",
+    "id": "tool-result-artifact-contract-pin-yanked",
+    "name": "Tool Result: Artifact Publish Contract Echo Rejected",
+    "desc": "Publish error when the service refuses a stored contract pin, steering a retry with contract latest or a user-facing explanation."
+  },
+  "cf8f3e074920c78423004f4e2483eb2d518a5964": { "facing": "internal" },
+  "52d5692e63732528d255e7eae61abfc365473612": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-source-pin-unobserved",
+    "name": "Artifact Publish Source Pin Unobserved",
+    "desc": "Publish tool error when the permission check never recorded this file, so retrying the same call will not help."
+  },
+  "251bd55aabec9162767f7a974dbaa9e237e3cd25": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-approval-replayed",
+    "name": "Artifact Publish Approval Replayed",
+    "desc": "Publish tool error when this run reused an approval already consumed by an earlier run of the same tool call."
+  },
+  "5c6886ea837af05fd5f63950138b8622ef8892f7": {
+    "facing": "model",
+    "id": "slash-command-effort-exceeds-org-cap",
+    "name": "Slash Command: /effort — Exceeds Org Cap",
+    "desc": "/effort result telling the model the requested effort exceeded the settings/org cap and was clamped."
+  },
+  "8257ceba1b03e5122cc095b8656e308623a1e24b": {
+    "facing": "model",
+    "id": "tool-result-send-message-session-restarted",
+    "name": "Tool Result: Send Message Session Restarted",
+    "desc": "SendMessage note that the target session restarted (same session, new process) since it was last reached."
+  },
+  "00ddfe313ebc109c40c2338c84d2b86ea13e541c": {
+    "facing": "model",
+    "id": "tool-description-subagent-handback",
+    "name": "Tool Description: Subagent Handback",
+    "desc": "Short SubagentHandback tool description: deliver the final report to the spawning agent as the last tool call."
+  },
+  "b2d6928353fdfd994ee09c6747bf362851b390a1": { "facing": "internal" },
+  "e8f6ab13831416d49aaa44f8bde43e1fd16cb197": { "facing": "internal" },
+  "5e31b9149265dd2628f0a367f0d293cb547045d9": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-drop-runtime-capability",
+    "name": "Artifact Publish Drop Runtime Capability",
+    "desc": "capability_refused tool result telling the model to drop a capability the runtime already provides."
+  },
+  "0032753d17bf574b21bd862b3dfdcf8bf2a65761": {
+    "facing": "model",
+    "id": "tool-result-memory-tombstone-identical-recreate-refused",
+    "name": "Tool Result: Memory Tombstone Identical Recreate Refused",
+    "desc": "Memory-tools failed outcome when recreating a just-deleted shared-memory document with identical content is refused."
+  },
+  "700f8e542a48f3afdebdfabaceaad70f75703494": {
+    "facing": "model",
+    "id": "tool-result-artifact-write-db-if-version-write-ops-only",
+    "name": "Artifact write_db if_version Write Ops Only",
+    "desc": "validateInput error when if_version is used with a db_op other than set/update/str_replace/delete."
+  },
+  "3e40f21cfc3d756c1a3af574a22642399d31a0c8": { "facing": "internal" },
+  "a39034144e2166134479fb19cebcd2960bbfabac": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-doc-shim-result",
+    "name": "Tool Result: Artifact Live Doc Shim",
+    "desc": "Formats the Artifact publish tool_result when a live-doc shim carried the write, including edits, copy metadata, version, and url."
+  },
+  "eed4422944dcbc50b545e8c95f6ca3bd27dd6f1f": { "facing": "internal" },
+  "a3e92876b36e3b561dd5502c8fdcc124e99ca589": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-audience-not-owner",
+    "name": "Tool Result: Artifact Publish Audience Not Owner",
+    "desc": "Publish 422 audience_conflict copy: only the artifact owner can change sharing, so drop the named capability or tell the user."
+  },
+  "2b49ab4cd955ac0ca761609c0f2ce4e0acd6a731": {
+    "facing": "model",
+    "id": "tool-result-send-message-renamed-session-hint",
+    "name": "SendMessage Renamed Session Hint",
+    "desc": "SendMessage tool-result note that a named session now goes by a new name (a rename, not a stop)."
+  },
+  "7e50baea62adce85ee6e8d3a64f7fd36da74e173": { "facing": "ui" },
+  "b0191fd085d4189d9b56d1f889b1d72dd278bdf4": {
+    "facing": "model",
+    "id": "tool-result-artifact-deadline-one-word",
+    "name": "Artifact Deadline One Word",
+    "desc": "Zod union .message() returned to the model when a publish deadline is not now, a known window, or a UTC ISO time."
+  },
+  "8fede66691ae3032389f0a6c0c93788f71be76b9": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-batch-write-stale-pin-changed-or-deleted",
+    "name": "Tool Result: Artifact DB Batch Write Stale Pin Changed Or Deleted",
+    "desc": "version_mismatch tool result when a pinned document changed or may have been deleted with no current version."
+  },
+  "f8a1b460a168583e958c37fa8e7243341fabe8c0": {
+    "facing": "model",
+    "id": "slash-command-list-agents-self-main-session-token",
+    "name": "/list-agents self - main session token",
+    "desc": "Line in the /list-agents output naming this process's main session token for other sessions, shown when the caller is a subagent."
+  },
+  "78d1e109332c8dbd565c1f2696892049fb38d154": { "facing": "internal" },
+  "aa0ab1bd7d3ed9d42521d1ea4e56defc2962e1b6": {
+    "facing": "model",
+    "id": "tool-result-artifact-write-db-permission-ask",
+    "name": "Artifact Write-Db Permission Ask",
+    "desc": "checkPermissions ask message when writing an artifact database, noting writes persist and are visible to everyone who can open the artifact."
+  },
+  "d03815f2c6044ba9a6965dae5f51b1c30eaa32a6": {
+    "facing": "model",
+    "id": "data-memory-sync-tombstone-local-copy-not-saved-lead",
+    "name": "Data: Memory Sync Tombstone Local Copy Not Saved Lead",
+    "desc": "Lead of the PostToolUse additionalContext notice when a local memory file was not saved because shared memory deleted it."
+  },
+  "673c6e4a617d8e4b25bc9d3b67c0b9f4f58387a4": { "facing": "ui" },
+  "78240d08f6cfd5159a52b7f6ed89a2b4785010a2": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-batch-write-version-mismatch-none-applied",
+    "name": "Tool Result: Artifact DB Batch Write Version Mismatch None Applied",
+    "desc": "version_mismatch lead of a write_db batch error: the batch is atomic, so none of the writes applied."
+  },
+  "1f0697fe43c5eb379bb36e881f235c815a090b73": {
+    "facing": "model",
+    "id": "system-prompt-permission-classifier-forwarded-project-owner-standing",
+    "name": "System Prompt: Permission Classifier Forwarded Project Owner Standing",
+    "desc": "Permission-classifier rule for project-timeline messages attributed to the Claude Code Project owner."
+  },
+  "511f8511cd9d31c4a9f2b0178112818cca70bd2f": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-version-mismatch",
+    "name": "Tool Result: Artifact Db Write Version Mismatch",
+    "desc": "write_db error when an if_version pin is stale and the server reports the document's current version."
+  },
+  "df50de3a516d5087a38647b47af25ed980bfe4ee": {
+    "facing": "model",
+    "id": "tool-result-subagent-spawn-hook-rewrite-ruled",
+    "name": "Tool Result: Subagent Spawn Hook Rewrite Ruled",
+    "desc": "AgentPreconditionError when a plugin agent.spawn hook rewrites a spawn into one a permission rule denies or asks; tells the model to dispatch it directly."
+  },
+  "5a653d55206f714f3be8d6524023b68931dc224d": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-write-version-mismatch-gone",
+    "name": "Tool Result: Artifact Db Write Version Mismatch Gone",
+    "desc": "write_db error when an if_version pin no longer matches and the server named no current version, so the document may have been deleted."
+  },
+  "8cd086775f3109d28401a410dad53b13fd8d444e": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-engine-create-catch-inapplicable",
+    "name": "Plugin Validate: Engine.create Hook Catch Does Not Apply",
+    "desc": "Hooks-module scan refusal when .catch() is used on an engine.create hook that has no budget."
+  },
+  "12861890daeaf45a1d8b070063bcb0e5b7e0c0e9": {
+    "facing": "model",
+    "id": "system-reminder-subagent-handback-report-via-tool",
+    "name": "System Reminder: Subagent Handback Report Via Tool",
+    "desc": "Instructs a subagent that only a SubagentHandback tool call delivers its final report to the caller."
+  },
+  "fc82d031e4a279b867d0689fb71d8c00135ada5b": { "facing": "internal" },
+  "b6e9abf780289d138926d5bfda3b962cbde0cbc5": { "facing": "ui" },
+  "0c94d61d55896aa47407729f327473cc1c94355f": { "facing": "ui" },
+  "a393ef6927e3f1005f4c596b5f2a2775bdf5dcb0": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-action-str-replace",
+    "name": "Tool Parameter: Artifact Action str_replace",
+    "desc": "Action-enum clause describing write_db str_replace and if_version on set/update/str_replace/delete and batch entries, spliced into dbClauses when that op is enabled."
+  },
+  "c1535e9edd3f35a1782365ee4f1a4d5bdb4966c5": {
+    "facing": "model",
+    "id": "tool-result-remote-host-mcp-tools-not-available",
+    "name": "Remote Host MCP Tools Not Available",
+    "desc": "Remote-tool error when the host's MCP tools are unavailable in this session, so the named tool did not run."
+  },
+  "aa4e1978c3300090a4a2b62912f06df5aedbc327": { "facing": "internal" },
+  "4803848919e69483be9d9d3f10b8584cf43eacf8": { "facing": "ui" },
+  "0bcf23259612bd01b848e19e610852e9c5de53ed": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-batch-version-mismatch",
+    "name": "Tool Result: Artifact Db Batch Version Mismatch",
+    "desc": "Atomic batch write_db error when a pinned if_version is stale and the server did not name which entry."
+  },
+  "e9dfb283762163357b59a58d0e60240d25bda4b0": { "facing": "internal" },
+  "d99780c240b675e9b2997e6cda698fe033874179": { "facing": "internal" },
+  "ac7c236d4b1b7e78234e8126a5065abccd4bb689": {
+    "facing": "model",
+    "id": "tool-result-subagent-handback-report-delivered-to-caller",
+    "name": "Tool Result: SubagentHandback report delivered",
+    "desc": "Success result of the SubagentHandback tool, telling the subagent its final report reached its caller."
+  },
+  "5eaf69876d3d137a04eb7bbefa9d453ab43fa0ee": {
+    "facing": "model",
+    "id": "tool-result-subagent-handback-message-empty",
+    "name": "Tool Result: SubagentHandback empty message",
+    "desc": "Validation error when the SubagentHandback tool is called with an empty report."
+  }
 }

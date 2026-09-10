@@ -1485,5 +1485,51 @@
     "text": ", as those instructions below describe (they cover only this Artifact's own content). Do not publish `file_path`/`files` to it as its content — a file only wher",
     "verdict": "glue",
     "desc": "Second quasi of the same template node, catalogued as tool-result-artifact-created-from-type-fill-via-store-write."
+  },
+  "e8698ecd0520e5de": {
+    "promptId": "system-reminder-brief-mode-toggle",
+    "label": "IS_BRIEF_MODE_ENABLED",
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": "Your final report is delivered through ",
+    "verdict": "catalogue",
+    "desc": "gln, the SubagentHandback lead: rendered as <system-reminder> ${gln} to a subagent that must report through the tool, and as the slot opening system-reminder-subagent-handback-report-via-tool. Gate attributed it to brief-mode-toggle because that prompt's <system-reminder> opener matches the bfo site.",
+    "id": "system-reminder-subagent-handback-delivered-through",
+    "name": "System Reminder: SubagentHandback delivery channel"
+  },
+  "72374234646ade4b": {
+    "promptId": "system-reminder-brief-mode-toggle",
+    "label": "IS_BRIEF_MODE_ENABLED",
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": " is not available in this run",
+    "verdict": "catalogue",
+    "desc": "yln, the lead of the countermand reminder (system-reminder-subagent-handback-countermand) telling a subagent the hand-back tool is gone for this run.",
+    "id": "system-reminder-subagent-handback-unavailable",
+    "name": "System Reminder: SubagentHandback unavailable in this run"
+  },
+  "cee333773f09aebe": {
+    "promptId": "slash-command-effort-exceeds-org-cap",
+    "label": "SLASH_COMMAND_EFFORT_EXCEEDS_ORG_CAP_VAR_3",
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": " (saved as your default for new sessions)",
+    "verdict": "glue",
+    "desc": "Persistence label beside \" (this session only)\" in the /effort result; labels where the value was saved."
+  },
+  "ec5d7011b4d55562": {
+    "promptId": "tool-result-artifact-publish-source-path-mismatch",
+    "label": "TOOL_RESULT_ARTIFACT_PUBLISH_SOURCE_PATH_MISMATCH_VAR_1",
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": "after approval",
+    "verdict": "glue",
+    "desc": "Clause filler inside the catalogued path-mismatch result; the alternative arm interpolates the approved path."
+  },
+  "bd62216397bf0ccc": {
+    "promptId": "tool-result-artifact-publish-source-replacement-char",
+    "label": "TOOL_RESULT_ARTIFACT_PUBLISH_SOURCE_REPLACEMENT_CHAR_VAR_1",
+    "note": "REVIEW ME - replace with the verdict and its reason",
+    "text": "then preview again.",
+    "verdict": "catalogue",
+    "desc": "Preview arm of Ul(): closes the undecodable / replacement-char source results with the next step when previewing; its publish twin is tool-result-artifact-publish-then-publish-again.",
+    "id": "tool-result-artifact-preview-then-preview-again",
+    "name": "Tool Result: Artifact preview - then preview again"
   }
 }
