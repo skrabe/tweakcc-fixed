@@ -279,6 +279,7 @@ const PATCH_DEFINITIONS = [
       'Automatically update context window and maxTokens when model changes via /model command or programmatic selection (reads from CUSTOM_MODELS injected data)',
     modelFacing: true,
   },
+
   {
     id: 'patches-applied-indication',
     name: 'Patches applied indication',
@@ -603,6 +604,7 @@ const PATCH_DEFINITIONS = [
     modelFacing: true,
   },
 ] as const;
+
 
 /** Union type of all valid patch IDs */
 export type PatchId = (typeof PATCH_DEFINITIONS)[number]['id'];
