@@ -48,6 +48,7 @@ import { DEFAULT_SETTINGS } from '../defaultSettings';
 import { writeShowMoreItemsInSelectMenus } from './showMoreItemsInSelectMenus';
 import { writeThemes } from './themes';
 import { writeContextLimit } from './contextLimit';
+import { writeModelContextWindowSync } from './modelContextWindowSync';
 import { writeInputBoxBorder } from './inputBorderBox';
 import { writeThinkerFormat } from './thinkerFormat';
 import { writeThinkerSymbolMirrorOption } from './thinkerMirrorOption';
@@ -268,6 +269,14 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
       'Override the 200K context limit via CLAUDE_CODE_CONTEXT_LIMIT env var (set before launching CC)',
+  },
+  {
+    id: 'model-context-window-sync',
+    name: 'Model context window sync',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'Automatically update context window and compact buffer when model changes via /model command or programmatic selection',
+    modelFacing: true,
   },
   {
     id: 'patches-applied-indication',
@@ -981,6 +990,10 @@ export const applyCustomization = async (
     'context-limit': {
       fn: c => writeContextLimit(c),
       condition: !!config.settings.misc?.enableContextLimitOverride,
+    },
+    'model-context-window-sync': {
+      fn: c => writeModelContextWindowSync(c),
+      condition: config.settings.misc?.compactBufferPercent !== undefined,
     },
     opusplan1m: {
       fn: c => writeOpusplan1m(c),
