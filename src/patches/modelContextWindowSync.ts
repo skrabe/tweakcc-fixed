@@ -9,7 +9,7 @@
 // 1. The context window limit used for truncation decisions
 // 2. The auto-compact buffer percentage (default 90% of context window)
 
-import { CustomModel } from './modelSelector';
+import { CustomModel, CUSTOM_MODELS } from './modelSelector';
 import { debug } from '../utils';
 import { showDiff } from './index';
 
