@@ -40,6 +40,17 @@ describe('autonomousOperationAllModels (treat model as fable/mythos)', () => {
     expect(writeAutonomousOperationAllModels(out as string)).toBe(out);
   });
 
+  it('flips the 2.1.267 tri-state capability shape', () => {
+    const gate =
+      'function nae(e,n){let o=pm(e,"fable_5_mitigations",n);if(o!==void 0)return o;if(e==="claude-mythos-5")return!0;return!1}';
+    const src = `var A=1;${gate}var B=2;`;
+    const out = writeAutonomousOperationAllModels(src);
+    expect(out).toBe(
+      `var A=1;${gate.replace(/return!1\}$/, 'return!0}')}var B=2;`
+    );
+    expect(writeAutonomousOperationAllModels(out as string)).toBe(out);
+  });
+
   it('errors when the model ids are present but the gate shape changed', () => {
     const consoleError = vi
       .spyOn(console, 'error')

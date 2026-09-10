@@ -44,10 +44,20 @@ export const writeAutonomousOperationAllModels = (
   // further argument does not break this again.
   const pattern257 =
     /function\s+([$\w]+)\s*\(\s*([$\w]+)\s*(?:,\s*[$\w]+\s*)?\)\s*\{\s*if\s*\(\s*[$\w]+\s*\(\s*\2\s*,\s*"fable_5_mitigations"\s*(?:,\s*[$\w]+\s*)?\)\s*\|\|\s*\2\s*===\s*"claude-mythos-5"\s*\)\s*return\s*!0\s*;\s*return\s*!1\s*\}/;
+  // CC 2.1.267 shape: the capability lookup became tri-state (a new
+  // CLAUDE_CODE_MODEL_CAPABILITIES env can force a capability on or off), so a
+  // defined answer returns early and only an undefined one reaches the mythos
+  // arm and the fallback:
+  //   function nae(e,n){let o=pm(e,"fable_5_mitigations",n);if(o!==void 0)return o;if(e==="claude-mythos-5")return!0;return!1}
+  // Flipping the fallback still covers every model the capability does not
+  // name; an explicit `-fable_5_mitigations` in that env is left to win.
+  const pattern267 =
+    /function\s+([$\w]+)\s*\(\s*([$\w]+)\s*(?:,\s*[$\w]+\s*)?\)\s*\{\s*let\s+([$\w]+)\s*=\s*[$\w]+\s*\(\s*\2\s*,\s*"fable_5_mitigations"\s*(?:,\s*[$\w]+\s*)?\)\s*;\s*if\s*\(\s*\3\s*!==\s*void\s*0\s*\)\s*return\s*\3\s*;\s*if\s*\(\s*\2\s*===\s*"claude-mythos-5"\s*\)\s*return\s*!0\s*;\s*return\s*!1\s*\}/;
   const match =
     oldFile.match(pattern) ||
     oldFile.match(pattern195) ||
-    oldFile.match(pattern257);
+    oldFile.match(pattern257) ||
+    oldFile.match(pattern267);
 
   // CC 2.1.257 also reads this gate in refusal-fallback routing (`Men`/`VF`:
   // `!$f(n,"refusal_fallback",e)&&!Zfe(n)&&!xoe(n,e)&&…` is the early return

@@ -307,9 +307,11 @@ const patchModelPicker = (
 const patchEffortResolver = (file: string): string | null => {
   // Method 0 — CC >= 2.1.251: the resolver gained a third
   // `{honorLaunchPin:PIN=!0}={}` arg and the first binding is
-  // `PIN&&launchPin(model)` instead of a bare helper call.
+  // `PIN&&launchPin(model)` instead of a bare helper call. CC 2.1.267 added a
+  // `turnEffort:T` prop to that destructure and a fourth `l=U(e)!==null`
+  // binding, so both lists take any further entries.
   const pattern0 =
-    /(function ([$\w]+)\(([$\w]+),([$\w]+),\{honorLaunchPin:([$\w]+)=!0\}=\{\}\)\{)(if\(!([$\w]+)\(\3\)\)return;let [$\w]+=\5&&[$\w]+\(\3\),[$\w]+=[$\w]+\(\3\),[$\w]+=[$\w]+\(\);)/;
+    /(function ([$\w]+)\(([$\w]+),([$\w]+),\{honorLaunchPin:([$\w]+)=!0(?:,[$\w]+(?::[$\w]+)?(?:=[^,{}]+)?)*\}=\{\}\)\{)(if\(!([$\w]+)\(\3\)\)return;let [$\w]+=\5&&[$\w]+\(\3\),[$\w]+=[$\w]+\(\3\),[$\w]+=[$\w]+\(\)(?:,[$\w]+=[^,;]+)*;)/;
   const match0 = file.match(pattern0);
 
   const pattern1 =

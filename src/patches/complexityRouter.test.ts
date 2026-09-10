@@ -82,6 +82,18 @@ const YT_SHAPE =
 
 const FILE_YT = `var head=1;${GB_SHAPE}${VPT_SHAPE}${KM_SHAPE}${ZE_SHAPE}${COMPACT_SHAPE}${RESTORE_SHAPE}${YT_SHAPE}${HMM_SHAPE}var tail=2;`;
 
+// CC 2.1.267: the options arg gained a per-turn `turnEffort`, a fourth binding
+// records numeric-effort support, and TURN outranks the pin and the fallback.
+const CA_SHAPE =
+  'function CA(e,n,{honorLaunchPin:o=!0,turnEffort:r}={}){if(!$h(e))return;' +
+  'let f=o&&y1(e),d=D(e),s=G0(),l=U(e)!==null;' +
+  'if(s===null&&!f&&!l)return;let c=s??(s===null?d:void 0)??r??(f?d:void 0)??n??d;' +
+  'if(typeof c==="number"&&l)c=_1(c);return P(c,e)}' +
+  'function P(e,n){let o=e;if(typeof o==="string"&&xT(o))o=g1(o,n);' +
+  'if(o==="max"&&!m1(n))o="high";if(o==="xhigh"&&!$W(n))o="high";return o}';
+
+const FILE_CA = FILE_YT.replace(YT_SHAPE, CA_SHAPE);
+
 const cfg = (
   over: Partial<ComplexityRouterConfig> = {}
 ): ComplexityRouterConfig => ({
@@ -233,6 +245,21 @@ describe('writeComplexityRouter', () => {
     );
     expect(r).toContain(
       'await __tweakccRouterClassify(E,t,r.options.mainLoopModel);'
+    );
+  });
+
+  it('wraps the CC 2.1.267 resolver and yields to a per-turn effort', () => {
+    const out = writeComplexityRouter(FILE_CA, cfg());
+    expect(out).not.toBeNull();
+    const r = out as string;
+    expect(r).toContain('l=U(e)!==null;var __st=__tweakccRouterState();');
+    expect(r).toContain(
+      'if(__twkRE&&s==null&&r==null&&(n==null||n===__st.baseline))'
+    );
+    expect(r).toContain('if(__twkRE==="max"&&!m1(e))__twkRE="high";');
+    expect(r).toContain('if(__twkRE==="xhigh"&&!$W(e))__twkRE="high";');
+    expect(r).toContain(
+      'let c=s??(s===null?d:void 0)??r??(f?d:void 0)??n??d;if(typeof c==="number"&&l)c=_1(c);return P(c,e)}'
     );
   });
 

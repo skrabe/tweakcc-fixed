@@ -363,9 +363,29 @@ const wrapEffortResolver = (
   const patternLegacy =
     /(function [$\w]+\(([$\w]+),([$\w]+)\)\{if\(![$\w]+\(\2\)\)return;let [$\w]+=[$\w]+\(\2\),[$\w]+=[$\w]+\(\2\),([$\w]+)=[$\w]+\(\);)if\(\4===null\)return [$\w]+\?[$\w]+:void 0;let ([$\w]+)=\4\?\?\([$\w]+\?[$\w]+:void 0\)\?\?\3\?\?[$\w]+;if\(\5==="max"&&!([$\w]+)\(\2\)\)return"high";if\(\5==="xhigh"&&!([$\w]+)\(\2\)\)return"high";return \5\}/;
 
-  const splitMatch = file.match(patternHonorPin) || file.match(patternSplit);
+  //
+  // CC 2.1.267: the options arg gained a per-turn `turnEffort:TURN`, a fourth
+  // binding records whether the model takes a numeric effort, and TURN outranks
+  // both the launch pin and the persisted FALLBACK:
+  //   function NAME(MODEL,FALLBACK,{honorLaunchPin:PIN=!0,turnEffort:TURN}={}){if(!$h(MODEL))return;
+  //     let A=PIN&&y1(MODEL),B=D(MODEL),ENV=G0(),NUM=U(MODEL)!==null;
+  //     if(ENV===null&&!A&&!NUM)return;let S=ENV??(ENV===null?B:void 0)??TURN??(A?B:void 0)??FALLBACK??B;
+  //     if(typeof S==="number"&&NUM)S=_1(S);return NORM(S,MODEL)}
+  // A per-turn effort is an explicit pick for that turn, so the router yields
+  // to it the same way it yields to ENV. Captures: 1=prefix, 2=MODEL,
+  // 3=FALLBACK, 4=TURN, 5=ENV, 6=NORM.
+  const patternTurnEffort =
+    /(function [$\w]+\(([$\w]+),([$\w]+),\{honorLaunchPin:[$\w]+=!0,turnEffort:([$\w]+)\}=\{\}\)\{if\(![$\w]+\(\2\)\)return;let [$\w]+=[$\w]+&&[$\w]+\(\2\),[$\w]+=[$\w]+\(\2\),([$\w]+)=[$\w]+\(\),[$\w]+=[$\w]+\(\2\)!==null;)if\(\5===null&&![$\w]+&&![$\w]+\)return;let ([$\w]+)=\5\?\?\(\5===null\?[$\w]+:void 0\)\?\?\4\?\?\([$\w]+\?[$\w]+:void 0\)\?\?\3\?\?[$\w]+;if\(typeof \6==="number"&&[$\w]+\)\6=[$\w]+\(\6\);return ([$\w]+)\(\6,\2\)\}/;
+  const turnMatch = file.match(patternTurnEffort);
+
+  const splitMatch = turnMatch
+    ? null
+    : file.match(patternHonorPin) || file.match(patternSplit);
   const match =
-    splitMatch || file.match(patternNew) || file.match(patternLegacy);
+    turnMatch ||
+    splitMatch ||
+    file.match(patternNew) ||
+    file.match(patternLegacy);
   if (!match || match.index === undefined) {
     if (!file.includes('CLAUDE_CODE_EFFORT_LEVEL')) {
       debug(
@@ -382,13 +402,15 @@ const wrapEffortResolver = (
   const prefix = match[1];
   const model = match[2];
   const fallback = match[3];
-  const env = match[4];
+  const turn = turnMatch ? turnMatch[4] : null;
+  const env = turnMatch ? turnMatch[5] : match[4];
   let maxGuard = match[6];
   let xhighGuard = match[7];
 
-  // Split shape: the guards live in the normalizer the resolver tail-calls.
-  if (splitMatch) {
-    const norm = splitMatch[5].replace(/[$]/g, '\\$');
+  // Split shapes: the guards live in the normalizer the resolver tail-calls.
+  const normName = turnMatch ? turnMatch[7] : splitMatch?.[5];
+  if (normName) {
+    const norm = normName.replace(/[$]/g, '\\$');
     const normPattern = new RegExp(
       `function ${norm}\\(([$\\w]+),([$\\w]+)\\)\\{let ([$\\w]+)=\\1;` +
         `(?:if\\(typeof \\3==="string"&&[$\\w]+\\(\\3\\)\\)\\3=[$\\w]+\\(\\3,\\2\\);)?` +
@@ -416,7 +438,7 @@ const wrapEffortResolver = (
     `var __st=__tweakccRouterState();` +
     `if(__st.baseline===void 0)__st.baseline=(${fallback}==null?null:${fallback});` +
     `let __twkRE=__st.effort;` +
-    `if(__twkRE&&${env}==null&&(${fallback}==null||${fallback}===__st.baseline)){` +
+    `if(__twkRE&&${env}==null${turn ? `&&${turn}==null` : ''}&&(${fallback}==null||${fallback}===__st.baseline)){` +
     `if(__twkRE==="max"&&!${maxGuard}(${model}))__twkRE="high";` +
     `if(__twkRE==="xhigh"&&!${xhighGuard}(${model}))__twkRE="high";` +
     `return __twkRE}`;

@@ -178,6 +178,21 @@ describe('writeFablePlan', () => {
     expect(out).toContain('case"fableplan":return Nt(t);');
   });
 
+  it('applies against the CC 2.1.267 effort resolver with turnEffort', () => {
+    const resolver251 =
+      'function yT(e,o,{honorLaunchPin:t=!0}={}){if(!lg(e))return;let r=t&&LM(e),u=C(e),f=mH();return f}';
+    const resolver267 =
+      'function CA(e,n,{honorLaunchPin:o=!0,turnEffort:r}={}){if(!$h(e))return;let f=o&&y1(e),d=D(e),s=G0(),l=U(e)!==null;if(s===null&&!f&&!l)return;return s}';
+    const src = cli251.replace(resolver251, resolver267);
+    expect(src).toContain(resolver267);
+    const out = writeFablePlan(src, config());
+    expect(out).not.toBeNull();
+    expect(out).toContain(
+      'function CA(e,n,{honorLaunchPin:o=!0,turnEffort:r}={}){if(globalThis.__tweakccFablePlanEffort!==void 0)return globalThis.__tweakccFablePlanEffort;if(!$h(e))return;let f=o&&y1(e),d=D(e),s=G0(),l=U(e)!==null;'
+    );
+    expect(writeFablePlan(out!, config())).toBe(out);
+  });
+
   it('is idempotent on the CC 2.1.251 shape', () => {
     const once = writeFablePlan(cli251, config())!;
     const twice = writeFablePlan(once, config())!;
