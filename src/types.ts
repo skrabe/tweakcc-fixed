@@ -256,13 +256,6 @@ export interface Settings {
   inputPatternHighlighters: InputPatternHighlighter[];
   inputPatternHighlightersTestText: string; // Global test text for previewing highlighters
   claudeMdAltNames: string[] | null;
-  /**
-   * Per-model context window overrides. Maps model IDs (or aliases like "opus",
-   * "sonnet") to their desired context window in tokens. When set, the
-   * context-limit patch uses these values instead of a single global override.
-   * Example: { "claude-opus-4": 200000, "claude-haiku-3": 8192 }
-   */
-  modelContextWindows?: Record<string, number>;
 }
 
 export interface RemoteConfig {
