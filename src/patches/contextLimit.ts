@@ -1,47 +1,8 @@
 // Please see the note about writing patches in ./index
 
-/**
- * Per-model context window overrides. Maps model IDs or aliases to their
- * desired context window size in tokens. When a model-specific override exists,
- * it takes precedence over the global CLAUDE_CODE_CONTEXT_LIMIT env var.
- */
-export interface ModelContextWindowOverrides {
-  [modelId: string]: number;
-}
-
-/**
- * Resolves which context limit to use based on per-model overrides and env vars.
- * Priority order (highest first):
- * 1. Per-model override from config (if active model is known)
- * 2. CLAUDE_CODE_CONTEXT_LIMIT environment variable
- * 3. Default fallback (200000)
- */
-export const resolveContextLimit = (
-  overrides: ModelContextWindowOverrides | undefined,
-  activeModel: string | null,
-  envOverride?: string
-): number => {
-  // Check for per-model override first
-  if (overrides && activeModel && overrides[activeModel]) {
-    return overrides[activeModel];
-  }
-
-  // Fall back to environment variable
-  if (envOverride) {
-    const parsed = parseInt(envOverride, 10);
-    if (!isNaN(parsed)) {
-      return parsed;
-    }
-  }
-
-  // Default fallback
-  return 200000;
-};
-
 // The override expression injected into Claude Code's JS. It reads from the
 // env var CLAUDE_CODE_CONTEXT_LIMIT (set by the user or by a wrapper script) and
-// falls back to 200000 if unset. When per-model overrides are configured, the
-// caller should set this env var to the desired limit for the active model.
+// falls back to 200000 if unset.
 const OVERRIDE = '(+process.env.CLAUDE_CODE_CONTEXT_LIMIT||200000)';
 
 export const writeContextLimit = (oldFile: string): string | null => {
