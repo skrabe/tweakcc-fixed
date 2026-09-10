@@ -23,7 +23,9 @@ const outDir = outDirArg || '/tmp';
 const code = fs.readFileSync(cliPath, 'utf8');
 
 const bodyOf = p =>
-  (p.pieces || []).filter(x => typeof x === 'string').join('') || p.content || '';
+  (p.pieces || []).filter(x => typeof x === 'string').join('') ||
+  p.content ||
+  '';
 
 const readPrompts = f => {
   try {
@@ -47,7 +49,11 @@ if (piebaldPath && fs.existsSync(piebaldPath)) {
     if (!p.id) continue;
     const b = bodyOf(p);
     if (b && !piebaldByBody.has(b))
-      piebaldByBody.set(b, { id: p.id, name: p.name || '', desc: p.description || '' });
+      piebaldByBody.set(b, {
+        id: p.id,
+        name: p.name || '',
+        desc: p.description || '',
+      });
   }
 }
 
@@ -57,9 +63,16 @@ if (piebaldPath && fs.existsSync(piebaldPath)) {
 // makes the raw form unfindable. Try every encoding rather than assuming a
 // delimiter.
 const escapeCtl = s =>
-  s.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/\t/g, '\\t').replace(/\r/g, '\\r');
+  s
+    .replace(/\\/g, '\\\\')
+    .replace(/\n/g, '\\n')
+    .replace(/\t/g, '\\t')
+    .replace(/\r/g, '\\r');
 const escapeUnicode = s =>
-  s.replace(/[^\x20-\x7e]/g, c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'));
+  s.replace(
+    /[^\x20-\x7e]/g,
+    c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0')
+  );
 
 const encodings = [
   ['raw', s => s],
@@ -84,7 +97,9 @@ const literalRuns = body => {
       if (t.length >= 24) asciiSegments.push(t);
     }
   }
-  return [...new Set([...runs, ...asciiSegments])].sort((a, b) => b.length - a.length);
+  return [...new Set([...runs, ...asciiSegments])].sort(
+    (a, b) => b.length - a.length
+  );
 };
 
 function locate(body) {
@@ -176,13 +191,23 @@ for (const cf of chunkFiles) {
       const old = prevById.get(c.reusedFrom.id);
       if (old) packet.reusedFromOldBody = old;
     }
+    if (c.possibleSuccessorOf) {
+      packet.possibleSuccessorOf = c.possibleSuccessorOf;
+      const old = prevById.get(c.possibleSuccessorOf.id);
+      if (old) packet.possibleSuccessorOldBody = old;
+    }
     return packet;
   });
-  const of = path.join(outDir, cf.replace('classify-chunk-', 'classify-evidence-'));
+  const of = path.join(
+    outDir,
+    cf.replace('classify-chunk-', 'classify-evidence-')
+  );
   fs.writeFileSync(of, JSON.stringify(packets, null, 1));
   written.push(of);
 }
 
-console.log(`evidence packets: ${written.length} file(s), ${total} candidate(s)`);
+console.log(
+  `evidence packets: ${written.length} file(s), ${total} candidate(s)`
+);
 console.log(`emission site located: ${located}/${total}`);
 for (const w of written) console.log(`  ${w}`);
