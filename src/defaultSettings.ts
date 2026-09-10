@@ -750,7 +750,6 @@ export const DEFAULT_SETTINGS: Settings = {
     autoModeClassifierModel: 'default',
     suppressDeferredTools: false,
     claudemdContextOncePerConversation: false,
-    compactBufferPercent: 90, // Default to 90% of context window for auto-compact
   },
   toolsets: [],
   defaultToolset: null,

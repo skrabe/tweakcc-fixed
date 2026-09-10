@@ -152,12 +152,6 @@ export interface MiscConfig {
   autoModeClassifierModel: AutoModeClassifierModel;
   suppressDeferredTools: boolean;
   claudemdContextOncePerConversation: boolean;
-  /**
-   * Compact buffer percentage (0-100) used for auto-compaction calculations.
-   * When enabled, the compact buffer is calculated as this percentage of the
-   * current model's context window size. Default: 90%.
-   */
-  compactBufferPercent?: number;
 }
 
 export interface InputPatternHighlighter {
