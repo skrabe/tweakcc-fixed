@@ -122,6 +122,7 @@ import {
 import { compareVersions } from '../systemPromptSync';
 
 export { showDiff, showPositionalDiff, globalReplace } from './patchDiffing';
+export { writeModelContextWindowSync } from './modelContextWindowSync'; // Explicit export to prevent tree-shaking
 export {
   findChalkVar,
   findChalkVarInModule,
@@ -1440,3 +1441,7 @@ export const applyCustomization = async (
     results: allResults,
   };
 };
+
+// Side-effect import to ensure writeModelContextWindowSync is included in the bundle
+// and not tree-shaken out by tsdown (it's only referenced inside patchImplementations object)
+import './modelContextWindowSync';

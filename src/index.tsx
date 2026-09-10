@@ -22,7 +22,11 @@ import {
   PatchGroup,
   getAllPatchDefinitions,
   TWEAKCC_VERSION,
+  writeModelContextWindowSync, // Import to prevent tree-shaking of model context window sync patch
 } from './patches/index';
+
+// Ensure writeModelContextWindowSync is referenced (prevents tree-shaking)
+if (false) { void writeModelContextWindowSync; }
 import {
   preloadStringsFile,
   getSystemPromptDefinitions,

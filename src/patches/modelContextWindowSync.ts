@@ -6,7 +6,7 @@
 // updates internal state variables (exceeds200kTokens, etc.) based on the
 // selected model's actual capabilities.
 
-import { CustomModel } from './modelSelector';
+import { CUSTOM_MODELS } from './modelSelector';
 import { debug } from '../utils';
 import { showDiff } from './index';
 
@@ -15,7 +15,9 @@ import { showDiff } from './index';
  */
 const injectCustomModelsData = (file: string): string | null => {
   // Find a safe injection point - typically near other globalThis assignments
-  const pattern = /globalThis\.[$\w]+=/;
+  // Match both dot notation (globalThis.foo=) and bracket notation (globalThis[expr]=)
+  // Allow optional whitespace around the assignment operator
+  const pattern = /globalThis(?:\.[$\w]+|\[[^\]]+\])\s*=/;
   const match = file.match(pattern);
 
   if (!match || match.index === undefined) {
@@ -29,7 +31,7 @@ const injectCustomModelsData = (file: string): string | null => {
   const newFile = file.slice(0, match.index) + injectCode + file.slice(match.index);
   showDiff(file, newFile, injectCode, match.index, match.index);
 
-  return newFile;
+  return newFile || null;
 };
 
 /**
@@ -41,27 +43,14 @@ const patchModelResolver = (file: string): string | null => {
   const patternMethod1 = /(function ([$\w]+)\(([$\w]+)\)\{let\{permissionMode:([$\w]+),mainLoopModel:([$\w]+),exceeds200kTokens:([$\w]+)=!1\}=\3;)(if\(\4!=="plan"\)return \5;let [$\w]+=([$\w]+)\(\),)/;
   const patternMethod2 = /(function ([$\w]+)\(([$\w]+)\)\{let\{permissionMode:([$\w]+),mainLoopModel:([$\w]+),exceeds200kTokens:([$\w]+)=!1\}=\3,([$\w]+)=([$\w]+)\(\);)/;
 
-  let match = file.match(patternMethod1);
-  if (!match) {
-    match = file.match(patternMethod2);
-  }
+  let match = file.match(patternMethod1) || file.match(patternMethod2);
 
-  if (!match || match.index === undefined) {
+  if (!match || !match.index) {
     debug('patch: modelContextWindowSync: failed to find model resolver function (uM pattern)');
     return null;
   }
 
   const prefix = match[1];
-
-  // Determine which method matched and extract the selected model variable correctly
-  let selectedModelVar: string;
-  if (match === file.match(patternMethod1)) {
-    // Pattern method 1 has capture group [8] for function call
-    selectedModelVar = `${match[8]}()`;
-  } else {
-    // Pattern method 2 has capture group [7] for the model value
-    selectedModelVar = match[7];
-  }
 
   // Build injection that looks up context window and maxTokens from CUSTOM_MODELS
   const injectionCode = `
@@ -73,21 +62,15 @@ function __tweakccGetMaxTokens(m){var a=__tweakccCustomModelsData.find(function(
 `;
 
   const insertionPoint = match.index + prefix.length;
-  const newFile = file.slice(0, insertionPoint) + injectionCode + file.slice(insertionPoint);
-
-  showDiff(file, newFile, injectionCode.trim(), insertionPoint, insertionPoint);
-
-  return newFile;
+  return file.slice(0, insertionPoint) + injectionCode + file.slice(insertionPoint);
 };
 
 /**
  * Main entry point: Apply all model context window sync patches.
  */
 export const writeModelContextWindowSync = (oldFile: string): string | null => {
-  let currentFile = oldFile;
-
   // Step 1: Inject CUSTOM_MODELS data into globalThis
-  currentFile = injectCustomModelsData(currentFile);
+  let currentFile = injectCustomModelsData(oldFile);
   if (!currentFile) return null;
 
   // Step 2: Hook into model resolver function (uM pattern from fablePlan.ts)
