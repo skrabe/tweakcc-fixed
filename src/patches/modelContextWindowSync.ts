@@ -37,47 +37,15 @@ const injectCustomModelsData = (file: string): string | null => {
 
 /**
  * Hook into the model selection logic to update context window and compact buffer.
- *
- * We look for patterns where:
- * - options.mainLoopModel is set/updated
- * - Or where exceeds200kTokens would be calculated based on selected model
  */
 const patchModelSelectionHook = (file: string): string | null => {
-  // Pattern: Look for where mainLoopModel gets assigned from user selection
-  // This typically happens in the /model command handler or programmatic switch
+  // Method 1: Look for where mainLoopModel gets assigned from user selection
+  const patternMethod1 = /options\.mainLoopModel\s*=\s*[$\w]+/;
 
-  // Method 1: Hook into the function that processes model changes
-  const patternMethod1 = /function\s+[$\w]+\(\s*\{permissionMode:[$\w]+,\s*mainLoopModel:[$\w]+,\s*exceeds200kTokens:[$\w]+=!1\}/;
+  let match: RegExpMatchArray | null = file.match(patternMethod1);
 
-  // Method 2: Hook into the model resolver function (like uM in fablePlan)
-  const patternMethod2 = /let\s+[$\w]+\([$\w]+\)\{[\s\S]{0,500}exceeds200kTokens:[$\w]+/;
-
-  // Method 3: Look for where options.mainLoopModel is set from user input
-  const patternMethod3 = /options\.mainLoopModel\s*=\s*[$\w]+/;
-
-  let match: RegExpMatchArray | null = null;
-  let anchorPattern: string | null = null;
-
-  // Try each method in order of specificity
-  if ((match = file.match(patternMethod1))) {
-    anchorPattern = patternMethod1.source;
-  } else if ((match = file.match(patternMethod2))) {
-    anchorPattern = patternMethod2.source;
-  } else if ((match = file.match(patternMethod3))) {
-    anchorPattern = patternMethod3.source;
-  }
-
-  if (!anchorPattern) {
-    console.error('patch: modelContextWindowSync: failed to find model selection hook point');
-    return null;
-  }
-
-  // Find the actual match and get surrounding context
-  const regex = new RegExp(anchorPattern);
-  const fullMatch = file.match(regex);
-
-  if (!fullMatch || fullMatch.index === undefined) {
-    console.error('patch: modelContextWindowSync: failed to locate anchor in file');
+  if (!match || match.index === undefined) {
+    console.error('patch: modelContextWindowSync: failed to find mainLoopModel assignment');
     return null;
   }
 
@@ -127,7 +95,7 @@ const patchModelSelectionHook = (file: string): string | null => {
 // END __tweakcc model context sync
 `;
 
-  const insertionPoint = fullMatch.index + fullMatch[0].length;
+  const insertionPoint = match.index + match[0].length;
   const newFile = file.slice(0, insertionPoint) + hookCode + file.slice(insertionPoint);
 
   showDiff(file, newFile, hookCode.trim(), insertionPoint, insertionPoint);
@@ -142,12 +110,14 @@ export const writeModelContextWindowSync = (oldFile: string): string | null => {
   let currentFile = oldFile;
 
   // Step 1: Inject CUSTOM_MODELS data into globalThis
-  currentFile = injectCustomModelsData(currentFile);
-  if (!currentFile) return null;
+  const injectedData = injectCustomModelsData(currentFile);
+  if (!injectedData) return null;
+  currentFile = injectedData;
 
   // Step 2: Hook into model selection logic
-  currentFile = patchModelSelectionHook(currentFile);
-  if (!currentFile) return null;
+  const patchedHook = patchModelSelectionHook(currentFile);
+  if (!patchedHook) return null;
+  currentFile = patchedHook;
 
   return currentFile;
 };
