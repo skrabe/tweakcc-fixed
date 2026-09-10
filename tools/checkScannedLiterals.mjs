@@ -77,7 +77,11 @@ const quoted = (lit, q) =>
 // "the const holding this prompt" just because some `o=` happened to precede it.
 const assignedOnce = (src, name) => {
   let count = 0;
-  for (let i = src.indexOf(name + '='); i !== -1; i = src.indexOf(name + '=', i + 1)) {
+  for (
+    let i = src.indexOf(name + '=');
+    i !== -1;
+    i = src.indexOf(name + '=', i + 1)
+  ) {
     const before = src[i - 1];
     const after = src[i + name.length + 1];
     if (before && /[\w$]/.test(before)) continue;
@@ -104,7 +108,10 @@ export const matchEvidence = (src, lit) => {
     for (let n = 0; i !== -1 && n < 20; n++, i = src.indexOf(needle, i + 1)) {
       const pre = src.slice(Math.max(0, i - 40), i).trimEnd();
       if (!pre.endsWith('=')) continue;
-      const m = pre.slice(0, -1).trimEnd().match(/[$\w]+$/);
+      const m = pre
+        .slice(0, -1)
+        .trimEnd()
+        .match(/[$\w]+$/);
       if (m && m[0].length <= 12) names.add(m[0]);
     }
     for (const name of names) {
@@ -154,6 +161,29 @@ const jsString = (src, i) => {
 };
 
 // Every `[[ "needle", "replacement" ], ...]` table passed as a call argument.
+// A needle missing from an override is only a broken rewrite when the sentence
+// it sat in is still there, reworded: that reworded text reaches the other
+// surface un-restated. When the whole sentence was deleted there is nothing
+// left to restate, and the rewrite's no-op is harmless. The sentence is taken
+// from pristine; either remainder of it (before or after the needle) still
+// present in the override means the sentence survived.
+export const sentenceSurvives = (pristine, needle, override) => {
+  const at = pristine.indexOf(needle);
+  if (at < 0) return true;
+  const before = pristine.slice(0, at);
+  const after = pristine.slice(at + needle.length);
+  const start =
+    Math.max(before.lastIndexOf('. '), before.lastIndexOf('\n')) + 1;
+  const endRel = after.search(/\.(\s|$)|\n/);
+  const head = before.slice(start).trim();
+  const tail = (endRel < 0 ? after : after.slice(0, endRel)).trim();
+  const flat = s => s.replace(/\s+/g, ' ');
+  const ov = flat(override);
+  return [head, tail].some(
+    part => part.length >= 12 && ov.includes(flat(part))
+  );
+};
+
 export const rewriteTableNeedles = src => {
   const needles = new Set();
   const re = /\b[$\w]+\(\s*(?:[$\w]+\.)?[$\w]+\s*,\s*\[\[/g;
@@ -257,13 +287,12 @@ const main = () => {
   // Rewrite-table needles: the override must still CONTAIN the needle, because
   // the binary matches it against the override's own text (see rewriteTableNeedles).
   const brokenRewrites = [];
+  const sentenceDeleted = [];
   const needles = rewriteTableNeedles(src);
   for (const needle of needles) {
     for (const p of prompts) {
       if (!p.id) continue;
-      const body = (p.pieces || [])
-        .filter(x => typeof x === 'string')
-        .join('');
+      const body = (p.pieces || []).filter(x => typeof x === 'string').join('');
       if (!body.includes(needle)) continue;
       for (const set of sets) {
         const file = path.join(set, `${p.id}.md`);
@@ -271,9 +300,19 @@ const main = () => {
         const ov = bodyOf(fs.readFileSync(file, 'utf8'));
         if (!ov.trim()) continue; // a deliberate suppression emits nothing at all
         if (ov.includes(needle)) continue;
+        if (!sentenceSurvives(body, needle, ov)) {
+          sentenceDeleted.push({ id: p.id, set: path.basename(set), needle });
+          continue;
+        }
         brokenRewrites.push({ id: p.id, set: path.basename(set), needle });
       }
     }
+  }
+  for (const r of sentenceDeleted) {
+    console.log(
+      `note: ${r.set}/${r.id} deleted the whole sentence carrying rewrite needle ` +
+        `${JSON.stringify(r.needle.slice(0, 60))} — nothing is left to restate`
+    );
   }
   for (const r of brokenRewrites) {
     console.error(

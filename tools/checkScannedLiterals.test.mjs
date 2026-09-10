@@ -4,7 +4,12 @@
 // CC 2.1.226 minified shapes.
 
 import { describe, it, expect } from 'vitest';
-import { literalOf, bodyOf, matchEvidence } from './checkScannedLiterals.mjs';
+import {
+  literalOf,
+  bodyOf,
+  matchEvidence,
+  sentenceSurvives,
+} from './checkScannedLiterals.mjs';
 
 // The `/loop` classifier, verbatim from the 2.1.226 bundle.
 const LOOP_SITE =
@@ -20,15 +25,15 @@ const DESCRIPTOR_SITE =
 
 describe('checkScannedLiterals: needle detection', () => {
   it('flags a literal passed inline to .includes()', () => {
-    expect(matchEvidence(LOOP_SITE, '<command-name>/loop</command-name>')).toEqual(
-      ['inline .includes()']
-    );
+    expect(
+      matchEvidence(LOOP_SITE, '<command-name>/loop</command-name>')
+    ).toEqual(['inline .includes()']);
   });
 
   it('follows a single-assignment const to its matcher', () => {
-    expect(matchEvidence(DESCRIPTOR_SITE, '"content":"<command-name>/')).toEqual(
-      ['zUp -> .includes()']
-    );
+    expect(
+      matchEvidence(DESCRIPTOR_SITE, '"content":"<command-name>/')
+    ).toEqual(['zUp -> .includes()']);
   });
 
   it('ignores a literal that is only emitted', () => {
@@ -64,7 +69,9 @@ describe('checkScannedLiterals: prompt reconstruction', () => {
   });
 
   it('skips a prompt carrying a runtime slot, which is never a needle', () => {
-    expect(literalOf({ pieces: ['<local-command-stdout>', {}, '</a>'] })).toBeNull();
+    expect(
+      literalOf({ pieces: ['<local-command-stdout>', {}, '</a>'] })
+    ).toBeNull();
   });
 
   it('treats a whitespace-only prompt as absent', () => {
@@ -77,5 +84,33 @@ describe('checkScannedLiterals: prompt reconstruction', () => {
     expect(bodyOf(`${wiped}<command-name>/loop</command-name>\n`)).toBe(
       '<command-name>/loop</command-name>'
     );
+  });
+});
+
+// CC 2.1.267 rewrites the Artifact `writes` parameter for the action surface
+// with [["separate write_db calls","separate calls"]]. Deleting the whole
+// sentence leaves nothing to restate; rewording it keeps text the rewrite now
+// misses.
+describe('sentenceSurvives (rewrite-table needles)', () => {
+  const pristine =
+    'Each document is addressed at most once. Prefer it over separate write_db calls whenever you write more than a couple of documents.';
+  const needle = 'separate write_db calls';
+  it('treats a whole-sentence delete as nothing left to restate', () => {
+    expect(
+      sentenceSurvives(
+        pristine,
+        needle,
+        'Each document is addressed at most once.'
+      )
+    ).toBe(false);
+  });
+  it('flags a reworded sentence that dropped only the needle', () => {
+    expect(
+      sentenceSurvives(
+        pristine,
+        needle,
+        'Each document is addressed at most once. Prefer it over individual writes whenever you write more than a couple of documents.'
+      )
+    ).toBe(true);
   });
 });
