@@ -810,6 +810,7 @@ export const DEFAULT_SETTINGS: Settings = {
     'WARP.md',
     'copilot-instructions.md',
   ],
+  modelContextWindows: {}, // Per-model context window overrides; empty by default
 };
 
 /**
