@@ -762,9 +762,7 @@ export const DEFAULT_SETTINGS: Settings = {
   fablePlan: {
     enabled: false,
     planModel: 'fable',
-    planEffort: 'xhigh',
     execModel: 'opus',
-    execEffort: 'medium',
     offerClearContextOnPlanAccept: true,
   },
   complexityRouter: {

@@ -27,25 +27,20 @@
 //   3. the builtin-default switch
 //   4. the alias -> concrete model switch
 //   5. the `/model` picker options
-//   6. the effort resolver
+//   6. the per-model effort lookup
 //
-// Effort is decided in `uM` — the one function that is handed the permission
-// mode — and read back in the effort resolver through a global.
+// Effort is Claude Code's own: each model keeps its level in
+// `settings.modelSettings.<model>.effortLevel` (what `/model` writes when you
+// adjust effort on a model), falling back to that model's built-in default. CC
+// looks that table up by the SESSION model, and a fableplan session resolves to
+// the exec model, so without help a Fable plan turn would run at Opus's level.
+// `uM` knows which model answers this request, records it in a global, and the
+// table lookup reads it — so each side of the pairing gets the level you set
+// for that model. An explicit `/effort` for the session still applies to both.
 //
-// It used to key on the resolved model instead ("the alias already encodes the
-// mode, so the model the effort resolver is handed says which side we are on").
-// That was WRONG, and shipped: every call site of the effort resolver passes
-// `options.mainLoopModel`, the SESSION model, never the per-request plan-resolved
-// one — `k3(m.options.mainLoopModel,…)` x6, `yW(…options.mainLoopModel,…)` x6,
-// and the spinner's `Qbt(h??fs(),…)`. So while planning it was handed the RESTING
-// model (Opus), the substring test missed, and Claude Code reported "thinking
-// with medium effort" during a Fable plan turn. Deriving both halves from the
-// same decision is the only way they cannot disagree.
-//
-// Still composes with the complexity router, which splices the same function at
-// a different point (right after its `=ENV();` prefix): this rides the top of
-// the body, so when fableplan is selected it answers first and the router keeps
-// every other model.
+// Earlier versions pinned their own plan/exec levels from tweakcc's config and
+// answered before Claude Code's resolver; that shadowed `/effort` and the
+// per-model table entirely, and was retired once CC grew per-model levels.
 
 // Scope note, because it nearly went the other way. The splices call helpers
 // declared far from where they are injected — the effort resolver reaches for
@@ -65,10 +60,11 @@ import { showDiff } from './index';
 
 const ALIAS = 'fableplan';
 
-// Written by the model resolver, read by the effort resolver. `__tweakcc` is the
-// repo's patched-binary marker prefix, so a binary carrying it is correctly
-// detected as patched.
-const EFFORT_GLOBAL = 'globalThis.__tweakccFablePlanEffort';
+// Written by the model resolver, read by the per-model effort lookup. `__tweakcc`
+// is the repo's patched-binary marker prefix, so a binary carrying it is
+// correctly detected as patched. A global rather than a call because the two
+// sites live in different bundle modules.
+const MODEL_GLOBAL = 'globalThis.__tweakccFablePlanModel';
 
 /**
  * Splice 1 — the alias whitelist.
@@ -156,14 +152,13 @@ const patchPlanResolver = (
   const selected = tableShape ? `${match[8]}()` : match[7];
   const tail = tableShape ? match[7] : '';
   const resolvedModel = `${aliasToModel}(${mode}==="plan"?"${config.planModel}":"${config.execModel}")`;
-  // Both halves of the pairing come out of ONE branch. The global is cleared on
-  // the way past for every other alias, so switching away from fableplan cannot
-  // leave a stale effort pinned for the rest of the session.
+  // The model and the effort lookup key come out of ONE branch. The global is
+  // cleared on the way past for every other alias, so switching away from
+  // fableplan cannot leave a stale model steering the effort table.
   const injection =
-    `if(${selected}==="${ALIAS}"){${EFFORT_GLOBAL}=` +
-    `${mode}==="plan"?"${config.planEffort}":"${config.execEffort}";` +
-    `${matchObj ? `return{model:${resolvedModel},clampWarning:null}` : `return ${resolvedModel}`}}` +
-    `${EFFORT_GLOBAL}=void 0;`;
+    `if(${selected}==="${ALIAS}"){${MODEL_GLOBAL}=${resolvedModel};` +
+    `${matchObj ? `return{model:${MODEL_GLOBAL},clampWarning:null}` : `return ${MODEL_GLOBAL}`}}` +
+    `${MODEL_GLOBAL}=void 0;`;
   const replacement = prefix + injection + tail;
   const newFile =
     file.slice(0, match.index) +
@@ -310,41 +305,40 @@ const patchModelPicker = (
 };
 
 /**
- * Splice 6 — reasoning effort, read back from the model resolver's decision.
+ * Splice 6 — per-model effort, keyed on the model that answers this request.
  *
- * The effort resolver is never handed the per-request model — every call site
- * passes `options.mainLoopModel` — so it cannot work out which side of the
- * pairing a turn is on by itself. `uM` can, because it receives the permission
- * mode, so it records the answer and this reads it.
+ * `case"inherit":if(e.settingsEffortTable===void 0)return;
+ *   if(!ee(e.settingsEffortTable))return e.settingsEffortTable.default;
+ *   return Z(e.settingsEffortTable,n??e.mainLoopModelForSession??…)`
  *
- * Rides the top of the resolver body, a different anchor from the complexity
- * router's (`=ENV();`), so the two compose: this answers only while fableplan is
- * the selected alias, and the router keeps every other model.
+ * `n` is the session model, which for fableplan resolves to the exec model.
+ * Prefer the model `uM` recorded for this request, so a plan turn reads the
+ * planning model's own entry. Nothing else in the resolver changes: env
+ * overrides, an explicit session `/effort`, per-turn effort and the per-model
+ * caps and defaults all still apply, and every other alias passes through
+ * because the global is only set while fableplan is selected.
  */
-const patchEffortResolver = (file: string): string | null => {
-  // Method 0 — CC >= 2.1.251: the resolver gained a third
-  // `{honorLaunchPin:PIN=!0}={}` arg and the first binding is
-  // `PIN&&launchPin(model)` instead of a bare helper call. CC 2.1.267 added a
-  // `turnEffort:T` prop to that destructure and a fourth `l=U(e)!==null`
-  // binding, so both lists take any further entries.
-  const pattern0 =
-    /(function ([$\w]+)\(([$\w]+),([$\w]+),\{honorLaunchPin:([$\w]+)=!0(?:,[$\w]+(?::[$\w]+)?(?:=[^,{}]+)?)*\}=\{\}\)\{)(if\(!([$\w]+)\(\3\)\)return;let [$\w]+=\5&&[$\w]+\(\3\),[$\w]+=[$\w]+\(\3\),[$\w]+=[$\w]+\(\)(?:,[$\w]+=[^,;]+)*;)/;
-  const match0 = file.match(pattern0);
-
-  const pattern1 =
-    /(function ([$\w]+)\(([$\w]+),([$\w]+)\)\{)(if\(!([$\w]+)\(\3\)\)return;let [$\w]+=[$\w]+\(\3\),[$\w]+=[$\w]+\(\3\),[$\w]+=[$\w]+\(\);)/;
-  const match = match0 ?? file.match(pattern1);
+const patchEffortLookup = (file: string): string | null => {
+  if (file.includes(`settingsEffortTable,${MODEL_GLOBAL}??`)) {
+    debug('patch: fablePlan: effort lookup already keyed — skipping');
+    return file;
+  }
+  const pattern =
+    /(case"inherit":if\(([$\w]+)\.settingsEffortTable===void 0\)return;if\(![$\w]+\(\2\.settingsEffortTable\)\)return \2\.settingsEffortTable\.default;return [$\w]+\(\2\.settingsEffortTable,)/;
+  const match = file.match(pattern);
   if (!match || match.index === undefined) {
-    if (!file.includes('CLAUDE_CODE_EFFORT_LEVEL')) {
-      debug('patch: fablePlan: effort resolver absent in this build — no-op');
+    if (!file.includes('settingsEffortTable')) {
+      debug(
+        'patch: fablePlan: no per-model effort table in this build — effort follows the session'
+      );
       return file;
     }
-    console.error('patch: fablePlan: failed to find the effort resolver');
+    console.error(
+      'patch: fablePlan: failed to find the per-model effort lookup'
+    );
     return null;
   }
-  const injection = `if(${EFFORT_GLOBAL}!==void 0)return ${EFFORT_GLOBAL};`;
-  const rest = match0 ? match[6] : match[5];
-  const replacement = match[1] + injection + rest;
+  const replacement = `${match[1]}${MODEL_GLOBAL}??`;
   const newFile =
     file.slice(0, match.index) +
     replacement +
@@ -444,7 +438,7 @@ export const writeFablePlan = (
   if (!picked) return null;
   file = picked;
 
-  const efforted = patchEffortResolver(file);
+  const efforted = patchEffortLookup(file);
   if (!efforted) return null;
   file = efforted;
 

@@ -49,6 +49,13 @@ const cli251 = [
   'let Fe=W((Qt)=>Qt.settings.showClearContextOnPlanAccept)??!1,Ve=2;',
 ].join('');
 
+// CC >= 2.1.265: the session-effort resolver reads the per-model table keyed on
+// the session model.
+const EFFORT_LOOKUP =
+  'function ul(e,n){let o=e.sessionEffort??Y;switch(o.kind){case"level":return o.value;case"default":return;' +
+  'case"inherit":if(e.settingsEffortTable===void 0)return;if(!ee(e.settingsEffortTable))return e.settingsEffortTable.default;' +
+  'return Z(e.settingsEffortTable,n??e.mainLoopModelForSession??e.mainLoopModel??dl())}}';
+
 describe('writeFablePlan', () => {
   beforeEach(() => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -65,10 +72,12 @@ describe('writeFablePlan', () => {
   it('resolves the plan model only for its own alias', () => {
     const out = writeFablePlan(cli, config())!;
     expect(out).toContain('o==="fableplan"');
-    expect(out).toContain('as(t==="plan"?"fable":"opus")');
-    // and clears the effort global on the way past every other alias, so
-    // switching away cannot leave a stale effort pinned for the session
-    expect(out).toContain('globalThis.__tweakccFablePlanEffort=void 0;');
+    expect(out).toContain(
+      'globalThis.__tweakccFablePlanModel=as(t==="plan"?"fable":"opus");'
+    );
+    // and clears the model global on the way past every other alias, so
+    // switching away cannot leave a stale model steering the effort table
+    expect(out).toContain('globalThis.__tweakccFablePlanModel=void 0;');
     // CC's own branches survive untouched — this must not change any other model
     expect(out).toContain(
       'if((o==="opusplan"||o==="opusplan[1m]")&&t==="plan"&&!n)'
@@ -83,21 +92,28 @@ describe('writeFablePlan', () => {
     expect(out).toContain('case"fableplan":return zZe(t);');
   });
 
-  it('decides effort where the permission mode is known, not from the model', () => {
-    // Regression: effort used to key on the model string handed to the effort
-    // resolver. Every call site passes `options.mainLoopModel` — the SESSION
-    // model — so during a Fable plan turn it saw the RESTING model (Opus), the
-    // substring test missed, and CC displayed "thinking with medium effort".
-    // `uM` is the only function handed the permission mode, so it decides both.
-    const out = writeFablePlan(cli, config())!;
+  it('keys the per-model effort lookup on the answering model', () => {
+    // The table is looked up by the SESSION model, which for fableplan resolves
+    // to the exec model, so a plan turn would read Opus's level. The lookup must
+    // prefer the model uM recorded for this request.
+    const out = writeFablePlan(cli + EFFORT_LOOKUP, config())!;
     expect(out).toContain(
-      'globalThis.__tweakccFablePlanEffort=t==="plan"?"xhigh":"medium";'
+      'return Z(e.settingsEffortTable,globalThis.__tweakccFablePlanModel??n??e.mainLoopModelForSession??'
     );
+    // tweakcc no longer pins its own levels or shadows the effort resolver
+    expect(out).not.toContain('__tweakccFablePlanEffort');
     expect(out).toContain(
-      'if(globalThis.__tweakccFablePlanEffort!==void 0)return globalThis.__tweakccFablePlanEffort;'
+      'function xte(e,t){if(!AO(e))return;let r=m1e(e),n=Uet(e),o=Xbt();return o}'
     );
-    // the model must NOT be consulted for effort any more
-    expect(out).not.toContain('String(e).includes(');
+    expect(writeFablePlan(out, config())).toBe(out);
+  });
+
+  it('fails loudly when the per-model effort lookup drifts', () => {
+    const drifted = EFFORT_LOOKUP.replace(
+      '.default;return Z(',
+      '.default;return Z2(0,'
+    );
+    expect(writeFablePlan(cli + drifted, config())).toBeNull();
   });
 
   it('offers the clear-context option Claude Code defaults off', () => {
@@ -116,12 +132,9 @@ describe('writeFablePlan', () => {
   it('honours a different pairing', () => {
     const out = writeFablePlan(
       cli,
-      config({ planModel: 'opus', execModel: 'sonnet', planEffort: 'max' })
+      config({ planModel: 'opus', execModel: 'sonnet' })
     )!;
     expect(out).toContain('as(t==="plan"?"opus":"sonnet")');
-    expect(out).toContain(
-      'globalThis.__tweakccFablePlanEffort=t==="plan"?"max":"medium";'
-    );
     expect(out).toContain('"label":"Opus Plan Mode"');
   });
 
@@ -151,15 +164,12 @@ describe('writeFablePlan', () => {
     ).toBeNull();
   });
 
-  it('no-ops the effort splice when the resolver is absent', () => {
-    // Effort is optional machinery; its absence must not fail the whole patch.
-    const withoutEffort = cli.replace(
-      'function xte(e,t){if(!AO(e))return;let r=m1e(e),n=Uet(e),o=Xbt();return o}',
-      ''
-    );
-    const out = writeFablePlan(withoutEffort, config());
+  it('no-ops the effort splice on builds without a per-model effort table', () => {
+    // Before CC grew per-model levels, effort simply follows the session.
+    const out = writeFablePlan(cli, config());
     expect(out).not.toBeNull();
     expect(out).toContain('"value":"fableplan"');
+    expect(out).not.toContain('settingsEffortTable');
   });
 
   it('applies against the CC 2.1.251 table-driven plan resolver', () => {
@@ -172,25 +182,10 @@ describe('writeFablePlan', () => {
       'if(t!=="plan")return r;let u=lf(),d=qde(u);if(d===null)return r;return r}'
     );
     expect(out).toContain(
-      'function yT(e,o,{honorLaunchPin:t=!0}={}){if(globalThis.__tweakccFablePlanEffort!==void 0)return globalThis.__tweakccFablePlanEffort;if(!lg(e))return;'
+      'function yT(e,o,{honorLaunchPin:t=!0}={}){if(!lg(e))return;'
     );
     expect(out).toContain('case"fableplan":return o?XS(Xe(bl())):bl();');
     expect(out).toContain('case"fableplan":return Nt(t);');
-  });
-
-  it('applies against the CC 2.1.267 effort resolver with turnEffort', () => {
-    const resolver251 =
-      'function yT(e,o,{honorLaunchPin:t=!0}={}){if(!lg(e))return;let r=t&&LM(e),u=C(e),f=mH();return f}';
-    const resolver267 =
-      'function CA(e,n,{honorLaunchPin:o=!0,turnEffort:r}={}){if(!$h(e))return;let f=o&&y1(e),d=D(e),s=G0(),l=U(e)!==null;if(s===null&&!f&&!l)return;return s}';
-    const src = cli251.replace(resolver251, resolver267);
-    expect(src).toContain(resolver267);
-    const out = writeFablePlan(src, config());
-    expect(out).not.toBeNull();
-    expect(out).toContain(
-      'function CA(e,n,{honorLaunchPin:o=!0,turnEffort:r}={}){if(globalThis.__tweakccFablePlanEffort!==void 0)return globalThis.__tweakccFablePlanEffort;if(!$h(e))return;let f=o&&y1(e),d=D(e),s=G0(),l=U(e)!==null;'
-    );
-    expect(writeFablePlan(out!, config())).toBe(out);
   });
 
   it('applies against the CC 2.1.268 object-returning plan resolver', () => {
@@ -202,15 +197,17 @@ describe('writeFablePlan', () => {
       'function YQt(e){let{permissionMode:t,mainLoopModel:r,exceeds200kTokens:o=!1}=e;' +
       'if(t!=="plan")return{model:r,clampWarning:null};let u=lf(),d=qde(u);' +
       'if(d===null)return{model:r,clampWarning:null};return{model:r,clampWarning:null}}';
-    const src = cli251.replace(resolver251, resolver268);
+    const src = cli251.replace(resolver251, resolver268) + EFFORT_LOOKUP;
     expect(src).toContain(resolver268);
     const out = writeFablePlan(src, config());
     expect(out).not.toBeNull();
     expect(out).toContain(
-      'if(lf()==="fableplan"){globalThis.__tweakccFablePlanEffort=t==="plan"?"'
+      'if(lf()==="fableplan"){globalThis.__tweakccFablePlanModel=Ot(t==="plan"?"fable":"opus");' +
+        'return{model:globalThis.__tweakccFablePlanModel,clampWarning:null}}' +
+        'globalThis.__tweakccFablePlanModel=void 0;if(t!=="plan")return{model:r,clampWarning:null};'
     );
     expect(out).toContain(
-      'return{model:Ot(t==="plan"?"fable":"opus"),clampWarning:null}}globalThis.__tweakccFablePlanEffort=void 0;if(t!=="plan")return{model:r,clampWarning:null};'
+      'settingsEffortTable,globalThis.__tweakccFablePlanModel??n??'
     );
     expect(writeFablePlan(out!, config())).toBe(out);
   });

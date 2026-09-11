@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Box, Text, useInput } from 'ink';
 
 import { SettingsContext } from '../App';
-import { FablePlanConfig, RouterEffort } from '../../types';
+import { FablePlanConfig } from '../../types';
 import { DEFAULT_SETTINGS } from '../../defaultSettings';
 
 const MODELS: FablePlanConfig['planModel'][] = [
@@ -11,7 +11,6 @@ const MODELS: FablePlanConfig['planModel'][] = [
   'sonnet',
   'haiku',
 ];
-const EFFORTS: RouterEffort[] = ['low', 'medium', 'high', 'xhigh', 'max'];
 
 const label = (alias: string): string =>
   alias.charAt(0).toUpperCase() + alias.slice(1);
@@ -19,15 +18,12 @@ const label = (alias: string): string =>
 type Row =
   | { kind: 'enabled' }
   | { kind: 'model'; side: 'plan' | 'exec' }
-  | { kind: 'effort'; side: 'plan' | 'exec' }
   | { kind: 'clearContext' };
 
 const ROWS: Row[] = [
   { kind: 'enabled' },
   { kind: 'model', side: 'plan' },
-  { kind: 'effort', side: 'plan' },
   { kind: 'model', side: 'exec' },
-  { kind: 'effort', side: 'exec' },
   { kind: 'clearContext' },
 ];
 
@@ -52,8 +48,8 @@ export const FablePlanView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     }));
   };
 
-  // Left/right cycles the focused row's value. Model and effort are small closed
-  // sets, so a picker sub-view would be more chrome than the choice deserves.
+  // Left/right cycles the focused row's value. The models are a small closed
+  // set, so a picker sub-view would be more chrome than the choice deserves.
   const cycle = (delta: number): void => {
     const row = ROWS[index];
     if (row.kind === 'enabled') {
@@ -66,27 +62,20 @@ export const FablePlanView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       });
       return;
     }
-    if (row.kind === 'model') {
-      const key = row.side === 'plan' ? 'planModel' : 'execModel';
-      const other =
-        row.side === 'plan' ? fablePlan.execModel : fablePlan.planModel;
-      const from = MODELS.indexOf(fablePlan[key]);
-      // Skip the other side's model: pairing a model with itself is not a
-      // pairing, and the patch refuses it rather than emitting a no-op alias.
-      for (let step = 1; step <= MODELS.length; step++) {
-        const next =
-          MODELS[(from + delta * step + MODELS.length * step) % MODELS.length];
-        if (next !== other) {
-          update({ [key]: next } as Partial<FablePlanConfig>);
-          return;
-        }
+    const key = row.side === 'plan' ? 'planModel' : 'execModel';
+    const other =
+      row.side === 'plan' ? fablePlan.execModel : fablePlan.planModel;
+    const from = MODELS.indexOf(fablePlan[key]);
+    // Skip the other side's model: pairing a model with itself is not a
+    // pairing, and the patch refuses it rather than emitting a no-op alias.
+    for (let step = 1; step <= MODELS.length; step++) {
+      const next =
+        MODELS[(from + delta * step + MODELS.length * step) % MODELS.length];
+      if (next !== other) {
+        update({ [key]: next } as Partial<FablePlanConfig>);
+        return;
       }
-      return;
     }
-    const key = row.side === 'plan' ? 'planEffort' : 'execEffort';
-    const from = EFFORTS.indexOf(fablePlan[key]);
-    const next = EFFORTS[(from + delta + EFFORTS.length) % EFFORTS.length];
-    update({ [key]: next } as Partial<FablePlanConfig>);
   };
 
   useInput((input, key) => {
@@ -123,7 +112,8 @@ export const FablePlanView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           Adds a <Text color="green">{alias}</Text> entry to Claude Code&apos;s{' '}
           <Text color="green">/model</Text> list: {label(fablePlan.planModel)}{' '}
           while planning, {label(fablePlan.execModel)} while executing, each at
-          its own reasoning effort.
+          the effort you set for that model in <Text color="green">/model</Text>
+          .
         </Text>
         <Text dimColor>
           It is a model you select, the same mechanism Claude Code ships for
@@ -147,19 +137,10 @@ export const FablePlanView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             );
           }
           const side = r.side === 'plan' ? 'Planning' : 'Executing';
-          if (r.kind === 'model') {
-            return row(
-              i,
-              `${side} model`,
-              label(
-                r.side === 'plan' ? fablePlan.planModel : fablePlan.execModel
-              )
-            );
-          }
           return row(
             i,
-            `${side} effort`,
-            r.side === 'plan' ? fablePlan.planEffort : fablePlan.execEffort
+            `${side} model`,
+            label(r.side === 'plan' ? fablePlan.planModel : fablePlan.execModel)
           );
         })}
       </Box>
@@ -173,8 +154,11 @@ export const FablePlanView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           so the cache is cold either way and you pay for the transcript twice.
         </Text>
         <Text dimColor>
-          Effort follows the resolved model, so the complexity router still
-          drives every model that is not part of this pairing.
+          Reasoning effort is Claude Code&apos;s own per-model setting: pick{' '}
+          {label(fablePlan.planModel)} in <Text color="green">/model</Text>, set
+          its effort, then do the same for {label(fablePlan.execModel)}. An
+          explicit <Text color="green">/effort</Text> applies to both sides for
+          the rest of the session.
         </Text>
       </Box>
 

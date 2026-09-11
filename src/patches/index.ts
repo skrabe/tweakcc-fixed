@@ -479,7 +479,7 @@ const PATCH_DEFINITIONS = [
     name: 'Fable Plan mode',
     group: PatchGroup.FEATURES,
     description:
-      'Adds a "fableplan" entry to /model: Fable while planning, Opus while executing, each at its own reasoning effort (Fable xhigh, Opus medium by default). Mirrors the mechanism Claude Code already ships for opusplan, so it is a MODEL YOU SELECT — nothing changes for any other model, your selection stays "fableplan" throughout, and no model is ever switched underneath you mid-session. Also surfaces Claude Code\'s own "Yes, clear context (N% used)" option on the plan-approval dialog, which Claude Code defaults off: clearing hands only the plan to the executing model, where continuing re-sends the entire planning transcript to a different one. Off by default.',
+      'Adds a "fableplan" entry to /model: Fable while planning, Opus while executing, each at the reasoning effort you set for that model in /model (Claude Code\'s per-model effort). Mirrors the mechanism Claude Code already ships for opusplan, so it is a MODEL YOU SELECT — nothing changes for any other model, your selection stays "fableplan" throughout, and no model is ever switched underneath you mid-session. Also surfaces Claude Code\'s own "Yes, clear context (N% used)" option on the plan-approval dialog, which Claude Code defaults off: clearing hands only the plan to the executing model, where continuing re-sends the entire planning transcript to a different one. Off by default.',
     modelFacing: true,
   },
   {

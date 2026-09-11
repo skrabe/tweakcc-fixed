@@ -216,10 +216,8 @@ export interface FablePlanConfig {
   enabled: boolean;
   /** Alias used while `permissionMode === 'plan'`. */
   planModel: 'fable' | 'opus' | 'sonnet' | 'haiku';
-  planEffort: RouterEffort;
   /** Alias used for everything else — the model that executes the plan. */
   execModel: 'fable' | 'opus' | 'sonnet' | 'haiku';
-  execEffort: RouterEffort;
   /**
    * Force Claude Code's `showClearContextOnPlanAccept` setting on, so the
    * plan-approval dialog offers "Yes, clear context (N% used) and …". Claude
