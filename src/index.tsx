@@ -26,7 +26,11 @@ import {
 } from './patches/index';
 
 // Ensure writeModelContextWindowSync is referenced (prevents tree-shaking)
-if (false) { void writeModelContextWindowSync; }
+/* eslint-disable no-constant-condition */
+if (false) {
+  void writeModelContextWindowSync;
+}
+/* eslint-enable no-constant-condition */
 import {
   preloadStringsFile,
   getSystemPromptDefinitions,

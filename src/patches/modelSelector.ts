@@ -17,6 +17,7 @@ export interface CustomModel {
   };
 }
 
+// Models to inject/make available.
 // prettier-ignore
 export const CUSTOM_MODELS: CustomModel[] = [
   { value: 'claude-opus-4-6',              label: 'Opus 4.6',             description: "Claude Opus 4.6 (February 2026)", contextWindow: 1000000, maxTokens: 32768 },
@@ -118,7 +119,10 @@ export const writeModelCustomizations = (oldFile: string): string | null => {
 
   const { insertionIndex, modelListVar } = found;
 
-  // Build the injection: push each custom model onto the list
+  // Build the injection: push each custom model onto the list.
+  // JSON.stringify includes all properties (contextWindow, maxTokens, pricing),
+  // which our writeModelContextWindowSync reads from globalThis.__tweakccCustomModels
+  // to drive per-model context window enforcement via hF calculation.
   const inject = CUSTOM_MODELS.map(
     model => `${modelListVar}.push(${JSON.stringify(model)});`
   ).join('');

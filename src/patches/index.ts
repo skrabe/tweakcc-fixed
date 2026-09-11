@@ -48,7 +48,6 @@ import { DEFAULT_SETTINGS } from '../defaultSettings';
 import { writeShowMoreItemsInSelectMenus } from './showMoreItemsInSelectMenus';
 import { writeThemes } from './themes';
 import { writeContextLimit } from './contextLimit';
-import { writeModelContextWindowSync } from './modelContextWindowSync';
 import { writeInputBoxBorder } from './inputBorderBox';
 import { writeThinkerFormat } from './thinkerFormat';
 import { writeThinkerSymbolMirrorOption } from './thinkerMirrorOption';
@@ -60,6 +59,7 @@ import { writeUserMessageDisplay } from './userMessageDisplay';
 import { writeInputPatternHighlighters } from './inputPatternHighlighters';
 import { writeVerboseProperty } from './verboseProperty';
 import { writeModelCustomizations } from './modelSelector';
+import { writeModelContextWindowSync } from './modelContextWindowSync';
 import { writeOpusplan1m } from './opusplan1m';
 import { writeThinkingVisibility } from './thinkingVisibility';
 import { writeSubagentModels } from './subagentModels';
@@ -122,7 +122,7 @@ import {
 import { compareVersions } from '../systemPromptSync';
 
 export { showDiff, showPositionalDiff, globalReplace } from './patchDiffing';
-export { writeModelContextWindowSync } from './modelContextWindowSync'; // Explicit export to prevent tree-shaking
+export { writeModelContextWindowSync } from './modelContextWindowSync'; // Prevent tree-shaking
 export {
   findChalkVar,
   findChalkVarInModule,
@@ -279,7 +279,6 @@ const PATCH_DEFINITIONS = [
       'Automatically update context window and maxTokens when model changes via /model command or programmatic selection (reads from CUSTOM_MODELS injected data)',
     modelFacing: true,
   },
-
   {
     id: 'patches-applied-indication',
     name: 'Patches applied indication',
@@ -604,7 +603,6 @@ const PATCH_DEFINITIONS = [
     modelFacing: true,
   },
 ] as const;
-
 
 /** Union type of all valid patch IDs */
 export type PatchId = (typeof PATCH_DEFINITIONS)[number]['id'];
@@ -994,10 +992,6 @@ export const applyCustomization = async (
       fn: c => writeContextLimit(c),
       condition: !!config.settings.misc?.enableContextLimitOverride,
     },
-    'model-context-window-sync': {
-      fn: c => writeModelContextWindowSync(c),
-      condition: modelCustomizationsEnabled && !ccInstInfo.nativeInstallationPath,
-    },
     opusplan1m: {
       fn: c => writeOpusplan1m(c),
       condition:
@@ -1049,6 +1043,11 @@ export const applyCustomization = async (
     'model-customizations': {
       fn: c => writeModelCustomizations(c),
       condition: modelCustomizationsEnabled,
+    },
+    'model-context-window-sync': {
+      fn: c => writeModelContextWindowSync(c),
+      condition:
+        modelCustomizationsEnabled && !ccInstInfo.nativeInstallationPath,
     },
     'show-more-items-in-select-menus': {
       fn: c => writeShowMoreItemsInSelectMenus(c, 25),
@@ -1443,7 +1442,3 @@ export const applyCustomization = async (
     results: allResults,
   };
 };
-
-// Side-effect import to ensure writeModelContextWindowSync is included in the bundle
-// and not tree-shaken out by tsdown (it's only referenced inside patchImplementations object)
-import './modelContextWindowSync';
