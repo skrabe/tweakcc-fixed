@@ -35,7 +35,9 @@ const allow = new Set(
     .filter(Boolean)
 );
 if (files.length !== 2) {
-  console.error('usage: checkMapDrift.mjs <prev.json> <next.json> [--allow=id,…]');
+  console.error(
+    'usage: checkMapDrift.mjs <prev.json> <next.json> [--allow=id,…]'
+  );
   process.exit(2);
 }
 const load = f => {
@@ -51,8 +53,31 @@ const prev = byId(load(files[0]));
 const next = byId(load(files[1]));
 
 const same = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
+// How each slot is USED: the character after it says whether pristine calls it
+// (`(`), reads a member (`.`/`[`), or interpolates the value. An identical
+// `identifiers` array can still hide a slot whose expression changed kind —
+// CC 2.1.268 turned `${e!==null?pEr():…}` into `${e!==null?pEr:…}` — and a name
+// that follows that change (`…_FN` → plain) is the catalogue being right, not
+// drifting. Only a rename under an unchanged use-shape is the slip this gate is for.
+const slotShapes = p => {
+  const shapes = new Map();
+  const pieces = p.pieces ?? [];
+  (p.identifiers ?? []).forEach((ident, i) => {
+    const after = typeof pieces[i + 1] === 'string' ? pieces[i + 1][0] : '';
+    const shape =
+      after === '('
+        ? 'call'
+        : after === '.' || after === '['
+          ? 'member'
+          : 'value';
+    const k = String(ident);
+    shapes.set(k, [...(shapes.get(k) ?? []), shape].sort().join(','));
+  });
+  return shapes;
+};
 const drifted = [];
 const acknowledged = [];
+const reshaped = [];
 let compared = 0;
 for (const [id, p] of next) {
   const o = prev.get(id);
@@ -64,18 +89,40 @@ for (const [id, p] of next) {
   const slots = [...new Set((p.identifiers ?? []).map(String))];
   const changes = slots
     .filter(k => (o.identifierMap ?? {})[k] !== (p.identifierMap ?? {})[k])
-    .map(k => `[${k}] ${(o.identifierMap ?? {})[k] ?? '∅'} → ${(p.identifierMap ?? {})[k] ?? '∅'}`);
+    .map(
+      k =>
+        `[${k}] ${(o.identifierMap ?? {})[k] ?? '∅'} → ${(p.identifierMap ?? {})[k] ?? '∅'}`
+    );
   if (changes.length === 0) continue;
+  const os = slotShapes(o);
+  const ps = slotShapes(p);
+  const movedUnderSameShape = slots.some(
+    k =>
+      (o.identifierMap ?? {})[k] !== (p.identifierMap ?? {})[k] &&
+      os.get(k) === ps.get(k)
+  );
+  if (!movedUnderSameShape) {
+    reshaped.push({ id, changes });
+    continue;
+  }
   (allow.has(id) ? acknowledged : drifted).push({ id, changes });
+}
+
+for (const d of reshaped) {
+  console.log(
+    `  · ${d.id}: renamed with its slot's use-shape (call/member/value) — ${d.changes.join('; ')}`
+  );
 }
 
 for (const d of acknowledged) {
   console.log(`  ✓ ${d.id}: acknowledged rename — ${d.changes.join('; ')}`);
 }
 for (const d of drifted) {
-  console.log(`  ✗ ${d.id}: slot names moved under an unchanged shape — ${d.changes.join('; ')}`);
+  console.log(
+    `  ✗ ${d.id}: slot names moved under an unchanged shape — ${d.changes.join('; ')}`
+  );
 }
 console.log(
-  `${drifted.length ? '✗' : '✓'} identifierMap drift: ${drifted.length} unacknowledged, ${acknowledged.length} acknowledged, ${compared} same-shape prompts compared`
+  `${drifted.length ? '✗' : '✓'} identifierMap drift: ${drifted.length} unacknowledged, ${acknowledged.length} acknowledged, ${reshaped.length} reshaped, ${compared} same-shape prompts compared`
 );
 process.exit(drifted.length ? 1 : 0);
