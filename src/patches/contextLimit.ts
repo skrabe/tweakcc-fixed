@@ -1,8 +1,5 @@
 // Please see the note about writing patches in ./index
 
-// The override expression injected into Claude Code's JS. It reads from the
-// env var CLAUDE_CODE_CONTEXT_LIMIT (set by the user or by a wrapper script) and
-// falls back to 200000 if unset.
 const OVERRIDE = '(+process.env.CLAUDE_CODE_CONTEXT_LIMIT||200000)';
 
 export const writeContextLimit = (oldFile: string): string | null => {
