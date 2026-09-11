@@ -863,5 +863,83 @@
     "shape": "concat",
     "excerpt": "Controls how the managed settings sources compose. \"first-wins\" (default): the highest-priority source present (server-managed > MDM (manage",
     "why": "Managed-settings schema field: zod .describe() on managedSourcesBehavior, beside forceLoginGatewayUrl and parentSettingsBehavior in the admin policy tier (MDM / managed-settings.json / policy helper). Admin configuration documentation, never assembled into a system prompt or a tool schema."
+  },
+  "bdedb43a552c8844": {
+    "verdict": "internal",
+    "note": "sandbox-runtime (srt) settings schema: a zod .describe() on a config field or an addIssue validation message; config documentation / settings error, never sent to the model",
+    "shape": "concat",
+    "excerpt": "Controls how the managed settings sources compose. \"first-wins\" (default): the highest-priority source present (server-managed > MDM (manage"
+  },
+  "082d2cb015aea2d3": {
+    "verdict": "internal",
+    "note": "sandbox-runtime (srt) settings schema: a zod .describe() on a config field or an addIssue validation message; config documentation / settings error, never sent to the model",
+    "shape": "concat",
+    "excerpt": "What to do when extract matches nothing (or, with decode, no candidate verifies): \"warn\" (default — stderr warning, file left readable), \"de"
+  },
+  "e35ea447f4f08d98": {
+    "verdict": "internal",
+    "note": "sandbox-runtime (srt) settings schema: a zod .describe() on a config field or an addIssue validation message; config documentation / settings error, never sent to the model",
+    "shape": "concat",
+    "excerpt": "If true, verbatim occurrences of each captured credential value outside the regex-matched spans are also replaced with the corresponding sen"
+  },
+  "ab53d9f7647b92c5": {
+    "verdict": "internal",
+    "note": "sandbox-runtime (srt) settings schema: a zod .describe() on a config field or an addIssue validation message; config documentation / settings error, never sent to the model",
+    "shape": "concat",
+    "excerpt": "Optional narrowing of where the proxy substitutes this credential. If unset, defaults to network.allowedDomains — the credential is injected"
+  },
+  "3ddd74612cddfe47": {
+    "verdict": "internal",
+    "note": "sandbox-runtime (srt) settings schema: a zod .describe() on a config field or an addIssue validation message; config documentation / settings error, never sent to the model",
+    "shape": "concat",
+    "excerpt": "What to do when extract matches nothing: \"warn\" (default — stderr warning, variable passes through unmasked), \"deny\" (variable unset inside "
+  },
+  "8303ee12f8687440": {
+    "verdict": "internal",
+    "note": "sandbox-runtime (srt) settings schema: a zod .describe() on a config field or an addIssue validation message; config documentation / settings error, never sent to the model",
+    "shape": "concat",
+    "excerpt": "Allow sentinel→real substitution on the plain-HTTP proxy path. Defaults to false: without TLS termination the upstream identity is unverifie"
+  },
+  "6cfa0325a641c42c": {
+    "verdict": "internal",
+    "note": "sandbox-runtime (srt) settings schema: a zod .describe() on a config field or an addIssue validation message; config documentation / settings error, never sent to the model",
+    "shape": "concat",
+    "excerpt": "Inclusive [low, high] port range the JS mux proxy listeners bind inside. MUST match the range passed to `srt-win install --proxy-port-range`"
+  },
+  "0e0d20d9e61f7bd9": {
+    "verdict": "internal",
+    "note": "sandbox-runtime (srt) settings schema: a zod .describe() on a config field or an addIssue validation message; config documentation / settings error, never sent to the model",
+    "shape": "concat",
+    "excerpt": "How to locate/invoke the srt-win helper binary. `srtWin.path` is required to use the Windows sandbox — your own (multicall) binary, or the e"
+  },
+  "e0dd4879f13be8a5": {
+    "verdict": "internal",
+    "note": "sandbox-runtime (srt) settings schema: a zod .describe() on a config field or an addIssue validation message; config documentation / settings error, never sent to the model",
+    "shape": "concat",
+    "excerpt": "This masked credential has no injectHosts, so it defaults to network.allowedDomains — but network.tlsTerminate.excludeDomains covers every a"
+  },
+  "3be7fa4666e4fd51": {
+    "verdict": "internal",
+    "note": "sandbox-runtime (srt) settings schema: a zod .describe() on a config field or an addIssue validation message; config documentation / settings error, never sent to the model",
+    "shape": "concat",
+    "excerpt": "injectHosts is explicitly empty — the credential would be masked but never injected. Omit injectHosts to default to network.allowedDomains, "
+  },
+  "7840960b29010279": {
+    "verdict": "internal",
+    "note": "sandbox-runtime (srt) settings schema: a zod .describe() on a config field or an addIssue validation message; config documentation / settings error, never sent to the model",
+    "shape": "concat",
+    "excerpt": "maskClaims requires decode — it names claims inside the decoded payload. Set decode (e.g. \"jwt\"), or remove maskClaims to mask the whole val"
+  },
+  "de7791b9cdc27b3d": {
+    "verdict": "internal",
+    "note": "sandbox-runtime (srt) settings schema: a zod .describe() on a config field or an addIssue validation message; config documentation / settings error, never sent to the model",
+    "shape": "concat",
+    "excerpt": "maskClaims is explicitly empty — no claim would ever be masked. Omit maskClaims to mask the whole token, or list the claims to protect."
+  },
+  "40ecdf1e810ad91d": {
+    "verdict": "internal",
+    "note": "sandbox-runtime (srt) settings schema: a zod .describe() on a config field or an addIssue validation message; config documentation / settings error, never sent to the model",
+    "shape": "concat",
+    "excerpt": "maskClaims requires decode — it names claims inside the decoded payload. Set decode (e.g. \"jwt\"), or remove maskClaims to mask the extracted"
   }
 }

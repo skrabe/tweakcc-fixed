@@ -1531,5 +1531,45 @@
     "desc": "Preview arm of Ul(): closes the undecodable / replacement-char source results with the next step when previewing; its publish twin is tool-result-artifact-publish-then-publish-again.",
     "id": "tool-result-artifact-preview-then-preview-again",
     "name": "Tool Result: Artifact preview - then preview again"
+  },
+  "a1921102f24b6b95": {
+    "desc": "Labels how much of the first line survived in the partial-load note (`everything after the first N characters of line 1 was cut off`); the constraint is the surrounding sentence.",
+    "verdict": "glue",
+    "text": "everything after the first "
+  },
+  "5fd1c8df7f788d40": {
+    "desc": "Closing half of the same truncated-first-line label; carries a count, no instruction.",
+    "verdict": "glue",
+    "text": " characters of line 1 was cut off"
+  },
+  "910b4a23d922a0fb": {
+    "desc": "Remedy clause of the GitHub-not-connected cloud-clone notice when /web-setup is unavailable: connect GitHub on the web at the given URL.",
+    "id": "data-github-not-connected-web-connect-recovery",
+    "label": "DATA_GITHUB_NOT_CONNECTED_CANNOT_CLONE_IN_CLOUD_VAR_1",
+    "name": "Data: GitHub not connected — connect on the web",
+    "promptId": "data-github-not-connected-cannot-clone-in-cloud",
+    "reason": "the no-/web-setup branch of a remedy whose other branch is catalogued as data-github-not-connected-web-setup-recovery",
+    "verdict": "catalogue",
+    "text": "Connect it on the web at "
+  },
+  "baaf39e7572cd762": {
+    "desc": "Bare label for a failed tool call inside the permission-denied wrapper; the retry instruction that used to follow it is gone from the binary.",
+    "verdict": "glue",
+    "text": "Error calling tool"
+  },
+  "be0870b5bc584809": {
+    "desc": "Lifetime clause of the Monitor started tool result for a persistent watch: it runs until TaskStop or the session ends.",
+    "id": "tool-result-monitor-started-persistent-clause",
+    "label": "TOOL_DESCRIPTION_MONITOR_STARTED_TOOL_RESULT_VAR_1",
+    "name": "Tool Result: Monitor started — persistent clause",
+    "promptId": "tool-description-monitor-started-tool-result",
+    "reason": "states the watch lifetime the model acts on; the expiry branch of the same ternary is catalogued as tool-result-monitor-started-expiry-rearm-clause",
+    "verdict": "catalogue",
+    "text": "persistent — runs until TaskStop or session end"
+  },
+  "d3db55ac22403b6c": {
+    "desc": "Joins the Artifact type name into the list_files header.",
+    "verdict": "glue",
+    "text": ", an Artifact of type "
   }
 }

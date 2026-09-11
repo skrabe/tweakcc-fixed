@@ -63569,5 +63569,1203 @@
     "id": "tool-result-subagent-handback-message-empty",
     "name": "Tool Result: SubagentHandback empty message",
     "desc": "Validation error when the SubagentHandback tool is called with an empty report."
-  }
+  },
+  "98dde779bed3ae422c899950d2e586513e2cd110": {
+    "facing": "model",
+    "id": "system-prompt-harness-instructions-2",
+    "name": "System Prompt: Harness Instructions 2",
+    "desc": "Opening system-prompt line that selects Output Style, collaborative-goals, or software-engineering framing and injects URL-guessing restrictions."
+  },
+  "588f832f7eea941616e7209b7b6ca06a056b8e11": {
+    "facing": "model",
+    "id": "data-mcp-tab-context-front-loaded",
+    "name": "Data: MCP Tab Context Front Loaded",
+    "desc": "Front-loaded tabs_context_mcp JSON plus tab-cleanup guidance appended onto the MCP tool result the model reads."
+  },
+  "a5dfeca5dd2067c1cc52ab6c936debe655de108e": {
+    "facing": "model",
+    "id": "system-prompt-project-timeline-user-message-provenance",
+    "name": "System Prompt: Project Timeline User Message Provenance",
+    "desc": "Defines how project timeline messages from the verified owner become user turns while other relayed or fetched project content remains untrusted external data."
+  },
+  "462ada2ff2e46c9838a715bb5d6a5ee2c0f3eca1": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-source-path-already-resolved-tail",
+    "name": "Data: Task Notification Artifact Source Path Already Resolved Tail",
+    "desc": "Tells the model a source-path artifact comment thread is already resolved, so it should post a new reply and must not resolve or reopen it."
+  },
+  "fc4d583ae70d61d395097e7eb82d9646bce60bf2": { "facing": "internal" },
+  "c427fd072311ef38860bdc9bdbe48dc9b18eef41": { "facing": "internal" },
+  "768bc349710364c9e3f1732403013d56c6663c6d": { "facing": "internal" },
+  "c415e7c7a89031d7d128b45a021f8b3bfdcc14ee": {
+    "facing": "model",
+    "id": "data-task-notification-monitor-expired-with-events",
+    "name": "Data: Task Notification Monitor Expired With Events",
+    "desc": "Housekeeping task notification telling the model a bounded monitor expired after delivering events and should be re-armed if still needed."
+  },
+  "95e41e56aee07920e24ba1ed2b35044ef9c3aa26": {
+    "facing": "model",
+    "id": "data-task-notification-monitor-expired-no-events",
+    "name": "Data: Task Notification Monitor Expired No Events",
+    "desc": "Housekeeping task notification telling the model a bounded monitor expired with no events and to re-arm or widen the filter."
+  },
+  "7f1b4d6378dffd6f3cca7510b018651080ef70d8": { "facing": "internal" },
+  "d1f3527488bcb628362eea15cc0451f44d062eb7": { "facing": "internal" },
+  "fcc3e4af2efd0814a873bbf08ae1252173354cfe": { "facing": "internal" },
+  "46ae8dad3d285d8ecc604afc5505c7e0274e9909": { "facing": "internal" },
+  "80b75a53f16f6cedb769f0fd1a20c306d4f79a06": {
+    "facing": "model",
+    "id": "tool-description-artifact-watching-unavailable-with-status",
+    "name": "Tool Description: Artifact Watching Unavailable With Status",
+    "desc": "Artifact-tool description telling the model watching is unavailable and how to use status/unwatch without claiming a watch."
+  },
+  "d13ba80a1e8e6adfd6775882a5dec7faa70daa6a": { "facing": "ui" },
+  "58bead9f420b3b755c21d30c66945c792e935e41": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-doc-shim-result",
+    "name": "Tool Result: Artifact Live Doc Shim Result",
+    "desc": "Artifact publish tool_result that renders the live-doc shim line plus addon suffixes when liveDocShim is present."
+  },
+  "f069defea33a214a290eb4e6badac253904ac88c": { "facing": "ui" },
+  "2a18c37d1e181e13be83b04a4f304e63a067fa9e": { "facing": "ui" },
+  "8878a97f4b50c24f40fc417d41a4d7a91c782021": {
+    "facing": "model",
+    "id": "tool-description-claude-in-chrome-file-upload-shared-only",
+    "name": "Tool Description: Claude In Chrome File Upload Shared Only",
+    "desc": "file_upload tool description restricting uploads to files the user has shared with the session."
+  },
+  "af4b707f69bc6559bc8a58819f31058bfaa2ca02": {
+    "facing": "model",
+    "id": "tool-description-claude-in-chrome-file-upload-session-readable",
+    "name": "Tool Description: Claude In Chrome File Upload Session Readable",
+    "desc": "file_upload tool description for the client-populated files schema, allowing any path this session can read."
+  },
+  "b6a253e9030f38ca5f4d7d36777d4a90ddaa95b9": {
+    "facing": "model",
+    "id": "tool-result-artifact-file-read-saved",
+    "name": "Tool Result: Artifact File Read Saved",
+    "desc": "Reports a saved artifact file with size, hash, provenance, and untrusted-content instructions after a file read."
+  },
+  "73ec8032bf85a755dcdefc5e33f19e9b819ca456": { "facing": "ui" },
+  "3ccc4a2c1c45d8df23bf323d61358b0be9af5012": { "facing": "ui" },
+  "d8645c3a26c8579c175a9a31184d42c9abcbf456": {
+    "facing": "model",
+    "id": "tool-description-navigate-tab-cleanup-guidance",
+    "name": "Tool Description: Navigate Tab Cleanup Guidance",
+    "desc": "Requires closing automatically opened browser tabs when they are no longer needed unless the user wants them kept open."
+  },
+  "74141c0e80dd2fe816f422d13f0733e5a9cbfb7e": {
+    "facing": "model",
+    "id": "tool-parameter-claude-in-chrome-file-upload-paths-session-readable",
+    "name": "Tool Parameter: Claude In Chrome File Upload Paths Session Readable",
+    "desc": "inputSchema description for file_upload paths requiring each path to be a file this session is allowed to read."
+  },
+  "f61b94f4b89bebc49501da43e91e2b1f726d781f": { "facing": "internal" },
+  "02e4bd03182956e05b6ef7190f8267c520a9604b": { "facing": "internal" },
+  "1e6490142dabe35792fd8c339a27053e2dab9bc5": { "facing": "internal" },
+  "05ae056660d1fa68acd823ea062b51d18e656fc7": { "facing": "internal" },
+  "0d1d9897024f939e92eb380b256c5eae1a563dd3": { "facing": "internal" },
+  "48689a2101375affa7c4195d338a28d46fdf0440": { "facing": "internal" },
+  "fc51eeb2eb20eaf1f36c4f2702ba16e89bd5d437": { "facing": "internal" },
+  "8e90b71869761e255509380ecae5bfe31b6b58bc": {
+    "facing": "model",
+    "id": "tool-result-allowed-domains-cannot-widen-sandbox-allowlist",
+    "name": "Tool Result: Allowed Domains Cannot Widen Sandbox Allowlist",
+    "desc": "validateInput failure telling the model allowed_domains cannot expand a managed or strict sandbox allowlist."
+  },
+  "55f0cbf9e15e019bef670470b57eb7284c64759c": { "facing": "internal" },
+  "418e6a9822ddaa00004be3a4caa46f74a41b7e07": { "facing": "ui" },
+  "759d73a7ff0b399949ae92055283ca2553c3c68d": {
+    "facing": "model",
+    "id": "tool-parameter-claude-in-chrome-file-upload-data",
+    "name": "Tool Parameter: Claude in Chrome File Upload Data",
+    "desc": "Describes the base64 file-contents field on Claude in Chrome file_upload's client-populated files array."
+  },
+  "c1abbe1194af29cd1866b36a84a1b6698adf1087": { "facing": "internal" },
+  "11fdfcefa03d895d66e392d0b19576a24dadbfaa": { "facing": "internal" },
+  "7b676c4b23c308542e4734b3ba0090ed9127b911": {
+    "facing": "model",
+    "id": "tool-result-cowork-unexamined-file-no-consent-surface",
+    "name": "Tool Result: Cowork Unexamined File No Consent Surface",
+    "desc": "Denies a file read in a Cowork session when the path could not be examined and no one can answer the approval card."
+  },
+  "55da46349fe617b66e03928025fc89a58eef2512": { "facing": "internal" },
+  "a9fabb11a78b4c6ae890549208b3e7a48def00e4": { "facing": "internal" },
+  "9cfad4f748d875b1b40b1b75801fe4b51bc2ac4e": { "facing": "ui" },
+  "9be7ebaaf266205f98f1a3df824d97485ff70d62": { "facing": "internal" },
+  "a1502d23c1eafd80a229dd730c6210112b6541a4": { "facing": "internal" },
+  "f5ac017dead81a103942b4c378a0e94a0997de72": { "facing": "internal" },
+  "45114bcf10b056b269aad04f29c2f685bf8154f2": { "facing": "internal" },
+  "86f3da5df2f8824a39ab4310f936125498430876": { "facing": "internal" },
+  "3475904c6a4122fbfff00a2ed4501950501ba580": { "facing": "internal" },
+  "124f5b987bcba72ec8cb4d8eac26d9583f36a99b": { "facing": "internal" },
+  "141cdc4f318b3f897af495c5305d34621881cf7b": { "facing": "internal" },
+  "a2ea61bf746cf6e96bd3d23a32d8592392877e5f": { "facing": "internal" },
+  "2becc8065fea9943595f87e56576fd4522958f63": { "facing": "internal" },
+  "26431e1f9994756863ff5812530bb569623d6035": { "facing": "internal" },
+  "e1983bbfc092c8d7ac1797be8347838689a66f91": { "facing": "internal" },
+  "2454c09e4f738284c97a3461342f37c866240ae2": {
+    "facing": "model",
+    "id": "system-prompt-artifact-page-owned-comment-thread-guidance",
+    "name": "System Prompt: Artifact page-owned comment thread guidance",
+    "desc": "Directs replies to page-owned comment threads through an available authorized page tool rather than Artifact relay threads"
+  },
+  "2046908eb42ce2ef48563421ad1b14e781eb1d24": {
+    "facing": "model",
+    "id": "tool-result-async-agent-running-read-partial",
+    "name": "Tool Result: Async Agent Running (send message)",
+    "desc": "Tells the model a background agent is still running without an output file: do not spawn a duplicate; send it a message for a progress report."
+  },
+  "d63a45e422718a51fcf9bea24641cc44098e401a": { "facing": "internal" },
+  "00c4b023ef8d2ed9650c8dae723cf3d42d495041": { "facing": "internal" },
+  "9d3e18adf568e264370a79412d28146345a86adc": { "facing": "internal" },
+  "bdfc71255b1d4ac7d6a1358fd750cc480ed210ba": { "facing": "internal" },
+  "c1f7981ce6d0fd3c08707d50af635d50ef62cec7": { "facing": "internal" },
+  "6db73f8fbc10cc842d9aad277de22d37f00a6e06": { "facing": "internal" },
+  "3058f11283607f444d9bbc04e6f6506c0b48df64": {
+    "facing": "model",
+    "id": "tool-description-monitor-timeout-rearm",
+    "name": "Tool Description: Monitor Timeout Re-arm",
+    "desc": "Explains that every monitor expires after timeout_ms, is killed with an event-count notice, and should be re-armed for long watches."
+  },
+  "61fe3bdae7ceffdd8fe6f4acfde507c4a05a73c5": { "facing": "internal" },
+  "048f1106ccede92a30ea1f702c7ee24ac4b3f270": {
+    "facing": "model",
+    "id": "tool-parameter-claude-in-chrome-file-upload-filename",
+    "name": "Tool Parameter: Claude in Chrome File Upload Filename",
+    "desc": "Describes the file-name field shown to the page on Claude in Chrome file_upload's client-populated files array."
+  },
+  "b5c8ce4b335db14e9aa8ac9ca608a1a6e5a711bd": { "facing": "internal" },
+  "5869e4c82213d749fdaecb81717d7d89f5aaaffe": {
+    "facing": "model",
+    "id": "tool-parameter-claude-in-chrome-screenshot-zoom-scale",
+    "name": "Tool Parameter: Claude in Chrome Screenshot Zoom Scale",
+    "desc": "Documents the scale factor for screenshot and zoom actions on the Claude in Chrome computer tool, including the full-resolution coordinate frame and extension-version requirement."
+  },
+  "5b6de507a0b1e6c685891bf6e04138be15344273": { "facing": "internal" },
+  "87ebc027cb0391db02a310092ebebc1f43562295": {
+    "facing": "model",
+    "id": "tool-parameter-sandbox-allowed-domains",
+    "name": "Tool Parameter: Sandbox Allowed Domains",
+    "desc": "Auto-mode-only list of extra hosts a sandboxed command needs beyond the sandbox network allowlist, reviewed together with the command."
+  },
+  "87db5e8d6843cf13d986865072aa5a5147b87fb7": { "facing": "internal" },
+  "fc5909244fd2817629df837846b5d898b9e3128c": { "facing": "internal" },
+  "c8d1a8f85d431933a7e06efccdb861c5b7bae3af": {
+    "facing": "model",
+    "id": "tool-parameter-claude-in-chrome-upload-image-image-id",
+    "name": "Tool Parameter: Claude in Chrome Upload Image Image ID",
+    "desc": "Identifies a computer-tool screenshot to upload; user-attached image IDs are not accepted."
+  },
+  "4595209e461e81481d5c8c9ceef909be07ae3884": {
+    "facing": "model",
+    "id": "tool-description-bash-sandbox-restriction-tell-user",
+    "name": "Tool Description: Bash Sandbox Restriction Tell User",
+    "desc": "When sandbox bypass is disabled, tells the model to report which restriction a command hit and leave sandbox settings to the user."
+  },
+  "b60b2a7d1b5126c31e33afca6a9c3c60b41d79b6": { "facing": "internal" },
+  "51d066a654b9e06576a0ff9acca942650badba95": {
+    "facing": "model",
+    "id": "tool-result-permission-denied-safer-method-guidance",
+    "name": "Tool Result: Permission Denied Safer Method Guidance",
+    "desc": "Auto-mode classifier denial suffix: try a safer method, finish other work, then stop and ask the user for the permission."
+  },
+  "e16345f7b030f43d4f7d36978e582302084df964": { "facing": "internal" },
+  "05ea8e2afb9fc88608d79b6637b9fa1a71ae0aef": { "facing": "internal" },
+  "5770d6d9ed8e038ecb7fb3b89647bd3d2f7e31b3": { "facing": "internal" },
+  "861e24529857acbcbec1df58597e4c61f3f3af46": { "facing": "internal" },
+  "c09e89c9e188c8d00c05c0408fb9638949289dbb": { "facing": "internal" },
+  "35fc2fc64b0be325fbc7a5618ec5bb153991d0cd": { "facing": "internal" },
+  "9bf6687464bdb58e2cee8777a4d94d58e4aaa35d": { "facing": "internal" },
+  "d74f6475f57f0d7a9bb14d1e71aca374b9e5e572": {
+    "facing": "model",
+    "id": "tool-parameter-monitor-timeout-capped-rearm",
+    "name": "Tool Parameter: Monitor Timeout Capped Re-arm",
+    "desc": "Describes Monitor timeout_ms when persistent mode is unavailable: deadlines cap at a maximum and the model is notified so it can re-arm."
+  },
+  "6563273a3a83c58a6d2b798bf8a358b58408d54a": { "facing": "internal" },
+  "3e2284489dd9b72010231e5eb6f3eac2b918b39a": { "facing": "internal" },
+  "0a57fc1528dc9c5b4b0534e08a4b789e2797edc4": { "facing": "internal" },
+  "baf517d87df07f903e0258a3a2d5a6ef69273242": { "facing": "internal" },
+  "0d6349392847ca94f8ccf8d9c9d0d608787dade4": { "facing": "internal" },
+  "55d0c3a4a47666dd7e5abf9deb4b5345e7c9d6a6": { "facing": "internal" },
+  "a731e07358aea3907eeef52a2ba9829da183bf2c": { "facing": "internal" },
+  "de783a4d79551e462d2a4f1bc745aefc52785fb2": { "facing": "internal" },
+  "ea5bb372808facd384f743540aa7bc429bf1bdc9": { "facing": "internal" },
+  "f5ed7b74e22db4d6e23508bfee59b967ea6e03dc": { "facing": "internal" },
+  "10620e64a0cdecc8a0d9d4f07de1e5a2bd235a7a": { "facing": "internal" },
+  "1f34572829646e1ef4124a0c9d6588d8b90dc15b": { "facing": "internal" },
+  "6a3d09e2fe24a18c21a0f7e95953f8ae20b52e51": { "facing": "internal" },
+  "e66a7c6ea0084e1e0d885061d8349eb7d57873c4": {
+    "facing": "model",
+    "id": "tool-parameter-claude-in-chrome-file-upload-mime-type",
+    "name": "Tool Parameter: Claude In Chrome File Upload Mime Type",
+    "desc": "Input-schema description for the nested files[].mimeType field on the Claude-in-Chrome file_upload tool."
+  },
+  "694709b24094b5c18d7a58311c3f27b531661a2f": {
+    "facing": "model",
+    "id": "tool-description-monitor-started-tool-result",
+    "name": "Tool Result: Monitor Started",
+    "desc": "Monitor tool result telling the model the monitor started and it will be notified on events; keep working, do not poll."
+  },
+  "938e6ce917fe3c39417ebe95f709640ea964ce94": { "facing": "internal" },
+  "4f7889681c684f6b03060f555c08c721d085acc6": { "facing": "internal" },
+  "d1ac7910251f90666f07b79396b2a495f2859e61": { "facing": "internal" },
+  "8ccd1631791e743cb2546c419b4284c32eed9636": { "facing": "internal" },
+  "1db6b311e585de33c6c4372f62f7c70cafe5ca4e": { "facing": "internal" },
+  "3b05a1edf2591bc0fc29c0c67698e257285c46f1": { "facing": "internal" },
+  "8f14e539fdf691d4f2375fae235914b23e92820c": { "facing": "internal" },
+  "f8637586ed5fb2d778f9875315b2cde9ba5a904d": { "facing": "internal" },
+  "3294200c7532ab10e1ac727ead6e274ecaf23189": { "facing": "internal" },
+  "25aa6e115f7fd5ec964883729fc54661932dfb5c": { "facing": "internal" },
+  "766ec6682eff5b1391a228579956cac0b6134e2e": { "facing": "internal" },
+  "c41415a0d00f29922238541a32657ba2d643e066": { "facing": "internal" },
+  "18d84019805de4be9c8491c7ec957c12d1c29b11": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-icon",
+    "name": "Tool Parameter: Artifact Icon",
+    "desc": "Zod .describe() for the Artifact tool icon parameter: a short generic word for the artifact's tab icon."
+  },
+  "4499eec642ced1ec49321447ba29009b3ecddee7": { "facing": "internal" },
+  "192bcdd98d33b46366909505f678b15e1d19a041": { "facing": "internal" },
+  "072e1ce7a2b6edde310ca01337212dafff5d1891": { "facing": "internal" },
+  "7764f101313e6c7feb2d3e8c43a56ab221c051db": { "facing": "internal" },
+  "660676bbd6d84eacb4dddb49ef1d20bcaaa536fd": { "facing": "internal" },
+  "3f0fca01351d59e20657e295acf19ef1b6675899": { "facing": "internal" },
+  "25e0ead8148c0daff2eb49604c88a0f643418d3a": { "facing": "internal" },
+  "a8bc3364b92f51380259b7e0de0144ba7f907a0c": { "facing": "internal" },
+  "ff8db17f6eb5cf2ce3214196f6469ec9e04952df": { "facing": "internal" },
+  "f4d3a7008ba20f19b397ac6f68bcf292bebb8ea5": { "facing": "internal" },
+  "fa855de97dc6046c5f36f34514cbc62d7b901d97": { "facing": "internal" },
+  "7510d697e1f36ee5707b0b455fcb498873ae3abe": { "facing": "internal" },
+  "c7efe6a39fad92d2dc3a4926f865e340a892ce7a": { "facing": "ui" },
+  "de4485c732187312703f70b0b20e40457f218905": { "facing": "ui" },
+  "75e0b8abc1ad0add55f5a3c2aeed99abb40f7cbb": { "facing": "internal" },
+  "869c9a6acd6a8657992b09241656729928efb69f": { "facing": "internal" },
+  "3aea763fd534dae4ff511d642a88adf71f8895b2": { "facing": "internal" },
+  "0b9f06ae42fc5c6305a17094f41cc527a07873ed": { "facing": "internal" },
+  "de3784f3249b95a5718ffa6435afc4ec537849bc": {
+    "facing": "model",
+    "id": "tool-parameter-claude-in-chrome-file-upload-files",
+    "name": "Tool Parameter: Claude In Chrome File Upload Files",
+    "desc": "Input-schema description telling the model not to set file_upload.files; the client populates it from paths after reading them."
+  },
+  "8ec4ec579d0e4a187d2d44927a914447a430ca7d": { "facing": "internal" },
+  "c26dfeba33bc3e706f7cae0d827e21faf907e051": { "facing": "internal" },
+  "166630c14d1ad3f7061be90595e5fd6a3b13136c": {
+    "facing": "model",
+    "id": "tool-result-cowork-local-file-outside-connected-folders",
+    "name": "Tool Result: Cowork Local File Outside Connected Folders",
+    "desc": "Permission-deny tool_result when a Cowork session cannot show the approval card for reading a local file outside the connected folders or through a link."
+  },
+  "25382f9d63a3d797a643febbae18e556ea69c2a6": {
+    "facing": "model",
+    "id": "system-reminder-artifact-page-owned-comment-reply-refusal",
+    "name": "System Reminder: Artifact page-owned comment reply refusal",
+    "desc": "Reports that no reply was posted to an Artifact relay thread and directs the answer to the page-owned comment thread or the current session"
+  },
+  "4e7782b4cf9fdbff958381a7b691567b4dc5a31e": { "facing": "internal" },
+  "42fea8f7c521772802533781fec9c80b51196f4f": { "facing": "internal" },
+  "9749a824925aa9e899a8b819b79e789d322fa904": { "facing": "internal" },
+  "6dd8e44e3200b4f8223c01a11777f2eb5a78f309": { "facing": "ui" },
+  "4253dbd01b41b1986296c002f1695fa1ad066b32": {
+    "facing": "model",
+    "id": "tool-description-chrome-selected-browser-switch",
+    "name": "Tool Result: Selected Browser Switch",
+    "desc": "switch_browser MCP tool_result confirming the selected browser, labeled with the connected-browser name helper."
+  },
+  "d198e357652193385e42a50d7d4070414112c710": {
+    "facing": "model",
+    "id": "tool-description-chrome-selected-browser",
+    "name": "Tool Result: Selected Browser",
+    "desc": "select_browser MCP tool_result confirming which connected browser is now selected."
+  },
+  "dd58473a5fd2cf9a7d26e40927cc9035834a39cd": {
+    "facing": "model",
+    "id": "tool-description-claude-in-chrome-unexpected-error",
+    "name": "Tool Description: Claude In Chrome Unexpected Error",
+    "desc": "Fallback MCP tool_result when a Claude-in-Chrome tool call throws an unclassified error, telling the model the failure is usually transient and to retry."
+  },
+  "d9e6cae78abf156f6e6602dcefaaa1e28f90eb71": {
+    "facing": "model",
+    "id": "tool-description-bash-sandbox-mandatory",
+    "name": "Tool Description: Bash (sandbox bypass disabled)",
+    "desc": "Bash sandbox tool-description branch telling the model dangerouslyDisableSandbox is disabled in this session and does not unsandbox a command."
+  },
+  "bdd0a37be1272b93f2a22f8858e533fed90f1e6f": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-favicon",
+    "name": "Tool Parameter: Artifact Favicon",
+    "desc": "Zod .describe() for the Artifact tool favicon parameter (emoji on first publish)."
+  },
+  "45341d2a6729328f673b257b031c3f66006d3d2a": { "facing": "ui" },
+  "2660c8dcc94d2bdcdda645dee06452ea8eb95c17": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-replied-followup-withheld",
+    "name": "Data: Task Notification Artifact Promised Follow-Up Reply Withheld",
+    "desc": "Task-notification detail stating that the promised follow-up reply to an artifact comment thread was withheld and the acknowledgement stands as this session's reply."
+  },
+  "9831b30388eb8e83ed8f0d7bed6ec1ce0ca21fa7": { "facing": "internal" },
+  "ac4ca0946dafd4b4bda5183ce39179860758e29b": {
+    "facing": "model",
+    "id": "system-prompt-sandbox-task-resource-boundary",
+    "name": "System Prompt: Sandbox task resource boundary",
+    "desc": "Limits sandboxed work to task-provided resources even when other resources are reachable and requires reporting missing access instead of bypassing the boundary"
+  },
+  "0006903a3f8c366ae28bf442c6326a23b63bd810": {
+    "facing": "model",
+    "id": "system-reminder-at-mention-reference",
+    "name": "System Reminder: At-mention Reference",
+    "desc": "Meta user message telling the model the user @-mentioned paths whose contents are not auto-attached, so it should read them with file tools."
+  },
+  "50146ff9eda3eae584e3b22c6618c7f7e146bffe": {
+    "facing": "model",
+    "id": "tool-result-bash-allowed-domains-unsandboxed",
+    "name": "Tool Result: Allowed Domains Unsandboxed",
+    "desc": "SandboxPolicyRefusalError when a command approved with allowed_domains would run outside the sandbox, so the lists cannot be enforced and the command is not run."
+  },
+  "e29cea24668fa80f1b41578c5b8f1834947b599c": { "facing": "internal" },
+  "088572d6bb6695cb3be39501d9fdaae700c5ba6b": {
+    "facing": "model",
+    "id": "tool-result-artifact-comment-thread-resolve-page-owns-threads",
+    "name": "Tool Result: Artifact Comment Thread Resolve Page Owns Threads",
+    "desc": "Tells the model resolve is a no-op because the artifact page owns its comment threads, so it should reply there instead of retrying."
+  },
+  "efaeafd47d2750390bd0233011821372ee30928e": {
+    "facing": "model",
+    "id": "tool-description-monitor-timeout-killed-persistent",
+    "name": "Tool Description: Monitor Timeout Killed Persistent",
+    "desc": "Monitor tool description copy when persistent watches are available: timeout kills the monitor unless persistent:true is set for session-length watches."
+  },
+  "11d0f13c6b7e5e1094d7682c8832e284ae6f8e37": { "facing": "internal" },
+  "b958ce30b712dd9fa956b58c6c33227980a73ce2": {
+    "facing": "model",
+    "id": "tool-description-upload-image",
+    "name": "Tool Description: Upload image",
+    "desc": "Describes uploading fresh computer-tool screenshots to file inputs or drag-and-drop targets with bounded retries"
+  },
+  "5fbe6b880618ac3c71b3306b5f538ab8688c8f4b": { "facing": "internal" },
+  "c0560deda11b26eb85e9e9bc955d6fcbd2c2ab31": { "facing": "internal" },
+  "a90df5c934c32ee5cf493bfcc99f3cfda151811a": { "facing": "internal" },
+  "95cd0bfba4f0b28d3d1a4a9575d77de0647af35b": {
+    "facing": "model",
+    "id": "tool-description-monitor-one-notification-run-in-background",
+    "name": "Tool Description: Monitor One Notification Run In Background",
+    "desc": "Monitor tool guidance to wait for a single condition using Bash run_in_background and an until loop that exits."
+  },
+  "192134cd45e96cf64fb8fc488f0a53e603fb6ae4": { "facing": "internal" },
+  "3365bfc065e17b3a12ae84d177afb603f795d9ee": { "facing": "internal" },
+  "95506f3fcabfa544c24153c79c0feed7c999a1a4": { "facing": "internal" },
+  "6c824c47173b4a05a84850391a332b45907fa31b": { "facing": "internal" },
+  "91e0b7c536eeeb67ce2b611ec0f9adab3ec6a6f5": { "facing": "internal" },
+  "e964eafa965a636282ff73a8c35d6918ae7a93bb": { "facing": "internal" },
+  "43902d9664c5f57e15b7b5b60ce270d8ba68dead": { "facing": "internal" },
+  "e1744791fae09c397ebaee401654a2ca4eb592de": { "facing": "internal" },
+  "d22a04847baf2c234c55d6019624f02a051112ae": { "facing": "internal" },
+  "0c4f07e53cd595d6a59785e6df3bfde34e1908e0": { "facing": "internal" },
+  "0aee9b205d7bf71ea21c0f6c3cb554b033ba0321": { "facing": "internal" },
+  "46a46f3b4dbae16263e23ddb0ed5a95a5e52d8f8": { "facing": "internal" },
+  "afd16ca85f8bfadf4631914609549a0a126b4f2f": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-write-db-field",
+    "name": "Tool Parameter: Artifact write_db field",
+    "desc": "Schema description of write_db str_replace field: the top-level string key of the document to edit, with length and character constraints."
+  },
+  "bd8d400651d3b3817c4fee871b28b323be308cdf": { "facing": "ui" },
+  "31a9d002baf777b99e4c29389438f1545b116f1c": { "facing": "ui" },
+  "a18cdb2a1e2ad4a7254b918fafd62656220608ed": { "facing": "ui" },
+  "5af2c52d85c2554519db6b3f14c3d363aa12e38b": { "facing": "ui" },
+  "8dbaa69481f5a8e556c1117c3b217dd474ef0912": { "facing": "ui" },
+  "0d60cd781264c653ee0a42a50f9a288cdfebdd11": { "facing": "ui" },
+  "1b984e92681f0b32ea6819baedc37386a4320b74": { "facing": "internal" },
+  "1f52189fe3a5832129a632925db4ba40b61ceb08": { "facing": "internal" },
+  "aff77c5ab1814621ebdb3abbb59789df3f31ff1b": { "facing": "internal" },
+  "1185246477beac5a5b5e7b29256cfdd516bb7014": { "facing": "internal" },
+  "5c2f243b32a67c1918687d63b1c93c3f48aa251e": { "facing": "ui" },
+  "0ab42de47f13ab950e9d8acd26264981093ecb61": { "facing": "ui" },
+  "3b014de30f7854027379fdeedf6c0596d46e211a": { "facing": "ui" },
+  "72f6f33b9dd0c9164c5bb438e6f18d8be3c1e89a": { "facing": "ui" },
+  "06cde25b93f5570182c760774140b8c49bd6fb9a": { "facing": "ui" },
+  "13dd2159b6d14af2885a0ce6c4e49ea5c103234c": { "facing": "internal" },
+  "ecbc6892649fc8e168f69f06197a86f16aba28e5": { "facing": "ui" },
+  "e8eb55dcb3768b79024e1522a3e276481913b395": { "facing": "internal" },
+  "24cb6760c3c6250a43c4e0910d967b9f04a12084": { "facing": "internal" },
+  "46e7071600209e3f7ac2f65cfde6aef08d9d4982": { "facing": "internal" },
+  "98d34d84bbbf5d0e66e2505ca13c13f8a6b8a9b4": { "facing": "internal" },
+  "cb1ae039161de1e3b32d6740f8bc81e0f07e38b0": {
+    "facing": "model",
+    "id": "system-reminder-memory-file-lines-cut-off",
+    "name": "System Reminder: Memory File Lines Cut Off",
+    "desc": "Detail clause in a truncated memory-file warning naming how many lines were dropped and where the cutoff starts."
+  },
+  "07264b66a6f50dec8bc5d8f0fa1512c1e973fecc": {
+    "facing": "model",
+    "id": "system-reminder-memory-file-partially-loaded",
+    "name": "System Reminder: Memory file partially loaded",
+    "desc": "Warning appended to a truncated memory file attachment telling the model to keep each file focused on one topic"
+  },
+  "c5492badd76add42b22ffc4ec8462059c8b3222c": {
+    "facing": "model",
+    "id": "tool-result-bash-empty-backtick-substitution-too-complex",
+    "name": "Tool Result: Bash Empty Backtick Substitution Too Complex",
+    "desc": "Bash too-complex reason when an empty backtick substitution would join surrounding words so parsed command boundaries cannot be trusted."
+  },
+  "837908a07f300aef50a92c1f9adf69b55ac3c89e": {
+    "facing": "model",
+    "id": "tool-result-bash-backtick-substitution-untrusted-too-complex",
+    "name": "Tool Result: Bash Backtick Substitution Untrusted Too Complex",
+    "desc": "Bash too-complex reason tail when a backtick substitution scan cannot be trusted because parsed bytes may differ from what bash executes."
+  },
+  "98ead72f0c34594a214967fc2d7748244978a401": {
+    "facing": "model",
+    "id": "tool-result-bash-zsh-read-non-numeric-operand-too-complex",
+    "name": "Tool Result: Bash Zsh Read Non-Numeric Operand Too Complex",
+    "desc": "Bash too-complex reason when a zsh read numeric option's operand is non-numeric and may arith-eval $(cmd)."
+  },
+  "93919983df68e0a8f7d39fd3269e71c770371c54": {
+    "facing": "model",
+    "id": "tool-result-bash-zsh-read-prompt-subscript-too-complex",
+    "name": "Tool Result: Bash Zsh Read Prompt Subscript Too Complex",
+    "desc": "Bash too-complex reason when zsh read -p is given a subscripted or runtime operand that may arith-eval $(cmd)."
+  },
+  "4310bfaa8f9ebcc0140a34b1677198234f5c3205": { "facing": "internal" },
+  "693db416d511b27e68f955a83d13012d245071f6": { "facing": "internal" },
+  "633c852d82c04a4a0f8fe6f1fe4a623486a3204a": {
+    "facing": "model",
+    "id": "tool-description-monitor-one-notification-bullet",
+    "name": "Tool Description: Monitor One Notification Bullet",
+    "desc": "Monitor tool description bullet prefix for a single-notification wait such as server-ready or build-finished."
+  },
+  "b03755097758a679729b524f2c463b37ac22e322": {
+    "facing": "model",
+    "id": "tool-description-monitor-one-notification-foreground-bash",
+    "name": "Tool Description: Monitor One Notification Foreground Bash",
+    "desc": "Monitor tool guidance to wait for a single condition with a foreground Bash until loop that exits."
+  },
+  "07a54a78755641cba213da24cd8f79505ac1b54a": {
+    "facing": "model",
+    "id": "tool-description-monitor-until-loop-instead-run-in-background",
+    "name": "Tool Description: Monitor Until Loop Instead Run In Background",
+    "desc": "Monitor tool admonition not to use an unbounded command for a single notification; use Bash run_in_background with an until loop instead."
+  },
+  "ea3c1a70b7767f58c168408806c2519a9751269a": {
+    "facing": "model",
+    "id": "system-prompt-workers-mcp-tools-from-connected-servers",
+    "name": "System Prompt: Workers MCP Tools From Connected Servers",
+    "desc": "Prefix listing connected MCP server names whose tools workers can use, injected into workerToolsContext."
+  },
+  "91ed545d85f8bd181446afa2eca8e59ab420f1a4": {
+    "facing": "model",
+    "id": "data-coordinator-timeline-returned-by-tool",
+    "name": "Coordinator timeline message returned by a tool",
+    "desc": "User-turn provenance marker for a timeline message the server returned from a fetch tool rather than as a thread reply."
+  },
+  "52b89c8dc9fc5414bc366476273c1e192826bd00": {
+    "facing": "model",
+    "id": "data-coordinator-timeline-relayed-by-coordinator",
+    "name": "Coordinator timeline message relayed by the session",
+    "desc": "User-turn provenance marker for a timeline message relayed by the coordinator session rather than as a thread reply."
+  },
+  "d77638f1f68b895e6bd1c8c5d928b839264220d7": { "facing": "internal" },
+  "2e3cf7556c74eb0f0bd0882b58775bdf677fbb03": {
+    "facing": "model",
+    "id": "data-github-not-connected-web-setup-recovery",
+    "name": "GitHub Not Connected Web-Setup Recovery",
+    "desc": "Recovery clause interpolated into PRe() when /web-setup is available, offering the GitHub CLI login path or the connect-github web URL."
+  },
+  "a19d03b730efc97ee1a56ce0ac62632437428eb5": {
+    "facing": "model",
+    "id": "data-github-not-connected-cannot-clone-in-cloud",
+    "name": "GitHub Not Connected Cannot Clone In Cloud",
+    "desc": "Shared GitHub-not-connected message from PRe() explaining the repository cannot be cloned in the cloud, used by /schedule setupNotes, ultrareview local-jsx onDone, and tQ eligibility."
+  },
+  "0bce7bbf9ad5c50cc3ce1063c56eacfea42adb8f": { "facing": "ui" },
+  "5c026c8f72351bc18da51b7c8bab938c4705044d": { "facing": "internal" },
+  "4bdc8a16bdac7f59e03499f2c687e316a6ca39e8": { "facing": "internal" },
+  "e7206767aafc59e055204c1d8a630dda8a3a7690": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-unlocated-program",
+    "name": "Worktree Guard Operand: Cannot Tell Which Operand Is The Program",
+    "desc": "Ku() worktree-isolation refusal when a computed or flag-shaped argument appears before the program can be identified, next to other runtime operands."
+  },
+  "d83f7cc84118b5d18b642d0d02bd5a5540422c1f": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-computed-after-script",
+    "name": "Worktree Guard Operand: Computed Argument After Script",
+    "desc": "Nested interpolation inside the unlocated-program Ku() refusal describing a computed argument that belongs after the script or --."
+  },
+  "da68bc40b14bf6a9092890988b515a4b4ef6d17e": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-runtime-script",
+    "name": "Worktree Guard Operand: Script Computed At Runtime",
+    "desc": "Ku() refusal when the script operand itself is non-literal (computed at runtime)."
+  },
+  "c0d5d5cb6020e0c4835f375cb22e616aed141399": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-isolation-descriptor-holds-program",
+    "name": "Worktree Isolation Descriptor Holds Program",
+    "desc": "Worktree-isolation refusal when the program is a descriptor-held path, so it cannot be shown not to be git."
+  },
+  "2e17ff496ca50f97ff9081d50483ee784756ac33": { "facing": "internal" },
+  "69ddd67db214749fc61f9616f8fe0f318b11d872": { "facing": "internal" },
+  "4622c9c019a680376359066227de89599a8f3093": { "facing": "internal" },
+  "ebe634c261f7a6f7ee3521383d65141900cfbe66": {
+    "facing": "model",
+    "id": "tool-result-bash-deny-rules-unjudged-explicit-approval",
+    "name": "Bash Deny-Rules Unjudged Explicit Approval",
+    "desc": "checkPermissions ask suffix when a bash command cannot be auto-allowed because deny rules could not be judged; on decline it becomes the tool_result the model reads."
+  },
+  "589b6178d947e5ea8a65c504e087f99c43e755b0": {
+    "facing": "model",
+    "id": "tool-result-bash-edit-deny-rule-write-undetermined",
+    "name": "Bash Edit Deny Rule Write Undetermined",
+    "desc": "checkPermissions ask when a command names a path an Edit deny rule covers but whether the command writes it cannot be determined."
+  },
+  "a8e4e4d816a325c3781a126a67d3cadac4a8da07": {
+    "facing": "model",
+    "id": "tool-result-bash-cd-unfollowed-deny-rules-unchecked",
+    "name": "Bash Cd Unfollowed Deny Rules Unchecked",
+    "desc": "checkPermissions ask when directory changes before a command could not all be followed, so relative paths cannot be checked against Read/Edit deny rules."
+  },
+  "2244700de38e7aa392961596286e25f7eeca59f9": {
+    "facing": "model",
+    "id": "tool-result-bash-redirect-blocked-by-deny-rule",
+    "name": "Tool Result: Bash redirect blocked by deny rule",
+    "desc": "checkPermissions deny message when an env-wrapped command reads from or writes to a path a deny rule blocks."
+  },
+  "a51a9231ee9c463587bb552da1773471b1b57f30": {
+    "facing": "model",
+    "id": "tool-parameter-allowed-domains-entry-format",
+    "name": "Allowed Domains Entry Format",
+    "desc": "Zod refine message for each allowed_domains host entry on sandboxed Bash/Monitor/sandbox_exec; shown to the model when an entry fails the domain/wildcard/address format check."
+  },
+  "45665e9fee64e1b4f5809bfce87417426b14969a": {
+    "facing": "model",
+    "id": "tool-parameter-allowed-domains-loopback-alias",
+    "name": "Allowed Domains Loopback Alias",
+    "desc": "Schema error when an allowed_domains entry names loopback or an IPv4 host under another spelling; tells the model to allow the dotted-quad or real host instead."
+  },
+  "3e3a04b5eea79868da46a958d500e19c91cfea39": {
+    "facing": "model",
+    "id": "tool-parameter-allowed-domains-non-canonical",
+    "name": "Allowed Domains Non-Canonical Host",
+    "desc": "Schema error when an allowed_domains entry is not the host the sandbox would dial; tells the model to use the canonical form."
+  },
+  "e922583068555b4a0359c20973674689db6e525f": {
+    "facing": "model",
+    "id": "tool-result-allowed-domains-not-sandboxed",
+    "name": "Allowed Domains Not Sandboxed",
+    "desc": "validateInput refusal when allowed_domains is set on a command that would not run in the sandbox."
+  },
+  "772cc2da23f574fc0186e3e47697f489706340ec": {
+    "facing": "model",
+    "id": "tool-result-allowed-domains-classifier-review-ask",
+    "name": "Allowed Domains Classifier Review Ask",
+    "desc": "checkPermissions ask when a tool call carries allowed_domains so the auto-mode classifier reviews the hosts together with the command."
+  },
+  "1fea1bd037bcb90d7c861593c28bd65181a4f480": {
+    "facing": "model",
+    "id": "tool-result-allowed-domains-classifier-review-reason",
+    "name": "Allowed Domains Classifier Review Reason",
+    "desc": "decisionReason for the allowed_domains classifier-review ask; on decline the model reads it as the tool_result."
+  },
+  "927f7c27758da7635417c45ccc3ff908dd0b8326": { "facing": "internal" },
+  "97370e6ca09cd00ff197aa450239017a686884ba": { "facing": "internal" },
+  "3e7f9420088b8682c97aa04b8642ba35674f8f63": { "facing": "internal" },
+  "7c4db4dc92332883b79185525c09f0702eb47050": { "facing": "ui" },
+  "8e9e59b02565cec447f8a84c3da14f843e9f7883": { "facing": "ui" },
+  "3fc8f7ce894044ca8c0e1b1ebedea3cba250de95": { "facing": "ui" },
+  "97f2a47fc2f961672def1daaf0d2575d1e480a3e": { "facing": "internal" },
+  "b4804280942a1389440e17257e45dfb0b3eac465": { "facing": "internal" },
+  "d26ecbafd46375991358499313d27c0b0b18e0ff": { "facing": "ui" },
+  "7887f5e46c83f0c8d0174f5033a045a148bdaa96": { "facing": "ui" },
+  "b399249e5c4c487e7f26d016a3ccc70059e3c8f3": { "facing": "ui" },
+  "18c6229f3139e27b7aee2f2aaacb569b04bbcb01": { "facing": "ui" },
+  "4f36c5d34f20cdba7704d1effe622af6eacdb9ef": { "facing": "internal" },
+  "a2d8563a918c0871611bf6a3512740827ba3afd1": { "facing": "internal" },
+  "cc9f130b7c86949cdfeafb29e749b4241e28935c": { "facing": "ui" },
+  "52e6d7a35768043997ea0877effd2f984d075383": { "facing": "internal" },
+  "8c24cbd97338bf339ee92a3c51aed1e14ab2acf6": { "facing": "ui" },
+  "19d047e33f9d37cc83fdb42e604b6c6984c0c231": { "facing": "ui" },
+  "8af1083649a3adf81357ff012be65308b92049a0": { "facing": "internal" },
+  "a85fa50def6b0a2c5af52cf6d294b9bbe8c39c5c": { "facing": "ui" },
+  "8736900d6e22974501eeb8b2385f0970f420c21a": { "facing": "internal" },
+  "732b3439bb816ba7f2a6c3ef0d248c8439ac615f": { "facing": "ui" },
+  "7b0772e88a0f6dfb70e8908b1b8aed0bb7ea5d08": { "facing": "internal" },
+  "063f5d6bf4ca5a6c59045d958c5b5e92af89b2e3": { "facing": "internal" },
+  "b563d4a6186430182381034807e47c4976be78cd": { "facing": "ui" },
+  "63a92dacf496f74c632070b14c8a442793c2d221": { "facing": "internal" },
+  "c2193c22a99f26a0071f20daa24c26372047fdb9": { "facing": "internal" },
+  "5d44979714b0939c6af606b0d42624fdb3ffb983": { "facing": "ui" },
+  "ad8c881b8d0db1d65e161b0171a293d729533b43": { "facing": "ui" },
+  "845c1a7a278c9ca3121e9e71307a47f92cec1fff": { "facing": "internal" },
+  "bd4ed4df4a81692c841e6c818bc57d9ae339d411": { "facing": "ui" },
+  "6da00846a406528612dafa38c65a975c1389c44f": { "facing": "internal" },
+  "f096f8f5a0c891db021006f4d11a555da24d722c": { "facing": "internal" },
+  "3f38fd0c6e6185241a39d6fa11776435972cca2c": { "facing": "internal" },
+  "40f90df44f18c09ffc176fe92bb7e346545a5d23": { "facing": "internal" },
+  "08fc74b7ff2bf85bdedecc5b6a98b7149dcecdfb": { "facing": "internal" },
+  "2620df6770b966b9758bf4d0b00c103972c48809": { "facing": "internal" },
+  "5ff189b92a1a813bd5b3cc525ebe0927c1a319e0": { "facing": "internal" },
+  "67d0ab86c0ec2fa1d0623580e2e799843421a378": {
+    "facing": "model",
+    "id": "data-cloud-session-notice-ahead-of-remote",
+    "name": "Data: Cloud Session Notice Ahead Of Remote",
+    "desc": "Clause in the teleport git-source notice naming the newest pushed commit the cloud session starts from when the local branch is ahead."
+  },
+  "778502cc6fa3b32b2cd31048a41139a84a9eee36": {
+    "facing": "model",
+    "id": "data-cloud-session-notice-start-from-host-tip",
+    "name": "Data: Cloud Session Notice Start From Host Tip",
+    "desc": "Teleport git-source notice that the cloud session starts from a named tip on a non-github.com host instead of fetching a commit by id."
+  },
+  "a34384ae66d03ca3c977d557e591c223928d99b0": {
+    "facing": "model",
+    "id": "data-cloud-session-notice-uncommitted-stay-local",
+    "name": "Data: Cloud Session Notice Uncommitted Stay Local",
+    "desc": "Teleport git-source notice that uncommitted changes and unpushed commits stay on this machine unless the branch is pushed."
+  },
+  "6c6369e2efbb6d9c2d3d1ea0ffc2cff25d71edde": {
+    "facing": "model",
+    "id": "data-cloud-session-notice-unrelated-history",
+    "name": "Data: Cloud Session Notice Unrelated History",
+    "desc": "Notice that a detached HEAD or local branch shares no history with the last-fetched remote, so the cloud session starts from the remote default instead."
+  },
+  "b94833bb6fdbf3d93e5ae583af71613c442e4a57": {
+    "facing": "model",
+    "id": "tool-result-cloud-session-explicit-ref-cannot-be-honored",
+    "name": "Tool Result: Cloud Session Explicit Ref Cannot Be Honored",
+    "desc": "Create-fail text when an explicit git ref cannot be used as the cloud-session source, offering an alternative seed."
+  },
+  "bc40066f4e253b3c30579c4ea0dade22ec6995ec": {
+    "facing": "model",
+    "id": "tool-result-cloud-session-branch-not-on-remote",
+    "name": "Tool Result: Cloud Session Branch Not On Remote",
+    "desc": "Bundle-fail suffix telling the model the local branch has no remote history and must be pushed or fetched before starting from GitHub."
+  },
+  "0a6fc02a29a0e58490b27d2e3a92e167515d08ba": {
+    "facing": "model",
+    "id": "tool-result-webfetch-artifact-fetch-deny-rule",
+    "name": "WebFetch artifact fetch denied by rule",
+    "desc": "Permission denial text returned when an Artifact-tool deny rule covers the URL WebFetch was asked to fetch."
+  },
+  "389f4b69cfe2af70cd8636c819b79a5ec8270ddd": {
+    "facing": "model",
+    "id": "tool-result-subagent-spawn-hook-rewrite-ruled",
+    "name": "Tool Result: Subagent Spawn Hook Rewrite Ruled",
+    "desc": "AgentPreconditionError when a plugin agent.spawn hook rewrites a spawn into one a permission rule denies or asks; tells the model to dispatch it directly."
+  },
+  "f5d71523ac4a344b8687613adbdda8e7e4bcdfe6": { "facing": "internal" },
+  "bd1f9e8dbf3254cb5141c2e752538d1829db89b1": { "facing": "ui" },
+  "0f9a2e0355b82f7ed0ed5b19ae1c0058a40bf5a0": { "facing": "internal" },
+  "2c8c8bb481fba428e1b1735db57f668c52921ddb": { "facing": "ui" },
+  "5ed2b3e284c86de216c58d17c93837e0a797e1b4": {
+    "facing": "model",
+    "id": "tool-description-bash-sandbox-relaxed-filesystem",
+    "name": "Tool Description: Bash (sandbox — relaxed filesystem)",
+    "desc": "Relaxed-mode filesystem paragraph in the Bash command-sandbox tool description stating the sandbox does not confine directory reads or writes."
+  },
+  "09f8f14c5d393173f56e5abbd6543b0e5a7f008a": {
+    "facing": "model",
+    "id": "tool-description-bash-sandbox-session-work-directories",
+    "name": "Tool Description: Bash (sandbox — session work directories)",
+    "desc": "Relaxed sandbox sentence listing the directories this session is set up to work in."
+  },
+  "f76a68eb80d32c976f893d104361871d509556d3": {
+    "facing": "model",
+    "id": "tool-description-bash-sandbox-unenforced-read-denies",
+    "name": "Tool Description: Bash (sandbox — unenforced read denies)",
+    "desc": "Relaxed sandbox sentence listing configured unread paths that still stand even though they are not enforced."
+  },
+  "f3408af5b93e0faee912b0bd4c61596a771e8314": {
+    "facing": "model",
+    "id": "tool-description-bash-sandbox-settings-and-credentials-boundary",
+    "name": "Tool Description: Bash (sandbox — settings and credentials boundary)",
+    "desc": "Relaxed sandbox instruction to leave Claude Code/git settings and others' credentials alone unless the user asks."
+  },
+  "77dc85a0e52356360a59a97144027612baebc43e": {
+    "facing": "model",
+    "id": "tool-description-bash-sandbox-retry-allowed-domains-permission-gate",
+    "name": "Tool Description: Bash (sandbox — retry with allowed_domains via permission gate)",
+    "desc": "Auto-mode sandbox-failure guidance: add a denied host to allowed_domains or retry with dangerouslyDisableSandbox through the permission gate rather than asking in prose."
+  },
+  "5121a7cd62594d04a0e715134d726409a89c1052": {
+    "facing": "model",
+    "id": "tool-description-bash-sandbox-retry-permission-gate",
+    "name": "Tool Description: Bash (sandbox — retry via permission gate)",
+    "desc": "Auto-mode sandbox-failure guidance to retry with dangerouslyDisableSandbox through the permission gate when no denied host is named."
+  },
+  "4a403d708a0c551ebf561e2b4cb4a217638f66bb": {
+    "facing": "model",
+    "id": "tool-description-bash-sandbox-retry-allowed-domains",
+    "name": "Tool Description: Bash (sandbox — retry with allowed_domains)",
+    "desc": "Non-auto sandbox-failure guidance: re-run with the denied host in allowed_domains or retry with dangerouslyDisableSandbox without asking."
+  },
+  "e6384e33b264428e5074c5bbb7a0f4561c7d8129": {
+    "facing": "model",
+    "id": "tool-description-bash-sandbox-boundary-denial-do-not-bypass",
+    "name": "Tool Description: Bash (sandbox — boundary denial, do not bypass)",
+    "desc": "Tells the model a sandbox denial on an unrelated credential, file, or host is the session boundary: tell the user rather than retrying with dangerouslyDisableSandbox."
+  },
+  "1f28afa223086fa67c1d35517344ad9c4232583f": {
+    "facing": "model",
+    "id": "tool-description-bash-sandbox-os-level-intro",
+    "name": "Tool Description: Bash (sandbox — OS-level intro)",
+    "desc": "Opening paragraph of the command-sandbox section when OS-level per-command sandboxing is on, pointing at the session configuration below."
+  },
+  "1e4652c1ff72bf811e38b69ba7a087aa28da5887": {
+    "facing": "model",
+    "id": "tool-description-bash-sandbox-session-config-header",
+    "name": "Tool Description: Bash (sandbox — session config header)",
+    "desc": "Header line introducing how the OS-level sandbox is configured in this session."
+  },
+  "a05ee0c3b6d8b0a7e105ce90d5ea6f75c17b4eed": {
+    "facing": "model",
+    "id": "tool-description-bash-sandbox-relaxed-network-intro",
+    "name": "Tool Description: Bash (sandbox — relaxed network intro)",
+    "desc": "Relaxed-mode intro stating the sandbox only controls which network hosts commands may access without an override."
+  },
+  "6012b5b55fd6c4ee22b0f2fe0dd451a59a525e8d": { "facing": "internal" },
+  "33e9e58c30868a77039b8676bfd7eb7194f9f494": { "facing": "internal" },
+  "84a8882f9716c37036d37f58c49929b417bc422f": {
+    "facing": "model",
+    "id": "system-reminder-coordinator-mode-ended",
+    "name": "System Reminder: Coordinator Mode Ended",
+    "desc": "Meta reminder injected when coordinator_context is empty after a change, telling the model the earlier worker-tools list no longer applies."
+  },
+  "bfaf367efd2ddaf8cf97dffa7d7d116188a4e9bd": {
+    "facing": "model",
+    "id": "system-reminder-coordinator-context",
+    "name": "System Reminder: Coordinator Context",
+    "desc": "Wrapper for the coordinator_context attachment: optional worker-tools-changed lead, the tools list, and the standard reminder footer."
+  },
+  "c3eea213ced7d087b48320ab99960200695210e6": {
+    "facing": "model",
+    "id": "system-reminder-coordinator-worker-tools-changed",
+    "name": "System Reminder: Coordinator Worker Tools Changed",
+    "desc": "Lead sentence announcing that the coordinator's worker-tools list has been replaced."
+  },
+  "e697c4836125a10c77c7662789b488a5e02270ab": {
+    "facing": "model",
+    "id": "data-task-notification-task-status-send-message-retrieve-result",
+    "name": "Data: Task Status Send-Message Retrieve Result",
+    "desc": "Task-status notification telling the model to SendMessage a finished background agent to retrieve its result when there is no output file."
+  },
+  "f08faf3013f50107ee45ae420b255463dac75e5b": { "facing": "internal" },
+  "4824fa0a2153eef2d1895c01a3726f9269d59211": { "facing": "internal" },
+  "29e875ed2fb362910f41fe55d3b5050facd702c9": { "facing": "internal" },
+  "48d8dafb83f9eabca01fb3f79d46741b3da917c3": { "facing": "internal" },
+  "6d475a47650c5780e9f2bfb43179b35e9054c363": { "facing": "internal" },
+  "d9cd7debfecb7a6145f3f7f0c060e4d3a95d084b": { "facing": "internal" },
+  "3dc7867032a0a11b8c097c3c706160f891e0f6b3": { "facing": "internal" },
+  "5e2b4a9278170ed26f8c89bb816ab8a534ea65d3": { "facing": "internal" },
+  "e6a78044a101638bff46157b2d39f0e56cdfd811": { "facing": "internal" },
+  "5b6c90b30b911f330c9c6532ab3e59ebda6efd97": { "facing": "internal" },
+  "d3e703835bdee5a1bef70eb7658c864c5ea6f1f4": { "facing": "internal" },
+  "15587a2509390aa7234786e2b8f0be36ad00dc47": { "facing": "internal" },
+  "687a5fd6ef6bc86a1028afe8d187f151294dbd04": { "facing": "internal" },
+  "7039c2fcdef5c1ee1e25ac7faa4e84fa990e903c": { "facing": "internal" },
+  "d67998145a12588d003925a4f251e3d58733a857": { "facing": "internal" },
+  "c918bbbaf46a4472e950101b55f4eb332bd1ad0a": { "facing": "internal" },
+  "80c67a8896c13374e9a7791ef69360857e57189f": { "facing": "internal" },
+  "2584a92a4f33fa256cc2e89d28ce1078646cf6c7": { "facing": "internal" },
+  "f8a1ec095c4fb7aa614c2d11a152c1e3101e0bb7": { "facing": "internal" },
+  "e09e94015caf69c9aca734560f0e85fac7b18a05": { "facing": "internal" },
+  "fd58d1de250d9328ee85c36a610e4400b82d4b31": { "facing": "internal" },
+  "763815a768867fe9cca506d8c6bd35445f9e00f4": { "facing": "internal" },
+  "bd2552f1a845f4553c306c7055ce6556c70cb24f": { "facing": "internal" },
+  "eca42c2fd210ec4ed7952fedacc4e1fefa8a2a69": { "facing": "internal" },
+  "9de7345dad9e25cf536679bf93b1245536104a0b": { "facing": "internal" },
+  "b834fb5333058c77984af3f9bcd2a23da7575a69": { "facing": "internal" },
+  "4f79ea2a440699da7472271cc41a576f144f920b": { "facing": "internal" },
+  "9de5c8b3ba836056c06840c8376ddb8e1f9347db": { "facing": "internal" },
+  "781582f528ac9c2b92aac765bc79c31051f015e7": { "facing": "internal" },
+  "569f0479550a3363890c043baf0c1f1c7461bb13": { "facing": "internal" },
+  "398cb4248e9f09c79cd33c5566e74bbaf575f438": { "facing": "internal" },
+  "3043edab195de94d54c40d429aa10a6e8f3757b0": { "facing": "internal" },
+  "7969c80206528355fd7ee4499f6a433936be9caa": { "facing": "internal" },
+  "c5d6c722c950256d5ec21db43a002c8de99eaff7": { "facing": "internal" },
+  "1f5a9a2f4706083a57e93b36d32846af5c6ad55d": { "facing": "internal" },
+  "9ac0f2ae8d8595accfe9a0ecbd90bdbc0641e687": { "facing": "internal" },
+  "8354b180a825074030893438da216db04722c901": { "facing": "ui" },
+  "7ca7c9e921b6ef32cf1e37e9f3be6e32691ce9b6": { "facing": "ui" },
+  "07e5b568070959e341d7e8b8e967655f19058bb4": { "facing": "ui" },
+  "68db533420b2b8336dbef004040df959e4ecc6bc": { "facing": "ui" },
+  "7bcabecdcc2f923eff30cec3dd40e32f1de8b4fe": { "facing": "ui" },
+  "3aba03d23c8023c176bc41c9d440f8dcd120ef2c": { "facing": "ui" },
+  "fb05153573a58360ab26ceac0f7a6db0b67751c0": { "facing": "ui" },
+  "fc0853a0b8cbbc32b75ef44ada70e0e868c3107f": { "facing": "ui" },
+  "74965025320e8a35ee4f0c16208c843a25fac974": { "facing": "ui" },
+  "9298c78b986b98cbad27284c4dae502d45b48ed6": { "facing": "ui" },
+  "637de2583635ef92f2887118549827adb93bf1dc": { "facing": "ui" },
+  "91cbefbd1a5824c7e33aaad18258647701e0ce9d": { "facing": "ui" },
+  "02c2783df3cde8b834765604029ed582d2b1bcfc": { "facing": "ui" },
+  "4d739a95bd07c509fff34744431d34f41022e81a": { "facing": "ui" },
+  "fd7df8b9db6a27d014530022a1e56af8383dcd5c": { "facing": "ui" },
+  "d004f62055c09968ad523a2162c4038717b915f0": { "facing": "ui" },
+  "a2a605a11edb7b2210eb0b11b9df08594474c152": { "facing": "ui" },
+  "b3dbcc9fc004b4473f130e121878bedde17154eb": { "facing": "ui" },
+  "dd17a2b62cee327563bdc741d5ec05d85418c6e4": { "facing": "ui" },
+  "51ba88ba769787b4af285d050bd6ccb0e9f1e0d1": { "facing": "ui" },
+  "1214c0e78ede854dae5944e7743ed4dc2c276919": { "facing": "ui" },
+  "fe1aca66f164823b01457a906ae9ccc351f7cd62": { "facing": "ui" },
+  "cc3ae9f463b5df78f30f7444ae62d512a27bad9e": { "facing": "ui" },
+  "a22cae4b799b51a52f2edd0f332e974ca3ea541d": { "facing": "ui" },
+  "180e8db9453de5d7fd6a419727ab68fdb9208e8d": { "facing": "ui" },
+  "17f9794b5af6b6748368e12d285456549e11c5f9": { "facing": "ui" },
+  "8fc48b090fcac49741956425b5d90600f0c9d149": { "facing": "ui" },
+  "7deb3266ee165623c227558b722ec13c6ada4cbc": { "facing": "ui" },
+  "1b0ca5956442e4a6f2d4b065131e2e2d232bb4a7": { "facing": "ui" },
+  "a3afda0588ea83135705db0463721d38d649e685": { "facing": "ui" },
+  "02e9961ac9ed5973748e83ee95a092227103c7cd": { "facing": "ui" },
+  "e823dfe3e6dd85243e90cbdf228c7ae58d4c6641": { "facing": "ui" },
+  "5f68c24fdd3fec2de42f0608d556f95fc1769cfc": { "facing": "ui" },
+  "952a4d0276ce2bf8f3753cf951ac523d15f523f8": { "facing": "ui" },
+  "e068aed9229b2e638d9b16b27f626ff9b00f28e3": { "facing": "ui" },
+  "da4252d2f8298c1551063ac4798b4d8cbb62abe5": { "facing": "ui" },
+  "03caed9182b0f0b9906ccf751f6570b4db9d6908": { "facing": "ui" },
+  "c4f0230d3a115a4359eccbb31a4e20ff2477f861": { "facing": "ui" },
+  "2f21226a234e1f70e1a3aea36ebdb909aee5e66e": { "facing": "ui" },
+  "b1cf5929abc458c84ebd87d3c75c5834f07c9e3b": { "facing": "ui" },
+  "f78749c4ae6e1ff72dcec86f2cb49e9c4e298166": { "facing": "ui" },
+  "865a00ab2d5672652eb97df8b3c1412e2350231c": { "facing": "ui" },
+  "6b0d035a1397d386e8d907d14aaf654404d4eb71": { "facing": "ui" },
+  "47bcc48dc380e0dadbc5dcbd8f69b27b4d2ad3cb": { "facing": "ui" },
+  "6c44d3fbd0cd0101a95644a6e42d61076e1e33c8": { "facing": "ui" },
+  "9bece9f0985d47c4de090d59e901692857d37e92": { "facing": "ui" },
+  "668842246f1cf2373fa51397bd0dfe71af4ff1be": { "facing": "ui" },
+  "2efe437850db22efba9434f0b4d444ec55e8c9f6": { "facing": "ui" },
+  "6559521a1d997c11d62369f4813c5cd47218a2a2": { "facing": "ui" },
+  "acb55724d0da46e184bd0be1eb5d4c4220c7da25": { "facing": "ui" },
+  "2e4ef34fd2c5e5d74a84371326c2576688f41b87": { "facing": "ui" },
+  "e06661f6fb33f0c3eb8f4e9063e7e9ea75776435": { "facing": "ui" },
+  "5d37327bf9f0c4d4149e08c4447f230ea741816c": { "facing": "ui" },
+  "abb3b486767150f83ab190795297388895cff1a2": { "facing": "ui" },
+  "930353665fc74cc8f141eb35e59594e1118ffa33": { "facing": "ui" },
+  "f271fd6064a706fd020e6353e0c260ee3d9dc720": { "facing": "ui" },
+  "46644c7f93f762b0e99d4fdefc49e67f1065e1c0": { "facing": "ui" },
+  "3b354b0315f9f768e7bfe79053e435ea4d915873": { "facing": "ui" },
+  "5a6735e5252edb5c17ae3b8ed548d788aa12723c": { "facing": "internal" },
+  "4d3c3b679629ea1949801a1e09511b7cef6c3214": { "facing": "ui" },
+  "5e2da375ff1c625fd0984a411c4c9b82d1cd7a38": { "facing": "internal" },
+  "ba4fa979506fdaa488ae160dedc9fc54e76aa940": { "facing": "ui" },
+  "22450bd1e3dde3b079d6b17c30209411fcc390e7": {
+    "facing": "model",
+    "id": "tool-result-monitor-started-expiry-rearm-clause",
+    "name": "Monitor Started Expiry Rearm Clause",
+    "desc": "Expiry clause of the Monitor tool_result telling the model the watch ends unless re-armed."
+  },
+  "724557c4ea691901639edb2cc45f4d9485cb8414": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-reply-withheld-lead",
+    "name": "Artifact Auto Reply Withheld Lead",
+    "desc": "Lead of the auto-reply-withheld task notification the model reads when a reply is not posted."
+  },
+  "14bb8960fafbe191bcc523a0617f71c07b84071a": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-edited-page-owns-threads-tail",
+    "name": "Artifact Auto Edited Page Owns Threads Tail",
+    "desc": "Tail on an auto-edit withheld notice when the page owns threads: the artifact changed and the answer belongs there."
+  },
+  "fada82fdb0ca922ce77dfd6a1869619171789ffb": {
+    "facing": "model",
+    "id": "data-artifact-comment-reply-withheld-page-owns-threads-reason",
+    "name": "Artifact Comment Reply Withheld Page Owns Threads Reason",
+    "desc": "Reason string ln() selects when a withheld auto-reply is because the artifact page owns its threads."
+  },
+  "b512766521611b849a2dd058a729c6fd4ed0f1d9": {
+    "facing": "model",
+    "id": "tool-result-artifact-durable-wake-session-device-bound",
+    "name": "Artifact Durable Wake Session Device Bound",
+    "desc": "Durable-wake failure reason: a desktop-bound cloud session cannot register an artifact wake subscription."
+  },
+  "c4761073db9c289fb5d34bc126da42bda238a71d": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-favicon-unread",
+    "name": "Artifact Publish Favicon Unread",
+    "desc": "Publish validation error when the current Artifact favicon cannot be read so the model must pass favicon explicitly."
+  },
+  "83c3aea22959ad8da55e5e8e610709a341d64cbd": { "facing": "ui" },
+  "61892274f1866315f67b7c6bfd48d6af1e2294e8": { "facing": "internal" },
+  "b8eeccdf4a7a4ff57d79ab2eb089655feb9717d8": { "facing": "internal" },
+  "2637923fd1e3c73f8f2096ee2f33ec032fa39c4e": { "facing": "internal" },
+  "02fb123f3a578134e06e7c2af135fbc3b1bc17df": { "facing": "ui" },
+  "78a2ea728d43d9e8564c51dab254ab9cf0ca8797": { "facing": "ui" },
+  "0017a8a60b2e3e03705ace8757880423d150ba52": { "facing": "ui" },
+  "a5c3aaac54e60ca66ecd7b57785ae6833b871e5b": { "facing": "ui" },
+  "42537d1ec3dceec914748c8eea62d48784a5a73e": { "facing": "ui" },
+  "e320e011d6d97fa69c1c6450fd1bc601524430f7": {
+    "facing": "model",
+    "id": "tool-description-fileupload-combined-size-limit",
+    "name": "File Upload Combined Size Limit",
+    "desc": "file_upload tool description sentence capping combined attachment size at 10 MB."
+  },
+  "460ae43c222ea60c8f48c42520620823ecbe6990": { "facing": "internal" },
+  "2d62b0f039863b6192dabe777ec994c53dd7ca4b": { "facing": "internal" },
+  "7a559b57c336ec988e0c7ae6a24fe836baef85e0": {
+    "facing": "model",
+    "id": "tool-result-claude-in-chrome-request-too-large",
+    "name": "Claude In Chrome Request Too Large",
+    "desc": "Chrome bridge error telling the model the sealed tool call exceeded the local connection byte limit."
+  },
+  "83440ea7d06e12e15c72c10be203a7dd058c7adb": { "facing": "internal" },
+  "daca897349b1b12440f84ab42942e23d9a9c6559": { "facing": "internal" },
+  "65bc7771ce486e82d729721fb8211a37f1a6874e": { "facing": "internal" },
+  "9f75795a40e014bc99d686ed68fb60e5764f05f4": { "facing": "internal" },
+  "c9a59b98cd16ae2eabe10f63799e3f8c277f2953": { "facing": "internal" },
+  "32274f1120be089165746e3108f3770baad14502": { "facing": "internal" },
+  "4e4d65433c43ade15f10cf477ef7a922ef18123e": {
+    "facing": "model",
+    "id": "tool-result-browser-batch-nested-or-unnamed-action",
+    "name": "Browser Batch Nested Or Unnamed Action",
+    "desc": "browser_batch validation tool_result when an action lacks a string tool name or nests another batch."
+  },
+  "5ffdd5e277ab2c54489728b9fc804188f14e7ea4": { "facing": "internal" },
+  "1b84875df8f380ca97f962d42c5ca61c2700690b": {
+    "facing": "model",
+    "id": "tool-result-claude-in-chrome-never-delivered",
+    "name": "Claude In Chrome Call Never Delivered",
+    "desc": "Tool result when a Chrome call never reached the extension because the host looks offline or asleep."
+  },
+  "8d34dcee34deba5a1af3211c612e4a06c5ba580a": {
+    "facing": "model",
+    "id": "tool-result-claude-in-chrome-displaced",
+    "name": "Claude In Chrome Tool Call Displaced",
+    "desc": "Tool result when a newer call on the same browser connection displaced this one before a result arrived."
+  },
+  "d52348299fce75c9e5f8d4f3fdc9368133527bc2": {
+    "facing": "model",
+    "id": "tool-result-claude-in-chrome-displaced-may-have-executed",
+    "name": "Claude In Chrome Displaced May Have Executed",
+    "desc": "Second sentence of the displaced Chrome tool_result warning the action may already have run."
+  },
+  "c451038441de774b9cd23f7bbf7d73d5bb6dff77": {
+    "facing": "model",
+    "id": "tool-result-claude-in-chrome-not-sent",
+    "name": "Claude In Chrome Tool Call Not Sent",
+    "desc": "Tool result wrapping a local send failure (e.g. request too large) and forbidding an identical retry."
+  },
+  "3c4baaadbaca425727a30a4da203cce928c41eb5": {
+    "facing": "model",
+    "id": "tool-result-claude-in-chrome-tabs-context-timeout",
+    "name": "Claude In Chrome Tabs Context Timeout",
+    "desc": "Tool result when the hidden tabs_context_mcp lookup times out before navigate can get a tabId."
+  },
+  "8a9e7bffef7928c83747e47b0c40b93256410b30": { "facing": "internal" },
+  "fab611528c265bd4754b330689785921180e8b6e": { "facing": "ui" },
+  "c50f8be4a5e6c282b3ce874b4cf69c3e663a8cfb": { "facing": "ui" },
+  "c18b3c05e5aceb7be8e15c6df4cd82961492ec0c": {
+    "facing": "model",
+    "id": "slash-command-mcp-action-failed",
+    "name": "MCP Action Failed",
+    "desc": "Generic /mcp enable-disable-reconnect failure returned through local-jsx onDone."
+  },
+  "aab6b51f3de90fdd6fba19d4dd05c98b8ebb0aa6": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-run-script-mutation-fill",
+    "name": "Artifact Read Run Script Mutation Fill",
+    "desc": "Created-from-type fill guidance: no store-write tool, but run_script mutation can write because the type declares endpoints."
+  },
+  "9b775d460d5cf4ce459bafc755bb7360d3148e6e": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-run-script-no-endpoints",
+    "name": "Artifact Read Run Script No Endpoints",
+    "desc": "Artifact-read fill guidance when the store-write path is run_script but the type declares no endpoints."
+  },
+  "9df7e747078178cc76e67d4bed36181e35b7353b": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-read-single-thread-hint",
+    "name": "Artifact Comments Read Single Thread Hint",
+    "desc": "Comments listing hint to re-call action comments with thread_id to read one thread up to the size cap."
+  },
+  "d8b546bdfc44a76871f364cfa551ac38b28558ae": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-page-owns-threads-header",
+    "name": "Artifact Comments Page Owns Threads Header",
+    "desc": "Preamble on a comments listing when the page owns threads: listed threads are platform relay records only."
+  },
+  "fcbb0d54ca0d372e36bbe1ff0171deca1f53ed50": {
+    "facing": "model",
+    "id": "tool-result-artifact-comments-header-counts",
+    "name": "Artifact Comments Header Counts",
+    "desc": "Counts header of an artifact comments tool_result (threads, open/activated, unread status)."
+  },
+  "8ff194c76b4a032df801fddd8a294be4adb10379": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-db-out-dir-no-consent-surface",
+    "name": "Artifact Read Db Out Dir No Consent Surface",
+    "desc": "checkPermissions deny for read_db out_dir outside working folders when no live consent surface exists."
+  },
+  "b0f9377abbc0613d2127bc88db38fb0d5fa51e50": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-read-not-saved-line",
+    "name": "Artifact Db Read Not Saved Line",
+    "desc": "Per-reason line on a read_db tool_result listing documents that were returned but not saved."
+  },
+  "a2d047c042de636490e820366af0803bdb9497ce": {
+    "facing": "model",
+    "id": "tool-result-artifact-watch-session-device-bound",
+    "name": "Artifact Watch Session Device Bound",
+    "desc": "Watch tool_result explaining a desktop-bound cloud session cannot be woken by artifact activity."
+  },
+  "ff70cfac1e08ec5ff8ad4a27eb774e785634e3b7": {
+    "facing": "model",
+    "id": "tool-result-artifact-conflict-live-content-withheld-deny-rule",
+    "name": "Artifact Conflict Live Content Withheld Deny Rule",
+    "desc": "Conflict-publish tool_result when a deny rule withheld live content and also blocks re-reading."
+  },
+  "d46e3fd94f8b35cbea02572f0c5924725ae5109b": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-asset-out-dir-no-consent-surface",
+    "name": "Artifact Read Asset Out Dir No Consent Surface",
+    "desc": "checkPermissions deny for read_asset out_dir outside working folders when no one can answer the prompt."
+  },
+  "4bdbdf7ff4474da7c6498ade3de864bbbbe97635": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-required-new-artifact-clause",
+    "name": "Artifact Publish Required New Artifact Clause",
+    "desc": "Clause on a publish validation error that this call creates a new Artifact unless url is passed."
+  },
+  "7e2b39b550f944684e7e83d2f8ff99e35545b13d": {
+    "facing": "model",
+    "id": "tool-result-artifact-file-list-header",
+    "name": "Artifact File List Header",
+    "desc": "Header of the published-files tool_result listing paths as data, not instructions."
+  },
+  "18d466848bf0b2196af21795dfee92a76ecb8dfc": {
+    "facing": "model",
+    "id": "tool-result-artifact-created-from-type-ignored-fields",
+    "name": "Artifact Created From Type Ignored Fields",
+    "desc": "Create-from-type note that favicon/label/description were ignored and belong on a later publish."
+  },
+  "6af07ee8fef3019ed262bce8e34528c212a497dd": {
+    "facing": "model",
+    "id": "tool-result-send-message-teammate-definition-untrusted",
+    "name": "Send Message Teammate Definition Untrusted",
+    "desc": "Appended to the teammate-resume tool_result when the agent definition folder is not trusted."
+  },
+  "59815be6b20ed755f6465d14791afa7e734650c5": { "facing": "internal" },
+  "f4fab76eae78fa70ed20c3a313fab5c6f1a18872": { "facing": "ui" },
+  "ed573b1b73b229f9a2d73b52d647b53ddfde13df": { "facing": "internal" },
+  "ba303ad30dc5b2c141751487552729bbd76c86d6": { "facing": "internal" },
+  "d8c5bfeb250e4f79cae7ca70aeb31556ef5cebd0": { "facing": "internal" },
+  "fa13fe0c5dcdc006e5b6ed73195ef41f2d2e467f": { "facing": "internal" },
+  "1f70b53969e1b7d3da7116095b024c492c81e113": { "facing": "internal" },
+  "e331a0eb9f234012fdd1ad161455190c1a21b726": { "facing": "internal" },
+  "63120e01fba7b2d487f14584bc3413cc4c1eec9e": { "facing": "internal" },
+  "871978de42603f313688dfde904a161a659bcf07": { "facing": "internal" },
+  "9549e9b7369aea51daa682947952b0a90922f96d": { "facing": "internal" },
+  "386c2bb51b8dfa3fbbd6c9d25abfa1a84de65d88": { "facing": "internal" },
+  "4953a711220a637d64766ba33740e0f9a616a114": { "facing": "internal" },
+  "0ff8cd327bb5a657d16879169b8ee70a6613c3eb": { "facing": "internal" },
+  "1c8a191620dd21d81caa1f55dcde45f864f068c6": { "facing": "ui" },
+  "4a7c35ad90be0ccc1091fc13639402aca0dc7c0d": { "facing": "ui" },
+  "ae9174e12b00cd2731ad425a7e309177e7676144": { "facing": "internal" },
+  "e891ed3f770e457558a1af557fd73c689ab29963": { "facing": "internal" },
+  "9ffdd49aaa2755d9a8939e46527ca4900c7239fd": { "facing": "internal" },
+  "0a5b9363ee80c0772d5541cd6ba08890a933db2d": {
+    "facing": "model",
+    "id": "system-reminder-orphaned-agent-redispatched",
+    "name": "Orphaned background agent (re-dispatched) notice",
+    "desc": "Notification injected into model context on resume when a re-dispatched background agent has no completion record."
+  },
+  "aafd39bbade17dc046c5b531f8e41c776ebcf5a7": {
+    "facing": "model",
+    "id": "data-task-notification-background-agent-redispatched-ask-status-report",
+    "name": "Redispatched Agent — Ask Status-Report Tail",
+    "desc": "Third ternary arm of the re-dispatched orphan notice: resume with SendMessage and ask for a status report before assuming the task landed."
+  },
+  "756a358c192b12acf19c6c1374248fd124cf2b91": {
+    "facing": "model",
+    "id": "data-task-notification-background-agent-resume-ask-status-report",
+    "name": "Resume Agent And Ask For A Status Report",
+    "desc": "Third ternary arm of the stopped-but-transcript-saved orphan notice: resume with SendMessage and ask for a status report before assuming the task landed."
+  },
+  "7e42e9d9a69199dc35070c6ff9fb6ba75d8a5f9a": {
+    "facing": "model",
+    "id": "system-reminder-orphaned-agent-completed",
+    "name": "Orphaned background agent (already completed) notice",
+    "desc": "Notification injected into model context on resume about a background agent that had completed but lost only its notification."
+  },
+  "9274d853b4cd162d2fab74187d888d99f54ebf87": {
+    "facing": "model",
+    "id": "system-reminder-orphaned-agent-restart-failed",
+    "name": "Orphaned background agent (restart failed) notice",
+    "desc": "Notification injected into model context on resume about a background agent that could not be automatically restarted."
+  },
+  "c2392c76e03c1f3e50258369628ab1610d81313a": {
+    "facing": "model",
+    "id": "data-task-notification-background-agent-ask-status-report-tail",
+    "name": "Ask For A Status Report (Restart-Failed Tail)",
+    "desc": "Else-arm of the restart-failed orphan notice: resume via SendMessage and ask for a status report before assuming the task landed."
+  },
+  "ec3859f29a21db290becfd71427c61ecbb833178": {
+    "facing": "model",
+    "id": "system-reminder-orphaned-agents-aggregate-stopped-count",
+    "name": "Orphaned agents aggregate — stopped",
+    "desc": "Aggregate system-reminder listing background agents from a previous session with no completion record (stopped variant), injected as a task-notification into the model context."
+  },
+  "9ff716ebe678af5982d641f3aa764521c38bef62": {
+    "facing": "model",
+    "id": "data-task-notification-background-agents-resume-all-ask-status-report",
+    "name": "Resume All Agents And Ask For A Status Report",
+    "desc": "Middle ternary arm of the multi-agent stopped notice: resume each by SendMessage to its id and ask for a status report before assuming the task landed."
+  },
+  "6e8c59f038c7ab820c96debb87fc0063d1083c3a": { "facing": "internal" },
+  "9d52b6674cec9826dd007c110271f45be09b3d3c": { "facing": "internal" },
+  "fcafd2ce68506d3380d9b7aa3ffcf18da968269a": { "facing": "internal" },
+  "1d364b88b59b9fd5f436256b21bb3127566bc53e": { "facing": "internal" },
+  "cd3d394db755c12d22d3089c5ca093a97284b855": { "facing": "internal" },
+  "303f1ad71f820dd496254449571b27a0161eb25b": { "facing": "internal" },
+  "05bca1d2a1c6bb7d44d9e8849bda58b1dcbad1b5": { "facing": "ui" },
+  "e9aecead560c59640f22aa446e14f40f0154466c": { "facing": "internal" },
+  "d5e4d35bf1c30cd58c4c43545f484f14105fedbe": { "facing": "internal" },
+  "bc5bd757cd1c689601839cbeb6b3040e98048a44": { "facing": "internal" },
+  "c4e96089c23f4f5162e80046097328a5d97a3c39": {
+    "facing": "model",
+    "id": "slash-command-loop-monitor-expires-rearm",
+    "name": "/loop Monitor Expiry Re-arm Note",
+    "desc": "Inserted into the /loop self-pacing prompt: a monitor expires after a timeout, so later iterations must list tasks and re-arm only if none is still running."
+  },
+  "e0c25603ac8fdef3f3fb3cde0fa39b5dbabe8eeb": {
+    "facing": "model",
+    "id": "slash-command-loop-arm-once-later-iterations",
+    "name": "/loop Arm-Once On Later Iterations",
+    "desc": "Inserted into the /loop self-pacing prompt: arm a monitor once, then on later iterations list tasks and skip if one is already running."
+  },
+  "7338a4d9cf34e271af2e4a59618d4acf12c52c44": {
+    "facing": "model",
+    "id": "slash-command-loop-arm-once-later-ticks",
+    "name": "/loop Arm-Once On Later Ticks",
+    "desc": "Inserted into the /loop self-pacing prompt: arm a monitor once, then on later ticks list tasks and skip if one is already running."
+  },
+  "f2263accd82bff69caf834d771731e0ad8f6a929": {
+    "facing": "model",
+    "id": "slash-command-schedule-note-github-access-unverified",
+    "name": "Schedule note: GitHub access unverified",
+    "desc": "Environment/context note injected into the /schedule (routine) prompt when GitHub access for a repo couldn't be verified temporarily, suggesting installing the Claude GitHub App."
+  },
+  "a6449e05665f62112c69459fe1f3541393551d3d": {
+    "facing": "model",
+    "id": "slash-command-schedule-note-github-not-connected",
+    "name": "/schedule setup note: GitHub not connected",
+    "desc": "Setup note about missing GitHub connection, injected into the /schedule prompt text sent to the model."
+  },
+  "7cd30d3d1b9123dc8edae199c370783129362bb1": {
+    "facing": "model",
+    "id": "slash-command-schedule-note-github-app",
+    "name": "/schedule setup note: GitHub App not installed",
+    "desc": "Setup note about the uninstalled Claude GitHub App, injected into the /schedule prompt text sent to the model."
+  },
+  "d17e29a65723cb0bdf450058222c6673dadd9ade": {
+    "facing": "model",
+    "id": "slash-command-plugin-changes-apply-when-response-finishes",
+    "name": "Plugin Changes Apply When The Response Finishes",
+    "desc": "/plugin local-jsx onComplete notice that queued plugin changes apply after the current model response finishes."
+  },
+  "3ced34a5ae3aed083f6c3349ba8c08fbcc331f27": { "facing": "ui" },
+  "3f93228ccccb0294f802999972d741a80165489b": { "facing": "ui" },
+  "12f723c0e46429c137c57f6c0db4d334f9b33e56": { "facing": "ui" },
+  "2158c2b3c4666822c65d375e2d4595a1211fff30": { "facing": "ui" },
+  "60946de1f4c0fd132ba622531de98ef2f03970e8": { "facing": "ui" }
 }
