@@ -53,6 +53,24 @@ describe('systemReminders kill-switches', () => {
       );
     });
 
+    it('applies against the CC 2.1.268 const-tag wrapper', () => {
+      const src =
+        'var iI="<system-reminder>",Uue="</system-reminder>";' +
+        'return}}function Pa(e){return`${iI}\n${e}\n${Uue}`}function MNt(e){return e}';
+      const result = writeStripEmptySystemReminders(src);
+      expect(result).not.toBeNull();
+      expect(result).toContain(
+        'function Pa(e){if(!e||!e.trim()||e==="(no content)")return"(no content)";return`${iI}\n${e}\n${Uue}`}'
+      );
+      expect(writeStripEmptySystemReminders(result!)).toBe(result);
+    });
+
+    it('ignores a const-tag wrapper whose consts are not the reminder tags', () => {
+      const src =
+        'var iI="<other>",Uue="</other>";function Pa(e){return`${iI}\n${e}\n${Uue}`}';
+      expect(writeStripEmptySystemReminders(src)).toBeNull();
+    });
+
     it('returns null when LW shape not found', () => {
       expect(writeStripEmptySystemReminders('unrelated')).toBeNull();
     });

@@ -88,13 +88,32 @@ export const writeClaudemdContextOncePerConversation = (
 export const writeStripEmptySystemReminders = (
   oldFile: string
 ): string | null => {
+  // CC >= 2.1.268 hoists both tags into consts: `return`${iI}\n${e}\n${Uue}``.
+  // A `${a}\n${x}\n${b}` wrapper is only trusted when `a` and `b` are assigned
+  // the two reminder tags, since that template shape is otherwise generic.
+  const constPattern =
+    /function ([$\w]+)\(([$\w]+)\)\{return`\$\{([$\w]+)\}\n\$\{\2\}\n\$\{([$\w]+)\}`\}/g;
+  const assignedTo = (name: string, value: string): boolean =>
+    new RegExp(
+      `[,;{(\\s]${name.replace(/\$/g, '\\$')}=${JSON.stringify(value)}[,;]`
+    ).test(oldFile);
+  let constMatch: RegExpExecArray | null = null;
+  for (const m of oldFile.matchAll(constPattern)) {
+    if (
+      assignedTo(m[3], '<system-reminder>') &&
+      assignedTo(m[4], '</system-reminder>')
+    ) {
+      constMatch = m as RegExpExecArray;
+      break;
+    }
+  }
   const pattern =
     /function ([$\w]+)\(([$\w]+)\)\{return`<system-reminder>\n\$\{\2\}\n<\/system-reminder>`\}/;
-  const match = oldFile.match(pattern);
+  const match = constMatch ?? oldFile.match(pattern);
 
   if (!match || match.index === undefined) {
     if (
-      /function [$\w]+\(([$\w]+)\)\{if\(!\1\|\|!\1\.trim\(\)\|\|\1==="\(no content\)"\)return"\(no content\)";return`<system-reminder>/.test(
+      /function [$\w]+\(([$\w]+)\)\{if\(!\1\|\|!\1\.trim\(\)\|\|\1==="\(no content\)"\)return"\(no content\)";return`(?:<system-reminder>|\$\{[$\w]+\}\n)/.test(
         oldFile
       )
     ) {
@@ -107,13 +126,15 @@ export const writeStripEmptySystemReminders = (
   }
 
   const [fullMatch, fnName, argName] = match;
+  const open = constMatch ? `\${${constMatch[3]}}` : '<system-reminder>';
+  const close = constMatch ? `\${${constMatch[4]}}` : '</system-reminder>';
   // Return the unwrapped "(no content)" placeholder for empty/placeholder input.
   // Returning "" would make text blocks empty, which Anthropic's API rejects when
   // cache_control is attached: `cache_control cannot be set for empty text blocks`.
   const replacement =
     `function ${fnName}(${argName}){` +
     `if(!${argName}||!${argName}.trim()||${argName}==="(no content)")return"(no content)";` +
-    `return\`<system-reminder>\n\${${argName}}\n</system-reminder>\`}`;
+    `return\`${open}\n\${${argName}}\n${close}\`}`;
 
   const startIndex = match.index;
   const endIndex = startIndex + fullMatch.length;

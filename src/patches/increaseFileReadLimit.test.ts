@@ -54,6 +54,16 @@ describe('writeIncreaseFileReadLimit', () => {
     );
   });
 
+  it('raises 25000 through the CC 2.1.268 default-limits fallback', () => {
+    const src =
+      'var LSo=25000,kot=128;function HV(){let e=hi();' +
+      'return e.defaultFileReadingLimits??={maxSizeBytes:MSe,maxTokens:FSo()??LSo},e.defaultFileReadingLimits}' +
+      'function x(){let LSo=!1;return LSo}';
+    const out = writeIncreaseFileReadLimit(src);
+    expect(out).toContain('var LSo=1000000,kot=128;');
+    expect(out).toContain('let LSo=!1;');
+  });
+
   it('returns null (logging) when 25000 has no nearby anchor', () => {
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     // 25000 present but no anchor within range -> no match.

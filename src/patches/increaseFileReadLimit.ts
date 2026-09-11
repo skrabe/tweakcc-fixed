@@ -11,6 +11,21 @@ import { LocationResult, showDiff } from './index';
  * - "tengu_amber_wren" (CC >=2.1.83)
  */
 const getFileReadLimitLocation = (oldFile: string): LocationResult | null => {
+  // Method 0 (CC >=2.1.268): the tengu_amber_wren gate is gone and the limits
+  // are a plain default object, so bind through its maxTokens fallback:
+  //   e.defaultFileReadingLimits??={maxSizeBytes:MSe,maxTokens:FSo()??LSo}
+  const defaultsIdent = oldFile.match(
+    /defaultFileReadingLimits\?\?=\{maxSizeBytes:[$\w]+,maxTokens:[$\w]+\(\)\?\?([$\w]+)\}/
+  );
+  if (defaultsIdent) {
+    const ident = defaultsIdent[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const decl = oldFile.match(new RegExp(`[^$\\w]${ident}=25000[,;}]`));
+    if (decl && decl.index !== undefined) {
+      const startIndex = decl.index + decl[0].indexOf('25000');
+      return { startIndex, endIndex: startIndex + 5 };
+    }
+  }
+
   // Method 1 (CC >=2.1.232): the limit moved OUT of the gate's neighbourhood
   // into its own `var psb=25000` further down, so every anchor-then-value and
   // value-then-anchor window misses it. Bind through the identifier the gate

@@ -193,6 +193,49 @@ describe('writeFablePlan', () => {
     expect(writeFablePlan(out!, config())).toBe(out);
   });
 
+  it('applies against the CC 2.1.268 object-returning plan resolver', () => {
+    const resolver251 =
+      'function hp(e){let{permissionMode:t,mainLoopModel:r,exceeds200kTokens:o=!1}=e;' +
+      'if(t!=="plan")return r;let u=lf(),d=qde(u);if(d===null)return r;return r}';
+    const resolver268 =
+      'function hp(e){let{model:n,clampWarning:r}=YQt(e);return n}' +
+      'function YQt(e){let{permissionMode:t,mainLoopModel:r,exceeds200kTokens:o=!1}=e;' +
+      'if(t!=="plan")return{model:r,clampWarning:null};let u=lf(),d=qde(u);' +
+      'if(d===null)return{model:r,clampWarning:null};return{model:r,clampWarning:null}}';
+    const src = cli251.replace(resolver251, resolver268);
+    expect(src).toContain(resolver268);
+    const out = writeFablePlan(src, config());
+    expect(out).not.toBeNull();
+    expect(out).toContain(
+      'if(lf()==="fableplan"){globalThis.__tweakccFablePlanEffort=t==="plan"?"'
+    );
+    expect(out).toContain(
+      'return{model:Ot(t==="plan"?"fable":"opus"),clampWarning:null}}globalThis.__tweakccFablePlanEffort=void 0;if(t!=="plan")return{model:r,clampWarning:null};'
+    );
+    expect(writeFablePlan(out!, config())).toBe(out);
+  });
+
+  it('adds the alias to the CC 2.1.268 flag-merged model picker', () => {
+    const src = cli251.replace(
+      /function ln\(e,o\)\{let t=tn\(e\),s=a\.ANTHROPIC_CUSTOM_MODEL_OPTION;/,
+      'function ln(e,o){let r=Wk(e,o),t=r??tn(e),d=r!==null&&Pl()==="flag";if(d){t.push(1)}let p=r===null||d,s=a.ANTHROPIC_CUSTOM_MODEL_OPTION;'
+    );
+    expect(src).toContain('d=r!==null&&Pl()==="flag";');
+    const out = writeFablePlan(src, config());
+    expect(out).not.toBeNull();
+    expect(out).toContain(
+      'd=r!==null&&Pl()==="flag";if(!t.some((z)=>z.value==="fableplan"))t.push('
+    );
+    const pushes = 't.push({"value":"claude-opus-4-6"});'.repeat(20);
+    const crowded = src.replace(
+      'd=r!==null&&Pl()==="flag";',
+      `d=r!==null&&Pl()==="flag";${pushes}`
+    );
+    expect(writeFablePlan(crowded, config())).toContain(
+      `flag";if(!t.some((z)=>z.value==="fableplan"))t.push(`
+    );
+  });
+
   it('is idempotent on the CC 2.1.251 shape', () => {
     const once = writeFablePlan(cli251, config())!;
     const twice = writeFablePlan(once, config())!;

@@ -125,19 +125,25 @@ const patchPlanResolver = (
   config: FablePlanConfig,
   aliasToModel: string
 ): string | null => {
+  // Method -1 — CC >= 2.1.268: the resolver returns `{model,clampWarning}` and
+  // a thin wrapper logs the warning, so every early return is an object.
+  const patternObj =
+    /(function ([$\w]+)\(([$\w]+)\)\{let\{permissionMode:([$\w]+),mainLoopModel:([$\w]+),exceeds200kTokens:([$\w]+)=!1\}=\3;)(if\(\4!=="plan"\)return\{model:\5,clampWarning:null\};let [$\w]+=([$\w]+)\(\),)/;
+  const matchObj = file.match(patternObj);
+
   // Method 0 — CC >= 2.1.251: the inlined opusplan/haiku branches became a
   // pairing table, and the selected-alias getter moved past an early
   // `if(mode!=="plan")return main`. Call the getter ourselves so we still
   // intercept before that return (exec-side resolution + effort).
   const pattern0 =
     /(function ([$\w]+)\(([$\w]+)\)\{let\{permissionMode:([$\w]+),mainLoopModel:([$\w]+),exceeds200kTokens:([$\w]+)=!1\}=\3;)(if\(\4!=="plan"\)return \5;let [$\w]+=([$\w]+)\(\),)/;
-  const match0 = file.match(pattern0);
+  const match0 = matchObj ? null : file.match(pattern0);
 
   const pattern1 =
     /(function ([$\w]+)\(([$\w]+)\)\{let\{permissionMode:([$\w]+),mainLoopModel:([$\w]+),exceeds200kTokens:([$\w]+)=!1\}=\3,([$\w]+)=([$\w]+)\(\);)/;
-  const match1 = match0 ? null : file.match(pattern1);
+  const match1 = matchObj || match0 ? null : file.match(pattern1);
 
-  const match = match0 ?? match1;
+  const match = matchObj ?? match0 ?? match1;
   if (!match || match.index === undefined) {
     console.error(
       'patch: fablePlan: failed to find the plan-mode model resolver (uM shape)'
@@ -146,15 +152,17 @@ const patchPlanResolver = (
   }
   const prefix = match[1];
   const mode = match[4];
-  const selected = match0 ? `${match[8]}()` : match[7];
-  const tail = match0 ? match[7] : '';
+  const tableShape = matchObj ?? match0;
+  const selected = tableShape ? `${match[8]}()` : match[7];
+  const tail = tableShape ? match[7] : '';
+  const resolvedModel = `${aliasToModel}(${mode}==="plan"?"${config.planModel}":"${config.execModel}")`;
   // Both halves of the pairing come out of ONE branch. The global is cleared on
   // the way past for every other alias, so switching away from fableplan cannot
   // leave a stale effort pinned for the rest of the session.
   const injection =
     `if(${selected}==="${ALIAS}"){${EFFORT_GLOBAL}=` +
     `${mode}==="plan"?"${config.planEffort}":"${config.execEffort}";` +
-    `return ${aliasToModel}(${mode}==="plan"?"${config.planModel}":"${config.execModel}")}` +
+    `${matchObj ? `return{model:${resolvedModel},clampWarning:null}` : `return ${resolvedModel}`}}` +
     `${EFFORT_GLOBAL}=void 0;`;
   const replacement = prefix + injection + tail;
   const newFile =
@@ -264,7 +272,16 @@ const patchModelPicker = (
   //   function eXr(e,n){let r=X9r(e,n),o=r??V9r(e),d=a.ANTHROPIC_CUSTOM_MODEL_OPTION;
   const pattern257 =
     /(function [$\w]+\(([$\w]+),([$\w]+)\)\{let ([$\w]+)=[$\w]+\(\2,\3\),([$\w]+)=\4\?\?[$\w]+\(\2\),([$\w]+)=[$\w]+\.ANTHROPIC_CUSTOM_MODEL_OPTION;)/;
-  const match257 = file.match(pattern257);
+  // CC 2.1.268 shape: the custom-option read moved out of the first `let`, past
+  // a flag-gated merge of the bootstrap list. Anchor on the first statement and
+  // confirm the custom-option read follows before the next function — by scope,
+  // not distance, because model-customizations and opusplan1m inject pushes here
+  // first:
+  //   function Vko(e,n){let r=Wko(e,n),o=r??Smn(e),d=r!==null&&Ple()==="flag";
+  //     if(d){…}let p=r===null||d,_=a.ANTHROPIC_CUSTOM_MODEL_OPTION;
+  const pattern268 =
+    /(function [$\w]+\(([$\w]+),([$\w]+)\)\{let ([$\w]+)=[$\w]+\(\2,\3\),([$\w]+)=\4\?\?[$\w]+\(\2\),[^;]*;)(?=(?:(?!function )[^])*?[$\w]+\.ANTHROPIC_CUSTOM_MODEL_OPTION;)/;
+  const match257 = file.match(pattern268) ?? file.match(pattern257);
   const match = match257 ?? file.match(pattern);
   if (!match || match.index === undefined) {
     console.error('patch: fablePlan: failed to find the model picker options');
