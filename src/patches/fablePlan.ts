@@ -354,6 +354,103 @@ const patchEffortLookup = (file: string): string | null => {
 };
 
 /**
+ * Splice 8 — no single effort control on the fableplan row of `/model`.
+ *
+ * The picker resolves the highlighted alias to one concrete model, so ←/→ on
+ * fableplan would pin ONE session-wide level for both sides and save it as the
+ * exec model's default. Each side already follows its own model's setting
+ * (splice 6), so on this row the arrows do nothing, the effort line says where
+ * the levels come from, and confirming the row never writes an effort:
+ *   - the adjust handler returns before `supportsEffort` for fableplan;
+ *   - the effort line renders a note instead of the level + ←/→ hint;
+ *   - the commit passes the alias through with no effort, even if the arrows
+ *     were used on another row first.
+ */
+const patchPickerEffortRow = (
+  file: string,
+  config: FablePlanConfig
+): string | null => {
+  if (!file.includes('"modelPicker:decreaseEffort"')) {
+    debug('patch: fablePlan: no model-picker effort control in this build');
+    return file;
+  }
+  if (file.includes(`==="${ALIAS}")return;let `)) {
+    debug('patch: fablePlan: picker effort row already handled — skipping');
+    return file;
+  }
+
+  const adjust =
+    /(=[$\w]+\(\(([$\w]+)\)=>\{let ([$\w]+)=[$\w]+\(\),([$\w]+)=[$\w]+\.find\(\(([$\w]+)\)=>\5\.value===\3\);if\(\4===void 0\|\|\4\.disabled===!0\)return;)(let ([$\w]+)=[$\w]+\(\3\);if\(!\7\.supportsEffort\)return;)/;
+  const display =
+    /(([$\w]+)!==void 0&&![$\w]+&&[$\w]+\([$\w]+,\{marginBottom:1,flexDirection:"column",children:)([$\w]+\?)/;
+  const unsupported =
+    /([$\w]+)\(([$\w]+),\{color:"subtle",children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," Effort not supported"/;
+  const commit =
+    /(function ([$\w]+)\(([$\w]+)\)\{)(let ([$\w]+)=[$\w]+\(\3\),[$\w]+=\5&&[$\w]+!==void 0&&[$\w]+!=="ultracode"\?[$\w]+\([$\w]+,\5\):[$\w]+;if\([$\w]+\("tengu_model_command_menu_effort")/;
+
+  const a = file.match(adjust);
+  const d = file.match(display);
+  const u = file.match(unsupported);
+  const c = file.match(commit);
+  if (
+    !a ||
+    a.index === undefined ||
+    !d ||
+    d.index === undefined ||
+    !u ||
+    !c ||
+    c.index === undefined
+  ) {
+    console.error(
+      'patch: fablePlan: failed to find the model picker effort control'
+    );
+    return null;
+  }
+  // The commit's own apply call, `if(sel===DEFAULT){apply(null,effort);return}`,
+  // names the function that sets the model; find it inside the same function.
+  const tail = file
+    .slice(c.index + c[1].length)
+    .match(
+      new RegExp(
+        `^(?:(?!function )[^])*?if\\(${c[3].replace(/\$/g, '\\$')}===[$\\w]+\\)\\{([$\\w]+)\\(null,[$\\w]+\\);return\\}`
+      )
+    );
+  if (!tail) {
+    console.error(
+      'patch: fablePlan: failed to find the model picker apply call'
+    );
+    return null;
+  }
+  const note = JSON.stringify(
+    `${title(config.planModel)} and ${title(config.execModel)} each use their own effort (set it on their rows)`
+  );
+  const edits: [number, number, string][] = [
+    [
+      a.index,
+      a.index + a[0].length,
+      `${a[1]}if(${a[3]}==="${ALIAS}")return;${a[6]}`,
+    ],
+    [
+      d.index,
+      d.index + d[0].length,
+      `${d[1]}${d[2]}==="${ALIAS}"?${u[1]}(${u[2]},{color:"subtle",children:[${note}]}):${d[3]}`,
+    ],
+    [
+      c.index,
+      c.index + c[0].length,
+      `${c[1]}if(${c[3]}==="${ALIAS}"){${tail[1]}(${c[3]},void 0);return}${c[4]}`,
+    ],
+  ];
+  // Apply back to front so earlier offsets stay valid.
+  let newFile = file;
+  for (const [start, end, text] of edits.sort((x, y) => y[0] - x[0])) {
+    newFile = newFile.slice(0, start) + text + newFile.slice(end);
+  }
+  showDiff(file, newFile, edits.map(e => e[2]).join(' … '), a.index, a.index);
+  return newFile;
+};
+
+/**
  * Splice 7 — surface Claude Code's own clear-context option.
  *
  * `let p=it((yt)=>yt.settings.showClearContextOnPlanAccept)??!1` — Claude Code
@@ -441,6 +538,10 @@ export const writeFablePlan = (
   const efforted = patchEffortLookup(file);
   if (!efforted) return null;
   file = efforted;
+
+  const effortRow = patchPickerEffortRow(file, config);
+  if (!effortRow) return null;
+  file = effortRow;
 
   if (config.offerClearContextOnPlanAccept) {
     const cleared = patchClearContextOption(file);

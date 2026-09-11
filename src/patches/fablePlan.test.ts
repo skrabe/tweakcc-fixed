@@ -233,6 +233,35 @@ describe('writeFablePlan', () => {
     );
   });
 
+  it('drops the single effort control on the fableplan picker row', () => {
+    const picker =
+      'Ze({"modelPicker:decreaseEffort":()=>{Ws("left")}});' +
+      'Ws=oe((Bs)=>{let di=ko(),ra=yn.find((qn)=>qn.value===di);if(ra===void 0||ra.disabled===!0)return;' +
+      'let $a=hne(di);if(!$a.supportsEffort)return;jn(1)},[yn]);' +
+      'function es(Bs){let di=HT(Bs),ra=di&&In!==void 0&&In!=="ultracode"?W1(In,di):In;' +
+      'if(i("tengu_model_command_menu_effort",{effort:we(ra)}),!Oe&&gr)Je(1);let $a=ra;' +
+      'if(Bs===EC){ee(null,$a);return}ee(Bs,$a)}' +
+      'hi!==void 0&&!ai&&e(o,{marginBottom:1,flexDirection:"column",children:oi?r(F,{children:[1]}):' +
+      'r(n,{color:"subtle",children:[e(jY,{effort:void 0})," Effort not supported",Vi?` for ${Vi}`:""]})})';
+    const out = writeFablePlan(cli + picker, config())!;
+    expect(out).toContain('if(di==="fableplan")return;let $a=hne(di)');
+    expect(out).toContain(
+      'children:hi==="fableplan"?r(n,{color:"subtle",children:["Fable and Opus each use their own effort (set it on their rows)"]}):oi?'
+    );
+    expect(out).toContain(
+      'function es(Bs){if(Bs==="fableplan"){ee(Bs,void 0);return}let di=HT(Bs)'
+    );
+    expect(writeFablePlan(out, config())).toBe(out);
+    // a build that has the effort control but a drifted shape fails loudly
+    expect(
+      writeFablePlan(
+        cli +
+          picker.replace('supportsEffort)return;', 'supportsEffort)return 0;'),
+        config()
+      )
+    ).toBeNull();
+  });
+
   it('is idempotent on the CC 2.1.251 shape', () => {
     const once = writeFablePlan(cli251, config())!;
     const twice = writeFablePlan(once, config())!;
