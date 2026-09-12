@@ -263,8 +263,8 @@ export interface Settings {
   defaultToolset: string | null;
   planModeToolset: string | null;
   subagentModels: SubagentModelsConfig;
-  /** User-defined models (Ollama, LM Studio, etc.) for per-model context window enforcement */
-  customModels: CustomModel[];
+  // CC's native modelOverrides format — keys are model IDs, values carry contextWindow/maxTokens.
+  // Our startup reader reads these from ~/.claude/settings.json to populate globalThis.__tweakccCustomModels.
   // Non-optional like subagentModels (its analog): DEFAULT_SETTINGS always
   // provides it and normalizeConfig backfills it via deepMergeWithDefaults.
   complexityRouter: ComplexityRouterConfig;
