@@ -759,6 +759,7 @@ export const DEFAULT_SETTINGS: Settings = {
     explore: null,
     generalPurpose: null,
   },
+  customModels: [], // User-defined models (Ollama, LM Studio, etc.) — set contextWindow for per-model auto-compact support
   fablePlan: {
     enabled: false,
     planModel: 'fable',

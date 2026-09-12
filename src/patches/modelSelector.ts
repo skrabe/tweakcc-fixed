@@ -1,21 +1,12 @@
 // Please see the note about writing patches in ./index
 
 import { escapeIdent, showDiff } from './index';
+import type { CustomModel } from '../types';
 
-/**
- * Custom model definition with all metadata.
- */
-export interface CustomModel {
-  value: string; // Model ID used by Claude Code (e.g., 'claude-opus-4-6')
-  label: string; // Short display name in /model picker (e.g., 'Opus 4.6')
-  description: string; // Longer description shown on hover/select
-  contextWindow?: number; // Context window size in tokens (default: 200000)
-  maxTokens?: number; // Max output tokens per response (default: 16384)
-  pricing?: {
-    input?: number; // Cost per token for input (USD)
-    output?: number; // Cost per token for output (USD)
-  };
-}
+/** Re-export CustomModel for use by other modules */
+export type { CustomModel };
+
+// Models to inject/make available. These are the built-in Claude models that ship with tweakcc.
 
 // Models to inject/make available.
 // prettier-ignore
@@ -34,6 +25,10 @@ export const CUSTOM_MODELS: CustomModel[] = [
   { value: 'claude-3-5-sonnet-20240620',  label: 'Sonnet 3.5 (June)',    description: "Claude 3.5 Sonnet (June 2024)", contextWindow: 200000, maxTokens: 8192 },
   { value: 'claude-3-haiku-20240307',     label: 'Haiku 3',              description: "Claude 3 Haiku (March 2024)", contextWindow: 65536, maxTokens: 8192 },
   { value: 'claude-3-opus-20240229',      label: 'Opus 3',               description: "Claude 3 Opus (February 2024)", contextWindow: 200000, maxTokens: 8192 },
+
+  // Custom Ollama models — add your own here for per-model context window enforcement
+  { value: 'qwen36-500k:35b',             label: 'Qwen 35B (500K)',      description: "Qwen 35B MoE via Ollama", contextWindow: 500000, maxTokens: 32768 },
+  { value: 'ornith1-505k:35b',            label: 'Ornith 1 (505K)',      description: "Qwen 35B MoE via Ollama", contextWindow: 505000, maxTokens: 32768 },
 ];
 
 const findCustomModelListInsertionPoint = (
