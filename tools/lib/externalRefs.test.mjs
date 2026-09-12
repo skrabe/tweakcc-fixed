@@ -63,6 +63,24 @@ describe('externalRefs', () => {
     expect(r.predicateRuns).toEqual(['<command-name>/loop</command-name>']);
   });
 
+  it('flags a body that is the replacement half of a rewrite pair (CC 2.1.269)', () => {
+    const body = 'one the person can open, in their organization';
+    const r = externalRefs({
+      id: 'replacement',
+      bodies: [body],
+      corpus,
+      replacements: [
+        body,
+        'publish with `asset: true`, in place of `file_path`:',
+      ],
+    });
+    expect(r.rewriteReplacement).toBe(true);
+    expect(
+      externalRefs({ id: 'x', bodies: [WRITES], corpus, replacements: [body] })
+        .rewriteReplacement
+    ).toBe(false);
+  });
+
   it('splits literal runs on slots, keeping each run as written', () => {
     expect(literalRuns('Reason: ${a}. The report follows here.')).toEqual([
       '. The report follows here.',

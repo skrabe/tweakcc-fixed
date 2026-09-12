@@ -14,7 +14,10 @@ import path from 'node:path';
 import os from 'node:os';
 import { packByWeight, packingFloor } from './lib/packByWeight.mjs';
 import { externalRefs } from './lib/externalRefs.mjs';
-import { rewriteTableNeedles } from './checkScannedLiterals.mjs';
+import {
+  rewriteTableNeedles,
+  rewriteTablePairs,
+} from './checkScannedLiterals.mjs';
 
 const [jsonPath, idsPath, outDirArg, groupSizeArg] = process.argv.slice(2);
 if (!jsonPath || !idsPath) {
@@ -109,6 +112,9 @@ const cliPath = process.env.TWEAKCC_CLI || '';
 const cliSrc =
   cliPath && fs.existsSync(cliPath) ? fs.readFileSync(cliPath, 'utf8') : null;
 const needles = cliSrc ? [...rewriteTableNeedles(cliSrc)] : [];
+const replacements = cliSrc
+  ? [...new Set(rewriteTablePairs(cliSrc).map(p => p.replacement))]
+  : [];
 const corpus = new Map(
   [...byId].map(([k, v]) => [k, v.map(bodyOf).join('\n')])
 );
@@ -191,6 +197,7 @@ const packetFor = id => {
         bodies: entries.map(bodyOf),
         corpus,
         needles,
+        replacements,
         src: cliSrc,
       }),
       bundleChecked: Boolean(cliSrc),

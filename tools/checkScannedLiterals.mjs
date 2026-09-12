@@ -184,8 +184,11 @@ export const sentenceSurvives = (pristine, needle, override) => {
   );
 };
 
-export const rewriteTableNeedles = src => {
-  const needles = new Set();
+// Every [needle, replacement] pair passed to a rewrite call. The replacement
+// half is spliced into the MIDDLE of another rendered sentence, so blanking an
+// override of it deletes words from that sentence rather than a prompt.
+export const rewriteTablePairs = src => {
+  const pairs = [];
   const re = /\b[$\w]+\(\s*(?:[$\w]+\.)?[$\w]+\s*,\s*\[\[/g;
   let m;
   while ((m = re.exec(src)) !== null) {
@@ -216,14 +219,22 @@ export const rewriteTableNeedles = src => {
         p = next - 1;
       }
     }
-    // A table is pairs; a short marker is not a prose needle worth guarding.
     if (strings.length < 2 || strings.length % 2 !== 0) continue;
     for (let a = 0; a < strings.length; a += 2) {
-      if (strings[a].length >= 12) needles.add(strings[a]);
+      pairs.push({ needle: strings[a], replacement: strings[a + 1] });
     }
   }
-  return [...needles];
+  return pairs;
 };
+
+// A short marker is not a prose needle worth guarding.
+export const rewriteTableNeedles = src => [
+  ...new Set(
+    rewriteTablePairs(src)
+      .map(p => p.needle)
+      .filter(n => n.length >= 12)
+  ),
+];
 
 const main = () => {
   const args = process.argv.slice(2);
