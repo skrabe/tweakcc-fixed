@@ -72,6 +72,27 @@ describe('writeSessionMemory', () => {
     expect(() => new Function(out)).not.toThrow();
   });
 
+  it('collapses the CC 2.1.269 extract-mode helper (POST_TURN_MEMORY prefix)', () => {
+    // Real contiguous excerpt from /tmp/cli-2.1.269.js around Dat(). The
+    // passport_quail gate is still present; Anthropic only prepended
+    // `if(wIe()!==null)return!0` for CLAUDE_CODE_POST_TURN_MEMORY.
+    const v269 =
+      'function EIe(){let e=H("tengu_sepia_cormorant",null);if(!Array.isArray(e)||e.length===0)return!1;let n=Oc(),r=n!==void 0?n:Cx();if(typeof r!=="string"||!Itn(r,e))return!1;return H("tengu_umber_petrel",!1)}function Dat(){if(wIe()!==null)return!0;if(!H("tengu_passport_quail",!1))return!1;return!Ae()||H("tengu_slate_thimble",!1)}function J$(){if(process.env.CLAUDE_CODE_REMOTE_MEMORY_DIR)return process.env.CLAUDE_CODE_REMOTE_MEMORY_DIR;return _e()}';
+    const out = writeSessionMemory(v269);
+    expect(out).not.toBeNull();
+    expect(out).toContain('function Dat(){return!0}');
+    expect(out).not.toContain('if(wIe()!==null)return!0');
+    expect(out).not.toContain('tengu_passport_quail');
+    expect(out).not.toContain('tengu_slate_thimble');
+    expect(out).toContain(
+      'function EIe(){let e=H("tengu_sepia_cormorant",null)'
+    );
+    expect(out).toContain(
+      'function J$(){if(process.env.CLAUDE_CODE_REMOTE_MEMORY_DIR)'
+    );
+    expect(() => new Function(out!)).not.toThrow();
+  });
+
   it('treats a modern build (gates already promoted) as a clean no-op', () => {
     // CC >= ~2.1.152: none of the flag literals / anchors are present, but the
     // session-search UI event path exists, so every sub-patch no-ops and the
@@ -79,6 +100,16 @@ describe('writeSessionMemory', () => {
     const modern = 'var a=1;sendEvent("tengu_session_search_toggled");var b=2;';
     const out = writeSessionMemory(modern);
     expect(out).toBe(modern);
+  });
+
+  it('returns null when the extract-mode flag is present but its shape is unknown', () => {
+    const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const broken = 'var x=lookup("tengu_passport_quail");doSomethingElse();';
+    expect(writeSessionMemory(broken)).toBeNull();
+    expect(errSpy).toHaveBeenCalledWith(
+      'patch: sessionMemory: failed to find extract-mode helper'
+    );
+    errSpy.mockRestore();
   });
 
   it('returns null when the extraction gate is present but its shape is unknown', () => {

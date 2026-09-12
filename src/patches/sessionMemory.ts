@@ -277,6 +277,68 @@ const patchUpdateThresholds = (
   return newFile;
 };
 
+const collapseExtractModeHelper = (
+  file: string,
+  fnDecl: string,
+  startIndex: number,
+  matchedLength: number
+): string => {
+  const replacement = `${fnDecl}{return!0}`;
+  const newFile =
+    file.slice(0, startIndex) +
+    replacement +
+    file.slice(startIndex + matchedLength);
+  showDiff(file, newFile, replacement, startIndex, startIndex + matchedLength);
+  return newFile;
+};
+
+/**
+ * Patch 5: Force-enable the extract-mode helper. Call sites still use it
+ * to decide whether to run executeExtractMemories / drainPendingExtraction.
+ *
+ * The helper is still gated by tengu_passport_quail on current CC; only
+ * the opening of the function has changed. Fail loud when the flag
+ * literal is present but neither known shape matches.
+ */
+const patchExtractMode = (file: string): string | null => {
+  // Method 1 (CC >= 2.1.269): a POST_TURN_MEMORY helper short-circuits to
+  // true when set; the passport_quail / slate_thimble gate is otherwise
+  // the same as Method 2.
+  //   function Dat(){if(wIe()!==null)return!0;if(!H("tengu_passport_quail",!1))return!1;return!Ae()||H("tengu_slate_thimble",!1)}
+  const method1 =
+    /(function [$\w]+\(\))\{if\([$\w]+\(\)!==null\)return!0;if\(![$\w]+\("tengu_passport_quail",!1\)\)return!1;return![$\w]+\(\)\|\|[$\w]+\("tengu_slate_thimble",!1\)\}/;
+  const match1 = file.match(method1);
+  if (match1 && match1.index !== undefined) {
+    return collapseExtractModeHelper(
+      file,
+      match1[1],
+      match1.index,
+      match1[0].length
+    );
+  }
+
+  // Method 2 (CC <= 2.1.268): flag check is the first statement.
+  //   function Dst(){if(!H("tengu_passport_quail",!1))return!1;return!Re()||H("tengu_slate_thimble",!1)}
+  const method2 =
+    /(function [$\w]+\(\))\{if\(![$\w]+\("tengu_passport_quail",!1\)\)return!1;return![$\w]+\(\)\|\|[$\w]+\("tengu_slate_thimble",!1\)\}/;
+  const match2 = file.match(method2);
+  if (match2 && match2.index !== undefined) {
+    return collapseExtractModeHelper(
+      file,
+      match2[1],
+      match2.index,
+      match2[0].length
+    );
+  }
+
+  if (file.includes('"tengu_passport_quail"')) {
+    console.error('patch: sessionMemory: failed to find extract-mode helper');
+    return null;
+  }
+
+  return file;
+};
+
 /**
  * Combined patch - applies extraction, past sessions, token limits, and update thresholds
  */
@@ -292,24 +354,11 @@ export const writeSessionMemory = (oldFile: string): string | null => {
   }
   newFile = withPastSessions;
 
-  const extractModePattern =
-    /(function [$\w]+\(\))\{if\(![$\w]+\("tengu_passport_quail",!1\)\)return!1;return![$\w]+\(\)\|\|[$\w]+\("tengu_slate_thimble",!1\)\}/;
-  const extractModeMatch = newFile.match(extractModePattern);
-  if (extractModeMatch && extractModeMatch.index !== undefined) {
-    const replacement = `${extractModeMatch[1]}{return!0}`;
-    const beforePatch = newFile;
-    newFile =
-      newFile.slice(0, extractModeMatch.index) +
-      replacement +
-      newFile.slice(extractModeMatch.index + extractModeMatch[0].length);
-    showDiff(
-      beforePatch,
-      newFile,
-      replacement,
-      extractModeMatch.index,
-      extractModeMatch.index + extractModeMatch[0].length
-    );
+  const withExtractMode = patchExtractMode(newFile);
+  if (!withExtractMode) {
+    return null;
   }
+  newFile = withExtractMode;
 
   const tokenLimitsFile = patchTokenLimits(newFile, usedLegacyExtraction);
   if (tokenLimitsFile) {
