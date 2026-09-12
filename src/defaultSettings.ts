@@ -759,6 +759,7 @@ export const DEFAULT_SETTINGS: Settings = {
     explore: null,
     generalPurpose: null,
   },
+  customModels: [], // User-defined models with contextWindow/maxTokens — read by startup reader at ~/.claude/settings.json
   fablePlan: {
     enabled: false,
     planModel: 'fable',

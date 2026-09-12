@@ -263,7 +263,9 @@ export interface Settings {
   defaultToolset: string | null;
   planModeToolset: string | null;
   subagentModels: SubagentModelsConfig;
-  // CC's native modelOverrides format — keys are model IDs, values carry contextWindow/maxTokens.
+  /** Custom model definitions — keys are model IDs, values carry contextWindow/maxTokens */
+  customModels: CustomModel[];
+  // CC's native modelOverrides format (string arrays) is also read by the startup reader.
   // Our startup reader reads these from ~/.claude/settings.json to populate globalThis.__tweakccCustomModels.
   // Non-optional like subagentModels (its analog): DEFAULT_SETTINGS always
   // provides it and normalizeConfig backfills it via deepMergeWithDefaults.

@@ -94,15 +94,16 @@ const findCustomModelListInsertionPoint = (
 };
 
 /**
- * Inject a runtime settings reader at CC startup that loads per-model overrides from
- * ~/.claude/settings.json. This uses CC's native `modelOverrides` format (keys = model ID,
- * values = config with optional contextWindow/maxTokens) so users can add Ollama/custom
- * models without re-patching the binary.
+ * Inject a runtime settings reader at CC startup that loads per-model context windows
+ * from ~/.claude/settings.json. Uses two formats for maximum compatibility:
  *
- * Example settings.json entry:
- *   "modelOverrides": {
- *     "qwen36-500k:35b": { "contextWindow": 500000 }
- *   }
+ * 1. Primary (recommended): "customModels" array — clean JSON objects
+ *    { "customModels": [{ "value": "qwen36-500k:35b", "contextWindow": 500000 }] }
+ *
+ * 2. Fallback: modelOverrides strings with key=value format (works with CC's native modelOverrides)
+ *    { "modelOverrides": { "my-model": ["contextWindow=500000"] } }
+ *
+ * This is dynamic — no re-patching needed when users add/remove models.
  */
 const injectSettingsReader = (fileContents: string): string | null => {
   // Find server initialization point — where we can safely inject startup code
@@ -117,9 +118,9 @@ const injectSettingsReader = (fileContents: string): string | null => {
   }
 
   // Build the startup reader that reads ~/.claude/settings.json at CC boot.
-  // It populates globalThis.__tweakccCustomModels with models from CC's native
-  // modelOverrides (keys are model IDs, values carry contextWindow/maxTokens).
-  const readerFunc = `globalThis.__tweakccReadSettings=function(){try{var m=globalThis.__tweakccCustomModels;if(m&&m.length>0)return}catch(e){}try{var f=require("fs"),p=require("path");try{var c=p.join(p.homedir(),".claude","settings.json");var d=JSON.parse(f.readFileSync(c,"utf8"));if(d.modelOverrides)for(var k in d.modelOverrides){var v=d.modelOverrides[k];if(v.contextWindow||v.maxTokens)m=(m||[]).concat({value:k,label:v.label||k,description:v.description||"",contextWindow:v.contextWindow||200000,maxTokens:v.maxTokens||16384})}}catch(u){}}catch(t){}globalThis.__tweakccCustomModels=m};
+  // Populates globalThis.__tweakccCustomModels from customModels array (primary)
+  // and modelOverrides strings with contextWindow=... format (fallback).
+  const readerFunc = `globalThis.__tweakccReadSettings=function(){var m=globalThis.__tweakccCustomModels;if(!m)m=[];try{var f=require("fs"),p=require("path");try{var c=p.join(p.homedir(),".claude","settings.json");var d=JSON.parse(f.readFileSync(c,"utf8"));if(d.customModels)for(var x of d.customModels){var already=m.some(function(e){return e.value===x.value});if(!already)m.push({value:x.value,label:x.label||x.value,description:"",contextWindow:x.contextWindow||200000,maxTokens:x.maxTokens||16384})}}catch(u){}try{var v=d&&d.modelOverrides;for(var k in v){var vals=v[k];if(Array.isArray(vals))for(var j=0;j<vals.length;j++){var parts=String(vals[j]).split("=");if(parts[0]==="contextWindow"){m=(m||[]).concat({value:k,label:k,description:"",contextWindow:Number(parts[1])||200000,maxTokens:16384})}}}}catch(t){}globalThis.__tweakccCustomModels=m};
   globalThis.__tweakccReadSettings();`;
 
   const newFile =
