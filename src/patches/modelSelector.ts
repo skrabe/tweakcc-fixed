@@ -7,8 +7,9 @@ import type { CustomModel } from '../types';
 export type { CustomModel };
 
 // Models to inject/make available. These are the built-in Claude models that ship with tweakcc.
+// The patch also injects a runtime reader at CC startup that loads custom models from
+// ~/.claude/settings.json (modelOverrides entries with contextWindow/maxTokens).
 
-// Models to inject/make available.
 // prettier-ignore
 export const CUSTOM_MODELS: CustomModel[] = [
   { value: 'claude-opus-4-6',              label: 'Opus 4.6',             description: "Claude Opus 4.6 (February 2026)", contextWindow: 1000000, maxTokens: 32768 },
@@ -25,10 +26,6 @@ export const CUSTOM_MODELS: CustomModel[] = [
   { value: 'claude-3-5-sonnet-20240620',  label: 'Sonnet 3.5 (June)',    description: "Claude 3.5 Sonnet (June 2024)", contextWindow: 200000, maxTokens: 8192 },
   { value: 'claude-3-haiku-20240307',     label: 'Haiku 3',              description: "Claude 3 Haiku (March 2024)", contextWindow: 65536, maxTokens: 8192 },
   { value: 'claude-3-opus-20240229',      label: 'Opus 3',               description: "Claude 3 Opus (February 2024)", contextWindow: 200000, maxTokens: 8192 },
-
-  // Custom Ollama models — add your own here for per-model context window enforcement
-  { value: 'qwen36-500k:35b',             label: 'Qwen 35B (500K)',      description: "Qwen 35B MoE via Ollama", contextWindow: 500000, maxTokens: 32768 },
-  { value: 'ornith1-505k:35b',            label: 'Ornith 1 (505K)',      description: "Qwen 35B MoE via Ollama", contextWindow: 505000, maxTokens: 32768 },
 ];
 
 const findCustomModelListInsertionPoint = (
@@ -98,6 +95,42 @@ const findCustomModelListInsertionPoint = (
   return { insertionIndex, modelListVar };
 };
 
+/**
+ * Inject a runtime settings reader at CC startup that loads custom models from
+ * ~/.claude/settings.json. This function populates globalThis.__tweakccCustomModels
+ * dynamically so users can add/remove Ollama/custom models by editing settings.json
+ * without re-patching the binary.
+ */
+/**
+ * Inject a runtime settings reader at CC startup that loads custom models from
+ * ~/.claude/settings.json. The reader populates globalThis.__tweakccCustomModels
+ * dynamically so users can add/remove Ollama/custom models by editing settings.json
+ * without re-patching the binary.
+ */
+const injectSettingsReader = (fileContents: string): string | null => {
+  // Find server initialization point — where we can safely inject startup code
+  const serverPattern = /server\s*=\s*globalThis\./;
+  const srvMatch = fileContents.match(serverPattern);
+
+  if (!srvMatch || srvMatch.index === undefined) {
+    console.error(
+      'patch: modelCustomizations: failed to find server initialization point for settings reader'
+    );
+    return null;
+  }
+
+  // Build the startup reader that reads ~/.claude/settings.json at CC boot.
+  // It populates globalThis.__tweakccCustomModels with custom models from CC's own
+  // settings (modelOverrides entries with contextWindow/maxTokens).
+  const readerFunc = `globalThis.__tweakccReadSettings=function(){try{var m=globalThis.__tweakccCustomModels;if(m&&m.length>0)return}catch(e){}try{var f=require("fs"),p=require("path");try{var c=p.join(p.homedir(),".claude","settings.json");var d=JSON.parse(f.readFileSync(c,"utf8"));if(d.modelOverrides)for(var k in d.modelOverrides){var v=d.modelOverrides[k];if(v.contextWindow||v.maxTokens){m=m||[];m.push({value:k,label:v.label||k,description:v.description||"",contextWindow:v.contextWindow||200000,maxTokens:v.maxTokens||16384})}}if(d.customModels)for(var x of d.customModels)(m=m||[]).some(function(e){return e.value===x.value})||m.push(x)}catch(u){}}catch(t){}globalThis.__tweakccCustomModels=m||[]};
+  globalThis.__tweakccReadSettings();`;
+
+  const newFile =
+    fileContents.slice(0, srvMatch.index) + readerFunc + fileContents.slice(srvMatch.index);
+
+  return newFile;
+};
+
 export const writeModelCustomizations = (oldFile: string): string | null => {
   // Skip if custom models are already injected (e.g. from a previous
   // tweakcc run baked into the backup, or future native support).
@@ -122,8 +155,14 @@ export const writeModelCustomizations = (oldFile: string): string | null => {
     model => `${modelListVar}.push(${JSON.stringify(model)});`
   ).join('');
 
-  const newFile =
-    oldFile.slice(0, insertionIndex) + inject + oldFile.slice(insertionIndex);
-  showDiff(oldFile, newFile, inject, insertionIndex, insertionIndex);
-  return newFile;
+  let patchedFile = oldFile.slice(0, insertionIndex) + inject + oldFile.slice(insertionIndex);
+
+  // Also inject the runtime settings reader at server initialization point
+  const readerResult = injectSettingsReader(patchedFile);
+  if (readerResult) {
+    showDiff(patchedFile, readerResult, '\n  /* __tweakccReadSettings injected */', patchedFile.indexOf('server'), patchedFile.indexOf('server') + 100);
+    patchedFile = readerResult;
+  }
+
+  return patchedFile;
 };
