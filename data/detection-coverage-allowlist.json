@@ -941,5 +941,17 @@
     "note": "sandbox-runtime (srt) settings schema: a zod .describe() on a config field or an addIssue validation message; config documentation / settings error, never sent to the model",
     "shape": "concat",
     "excerpt": "maskClaims requires decode — it names claims inside the decoded payload. Set decode (e.g. \"jwt\"), or remove maskClaims to mask the extracted"
+  },
+  "983401eb8d711d7c": {
+    "verdict": "internal",
+    "why": "rewrite-table pairs passed to br(r.from_url, [[needle, replacement], ...]) in the Artifact action-surface schema builder (CC 2.1.269 @20195715): each needle is a match key and each replacement restates text inside the catalogued from_url parameter description; the joined pair is never emitted as a unit",
+    "shape": "array",
+    "excerpt": "one you can open, in your organization one the person can open, in their organization"
+  },
+  "f16af57a030478b2": {
+    "verdict": "ui",
+    "why": "commander .option(\"--max-cost-usd <usd>\", ...) help text on the `claude plugin eval` CLI (CC 2.1.269 @15025165); printed by --help, never sent to the model",
+    "shape": "concat",
+    "excerpt": "Optional hard cost ceiling; abort and report partial results if hit (exit 2). The ceiling is checked before each run launches, so overrun is"
   }
 }

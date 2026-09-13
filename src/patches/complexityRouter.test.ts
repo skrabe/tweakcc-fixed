@@ -94,6 +94,20 @@ const CA_SHAPE =
 
 const FILE_CA = FILE_YT.replace(YT_SHAPE, CA_SHAPE);
 
+// CC 2.1.269: options gained hookEffortValue; NUM is bound first and a
+// defined HOOK short-circuits before the ENV/TURN/FALLBACK chain. Excerpt
+// from the pristine darwin 2.1.269 resolver + its tail-called normalizer.
+const EW_SHAPE =
+  'function Ew(e,o,{honorLaunchPin:n=!0,turnEffort:r,hookEffortValue:f}={}){if(!Zh(e))return;' +
+  'let d=U(e)!==null;if(f!==void 0){let v=typeof f==="number"&&d?hN(f):f;return P(v,e)}' +
+  'let s=n&&x$(e),l=A(e),c=$P();' +
+  'if(c===null&&!s&&!d)return;let E=c??(c===null?l:void 0)??r??(s?l:void 0)??o??l;' +
+  'if(typeof E==="number"&&d)E=hN(E);return P(E,e)}' +
+  'function P(e,o){let n=e;if(typeof n==="string"&&Ek(n))n=k$(n,o);' +
+  'if(n==="max"&&!T$(o))n="high";if(n==="xhigh"&&!aG(o))n="high";return n}';
+
+const FILE_EW = FILE_YT.replace(YT_SHAPE, EW_SHAPE);
+
 const cfg = (
   over: Partial<ComplexityRouterConfig> = {}
 ): ComplexityRouterConfig => ({
@@ -260,6 +274,28 @@ describe('writeComplexityRouter', () => {
     expect(r).toContain('if(__twkRE==="xhigh"&&!$W(e))__twkRE="high";');
     expect(r).toContain(
       'let c=s??(s===null?d:void 0)??r??(f?d:void 0)??n??d;if(typeof c==="number"&&l)c=_1(c);return P(c,e)}'
+    );
+  });
+
+  it('wraps the CC 2.1.269 resolver after the hookEffortValue early-return', () => {
+    const out = writeComplexityRouter(FILE_EW, cfg());
+    expect(out).not.toBeNull();
+    const r = out as string;
+    // Wrap rides RIGHT AFTER the env read (= $P();), which is after the
+    // hook short-circuit — a defined hookEffortValue never reaches us.
+    expect(r).toContain(
+      'if(f!==void 0){let v=typeof f==="number"&&d?hN(f):f;return P(v,e)}let s=n&&x$(e),l=A(e),c=$P();var __st=__tweakccRouterState();'
+    );
+    expect(r).toContain(
+      'if(__twkRE&&c==null&&r==null&&(o==null||o===__st.baseline))'
+    );
+    expect(r).toContain('if(__twkRE==="max"&&!T$(e))__twkRE="high";');
+    expect(r).toContain('if(__twkRE==="xhigh"&&!aG(e))__twkRE="high";');
+    expect(r).toContain(
+      'if(c===null&&!s&&!d)return;let E=c??(c===null?l:void 0)??r??(s?l:void 0)??o??l;if(typeof E==="number"&&d)E=hN(E);return P(E,e)}'
+    );
+    expect(r).toContain(
+      'await __tweakccRouterClassify(E,t,r.options.mainLoopModel);'
     );
   });
 

@@ -22,8 +22,14 @@
 //                     startsWith/includes/endsWith.
 //   opensWithSlot   — the body starts with an interpolation; its value may be a
 //                     key some detector matches the rendered text against.
+//   rewriteReplacement — the body IS the replacement half of a rewrite pair.
+//                     CC splices it into the middle of another rendered
+//                     sentence, so a wipe deletes words from that sentence
+//                     (CC 2.1.269: stage 1 proposed wiping "one the person can
+//                     open, in their organization", which would have left the
+//                     from_url description reading "must be ones ").
 //
-// All four are leads, not verdicts: text on these lists is FROZEN
+// All five are leads, not verdicts: text on these lists is FROZEN
 // (verbatim-or-keep), and a wipe needs the lead checked in the bundle first.
 
 const LABEL_RE = /\b[A-Z][A-Z0-9_-]{1,}(?: [A-Z][A-Z0-9_-]{1,})+\b/g;
@@ -43,6 +49,7 @@ export const externalRefs = ({
   bodies,
   corpus,
   needles = [],
+  replacements = [],
   src = null,
 }) => {
   const own = bodies.join('\n');
@@ -87,5 +94,6 @@ export const externalRefs = ({
     quotedElsewhere,
     predicateRuns,
     opensWithSlot: bodies.some(b => b.trimStart().startsWith('${')),
+    rewriteReplacement: bodies.some(b => replacements.includes(b.trim())),
   };
 };

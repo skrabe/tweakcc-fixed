@@ -318,7 +318,7 @@ const wrapEffortResolver = (
   helpers: ClassifierHelpers,
   sidFn: string | null
 ): string | null => {
-  // Four resolver shapes, tried newest-first. The two in-line shapes expose the
+  // Five resolver shapes, tried newest-first. The two in-line shapes expose the
   // same capture groups: 1=prefix (through `=ENV();`), 2=MODEL, 3=FALLBACK,
   // 4=ENV result, 5=combined effort var, 6=maxGuard, 7=xhighGuard. Both split
   // shapes carry their guards in a separate normalizer function, resolved below.
@@ -376,7 +376,22 @@ const wrapEffortResolver = (
   // 3=FALLBACK, 4=TURN, 5=ENV, 6=NORM.
   const patternTurnEffort =
     /(function [$\w]+\(([$\w]+),([$\w]+),\{honorLaunchPin:[$\w]+=!0,turnEffort:([$\w]+)\}=\{\}\)\{if\(![$\w]+\(\2\)\)return;let [$\w]+=[$\w]+&&[$\w]+\(\2\),[$\w]+=[$\w]+\(\2\),([$\w]+)=[$\w]+\(\),[$\w]+=[$\w]+\(\2\)!==null;)if\(\5===null&&![$\w]+&&![$\w]+\)return;let ([$\w]+)=\5\?\?\(\5===null\?[$\w]+:void 0\)\?\?\4\?\?\([$\w]+\?[$\w]+:void 0\)\?\?\3\?\?[$\w]+;if\(typeof \6==="number"&&[$\w]+\)\6=[$\w]+\(\6\);return ([$\w]+)\(\6,\2\)\}/;
-  const turnMatch = file.match(patternTurnEffort);
+  //
+  // CC 2.1.269: the options arg gained `hookEffortValue:HOOK`. NUM is bound
+  // first; a defined HOOK short-circuits (numeric HOOK is converted, then
+  // NORM) before the ENV/TURN/FALLBACK chain. The wrap still rides right
+  // after `=ENV();`, so a hook-set effort never reaches the router — the
+  // early-return is the yield. Same capture groups as patternTurnEffort.
+  //   function NAME(MODEL,FALLBACK,{honorLaunchPin:PIN=!0,turnEffort:TURN,hookEffortValue:HOOK}={}){
+  //     if(!SUPPORT(MODEL))return;let NUM=NUMERIC(MODEL)!==null;
+  //     if(HOOK!==void 0){let V=typeof HOOK==="number"&&NUM?CONVERT(HOOK):HOOK;return NORM(V,MODEL)}
+  //     let A=PIN&&LAUNCH(MODEL),B=DEFAULT(MODEL),ENV=ENVFN();
+  //     if(ENV===null&&!A&&!NUM)return;let S=ENV??(ENV===null?B:void 0)??TURN??(A?B:void 0)??FALLBACK??B;
+  //     if(typeof S==="number"&&NUM)S=CONVERT(S);return NORM(S,MODEL)}
+  const patternHookEffort =
+    /(function [$\w]+\(([$\w]+),([$\w]+),\{honorLaunchPin:[$\w]+=!0,turnEffort:([$\w]+),hookEffortValue:[$\w]+\}=\{\}\)\{if\(![$\w]+\(\2\)\)return;let [$\w]+=[$\w]+\(\2\)!==null;if\([$\w]+!==void 0\)\{let [$\w]+=typeof [$\w]+==="number"&&[$\w]+\?[$\w]+\([$\w]+\):[$\w]+;return [$\w]+\([$\w]+,\2\)\}let [$\w]+=[$\w]+&&[$\w]+\(\2\),[$\w]+=[$\w]+\(\2\),([$\w]+)=[$\w]+\(\);)if\(\5===null&&![$\w]+&&![$\w]+\)return;let ([$\w]+)=\5\?\?\(\5===null\?[$\w]+:void 0\)\?\?\4\?\?\([$\w]+\?[$\w]+:void 0\)\?\?\3\?\?[$\w]+;if\(typeof \6==="number"&&[$\w]+\)\6=[$\w]+\(\6\);return ([$\w]+)\(\6,\2\)\}/;
+  const turnMatch =
+    file.match(patternHookEffort) || file.match(patternTurnEffort);
 
   const splitMatch = turnMatch
     ? null

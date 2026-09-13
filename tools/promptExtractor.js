@@ -121,6 +121,27 @@ const COORDINATOR_MODE_2_1_257_MAP = {
 };
 
 const CURATED_IDENTIFIER_MAPS = {
+  'system-prompt-worker-agent': [
+    {
+      // CC 2.1.269 wrapped the commit line in the commit/PR-skill routing
+      // ternary `${q0e()?`…\`/${kP}\` skill…\`/${zR}\` skill…`:"…"}`, which
+      // puts three NEW distinct vars AHEAD of the spawn-depth predicate. The
+      // carried 2-slot map then named the routing flag
+      // MAX_SUBAGENT_SPAWN_DEPTH_FN and the commit skill name AGENT_TOOL_NAME:
+      // valid names on the wrong slots, so the override rendered the fan-out
+      // bullet off the skill flag. Site: `You are a worker agent executing a
+      // task assigned by the coordinator`; distinct vars in first-seen order:
+      // q0e (shipSkillsInvocable), kP ("commit"), zR ("pr"), gw, ht.
+      identifiers: [0, 1, 2, 3, 4],
+      identifierMap: {
+        0: 'COMMIT_AND_PR_SKILLS_CONFIG_FN',
+        1: 'COMMIT_SKILL_NAME',
+        2: 'CREATE_PR_SKILL_NAME',
+        3: 'MAX_SUBAGENT_SPAWN_DEPTH_FN',
+        4: 'AGENT_TOOL_NAME',
+      },
+    },
+  ],
   'system-prompt-memory-instructions': [
     {
       // CC 2.1.247 hoisted the memory-file size-cap note into a new conditional
@@ -179,6 +200,23 @@ const CURATED_IDENTIFIER_MAPS = {
     },
   ],
   'system-prompt-coordinator-mode': [
+    {
+      // CC 2.1.269 appended three distinct vars after the 2.1.257 twelve, so
+      // slots 0-11 keep their names: S (the `Commit${S}` suffix naming the
+      // commit skill), A (the `draft PR${A}` suffix) and v (the git
+      // skill-routing bullet after the QA note). Names match upstream's
+      // system-prompt-coordinator-mode-orchestration at the same slots.
+      identifiers: [
+        0, 1, 2, 3, 4, 5, 6, 7, 2, 8, 3, 0, 9, 2, 10, 3, 2, 11, 3, 4, 2, 3, 2, 4,
+        3, 2, 2, 2, 12, 3, 2, 3, 3, 12, 3, 12, 13, 12, 12, 14, 2, 2, 10, 3, 12,
+      ],
+      identifierMap: {
+        ...COORDINATOR_MODE_2_1_257_MAP,
+        12: 'WORKER_COMMIT_INSTRUCTION_SUFFIX',
+        13: 'WORKER_PR_CREATION_INSTRUCTION_SUFFIX',
+        14: 'WORKER_GIT_SKILL_ROUTING_NOTE',
+      },
+    },
     {
       // 2.1.257 shape — see COORDINATOR_MODE_2_1_257_MAP.
       identifiers: [0, 1, 2, 3, 4, 5, 6, 7, 2, 8, 3, 0, 9, 2, 10, 3, 2, 11, 3, 4, 2, 3, 2, 4, 3, 2, 2, 2, 3, 2, 3, 3, 3, 2, 2, 10, 3],
@@ -2687,10 +2725,9 @@ const NEW_PROMPT_ASSIGNMENTS = [
     id: 'system-prompt-worker-agent',
     description:
       'System prompt for a worker subagent in coordinator mode — scoped execution, reports back to the coordinator (not the user) via task-note output',
-    // Slot 0 is the max-spawn-depth predicate (`db()>1?`), NOT the tool
-    // name; slot 1 is the Agent tool name. Upstream carries this prompt under
-    // a different id, so the shared-id map adoption never corrected it.
-    identifierMap: { 0: 'MAX_SUBAGENT_SPAWN_DEPTH_FN', 1: 'AGENT_TOOL_NAME' },
+    // Upstream carries this prompt under a different id, so the shared-id map
+    // adoption never corrects it; the per-shape map lives in
+    // CURATED_IDENTIFIER_MAPS.
   },
 
   // 2.1.151/2.1.152 — /code-review --fix extension. The --fix flag appends
