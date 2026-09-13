@@ -86,6 +86,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     allowCustomAgentModels: false,
     enableContextLimitOverride: false,
     enableModelCustomizations: true,
+    enableModelContextWindowSync: true, // Per-model context window enforcement via hF dynamic lookup
     enableVoiceMode: false,
     enableVoiceConciseOutput: true,
     enableChannelsMode: false,
@@ -272,6 +273,20 @@ export function MiscView({ onSubmit }: MiscViewProps) {
             ensureMisc();
             settings.misc!.enableModelCustomizations =
               !settings.misc!.enableModelCustomizations;
+          });
+        },
+      },
+      {
+        id: 'enableModelContextWindowSync',
+        title: 'Per-model context window sync (auto-compact)',
+        description:
+          'Dynamically update auto-compact window when switching models via /model. Reads customModels from ~/.claude/settings.json at startup and enforces per-model limits in the hF function. Disable to always use the CLAUDE_CODE_CONTEXT_LIMIT fallback or fixed 200k.',
+        getValue: () => settings.misc?.enableModelContextWindowSync ?? true,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.enableModelContextWindowSync =
+              !settings.misc!.enableModelContextWindowSync;
           });
         },
       },

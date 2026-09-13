@@ -143,6 +143,8 @@ export interface MiscConfig {
   allowCustomAgentModels: boolean;
   enableContextLimitOverride: boolean;
   enableModelCustomizations: boolean;
+  /** Independent toggle for per-model context window enforcement (hF dynamic lookup). Defaults to true. */
+  enableModelContextWindowSync: boolean;
   enableVoiceMode: boolean;
   enableVoiceConciseOutput: boolean;
   enableChannelsMode: boolean;
@@ -238,6 +240,20 @@ export interface ComplexityRouterConfig {
   levels: RouterLevel[]; // ordinal complexity level -> effort map (index 0 = easiest); label/help/effort all user-editable
 }
 
+/** Custom model definition for user-configured models (Ollama, LM Studio, etc.) */
+export interface CustomModel {
+  /** Model ID used by Claude Code (e.g., 'qwen36-500k:35b', 'llama3.1') — must match what the provider returns */
+  value: string;
+  /** Short display name in /model picker */
+  label?: string;
+  /** Longer description shown on hover/select */
+  description?: string;
+  /** Context window size in tokens (required) */
+  contextWindow: number;
+  /** Max output tokens per response (default: 16384) */
+  maxTokens?: number;
+}
+
 export interface Settings {
   themes: Theme[];
   thinkingVerbs: ThinkingVerbsConfig;
@@ -249,6 +265,10 @@ export interface Settings {
   defaultToolset: string | null;
   planModeToolset: string | null;
   subagentModels: SubagentModelsConfig;
+  /** Custom model definitions — keys are model IDs, values carry contextWindow/maxTokens */
+  customModels: CustomModel[];
+  // CC's native modelOverrides format (string arrays) is also read by the startup reader.
+  // Our startup reader reads these from ~/.claude/settings.json to populate globalThis.__tweakccCustomModels.
   // Non-optional like subagentModels (its analog): DEFAULT_SETTINGS always
   // provides it and normalizeConfig backfills it via deepMergeWithDefaults.
   complexityRouter: ComplexityRouterConfig;

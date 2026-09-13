@@ -59,6 +59,7 @@ import { writeUserMessageDisplay } from './userMessageDisplay';
 import { writeInputPatternHighlighters } from './inputPatternHighlighters';
 import { writeVerboseProperty } from './verboseProperty';
 import { writeModelCustomizations } from './modelSelector';
+import { writeModelContextWindowSync } from './modelContextWindowSync';
 import { writeOpusplan1m } from './opusplan1m';
 import { writeThinkingVisibility } from './thinkingVisibility';
 import { writeSubagentModels } from './subagentModels';
@@ -121,6 +122,7 @@ import {
 import { compareVersions } from '../systemPromptSync';
 
 export { showDiff, showPositionalDiff, globalReplace } from './patchDiffing';
+export { writeModelContextWindowSync } from './modelContextWindowSync'; // Prevent tree-shaking
 export {
   findChalkVar,
   findChalkVarInModule,
@@ -268,6 +270,14 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
       'Override the 200K context limit via CLAUDE_CODE_CONTEXT_LIMIT env var (set before launching CC)',
+  },
+  {
+    id: 'model-context-window-sync',
+    name: 'Model context window sync',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'Automatically update context window and maxTokens when model changes via /model command or programmatic selection (reads from CUSTOM_MODELS injected data)',
+    modelFacing: true,
   },
   {
     id: 'patches-applied-indication',
@@ -1033,6 +1043,12 @@ export const applyCustomization = async (
     'model-customizations': {
       fn: c => writeModelCustomizations(c),
       condition: modelCustomizationsEnabled,
+    },
+    'model-context-window-sync': {
+      fn: c => writeModelContextWindowSync(c),
+      condition:
+        (config.settings.misc?.enableModelContextWindowSync ?? true) &&
+        !ccInstInfo.nativeInstallationPath,
     },
     'show-more-items-in-select-menus': {
       fn: c => writeShowMoreItemsInSelectMenus(c, 25),

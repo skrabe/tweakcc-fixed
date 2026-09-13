@@ -22,7 +22,15 @@ import {
   PatchGroup,
   getAllPatchDefinitions,
   TWEAKCC_VERSION,
+  writeModelContextWindowSync, // Import to prevent tree-shaking of model context window sync patch
 } from './patches/index';
+
+// Ensure writeModelContextWindowSync is referenced (prevents tree-shaking)
+/* eslint-disable no-constant-condition */
+if (false) {
+  void writeModelContextWindowSync;
+}
+/* eslint-enable no-constant-condition */
 import {
   preloadStringsFile,
   getSystemPromptDefinitions,

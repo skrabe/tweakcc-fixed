@@ -129,7 +129,7 @@ export function getSelectedModel(): string {
     // Check against CUSTOM_MODELS list
     const customModel = CUSTOM_MODELS.find(m => m.value === model);
     if (customModel) {
-      return customModel.label;
+      return customModel.label ?? customModel.description ?? model;
     }
   } catch {
     // File not found or invalid JSON, use default
