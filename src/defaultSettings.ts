@@ -741,6 +741,7 @@ export const DEFAULT_SETTINGS: Settings = {
     allowCustomAgentModels: false,
     enableContextLimitOverride: false,
     enableModelCustomizations: true,
+    enableModelContextWindowSync: true, // Per-model context window enforcement via hF dynamic lookup
     enableVoiceMode: false,
     enableVoiceConciseOutput: true,
     enableChannelsMode: false,

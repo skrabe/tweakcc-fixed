@@ -143,6 +143,8 @@ export interface MiscConfig {
   allowCustomAgentModels: boolean;
   enableContextLimitOverride: boolean;
   enableModelCustomizations: boolean;
+  /** Independent toggle for per-model context window enforcement (hF dynamic lookup). Defaults to true. */
+  enableModelContextWindowSync: boolean;
   enableVoiceMode: boolean;
   enableVoiceConciseOutput: boolean;
   enableChannelsMode: boolean;

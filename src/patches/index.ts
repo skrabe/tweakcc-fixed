@@ -1046,7 +1046,9 @@ export const applyCustomization = async (
     },
     'model-context-window-sync': {
       fn: c => writeModelContextWindowSync(c),
-      condition: modelCustomizationsEnabled && !ccInstInfo.nativeInstallationPath,
+      condition:
+        (config.settings.misc?.enableModelContextWindowSync ?? true) &&
+        !ccInstInfo.nativeInstallationPath,
     },
     'show-more-items-in-select-menus': {
       fn: c => writeShowMoreItemsInSelectMenus(c, 25),
