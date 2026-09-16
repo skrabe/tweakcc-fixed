@@ -85,6 +85,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     swapRipgrepForFff: false,
     allowCustomAgentModels: false,
     enableContextLimitOverride: false,
+    enableModelContextTokens: false,
     enableModelCustomizations: true,
     enableVoiceMode: false,
     enableVoiceConciseOutput: true,
@@ -505,6 +506,20 @@ export function MiscView({ onSubmit }: MiscViewProps) {
             ensureMisc();
             settings.misc!.enableContextLimitOverride =
               !settings.misc!.enableContextLimitOverride;
+          });
+        },
+      },
+      {
+        id: 'enableModelContextTokens',
+        title: 'Per-model context windows',
+        description:
+          'Gives each unrecognized model its own context window via TWEAKCC_MODEL_CONTEXT_TOKENS env var (comma-separated model=tokens pairs). Must be exported manually before launching CC; unlisted models keep the default behavior.',
+        getValue: () => settings.misc?.enableModelContextTokens ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.enableModelContextTokens =
+              !settings.misc!.enableModelContextTokens;
           });
         },
       },
