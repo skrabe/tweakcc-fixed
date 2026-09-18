@@ -56,6 +56,7 @@ import { DEFAULT_SETTINGS } from '../defaultSettings';
 import { writeShowMoreItemsInSelectMenus } from './showMoreItemsInSelectMenus';
 import { writeThemes } from './themes';
 import { writeContextLimit } from './contextLimit';
+import { writeModelContextTokens } from './modelContextTokens';
 import { writeInputBoxBorder } from './inputBorderBox';
 import { writeInputChevronColor } from './inputChevronColor';
 import { writeThinkerFormat } from './thinkerFormat';
@@ -278,6 +279,13 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
       'Override the 200K context limit via CLAUDE_CODE_CONTEXT_LIMIT env var (set before launching CC)',
+  },
+  {
+    id: 'model-context-tokens',
+    name: 'Per-model context windows',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'Give each unrecognized model its own context window via TWEAKCC_MODEL_CONTEXT_TOKENS env var (comma-separated model=tokens pairs, set before launching CC)',
   },
   {
     id: 'patches-applied-indication',
@@ -1004,6 +1012,10 @@ export const applyCustomization = async (
     'context-limit': {
       fn: c => writeContextLimit(c),
       condition: !!config.settings.misc?.enableContextLimitOverride,
+    },
+    'model-context-tokens': {
+      fn: c => writeModelContextTokens(c),
+      condition: !!config.settings.misc?.enableModelContextTokens,
     },
     opusplan1m: {
       fn: c => writeOpusplan1m(c),
