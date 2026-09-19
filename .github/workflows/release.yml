@@ -40,10 +40,17 @@ jobs:
       - name: Build project
         run: pnpm run build
 
-      - name: Publish to npm
-        run: pnpm publish --access public --no-git-checks
-
+      # Recorded before the publish, so that moving a tag to correct a prompts
+      # JSON is legible from the run alone. That move is how a correction now
+      # reaches an already-published version, since clients read
+      # refs/tags/v<version>: the release updates, and npm refuses a second
+      # publish of a version that exists, which is the registry's immutability
+      # working rather than a fault. Green throughout shipped a new version; a
+      # run whose only red step is the publish re-pointed an existing one.
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
+
+      - name: Publish to npm
+        run: pnpm publish --access public --no-git-checks

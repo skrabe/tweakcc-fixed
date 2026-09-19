@@ -4,27 +4,12 @@ import * as fsSync from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { createRequire } from 'node:module';
-
-// package.json sits two levels up from src/patches/ but one level up from the
-// bundled dist/*.mjs chunks, so try both — keeps the reported version pinned
-// to the published one instead of a hardcoded literal that drifts.
-const _require = createRequire(import.meta.url);
-interface PackageMeta {
-  version: string;
-  supportedClaudeCode: string;
-}
-const PACKAGE_META: PackageMeta = (() => {
-  try {
-    return _require('../package.json') as PackageMeta;
-  } catch {
-    return _require('../../package.json') as PackageMeta;
-  }
-})();
-export const TWEAKCC_VERSION: string = PACKAGE_META.version;
-// Newest Claude Code version this release was verified against; the release
-// workflows refuse a tag where it lags data/prompts.
-export const TWEAKCC_SUPPORTED_CC: string = PACKAGE_META.supportedClaudeCode;
+// Re-exported so the many existing importers keep their path. The values are
+// read in `../packageMeta`, which imports nothing but a node builtin:
+// `systemPromptDownload` needs the version to address the release tag, and it
+// is reached from here through `../systemPromptSync`.
+import { TWEAKCC_VERSION, TWEAKCC_SUPPORTED_CC } from '../packageMeta';
+export { TWEAKCC_VERSION, TWEAKCC_SUPPORTED_CC };
 
 import {
   CONFIG_DIR,
