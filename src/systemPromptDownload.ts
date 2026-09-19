@@ -4,6 +4,7 @@ import * as path from 'path';
 import { fileURLToPath } from 'node:url';
 import type { StringsFile } from './systemPromptSync';
 import { PROMPT_CACHE_DIR } from './config';
+import { TWEAKCC_VERSION } from './packageMeta';
 import { readResponseTextCapped } from './utils';
 
 // Cap the prompts-JSON fetch so a hung / blackholed connection (captive portal,
@@ -156,13 +157,37 @@ export async function downloadStringsFile(
   // npm tarball ships no data/, so npx installs resolve prompts JSONs from
   // here — upstream's JSONs use different naming conventions and would
   // silently mis-pair with this fork's overrides.
-  const url = `https://raw.githubusercontent.com/skrabe/tweakcc-fixed/refs/heads/main/data/prompts/prompts-${version}.json`;
+  //
+  // The REF is this build's own release tag, so an npm install reads the bytes
+  // that were committed when it was published — the same bytes a clone at that
+  // tag reads from disk. `package.json` already knows which release this is,
+  // and addressing the tag is what makes that knowledge reach the data.
+  //
+  // A tag cannot carry a Claude Code release that came after it, which is the
+  // one case the tag legitimately has nothing to say about. `main` answers it,
+  // exactly as it answers the same miss for a clone whose `data/prompts` stops
+  // at its own commit. So the order here is the clone's order: this release's
+  // own data first, then whatever is current.
+  const tagUrl = `https://raw.githubusercontent.com/skrabe/tweakcc-fixed/refs/tags/v${TWEAKCC_VERSION}/data/prompts/prompts-${version}.json`;
+  const mainUrl = `https://raw.githubusercontent.com/skrabe/tweakcc-fixed/refs/heads/main/data/prompts/prompts-${version}.json`;
+
+  // A 404 on the tag means only "not in this release", so it advances to the
+  // next candidate. Every other status is reported against the URL that
+  // produced it — retrying a rate limit or a 5xx would only spend the second
+  // request reaching the same answer.
+  const candidates = [tagUrl, mainUrl];
 
   try {
-    // Fetch the file from GitHub
-    const response = await fetch(url, {
-      signal: AbortSignal.timeout(PROMPTS_FETCH_TIMEOUT_MS),
-    });
+    let response!: Response;
+    let url!: string;
+    for (let i = 0; i < candidates.length; i++) {
+      url = candidates[i];
+      response = await fetch(url, {
+        signal: AbortSignal.timeout(PROMPTS_FETCH_TIMEOUT_MS),
+      });
+      if (response.status === 404 && i < candidates.length - 1) continue;
+      break;
+    }
 
     if (!response.ok) {
       // Network reachable but no usable body — serve the cache if we have one
