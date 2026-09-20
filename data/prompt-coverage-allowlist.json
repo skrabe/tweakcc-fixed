@@ -129,6 +129,11 @@
     "version": "2.1.276",
     "why": "module 119 chunk-n55wtmpy.js, r_ footer_indicator object .describe(): Documents the ◆ footer pill carried on system/init and initialize for host UIs. Terminal/host rendering only; the Zod description is not model-facing."
   },
+  "data-sdk-frame-received-wall-ms-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.278",
+    "why": "Description opens with the @internal marker, and CC deletes an @internal property with its subtree before sending the schema, so this text never reaches the model. SDK transport timing field (frame_received_wall_ms) beside frame_enqueued_wall_ms/turn_started_wall_ms/request_sent_wall_ms."
+  },
   "data-sdk-set-model-system-prompt-field": {
     "verdict": "not-model-facing",
     "version": "2.1.276",
@@ -139,6 +144,11 @@
     "version": "2.1.276",
     "why": "module 319 chunk-c7pgjrkn.js, i() console.log '[self-hosted-runner]': Runner startup notice logged with i=(msg)=>console.log(`[self-hosted-runner] ${msg}`). Operator stderr/stdout, not a model prompt."
   },
+  "data-structured-usage-rate-limit-rows-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.278",
+    "why": "rate_limits.limits[] .describe() inside gar, the --output-format json result envelope (session/total_cost_usd/model_usage/rate_limits). SDK result-shape documentation for the host, never converted into a tool schema; all seven sibling .describe() calls in the same object already carry internal verdicts."
+  },
   "data-thin-client-diff-dialog-schema": {
     "verdict": "not-model-facing",
     "version": "2.1.276",
@@ -148,6 +158,11 @@
     "verdict": "not-model-facing",
     "version": "2.1.276",
     "why": "module 119 chunk-n55wtmpy.js, assistant-message tool_use_meta .describe(): Wrapper-level UI metadata (display_name/icon) on SDK assistant frames. Runtime code attaches VALUES for the host (module 439); the description states it is not replayed to the model, and it is not converted to JSON Schema for prompts."
+  },
+  "data-turn-handoff-available-event-schema": {
+    "verdict": "not-model-facing",
+    "version": "2.1.278",
+    "why": "Description opens with the @internal marker, so CC strips the property with its subtree before sending. Cloud-worker turn_handoff capability event on the SDK/session event stream, read by a session client, not placed in a prompt or tool schema."
   },
   "data-turn-handoff-memory-context-field": {
     "verdict": "not-model-facing",

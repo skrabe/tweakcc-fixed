@@ -32944,8 +32944,8 @@
   },
   "tool-result-auto-mode-no-verdict-not-requested": {
     "verdict": "pristine-keep",
-    "version": "2.1.261",
-    "why": "Unique no-verdict-because-not-requested error with a one-shot retry then skip. Keep verbatim; do not merge into the will-not-change deny."
+    "version": "2.1.278",
+    "why": "Unique no-verdict error with a one-shot retry then skip. CC 2.1.278 folds a second reason into the same sentence through a new ternary slot (server_not_requested, or the session no longer holding the result); the instruction the model acts on is unchanged, so the keep stands. Do not merge into the will-not-change deny."
   },
   "tool-result-claude-browser-enable-already-connected": {
     "verdict": "pristine-keep",
