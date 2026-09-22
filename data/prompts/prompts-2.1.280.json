@@ -7464,6 +7464,17 @@
       "version": "2.1.246"
     },
     {
+      "name": "System Reminder: Dir sync agent staging dropped — contents unchanged",
+      "id": "system-reminder-dir-sync-agent-staging-contents-unchanged",
+      "description": "Suffix on the staging-dropped reminder when the update unstaged the agent's files but their contents are unchanged.",
+      "pieces": [
+        " (the file contents are unchanged)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.280"
+    },
+    {
       "name": "Artifact Publish Mcp Wrong Server Key Clause",
       "id": "tool-result-artifact-publish-mcp-wrong-server-key-clause",
       "description": "Parenthetical on a malformed servers entry when the key was not \"server\".",
@@ -49768,6 +49779,17 @@
       "version": "2.1.280"
     },
     {
+      "name": "Git Bundle Previous Way — Linked Worktree Uploaded Privately",
+      "id": "tool-result-git-bundle-previous-way-linked-worktree-only",
+      "description": "Reason clause telling the model a linked working tree is uploaded under that private git directory only, so the previous way does not cover it.",
+      "pieces": [
+        "a linked working tree is uploaded under that private directory only"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.280"
+    },
+    {
       "name": "Tool Result: Git Bundle Linked Worktree No Private Admin",
       "id": "tool-result-git-bundle-linked-worktree-no-private-admin",
       "description": "Synthetic git stderr, returned as the upload error detail, when a linked worktree has no private admin directory to run git under.",
@@ -50915,6 +50937,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.268"
+    },
+    {
+      "name": "Tool Result: Write refusing symbolic link — undetermined target",
+      "id": "tool-result-write-refusing-symbolic-link-undetermined-target",
+      "description": "Stands in for the symlink target path when resolution failed, so the write refusal tells the model there is no path to write instead.",
+      "pieces": [
+        "a target that could not be determined"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.280"
     },
     {
       "name": "Data: Task Notification Agent Stop Resume Note",
@@ -82991,6 +83024,17 @@
       "version": "2.1.257"
     },
     {
+      "name": "Git Bundle Previous Way — Per-Worktree Configuration",
+      "id": "tool-result-git-bundle-previous-way-worktree-config",
+      "description": "Reason clause naming extensions.worktreeConfig, which git sparse-checkout sets, as why the previous-way upload is also refused.",
+      "pieces": [
+        "its repository has per-worktree configuration switched on (extensions.worktreeConfig, which git sparse-checkout sets)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.280"
+    },
+    {
       "name": "Tool Result: Git Bundle Repo Placement Untrusted",
       "id": "tool-result-git-bundle-repo-placement-untrusted",
       "description": "tC.placement clause refusing the upload when the repository is not placed or named the way this upload accepts.",
@@ -95580,6 +95624,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.276"
+    },
+    {
+      "name": "Tool Result: Cloud session — start from GitHub with file sync off",
+      "id": "tool-result-cloud-session-run-cloud-ref-file-sync-off",
+      "description": "Remedy appended to the GitHub-clone-would-lack result telling the model to run claude --cloud --ref <branch> so the session starts from GitHub with file sync off.",
+      "pieces": [
+        "or run claude --cloud --ref <branch> to start from GitHub as it is there, with file sync off."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.280"
     },
     {
       "name": "Memory Sync Mount Conflict Remedy Tail",
@@ -124646,6 +124701,22 @@
       "version": "2.1.238"
     },
     {
+      "name": "System Reminder: Dir sync — latest upload unusable here",
+      "id": "system-reminder-dir-sync-latest-upload-unusable",
+      "description": "Cause clause inside the directory-sync notice when the user's machine's latest upload cannot be used in this checkout.",
+      "pieces": [
+        "their machine's latest upload (number ${",
+        "}) cannot be used here"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_REMINDER_DIR_SYNC_LATEST_UPLOAD_UNUSABLE_VAR_0"
+      },
+      "version": "2.1.280"
+    },
+    {
       "name": "Tool Result: Computer Use No Focused Text Replace Hint",
       "id": "tool-result-computer-use-no-focused-text-replace-hint",
       "description": "Fragment of the no_focused_text unsupported result telling Claude to drop overwrite_existing and use mode replace.",
@@ -131011,6 +131082,17 @@
       "version": "2.1.237"
     },
     {
+      "name": "Tool Result: Cloud session — upload without file sync",
+      "id": "tool-result-cloud-session-dir-sync-engine-none",
+      "description": "Remedy telling the model to set CLAUDE_CODE_DIR_SYNC_ENGINE=none and run claude --cloud so the branch and tracked changes upload without file sync.",
+      "pieces": [
+        "to upload the branch and tracked changes without file sync (untracked files stay here), run CLAUDE_CODE_DIR_SYNC_ENGINE=none claude --cloud."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.280"
+    },
+    {
       "name": "Tool Description: App Batch Screenshot Verify",
       "id": "tool-description-app-batch-screenshot-verify",
       "description": "app_batch description clause to include a screenshot action to verify and re-anchor later coordinates.",
@@ -135051,11 +135133,44 @@
       "version": "2.1.280"
     },
     {
+      "name": "System Reminder: Tool hosts correction — reported still running",
+      "id": "system-reminder-tool-hosts-correction-reported-still-running",
+      "description": "Phrase in a late-outcome correction saying the earlier call was reported as still running on that machine.",
+      "pieces": [
+        "was reported as still running there"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.280"
+    },
+    {
       "name": "Tool Hosts Correction Timed Out",
       "id": "system-reminder-tool-hosts-correction-timed-out",
       "description": "Phrase in a late-outcome correction saying the machine did not answer in time.",
       "pieces": [
         "was reported as unanswered (that machine did not answer in time)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.280"
+    },
+    {
+      "name": "System Reminder: Tool hosts correction — outcome unknown",
+      "id": "system-reminder-tool-hosts-correction-outcome-unknown",
+      "description": "Phrase in a late-outcome correction saying the earlier call was reported with its outcome unknown.",
+      "pieces": [
+        "was reported with its outcome unknown"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.280"
+    },
+    {
+      "name": "System Reminder: Tool hosts correction — machine stopped answering",
+      "id": "system-reminder-tool-hosts-correction-host-unresponsive",
+      "description": "Phrase in a late-outcome correction saying the call's state is unknown because that machine stopped answering this session's checks.",
+      "pieces": [
+        "was reported with its state unknown after that machine stopped answering this session's checks on it"
       ],
       "identifiers": [],
       "identifierMap": {},
@@ -137440,6 +137555,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.276"
+    },
+    {
+      "name": "System Reminder: Tool hosts header — calls without a machine run here",
+      "id": "system-reminder-tool-hosts-header-without-machine-arg-run-here",
+      "description": "Clause in the coordinator header saying calls that omit the machine argument run in this environment.",
+      "pieces": [
+        "without it those run here"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.280"
     },
     {
       "name": "Tool Result: ToolSearch Schema Missing Guidance",

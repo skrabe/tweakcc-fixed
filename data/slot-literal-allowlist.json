@@ -1327,7 +1327,6 @@
   "47c16f88e2c901ea": {
     "promptId": "system-prompt-project-timeline-user-message-provenance",
     "label": "PROJECT_COORDINATION_MCP_SERVER_NAME",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": "[Coordinator session's relay",
     "verdict": "glue",
     "desc": "Label prefix on the relayed-message provenance line; the constraint is the surrounding sentence."
@@ -1335,7 +1334,6 @@
   "6fedc18ce2c9700d": {
     "promptId": "tool-result-artifact-read-shared-consent-ask",
     "label": "TOOL_RESULT_ARTIFACT_READ_SHARED_CONSENT_ASK_VAR_0",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": "another person's artifact",
     "verdict": "glue",
     "desc": "Noun phrase naming the read target in the consent ask; the rule is the surrounding sentence."
@@ -1343,7 +1341,6 @@
   "6f9055578fd64926": {
     "promptId": "system-reminder-deferred-tools-no-longer-available",
     "label": "SYSTEM_REMINDER_DEFERRED_TOOLS_NO_LONGER_AVAILABLE_VAR_1",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": "Do not call them",
     "verdict": "catalogue",
     "id": "system-reminder-deferred-tools-no-longer-available-do-not-call",
@@ -1353,7 +1350,6 @@
   "ee506d1bbdf1f928": {
     "promptId": "system-reminder-deferred-tools-no-longer-available",
     "label": "SYSTEM_REMINDER_DEFERRED_TOOLS_NO_LONGER_AVAILABLE_VAR_1",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": "Do not search for them — ",
     "verdict": "catalogue",
     "id": "system-reminder-deferred-tools-no-longer-available-do-not-search",
@@ -1363,7 +1359,6 @@
   "448d2c95521f01de": {
     "promptId": "system-reminder-deferred-tools-no-longer-available",
     "label": "SYSTEM_REMINDER_DEFERRED_TOOLS_NO_LONGER_AVAILABLE_VAR_1",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": " will return no match",
     "verdict": "glue",
     "desc": "Second quasi of the ONE template node catalogued as system-reminder-deferred-tools-no-longer-available-do-not-search (ee506d1bbdf1f928). Cataloguing it separately would mint an id no extraction can produce."
@@ -1371,7 +1366,6 @@
   "4413363ad7d4f935": {
     "promptId": "tool-result-artifact-public-change-unknown-owner-permission-ask",
     "label": null,
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": "Let Claude read it",
     "verdict": "glue",
     "desc": "Label of a permission choice offered to the user, not an instruction to the model."
@@ -1379,7 +1373,6 @@
   "b0f8762dc0666b17": {
     "promptId": "tool-result-artifact-read-writer-file-data-not-instructions",
     "label": "TOOL_RESULT_ARTIFACT_READ_WRITER_FILE_DATA_NOT_INSTRUCTIONS_VAR_5",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": "an artifact shared with you from another organization",
     "verdict": "glue",
     "desc": "Noun phrase naming the artifact's provenance inside the surrounding untrusted-data sentence."
@@ -1387,7 +1380,6 @@
   "72462cbe51f6b683": {
     "promptId": "tool-result-artifact-comments-untrusted-header",
     "label": "TOOL_RESULT_ARTIFACT_COMMENTS_UNTRUSTED_HEADER_VAR_1",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": ", who may be outside your organization",
     "verdict": "glue",
     "desc": "Qualifier on the interpolated comment author; the untrusted-data framing is the enclosing header."
@@ -1395,7 +1387,6 @@
   "4eecc2bfe59802bf": {
     "promptId": "tool-result-artifact-read-db-documents-saved-not-into-conversation",
     "label": "TOOL_RESULT_ARTIFACT_READ_DB_DOCUMENTS_SAVED_NOT_INTO_CONVERSATION_VAR_0",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": " — outside this session's working paths",
     "verdict": "glue",
     "desc": "Qualifier on an interpolated out_dir path; the consent requirement is the surrounding sentence."
@@ -1403,7 +1394,6 @@
   "156485b9837b1c2d": {
     "promptId": "data-artifact-write-db-auto-classifier-input",
     "label": "DATA_ARTIFACT_WRITE_DB_AUTO_CLASSIFIER_INPUT_VAR_5",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": " (only if still at version ",
     "verdict": "glue",
     "desc": "Joins an interpolated version number in the auto-classifier input; carries no instruction alone."
@@ -1411,7 +1401,6 @@
   "26104f5f0202b345": {
     "promptId": "tool-result-artifact-created-from-type",
     "label": "TOOL_RESULT_ARTIFACT_CREATED_FROM_TYPE_VAR_9",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": "This type's instructions fill it through its own store, not with its page or data files: write it ",
     "verdict": "catalogue",
     "desc": "mcp/data/write_db arm @19401173: the whole template telling the model to fill the Artifact through the type's own store and never to publish index.html or the type's files as content. The verdict is what bypasses the prose gate for this branch; fuzzy carryover then restores the previous release's id, which keeps its overrides bound.",
@@ -1421,7 +1410,6 @@
   "95a8f7cf41fccb53": {
     "promptId": "tool-result-artifact-created-from-type",
     "label": "TOOL_RESULT_ARTIFACT_CREATED_FROM_TYPE_VAR_9",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": ", as those instructions below describe (they cover only this Artifact's own content). Do not publish `file_path`/`files` to it as its content — a file only wher",
     "verdict": "glue",
     "desc": "Second quasi of the same template node, catalogued as tool-result-artifact-created-from-type-fill-via-store-write."
@@ -1429,7 +1417,6 @@
   "e8698ecd0520e5de": {
     "promptId": "system-reminder-brief-mode-toggle",
     "label": "IS_BRIEF_MODE_ENABLED",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": "Your final report is delivered through ",
     "verdict": "catalogue",
     "desc": "gln, the SubagentHandback lead: rendered as <system-reminder> ${gln} to a subagent that must report through the tool, and as the slot opening system-reminder-subagent-handback-report-via-tool. Gate attributed it to brief-mode-toggle because that prompt's <system-reminder> opener matches the bfo site.",
@@ -1439,7 +1426,6 @@
   "72374234646ade4b": {
     "promptId": "system-reminder-brief-mode-toggle",
     "label": "IS_BRIEF_MODE_ENABLED",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": " is not available in this run",
     "verdict": "catalogue",
     "desc": "yln, the lead of the countermand reminder (system-reminder-subagent-handback-countermand) telling a subagent the hand-back tool is gone for this run.",
@@ -1449,7 +1435,6 @@
   "cee333773f09aebe": {
     "promptId": "slash-command-effort-exceeds-org-cap",
     "label": "SLASH_COMMAND_EFFORT_EXCEEDS_ORG_CAP_VAR_3",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": " (saved as your default for new sessions)",
     "verdict": "glue",
     "desc": "Persistence label beside \" (this session only)\" in the /effort result; labels where the value was saved."
@@ -1457,7 +1442,6 @@
   "ec5d7011b4d55562": {
     "promptId": "tool-result-artifact-publish-source-path-mismatch",
     "label": "TOOL_RESULT_ARTIFACT_PUBLISH_SOURCE_PATH_MISMATCH_VAR_1",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": "after approval",
     "verdict": "glue",
     "desc": "Clause filler inside the catalogued path-mismatch result; the alternative arm interpolates the approved path."
@@ -1465,7 +1449,6 @@
   "bd62216397bf0ccc": {
     "promptId": "tool-result-artifact-publish-source-replacement-char",
     "label": "TOOL_RESULT_ARTIFACT_PUBLISH_SOURCE_REPLACEMENT_CHAR_VAR_1",
-    "note": "REVIEW ME - replace with the verdict and its reason",
     "text": "then preview again.",
     "verdict": "catalogue",
     "desc": "Preview arm of Ul(): closes the undecodable / replacement-char source results with the next step when previewing; its publish twin is tool-result-artifact-publish-then-publish-again.",
@@ -1766,5 +1749,114 @@
     "promptId": "slash-command-plugin-install-already-installed",
     "reason": "states a failure consequence and where to look (/plugin); identical text also emitted at @33915799",
     "text": ". The plugin couldn't be loaded — see /plugin for details."
+  },
+  "f3a12414757979bd": {
+    "promptId": "tool-result-write-refusing-symbolic-link-target",
+    "label": "TOOL_RESULT_WRITE_REFUSING_SYMBOLIC_LINK_TARGET_VAR_1",
+    "text": "a target that could not be determined",
+    "verdict": "catalogue",
+    "desc": "Stands in for the symlink target path when resolution failed, so the write refusal tells the model there is no path to write instead.",
+    "id": "tool-result-write-refusing-symbolic-link-undetermined-target",
+    "name": "Tool Result: Write refusing symbolic link — undetermined target"
+  },
+  "fac088af288e1bc6": {
+    "promptId": "tool-result-git-bundle-private-dir-home",
+    "label": "TOOL_RESULT_GIT_BUNDLE_PRIVATE_DIR_HOME_VAR_1",
+    "text": "its repository has per-worktree configuration switched on (extensions.worktreeConfig, which git sparse-checkout sets)",
+    "verdict": "not-a-slot",
+    "desc": "Argument of Hs() inside pt's initializer; slot 3 of the private-dir-home refusal holds Hs's return value, not this string."
+  },
+  "d0f0e166b4a0e2cf": {
+    "promptId": "tool-result-git-bundle-private-dir-home",
+    "label": "TOOL_RESULT_GIT_BUNDLE_PRIVATE_DIR_HOME_VAR_1",
+    "text": "a linked working tree is uploaded under that private directory only",
+    "verdict": "not-a-slot",
+    "desc": "Argument of Hs() inside the same pt initializer; the slot renders Hs's return value."
+  },
+  "a1c670e2454e8ac5": {
+    "promptId": "tool-result-artifact-publish-deploy-422-capability-refused",
+    "label": "TOOL_RESULT_ARTIFACT_PUBLISH_DEPLOY_422_CAPABILITY_REFUSED_VAR_1",
+    "text": "publish its files with a manifest",
+    "verdict": "not-a-slot",
+    "desc": "Search needle of w.includes inside the condition that chooses A; A evaluates to Hf or the empty string."
+  },
+  "44d899aa9a89b0b8": {
+    "promptId": "tool-result-cloud-session-github-clone-would-lack",
+    "label": "TOOL_RESULT_CLOUD_SESSION_GITHUB_CLONE_WOULD_LACK_VAR_2",
+    "text": "or run claude --cloud --ref <branch> to start from GitHub as it is there, with file sync off.",
+    "verdict": "catalogue",
+    "desc": "Remedy appended to the GitHub-clone-would-lack result telling the model to run claude --cloud --ref <branch> so the session starts from GitHub with file sync off.",
+    "id": "tool-result-cloud-session-run-cloud-ref-file-sync-off",
+    "name": "Tool Result: Cloud session — start from GitHub with file sync off"
+  },
+  "4b4201145f7aafec": {
+    "promptId": "tool-result-cloud-session-preflight-transient",
+    "label": "TOOL_RESULT_CLOUD_SESSION_PREFLIGHT_TRANSIENT_VAR_0",
+    "text": "to upload the branch and tracked changes without file sync (untracked files stay here), run CLAUDE_CODE_DIR_SYNC_ENGINE=none claude --cloud.",
+    "verdict": "catalogue",
+    "desc": "Remedy telling the model to set CLAUDE_CODE_DIR_SYNC_ENGINE=none and run claude --cloud so the branch and tracked changes upload without file sync.",
+    "id": "tool-result-cloud-session-dir-sync-engine-none",
+    "name": "Tool Result: Cloud session — upload without file sync"
+  },
+  "0b8477232b0475a0": {
+    "promptId": "system-reminder-tool-hosts-correction-lead",
+    "label": "SYSTEM_REMINDER_TOOL_HOSTS_CORRECTION_LEAD_VAR_1",
+    "text": "was reported with its state unknown after that machine stopped answering this session's checks on it",
+    "verdict": "catalogue",
+    "desc": "Phrase in a late-outcome correction saying the call's state is unknown because that machine stopped answering this session's checks.",
+    "id": "system-reminder-tool-hosts-correction-host-unresponsive",
+    "name": "System Reminder: Tool hosts correction — machine stopped answering"
+  },
+  "d7e397f1b45dbdda": {
+    "promptId": "system-reminder-tool-hosts-correction-lead",
+    "label": "SYSTEM_REMINDER_TOOL_HOSTS_CORRECTION_LEAD_VAR_1",
+    "text": "was reported as still running there",
+    "verdict": "catalogue",
+    "desc": "Phrase in a late-outcome correction saying the earlier call was reported as still running on that machine.",
+    "id": "system-reminder-tool-hosts-correction-reported-still-running",
+    "name": "System Reminder: Tool hosts correction — reported still running"
+  },
+  "07654630a8f9124e": {
+    "promptId": "system-reminder-tool-hosts-correction-lead",
+    "label": "SYSTEM_REMINDER_TOOL_HOSTS_CORRECTION_LEAD_VAR_1",
+    "text": "was reported with its outcome unknown",
+    "verdict": "catalogue",
+    "desc": "Phrase in a late-outcome correction saying the earlier call was reported with its outcome unknown.",
+    "id": "system-reminder-tool-hosts-correction-outcome-unknown",
+    "name": "System Reminder: Tool hosts correction — outcome unknown"
+  },
+  "9e3e6f90518ce58e": {
+    "promptId": "system-reminder-tool-hosts-header-coordinator-powershell",
+    "label": "SYSTEM_REMINDER_TOOL_HOSTS_HEADER_COORDINATOR_POWERSHELL_VAR_3",
+    "text": "without it those run here",
+    "verdict": "catalogue",
+    "desc": "Clause in the coordinator header saying calls that omit the machine argument run in this environment.",
+    "id": "system-reminder-tool-hosts-header-without-machine-arg-run-here",
+    "name": "System Reminder: Tool hosts header — calls without a machine run here"
+  },
+  "13b7cd68ef415683": {
+    "promptId": "system-reminder-dir-sync-agent-staging-dropped",
+    "label": "SYSTEM_REMINDER_DIR_SYNC_AGENT_STAGING_DROPPED_VAR_1",
+    "text": " (the file contents are unchanged)",
+    "verdict": "catalogue",
+    "desc": "Suffix on the staging-dropped reminder when the update unstaged the agent's files but their contents are unchanged.",
+    "id": "system-reminder-dir-sync-agent-staging-contents-unchanged",
+    "name": "System Reminder: Dir sync agent staging dropped — contents unchanged"
+  },
+  "5014e788ca3aa445": {
+    "promptId": "system-reminder-directory-sync-latest-changes-unusable",
+    "label": "SYSTEM_REMINDER_DIRECTORY_SYNC_LATEST_CHANGES_UNUSABLE_VAR_0",
+    "text": "their machine's latest upload (number ",
+    "verdict": "glue",
+    "desc": "Labels the upload number inside `their machine's latest upload (number ${n}) cannot be used here`, the parenthetical of the latest-changes-unusable reminder."
+  },
+  "763a56102ee1a7c3": {
+    "promptId": "system-reminder-directory-sync-latest-changes-unusable",
+    "label": "SYSTEM_REMINDER_DIRECTORY_SYNC_LATEST_CHANGES_UNUSABLE_VAR_0",
+    "text": ") cannot be used here",
+    "verdict": "catalogue",
+    "desc": "Cause clause inside the directory-sync notice when the user's machine's latest upload cannot be used in this checkout.",
+    "id": "system-reminder-dir-sync-latest-upload-unusable",
+    "name": "System Reminder: Dir sync — latest upload unusable here"
   }
 }

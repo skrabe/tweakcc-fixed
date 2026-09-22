@@ -134,11 +134,6 @@
     "version": "2.1.278",
     "why": "Description opens with the @internal marker, and CC deletes an @internal property with its subtree before sending the schema, so this text never reaches the model. SDK transport timing field (frame_received_wall_ms) beside frame_enqueued_wall_ms/turn_started_wall_ms/request_sent_wall_ms."
   },
-  "data-sdk-set-model-system-prompt-field": {
-    "verdict": "not-model-facing",
-    "version": "2.1.276",
-    "why": "module 119 chunk-n55wtmpy.js, l_ set_model control_request system_prompt .describe(): Documents the control-request field whose VALUE becomes the custom system prompt. The catalogue string is the field description for SDK hosts, not that prompt text."
-  },
   "data-self-hosted-runner-deferred-shutdown-timing-notice": {
     "verdict": "not-model-facing",
     "version": "2.1.276",
@@ -188,5 +183,10 @@
     "verdict": "not-model-facing",
     "version": "2.1.276",
     "why": "module 119 chunk-n55wtmpy.js, s_ can_use_tool control_request matched_ask_rule .describe(): Field on the CLI->host can_use_tool permission RPC so hosts can treat ask-rule-forced prompts as rule-forced. Not a model tool parameter; $V never converts this schema."
+  },
+  "tool-description-artifact-theme-aware-styling": {
+    "verdict": "covered-reworded",
+    "version": "2.1.280",
+    "why": "Upstream's 2.1.278 body. CC 2.1.280 added the color-scheme: dark clause at both sites; ours catalogues the current text as tool-description-artifact-theme-aware and inside tool-description-artifact-page-implementation-requirements-app-wording."
   }
 }
