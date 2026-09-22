@@ -150,13 +150,6 @@
       "SYSTEM_REMINDER_PEER_MENTION_SENDMESSAGE_TOOL_REFERENCE_VAR_1": "Deployed body keeps ${VAR_0} and the do-not-substitute rule; the how-to-load clause is covered by deployed system-reminder-undiscovered-tool-schemas (query \"select:<name>\") which fires under the same condition."
     }
   },
-  "tool-description-agent-simple-usage-notes": {
-    "bodyHash": "a9eeb30325c3",
-    "reviewed": "2026-09-16 (CC 2.1.273)",
-    "tokens": {
-      "TOOL_DESCRIPTION_AGENT_SIMPLE_USAGE_NOTES_VAR_1": "CC 2.1.273 factored the when-to-use paragraph out of this template into a helper the slot selects among several arms. The override supplies its own when-to-use wording unconditionally instead, so the paragraph reaches the model exactly once whichever arm the binary would have picked; the child id tool-description-agent-when-to-use-guidance is wiped for the same reason. VAR_2, the fork/background note, is a separate conditional and is interpolated."
-    }
-  },
   "tool-description-artifact-publish-lang-parameter": {
     "bodyHash": "da39a3ee5e6b",
     "reviewed": "2026-09-02 (CC 2.1.258)",
@@ -394,6 +387,14 @@
     "tokens": {
       "TOOL_DESCRIPTION_ARTIFACT_WATCHING_UNAVAILABLE_VAR_0": "Whole-sentence deletion takes its slots with it: the lead sentence duplicated tool-parameter-artifact-action-watch-unavailable, which co-renders on the same tool schema (Zu joins hw(commentsOn, watchRail); the action.describe concatenates yr(n,c) and case 'none' is this arm). Confirmed by the stage-3 adversarial pass.",
       "TOOL_DESCRIPTION_ARTIFACT_WATCHING_UNAVAILABLE_VAR_1": "Second slot of the same deleted lead sentence (VAR_1() is N2e(), the function yr interpolates on the co-rendering parameter). The never-claim-a-watch sentence, the status/unwatch sentence and ${VAR_2} are all kept verbatim."
+    }
+  },
+  "tool-result-account-skills-send-complete-skill": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-09-22 (CC 2.1.280)",
+    "tokens": {
+      "TOOL_RESULT_ACCOUNT_SKILLS_SEND_COMPLETE_SKILL_VAR_0": "Suppressed per the wipe-merge verdict: system-prompt-saving-skills-via-file-delivery is injected by the same send_file selector and names the same file-delivery tool through its own SEND_USER_FILE_TOOL_NAME slot.",
+      "TOOL_RESULT_ACCOUNT_SKILLS_SEND_COMPLETE_SKILL_VAR_1": "Renders the same constant save-option sentence that system-prompt-saving-skills-via-file-delivery interpolates as its VAR_1, so it still reaches the model once on the send_file arm."
     }
   }
 }

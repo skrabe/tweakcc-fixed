@@ -1,33 +1,17 @@
 {
-  "system-prompts-opus-5/agent-prompt-conversation-summarization::<summary>": {
+  "system-prompts-lcc/agent-prompt-conversation-summarization::<summary>": {
     "verdict": "reviewed",
     "why": "Pointer override: it defers to the summary contract carried by the live sibling system-prompt-context-compaction-summary ('Wrap it in <summary></summary> tags') and agent-prompt-conversation-summary-analysis-summary-blocks ('an <analysis> block followed by a <summary> block'), both deployed non-empty. The tag instruction still reaches the model."
   },
-  "system-prompts-opus-5/agent-prompt-conversation-summarization::<analysis>": {
+  "system-prompts-lcc/agent-prompt-conversation-summarization::<analysis>": {
     "verdict": "reviewed",
     "why": "Pointer override: it defers to the summary contract carried by the live sibling system-prompt-context-compaction-summary ('Wrap it in <summary></summary> tags') and agent-prompt-conversation-summary-analysis-summary-blocks ('an <analysis> block followed by a <summary> block'), both deployed non-empty. The tag instruction still reaches the model."
   },
-  "system-prompts-opus-5/system-prompt-partial-compaction-instructions::<summary>": {
+  "system-prompts-lcc/system-prompt-partial-compaction-instructions::<summary>": {
     "verdict": "reviewed",
     "why": "Pointer override: it defers to the summary contract carried by the live sibling system-prompt-context-compaction-summary ('Wrap it in <summary></summary> tags') and agent-prompt-conversation-summary-analysis-summary-blocks ('an <analysis> block followed by a <summary> block'), both deployed non-empty. The tag instruction still reaches the model."
   },
-  "system-prompts-opus-5/system-prompt-partial-compaction-instructions::<analysis>": {
-    "verdict": "reviewed",
-    "why": "Pointer override: it defers to the summary contract carried by the live sibling system-prompt-context-compaction-summary ('Wrap it in <summary></summary> tags') and agent-prompt-conversation-summary-analysis-summary-blocks ('an <analysis> block followed by a <summary> block'), both deployed non-empty. The tag instruction still reaches the model."
-  },
-  "system-prompts-fable-5-1/agent-prompt-conversation-summarization::<summary>": {
-    "verdict": "reviewed",
-    "why": "Pointer override: it defers to the summary contract carried by the live sibling system-prompt-context-compaction-summary ('Wrap it in <summary></summary> tags') and agent-prompt-conversation-summary-analysis-summary-blocks ('an <analysis> block followed by a <summary> block'), both deployed non-empty. The tag instruction still reaches the model."
-  },
-  "system-prompts-fable-5-1/agent-prompt-conversation-summarization::<analysis>": {
-    "verdict": "reviewed",
-    "why": "Pointer override: it defers to the summary contract carried by the live sibling system-prompt-context-compaction-summary ('Wrap it in <summary></summary> tags') and agent-prompt-conversation-summary-analysis-summary-blocks ('an <analysis> block followed by a <summary> block'), both deployed non-empty. The tag instruction still reaches the model."
-  },
-  "system-prompts-fable-5-1/system-prompt-partial-compaction-instructions::<summary>": {
-    "verdict": "reviewed",
-    "why": "Pointer override: it defers to the summary contract carried by the live sibling system-prompt-context-compaction-summary ('Wrap it in <summary></summary> tags') and agent-prompt-conversation-summary-analysis-summary-blocks ('an <analysis> block followed by a <summary> block'), both deployed non-empty. The tag instruction still reaches the model."
-  },
-  "system-prompts-fable-5-1/system-prompt-partial-compaction-instructions::<analysis>": {
+  "system-prompts-lcc/system-prompt-partial-compaction-instructions::<analysis>": {
     "verdict": "reviewed",
     "why": "Pointer override: it defers to the summary contract carried by the live sibling system-prompt-context-compaction-summary ('Wrap it in <summary></summary> tags') and agent-prompt-conversation-summary-analysis-summary-blocks ('an <analysis> block followed by a <summary> block'), both deployed non-empty. The tag instruction still reaches the model."
   }
