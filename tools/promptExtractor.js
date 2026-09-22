@@ -419,6 +419,38 @@ const CURATED_IDENTIFIER_MAPS = {
   // responses (legacy)…':""}`, so t = the cross-session recipient rows, n = the
   // "## Cross-session" section, and e = the legacy-protocol flag at slot 2.
   // Upstream does not ship this prompt, so auditMisbinds had no reference.
+  // 2.1.280 inserted a parallel-worktree note ahead of the remote-isolation
+  // predicate: `…returned in the result.${B?`\n- ${B}`:""}${C3t()?'…remote…':""}
+  // ${h6()?`…`:Aa()?`…`:""}${j}${he}\n\n${M?_e:Me}` in `w8r`, where B is the
+  // "give EACH `isolation: \"worktree\"`" sentence. Fuzzy carryover kept every
+  // later label on its old slot number, so each one named its left neighbour.
+  'tool-description-agent-usage-notes': [
+    {
+      identifiers: [
+        0, 1, 2, 2, 3, 2, 4, 5, 6, 4, 7, 8, 6, 9, 9, 10, 11, 12, 13, 14, 4, 15,
+        16,
+      ],
+      identifierMap: {
+        0: 'TOOL_BASE_DESCRIPTION',
+        1: 'WHEN_NOT_TO_USE_NOTE',
+        2: 'CAN_RUN_BACKGROUND_AGENTS',
+        3: 'IS_FORK_SUBAGENT_FEATURE_ENABLED',
+        4: 'CAN_FORK_CONTEXT',
+        5: 'SEND_MESSAGE_TOOL_NAME',
+        6: 'AGENT_TOOL_NAME',
+        7: 'PROCESS_ENV',
+        8: 'IS_DEFAULT_SUBAGENT_STEERING_MODE',
+        9: 'PARALLEL_WORKTREE_ISOLATION_NOTE',
+        10: 'IS_REMOTE_ISOLATION_AVAILABLE_FN',
+        11: 'IS_IN_PROCESS_TEAMMATE_CONTEXT_FN',
+        12: 'IS_TEAMMATE_CONTEXT_FN',
+        13: 'FORK_USAGE_GUIDELINES',
+        14: 'WRITING_SUBAGENT_PROMPTS_GUIDANCE',
+        15: 'FORK_CAPABLE_SUBAGENT_DELEGATION_EXAMPLES',
+        16: 'NON_FORK_SUBAGENT_DELEGATION_EXAMPLES',
+      },
+    },
+  ],
   'tool-description-sendmessagetool': [
     {
       identifiers: [0, 1, 2],
@@ -2879,6 +2911,27 @@ const NEW_PROMPT_ASSIGNMENTS = [
     id: 'system-reminder-mcp-servers-connecting-without-toolsearch',
     description:
       'Lists MCP servers still connecting when ToolSearch is absent and tells the agent to await tool announcements rather than report the capability unavailable',
+  },
+  // 2.1.280 — two string concatenations whose head alone clears the capture
+  // floor; the tail ("…or have the shape of an agent id", "does not accept —
+  // nothing was sent.") is a separate literal. Named like the sibling
+  // changed-recipient-after-approval head, which is catalogued the same way.
+  {
+    // Agent tool `name` refine: `…"user" or '+'"system", in any spelling) …`
+    matcher: t =>
+      t.startsWith('name must not be a reserved name ("main", "team-lead"'),
+    name: 'Tool Result: Agent name is reserved',
+    id: 'tool-result-agent-name-reserved',
+    description:
+      'Validation error returned when a spawned agent is given a reserved name (main, team-lead, user, system) or an agent-id-shaped name.',
+  },
+  {
+    matcher: t =>
+      t.startsWith('The permission handler narrowed the input to a shape SendMessage'),
+    name: 'Tool Result: SendMessage permission handler narrowed the input',
+    id: 'tool-result-send-message-permission-handler-narrowed-input',
+    description:
+      'SendMessage refusal when a permission handler rewrote the input into a shape the tool does not accept, so nothing was sent.',
   },
 ];
 

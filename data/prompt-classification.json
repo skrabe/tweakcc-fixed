@@ -76774,5 +76774,1988 @@
   "eb10e7c773d722e083bc26fe5a5ae61f4e2eb273": { "facing": "internal" },
   "074ee22564a06e0cba1e33dd38ec4834064c61db": { "facing": "internal" },
   "7fa0473a7dc0e470b5b064263f272ae50571768c": { "facing": "ui" },
-  "5050d183def1826f0e9fa0f073ac83d2bd4608f5": { "facing": "ui" }
+  "5050d183def1826f0e9fa0f073ac83d2bd4608f5": { "facing": "ui" },
+  "b751058dafe11e4178ac3fb127c3de606b2ea803": { "facing": "ui" },
+  "b008006b9237e47d93a3a2108e4a7e36d8e0fa47": {
+    "facing": "model",
+    "id": "tool-result-artifact-policy-fetch-failed-background-retry",
+    "name": "Tool Result: Artifact Policy Fetch Still Retrying",
+    "desc": "Suffix of the Artifact denial when the organization-policy fetch failed and is still retrying in the background, telling the model not to call again now."
+  },
+  "a074d31e37f812b29220401c51003862d2ae78d9": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-index-second-name",
+    "name": "Tool Result: Git Bundle Index Second Name",
+    "desc": "Remedy clause when a cloud bundle upload refuses because the git index has a second name, telling the model to remove it and retry."
+  },
+  "8525719d32185cbc6f761dce27f36e84a7e0b95f": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-shallow-second-name",
+    "name": "Tool Result: Git Bundle Shallow Second Name",
+    "desc": "Remedy clause when a cloud bundle upload refuses because the shallow file has a second name."
+  },
+  "91bb960051884bca8730d8fab3035e857dd3ba4b": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-index-link",
+    "name": "Tool Result: Git Bundle Index Link",
+    "desc": "Remedy clause when a cloud bundle upload refuses because the git index is a symlink that git would write through."
+  },
+  "9d7b66650f14724ff0cd6e010bcfb7b0bb9e9c4e": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-shallow-link",
+    "name": "Tool Result: Git Bundle Shallow Link",
+    "desc": "Remedy clause when a cloud bundle upload refuses because the shallow file is a symlink."
+  },
+  "88865c048a1e0e7f79ac4527ef8750a96760c517": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-shallow-not-plain-file",
+    "name": "Tool Result: Git Bundle Shallow Not a Plain File",
+    "desc": "Remedy clause when a cloud bundle upload refuses because the shallow path is not the plain file git would have written."
+  },
+  "8849ee1e4592d02228923c54a58d39e32527b344": { "facing": "ui" },
+  "6c087185f305f517670385da86c0dabafc2b57db": { "facing": "ui" },
+  "11699de4048a4c7d09b9eef0449c00290034cbfe": { "facing": "ui" },
+  "d9a874c98e1e93f4688224d015348aac0be3e183": { "facing": "ui" },
+  "d04d7dfd13cf872aed6391dcf8c4f06a50ed2ca0": {
+    "facing": "model",
+    "id": "tool-result-tool-call-approval-request-expired",
+    "name": "Tool Result: Tool Call Approval Request Expired",
+    "desc": "Error tool_result when a parked approval times out with no answer, so the tool did not run and the model should ask again if it is still needed."
+  },
+  "38ea5283a1cf42657f6f75da3d27239cec518f31": {
+    "facing": "model",
+    "id": "tool-result-tool-call-approval-closed-unanswered",
+    "name": "Tool Result: Tool Call Approval Closed Unanswered",
+    "desc": "Error tool_result when an unanswered approval is closed because the next message arrived, so the action did not run and was not a refusal."
+  },
+  "815bf392f532cdb783f4800e5b01b3d8d2a8c0df": {
+    "facing": "model",
+    "id": "tool-result-tool-call-skipped-sibling-check-denial",
+    "name": "Tool Result: Tool Call Skipped Sibling Check Denial",
+    "desc": "Synthetic tool_result when a batched tool call never runs because the check that denied another call in the batch stopped the turn."
+  },
+  "b0571c9755efd6f0020bda70201bcff4e43625dc": {
+    "facing": "model",
+    "id": "tool-description-artifact-watching-publish-result-app-wording",
+    "name": "Tool Description: Artifact watching publish result (app wording)",
+    "desc": "App-worded watching clause: each publish result's subscription line says whether this session now watches the artifact, and Claude must not claim a watch the result did not confirm."
+  },
+  "68a6f5ee87925640d4417e33ba80eeee53f9aff6": {
+    "facing": "model",
+    "id": "tool-description-artifact-watching-unavailable",
+    "name": "Tool Description: Artifact Watching Unavailable",
+    "desc": "Artifact tool-description arm for watchRail none: nothing notifies this session of republishes or comments, so Claude must say so and never claim to be watching."
+  },
+  "aab8cc9de8132856ba8977cedf2a8b0ee30fdf01": {
+    "facing": "model",
+    "id": "system-prompt-responsive-mode",
+    "name": "Responsive Mode",
+    "desc": "Prompt section telling the model to answer immediately in plain chat English before any thinking or tool use."
+  },
+  "96ca461604539b20b9f5b989318718e3478997b5": {
+    "facing": "model",
+    "id": "skill-artifact-verify-before-handover",
+    "name": "Verify Before Handover",
+    "desc": "Artifact-capabilities skill section telling the model to functionally check a page's declared capabilities once before sharing the link."
+  },
+  "071a87e0ebeaaf880276ce73a6a5b28947ff48cc": {
+    "facing": "model",
+    "id": "skill-artifact-where-page-keeps-state",
+    "name": "Where A Page Keeps Its State",
+    "desc": "Artifact-capabilities skill section telling the model whether page state belongs in browser storage, the artifact capability, or db."
+  },
+  "310fc459ce064cd3d10522c70c4bf03e9e5336c4": {
+    "facing": "model",
+    "id": "system-reminder-responsive-mode",
+    "name": "Responsive Mode Reminder",
+    "desc": "Per-turn reminder telling the model to reply to the latest user message before thinking or tools."
+  },
+  "258f517d23ca320192593c11f2b52d9549b7ea49": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-forged-path-names",
+    "name": "Forged Path Names",
+    "desc": "Cloud-session creation failure telling the model git lists changed files under names git itself never writes."
+  },
+  "e937073ce4913c681979ac458e0ff21200c489a7": {
+    "facing": "model",
+    "id": "tool-result-subagent-refusal-fallback-completed-by",
+    "name": "Completed By Fallback Model",
+    "desc": "Local refusal-fallback note prepended to a subagent tool result, telling the parent model the response was completed by another model and the session model is unchanged."
+  },
+  "af14a0071f69f40343831caea709c4e125d67afe": {
+    "facing": "model",
+    "id": "tool-result-subagent-refusal-fallback-generated-instead",
+    "name": "Generated By Fallback Instead",
+    "desc": "Local refusal-fallback note prepended to a subagent tool result, telling the parent model the response was generated by another model instead and the session model is unchanged."
+  },
+  "b22a93f21046f4f50969a05c074b26740fd6f5fd": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-did-not-reconnect",
+    "name": "Host Did Not Reconnect",
+    "desc": "Tool-hosts notice telling the model not to do a machine's work locally after it failed to reconnect."
+  },
+  "55ab8116f0e6181971c07797641b47bdec8ec48f": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-not-reconnected-yet",
+    "name": "Host Not Reconnected Yet",
+    "desc": "Tool-hosts notice telling the model a replaced worker has not reconnected and not to report its work done."
+  },
+  "2902d9a5ee0bc5675036049c7c946a8c526ff489": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-host-must-name-machine",
+    "name": "Must Name Machine",
+    "desc": "Tool error telling the model to set the machine argument when several attached hosts can run the tool."
+  },
+  "1904c67d15cfb660267c7f8a64ffc7bf9c0dd988": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-classifier-no-verdict-will-not-change",
+    "name": "Auto Mode Classifier No-Verdict Will Not Change",
+    "desc": "Permission-denial text telling the model a hard auto-mode no-verdict will not change if the action is retried."
+  },
+  "ca122997547ba74bfbda2996b3bf9a52c6b03004": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-classifier-no-verdict-transient",
+    "name": "Auto Mode Classifier Transient No-Verdict",
+    "desc": "Permission-denial text telling the model a transient auto-mode no-verdict may be retried once."
+  },
+  "d9e9f78bbc105166daa152220c3611ab82bd1976": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-host-detached-nowhere",
+    "name": "Host Detached Nowhere To Run",
+    "desc": "Tool error telling the model the named host is gone and this session cannot run the tool anywhere else."
+  },
+  "3e04a69d1af4a99d3e16af7cc6be9dc29006f6f3": {
+    "facing": "model",
+    "id": "tool-result-artifact-org-policy-unreachable",
+    "name": "Org Policy Unreachable",
+    "desc": "Artifact tool denial telling the model the org policy host could not be reached."
+  },
+  "b12d24c93094657eb3575a42967e6b568bf547f2": {
+    "facing": "model",
+    "id": "tool-result-artifact-org-policy-request-incomplete",
+    "name": "Org Policy Request Incomplete",
+    "desc": "Artifact tool denial telling the model the org-policy request did not complete and a proxy may be blocking it."
+  },
+  "c4f11181b4de631aa716a5e17fd6d6ecad98388b": {
+    "facing": "model",
+    "id": "tool-result-artifact-org-policy-http-check-proxy",
+    "name": "Org Policy HTTP Check Proxy",
+    "desc": "Artifact tool denial telling the model the org policy failed with an HTTP status and to check the proxy."
+  },
+  "1ab55a53eed7f40c2153c5195ecf28ea3729f05e": {
+    "facing": "model",
+    "id": "tool-result-artifact-org-policy-http-retry-later",
+    "name": "Org Policy HTTP Retry Later",
+    "desc": "Artifact tool denial telling the model the org policy failed with HTTP 429 or 5xx and to try later."
+  },
+  "67083b842e2c55c59d7cd38f58130c40857b294f": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-changed-file-unreadable",
+    "name": "Changed File Unreadable",
+    "desc": "Cloud-session creation failure telling the model a changed file could not be copied for upload."
+  },
+  "6efafc6b0f29ccc2e6f06335f2f1d10b4928e549": { "facing": "ui" },
+  "25ad8594bbbd181d3b804957b2293b5be1d25a9a": {
+    "facing": "model",
+    "id": "tool-result-cloud-session-github-clone-would-lack",
+    "name": "GitHub Clone Would Lack",
+    "desc": "Cloud-session creation failure telling the model what a GitHub clone would miss and how to start anyway."
+  },
+  "bfd449a5c6fca8f15b1cf8c5cce90062fdb32106": { "facing": "internal" },
+  "b02d35ffc7378c42c0e53b26b7f47dfe33dc5334": { "facing": "ui" },
+  "47b2ddb1f1be60949ff967a49bd1adfa71bdffa3": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-turn-ended-no-verdict",
+    "name": "Turn Ended No Verdict",
+    "desc": "Permission denial telling the model auto mode ended the turn and not to act until the next user message."
+  },
+  "7ea243170311bb1a9da4b03e6b39133fcba588c2": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-agent-stopped-no-verdict",
+    "name": "Agent Stopped No Verdict",
+    "desc": "Agent tool result telling the parent model the subagent was stopped because auto mode returned no verdict."
+  },
+  "f1a1599937d4b2cb7e0e3e176a9e00eaed03604d": { "facing": "internal" },
+  "e5e6d3fe90135bc9518e2b009bb7b6dacd6cc138": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-hipaa-refused",
+    "name": "HIPAA Bundle Refused",
+    "desc": "Cloud-session creation failure telling the model an uploaded working tree is unavailable for a HIPAA organization."
+  },
+  "15453566ce0ed63dd833c0dfb76ad0666b42491f": { "facing": "internal" },
+  "5e1c514a8a371e93726a31a0e80752220e348bbf": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-private-dir-home",
+    "name": "Private Git Dir Home",
+    "desc": "Cloud-session creation failure telling the model the private git directory under the config home could not be prepared."
+  },
+  "beb1c4a0826abc9bf4de89c17177eba82a02d6b9": {
+    "facing": "model",
+    "id": "system-reminder-directory-sync-latest-changes-unusable",
+    "name": "Latest Changes Unusable",
+    "desc": "Directory-sync reminder telling the model the user's latest changes are not in this checkout and to say so."
+  },
+  "1070d4457268c59c8012a0a17f29d451b802e1ea": {
+    "facing": "model",
+    "id": "system-reminder-directory-sync-git-keeps-failing-upload",
+    "name": "Git Keeps Failing Upload",
+    "desc": "Directory-sync reminder telling the model this turn is on the last synced files because an upload keeps failing."
+  },
+  "8e7e11b803aa551468216bd48c83d460085e0160": {
+    "facing": "model",
+    "id": "system-reminder-directory-sync-empty-start-awaiting-resend",
+    "name": "Empty Start Awaiting Resend",
+    "desc": "Directory-sync reminder telling the model not to create project files until the user's machine resends an unusable upload."
+  },
+  "329f0d6b21552c2ea984625da232bbf3145a6bc3": { "facing": "ui" },
+  "4d4bc2fd754d06e596a6710cfd3bb1d58ab28d5c": { "facing": "internal" },
+  "c82c858656e400433ab77aeb4de97a5c22341035": { "facing": "internal" },
+  "9908918007ed65743c3630a5c64079322f4e650d": { "facing": "ui" },
+  "4b97d2e814c96af5af496c0fd45084e542b357a4": { "facing": "ui" },
+  "efada3565cdc6c5fa8830848f994d38df4ba2f08": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-git-could-not-read",
+    "name": "Git Could Not Read",
+    "desc": "Cloud-session creation failure telling the model git could not read the project or prepare its upload."
+  },
+  "4f027684b37e45cfd3327cbfbfe92abe6ec829a3": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-git-dir-elsewhere",
+    "name": "Git Dir Elsewhere",
+    "desc": "Cloud-session creation failure telling the model git's data directory is not the checkout's own .git."
+  },
+  "886a5589fc005958813711d50dcd7a6634910d98": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-index-copy-failed",
+    "name": "Index Copy Failed",
+    "desc": "Cloud-session creation failure telling the model the legacy upload could not make a private index copy."
+  },
+  "c9ea6338a43ba4cc1ea2b12041aadad6d5fc750f": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-index-tree-failed",
+    "name": "Index Tree Failed",
+    "desc": "Cloud-session creation failure telling the model the legacy upload's private index copy could not be used."
+  },
+  "91de86bb0f80c82cc4fea66f11d3a42c33fa09ba": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-unwritten-file-modes",
+    "name": "Unwritten File Modes",
+    "desc": "Cloud-session creation failure telling the model the index contains file modes git never writes."
+  },
+  "9977f9d0ca6b6d5b6f829821de1eb594c8fa6e1b": {
+    "facing": "model",
+    "id": "system-reminder-code-review-ultra-stopped-remotely",
+    "name": "Ultra Review Stopped Remotely",
+    "desc": "Task notification telling the model a cloud review was stopped elsewhere and not to start another unless asked."
+  },
+  "aa7cde13a03be4d6de5b14f4beba7740772bf422": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-header-powershell-project-work-there",
+    "name": "PowerShell Project Work There",
+    "desc": "PowerShell tool-hosts header telling the model to do the project's work on the attached machine and keep only scratch work in this environment."
+  },
+  "38e6786156fd918076575315350dc06da504f77a": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-header-coordinator-worker-call",
+    "name": "Delegate Machine Work To Workers",
+    "desc": "Tool-hosts header telling a coordinator to hand attached-machine work to spawned workers and how a worker addresses a machine."
+  },
+  "54655d6970462118c09abc113c895fb45eb7e6b8": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-header-coordinator-powershell",
+    "name": "Coordinator PowerShell Header",
+    "desc": "Tool-hosts header telling a coordinator, on the PowerShell path, to hand machine work to workers and name the machine."
+  },
+  "d730a658cad4d6636f243a5e187b9d6f3c1eb8ba": { "facing": "ui" },
+  "514e789f4b3be3cd0070df5a3f2f5a519a0730c7": { "facing": "internal" },
+  "50b220e07145a4b62bd28a2f9f4754465fde7a6b": { "facing": "internal" },
+  "26e73a939c523a944910b36340cbea070748b828": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-hardlinked-changed-files",
+    "name": "Tool Result: Git Bundle Hardlinked Changed Files",
+    "desc": "Refuses the git-bundle upload when a changed file has a second hard link, so the upload never reads it."
+  },
+  "cab540fea3dedc7f4f1e2226813a425b71f35b32": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-unexamined-changed-files",
+    "name": "Tool Result: Git Bundle Unexamined Changed Files",
+    "desc": "Refuses the git-bundle upload when a changed path could not be examined, so an outside link cannot be ruled out."
+  },
+  "5850f1492f01821722b952d271738c41acc03c1b": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-alternates-or-reftable-appeared",
+    "name": "Tool Result: Git Bundle Alternates Or Reftable Appeared",
+    "desc": "Refuses the upload when an alternates file or a reftable directory shows up in the git directory while the bundle is prepared."
+  },
+  "3e03f86182dabd2c2d78c68115e6d261f616d59f": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-object-id-mismatch",
+    "name": "Tool Result: Git Bundle Object Id Mismatch",
+    "desc": "Refuses the upload when a git object does not match the id that names it, and tells the model to repair or re-clone."
+  },
+  "18994bcdb96cc59ad1d1ead82ad7daa19a45d783": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-git-file-pointer-unsupported",
+    "name": "Tool Result: Git Bundle Git File Pointer Unsupported",
+    "desc": "Refuses the upload when .git is a pointer file the upload will not follow, and tells the model to start from the main checkout."
+  },
+  "7f8b9e648f6be1a9c4c5f9859d6e7ee98f3a644b": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-index-same-bytes-planted",
+    "name": "Tool Result: Git Bundle Index Same Bytes Planted",
+    "desc": "Refuses the upload when an index entry appears holding the bytes of a local credential-like file this upload did not place."
+  },
+  "a21adb013474e0a2dc021d43a6fb8d4021d50483": {
+    "facing": "model",
+    "id": "system-reminder-parallel-write-agent-same-checkout",
+    "name": "System Reminder: Parallel Write Agent Same Checkout",
+    "desc": "Agent-prompt note injected when another write-capable agent is already running in this checkout, telling this agent not to clobber its edits."
+  },
+  "2fe6cad4672aececb61297f7bff04a66674512d0": { "facing": "internal" },
+  "afd7c5f223a28d40b2018c7ee781ff3258ee1ec9": {
+    "facing": "model",
+    "id": "tool-parameter-powershell-computer",
+    "name": "Tool Parameter: PowerShell Computer",
+    "desc": "Input-schema description of the PowerShell field that names which attached computer runs the command."
+  },
+  "c7cdda015e273102fecb2c8f76b53e8257ac3bb2": {
+    "facing": "model",
+    "id": "data-model-catalog-opus-5-description",
+    "name": "Data: Model Catalog Opus 5",
+    "desc": "Model-facing catalog description of Opus 5 in the selectable model list, now labeling it the previous Opus version."
+  },
+  "1c8c1d46f7fbe5faaf901b03ffdcad6b3c973c23": {
+    "facing": "model",
+    "id": "data-model-catalog-opus-5-5-description",
+    "name": "Data: Model Catalog Opus 5.5",
+    "desc": "Model-facing catalog description of Opus 5.5 in the selectable model list."
+  },
+  "2b70be78a503abd1979d9c8a09f8f8ccb830660f": {
+    "facing": "model",
+    "id": "data-model-catalog-opus-5-5-1m-long-description",
+    "name": "Data: Model Catalog Opus 5.5 1M",
+    "desc": "Model-facing descriptionForModel of the Opus 5.5 1M-context option in the selectable model list."
+  },
+  "de23a8728ab8a97d2da8f5a85bd0956bc2edccff": { "facing": "internal" },
+  "5aa00a2f40ffffe8e50ad06687d1c5bea519def7": {
+    "facing": "model",
+    "id": "tool-result-cloud-session-first-upload-unexpected",
+    "name": "Tool Result: Cloud Session First Upload Unexpected",
+    "desc": "Create-fail text when preparing the project directory for the first cloud upload throws, prefixed with the no-session line."
+  },
+  "4d4378902515046d1ce290461a8f1af365610912": { "facing": "internal" },
+  "aadb6c0aff2ed8fbf0ddefbe120b1aeec37e8d36": { "facing": "internal" },
+  "ad718c4cc30c4b00e37669c458b6c49c3bd85e70": { "facing": "internal" },
+  "7e0b0e59083ae58d30d3d60b50d78c8754180d71": { "facing": "internal" },
+  "c689e9c343bae5db03365850ce71eb0e33759112": { "facing": "ui" },
+  "d4be27c5105ecc7890e64a3f4e7c3c8fb47d49c0": {
+    "facing": "model",
+    "id": "tool-description-searchplugins-result-guidance",
+    "name": "Tool Description: SearchPlugins Result Guidance",
+    "desc": "Paragraph of the SearchPlugins tool prompt telling the model how to relay ranked results and when to call SuggestPluginInstall."
+  },
+  "da424acfda658394ffedf5571264b85695158d3a": {
+    "facing": "model",
+    "id": "tool-result-send-message-permission-handler-approved-recipient-suffix",
+    "name": "Tool Result: SendMessage Recipient Changed After Approval Suffix",
+    "desc": "Suffix of the SendMessage refusal when a permission handler changes the recipient after approval, so nothing was sent."
+  },
+  "5ace2bef10c07bc62d2319ffc287b5f7bf89d95c": { "facing": "internal" },
+  "42c90f6cb351a81666a66d7cec90e3d085611d84": { "facing": "ui" },
+  "20f9d7af483fbc829647a44af7412ea08e0efe95": {
+    "facing": "model",
+    "id": "data-task-notification-cloud-review-session-not-found",
+    "name": "Data: Task Notification Cloud Review Session Not Found",
+    "desc": "Trailing instruction on a failed cloud-review task notification when the review session is missing under the signed-in account."
+  },
+  "e2fc80cb7a6a8044d0619321a7f45d1e822337a5": { "facing": "internal" },
+  "776a88e2216488572ad29419ae156c88311d8bad": { "facing": "ui" },
+  "8f70416b710353f453258550e76c5674915ca15d": { "facing": "internal" },
+  "aba05a306ee83b629ad780def0831e5ea9621421": { "facing": "internal" },
+  "de8009b2c3fe0b5cff325703296adab5b27c7815": { "facing": "internal" },
+  "168c393f81eaa796b25ddea21c4f4193b84c4b75": { "facing": "internal" },
+  "cbaabd943f22f1293d60c1393352bb6248df57af": { "facing": "internal" },
+  "deeb6ed75012274084a23613be4b9c9877dd99bd": { "facing": "internal" },
+  "c51a1de894359d0a6f29cb6257841a192b12e6a8": { "facing": "internal" },
+  "a7a43ba9868bde0d1d68586b3f8440cff8adc0c5": { "facing": "internal" },
+  "099e41fd2dd407f47fdfc04b2b0a45b710c9ad78": { "facing": "internal" },
+  "00ce0deb8832a1f06aca100cee993351a4bf1b8e": {
+    "facing": "model",
+    "id": "system-reminder-blocked-tools-no-longer-available",
+    "name": "System Reminder: Blocked Tools No Longer Available",
+    "desc": "Attachment header telling the model that blocked tools are gone and must not be called."
+  },
+  "07cf520548b175e04f8bcde9bfea1af5a30deaea": {
+    "facing": "model",
+    "id": "tool-result-cloud-session-preflight-transient",
+    "name": "Tool Result: Cloud Session Preflight Transient",
+    "desc": "Hint added to a cloud-session create failure when the GitHub App check fails transiently, offering a retry or an upload without file sync."
+  },
+  "786b57bdcd04529ee09fd736964dbd6282af0599": { "facing": "internal" },
+  "566dedbe8c59faef4581c7d42a6243335a1fcd48": {
+    "facing": "model",
+    "id": "data-memory-sync-file-not-saved-stays-local",
+    "name": "Data: Memory Sync File Not Saved Stays Local",
+    "desc": "PostToolUse additionalContext when the server refused one memory file: it stays local, other files keep syncing, and the model should tell the user."
+  },
+  "a433eae84dda9031f206bfbdc54fd94ef1f6ff99": { "facing": "internal" },
+  "1906bb8c77e4474f8fcfa93959782e833198d78e": { "facing": "internal" },
+  "535d4f6cc9e56cc524f238b9fc77f5d7f6fd5d4a": { "facing": "internal" },
+  "4165ecf0cf23050cb40d964ae2a337849ec70856": { "facing": "internal" },
+  "9503fa97621250dc5ce8843378af825e3ed55d6b": { "facing": "internal" },
+  "4cb09d616cdbf982f8aa94a2b043f1dfa54c6c20": { "facing": "internal" },
+  "12c4036ae9f575efd755647c87a8bef5f29cd9e1": { "facing": "internal" },
+  "f5ee3183a7bfefd2679ddbdac7cefacff3f3dfcf": { "facing": "internal" },
+  "12d69b55b656f626473896ba571a83ff0dfadd15": { "facing": "ui" },
+  "0ded64859dc621df9445d8928baca0bec41ae6d4": { "facing": "ui" },
+  "0e40bd1398ab03194d1b17ab792b921dfddd921a": { "facing": "internal" },
+  "6746e4f8074b9c2375cc9ec56bb342b9608ed6db": { "facing": "internal" },
+  "751ed767d54187b49bb26054010da2007d45543e": { "facing": "internal" },
+  "3b484c9b387fbfe00d5ee5c1e04381d6900cd5ed": { "facing": "internal" },
+  "56f736290e8c2229fb970d3b632361bf3b92b8b7": { "facing": "internal" },
+  "11716d5610c4126fc4cdb7a64f97fd6bd7385299": { "facing": "internal" },
+  "16befbfdbc2339965f58ba522627c73ae120d853": { "facing": "ui" },
+  "0de1db757a198c114adfcde6ca6cb6fc96e42c81": { "facing": "internal" },
+  "61a7377cff9b23330b7d8b21b60db0396ceffa39": { "facing": "internal" },
+  "7162c43ebbe3c68426ddd8a50df3e57b425d336f": { "facing": "internal" },
+  "727b136f7e509fe434e804f4dd2b85e7abe7e222": {
+    "facing": "model",
+    "id": "system-prompt-cloud-app-readable-directories",
+    "name": "Cloud App Readable Directories",
+    "desc": "Session-guidance line telling the model the Claude app can open only the primary working directory, scratchpad, and memory directories, so user-facing files must be written there."
+  },
+  "c097afc632d0ff7f40f0f3def159aa8e592f781e": { "facing": "internal" },
+  "b6cdf34bd1b94bed3e77eb2777e36c8dabbe8426": { "facing": "ui" },
+  "9a16f020b96b37d068d98a1f1ee679c9292fd33f": { "facing": "ui" },
+  "2f075f471619e1ad1828edcddc3c822d296a781a": { "facing": "ui" },
+  "a2507c85bf90e078f264fd9f1aa3cdbea77ef8e7": { "facing": "ui" },
+  "6ec9913efb71e5b791e6dcdc6df06ac44c90dc11": { "facing": "ui" },
+  "f49fa6a8ea03e14deed4e729a7aafa4dcc82cd7e": { "facing": "ui" },
+  "695e747a4d82bc416a7d6b45d69dfb6c2d8f9705": { "facing": "ui" },
+  "60000c3619aec618fdd1ba117be4a12b6f21b2a9": {
+    "facing": "model",
+    "id": "tool-result-bash-synced-memory-mass-delete-held",
+    "name": "Synced Memory Mass Delete Held",
+    "desc": "Bash validateInput error telling the model a command would delete more synced memory files than memory sync will allow at once."
+  },
+  "59ae363ffc802deec8d6cbcf08e607827d6c4561": { "facing": "ui" },
+  "46e0a29d0a62614a6a2a6fefde19fef0e49f9517": { "facing": "internal" },
+  "15520c278aaa05dd1cad99da4d6fcfed085b0af9": { "facing": "internal" },
+  "c3024b1ec49a9974c0e40e66b27f68beaa745aa7": { "facing": "internal" },
+  "93c7c720dc2d742ede22d8060a74daf4aea41837": { "facing": "internal" },
+  "fee6536816a5e0620e51d0493d38fb0e1f606d89": { "facing": "internal" },
+  "aab4fc06505cc9555394b7e5d71e249b332ba6ed": { "facing": "internal" },
+  "68834c3945e275a42ee89d5b0e8f4241a8078d61": { "facing": "internal" },
+  "a36c5d9dc56840c87c3a3fe465d51990a39841db": { "facing": "internal" },
+  "c5fef43cf110a5e88e4bda048620affc2a858498": { "facing": "internal" },
+  "aae55a8e59928a4082d1d8724dcddc987bf8ea28": { "facing": "internal" },
+  "5cff06e1923c9f606f18c56b524a99e4c35d7fc3": { "facing": "internal" },
+  "a803a92323099a79798cf7dfef15b353dedbfaaf": { "facing": "internal" },
+  "e6f5a0e0646f153f056c91aab0d94e0b9b4dc696": { "facing": "internal" },
+  "397cb1f13d3655044af56552b4f34dd3583f2707": { "facing": "internal" },
+  "57328459fd98309ff96100295f83f41b47afdcc1": { "facing": "internal" },
+  "c18728a5bde72a7db20aa8d68cb47a36b0c31761": { "facing": "internal" },
+  "6da37bee9412f23134c4d60705f21dcfc83bc524": { "facing": "internal" },
+  "cc434bbacacf027bd9aafb08407cf4852599d5b6": { "facing": "ui" },
+  "73149b5e5db7e758e80afd0de3ca808265481890": { "facing": "ui" },
+  "f3cf1dbf3e6e1110795604c515447ab1d62609a4": { "facing": "ui" },
+  "0949987e98c89b0caacae136daf0b512e2975861": { "facing": "ui" },
+  "444913d3555ed79ea2671de5ea85a24636de19fc": { "facing": "ui" },
+  "854052b7116a4da0cb750b7abf4cc76d8d700c41": { "facing": "ui" },
+  "f44b386a5f84bc1625e395bdef3005fbc6b2ac05": { "facing": "ui" },
+  "b5630970e1efc153963827fda67160966ace6580": { "facing": "internal" },
+  "705e03ad592b8d904890f3331b944a1e2aafcc53": {
+    "facing": "model",
+    "id": "tool-result-artifact-org-policy-unreadable-reply",
+    "name": "Artifact Org Policy Unreadable Reply",
+    "desc": "Artifact tool error telling the model the org-policy reply could not be parsed, usually because a proxy or filter answered instead."
+  },
+  "cd21ff77c1fac6b4020aa6f88a1eb86a18320272": {
+    "facing": "model",
+    "id": "tool-result-artifact-org-policy-http-403",
+    "name": "Artifact Org Policy HTTP 403",
+    "desc": "Artifact tool error telling the model the org-policy host or a proxy in front of it returned HTTP 403."
+  },
+  "a1dfef421575281aafce84b0bdfe4a50cfbbff69": {
+    "facing": "model",
+    "id": "tool-result-artifact-org-policy-credentials-rejected",
+    "name": "Artifact Org Policy Credentials Rejected",
+    "desc": "Artifact tool error telling the model the org-policy host rejected this session's credentials."
+  },
+  "318ed5564880c36ff0736865394ee49590d5ee8e": {
+    "facing": "model",
+    "id": "tool-result-artifact-org-policy-no-credentials",
+    "name": "Artifact Org Policy No Credentials",
+    "desc": "Artifact tool error telling the model no credentials could be attached to the org-policy request."
+  },
+  "263146f5f278e1ca3a07aca4878dc013eadeec95": {
+    "facing": "model",
+    "id": "tool-result-artifact-org-policy-stale-signin-copy",
+    "name": "Artifact Org Policy Stale Sign-In Copy",
+    "desc": "Artifact tool error telling the model the saved org-policy copy belongs to a previous sign-in and a fresh one has not loaded."
+  },
+  "a7dae0d842911659dabe393469a97404079e5618": {
+    "facing": "model",
+    "id": "tool-result-artifact-org-policy-route-404",
+    "name": "Artifact Org Policy Route 404",
+    "desc": "Artifact tool error telling the model the org-policy request got a 404, usually because a proxy is not forwarding that path."
+  },
+  "a0303f3d882f324fcd33022dadd03efb3457b6bd": {
+    "facing": "model",
+    "id": "tool-result-artifact-org-policy-caching-proxy",
+    "name": "Artifact Org Policy Caching Proxy",
+    "desc": "Artifact tool error telling the model a caching proxy answered in place of the org-policy host."
+  },
+  "14d0b755b4107a5b6431db09eb35a5a8f8853f40": {
+    "facing": "model",
+    "id": "tool-result-artifact-org-policy-proxy-auth",
+    "name": "Artifact Org Policy Proxy Auth",
+    "desc": "Artifact tool error telling the model the proxy demanded authentication before forwarding the org-policy request."
+  },
+  "b45f486a77243a221083291ed0d151c57c010bcf": {
+    "facing": "model",
+    "id": "tool-result-artifact-policy-route-missing-no-retry",
+    "name": "Artifact Policy Route Missing No Retry",
+    "desc": "Suffix of the artifact org-policy error that tells the model a 404 will persist, not to retry, and to tell the user their IT admin must allow the address."
+  },
+  "bb8bbe756d5fc80ee8cc005c612a38fdba752b65": {
+    "facing": "model",
+    "id": "tool-result-memory-server-truncated-reread",
+    "name": "Memory Server Truncated Reread Note",
+    "desc": "Note appended to a truncated memory-server tool result telling the model the file content is incomplete and to call memory_read before rewriting it."
+  },
+  "619f05d3c3ea5b47a4e78a5ee46a0289aff25419": { "facing": "internal" },
+  "09405f6f2d630385356ef92774996d36a4cb85fc": { "facing": "internal" },
+  "1382d1757861fa61a893624a0fdd60abc5729d68": { "facing": "internal" },
+  "68d1f74f08815c0d21b67528903beea9908e291b": { "facing": "internal" },
+  "49d6001eae065bc3518b120a16caa1d1f107280e": { "facing": "internal" },
+  "88ac9defcffb7f52c09e710e41844ac4e6c9e149": { "facing": "internal" },
+  "dfcdc3b324768894bedc431a87c461d3e45b64ad": { "facing": "internal" },
+  "9cb0007c0140e1eff65339f3dabe884dc491bcfd": { "facing": "internal" },
+  "1525b9bcb8b2ff2e4189cfd8dfce478a0910923b": { "facing": "internal" },
+  "85aa82ec852b761fa67de654c07f9aa9a94538b4": { "facing": "internal" },
+  "25ac87936d1af543bc8cd85c3cdbf48c746e06b6": { "facing": "ui" },
+  "0eb9c51edae0a684e728600dc9b0759ecc5aa73a": { "facing": "ui" },
+  "60bbf9498f791d08b3c3784107fbe8b250a88f38": { "facing": "ui" },
+  "4e16bc1a0bd02f2fb71e62f21c759a412044d754": { "facing": "ui" },
+  "08b74143d61598dbc926e1ea35388a3f88e76464": { "facing": "ui" },
+  "100174e40497dd3a3e31fe11f31f26504a88f460": { "facing": "ui" },
+  "934423e36fa9fcf5c58392ec0b5ad7acf7c9195d": { "facing": "ui" },
+  "8cdb4014f6e90475e42dec684c0081f4f942565e": { "facing": "ui" },
+  "7d693d631abc3e8c219ac30c30a8bda4227e8575": { "facing": "ui" },
+  "f5d4943278e887f44366f39d43bbcc23da550475": { "facing": "ui" },
+  "2958432b88a260908e57658ec1fbb8963e15c428": { "facing": "ui" },
+  "f34f119c377befba2b4bc7c3bf09bc9ae2cabb01": { "facing": "ui" },
+  "da1aa4960254dadc0f86d50c56edf7bd8051502a": { "facing": "ui" },
+  "bf7d84d41624cafbf9b3bdad27e5ec1c072082d3": { "facing": "ui" },
+  "d50cfa69634b9516c427f7869fd2501516a42c1d": { "facing": "ui" },
+  "5d7cc8a0440d97dcf036ff00e2929cc316079206": { "facing": "ui" },
+  "37cde5e007efbdc6f1b4b3212c61bf10331ac6ac": { "facing": "ui" },
+  "a6505fed1b1d6e264323679eea54029e34d79347": { "facing": "ui" },
+  "1a9c3b8550430481badb55a07200031848534e88": { "facing": "ui" },
+  "c4a6073abaa0152e77bde75e7447a5236dc61098": { "facing": "ui" },
+  "c295e3b766cffde2463f9a6bbd0ab68ec4551931": { "facing": "ui" },
+  "c6fe829179547f37b28160789a89b10a856d6e8b": { "facing": "ui" },
+  "fbdb452293e9b7e942cb00414905cadceefb90fc": { "facing": "ui" },
+  "67b3aba95ddc0b5e18ae8bf5188839c0ff695e97": { "facing": "ui" },
+  "1e38fdc500a2395ec91262598be470881635b773": { "facing": "ui" },
+  "284e059321aae7408aa1ace8f82617d0bd50a63d": { "facing": "ui" },
+  "fd40599e61c0f9e173128136db4dbfe596032d01": { "facing": "ui" },
+  "1d362d76e35e566de6214c35a97a0de9e0e94bc7": { "facing": "ui" },
+  "e75820832e4ae750d76880ce4ef0eb512c30010e": { "facing": "ui" },
+  "ddb81941fc230521d76d39f74efa25e07ca020c7": {
+    "facing": "model",
+    "id": "tool-result-write-refusing-symbolic-link-target",
+    "name": "Tool Result: Write Refusing Symbolic Link Target",
+    "desc": "Permission-deny tool result when a write target is a symlink, naming the resolved path the model should write instead."
+  },
+  "5e587c9a042fef6f70407a7c4d8e3cf077aeb286": {
+    "facing": "model",
+    "id": "tool-result-permission-ask-symlink-landing",
+    "name": "Tool Result: Permission Ask Symlink Landing",
+    "desc": "Sentence appended to a permission ask, and stored as its decision reason, describing where a symlink resolves."
+  },
+  "11a34f8566da2a86c6f9d95a7396d3fbf77ec204": {
+    "facing": "model",
+    "id": "tool-result-outside-allowed-working-directories-clause",
+    "name": "Tool Result: Outside Allowed Working Directories Clause",
+    "desc": "Suffix added to the symlink-landing permission sentence when the resolved path is outside the allowed working directories."
+  },
+  "43160aae45b8d197444a326405323514461bf82d": {
+    "facing": "model",
+    "id": "tool-result-permission-ask-not-granted-yet",
+    "name": "Tool Result: Permission Ask Not Granted Yet",
+    "desc": "Permission-ask message telling the model the user has not yet granted the requested read or write."
+  },
+  "8c9a0dbe98f08078ac135fe7628ac7615fe2cd2a": {
+    "facing": "model",
+    "id": "tool-result-read-write-deny-link-unresolved",
+    "name": "Tool Result: Read Write Deny Link Unresolved",
+    "desc": "Permission-deny tool result when a read or write path's symlink chain cannot be examined or does not resolve."
+  },
+  "572d6355b8a5b21c212df8b4a2f0d0d49cde0370": { "facing": "internal" },
+  "79e769e9e8b24e55b89d00d2b8c67ee1a05c411d": { "facing": "internal" },
+  "fa6c78557654b00ecec399be1dc767387c4d145b": { "facing": "internal" },
+  "c91f244e07db34b57d512535304f9954026e65ea": { "facing": "internal" },
+  "46e6086f8944c3ee6d21992e2c66201ca16cc72b": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-refs-unreadable",
+    "name": "Tool Result: Git Bundle Refs Unreadable",
+    "desc": "Failure detail, spliced into the cloud-upload error, when packed-refs or a file under refs cannot be listed."
+  },
+  "ec81f3165945615b9117945f67f7eda783586dfd": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-split-index-too-large",
+    "name": "Tool Result: Git Bundle Split Index Too Large",
+    "desc": "Failure detail, spliced into the cloud-upload error, when sharedindex files in the git directory are too large to copy."
+  },
+  "6c59b23424fb07c602db4b89adb24aa6266e4913": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-seed-admin-write-failed",
+    "name": "Tool Result: Git Bundle Seed Admin Write Failed",
+    "desc": "Failure detail, spliced into the cloud-upload error, when writing the private seed-admin git directory fails."
+  },
+  "d06caec56916bb5dd84522f3756c36155c651d9b": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-index-copy-rewrite-failed",
+    "name": "Tool Result: Git Bundle Index Copy Rewrite Failed",
+    "desc": "Failure detail, spliced into the legacy-upload refusal, when git cannot rewrite the private index copy as one file."
+  },
+  "b4f3fe14761fc64eeeb5705f6ef7e4b25219c377": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-index-tree-unfinished-merge",
+    "name": "Tool Result: Git Bundle Index Tree Unfinished Merge",
+    "desc": "Failure detail, spliced into the legacy-upload refusal, when write-tree fails because of an unfinished merge."
+  },
+  "393b37f0d5b3db32941494f3c19ee01f362ec9e1": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-index-cached-tree-unwritten",
+    "name": "Tool Result: Git Bundle Index Cached Tree Unwritten",
+    "desc": "Failure detail, spliced into the legacy-upload refusal, when the index's rebuilt cached tree cannot be written back."
+  },
+  "8003d5e4e4107c08590445839eb7c2a3ad6da972": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-upload-file-too-large",
+    "name": "Tool Result: Git Bundle Upload File Too Large",
+    "desc": "Clause of a copy-refusal detail, spliced into the cloud-upload error, when a file exceeds the 256 MiB upload limit."
+  },
+  "1b82c1851578815c4c13796795728f035165b96f": { "facing": "internal" },
+  "6bbae04645c912c8b050018b937100822373acb0": { "facing": "internal" },
+  "b57f451d460ecda82681e9a5342b8a9fa1ce98fd": { "facing": "internal" },
+  "ae135fa22fef1c31a267c5071c9bc259a257b0a6": { "facing": "internal" },
+  "cfb3d756153f8a364ce8b84c45dc2b0c02193668": { "facing": "internal" },
+  "000548a5c1f58406310e7d223944d3e559e50e6b": { "facing": "ui" },
+  "137389766962232449c2ab37b7371c640970364f": { "facing": "ui" },
+  "9d28f3b73d318031e44a086b7aede1ec3fd4822b": { "facing": "ui" },
+  "0601238c3be03d9f1e9ad933e41dfbcc87fefefa": { "facing": "ui" },
+  "3ff7bddb84a1533bd56b0b0091ee82613d96bf05": { "facing": "internal" },
+  "b5daaf322159a42b47c4a8d22447672ec6f2bc09": { "facing": "internal" },
+  "70cf4319d679fc31d0dbf652709b0485a390e39e": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-index-changed-while-read",
+    "name": "Tool Result: Git Bundle Index Changed While Read",
+    "desc": "read-tree failure detail included in the uncommitted-changes upload error when the index changes or its trees do not match."
+  },
+  "f2bbfdfd99fd1eb5741b6db1a0a9fe6ee5db08b1": { "facing": "internal" },
+  "e5a81765a983235b9186a71168537d24071d2f7a": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-info-attributes-filter",
+    "name": "Tool Result: Git Bundle Info Attributes Filter",
+    "desc": "check-attr failure detail included in the uncommitted-changes upload error when .git/info/attributes sets filter attributes."
+  },
+  "d05fe2755d407c911660eb7e005bd24eca887c52": { "facing": "internal" },
+  "ba98979c1819edc190d7bea2818e7990e97a87e8": { "facing": "ui" },
+  "175b92d5441bc7f811cdfc2f75f056bc598a8e24": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-linked-worktree-no-private-admin",
+    "name": "Tool Result: Git Bundle Linked Worktree No Private Admin",
+    "desc": "Synthetic git stderr, returned as the upload error detail, when a linked worktree has no private admin directory to run git under."
+  },
+  "4a65ed16a0912ff0534ffc797b74a5c371ab0fb9": { "facing": "internal" },
+  "5ade3180132935a574ea240fab271b1e77bd6f2d": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-scratch-index-unopenable",
+    "name": "Tool Result: Git Bundle Scratch Index Unopenable",
+    "desc": "Detail of a stash_failed git-bundle error when the scratch index copy cannot be opened while it is carried off."
+  },
+  "fb40c4eb42bdeaea0eddbf5db0e0d84106daef41": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-scratch-index-uncarried",
+    "name": "Tool Result: Git Bundle Scratch Index Uncarried",
+    "desc": "Detail of a stash_failed git-bundle error when copying the scratch index off its original name fails."
+  },
+  "fc27ef3c1f5274514b9edf33583e87754e0756d8": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-git-file-symlink",
+    "name": "Tool Result: Git Bundle Git File Symlink",
+    "desc": "Previous-way clause refusing the upload when .git is a symlink the checkout's own session can retarget."
+  },
+  "07109adb1feb8a34228bb3483006866a40fad3f5": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-git-file-second-name",
+    "name": "Tool Result: Git Bundle Git File Second Name",
+    "desc": "Previous-way clause refusing the upload when the .git pointer file has a second hard-link name."
+  },
+  "a3e77e9242ff4890621721574dd7dcb338c98d28": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-git-file-unfollowed-pointer",
+    "name": "Tool Result: Git Bundle Git File Unfollowed Pointer",
+    "desc": "Previous-way clause refusing the upload when .git is a pointer file that is not the single gitdir line git writes."
+  },
+  "6a845dfe3333bb9a3649f6e6cef54cca8f3a41cc": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-worktree-entry-under-temp",
+    "name": "Tool Result: Git Bundle Worktree Entry Under Temp",
+    "desc": "Previous-way clause refusing the upload when .git names a worktree admin entry under a temporary directory."
+  },
+  "9e12ef366469d2f4c6ff5db1d20c6d6637188649": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-git-dir-under-temp",
+    "name": "Tool Result: Git Bundle Git Dir Under Temp",
+    "desc": "Previous-way clause refusing the upload when .git names a git directory that sits under a temporary directory."
+  },
+  "c165563d8a1a91138b854ea82e3c28cc0d0dc4c4": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-git-dir-inside-other-checkout",
+    "name": "Tool Result: Git Bundle Git Dir Inside Other Checkout",
+    "desc": "Previous-way clause refusing the upload when this checkout's git directory lies inside another checkout."
+  },
+  "1c76a21b2daf1148efceabd1c5c19e1f46c0345a": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-commondir-present",
+    "name": "Tool Result: Git Bundle Commondir Present",
+    "desc": "Previous-way clause refusing the upload when the git directory holds a commondir file git writes only for a linked worktree."
+  },
+  "b7f42aa335b92925e2b688ddd475082f27bc1759": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-worktree-config-file-present",
+    "name": "Tool Result: Git Bundle Worktree Config File Present",
+    "desc": "tC.worktree_config clause refusing the upload when the admin entry carries a per-worktree config file a session can write."
+  },
+  "6639034960999d473fff1c14bee971473ecd2902": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-commondir-unreadable",
+    "name": "Tool Result: Git Bundle Commondir Unreadable",
+    "desc": "tC.common_dir clause refusing the upload when commondir does not read the way git writes it."
+  },
+  "375ec42b51c472d6f62917a181ac13de9c192c65": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-repo-placement-untrusted",
+    "name": "Tool Result: Git Bundle Repo Placement Untrusted",
+    "desc": "tC.placement clause refusing the upload when the repository is not placed or named the way this upload accepts."
+  },
+  "03c915ea767ef3d9c8e5388ca7c49fc6def136b9": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-admin-back-link-broken",
+    "name": "Tool Result: Git Bundle Admin Back Link Broken",
+    "desc": "tC.back_link clause refusing the upload when the admin entry does not point back at this working tree."
+  },
+  "75af6c9ff829f8f6655396842e1e61c50fdfd4fc": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-worktree-entry-missing",
+    "name": "Tool Result: Git Bundle Worktree Entry Missing",
+    "desc": "tC.admin_dir clause refusing the upload when .git names a worktree entry that is missing or not one git made."
+  },
+  "9c438e1e23470d659904ca8ab4e84d6a1c22cbe8": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-git-file-unfollowed",
+    "name": "Tool Result: Git Bundle Git File Unfollowed",
+    "desc": "tC.git_file clause refusing the upload when .git is a pointer file this upload could not follow."
+  },
+  "045e9ea6e577c75c61b9ce84de192f5d16ae60b4": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-reftable-session-state",
+    "name": "Tool Result: Git Bundle Reftable Session State",
+    "desc": "fC.reftable clause refusing the previous-way upload because a session can turn on reftable refs without the user."
+  },
+  "b79004010e92c834ef9bb9740da3386f15456d35": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-alternates-session-state",
+    "name": "Tool Result: Git Bundle Alternates Session State",
+    "desc": "fC.borrowed_objects clause refusing the previous-way upload because a session can add an alternates file without the user."
+  },
+  "daa4612a7b080b560c4a29569938507228293b73": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-core-worktree-redirect",
+    "name": "Tool Result: Git Bundle core.worktree Redirect",
+    "desc": "Mh clause refusing the upload when core.worktree points the capture at a different directory."
+  },
+  "c9defa8283c91fec6943d1fdb35ebc5cec6b54c8": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-included-config-session-writable",
+    "name": "Tool Result: Git Bundle Included Config Session Writable",
+    "desc": "r6.included_config clause refusing the upload when git config includes a file a session can write."
+  },
+  "12e32b31f94e758350b0dceb364a6a8bd6575721": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-include-chain-unfollowed",
+    "name": "Tool Result: Git Bundle Include Chain Unfollowed",
+    "desc": "r6.many_includes clause refusing the upload when git config pulls in more includes than the capture follows."
+  },
+  "fcb983692c1ec33705705900eb4ca827f0ada949": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-env-config-includes-workdir",
+    "name": "Tool Result: Git Bundle Env Config Includes Workdir",
+    "desc": "pC includes-clause for GIT_CONFIG_PARAMETERS when that environment config includes a file inside the working tree."
+  },
+  "f9601bd33152b3baed9a7ea011dc7799b61dacdc": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-env-worktree-config",
+    "name": "Tool Result: Git Bundle Env Worktree Config",
+    "desc": "pC clause when launch-environment git config turns on extensions.worktreeConfig."
+  },
+  "ad1e95231fd2c27046d71da22bb17538b5209471": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-env-config-hard-link",
+    "name": "Tool Result: Git Bundle Env Config Hard Link",
+    "desc": "pC clause when GIT_CONFIG_PARAMETERS includes a file that has a second hard-link name."
+  },
+  "917821fe0923e9e302a4c92951e5a2327ea342ca": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-env-config-unparsed",
+    "name": "Tool Result: Git Bundle Env Config Unparsed",
+    "desc": "pC clause when GIT_CONFIG_PARAMETERS does not parse the way git would parse it."
+  },
+  "f20e517c66c6f5ae7f7bdc031271846443a0d283": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-config-includes-workdir",
+    "name": "Tool Result: Git Bundle Config Includes Workdir",
+    "desc": "pC includes-clause when a named git config file includes a path inside the working tree or its repository."
+  },
+  "fa88da77eca284f5f64bff9cfb2531bf5ecd521d": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-config-file-hard-link",
+    "name": "Tool Result: Git Bundle Config File Hard Link",
+    "desc": "pC clause when a named git config file, or a file it includes, has a second hard-link name."
+  },
+  "0755d0cdd1a4eaa1ca134832e1942aa91285a3c6": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-config-worktree-config",
+    "name": "Tool Result: Git Bundle Config Worktree Config",
+    "desc": "pC clause when a named git config file turns on extensions.worktreeConfig."
+  },
+  "f28dc86858b85115d41da480ca64bc0687504814": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-config-file-unreadable",
+    "name": "Tool Result: Git Bundle Config File Unreadable",
+    "desc": "pC clause when a named git config file could not be read as a plain file git would parse."
+  },
+  "3284b24ad3f197ce3bbd1b29183af47cf69fc18e": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-checkout-inside-checkout",
+    "name": "Tool Result: Git Bundle Checkout Inside Checkout",
+    "desc": "o6 clause refusing the upload when this checkout sits inside another checkout whose sessions can write its git files."
+  },
+  "ab6da0ec748d3c0ac54c6e5e9427eaa7362eed72": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-repo-inside-other-checkout",
+    "name": "Tool Result: Git Bundle Repo Inside Other Checkout",
+    "desc": "a6 clause refusing the upload when this working tree's repository sits inside another checkout."
+  },
+  "1bda4afde9d83bb1cd226897375e8af7bf6affa8": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-index-reset-hint",
+    "name": "Tool Result: Git Bundle Index Reset Hint",
+    "desc": "Ah hint, spliced into index-remedy clauses, saying git reset rebuilds the index from HEAD without touching files."
+  },
+  "dad127551f7016b601b5cd9a281fcf2a6d112bd9": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-index-too-large",
+    "name": "Tool Result: Git Bundle Index Too Large",
+    "desc": "d6.index_too_large remedy saying this upload has no way around the index size limit."
+  },
+  "c20d38aeb7234cf5905b845c54a48b55241c90f9": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-index-not-gits",
+    "name": "Tool Result: Git Bundle Index Not Git's",
+    "desc": "d6.index_other remedy telling the model to inspect the index with ls -l and remove it if git did not write it."
+  },
+  "d73c679c2fecc64bfd1213ec102b3c2275999508": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-split-index",
+    "name": "Tool Result: Git Bundle Split Index",
+    "desc": "d6.shared_index remedy for split-index files, including removing links before any git command and running git update-index --no-split-index."
+  },
+  "0f5efc07b57c3b02cbdcac9a378d258888f99d95": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-head-checkout-remedy",
+    "name": "Tool Result: Git Bundle Head Checkout Remedy",
+    "desc": "d6.head remedy telling the model to check out a branch or commit with git switch and retry."
+  },
+  "d21b0dcde97c621fd4f89506cc7fe3f2aac16c6f": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-refs-repair-remedy",
+    "name": "Tool Result: Git Bundle Refs Repair Remedy",
+    "desc": "d6.refs remedy telling the model to use git for-each-ref and rename or repair the branch or tag."
+  },
+  "7b933773c74eca5054378fe483f07cd945a04060": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-private-copy-retry",
+    "name": "Tool Result: Git Bundle Private Copy Retry",
+    "desc": "d6.other remedy telling the model to retry and use git status if the private-copy failure keeps happening."
+  },
+  "57f48ad1d1f4f2f981596efef50ad89dc2d5a95a": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-not-uploaded-previous-way",
+    "name": "Tool Result: Git Bundle Not Uploaded Previous Way",
+    "desc": "Hs wrapper that prefixes a previous-way refusal clause onto the hardened upload error."
+  },
+  "1dd9727704b771eb639cd1847ac1bbe1a897860a": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-previous-way-uncommitted-unlistable",
+    "name": "Tool Result: Git Bundle Previous Way Uncommitted Unlistable",
+    "desc": "w6 refusal when the previous upload path cannot list uncommitted changes to screen files that must stay on this machine."
+  },
+  "59940408d096a27cb210dac131578b53f163371c": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-previous-way-gitlinks",
+    "name": "Tool Result: Git Bundle Previous Way Gitlinks",
+    "desc": "w6 refusal when the previous upload path would enter nested gitlinks under configuration a session of this checkout can write."
+  },
+  "ebb88b1579d5e7299d1898c537b48c91b0520251": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-previous-way-keeps-nothing-back",
+    "name": "Tool Result: Git Bundle Previous Way Keeps Nothing Back",
+    "desc": "w6 refusal that rewrites a Not-uploading sentence to say the previous path keeps nothing back."
+  },
+  "0bff50f01541b63f7ce896a1cf98c85ee1af4ddc": { "facing": "ui" },
+  "87848bee0db486754187c1c5e4b5bbc17abc6b80": { "facing": "ui" },
+  "d38d657d4aa7b0295de63b470c65320161534274": { "facing": "ui" },
+  "17d8ef67272a9f22d90bde5f4704a3b644cb3e11": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-credential-named-files",
+    "name": "Tool Result: Git Bundle Credential-Named Files",
+    "desc": "Lead of the teleport git-bundle refusal when uncommitted changes include paths named like credentials or keys, so nothing is uploaded."
+  },
+  "6b285b27a74255f82ecceef84bcbf75f3e667caf": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-credential-named-covered-by-rule",
+    "name": "Tool Result: Git Bundle Credential Named Covered By Rule",
+    "desc": "Clause spliced into the credential-named git-bundle refusal when the upload was given a withhold callback, adding Read-rule, sandbox read-deny, or Claude Code config-link coverage."
+  },
+  "b68f04598676faa113fc16263be42ef83dd725a6": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-index-removed-still-on-disk",
+    "name": "Tool Result: Git Bundle Index-Removed File Still On Disk",
+    "desc": "Clause of the credential-named git-bundle refusal for paths committed but removed from the index while the file is, or may still be, on disk."
+  },
+  "e2e5b46c067bb0e59c4a177d1c44ca749ee44f6c": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-unresolved-worktree-path",
+    "name": "Tool Result: Git Bundle Unresolved Worktree Path",
+    "desc": "Refuses the upload when the working tree path cannot be resolved because a link on the way to it changed or could not be read."
+  },
+  "a3cd8b5c96bfe8d7c9b118ddaa46886998b2c0bd": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-linked-worktree-promisor-fetch",
+    "name": "Tool Result: Git Bundle Linked Worktree Promisor Fetch",
+    "desc": "Hs fallback when a linked worktree cannot be uploaded the hardened way and git cannot be kept from fetching the promisor remote."
+  },
+  "f33dbd75b29cda3c076f109f3b714fa4117b36e2": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-captured-changes-unlistable",
+    "name": "Tool Result: Git Bundle Captured Changes Unlistable",
+    "desc": "Refuses the upload when the uncommitted changes just captured cannot be listed back for the credential check."
+  },
+  "15eee3737f89a17fc23be407531ae8c5b302bf83": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-scratch-index-changed",
+    "name": "Tool Result: Git Bundle Scratch Index Changed",
+    "desc": "Refuses the upload when another process changes the scratch index copy while the upload runs."
+  },
+  "a7619478cfe709ef8117cc25b3a769ee4777c334": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-index-git-refuses-path",
+    "name": "Tool Result: Git Bundle Index Git Refuses Path",
+    "desc": "Refuses the upload when the git index names a .git-like or git~1 path that git itself refuses to write."
+  },
+  "d5f749c5d11160748c0c8f4ca38cf17f733d229f": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-scratch-index-unwritable",
+    "name": "Tool Result: Git Bundle Scratch Index Unwritable",
+    "desc": "Remedy of a stash_failed git-bundle error when a scratch copy of the index could not be written."
+  },
+  "6840109e8664cf3f9a6f6927740f2f82743088fb": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-head-gitattributes-unreadable",
+    "name": "Tool Result: Git Bundle Head Gitattributes Unreadable",
+    "desc": "stash_failed remedy when HEAD or .gitattributes could not be read back as the objects their ids name."
+  },
+  "82d2ed5fecc09bb06a32dadb140236cff5de6d70": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-info-attributes",
+    "name": "Tool Result: Git Bundle Info Attributes",
+    "desc": "Remedy clause of a stash_failed bundle error when filter rules, attribute macros, or quoted patterns in .git/info/attributes could not be vouched for."
+  },
+  "20e57a250a92f6ae185c12344f8bcd92bfee8e56": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-git-dir-unreadable-after-capture",
+    "name": "Tool Result: Git Bundle Git Dir Unreadable After Capture",
+    "desc": "Refuses the upload when the git directory cannot be re-read after the capture, so the pack cannot be vouched for."
+  },
+  "7f830b019770aee74424ffa82ea1e7aa19913fc3": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-commondir-appeared",
+    "name": "Tool Result: Git Bundle Commondir Appeared",
+    "desc": "Refuses the upload when a commondir file appears in the git directory while the upload is prepared."
+  },
+  "79c73d99d658d78ce378ab16fd32a5f0e0d0fa84": { "facing": "internal" },
+  "b0d1cfa758b69dd2b7a05cd9d7c073b3ec14e71c": { "facing": "internal" },
+  "faa0f7d6c6957dd4b4e08f9bf419a071190259b6": { "facing": "internal" },
+  "820649ce72934a6db7605da9d118ca4e0acc1296": { "facing": "internal" },
+  "8e7987603426451db9416bc18ad8c8276733cbab": { "facing": "internal" },
+  "5d3675f896c0e2ad0b47a7808087b39c9b0f76c7": { "facing": "internal" },
+  "555720d49da3dba9200a203d7b159c26b42d31ae": { "facing": "internal" },
+  "a64047e53d4b45d4653c14925d931974a52e0dee": { "facing": "ui" },
+  "46081741c8f72442a9d6c01bc9b0ddcf4dd94c46": { "facing": "ui" },
+  "6472f65e10c9da657d2d885d1bf8138772bfbd00": { "facing": "ui" },
+  "39c14101e0f7260907a06114245ce5ea878fe59b": { "facing": "internal" },
+  "6535988e0d1ce0ed6e7c2b3ca207c76c101e0cc2": { "facing": "internal" },
+  "86fb0b40c933bfe0498caadaf95c062b483bb4cd": { "facing": "internal" },
+  "e2154f4cc2f1cd72ad1e6b3de1fbb79b9c8b1ae0": { "facing": "ui" },
+  "0f1912875c28de88f5efb79559ecbcefcd96b9cc": { "facing": "ui" },
+  "033ee4c9c41d2f9ae2068e2595146ba4834dd485": { "facing": "ui" },
+  "ccc333fb3e76cf904596c3536ced11a4283d8799": { "facing": "ui" },
+  "15a3e364552bde1b26a5333c07f0cad1d4be5595": { "facing": "ui" },
+  "ae9ececd4ab112abd8a8cc852c73e7af7acd1b0d": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-db-rules-reset-user-scopes-also",
+    "name": "Artifact Publish Db Rules Reset User Scopes Also",
+    "desc": "Clause added to the db-rules publish error when the sent user block also omits stored scopes, telling the model to resend them or send an empty scopes list."
+  },
+  "f67bc9486c9edd2c9ddceda9b51003bd3759507d": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-db-rules-reset-refused-lead",
+    "name": "Artifact Publish Db Rules Reset Refused Lead",
+    "desc": "Opening of the publish tool error when a capabilities declaration re-sends db without the artifact's stored access rules."
+  },
+  "8f8c1ec679a7acd2fa13efa034b914246b795b4e": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-db-rules-reset-unlisted-rules",
+    "name": "Artifact Publish Db Rules Reset Unlisted Rules",
+    "desc": "Parenthetical in the db-rules publish error telling the model the stored rules are not listed and to read the artifact to see them."
+  },
+  "cac0d15ccd9b66c5b98da5bca3bcdb6b743c31a5": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-db-rules-reset-replaces-stored",
+    "name": "Artifact Publish Db Rules Reset Replaces Stored",
+    "desc": "Publish tool error explaining that a sent db block would reset stored access rules to the defaults and how to keep or reset them."
+  },
+  "a562d071a4c25f266ff3ad4008b8bbd1c6c08322": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-db-rules-reset-omit-or-reread",
+    "name": "Artifact Publish Db Rules Reset Omit Or Reread",
+    "desc": "Remedy branch of the db-rules publish error telling the model to omit capabilities or read the artifact back and resend db with its rules."
+  },
+  "9f35f3371407abef36361989faae20ede3a34031": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-user-scopes-reset-refused-lead",
+    "name": "Artifact Publish User Scopes Reset Refused Lead",
+    "desc": "Opening of the publish tool error when a capabilities declaration re-sends user without the artifact's stored scopes."
+  },
+  "c03eeb0d15f2b8f642c15a814a90bd8762c6236f": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-user-scopes-reset-replaces-stored",
+    "name": "Artifact Publish User Scopes Reset Replaces Stored",
+    "desc": "Publish tool error explaining that a sent user block would drop stored scopes, including profile name and avatar, and how to keep or drop them."
+  },
+  "e8461af715c7d892b6c8391de55ffeecc62e8e68": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-user-scopes-reset-omit-or-reread",
+    "name": "Artifact Publish User Scopes Reset Omit Or Reread",
+    "desc": "Remedy branch of the user-scopes publish error telling the model to omit capabilities or read the artifact back and resend user with its scopes."
+  },
+  "d9d76f130173bc75626847351adb6fe53e59effb": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-deploy-422-capability-refused",
+    "name": "Artifact Publish Deploy 422 Capability Refused",
+    "desc": "Publish tool error that wraps an HTTP 422 capability refusal, joining the named capability problems with the instruction to fix them and publish again."
+  },
+  "d28c46b3514fd0e4bdad053d879f899d6d95d88a": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-deploy-422-fix-named-entries",
+    "name": "Artifact Publish Deploy 422 Fix Named Entries",
+    "desc": "Sentence inside the deploy 422 capability refusal telling the model nothing was published and to correct each named capabilities entry before publishing again."
+  },
+  "1cc3a142b8d0aa293747840c357537f30e2fc888": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-unreadable-do-not-retry",
+    "name": "Tool Result Artifact Read Do Not Retry",
+    "desc": "Suffix on an Artifact read tool result for a terminal boot failure, telling the model not to retry and to tell the user the artifact could not be read."
+  },
+  "7a6a746b7c7313117fac30ecffa06938b702f9af": { "facing": "internal" },
+  "8046d4f6c3e33f3ee18e0bdde0b276129e002c55": { "facing": "internal" },
+  "d4cd568815dd38c91575ec8ca84a545672c52ba2": { "facing": "internal" },
+  "7e7861b0d619c118a2835cdda239b8c2d6718128": { "facing": "ui" },
+  "cf11ff56c24ed5ec4aac8f62e19886631d055103": {
+    "facing": "model",
+    "id": "system-prompt-saving-skills-org-settings-save-caveat",
+    "name": "System Prompt Saving Skills Org Settings Save Caveat",
+    "desc": "Clause in the saving-skills prompt and the SKILL.md tool-result suffix telling the model that saving depends on organization settings it cannot see and not to tell the user outright to save it."
+  },
+  "5274cb2c28fbb13f51cec45c45d24302f53317c8": {
+    "facing": "model",
+    "id": "tool-result-account-skills-send-complete-skill",
+    "name": "Account Skills Send Complete Skill",
+    "desc": "Write/Edit tool_result suffix telling the model to send the complete SKILL.md with the file-delivery tool, followed by the organization-settings save caveat."
+  },
+  "66433eee68b18ebbdbb53e53b1f4ce6c612cc189": {
+    "facing": "model",
+    "id": "tool-result-write-aliased-parameter-names",
+    "name": "Tool Result Write Aliased Parameter Names",
+    "desc": "Note appended to a successful Write tool result when path or content arrived under an alias, telling the model the parameters are named file_path and content."
+  },
+  "320c7c32bde1672ecb901f122ad2a99c3e4246b8": { "facing": "internal" },
+  "f42683f419e94f425208be119cdce9ada28f588c": { "facing": "ui" },
+  "8dff713b35d15e0a41d840ba3699b7b7edcf1118": { "facing": "ui" },
+  "02d6f3dbf7e31683838d2b1441bf901a4ac7208e": { "facing": "internal" },
+  "e77ad778e4ce82b6f0d905cc5528a5b5de9f8661": { "facing": "internal" },
+  "cd15579995b7bbba6e43fbd01724ad2db6387e16": { "facing": "internal" },
+  "5f814d1ebe6dc4ba545c90421b4e66d3bb5eb1f3": { "facing": "internal" },
+  "cbbdd4b9037d8874c16353fc883b6ba8452f15cc": { "facing": "internal" },
+  "fa99d54c01a227fb9861538b461a73cd66fabc09": { "facing": "ui" },
+  "b0adde2dadf696cac24dac188be7ada27dbb92ce": {
+    "facing": "model",
+    "id": "system-prompt-fast-mode-environment-note",
+    "name": "System Prompt: Fast Mode Environment Note",
+    "desc": "Environment-section system-prompt fragment describing Fast mode as Claude Opus with faster output, toggled with /fast."
+  },
+  "c707ee3c274e36bbf5b11c774552985710a28d6b": { "facing": "internal" },
+  "93413fe3288898084cad28eeaf5e0ed7b522e942": { "facing": "internal" },
+  "d8db638c790fb5a03fc0112430d0ed5256b80bcc": { "facing": "internal" },
+  "46d7af1f09853c860ea5ead41abf5d18489eb70b": { "facing": "internal" },
+  "d52a86b164161d39ed337e630517377178dd4900": { "facing": "internal" },
+  "5a90aff10fc165bdff96449a83f86d22c3efc8be": { "facing": "ui" },
+  "519a0be83cd7c6f69f830d0a6074d9a60cde1a4e": { "facing": "ui" },
+  "3faebdd2dc838d54cdadf0538103b2adf6070ae3": { "facing": "ui" },
+  "73faf3f27bef0efed29956e03ba668acd349ca13": { "facing": "internal" },
+  "5309ebc2322eacac5207939d51a3f0f23568b3ad": { "facing": "internal" },
+  "5c95233f9c1d22d45dc8ea99e6296514677988b1": { "facing": "internal" },
+  "890adc3ba0c7f190071e9d38e0046d5b59952129": { "facing": "internal" },
+  "c89cc1b41ebffccecd30d2d184612e7bd2ac47b4": { "facing": "internal" },
+  "174995d4cb7c0cf7b88ac1e355f1fdfc186a1169": { "facing": "internal" },
+  "8e91a8567a6cf03a6ee6d52eb044fbc1d2346612": { "facing": "internal" },
+  "70f918384656e497063bf8ae64c5a12dd5942906": { "facing": "internal" },
+  "da6e16f27d572050ba7f32fb6a327b2411fc1a46": { "facing": "internal" },
+  "5e663ee93812229ed7975d6dc5c15cfa04a6107b": { "facing": "internal" },
+  "78cbf4061b9761eff576c3fa6ef55ba64aa79718": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-classifier-safety-monitor-blocked",
+    "name": "Auto Mode Classifier Safety Monitor Block",
+    "desc": "Deny-message reason when an auto-mode classifier request is blocked by a safety monitor, so the model is told there is no verdict and not to retry."
+  },
+  "08da67eb361f123382442b3c54c919962f85a16a": { "facing": "internal" },
+  "af251a6d10f96139cc69ace6e2786e1351ec0795": { "facing": "internal" },
+  "8b1ecea45a994409d5203aabdd8e0241156b5b2a": {
+    "facing": "model",
+    "id": "system-reminder-cloud-review-session-not-found",
+    "name": "Cloud Review Session Not Found",
+    "desc": "Reason placed in the failed cloud-review task notification when the session is gone or the signed-in account no longer matches the one that started the review."
+  },
+  "1749daf9fe23c113a41f67797d2f1d9740d61f97": {
+    "facing": "model",
+    "id": "system-reminder-cloud-review-no-output",
+    "name": "System Reminder: Cloud Review No Output",
+    "desc": "Instruction sentence in the failed cloud-review task notification telling the model to have the user retry /code-review ultra or use a local review."
+  },
+  "99991f5e49bd5caae7d2d755ae1e1f850e8f14d1": { "facing": "internal" },
+  "85b5054c58c47e7a8c5abe8b8e12764a29ac43c6": { "facing": "ui" },
+  "d38c09de314c6f2db2b177c8f1e78c1093e54e31": { "facing": "ui" },
+  "33aeea427f8393ee80240d5d44fb82c806fa934f": { "facing": "ui" },
+  "df98fe852b73dd73c449b6dc4e190e86fd641c62": { "facing": "ui" },
+  "9ab01e9ebdb6c3e59c0a2688c8bd74dfe4c16182": { "facing": "ui" },
+  "f5d5436f8137bada242b0b500d246f0b45127ea8": { "facing": "ui" },
+  "3a443432f5eaa332b99696fb93a84017dffc970a": { "facing": "ui" },
+  "7d8995ad431cc9f344166c51d78cad3b48fadcee": { "facing": "ui" },
+  "fa49160bf43a5a982b9d9e798d3ac6fb4814e723": { "facing": "ui" },
+  "bfc80f5683eeee9891eb3251dfa053a162fd71ae": { "facing": "ui" },
+  "ed48a3918edb5415f7820524983107db6db93e36": { "facing": "ui" },
+  "2b6240c6cdb2f05398292f933bf7b09e800742e2": { "facing": "ui" },
+  "0f7beade5be254ce3487350631497428a727a9e3": { "facing": "ui" },
+  "362bfd8341dc566639b9de933bc5197c692abbaa": { "facing": "ui" },
+  "1668296c35bd48f4411ac9ac95b04da3680e36de": { "facing": "ui" },
+  "85c9757d74a8e4c394b38537374293dbfbf46a2f": { "facing": "ui" },
+  "b8072a9f8b122fc5c816cd327c81f8da6069ac78": { "facing": "ui" },
+  "c4236917e6abace24b5785e4f196724e9eb5b8e9": { "facing": "ui" },
+  "3ba5831ea0a01f387b5e3c3ba0e54dead9005d22": { "facing": "ui" },
+  "abc2a323b0e1375805ffa627085ac854fa768b34": { "facing": "ui" },
+  "d7ba973e1f5450efa74fd2decc1c1c153f60f660": { "facing": "ui" },
+  "9e6fec63ab4b6da5bbebd1ec9d6298179e07293f": { "facing": "ui" },
+  "e6c2f6322236b4296502d6432541c9b88fae5090": { "facing": "ui" },
+  "a444d47cfe4a668ef0ac5b6b68bc358a006b6219": { "facing": "ui" },
+  "ad1633b25d2115cd8e865a60d415650779263de6": { "facing": "ui" },
+  "0d8aff6e816c8b4526aa6be4127e2b7e08218423": { "facing": "ui" },
+  "5f7495cae5f56ab13a78d9110b5b61b1ee05e85d": { "facing": "ui" },
+  "8c892bb127739fbab404dedbe99618690e063eff": { "facing": "ui" },
+  "dd6a7aaad62854fc5440f4453d29f9d6350dbce2": { "facing": "ui" },
+  "691702ba7813bcba624cb14eedafad2282c41fcf": { "facing": "ui" },
+  "980aad0d480230e3b603f7508e77cdd116030cb8": { "facing": "ui" },
+  "9ac1586a698823602e8b5fd0610588dabc742856": { "facing": "ui" },
+  "ef9a5e859f86737d1379dd67e449749a16cf0627": { "facing": "internal" },
+  "7d9a853f6a7bb547543ab33651228265ce2f3ba8": { "facing": "internal" },
+  "1a2638e5a786dfaaa8372db61a4fedce3586fac8": {
+    "facing": "model",
+    "id": "tool-result-bundle-upload-credential-previous-way-error",
+    "name": "Bundle Upload Credential Previous Way Error",
+    "desc": "Agent-tool error when a hardened bundle upload still fails on uncommitted credentials, telling the model the previous upload path keeps nothing back either."
+  },
+  "d3c907942ec0c74453a3b41c2e3b73ed7d834fd9": {
+    "facing": "model",
+    "id": "tool-result-bundle-upload-previous-way-keeps-nothing-prefix",
+    "name": "Bundle Upload Previous Way Keeps Nothing Back",
+    "desc": "Prefix substituted onto a working-tree upload refusal so the model is told the previous upload path also keeps nothing back."
+  },
+  "0c43b5ef810ad29ad49529bd9f7407a71149e23e": { "facing": "ui" },
+  "637aa34eabb2f863eff7536891b2ba6538bb1beb": { "facing": "ui" },
+  "5cc99c32cbd3dd053774f5163d302a425c9eb56d": {
+    "facing": "model",
+    "id": "tool-description-agent-parallel-worktree-isolation",
+    "name": "Agent Tool Parallel Worktree Isolation",
+    "desc": "Conditional Agent tool-description sentence telling the model to set isolation worktree on every parallel agent that will write files in one repository."
+  },
+  "a6f5f3e9ccaa001c55e838fba4bd7f46daa3955a": {
+    "facing": "model",
+    "id": "tool-description-agent-simple-usage-notes",
+    "name": "Tool Description: Agent (Simple Usage Notes)",
+    "desc": "Condensed Agent tool description covering when to use an agent, that its final report is hidden from the user, how to resume it, and worktree isolation."
+  },
+  "4f3158ee1c2f6e789b371aef447fe2823da2edb2": {
+    "facing": "model",
+    "id": "tool-description-agent-worktree-result-branch-note",
+    "name": "Agent Tool Worktree Result Branch Note",
+    "desc": "Clause in the Agent tool description telling the model that each worktree-isolated result includes a branch and worktree path to merge."
+  },
+  "d9c20cda0be0ae691e72cac97c4f7a913395c851": { "facing": "internal" },
+  "bfc6421747e94e2398f08e289896903006643b7d": { "facing": "internal" },
+  "c3f1edf420c998a18bd65de9fdd97e84c9527b4b": { "facing": "internal" },
+  "1072e363e5ea7647ce214207e8e74921292fdbfb": { "facing": "internal" },
+  "fb1062b9f46b7df7616fc030964ebf7b2e559b4f": { "facing": "ui" },
+  "c76e92a1eee44cd156e65667e61fd0d5947dd74e": { "facing": "ui" },
+  "3299d0e4b886da30e9f30cb4f33fc01b4eb90f0d": { "facing": "internal" },
+  "f57949a5164d23b3139ad15ce70e89165cdd1b42": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-classifier-failure-not-unsafe-wrapper",
+    "name": "Auto Mode Classifier Failure Wrapper",
+    "desc": "Wraps an auto-mode classifier failure reason with guidance that the failure is not a judgment that the action is unsafe."
+  },
+  "3193159b1cb9b651955add953d6e94e4049d5066": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-classifier-safeguard-refused-parenthetical",
+    "name": "Auto Mode Safeguard Refused Parenthetical",
+    "desc": "Parenthetical added to an auto-mode no-verdict message when a safeguard refused to let the check read the conversation."
+  },
+  "d587df6c6d25246a0529c7b00e4a3e1e2f222db7": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-classifier-input-too-long-parenthetical",
+    "name": "Auto Mode Check Input Too Long Parenthetical",
+    "desc": "Parenthetical added to an auto-mode no-verdict message when the conversation is too long for the safety check."
+  },
+  "6adbf4ae2ab500d41a44c8448b6b5bcab747c2a3": {
+    "facing": "model",
+    "id": "system-reminder-tools-updated-definitions",
+    "name": "Tools Updated Definitions Reminder",
+    "desc": "Attachment header telling the model that the listed tools have new definitions which replace the earlier ones."
+  },
+  "ad646a7927ff20aee3819c2060a366724f9b7904": { "facing": "internal" },
+  "b0c7fcc341c2804deb180bba1dbeb9ad426bb9e4": { "facing": "internal" },
+  "49c2fc96e15efaff3d9a238eb1a60dd2f313bc5b": { "facing": "ui" },
+  "2067f20784ff0fe9d781a37a195f7f27bd0f98ff": { "facing": "ui" },
+  "0d132ce47200c182eca6316de817b106e453f584": { "facing": "ui" },
+  "8d1cc623f02a232ab2ee8134001583ddea2c5306": { "facing": "ui" },
+  "2996f6e9f1329ff4e0930ac2d072c501f495b3e8": { "facing": "ui" },
+  "e3d8f6adc2e99dd092dfb3c4799037d79bf37653": { "facing": "internal" },
+  "e03c52ef6acfa708271e11b1edc7391dceec15ee": { "facing": "internal" },
+  "5fa01c734b92787c16a63cce51e9b1ea35702cbe": { "facing": "ui" },
+  "a93788c258cdad191cf173a74f53831f1bb5edba": { "facing": "internal" },
+  "174a23d20eec705d9cd3c3c86cef37c515a24bca": { "facing": "internal" },
+  "a3b23b195c25c6e2ecae0ec8f2bcaec32dc01336": { "facing": "ui" },
+  "fb1b49522ddeb70127bb3457159bd425b9582544": { "facing": "ui" },
+  "b6c72865c8fb90fb4ea4c5fa99ee882b8bfefd35": { "facing": "ui" },
+  "fccbfea235327ec5155bbb0e4aa007aa3d6c16f4": { "facing": "ui" },
+  "b727e6d989c430417a7d7cee8e57193387f530ee": {
+    "facing": "model",
+    "id": "tool-result-agent-name-reserved-or-agent-id-shape",
+    "name": "Tool Result: Agent Name Reserved Or Agent Id Shape",
+    "desc": "Middle literal of the Agent tool name field's second Zod refine, returned to the model as an InputValidationError tool_result when the name is reserved or has the shape of an agent id."
+  },
+  "ffd397d672d9ec322fb93146a2f9059baafe5013": {
+    "facing": "model",
+    "id": "tool-result-subagent-spawn-hook-rewrite-ruled",
+    "name": "Tool Result: Subagent Spawn Hook Rewrite Ruled",
+    "desc": "Agent tool error returned when a plugin's agent.spawn hook rewrote a spawn into one that a permission rule asks for or denies. It tells Claude to dispatch the spawn directly."
+  },
+  "331cdb3ba99f538e2d5f4c0438a0fd8d03d25519": { "facing": "ui" },
+  "3dc2b8ebfb4d10fb980ef228d0d88c61bfd60e82": { "facing": "internal" },
+  "80e44da030ab2fe31a7d794785c3b95dd4657d41": { "facing": "internal" },
+  "e579ee9970049bd3e215d54d44b66aad0a17d93e": { "facing": "internal" },
+  "7bfddc069185c6c3b909a9a0155fc0395548c74e": { "facing": "internal" },
+  "30ceb4f98a8b8797c5792a467b6c682b88d24ff3": { "facing": "internal" },
+  "f4c088a8f555df5a8ead4faba619d01728a5d298": { "facing": "internal" },
+  "44a08f14d2ecf979f6c95587cd267d0f80805243": { "facing": "internal" },
+  "589c004d7c72f35fcecf4c93095d5b2c9b00107f": { "facing": "internal" },
+  "4701eb975b972dc61b39c9f13e09174f70bd1cf6": {
+    "facing": "model",
+    "id": "tool-result-safety-monitor-blocked-turn-cancelled",
+    "name": "Tool Result: Safety Monitor Blocked Tool Cancelled",
+    "desc": "Error tool_result inserted for each tool call still open when a safety monitor blocks the turn."
+  },
+  "7abc87f54d44b29ec0505d2094857ad275e33dc3": { "facing": "ui" },
+  "19ee7c9e8bb1353dde8e2a974f68673b464dc079": { "facing": "ui" },
+  "68755fc0c0c2ea80b221411b84a01911c2f277d8": { "facing": "ui" },
+  "d0942d24c10358f55187d9bea556be047f92da3f": {
+    "facing": "model",
+    "id": "skill-artifact-capabilities-verify-db-list-and-as-level",
+    "name": "Skill: Artifact Capabilities Verify Database List And As Level",
+    "desc": "Fragment of the artifact-capabilities skill prompt telling the model, after the first publish, to list each written collection and repeat the read at a lower as_level."
+  },
+  "a8bd513e165dd9426478b0f90abd0592bfa5ca75": {
+    "facing": "model",
+    "id": "skill-artifact-capabilities-verify-declared-endpoints",
+    "name": "Skill: Artifact Capabilities Verify Declared Endpoints",
+    "desc": "Fragment of the artifact-capabilities skill prompt telling the model to call get_endpoints once and call_endpoint on each GET route before handing over the link."
+  },
+  "ead37f974435fdd2b9b6f9e7b335a6c03f8c7241": { "facing": "internal" },
+  "12686409a28002c7357eab5658994ec90de53733": { "facing": "ui" },
+  "ad0bed0c48bde57402f77ab6814924c120f8d12a": { "facing": "ui" },
+  "be7227bbcf8541c6e9ee4d6928b9df925aff4d91": { "facing": "internal" },
+  "01e6fddfc48b5a7a1d70f45e71f649672d0d1bca": { "facing": "ui" },
+  "1a9cff6096e8b25d2b5338ce52b02cf38e2e6a8c": { "facing": "ui" },
+  "f2899a4db770b4377fa44c906dc3340c2d0738dc": { "facing": "internal" },
+  "c5cedee8385b273ae6cb9f60b11c401e83fe346a": { "facing": "ui" },
+  "c5793ab8eede6290f0f051df11f7a818154f7935": { "facing": "ui" },
+  "20eccbaab8f399ccd33db09330b1324c87557a1d": { "facing": "internal" },
+  "2631620b94f926fbc70f606a03a43b88ae54dbb0": { "facing": "internal" },
+  "c76874725fc36974cb8a9310d114a71a32a250e7": { "facing": "ui" },
+  "47ec8b8d80da7f78062e2dd324b6ebdc595a5927": { "facing": "ui" },
+  "5b875964f5e41fa82135ac4b3a5cc72213181b35": { "facing": "ui" },
+  "d54110fc142c30ebe29c17a50f18ab1e547874a6": { "facing": "ui" },
+  "5c31ad22e2d39aa62a81b82168f69552da8378ef": { "facing": "ui" },
+  "5163a417fd4db6aa70445d303e4635bb6a610a71": { "facing": "ui" },
+  "0cf4c4ba513c0341e951baa9f7d517491e37b47a": { "facing": "ui" },
+  "7673f84aa39ccdc89df7c7993b83cddb6bc08a72": { "facing": "ui" },
+  "d998e6212727d60ec22bbe5e47f37a5ffa29cbe7": { "facing": "ui" },
+  "8faec77849209a4c549c2aaeb89015e2752cdb3d": { "facing": "internal" },
+  "8b7047495249d34d27c4a7a4fbf65ee5700c24a8": { "facing": "internal" },
+  "98802c72e9e522012358d931ae40608b211ea183": { "facing": "internal" },
+  "e6a0d712b78986829dff2a1a5f029b811ba07319": { "facing": "internal" },
+  "18bd4de355b9c7b06fb5f644537276ab4955ad7e": { "facing": "ui" },
+  "efacf0bd358d531cd02283d61ffb72cb7bfaf5fd": { "facing": "internal" },
+  "94905c033ec3d07751d7ddcbba044bc29cd50420": { "facing": "internal" },
+  "d987b8745458e9a927d14fae09d66446217c4b36": { "facing": "internal" },
+  "47cad118a270156a65fa79cd5c24ddba436a05aa": { "facing": "internal" },
+  "cefd976e302a17fc0c99ba11d70ca19bfbae32b3": { "facing": "internal" },
+  "8d1b05741143e7a02f6d2cf3e774c8a13916a7d3": { "facing": "internal" },
+  "9e8c03c5407b3637b1f43ba60420f2088cb5893c": { "facing": "internal" },
+  "6de6244d21ac19aa0f3236ae68e64ec131c21b99": { "facing": "internal" },
+  "81aba7d906acf80d004d83bda8009106b7743646": { "facing": "internal" },
+  "26bf12d4e4770b065f7d97716c4fafe30d0765fb": { "facing": "internal" },
+  "9785101dab09e224d7385d3a603fa4b83e9d9f1a": { "facing": "internal" },
+  "39dd54fd669e6b3afa30573a25b19b61982e7e60": { "facing": "internal" },
+  "22e31ee4f819d8eb59579e4e1227afc005d2d6e1": { "facing": "ui" },
+  "3cdd7857c42429a111fe0393aced344d552bf6a3": { "facing": "ui" },
+  "52128c6043b846ecf353abf3366493808ee3b076": { "facing": "ui" },
+  "f4173fadd76d3bd40c234e20c1ffbe46d4a37bac": { "facing": "ui" },
+  "c3c837611fb69cb00f690904021230cf5d875bc6": { "facing": "ui" },
+  "daee00a8860981c43e835ccdefd3a7d650119a7c": { "facing": "ui" },
+  "df8b7923d0276d2ae6e70f73afffc999263522a6": { "facing": "ui" },
+  "28b6371334c82209afed6f47826815b9446f8eca": { "facing": "internal" },
+  "4015b705f0a3b036179c404da8ff2f18d7b9649f": { "facing": "ui" },
+  "c9185cea81e5d8cdca5740bca584b00096f9c0df": { "facing": "ui" },
+  "35b4bbb0b579beb794504da0a2c919c6573dd9d3": { "facing": "ui" },
+  "af24031c9ac59f2430bc5c935324ea828eb255d3": { "facing": "ui" },
+  "a6fcb2cfd91578fd2707cce22e657f30af6b5923": { "facing": "ui" },
+  "1561acb88d788c54698e05bad14a30389afb6943": { "facing": "ui" },
+  "fe0a8de688f29c8988315dd98b9b838c8fc66bc4": { "facing": "ui" },
+  "c11ea0b790408bc797e251499f4a6c1e833fada3": { "facing": "ui" },
+  "c83aaaf00e7264d93d14f9702d121249d5ae79ed": { "facing": "ui" },
+  "d45ea35735c31be022c0531776a063fe19c61eb7": { "facing": "ui" },
+  "346601dc0de84bd73fcc3794b04bf823f30f2c7e": { "facing": "ui" },
+  "11a1e2051db9ccec67cbd28511a9d15626cd02ae": { "facing": "ui" },
+  "45de34409ffd6934691f233da6afaa0e75c35597": { "facing": "ui" },
+  "72a035d38c5678955e2827ce00a95543f8ceab15": { "facing": "ui" },
+  "2d01f2568298e1698e44788bf40e6eb77d35af06": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-halt-line-lane-full",
+    "name": "System Reminder: Dir Sync Halt Line Lane Full",
+    "desc": "Halt-line quoted into the cloud agent's Directory-sync-has-STOPPED reminder when the session file store is full of uploads from the user's machine."
+  },
+  "9d956674ce87535dc8301816c7b36c1a333c11fc": { "facing": "ui" },
+  "b4ee31fd6254e39ad73f6977c1a9743bb3f37c8e": { "facing": "ui" },
+  "a1881fec8506dd355eeb29c02d9386d811e01daf": { "facing": "ui" },
+  "55958c0209f0ce8441608756b34eeacc9cea9160": { "facing": "ui" },
+  "17f549452e980f29fb00feab1a681be65c14a3b9": { "facing": "internal" },
+  "0911c136f3a46974437246293cbe489915f91e4f": { "facing": "internal" },
+  "17dede955de0381237c43c663053c9e2cb00a905": { "facing": "ui" },
+  "1b9c7970ecfc18d1a1c6ea49adf341ce46280919": { "facing": "ui" },
+  "aeabe98a28664e3a9c6247a7aba3108c1695bc94": { "facing": "ui" },
+  "f655a506e4df15170f4839f866690436f1d60dcb": { "facing": "ui" },
+  "d1a339120452fe9de2692e25284d6e7ef983faba": { "facing": "internal" },
+  "954387dc04b8e88812af4c78a47e8ff8d6b3a26e": { "facing": "ui" },
+  "301eeb7e40e32bb584b176d557f64e55436357f7": { "facing": "ui" },
+  "02ec25b82f3455d4f6bf0f956d9b8c175eaf211d": { "facing": "ui" },
+  "921137a06300b23a990ef905df50f5042a848181": { "facing": "ui" },
+  "8e7cc5ba714434c437254435ad4ea24f7f12b190": { "facing": "ui" },
+  "07719a362dc9902f79148a51acef00ac41fc1af3": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-saved-viewed-once-clause",
+    "name": "Tool Result: Artifact HTML Saved Viewed-Once Clause",
+    "desc": "Clause on the saved-artifact tool result saying this version counts as viewed only after every line of that file has been Read."
+  },
+  "5788b037fa1a80d95c1458d6539a7bcefd2aa7a8": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-saved-head-only-clause",
+    "name": "Tool Result: Artifact Saved HTML Head-Only Clause",
+    "desc": "Tool-result clause telling the model the inlined head is not the whole artifact and any republish must be built from the saved file."
+  },
+  "7d8136f32474a0c4d2c42339551b6b0ff9f5b966": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-saved-served-page-wrapper-clause",
+    "name": "Tool Result: Artifact Saved HTML Served-Page Wrapper Clause",
+    "desc": "Tool-result clause appended when the saved HTML is the page as served, telling the model the serve wrapper and frame-runtime block are removed on republish and must be left in place."
+  },
+  "5d95dd47267f3971cde4e7daf74c36b6df047429": {
+    "facing": "model",
+    "id": "tool-description-searchplugins-keyword-examples",
+    "name": "Tool Description: SearchPlugins Keyword Examples",
+    "desc": "Example block inside the SearchPlugins tool prompt showing how user wording maps to catalog keyword arrays."
+  },
+  "77db3e0013b0df36e8a6b426350f503344e1f71a": {
+    "facing": "model",
+    "id": "tool-description-searchplugins-upfront",
+    "name": "Tool Description: SearchPlugins Upfront Prompt",
+    "desc": "Upfront SearchPlugins tool prompt telling the model to search the org plugin catalog when a task depends on team process or data that nothing already loaded covers."
+  },
+  "bbbeefb20fbeabc16fa52e404bb007f80c365afb": { "facing": "internal" },
+  "b48af9817e05a999b950c8d365a481482bf9af56": { "facing": "internal" },
+  "37b5212663bb94980617f10241baf20a11c02e2b": { "facing": "ui" },
+  "1217d51a5ed9e2487a1d1949160cca3381c71162": { "facing": "ui" },
+  "4d0f9d1c34624d16659399701607a0e620bde982": { "facing": "ui" },
+  "e5cc5fe57a7ab885486c5ca7b54a0ed1b8ab1d5a": { "facing": "ui" },
+  "92a7f5086d3391d288bfc4f22fb85ad1e76243b7": { "facing": "ui" },
+  "67eae4a95ff0d30a54f515064b2e28e6d950e261": { "facing": "ui" },
+  "cb01b7af7e3bda77cf0781a50be8bdd2144bc29b": { "facing": "ui" },
+  "c580e8fbc5b4166652466e0082bfe5458c204cd0": { "facing": "ui" },
+  "788461714dd904f70cb92ee840911df30a55b5a8": { "facing": "ui" },
+  "a017db0eed8adb280e7dfbb68f14df245fd83fa7": { "facing": "ui" },
+  "d7e3d63c48351fe99abe5ee69d251acf6b2e30bc": { "facing": "ui" },
+  "3355bdca2448c0f21762fbbf523656363420dec8": { "facing": "ui" },
+  "31f6a2924c6bacc183975e619d8d3e9dacf84d66": { "facing": "ui" },
+  "6463b7806450e5b14b94367f644d2a1a657ab670": { "facing": "ui" },
+  "ba54e419abeaf1a990144fb267fa6cba1a363bf4": { "facing": "ui" },
+  "524c29d7ef176c6432b5574b235ce464b2a74c4a": { "facing": "ui" },
+  "b7d888436e4236a045a05668fa94c3ff0267e06a": { "facing": "ui" },
+  "f2958ad419ae350d71a6f49b79d9094c059e6cad": { "facing": "ui" },
+  "2672528b86733705bd6b2baaf3d4103c7bf9d863": { "facing": "ui" },
+  "3ad5b7f7a5b6366210fba66f639daee5982af343": { "facing": "ui" },
+  "7ea6022e90ac2bebdd23cfe38deab47bff6b7edb": { "facing": "ui" },
+  "25bca24e6fb2861a8c6be36959e465ce937c7b4e": { "facing": "ui" },
+  "11dd052d27700a7b266aaccfba01d162a3b0f32c": { "facing": "ui" },
+  "cd3fe0c461ec82141b75b517d25bd9309db242ab": { "facing": "ui" },
+  "63ae60b1c2d58a5b318373548cdaf1943e8ecfb5": { "facing": "ui" },
+  "95d96b40f72bb2616f2b523cdc478d0fd7b033d7": { "facing": "ui" },
+  "b79704be298904145b6e87b23c5a706342d71b01": { "facing": "ui" },
+  "a87bbfdfe55c73c87ed235fd4fb91c1366cfd1ad": { "facing": "ui" },
+  "034fcf57137f971402a0cf687fbf813a518b7ba2": { "facing": "ui" },
+  "55a21f47a8c18aae7372f4d0ebb71c285aa37043": { "facing": "ui" },
+  "160aa0722e38cc40bd9de8faab8f83c56e6dc86a": { "facing": "ui" },
+  "01927540fd57350983d870f301ec6ad6fa67d6fb": { "facing": "ui" },
+  "5c5dea520f0b444950ce4996f3e37919bcee0a5f": { "facing": "ui" },
+  "1e0d16194f2e6014ca0ad723e810bb3f9e682b55": { "facing": "internal" },
+  "d320736aa55ba6580dc3a531c06949711fcd1c73": { "facing": "internal" },
+  "b484d53116c5fb1ce17eab37435e1646f8e5b4d1": { "facing": "internal" },
+  "2e0ecfe6dc3f1353c685a0158b1436652d62622a": { "facing": "internal" },
+  "371afd0b90b9c9c367ea811ac9dd0f568d96e5a3": { "facing": "internal" },
+  "7fb9d97a51171c856278f55877e78116ebedce6a": { "facing": "ui" },
+  "6760db6ce1d2d9b3fceba8cac6d3cb4a272f6a04": { "facing": "ui" },
+  "1fa02fde61391903c3cdc5433e1a30c3fc803eac": { "facing": "ui" },
+  "89708c823da23b260939d21b48233c73451dfb9f": { "facing": "internal" },
+  "5fc0a94e16b2d89af5c05925583d2198df82b163": {
+    "facing": "model",
+    "id": "tool-result-send-message-plugin-hook-delivered",
+    "name": "Send Message Plugin Hook Delivered",
+    "desc": "SendMessage tool result telling the model a plugin hook delivered the message itself and nothing else was sent."
+  },
+  "53edefe22e2193fc6ce6f480fc577662a52e7ecc": { "facing": "internal" },
+  "c33a9c94c5387f3c1ec780d594de3fd0bcfa2f9a": { "facing": "internal" },
+  "b20fb0f5b3b1d979663ecaf4d600b4a7d573bd5e": { "facing": "internal" },
+  "85a56c0617fc91d80f8d01a7daa1d6c9d16eedea": { "facing": "internal" },
+  "4681557a2a404130e5820a4978f522f94771a14e": { "facing": "internal" },
+  "c2c0f510f9faf45f86f0f04bff3c2085a0f6e878": { "facing": "ui" },
+  "3145943264e49b2101be3c9ec00dbba651ace33c": {
+    "facing": "model",
+    "id": "tool-result-btw-call-still-in-progress",
+    "name": "BTW In-Progress Tool Result",
+    "desc": "Synthetic tool result the side-question agent receives for a main-conversation tool call that is still running, awaiting approval, or queued."
+  },
+  "ffcc954e23cd93d77f76b16341e7abbd209d4f8e": { "facing": "internal" },
+  "76711ba54141a2764cdd163d7d2c39e4e1882e21": { "facing": "internal" },
+  "b90964802286f3466e325a79386ccf6ad93aabe1": { "facing": "internal" },
+  "65b7a3c7847932ad9222fa610462c3253eda67ee": { "facing": "internal" },
+  "2c0df125b963a8e8a04362f2820af5eecc913cf8": { "facing": "internal" },
+  "f3e348e454cac0de7fab831a84d5f0607109f765": { "facing": "ui" },
+  "63ee85d1b99d1d126943c5c93a4e20924b4856e7": { "facing": "ui" },
+  "a90851d4c4fda61588f7b6ac4f636f2f27db9352": { "facing": "ui" },
+  "34a7334dae1637c395d98afed6394fc474aa9d34": { "facing": "internal" },
+  "9779c433122b493a79132d5e51761b6504b6c6ec": { "facing": "internal" },
+  "cceee388e3a9b43a70cbfd96aafca9b4944232bc": { "facing": "internal" },
+  "c8beba1128543e7d90055c987af737c9efee50b3": { "facing": "ui" },
+  "1dea8a19cb7e1a23e145526024f1cda355c8cbf7": { "facing": "internal" },
+  "e32cc62a2872f17700f03cba70f6db89ff4f134d": { "facing": "internal" },
+  "5e5faf02a11b270b88fb3b1bda6e2574de31e6be": { "facing": "internal" },
+  "2addca6bccae7fb362970c8ed9fb11df82d1406e": { "facing": "internal" },
+  "1cd89b36205f625a8e008f040378ac418d8e9bcb": { "facing": "internal" },
+  "2c6cb43d5c6fdd10be94a858d3b224634574bc14": { "facing": "ui" },
+  "29b7b43ac52f67f6fac53bfbf4563333ac523134": { "facing": "ui" },
+  "b78b9197f0683f81ca4c7c25dd5237b0295eee4d": { "facing": "ui" },
+  "402d0bbc54ac8524b16a7fe70efa5bcf5ca66adc": { "facing": "ui" },
+  "bec008aed547c5eddfbd8d578134e336df0a3117": { "facing": "internal" },
+  "cf34b433b630e7c5a7f621b26ca8edeb9a91fc9e": { "facing": "internal" },
+  "72f89026b2b5ab48e6c1642dccfb4c4fa053c6ac": { "facing": "internal" },
+  "8850d5080114bd5bf17ee854b0be702c6f7335b7": { "facing": "internal" },
+  "ba899f78eef5afbeacb6029cf914ecfaf212adf9": { "facing": "ui" },
+  "6e3fa168eb110cf11f24a177ff6511dead64f7f6": { "facing": "ui" },
+  "855505cc337b211d234852479138979577f08129": { "facing": "ui" },
+  "d395706b26f6bfd5d84f9b66a5e2cefd8b57b407": { "facing": "ui" },
+  "c2fa62f65f2de71a3e8594b104d1720a74856ff1": { "facing": "ui" },
+  "986faa90e0c84269c28a64a482ba473e41329ce7": { "facing": "ui" },
+  "14e1b023b737736fb10f6a9cefe5d3f3750e2e5b": { "facing": "ui" },
+  "116dabea5a7aca947a0d04f674a5ca32627fb74e": { "facing": "ui" },
+  "2da9feda727a4947303595c1bc75858a1ca08b81": { "facing": "ui" },
+  "1e57519efdd7601b501bda7cc137f3cbb571a500": { "facing": "ui" },
+  "2df593c487531390b0901aa7f8f9b136ada77213": { "facing": "ui" },
+  "65654d88a13610927f607b7aa383b41345c3ce4e": { "facing": "ui" },
+  "6b5237e5460b2a966c84f52c09940a92dfb6df7a": { "facing": "ui" },
+  "8e64cef01d31902fab8ada9630a9e9138e010cc4": { "facing": "ui" },
+  "f7b4f2d0c72b95b6f154e8ed1627fcc9ebf7051f": { "facing": "ui" },
+  "2900cb4299b0690a2629f588c5e7e4832df26cd4": { "facing": "ui" },
+  "a546008daf169c891dc01f2addecf9e91fa4cca8": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-read-not-saved-line",
+    "name": "Artifact DB Read Not Saved Line",
+    "desc": "Tells the model how many returned database documents were not saved and to read them without out_dir."
+  },
+  "9eeabaaa88a85fee9905c2e72cf588da5c9c4b30": {
+    "facing": "model",
+    "id": "tool-result-artifact-copy-from-listing-truncated",
+    "name": "Artifact Copy From Listing Truncated",
+    "desc": "Tells the model the copy-from asset listing was truncated and to list assets on the destination."
+  },
+  "9a51930a2ce90e023b3219288d8dfc9dbda23684": {
+    "facing": "model",
+    "id": "tool-result-artifact-copy-from-reference-note",
+    "name": "Artifact Copy From Reference Note",
+    "desc": "Tells the model to reference copied assets by the destination URL and how to delete them."
+  },
+  "b792913917351e12b752ff2127adc8779b5ccbde": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-files-root-need-file-path",
+    "name": "Artifact Publish Files Root Need File Path",
+    "desc": "Tells the model that files and root alone publish nothing and that file_path is required."
+  },
+  "6a9d46dcc1b66f315c5da158ab567e7f283b17d1": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-type-data-file-clause",
+    "name": "Artifact Publish Type Data File Clause",
+    "desc": "Appended when artifact types are on, telling the model a type-made artifact may publish one of its own data files."
+  },
+  "2a9cc04bc2953c39331fe27ee444b272d3de992e": {
+    "facing": "model",
+    "id": "tool-result-artifact-file-list-empty",
+    "name": "Artifact File List Empty",
+    "desc": "Tells the model a version has no separately listed published files, including the single-page case."
+  },
+  "4a816415988b51b753a1b00206fbaee8cab211ba": {
+    "facing": "model",
+    "id": "tool-result-artifact-file-list-empty-single-page",
+    "name": "Artifact File List Empty Single Page",
+    "desc": "Tells the model this version is a single page and to read the page itself with its url."
+  },
+  "2981af3489076c68328059cde4623323e0e6dbf7": {
+    "facing": "model",
+    "id": "tool-description-artifact-check",
+    "name": "Artifact Check Tool Prompt",
+    "desc": "Opens the artifact check tool prompt, telling the model when to check a page relative to publishing."
+  },
+  "147b6f30990fc2954bd848e519a68ca5d139ce12": {
+    "facing": "model",
+    "id": "tool-result-send-message-no-permission-surface",
+    "name": "Send Message No Permission Surface",
+    "desc": "Fragment of the SendMessage refusal when a hook readdresses a send and no permission check can run."
+  },
+  "3b446d2031ab3c85598acc0fdb3637451eeeeaf2": {
+    "facing": "model",
+    "id": "tool-result-send-message-hook-readdress-not-approved",
+    "name": "Send Message Hook Readdress Not Approved",
+    "desc": "Fallback SendMessage refusal when a hook-readdressed send is not approved."
+  },
+  "ac037ca827fc10a732bbc5e684e40901965d50b9": {
+    "facing": "model",
+    "id": "tool-result-send-message-hook-refused",
+    "name": "Send Message Hook Refused",
+    "desc": "SendMessage tool result when a plugin hook refuses the send."
+  },
+  "edb6879e9a07a78a8c88458734cc54222eef3f0e": {
+    "facing": "model",
+    "id": "tool-result-send-message-hook-rewrite-refused",
+    "name": "Send Message Hook Rewrite Refused",
+    "desc": "SendMessage tool result when a plugin hook rewrites the send into a shape the tool refuses."
+  },
+  "060294812d70f4ae2803c9a9812aba4b3bc56141": {
+    "facing": "model",
+    "id": "tool-result-send-message-permission-handler-narrowed-input",
+    "name": "Send Message Permission Handler Narrowed Input",
+    "desc": "SendMessage tool result when the permission handler narrows the input to a shape the tool rejects."
+  },
+  "ed95cd764cf7cc7bcd1088c4b22211a3fc2a3e4c": {
+    "facing": "model",
+    "id": "tool-result-send-message-permission-handler-changed-recipient-after-approval",
+    "name": "Send Message Recipient Changed After Approval",
+    "desc": "SendMessage tool result when the permission handler changes the recipient after the send was approved."
+  },
+  "dd2761e5aa81d9b6643f3c3906873bc1e6a73cc0": {
+    "facing": "model",
+    "id": "tool-result-proposeskills-not-users-own-skill",
+    "name": "Propose Skills Not User's Own Skill",
+    "desc": "Tells the model a built-in or plugin skill cannot be updated by the review card and to propose a new skill instead."
+  },
+  "d1fd8a92a8a63cc9517f2ed708797a5340740e2e": {
+    "facing": "model",
+    "id": "tool-result-proposeskills-name-competes-with-plugin",
+    "name": "Propose Skills Name Competes With Plugin",
+    "desc": "Tells the model a new skill name collides with a plugin skill and to choose another name."
+  },
+  "347073032bf177850191b12908cea709164d0946": { "facing": "internal" },
+  "d4a56e141ff3c29f396f198f00beff81f33ba986": { "facing": "internal" },
+  "369db57a0155610c60e0cb66443c09973da34863": { "facing": "internal" },
+  "0f5d5d7debe8463ddd1a7d0fa47f3bc9c801a5b5": { "facing": "internal" },
+  "ae8d0b984334fa2c92f9e69af0acbbbb4d592f5f": { "facing": "internal" },
+  "468c80171a6798b5f943f2e36b99664cee9fb907": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-no-home-served-instead",
+    "name": "Remote Tool No Home Served Instead",
+    "desc": "Clause of the incompatible-protocol tool error telling the model which attached machine serves the tool."
+  },
+  "2f8ea4831091278e5641c21ec07f004e8bbd65b2": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-cannot-run-here-one-machine",
+    "name": "Remote Tool Cannot Run Here One Machine",
+    "desc": "Tool error when a tool cannot run in this session and only one attached machine serves it."
+  },
+  "29cbb6bf67450cfaad2f22dd71916d069146eaa2": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-other-host-serves-it",
+    "name": "Remote Tool Other Host Serves It",
+    "desc": "Tool error when the named host does not serve the tool but another attached host does."
+  },
+  "50224e6c5f57b8aa9d68e4f834914d8e0f21ab27": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-host-unavailable-not-here",
+    "name": "Remote Tool Host Unavailable Not Here",
+    "desc": "Tool error when running the tool on that host is unavailable and this session cannot run it either."
+  },
+  "9db967d2375f64adfced5f106f6db38b54052e30": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-host-not-serving-and-not-here",
+    "name": "Remote Tool Host Not Serving And Not Here",
+    "desc": "Tool error when the host does not currently serve the tool and this session has no local copy."
+  },
+  "72e9d9fbdbeba1aca8b5225d92541459611b6209": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-file-store-full-ends-sync",
+    "name": "Dir Sync File Store Full Ends Sync",
+    "desc": "Remedy clause telling the model the next user message ends file sync and later commands run on the host's files."
+  },
+  "69d21b83ae1649b166d07afeb2089fbc241f8291": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-kept-here-file-store-full",
+    "name": "Dir Sync Kept Here File Store Full",
+    "desc": "Session note telling the model command changes stay on the host because this session's file store is full."
+  },
+  "4e9fd8c829068e3177aad474db71300ef1e9a3ee": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-kept-here",
+    "name": "Dir Sync Kept Here",
+    "desc": "Session note telling the model command changes stay on the host for now and how to read them there."
+  },
+  "c11662ecdbaaeaaf845436b86e37aeb5c90dfd63": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-attached-earlier-prefix",
+    "name": "Tool Hosts Attached Earlier Prefix",
+    "desc": "Opening of the reminder for machines that were attached earlier and have not reconnected."
+  },
+  "ca90ea0d7edd747bc2a97d3deb60daabbb7f386b": { "facing": "internal" },
+  "e7deb7e9f7985902f7982fa62561dff6d2447b63": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-correction-stalled",
+    "name": "Tool Hosts Correction Stalled",
+    "desc": "Phrase in a late-outcome correction saying the call was most likely not run because it was withdrawn while the session was backed up."
+  },
+  "ccaf08deadc18c5e357523892b91db3f9b5f9f05": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-correction-timed-out",
+    "name": "Tool Hosts Correction Timed Out",
+    "desc": "Phrase in a late-outcome correction saying the machine did not answer in time."
+  },
+  "6165a5df87d58bb5f7ae359be56ea40d1ffa3f6c": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-correction-lead",
+    "name": "Tool Hosts Correction Lead",
+    "desc": "Lead of a late-outcome correction naming the earlier remote tool call the following phrase revises."
+  },
+  "15ade0416502c23b28335474fc10c5dca8dc7389": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-correction-check-effects-read-only",
+    "name": "Tool Hosts Correction: Check Effects Read-Only",
+    "desc": "Closing clause of a late tool-host correction telling the model to check that machine with a read-only command before relying on the call or repeating it."
+  },
+  "ded9362d86f3fd731f1627c45426d8f197c7009d": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-correction-may-have-partially-run",
+    "name": "Tool Hosts Correction: May Have Partially Run",
+    "desc": "Clause on a failed late outcome warning that the call may have partially run and that its effects should be checked before repeating it."
+  },
+  "cb9ca43940eca6b5613e7e1a5d79478dbaeb7180": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-correction-cancelled-there",
+    "name": "Tool Hosts Correction: Cancelled There",
+    "desc": "Failure phrase used when the machine reports the forwarded call was cancelled before or while it ran."
+  },
+  "c22620dad69384833ef982d28b72bae57e512b0d": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-correction-did-run-output-not-delivered",
+    "name": "Tool Hosts Correction: Ran But Output Not Delivered",
+    "desc": "Late correction that the machine now reports the call did run and completed or errored, but the output was recorded there and not delivered here."
+  },
+  "b86a7498db053ec11ae004b0b268b7327a149af6": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-correction-did-not-run",
+    "name": "Tool Hosts Correction: Did Not Run",
+    "desc": "Late correction that the machine reports the call did not run, quoting the disposition or refusal reason."
+  },
+  "03c0956870a7d62ac5c2f52a81a4300aa92dccf8": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-correction-result-no-longer-held",
+    "name": "Tool Hosts Correction: Result No Longer Held",
+    "desc": "Late correction that the call did run and ended but the machine no longer holds its result."
+  },
+  "06c0dce6bdce8dc7a754b984350b8f77fff06e8c": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-correction-record-ended-result-gone",
+    "name": "Tool Hosts Correction: Record Ended Result Gone",
+    "desc": "Late correction when the machine's record shows the call reached it and ended, but the result is no longer held."
+  },
+  "1b08e8c00b621e087ab3a6c7fcdb8cb742ac0d5b": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-correction-no-record-safe-to-resend",
+    "name": "Tool Hosts Correction: No Record Safe To Resend",
+    "desc": "Late correction that the machine has no record of the call, so it never ran there and is safe to send again."
+  },
+  "24c50efdea9c119c4e28cb314bf3f3f053cef9bf": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-correction-host-restarted-command-lost",
+    "name": "Tool Hosts Correction: Host Restarted Command Lost",
+    "desc": "Late correction that Claude Code on the host restarted and the command was lost with it, so effects should be checked before repeating it."
+  },
+  "fdae263bc635a54c69f9e9986fc5297c2a2aae8d": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-correction-still-running",
+    "name": "Tool Hosts Correction: Still Running There",
+    "desc": "Late correction that the machine reports the call is still running and must not be run again."
+  },
+  "ccb4675ad32c4180180819d8bfc602746143a290": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-file-sync-print-powershell",
+    "name": "Tool Hosts Notice: Print It With Get-Content",
+    "desc": "PowerShell how-to, used when the host does not serve Read, telling the model to print a remote file with Get-Content and the machine argument."
+  },
+  "0c3a9a96cdd1261eb6001e2e5b7db6d3495797c9": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-machine-file-tools-this-session",
+    "name": "Tool Hosts Notice: File Tools Hit This Session",
+    "desc": "tool_hosts_notice line for off-sync: file tools hit this session's filesystem, so current project files are read with the host shell there."
+  },
+  "4491def4caad22b9eda2a7f361c3aa1fd1c6acfa": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-separate-copy-file-tools-this-checkout",
+    "name": "Tool Hosts Notice: Separate Copy File Tools Hit This Checkout",
+    "desc": "tool_hosts_notice line for a machine that holds the user's separate copy: file tools act on this checkout, so the user's copy is read with the host shell there."
+  },
+  "d97f21666ba2bf218c6cbca14572fb97c8ee3ca8": { "facing": "internal" },
+  "5d0efa0fefaae2b5894fc68bef37d37eef0d1c40": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-lives-there-clause",
+    "name": "Tool Hosts Notice: Current Files Live On Host",
+    "desc": "Reusable clause that the user's current project files live on the named host, interpolated into off-sync headers and the coordinator lead."
+  },
+  "2430212d1abd25c9a41ad26b2763e2b9c3f23ec9": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-two-copies-clause",
+    "name": "Tool Hosts Notice: Two Unsynced Copies",
+    "desc": "Reusable clause that this checkout is the primary copy and the folder on the host is the user's unsynced separate copy."
+  },
+  "9c98cd668d2e3770478bc683f1770e91bc1e76fa": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-say-where-machine",
+    "name": "Tool Hosts Notice: Say Where Machine",
+    "desc": "Coordinator instruction to say, in the prompt given to a worker, that project work runs on the host that holds the user's current files."
+  },
+  "2e69a6bd2d8cd923a0a1cf4e509162dad709ab7a": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-say-where-separate",
+    "name": "Tool Hosts Notice: Say Where Separate Copy",
+    "desc": "Coordinator instruction that project work belongs in this checkout, and a worker prompt should name the host when the task is about the user's separate copy."
+  },
+  "410787ce50f4c4ce8f7c08af28b30d5ec5fb50aa": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-say-where-attached-machine",
+    "name": "Tool Hosts Notice: Say Where Attached Machine",
+    "desc": "Coordinator instruction to name, in the worker prompt, which attached machine a task should run on."
+  },
+  "84d18373ce285e2cd705a3976f0f4bcc4398cae5": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-machine-read-search-edit-there",
+    "name": "Tool Hosts Machine Read Search Edit There",
+    "desc": "Off-sync header clause when the host serves search tools: read, search and edit the project's files there and run builds and tests there with the host shell."
+  },
+  "a54c0725dbee7b5c8399f1f670a8b9ab87eeaa32": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-machine-read-edit-search-there",
+    "name": "Tool Hosts Notice: Read Edit Search On The Machine",
+    "desc": "Off-sync header clause: read and edit the project's files on the host and run searches, builds and tests there with the host shell."
+  },
+  "60ae609f6a985baea4e98fa2b2d04750f90e5fbd": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-repl-machine-argument",
+    "name": "Tool Hosts Notice: REPL Machine Argument",
+    "desc": "REPL routing sentence: call the host shell as await Tool({command,…}) and add the machine-name argument so the call runs on the host."
+  },
+  "65aaac1374f0930350dc0ec3481be0fe4f01af75": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-header-current-files-on-machine",
+    "name": "Tool Hosts Notice: Header Current Files On Machine",
+    "desc": "Off-sync header: the user's current project files live on the named host, the machine argument runs the call there, and only scratch work belongs here."
+  },
+  "2ab7a68c57b20d1b1b1d192c42264041213e4758": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-header-separate-copy",
+    "name": "Tool Hosts Notice: Header Separate Copy",
+    "desc": "Separate-copy header: this checkout is primary, the folder on the host is the user's unsynced copy, and the machine argument runs a call on that copy only."
+  },
+  "ed32ed8ccdd11b0e31174c3f7b58e6fa4be3a857": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-powershell-runs-on-named-machine",
+    "name": "Tool Hosts Notice: PowerShell Runs On Named Machine",
+    "desc": "PowerShell routing fragment, when more than one PowerShell host is attached, saying the call runs on the machine the machine argument names."
+  },
+  "998ec8687a514ae97a962364332765dfbd7718f2": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-powershell-repl-never-here",
+    "name": "Tool Hosts Notice: PowerShell REPL Never Here",
+    "desc": "REPL sentence that PowerShell is callable as await PowerShell({command,…}) and runs on the named host, never in this environment."
+  },
+  "8b156654ada5f8f3a52a8a99b87b6246bd2e72c1": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-powershell-call-never-here",
+    "name": "Tool Hosts Notice: PowerShell Call Never Here",
+    "desc": "Non-REPL sentence that a PowerShell call runs on the named host, never in this environment."
+  },
+  "584ca0791801232dbfe456705160486532dae972": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-powershell-repl-other-tools-there-too",
+    "name": "Tool Hosts Notice: PowerShell REPL Other Tools There Too",
+    "desc": "REPL suffix telling the model that the host's other served tools also run there when given the machine argument."
+  },
+  "1f2b304ef3ee50fde2596630d2e8761d76e43b93": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-powershell-add-machine-arg-other-tools",
+    "name": "Tool Hosts Notice: PowerShell Add Machine Arg For Other Tools",
+    "desc": "Non-REPL suffix telling the model to add the machine argument to the host's other served tools so they run there too."
+  },
+  "b4675070833c10600f2050086b3558a23da58fc4": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-header-powershell-separate-copy",
+    "name": "Tool Hosts Notice: PowerShell Header Separate Copy",
+    "desc": "PowerShell separate-copy header: the two copies are unsynced, the call runs on that machine and acts on that copy only, and other calls run here by default."
+  },
+  "1bd82bca80a9659bb56f3372ce9adaeb8775fcdc": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-header-powershell-run-there-or-here",
+    "name": "Tool Hosts Notice: PowerShell Header Run There Or Here",
+    "desc": "PowerShell default header: the shell call runs on the named machine, and calls without the machine argument run here by default."
+  },
+  "9e5f6db2198c74517acd7aa8258b9554a30718a3": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-personal-machine-timeout",
+    "name": "Tool Hosts Notice: Personal Machine Command Timeout",
+    "desc": "Personal-machine description sentence: file-tool guidance, then either the command time limit or that machine's own shell timeout."
+  },
+  "d9b55a9a211ef5aa04cca57bd35cd26a5c575167": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-look-for-it-there",
+    "name": "System Reminder: Tool Hosts Look For It There",
+    "desc": "Fallback how-to when the host serves no file tools: look for a missing file there with the host shell and the machine argument."
+  },
+  "cc86ec99372382d8e767d8ae83659162201caf2a": { "facing": "internal" },
+  "5ee031022b179cebbaaaaec2ae680371e1823f76": { "facing": "internal" },
+  "44356a2011af24e668013d0fe2e04200203b04ab": { "facing": "internal" },
+  "17eae77f7e8f4ec60a45ba02459d3861397163f8": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-spilled-output-remainder",
+    "name": "Remote Tool Result: Spilled Output Remainder",
+    "desc": "Suffix on a forwarded tool result when the host spilled more stdout than it sent, telling the model the rest exists only on that machine."
+  },
+  "344dd2aaf2f79e25ee4052d42999c452124f621c": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-saved-output-file-on-host",
+    "name": "Remote Tool Result: Saved Output File On Host",
+    "desc": "hostLocal suffix that the full output was saved on the remote machine, was not sent, and cannot be read from here."
+  },
+  "657c64fdf031cd22419f4eb961ef46c638d8b40d": { "facing": "internal" },
+  "149858138cd000f7d47df610750c3d1228eb743f": { "facing": "internal" },
+  "fd04d3d78c7627cf62056986b5ebc834742b7012": { "facing": "internal" },
+  "38b77933f4ea598ce81507add084fb9303f3e648": { "facing": "internal" },
+  "06893766840b2e4ac566ff409bd2ae3b406f5a4e": { "facing": "internal" },
+  "72b5e93fc0d9148b8eb39dfbf871b4c7a7708ae6": { "facing": "internal" },
+  "c13d4a92a6e1b89ce776ca28f0bd33612c8ddd1d": { "facing": "internal" },
+  "23e31ffb7db9e11e2ddb2bf3e9c90d31b2e7653c": { "facing": "internal" },
+  "39a24c9510a401cc4d9275d32a2793afc72c5d79": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-git-error-detail-diff-files",
+    "name": "System Reminder: Dir Sync Diff-Files Or Ls-Files Failed",
+    "desc": "Git-error detail quoted into the not-applied and not-sent reminders when diff-files or ls-files could not list paths to read afresh."
+  },
+  "08f856ff5e8a7a4dfa55aa0d053f4b07ec155aee": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-agent-staging-no-longer-in-checkout",
+    "name": "System Reminder: Dir Sync Staged Files Gone",
+    "desc": "Suffix on the staging-dropped reminder when every path the agent had staged is no longer in the checkout."
+  },
+  "07c723d90676cf809c36f58ef9548600a1c0cada": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-agent-staging-reread-before-relying",
+    "name": "System Reminder: Dir Sync Staged Files Changed",
+    "desc": "Suffix on the staging-dropped reminder telling the model to re-read files whose contents this update also changed."
+  },
+  "f0dd4e065bf2e4a5304b91504a495056c895528d": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-agent-staging-dropped",
+    "name": "System Reminder: Dir Sync Agent Staging Dropped",
+    "desc": "Tells the cloud agent the index now mirrors the user's staging, so what it had staged is unstaged, with a conditional suffix for files that were removed or changed."
+  },
+  "4a38e295a7eefbb0983005b863271b7d203256bb": { "facing": "ui" },
+  "97b7b49368b488ff5abb310c96e17e177c4cc28e": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-missing-link-upload-unusable",
+    "name": "System Reminder: Dir Sync Missing Link Upload Unusable",
+    "desc": "Cause clause inside the model notice when an earlier upload from the user's machine cannot be used here and later uploads build on it."
+  },
+  "02340db4cb25137584854697688188eef309ac53": { "facing": "internal" },
+  "f2d8ae9b4d829a5d768432db4a567ac38b35ecdb": { "facing": "ui" },
+  "26dbcd1057d8395a791268f53db4a6d713acfd51": { "facing": "ui" },
+  "9343b83ce24b240633d8e88a3cb2b0ce1a5e0b3f": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-classifier-could-not-evaluate",
+    "name": "Auto Mode Classifier Could Not Evaluate",
+    "desc": "Lead sentence of the auto-mode deny tool_result the model reads when the safety classifier returns no usable verdict; CC also detects it with startsWith."
+  }
 }
