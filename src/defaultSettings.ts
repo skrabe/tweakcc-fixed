@@ -740,6 +740,7 @@ export const DEFAULT_SETTINGS: Settings = {
     suppressNativeInstallerWarning: false,
     filterScrollEscapeSequences: false,
     enableWorktreeMode: true,
+    unlockResponsiveMode: false,
     swapRipgrepForFff: false,
     allowCustomAgentModels: false,
     enableContextLimitOverride: false,

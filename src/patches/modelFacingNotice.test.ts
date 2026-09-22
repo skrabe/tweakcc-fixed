@@ -20,6 +20,7 @@ const MODEL_FACING_IDS = [
   'lean-memory-types',
   'suppress-deferred-tools',
   'claudemd-context-once-per-conversation',
+  'unlock-responsive-mode',
 ];
 
 describe('model-facing patch metadata', () => {

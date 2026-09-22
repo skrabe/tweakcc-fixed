@@ -105,6 +105,7 @@ import { writeAllowBypassPermsInSudo } from './allowBypassPermsInSudo';
 import { writeSuppressNativeInstallerWarning } from './suppressNativeInstallerWarning';
 import { writeScrollEscapeSequenceFilter } from './scrollEscapeSequenceFilter';
 import { writeWorktreeMode } from './worktreeMode';
+import { writeResponsiveMode } from './responsiveMode';
 import { writeAllowCustomAgentModels } from './allowCustomAgentModels';
 import { writeMaxEffortDefault } from './maxEffortDefault';
 import { writeAutonomousOperationAllModels } from './autonomousOperationAllModels';
@@ -519,6 +520,14 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.FEATURES,
     description:
       'Allow arbitrary model names in custom agent frontmatter (e.g. gemini-2.5-flash)',
+  },
+  {
+    id: 'unlock-responsive-mode',
+    name: 'Unlock responsive mode',
+    group: PatchGroup.FEATURES,
+    description:
+      "Make Claude Code's bundled responsive-mode plugin selectable. Claude Code 2.1.280 ships the whole feature in the binary - a system-reminder telling Claude to answer the message before it thinks or picks up a tool, and a system-prompt section ruling out stock AI phrasing (eager openers, agreement reflexes, corporate vocabulary, wrap-ups) - but gates it behind a server flag that answers no. This drops the flag check and keeps the session-kind guard, so the plugin appears in /plugin. It is registered DISABLED, so nothing changes until you turn it on there. Off by default.",
+    modelFacing: true,
   },
   {
     id: 'worktree-mode',
@@ -1263,6 +1272,10 @@ export const applyCustomization = async (
     'allow-custom-agent-models': {
       fn: c => writeAllowCustomAgentModels(c),
       condition: !!config.settings.misc?.allowCustomAgentModels,
+    },
+    'unlock-responsive-mode': {
+      fn: c => writeResponsiveMode(c),
+      condition: !!config.settings.misc?.unlockResponsiveMode,
     },
     'worktree-mode': {
       fn: c => writeWorktreeMode(c),

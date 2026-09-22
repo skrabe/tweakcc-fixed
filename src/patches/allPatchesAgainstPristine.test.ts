@@ -70,6 +70,7 @@ import { writeComplexityRouter } from './complexityRouter';
 import { writeFablePlan } from './fablePlan';
 import { writeAllowCustomAgentModels } from './allowCustomAgentModels';
 import { writeWorktreeMode } from './worktreeMode';
+import { writeResponsiveMode } from './responsiveMode';
 import { writeSessionMemory } from './sessionMemory';
 import { writeSwapRipgrepForFff } from './swapRipgrepForFff';
 import { writeDreamMode } from './dreamMode';
@@ -408,6 +409,7 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
     }),
   'fable-plan': c =>
     writeFablePlan(c, { ...DEFAULT_SETTINGS.fablePlan, enabled: true }),
+  'unlock-responsive-mode': c => writeResponsiveMode(c),
   'allow-custom-agent-models': c => writeAllowCustomAgentModels(c),
   'worktree-mode': c => writeWorktreeMode(c),
   'session-memory': c => writeSessionMemory(c),

@@ -84,6 +84,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     suppressNativeInstallerWarning: false,
     filterScrollEscapeSequences: false,
     enableWorktreeMode: true,
+    unlockResponsiveMode: false,
     swapRipgrepForFff: false,
     allowCustomAgentModels: false,
     enableContextLimitOverride: false,
@@ -468,6 +469,20 @@ export function MiscView({ onSubmit }: MiscViewProps) {
             ensureMisc();
             settings.misc!.enableWorktreeMode =
               !settings.misc!.enableWorktreeMode;
+          });
+        },
+      },
+      {
+        id: 'unlockResponsiveMode',
+        title: 'Unlock responsive mode (bundled plugin)',
+        description:
+          "Make Claude Code's bundled responsive-mode plugin selectable in /plugin by dropping the tengu_quiet_ember flag check. Responsive mode makes Claude answer in a sentence before it thinks or uses a tool, and adds a system-prompt section against stock AI phrasing. It stays OFF until you enable it in /plugin.",
+        getValue: () => settings.misc?.unlockResponsiveMode ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.unlockResponsiveMode =
+              !settings.misc!.unlockResponsiveMode;
           });
         },
       },
