@@ -108,6 +108,22 @@ const EW_SHAPE =
 
 const FILE_EW = FILE_YT.replace(YT_SHAPE, EW_SHAPE);
 
+// CC 2.1.280: the launch pin left the resolver — `honorLaunchPin` is gone from
+// the bundle — so the options arg is just {turnEffort,hookEffortValue}, the
+// `(PIN?DEFAULT:void 0)` term is gone from the chain, and the per-model DEFAULT
+// is bound AFTER the env read instead of beside it. Excerpt from the pristine
+// darwin 2.1.280 resolver + its tail-called normalizer.
+const LB_SHAPE =
+  'function lb(e,n,{turnEffort:r,hookEffortValue:s}={}){if(!N_(e))return;' +
+  'let f=G(e)!==null;if(s!==void 0){let E=typeof s==="number"&&f?BO(s):s;return D(E,e)}' +
+  'let d=dM();' +
+  'if(d===null&&!f)return;let u=T(e),m=d??(d===null?u:void 0)??r??n??u;' +
+  'if(typeof m==="number"&&f)m=BO(m);return D(m,e)}' +
+  'function D(e,n){let r=e;if(typeof r==="string"&&OC(r))r=$W(r,n);' +
+  'if(r==="max"&&!i$(n))r="high";if(r==="xhigh"&&!T5(n))r="high";return r}';
+
+const FILE_LB = FILE_YT.replace(YT_SHAPE, LB_SHAPE);
+
 const cfg = (
   over: Partial<ComplexityRouterConfig> = {}
 ): ComplexityRouterConfig => ({
@@ -293,6 +309,31 @@ describe('writeComplexityRouter', () => {
     expect(r).toContain('if(__twkRE==="xhigh"&&!aG(e))__twkRE="high";');
     expect(r).toContain(
       'if(c===null&&!s&&!d)return;let E=c??(c===null?l:void 0)??r??(s?l:void 0)??o??l;if(typeof E==="number"&&d)E=hN(E);return P(E,e)}'
+    );
+    expect(r).toContain(
+      'await __tweakccRouterClassify(E,t,r.options.mainLoopModel);'
+    );
+  });
+
+  it('wraps the CC 2.1.280 resolver after the launch pin left the signature', () => {
+    const out = writeComplexityRouter(FILE_LB, cfg());
+    expect(out).not.toBeNull();
+    const r = out as string;
+    // Wrap still rides RIGHT AFTER the env read (= dM();), which now sits
+    // alone rather than beside the launch-pin and default bindings.
+    expect(r).toContain(
+      'if(s!==void 0){let E=typeof s==="number"&&f?BO(s):s;return D(E,e)}let d=dM();var __st=__tweakccRouterState();'
+    );
+    // No pin term to consult: ENV, per-turn effort, and a FALLBACK diverging
+    // from the launch baseline are the only things the router yields to.
+    expect(r).toContain(
+      'if(__twkRE&&d==null&&r==null&&(n==null||n===__st.baseline))'
+    );
+    expect(r).toContain('if(__twkRE==="max"&&!i$(e))__twkRE="high";');
+    expect(r).toContain('if(__twkRE==="xhigh"&&!T5(e))__twkRE="high";');
+    // The original tail survives byte-for-byte after the injection.
+    expect(r).toContain(
+      'if(d===null&&!f)return;let u=T(e),m=d??(d===null?u:void 0)??r??n??u;if(typeof m==="number"&&f)m=BO(m);return D(m,e)}'
     );
     expect(r).toContain(
       'await __tweakccRouterClassify(E,t,r.options.mainLoopModel);'

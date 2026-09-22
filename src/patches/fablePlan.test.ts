@@ -56,6 +56,14 @@ const EFFORT_LOOKUP =
   'case"inherit":if(e.settingsEffortTable===void 0)return;if(!ee(e.settingsEffortTable))return e.settingsEffortTable.default;' +
   'return Z(e.settingsEffortTable,n??e.mainLoopModelForSession??e.mainLoopModel??dl())}}';
 
+// CC >= 2.1.280: the table guard flipped polarity — `if(!ee(TABLE))` became
+// `if(se(TABLE))`, the negation moving into the predicate. The splice site is
+// unchanged, so the match must not depend on which way the guard reads.
+const EFFORT_LOOKUP_280 = EFFORT_LOOKUP.replace(
+  'if(!ee(e.settingsEffortTable))',
+  'if(se(e.settingsEffortTable))'
+);
+
 describe('writeFablePlan', () => {
   beforeEach(() => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -105,6 +113,16 @@ describe('writeFablePlan', () => {
     expect(out).toContain(
       'function xte(e,t){if(!AO(e))return;let r=m1e(e),n=Uet(e),o=Xbt();return o}'
     );
+    expect(writeFablePlan(out, config())).toBe(out);
+  });
+
+  it('keys the effort lookup through the CC 2.1.280 inverted table guard', () => {
+    const out = writeFablePlan(cli + EFFORT_LOOKUP_280, config())!;
+    expect(out).toContain(
+      'return Z(e.settingsEffortTable,globalThis.__tweakccFablePlanModel??n??e.mainLoopModelForSession??'
+    );
+    // The guard itself is left exactly as CC wrote it.
+    expect(out).toContain('if(se(e.settingsEffortTable))');
     expect(writeFablePlan(out, config())).toBe(out);
   });
 

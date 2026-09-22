@@ -390,8 +390,26 @@ const wrapEffortResolver = (
   //     if(typeof S==="number"&&NUM)S=CONVERT(S);return NORM(S,MODEL)}
   const patternHookEffort =
     /(function [$\w]+\(([$\w]+),([$\w]+),\{honorLaunchPin:[$\w]+=!0,turnEffort:([$\w]+),hookEffortValue:[$\w]+\}=\{\}\)\{if\(![$\w]+\(\2\)\)return;let [$\w]+=[$\w]+\(\2\)!==null;if\([$\w]+!==void 0\)\{let [$\w]+=typeof [$\w]+==="number"&&[$\w]+\?[$\w]+\([$\w]+\):[$\w]+;return [$\w]+\([$\w]+,\2\)\}let [$\w]+=[$\w]+&&[$\w]+\(\2\),[$\w]+=[$\w]+\(\2\),([$\w]+)=[$\w]+\(\);)if\(\5===null&&![$\w]+&&![$\w]+\)return;let ([$\w]+)=\5\?\?\(\5===null\?[$\w]+:void 0\)\?\?\4\?\?\([$\w]+\?[$\w]+:void 0\)\?\?\3\?\?[$\w]+;if\(typeof \6==="number"&&[$\w]+\)\6=[$\w]+\(\6\);return ([$\w]+)\(\6,\2\)\}/;
+  //
+  // CC 2.1.280: the launch pin left the resolver entirely — `honorLaunchPin` is
+  // 0 occurrences in the bundle — so the options arg is `{turnEffort:TURN,
+  // hookEffortValue:HOOK}` and the `(PIN?DEFAULT:void 0)` term is gone from the
+  // chain. The per-model DEFAULT is now bound AFTER the env check rather than
+  // beside it. The wrap still rides right after `=ENV();`, and the inject never
+  // referenced the pin, so only the anchor moves. Same capture groups as
+  // patternTurnEffort.
+  //   function NAME(MODEL,FALLBACK,{turnEffort:TURN,hookEffortValue:HOOK}={}){
+  //     if(!SUPPORT(MODEL))return;let NUM=NUMERIC(MODEL)!==null;
+  //     if(HOOK!==void 0){let V=typeof HOOK==="number"&&NUM?CONVERT(HOOK):HOOK;return NORM(V,MODEL)}
+  //     let ENV=ENVFN();if(ENV===null&&!NUM)return;
+  //     let DEF=DEFAULT(MODEL),S=ENV??(ENV===null?DEF:void 0)??TURN??FALLBACK??DEF;
+  //     if(typeof S==="number"&&NUM)S=CONVERT(S);return NORM(S,MODEL)}
+  const patternNoLaunchPin =
+    /(function [$\w]+\(([$\w]+),([$\w]+),\{turnEffort:([$\w]+),hookEffortValue:[$\w]+\}=\{\}\)\{if\(![$\w]+\(\2\)\)return;let [$\w]+=[$\w]+\(\2\)!==null;if\([$\w]+!==void 0\)\{let [$\w]+=typeof [$\w]+==="number"&&[$\w]+\?[$\w]+\([$\w]+\):[$\w]+;return [$\w]+\([$\w]+,\2\)\}let ([$\w]+)=[$\w]+\(\);)if\(\5===null&&![$\w]+\)return;let [$\w]+=[$\w]+\(\2\),([$\w]+)=\5\?\?\(\5===null\?[$\w]+:void 0\)\?\?\4\?\?\3\?\?[$\w]+;if\(typeof \6==="number"&&[$\w]+\)\6=[$\w]+\(\6\);return ([$\w]+)\(\6,\2\)\}/;
   const turnMatch =
-    file.match(patternHookEffort) || file.match(patternTurnEffort);
+    file.match(patternNoLaunchPin) ||
+    file.match(patternHookEffort) ||
+    file.match(patternTurnEffort);
 
   const splitMatch = turnMatch
     ? null

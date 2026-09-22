@@ -323,8 +323,12 @@ const patchEffortLookup = (file: string): string | null => {
     debug('patch: fablePlan: effort lookup already keyed — skipping');
     return file;
   }
+  // The table guard flipped polarity in CC 2.1.280 — `if(!ee(TABLE))` became
+  // `if(se(TABLE))`, the negation moving into the predicate — so match either.
+  // The splice only needs the `return LOOKUP(TABLE,` site that follows; which
+  // way the guard reads says nothing about where the model key goes.
   const pattern =
-    /(case"inherit":if\(([$\w]+)\.settingsEffortTable===void 0\)return;if\(![$\w]+\(\2\.settingsEffortTable\)\)return \2\.settingsEffortTable\.default;return [$\w]+\(\2\.settingsEffortTable,)/;
+    /(case"inherit":if\(([$\w]+)\.settingsEffortTable===void 0\)return;if\(!?[$\w]+\(\2\.settingsEffortTable\)\)return \2\.settingsEffortTable\.default;return [$\w]+\(\2\.settingsEffortTable,)/;
   const match = file.match(pattern);
   if (!match || match.index === undefined) {
     if (!file.includes('settingsEffortTable')) {
