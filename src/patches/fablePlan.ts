@@ -389,13 +389,24 @@ const patchPickerEffortRow = (
     /(([$\w]+)!==void 0&&![$\w]+&&[$\w]+\([$\w]+,\{marginBottom:1,flexDirection:"column",children:)([$\w]+\?)/;
   const unsupported =
     /([$\w]+)\(([$\w]+),\{color:"subtle",children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," Effort not supported"/;
-  const commit =
-    /(function ([$\w]+)\(([$\w]+)\)\{)(let ([$\w]+)=[$\w]+\(\3\),[$\w]+=\5&&[$\w]+!==void 0&&[$\w]+!=="ultracode"\?[$\w]+\([$\w]+,\5\):[$\w]+;if\([$\w]+\("tengu_model_command_menu_effort")/;
+  const commits = [
+    // CC >= 2.1.281: effort state is read through getters inside the commit,
+    // and the analytics call is a bare statement.
+    //   function Dr(cs){let Ts=vy(cs),Hs=Pn(),_i=qo(),fi=Ts&&Hs!==void 0&&
+    //   Hs!=="ultracode"?yG(Hs,Ts):Hs;i("tengu_model_command_menu_effort",…
+    /(function ([$\w]+)\(([$\w]+)\)\{)(let ([$\w]+)=[$\w]+\(\3\),(?:[$\w]+=[$\w]+\(\),)*[$\w]+=\5&&([$\w]+)!==void 0&&\6!=="ultracode"\?[$\w]+\(\6,\5\):\6;[$\w]+\("tengu_model_command_menu_effort")/,
+    // CC <= 2.1.280.
+    /(function ([$\w]+)\(([$\w]+)\)\{)(let ([$\w]+)=[$\w]+\(\3\),[$\w]+=\5&&[$\w]+!==void 0&&[$\w]+!=="ultracode"\?[$\w]+\([$\w]+,\5\):[$\w]+;if\([$\w]+\("tengu_model_command_menu_effort")/,
+  ];
 
   const a = file.match(adjust);
   const d = file.match(display);
   const u = file.match(unsupported);
-  const c = file.match(commit);
+  let c: RegExpMatchArray | null = null;
+  for (const commit of commits) {
+    c = file.match(commit);
+    if (c) break;
+  }
   if (
     !a ||
     a.index === undefined ||

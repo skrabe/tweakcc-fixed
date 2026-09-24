@@ -47,6 +47,31 @@ describe('writeResponsiveMode', () => {
     expect(writeResponsiveMode(other)).toBe(other);
   });
 
+  describe('CC 2.1.281 shape (extra negated local guard)', () => {
+    // Pristine darwin 2.1.281: a `!tcn()` remote/Teams-entrypoint guard now
+    // sits between the session-kind check and the flag consult.
+    const cli281 = cli
+      .replace(
+        'var h=()=>yVe()&&Oa("tengu_quiet_ember",l());',
+        'var h=()=>nKe()&&!tcn()&&na("tengu_quiet_ember",l());'
+      )
+      .replace('jC({...d,hooksModule:VV(', 'EA({...d,hooksModule:Rq(');
+
+    it('drops the flag and keeps both local guards', () => {
+      const out = writeResponsiveMode(cli281)!;
+      expect(out).toContain('var h=()=>nKe()&&!tcn();');
+      expect(out).not.toContain('tengu_quiet_ember');
+      expect(out).toContain(
+        'on every prompt",defaultEnabled:!1,isAvailable:h}'
+      );
+    });
+
+    it('is idempotent', () => {
+      const once = writeResponsiveMode(cli281)!;
+      expect(writeResponsiveMode(once)).toBe(once);
+    });
+  });
+
   it('fails loudly when the plugin is present but the gate drifted', () => {
     // Listing intact, availability predicate reshaped into something else.
     const drifted = cli.replace(

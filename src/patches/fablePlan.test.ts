@@ -280,6 +280,27 @@ describe('writeFablePlan', () => {
     ).toBeNull();
   });
 
+  it('drops the effort control on the CC 2.1.281 getter-based commit', () => {
+    // 2.1.281 reads effort through getters inside the commit and fires the
+    // analytics call as a bare statement; the ultracode session write is gone.
+    const picker =
+      'Ze({"modelPicker:decreaseEffort":()=>{Ws("left")}});' +
+      'Ws=oe((Bs)=>{let di=ko(),ra=yn.find((qn)=>qn.value===di);if(ra===void 0||ra.disabled===!0)return;' +
+      'let $a=hne(di);if(!$a.supportsEffort)return;jn(1)},[yn]);' +
+      'function Dr(cs){let Ts=vy(cs),Hs=Pn(),_i=qo(),fi=Ts&&Hs!==void 0&&Hs!=="ultracode"?yG(Hs,Ts):Hs;' +
+      'i("tengu_model_command_menu_effort",{effort:pe(fi)});let Nr=_i&&Ts&&qS(Ts)?fi:void 0;' +
+      'if(cs===sh){D(null,Nr);return}D(cs,Nr)}' +
+      'hi!==void 0&&!ai&&e(o,{marginBottom:1,flexDirection:"column",children:oi?r(F,{children:[1]}):' +
+      'r(n,{color:"subtle",children:[e(jY,{effort:void 0})," Effort not supported",Vi?` for ${Vi}`:""]})})';
+    const out = writeFablePlan(cli + picker, config())!;
+    expect(out).not.toBeNull();
+    expect(out).toContain(
+      'function Dr(cs){if(cs==="fableplan"){D(cs,void 0);return}let Ts=vy(cs),Hs=Pn()'
+    );
+    expect(out).toContain('if(di==="fableplan")return;let $a=hne(di)');
+    expect(writeFablePlan(out, config())).toBe(out);
+  });
+
   it('is idempotent on the CC 2.1.251 shape', () => {
     const once = writeFablePlan(cli251, config())!;
     const twice = writeFablePlan(once, config())!;

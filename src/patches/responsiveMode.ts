@@ -18,6 +18,8 @@
 // local session-kind check (false for bg/daemon sessions, true for an
 // interactive TUI). So the ONLY thing withholding the feature is Anthropic's
 // flag. We drop that term and keep `yVe()`, which is a real precondition.
+// CC 2.1.281 added a second local guard, `!tcn()` (remote/Teams entrypoints);
+// every local guard is kept, only the flag consult goes.
 //
 // Availability is not the same as being on. `mde()` resolves each built-in
 // plugin's enabled state as:
@@ -66,21 +68,34 @@ export const writeResponsiveMode = (oldFile: string): string | null => {
   // Already unlocked by an earlier apply: the predicate no longer reads the
   // flag and the listing already carries an explicit default.
   const escaped = availName.replace(/[$]/g, '\\$');
-  const unlocked = new RegExp(`var ${escaped}=\\(\\)=>[$\\w]+\\(\\);`).test(
-    oldFile
-  );
+  const unlocked = new RegExp(
+    `var ${escaped}=\\(\\)=>(?:!?[$\\w]+\\(\\)&&)*!?[$\\w]+\\(\\);`
+  ).test(oldFile);
   if (unlocked && listing[0].includes('defaultEnabled')) {
     return oldFile;
   }
 
-  // The availability predicate. Keep the session-kind guard (group 2), drop the
+  // The availability predicate. Keep every local guard (group 2), drop the
   // dynamic-config consult entirely.
-  //   var h=()=>yVe()&&Oa("tengu_quiet_ember",l());
-  // Captures: 1=`var h=()=>`, 2=session-kind call, 3=the flag name.
-  const availPattern = new RegExp(
-    `(var ${escaped}=\\(\\)=>)([$\\w]+\\(\\))&&[$\\w]+\\("([a-z0-9_]+)",[$\\w]+\\(\\)\\);`
-  );
-  const avail = oldFile.match(availPattern);
+  // Captures: 1=`var h=()=>`, 2=the local guard chain, 3=the flag name.
+  const availPatterns = [
+    // Method 1 (CC >= 2.1.281): a chain of local guards before the flag, e.g.
+    // the session-kind check plus a negated remote/Teams-entrypoint check.
+    //   var h=()=>nKe()&&!tcn()&&na("tengu_quiet_ember",l());
+    new RegExp(
+      `(var ${escaped}=\\(\\)=>)((?:!?[$\\w]+\\(\\)&&)*!?[$\\w]+\\(\\))&&[$\\w]+\\("([a-z0-9_]+)",[$\\w]+\\(\\)\\);`
+    ),
+    // Method 2 (CC 2.1.280): the session-kind check alone.
+    //   var h=()=>yVe()&&Oa("tengu_quiet_ember",l());
+    new RegExp(
+      `(var ${escaped}=\\(\\)=>)([$\\w]+\\(\\))&&[$\\w]+\\("([a-z0-9_]+)",[$\\w]+\\(\\)\\);`
+    ),
+  ];
+  let avail: RegExpMatchArray | null = null;
+  for (const pattern of availPatterns) {
+    avail = oldFile.match(pattern);
+    if (avail) break;
+  }
   if (!avail || avail.index === undefined) {
     console.error(
       'patch: responsiveMode: failed to find the responsive-mode availability gate'
