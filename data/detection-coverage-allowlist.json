@@ -987,5 +987,23 @@
     "shape": "array",
     "excerpt": "entry that is not a file (a nested repository or directory) entries that are not files (nested repositories or directories)",
     "note": "ui: pluralization pair consumed by the dir-sync withheldNotice builder ('Left on this machine: …'); that sentence goes to stderr and a system/informational REPL warning, never a model request."
+  },
+  "e864f1cc19ba53fb": {
+    "verdict": "internal",
+    "why": "LR is interpolated into definitions.BootstrapConfig.description of the generated bootstrap-config JSON schema (editor autocomplete), same builder as 33a1364a2c55aa3c / f6180d6e1323a393",
+    "shape": "concat",
+    "excerpt": "Structural reference for editor autocomplete — the client applies further validation that this schema does not express (https-only and non-l"
+  },
+  "7a25c237c4371e4b": {
+    "verdict": "model",
+    "why": "stale-environment clause of the /cd working-directory-changed modelMessage",
+    "shape": "concat",
+    "excerpt": "The environment block at the start of this conversation still names the previous directory — that information is stale."
+  },
+  "e8aa863dc4a20d82": {
+    "verdict": "model",
+    "why": "plugin-validate MCP diagnostic; /plugin validate output routes to the model via the local-jsx onDone",
+    "shape": "concat",
+    "excerpt": "A directory on the way to this MCP servers file is a symlink or escapes the plugin, and the file was not read — the plugin loader follows it"
   }
 }

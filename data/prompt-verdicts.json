@@ -44056,5 +44056,1075 @@
     "verdict": "pristine-keep",
     "version": "2.1.280",
     "why": "A slot clause inside a catalogued tool result or reminder; it states the cause, the remedy command or the state of the call, and no sibling carries it."
+  },
+  "slash-command-plugin-validate-mcp-invalid-server-config-for-type": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is an exact error string from a validator that only runs on demand, and it names a runtime consequence (the server is dropped). Leaving it out costs nothing while the feature is off, and it is the only place this message appears. Every existing plugin-validate sibling in the set is kept as pristine."
+  },
+  "slash-command-plugin-validate-mcp-unknown-server-type-lead": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is half of an exact error string and it contains an enum. Wiping it would leave the tail as a broken sentence that opens with 'command, or \"http\"…'. The sentence is frozen (it names an enum), so it is kept verbatim."
+  },
+  "slash-command-plugin-validate-mcp-unknown-server-type-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It completes the lead's sentence and carries the list of valid remote types. The text is frozen (an enumeration and an enum), and no sibling that renders at the same time carries it."
+  },
+  "slash-command-plugin-validate-path-not-found-load-failure-suffix": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a unique consequence contract inside an exact error message from an on-demand validator. Keeping it costs nothing when the feature is off, and without it the error would lose the fact that the missing path fails at load time."
+  },
+  "system-reminder-container-restarted-finished-tasks-read-output-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "The caveat that the file may be gone and the note that the tasks cannot be stopped or messaged are runtime facts the model cannot infer. They appear nowhere else in the same request, and there is no slop to cut."
+  },
+  "data-settings-validation-policy-helper-path-not-normalized-posix": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only place the POSIX policyHelpers path rules are stated, and it is only read after a failed settings validation, so keeping it costs nothing the rest of the time. It is the exact validation contract, and the model needs it to fix the path."
+  },
+  "slash-command-exit-worktree-kept": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only copy of the no-tmux keep outcome. It carries the saved path and branch slots."
+  },
+  "slash-command-plugin-update-already-at-latest-satisfying-range": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "Only this string conveys the range-constrained outcome: that the version is pinned by the dependents' ranges and which plugins require it."
+  },
+  "slash-command-plugin-validate-hooks-command-unquoted-placeholder": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "The exec-form JSON shape and the quoting rule are unique remedy mechanics for this validator warning."
+  },
+  "system-reminder-dir-sync-name-list-overflow-suffix": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is mechanical scaffolding that other dir-sync notices embed, and it opens with a slot. Removing it would blank the name lists in those notices."
+  },
+  "tool-description-artifact-deliverable-docs-connector-start-from-docs-type-respelling": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the replacement half of a rewrite pair. CC splices it into the middle of the v1/v2 deliverable sentence, so wiping it would delete words from that sentence. It is also the only v1/v2 statement of the start-from-Docs-type rule."
+  },
+  "tool-description-artifact-finished-work-for-others-second-person": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only copy of the publish-finished-work, first-party-connector and file-exception rules when the v1/v2 text variant is live. It is conditional, so it costs nothing under v0. Its needles are depended on by the v and A rewrite pairs."
+  },
+  "tool-description-mcp-auth-placeholder-real-tools-in-tool-list": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only instruction, when tool search is off, to switch from the stale placeholder to the real tools. It is a unique error-recovery contract."
+  },
+  "tool-result-bash-dangerous-op-unset-var-root-child-guard-rewrite-suggestion": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is a security remedy: it is the only text that names the top-level directory at risk and the inherited-env fact for this case."
+  },
+  "tool-result-bash-sandbox-required-init-failed-fix-settings": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only guidance that a settings-build failure is fixable and that a pinned --settings file needs a restart. It is a unique error contract."
+  },
+  "tool-result-cloud-session-environment-repository-mismatch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only copy of this cloud-session create failure and its two remedies."
+  },
+  "tool-result-dir-sync-kept-here-detail-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only explanation, for the refused kept-here reason, that the pause waits on user action on that machine."
+  },
+  "tool-result-pdf-full-read-unsupported-model": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only error that tells the model its current model cannot read whole PDFs, along with the pages workaround and its dependency."
+  },
+  "data-settings-validation-attribution-expected-boolean-or-object": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only place the model learns which values the attribution setting accepts after a failed settings edit. It is conditional, so it costs nothing when unused, and it is unique."
+  },
+  "data-task-notification-remote-task-blocked-on-mcp-server-question": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It carries a unique state contract: the question cannot be answered here, it must be answered at the given place, and the task no longer waits. The model needs this to report correctly and not stall. The prompt is conditional and unique."
+  },
+  "skill-insights-report-auto-mode-switch-tip": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "The /insights report prompt tells the model to repeat this line verbatim, so the text is output content, not guidance. It is conditional, unique and exact, and a wipe would blank a user-facing line of the report."
+  },
+  "slash-command-plugin-update-already-at-latest-version": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only outcome text for the marketplace, claude.ai and archive up-to-date case. The model needs it to know that no update happened, and there is no bloat."
+  },
+  "slash-command-plugin-validate-hooks-module-dollar-passed-to-state-library": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a validation-gate error. The exact call signatures are what the model needs to fix a hook module, and it is unique mechanics."
+  },
+  "slash-command-plugin-validate-mcp-servers-file-missing-suffix": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only statement that a missing mcpServers file fails silently at load time. This fact explains why the validate error matters, cannot be inferred, and is unique."
+  },
+  "system-reminder-directory-sync-checkout-recreated-wait-for-files-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "Only this text tells the model that edits made before the user's files arrive are merged under them and may be overwritten. That is a unique ordering and data-loss contract."
+  },
+  "system-reminder-prefetched-artifact-type-batch-edits-via-bash": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the unique efficiency mechanic for editing artifact-type instruction files, which avoids huge re-emitted files. It is frozen and uncovered, so deleting it would lose the only copy."
+  },
+  "tool-description-artifact-runtime-capabilities-guidance-optional": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "When this variant renders, it is the only carrier of the skill-before-capabilities ordering, the redeploy/{} semantics and the merge-on-conflict rule. Every sentence is frozen mechanics, so a trim cannot remove anything without deleting a contract."
+  },
+  "tool-result-bash-dangerous-op-unset-var-filesystem-root-scope-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It tells the model exactly which rewrite escapes the dangerous-removal check, and the remedy follows it. This is a validation-gate contract, unique within its arm."
+  },
+  "tool-result-dir-sync-stale-remedy-turn-end": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is spliced into a composed sentence as the remedy. Wiping it would delete words from the rendered sentence, and it states the unique timing of when forwarded commands see the changes."
+  },
+  "tool-result-git-bundle-user-config-in-checkout": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the security refusal contract for user-level git config that sits inside or links into a checkout, with the unique remedy 'keep user-level git configuration outside any checkout'. It is load-bearing and unique."
+  },
+  "tool-result-settings-change-not-applied-symlink": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only explanation of why an approved edit did not land in the symlink case, and it carries the no-circumvention contract. Every sentence is unique within its arm or frozen."
+  },
+  "system-reminder-dir-sync-user-file-replaced-agent-directory": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only place the model learns that its files under that directory were moved to the trash, which blob ids hold them, and how to recover them. Recovery mechanics are unique, so the prompt stays."
+  },
+  "system-reminder-directory-sync-checkout-recreated-comes-back-after-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a sentence completion inside the recreated-checkout notice. Removing it leaves the parent sentence ending in 'and'. The refused-upload/supersede fact appears only in this arm."
+  },
+  "system-reminder-directory-sync-checkout-recreated-comes-back-on-resend": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a sentence completion spliced mid-sentence after '…are NOT here, and '. It is the only text that tells the model when and what earlier work returns in the resend case."
+  },
+  "tool-parameter-artifact-db-ids": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This schema text is the only pre-call source for the valid scope, count bound and id format of `ids`. Validation mechanics, so it stays."
+  },
+  "tool-result-artifact-conflict-changed-files-named": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only text that tells the model which files changed and to re-read each one before republishing. It is a conflict/ordering contract, so it stays."
+  },
+  "tool-result-bash-dangerous-op-derived-cd-empty-input": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a sentence completion inside the dangerous-removal message. Blanking it leaves 'which )' and removes the reason the target is dangerous."
+  },
+  "tool-result-bash-dangerous-op-unset-var-top-level-directory-scope-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the check's firing boundary plus the only remedy the message gives (G(!0)). Validation-gate mechanics, so it stays."
+  },
+  "tool-result-dir-sync-kept-here-detail-unauthorized": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only source for the cause and the remedy (/login on that machine) in the kept-here note. It is a detail slot, so blanking it guts the note."
+  },
+  "tool-result-git-bundle-index-link-inspect-remedy": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a sentence completion ('First … ; then …') holding a security/ordering contract: remove the link before any git command because git writes through it. It is never wiped."
+  },
+  "tool-result-task-output-truncated-no-files-session": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "Only this text tells the model that no saved output file exists, which stops it from trying to read one. It stays."
+  },
+  "tool-result-tool-call-cancelled-image-send-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This names the specific cause (an image could not be sent) and the error contract that effects may have partly happened. It stays."
+  },
+  "data-bg-session-workspace-untrusted-accept-trust-prompt": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only text that tells the model how the user unblocks /fork in an untrusted workspace: run claude there once, accept the trust prompt, then retry. It is a conditional error, so it costs nothing when unused. It is unique and has no slop."
+  },
+  "data-bg-session-workspace-untrusted-unresolvable-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the unique error cause for a /fork refusal: the path cannot be resolved, so trust cannot be checked. The model needs it to tell this case apart from the plain untrusted case. It is minimal already."
+  },
+  "slash-command-model-1m-disabled-run-command": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only copy of the /model failure cause (1M context disabled by an env var) and of the exact command to run. It is a conditional result and cannot be trimmed without losing mechanics."
+  },
+  "slash-command-model-alias-1m-unsupported-run-command": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the unique explanation of why '[1m]' is unavailable for this model and the exact /model command to use instead. Minimal already."
+  },
+  "slash-command-plugin-validate-mcp-undeclared-user-config-reference": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only place the model learns that an undeclared user_config reference makes the loader drop the server or pass the literal text through, and which keys to declare. It holds exact key names the model must reproduce."
+  },
+  "system-reminder-dir-sync-parked-reason-published": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This value completes the 'parked because …' sentence for the published case and states the rule that runs containing remote-held commits are not re-created on HEAD. Wiping it would leave a broken sentence. It is unique mechanics."
+  },
+  "system-reminder-working-directory-changed-stale-environment-block": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This clause is the only signal that the environment block's cwd is stale after /cd. Wiping it would leave 'previous directory — that information is stale.' dangling, because the -cont sibling renders pristine. Keep it verbatim. Flag for realign: drop the clause from the drifted parent override."
+  },
+  "tool-description-updating-existing-artifacts": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "For the v1/v2 Artifact descriptions this is the only copy of the update and read-before-publish contract. A publish that skips the read is refused, so this is load-bearing. No slop to cut."
+  },
+  "tool-result-auto-mode-classifier-api-wait-not-unsafe": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the unique rate-limit denial for the auto-mode classifier. It carries the wait duration and the anti-circumvention rule that no co-rendered text states. Wiping it would break the composite sentence built from Ble/SK."
+  },
+  "tool-result-bash-dangerous-op-unreadable-expansion-top-level-directory": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only explanation of this specific rm-guard trigger, plus its remedy (use a literal absolute path). It is a security/approval contract and must stay verbatim."
+  },
+  "tool-result-bash-dangerous-op-unset-var-root-child-reparsed-reason-suggestion": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This short reason clause completes the decision-reason string. It is structurally load-bearing and already minimal, and the matching reason sibling in LCC is also kept pristine."
+  },
+  "tool-result-dir-sync-stale-remedy-next-upload": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only statement of when the remote machine catches up in the awaiting_container state. Removing it would break the cause/remedy sentence."
+  },
+  "tool-result-git-bundle-home-is-checkout-parenthetical": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the minimal factual suffix naming the offending checkout path. Wiping it would drop the path the user needs to act on."
+  },
+  "tool-result-tool-call-interrupted-session-ended": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the unique sentinel that the bundle matches through yme, and it carries the only verify-before-rerun instruction for calls cut off by a session end. It must stay byte-exact at both sites."
+  },
+  "data-artifact-inherited-type-capabilities-classifier-label": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only signal telling the classifier that the capabilities are fixed by the type and that this publish cannot change them. It is short and fully load-bearing, so nothing can be cut."
+  },
+  "data-bg-session-workspace-untrusted-home-directory": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is a refusal whose remedy is unique: the home directory is trusted per session, so the fix is to start from a terminal there or from a project directory. There is no other carrier."
+  },
+  "slash-command-model-couldnt-confirm-with-api": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This error string is the only thing that tells the model the requested model was not applied and how to recover."
+  },
+  "slash-command-plugin-validate-headers-helper-user-config-reference": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is a validator error with unique loader behaviour and a security reason (splicing the value into a shell command). The rest is frozen mechanics."
+  },
+  "slash-command-plugin-validate-mcp-directory-set-url-empty": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only statement of the directory/url matching rule and its fix."
+  },
+  "slash-command-plugin-validate-mcp-server-config-not-object": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only message for the not-an-object case, and the shared tail is its consequence contract."
+  },
+  "system-reminder-directory-sync-checkout-recreated-comes-back-taken": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "Only this arm says the files come back now, and it swaps 'wait for their files' for 'check the files'. Wiping it would leave the parent reminder's sentence unfinished."
+  },
+  "tool-description-artifact-browser-storage-guidance-no-capabilities": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "In the v2 no-capabilities variant this is the only browser-storage guidance: per-origin and per-viewer scope, the try/catch requirement, and when not to use storage. It is conditional, so it costs nothing when that variant is off."
+  },
+  "tool-result-artifact-db-profiles-ids-invalid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "An error tool_result for a validation gate has to keep its exact format contract. The overlap with the parameter description is partial and cannot serve as the error text."
+  },
+  "tool-result-bash-dangerous-op-command-substitution-target": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It has a unique security/error contract and an ordering remedy."
+  },
+  "tool-result-bash-dangerous-op-derived-dirname-empty-input": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "The fragment completes a sentence in a security refusal. Blanking it would break the message."
+  },
+  "tool-result-enterworktree-path-is-main-working-tree": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only error explaining why the path was rejected."
+  },
+  "tool-result-git-bundle-home-inside-checkout-parenthetical": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only thing naming which checkout the home directory sits inside, and it is spliced into a git-bundle refusal."
+  },
+  "tool-result-remote-host-not-ready-connecting": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It has a unique error contract: the host name is unresolved because the machine is not ready, the call did not run, and the retry comes after a few seconds."
+  },
+  "data-api-error-stream-malformed-partial-response": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only text that tells the model its partial output above came from a malformed stream and may be incomplete. It is a conditional error context, so it costs nothing until it fires. It opens with the ${ua} error-prefix slot, which stays pristine. That is consistent with the sibling arms that are kept."
+  },
+  "slash-command-model-restricted-by-organization": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the error result returned by the model_switch path (code restricted_by_org / check_failed). It is the only statement of the refusal and the remedy, and it contains the model and command-name slots. It is conditional, so it costs nothing when off."
+  },
+  "system-prompt-tool-execution-denied-auto-mode-batch-flagged-items": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only place that allows re-running a batch minus the flagged items after an auto-mode denial. Without it, same-outcome-examples reads as forbidding that. It is a denial-handling ordering contract, frozen and unique."
+  },
+  "system-reminder-container-restarted-tasks-stopped-list": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This prompt carries the list of stopped tasks itself, the only statement of which tasks died. Wiping it would remove the list, not just words. Realignment flag: the stale parent override at 2.1.247 must drop its inlined copy of this paragraph, or the reminder renders it twice."
+  },
+  "system-reminder-device-tools-forwarding-off-retracted": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only message that lifts the earlier forwarding-off instruction ('Do not retry or look for another route'). Without it the model keeps refusing device work after the tools arrive. It is unique state-correction mechanics."
+  },
+  "system-reminder-directory-sync-environment-replaced-restored-to-last-turn": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only description of the last_turn restore outcome: what came back (commits, staged state, working files as of the last completed turn), what did not (edits from the interrupted turn, untracked files, tools, processes), and the check-before-rebuild order. It is conditional, unique and frozen."
+  },
+  "tool-description-artifact-deliverable-lives-in-conversation-cowork-wording": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is rewrite-replacement text. Wiping it would delete words from the middle of the rendered Artifact sentence, leaving 'is not fully delivered while it , even when…'. It is never wiped. Treat it as frozen even though externalRefs.rewriteReplacement reads false."
+  },
+  "tool-description-bash-sandbox-local-binding-exclude-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This clause is spliced into the EPERM local-binding sentence. It is the only mention of the `/sandbox exclude <pattern>` alternative for this session kind. The clause is frozen (a command name), and wiping it only drops a user remedy."
+  },
+  "tool-description-bash-sandbox-local-binding-exclude-or-bang-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This clause is spliced into the EPERM sentence. It is the only statement of both user remedies when no session kind is set. The clause is frozen (an enumeration plus a command name) and unique."
+  },
+  "tool-description-request-computer": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the tool's whole description. It is the only upfront signal that request_computer is inert and that the mcp__remote-devices__ tools are the real route. It is short, and the tool name keeps it frozen."
+  },
+  "tool-result-artifact-url-not-an-artifact-claude-ai-non-artifact-link": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only error for a claude.ai non-artifact link, and it points to action \"list\". It opens with the ${r} slot ('not an artifact URL: X —'), which is kept intact. It is a frozen error contract."
+  },
+  "tool-result-bash-dangerous-op-backslash-drive-root": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only explanation that a backslash-only target is the Windows Git Bash drive root, plus how to rewrite the path. Every sentence is frozen (paths, 'cannot be auto-allowed by permission rules'). It is unique security/error text."
+  },
+  "tool-result-git-bundle-user-config-home-inside-checkout": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only refusal explaining that a home directory inside a checkout makes the user-level git config writable, and giving the move-or-remove remedy. It is a unique security contract and frozen."
+  },
+  "data-api-error-stream-part-missing-partial-response": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only text the model sees for the stream-part-missing cause, and it tells the model the output above may be truncated. It is conditional, so it costs nothing when off. Wiping it would leave the prefix-only API-error message that detectors key on. Siblings are alternative arms, so none of them counts as coverage."
+  },
+  "slash-command-plugin-validate-hooks-module-state-const-reference-not-frozen": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is a unique, conditional validation error, and its remediation list is the only statement of the allowed patterns. The mechanics are frozen."
+  },
+  "slash-command-plugin-validate-hooks-module-state-reference-not-literal": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only statement of the reference-shape contract (literal plugin and key, computed id only). It is a unique validator mechanic."
+  },
+  "slash-command-plugin-validate-hooks-module-state-set-foreign-owner": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It carries a unique ownership rule and a remediation with an exact API path (state.set, e.value). It is conditional and load-bearing."
+  },
+  "system-prompt-coordinator-load-skill-before-briefing-worker": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "The load-before-brief ordering is a unique claim. The overlapping clauses sit inside one frozen sentence that must stay verbatim or be deleted whole. Deleting it would lose the unique ordering, so keep it verbatim."
+  },
+  "system-reminder-container-restarted-finished-tasks-no-output-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only instruction for finished tasks with no recorded output, and it is a conditional reminder. The alternative arm is not coverage."
+  },
+  "system-reminder-tool-hosts-project-sync-scope-containing-checkout": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "CC splices this fragment into the middle of rendered tool-hosts project lines. Wiping it would leave broken sentences such as 'synced two-way: )', so it has to stay. It also states the sync scope, which appears nowhere else."
+  },
+  "tool-result-agent-resume-forked-skill-unresolved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is a unique resume-refusal error with a security reason (permission scoping). The deployed override already matches pristine. Keep it, bumping ccVersion only."
+  },
+  "tool-result-auto-mode-no-verdict-server-thread-unsupported": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This fragment is spliced into the no-verdict denial sentence. Its unique signal, 'the next one will not be' (on a message thread), tells the model a retry will be evaluated. Wiping it would delete words from the enclosing sentence."
+  },
+  "tool-result-cloud-session-other-forge-upload-without-file-sync": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only statement of the workaround command/env var for non-GitHub forges. It is conditional and load-bearing."
+  },
+  "tool-result-git-bundle-user-config-home-is-checkout": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the unique security-refusal reason for the home-is-checkout case, with a specific remedy (a bare dotfiles repo with --git-dir). It is a security/error contract."
+  },
+  "tool-result-proposeskills-name-too-long": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is an exact validation error with a limit and a corrective action, and it renders only when triggered."
+  },
+  "tool-result-tool-call-cancelled-turn-error": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only tool_result for model-error cancellation. It carries a unique safety fact (partial side effects may have happened) and the error text."
+  },
+  "tool-result-web-search-cut-off-before-results": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is a unique, conditional WebSearch error with retry guidance."
+  },
+  "slash-command-heapdump-bun-external-line": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a conditional /heapdump output row and the only place the external strings/buffers figure is reported. Wiping it would drop the number, and there is no bloat to trim."
+  },
+  "slash-command-model-alias-1m-no-mode-variant-switch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This error message carries a unique rule: a mode-switching setting has no 1M form, with sonnet[1m] as the alternative. No co-rendering carrier covers it."
+  },
+  "slash-command-plugin-validate-mcp-json-invalid-syntax": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It carries unique error mechanics: .mcp.json must not have a BOM, unlike plugin.json, and a parse failure loads no servers. It is a conditional tool/command result."
+  },
+  "system-reminder-dir-sync-not-installed-reason-unlisted": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only carrier of which files have an unknown non-install reason and of which copy stands where. Those are state facts the agent needs."
+  },
+  "system-reminder-dir-sync-user-file-replaced-agent-directory-one-more": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only signal that one more replaced directory exists beyond the listed ones. Removing it hides an eviction."
+  },
+  "system-reminder-directory-sync-checkout-recreated-comes-back-later-upload": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It completes a larger rendered sentence, so blanking it would remove words mid-sentence. It is also the only statement of when the work comes back in this branch."
+  },
+  "tool-description-artifact-browser-storage-guidance-capability-skill": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "In the v1 tool description it is the only carrier of the storage contract and of the 'load the capabilities skill before writing the page' ordering. It is conditional, so it costs nothing when it is off."
+  },
+  "tool-result-artifact-url-not-an-artifact-claude-ai-artifact-link": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a unique error remedy: pass the artifact's own URL in the named field. It starts with a slot and completes a message from the caller, so wiping it would break the error text."
+  },
+  "tool-result-bash-dangerous-op-unreadable-expansion-root-child-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is a security contract for dangerous rm: an empty expansion removes a top-level directory, so use a literal path. It must be preserved."
+  },
+  "tool-result-kernel-redirect-prefix-read-ask": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a unique permission-ask reason for macOS kernel-redirected prefixes. It is a security explanation shown only when that case triggers."
+  },
+  "tool-result-proposeskills-name-reserved-word": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only statement of the validation rule and of the recovery instruction."
+  },
+  "tool-result-settings-change-not-applied-policy-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It carries a unique cause (policy file or --settings file) and a no-retry/no-workaround contract, which guards against circumventing managed settings."
+  },
+  "tool-result-tool-unavailable-still-listed-no-one-to-answer": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It carries unique guidance: nobody can answer AskUserQuestion, so ask in the reply text. It is also a fragment appended to the missing-tool error."
+  },
+  "tool-result-write-aliased-parameter-repeated-ignored": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only signal that a repeated alias parameter was dropped, which is an input-repair mechanic."
+  },
+  "slash-command-plugin-install-commit-unverifiable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This conditional refusal is the only statement of why the install, update or load was refused. It costs nothing when the failure does not happen, and the text is short and exact."
+  },
+  "system-reminder-dir-sync-environment-replaced-partial-restore": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "Only this reminder tells the model which state it is in: work is missing after an earlier turn, it may come back from the user's machine, the files must be checked before building on them rather than redone from memory, and missing changes must be reported. These are unique state and ordering mechanics, and the reminder is conditional."
+  },
+  "system-reminder-dir-sync-user-changes-reaching-again": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only signal that sync has recovered and that files the user mentioned earlier may now be visible. The model cannot infer this, and the reminder is conditional."
+  },
+  "system-reminder-tool-hosts-project-sync-scope-checkout-or-folder": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is a fragment spliced into the tool-hosts project line. Blanking it would leave a broken sentence and drop the fact that the sync scope is unknown."
+  },
+  "system-reminder-tool-hosts-project-upload-only-changes-in-scope": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It completes the upload-only project line and tells the model which kinds of change reach the session. Wiping it would break the host sentence."
+  },
+  "tool-result-artifact-conflict-changed-files-unnamed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the recovery contract for a conflict where no files were named. The list-files step is unique to this branch."
+  },
+  "tool-result-auto-mode-classifier-api-wait-long-stop-and-tell-user": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only text telling the model it cannot wait out a long API backoff inside the turn, that other reviewed actions will also be denied, and what to do instead. These are unique gate mechanics."
+  },
+  "tool-result-bash-dangerous-op-derived-variable-guard-useless": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is a unique refusal reason with a concrete remedy that the model needs in order to rewrite the command. It is conditional and frozen."
+  },
+  "tool-result-git-bundle-git-not-on-path-home-checkout-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It completes the parent stderr with the specific home checkout path that explains the exclusion. Wiping it would drop the concrete path."
+  },
+  "tool-result-git-bundle-repo-inside-home-checkout": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the unique refusal reason for the case where the repository lies inside the home checkout. It is a conditional security contract."
+  },
+  "tool-result-permission-denied-dangerous-removal-prompt-unanswered-count": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It explains why no prompt appeared (suppressed after N unanswered prompts). The model cannot infer this, and it affects whether retrying helps."
+  },
+  "tool-result-remote-host-unreachable-causes-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is a shared clause spliced into unreachable-host results. Wiping it would leave incomplete sentences and lose the diagnostic causes the model relays to the user."
+  },
+  "tool-result-settings-change-not-applied-needs-card-approval": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the unique contract that a settings edit in the desktop app requires card approval, with a no-workaround rule. It is a security and ordering gate, and conditional."
+  },
+  "tool-result-worktree-isolation-diskless": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only error explaining that worktree isolation is unavailable because the session has no disk. It is conditional and exact."
+  },
+  "slash-command-model-1m-disabled-switch-to": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only error text the model gets for this failure path, and it names the env var and the replacement alias. Nothing else covers it and it has no slop."
+  },
+  "slash-command-model-not-yet-available-for-account": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only copy of the unavailable-model result and the next-step hint."
+  },
+  "system-reminder-dir-sync-not-taken-from-user-machine": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It gives the model unique facts: which files were not synced, and why."
+  },
+  "tool-result-artifact-db-profiles-names-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only signal the model gets for this state, and it tells the model what to do next."
+  },
+  "tool-result-artifact-db-profiles-record-unreadable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is a unique error with a recovery instruction."
+  },
+  "tool-result-dir-sync-held-open-read-older-copy-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It tells the model that the read returned the older copy of the file, which it cannot infer. The body opens with a slot, but it is not wiped."
+  },
+  "tool-result-dir-sync-uploads-failing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only statement that the changes are missing here and that the model should read the files on the remote machine."
+  },
+  "tool-result-git-bundle-git-dir-inside-home-checkout": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only copy of this specific refusal cause and its remedy. The body opens with a slot, but it is not wiped."
+  },
+  "tool-result-git-bundle-home-dir-inside-checkout-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is a clause spliced into other refusal messages, and it is the only copy on its path."
+  },
+  "tool-result-git-bundle-linked-worktree-config-not-uploaded": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This refusal and its specific retry trap exist nowhere else."
+  },
+  "tool-result-git-bundle-settings-file-unreadable-in-worktree": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is a unique refusal reason with a remedy."
+  },
+  "tool-result-permission-denied-dangerous-removal-safety-check": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "The model needs to know who denied the command (a built-in check, not the user) and why, and this is the only place that says so. Every sentence is frozen: it contains `rm -rf /`, an enumeration, and 'Only'."
+  },
+  "tool-result-remote-host-wait-for-connect-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "Blanking it would delete words from the rendered wait-timeout sentence. It is unique."
+  },
+  "slash-command-model-alias-1m-unsupported-switch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "A minimal runtime error with a unique cause and remedy. It opens with a slot, but no wipe is proposed, so no detector question arises."
+  },
+  "slash-command-plugin-marketplace-list-available-not-added": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "A pure output-shape row that carries its state ('not added') and slots. There is nothing to trim."
+  },
+  "slash-command-plugin-validate-hooks-module-state-key-undeclared-other-plugin": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "A unique validation error contract. Nothing to cut."
+  },
+  "slash-command-plugin-validate-mcp-file-size-cap-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It completes a rendered refusal sentence with the cap value and the validate-separately remedy. Cutting it would truncate the sentence."
+  },
+  "slash-command-plugin-validate-mcp-files-over-limit": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "A unique validator note with its limit and remedy."
+  },
+  "system-prompt-tool-execution-denied-auto-mode-clearing-action": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only text that lets the model do what the denial itself names to clear it. Without it, the outcome-scope ban reads as forbidding that step, which invites over-refusal and stalls."
+  },
+  "system-prompt-tool-execution-denied-auto-mode-outcome-scope": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "A security contract for the auto-mode classifier: it defines what a denial covers and forbids workarounds across channels. It is unique and load-bearing, which matches checklist item 4 (protected-block exception)."
+  },
+  "system-reminder-dir-sync-service-refusing-turn-runs-on-stale-files": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only reminder for the refusing state, with its cause and resume mechanics. A conditional reminder costs nothing when off."
+  },
+  "system-reminder-tool-hosts-forwarding-off": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "The unique state reminder, with anti-loop and truthful-location mechanics the model cannot infer."
+  },
+  "tool-result-artifact-read-db-plan-mode-user-approval-required-2": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "A minimal authorization-gate reason (keep authorization as a lookup). It has no bloat and no co-rendered duplicate."
+  },
+  "tool-result-artifact-url-not-an-artifact-design-link": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "A unique error contract that tells the model why its url failed. It opens with a slot, but no wipe is proposed."
+  },
+  "tool-result-auto-mode-classifier-rate-limited-short-wait": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "The only text giving the short-wait retry and ordering contract. Without it the model hammers the classifier and gets identical denials."
+  },
+  "tool-result-cloud-session-environment-required-for-repository": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "A unique create-failure error with an actionable remedy."
+  },
+  "slash-command-model-alias-1m-no-mode-variant-run-command": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only runtime text for the alias_1m_no_mode_variant rejection when a slash command exists. It tells the model which model aliases are valid. Nothing else says this and there is no slop."
+  },
+  "slash-command-plugin-validate-hooks-module-other-plugins-state-unchecked": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a unique validator note that names the unchecked cross-plugin state and how to check it. It is short and has no slop."
+  },
+  "slash-command-plugin-validate-mcp-file-not-regular-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only reason text for an MCP servers file that was refused. It is short and all of it is frozen enumeration."
+  },
+  "slash-command-plugin-validate-mcp-server-schema-issue-dropped": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only consequence statement attached to per-field MCP schema issues. Nothing co-rendered covers it and there is no slop."
+  },
+  "slash-command-plugin-validate-mcp-server-url-without-type": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is unique diagnostic mechanics: a missing type makes the server parse as stdio and get dropped. Everything in it is frozen and there is no slop."
+  },
+  "system-prompt-tool-execution-denied-auto-mode-same-outcome-examples": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a security contract for auto-mode denials. It names split-command and re-quoting evasions that no co-rendered text states. Because it contains unique items it must stay verbatim."
+  },
+  "system-reminder-dir-sync-not-installed-reason-deferred": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only text telling the model that a deferred write will be retried automatically. It is minimal, and removing it would leave a hole in the notice sentence."
+  },
+  "system-reminder-dir-sync-published-commits-off-work-branch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only instruction for the case where every commit is already published. Its prohibition is the reverse of the default parked-branch advice, so it is load-bearing."
+  },
+  "system-reminder-tool-hosts-file-sync-timing-mid-turn": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the unique sync-timing mechanics for mid-turn mode. The alternative arms are not coverage."
+  },
+  "tool-description-artifact-render-html-v1": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the full opening for text variant v1. No alternative variant counts as coverage. It holds the security exception and a rewrite-needle literal, and has no slop."
+  },
+  "tool-result-bash-write-inside-working-directories-needs-approval": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the unique reason text for why a write inside the working directories still needs approval. It is short and has no slop."
+  },
+  "tool-result-bash-write-outside-working-directories-needs-approval": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the unique permission-ask reason. It states the outside-path fact and what approval does."
+  },
+  "tool-result-dir-sync-files-held-open-cause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only explanation of the held-open sync state and when it resolves. It is unique and minimal."
+  },
+  "tool-result-dir-sync-held-open-command-ran-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a unique state fact telling the model the command executed against stale contents. It is short and needs no trimming."
+  },
+  "agent-prompt-batch-slash-command-non-git-version-control": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only place that tells the /batch orchestrator how to run workers without git or gh, and that a reported publish counts as done in the PR column. It is conditional (not a git repo plus a WorktreeCreate hook), so it costs nothing when that case is off. Drift to fix elsewhere, not in this prompt: the text says 'replace step 4', but the LCC worker-instructions override (ccVersion 2.1.273) renumbered its steps. Step 4 is now 'Commit' and step 5 is 'Push and PR', while pristine step 4 was 'Commit and push'. Replacing step 4 of the LCC override would leave step 5's `gh pr create` in place. The fix belongs in system-prompt-worker-instructions (realign its numbering), because 'step 4' here is frozen."
+  },
+  "slash-command-heapdump-bun-outside-heap-line": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is a unique, conditional data line in the Bun /heapdump output. Cutting it would remove the only explanation of memory that is missing from the snapshot."
+  },
+  "slash-command-plugin-validate-hooks-module-state-library-source-unreadable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only copy of the accepted source shapes for this specific validation failure. It is conditional (plugin validate), so a cut would make the error unfixable."
+  },
+  "slash-command-plugin-validate-mcp-file-parent-dir-symlink-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the concluding half of a split sentence. Wiping it would truncate the rendered warning mid-sentence and drop the only instruction (validate the real file)."
+  },
+  "slash-command-plugin-validate-mcp-servers-is-array": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is a unique, conditional validation warning with a concrete fix (use an object keyed by server name)."
+  },
+  "slash-command-plugin-validate-mcp-url-cleartext-lead": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the first half of a split security warning, and the tail depends on it to complete the sentence. It is unique and conditional."
+  },
+  "slash-command-plugin-validate-mcp-url-cleartext-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It completes the split cleartext warning and holds the only remediation. Wiping it would truncate the rendered sentence."
+  },
+  "system-reminder-directory-sync-checkout-not-restored-reason-attached": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is spliced into the checkout-recreated notice as the reason. Blanking it would delete words from that sentence, and its restore-rule fact is unique."
+  },
+  "tool-description-bash-sandbox-apple-events-blocked": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "Only this prompt tells the model which cryptic macOS errors mean the sandbox blocked it and what to do instead. The rule is conditional (macOS sandbox on) and unique."
+  },
+  "tool-result-artifact-comments-people-rows-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a security/trust contract telling the model that self-chosen display names are untrusted, and how to read the row format. It is unique to the comments result."
+  },
+  "tool-result-artifact-db-profiles-people-block-header": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It holds an untrusted-data fence sentinel and a security contract for one tool result. Wiping it would strip the injection-safety framing around display names."
+  },
+  "tool-result-auto-mode-classifier-stage2-error-retry-after": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is a unique error contract: the block is based on the stage-1 assessment, and it gives the wait time before a retry. Cutting it would remove the rate-limit ordering guidance."
+  },
+  "tool-result-git-bundle-checkout-inside-home-checkout": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the unique refusal reason for this specific containment case, completing a sentence after the slot. Blanking it would break the refusal."
+  },
+  "tool-result-kernel-redirect-prefix-glob-ask": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "It is the only ask message explaining why a glob under these kernel-redirected prefixes needs permission. It is conditional and security-relevant."
+  },
+  "slash-command-exit-worktree-kept-tmux-reattach": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only place the reattach command appears when a tmux session is kept. The tmux attach command and the path slot are frozen mechanics."
+  },
+  "slash-command-plugin-validate-hooks-module-state-key-undeclared-own-contract": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only text that tells the author the required contract shape. It opens with a slot holding the plugin/key label; no detector matches it, and it is kept in any case."
+  },
+  "slash-command-plugin-validate-mcp-file-parent-dir-symlink-lead": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the lead half of a string concatenation. Cutting or wiping it would break the rendered diagnostic mid-sentence. The symlink/escape condition is a unique validation gate."
+  },
+  "slash-command-plugin-validate-mcp-header-literal-credential": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a unique security warning. The userConfig/env-var interpolation syntax is frozen mechanics."
+  },
+  "slash-command-plugin-validate-mcp-servers-not-object": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only statement of the error contract (no servers load from the file). Every clause is frozen: shape, type slot, consequence."
+  },
+  "slash-command-plugin-validate-mcp-url-not-absolute": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a unique validation error. The consequence (marked invalid config, never connects) is only stated here."
+  },
+  "system-reminder-container-restarted-finished-tasks-undelivered": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only way the model learns that finished-but-undelivered results exist. The undelivered state is load-bearing, and both models under-narrate and would not otherwise go looking."
+  },
+  "system-reminder-dir-sync-not-installed-stale-basis": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a unique state fact plus a no-action contract. Without it the model might try to re-push or rewrite those files."
+  },
+  "system-reminder-dir-sync-published-remote-changes-guidance": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a unique safety contract that protects the user's uncommitted edits, plus an ordering and ownership rule for merges."
+  },
+  "system-reminder-dir-sync-restored-files-no-longer-match-user-commits": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "These are unique ordering and safety mechanics that protect the user's own uncommitted edits."
+  },
+  "tool-result-cloud-session-no-github-remote": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only reason text for the no_remote case. Wiping it would leave an orphaned alternative with no explanation."
+  },
+  "tool-result-git-bundle-git-runner-stderr-not-on-path-reach-excluded": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "The body opens with the Za slot ('git was not found on the PATH…'). The runner emits Za alone as stderr in another branch; no includes/startsWith detector was found on the rendered text. The enumerated exclusions are the only explanation of why git was not found."
+  },
+  "tool-result-remote-host-path-spelling-unmatchable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "The body opens with a slot holding the tool name. It is the only statement of the error contract and remedy, and the 'was not contacted' outcome is load-bearing for retry decisions."
+  },
+  "tool-result-tool-call-result-not-in-session-copy": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a sentinel constant T0 in `ee=[Ud,sC,k0,T0]`. The bundle matches it with `e.includes(n)` (Lxr), and the escape regex Be is built from it. Outside code depends on it, so it must stay verbatim."
+  },
+  "skill-insights-report-auto-mode-setup-tip": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a conditional /insights line that costs nothing when off. Its text is unique and it names a command."
+  },
+  "slash-command-heapdump-rss-summary-line": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a data line of /heapdump output. It holds slot values and the .heapsnapshot filename, and both arms of the ternary say where the memory lives. Everything in it is load-bearing."
+  },
+  "slash-command-plugin-validate-mcp-file-parent-dir-symlink-middle": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "The fragment is spliced between the head and tail literals of the note. Removing it would break that sentence, and it carries the fact that the file was not read."
+  },
+  "system-reminder-dir-sync-not-installed-list-truncated": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a conditional reminder with a unique state fact that the model cannot infer."
+  },
+  "system-reminder-dir-sync-user-file-replaced-agent-directory-many-more": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "The line is the only carrier of the overflow count and of the fact that the files went to session trash. It opens with a count slot, and since the verdict is keep, no detector concern arises."
+  },
+  "tool-description-bash-sandbox-local-binding-blocked-sandbox-failure": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only place the model learns that EPERM on a local bind comes from the sandbox and which setting fixes it."
+  },
+  "tool-result-artifact-db-profiles-guest-marker-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "The note defines an enum literal in a conditional tool result and costs nothing when unused. The marker \"guest\" is frozen."
+  },
+  "tool-result-artifact-db-profiles-ids-not-listed-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is result data: the counts and the list of reasons are frozen mechanics."
+  },
+  "tool-result-bash-cwd-missing-session-pinned": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is an error contract with recovery mechanics found nowhere else."
+  },
+  "tool-result-bash-dangerous-op-removal-not-run-guidance": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is a safety and error contract with ordering (use the rewrite first, otherwise hand the removal to the user) and a trailing slot for what was flagged. Every sentence is frozen."
+  },
+  "tool-result-bash-dangerous-op-unset-var-root-child-guard-rewrite-reason-suggestion": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This remedy is unique to its case and carries the rewrite slot and the path. It is a clause spliced into the decision reason."
+  },
+  "tool-result-bash-dangerous-op-unset-var-root-child-reparsed-suggestion": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This is the only remedy in the ask message for this case. The path and the re-parse mechanics are frozen."
+  },
+  "tool-result-device-bridge-host-stopped-offering-tools": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "This error contract is unique and includes an ordering step (look up the folders, then ask to use one again)."
+  },
+  "tool-result-git-bundle-home-dir-is-checkout-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "The clause is spliced into git-bundle refusal reasons, and removing it would break the sentence. It carries the home-directory path slot."
+  },
+  "tool-description-artifact-database-people-profiles": {
+    "verdict": "trim",
+    "version": "2.1.281",
+    "why": "Sentence 1 ('opaque id (\"u_\" plus 22 characters)') is covered by the co-rendering ids parameter, and sentence 3 (names are data, not proof of identity) is covered by the people-block-header that comes with every returned name. Both are frozen, so they are deleted whole. Sentence 2 (what the action takes and returns, guest status) and sentence 4 (ids compare only within one owner's artifacts) are unique mechanics and stay verbatim."
+  },
+  "tool-description-bash-pre-commit-skill-checks-exemption-no-status-sentence": {
+    "verdict": "trim",
+    "version": "2.1.281",
+    "why": "Sentence 1 limits the silent path to qualifying commits where every check is NOT RUN. The parent already makes the status sentence the default otherwise. So sentence 3 adds no mechanics, only a restatement and an anti-laziness guard. Deleting it whole keeps the frozen text of sentences 1 and 2 verbatim."
+  },
+  "tool-description-bash-sandbox-local-binding-blocked-user-setting": {
+    "verdict": "trim",
+    "version": "2.1.281",
+    "why": "Only the trailing decision-ownership clause is duplicated by a co-rendered sibling. The EPERM diagnosis and the settings key are unique and must stay."
+  },
+  "system-reminder-directory-sync-environment-replaced-work-restored": {
+    "verdict": "trim",
+    "version": "2.1.281",
+    "why": "Every mechanic is unique: what was restored, what was not, the unfinished-turn edit caveat, and the reinstall/restart instruction. Only the final narration-suppressing sentence goes."
+  },
+  "tool-result-artifact-db-profiles-display-names-untrusted-warning": {
+    "verdict": "wipe-merge",
+    "version": "2.1.281",
+    "why": "Both claims (the display names are chosen by other people, and they should be treated as data, not instructions) are fully carried by the BEGIN ARTIFACT PEOPLE marker line in the same tool result. That line is frozen (it contains 'never' and is a nonce delimiter), so it will survive any trim of the header prompt. The marker tag still renders. Caveat for the wipe barrier: the header's marker line must not itself be cut on the strength of this warning."
+  },
+  "tool-result-request-computer-stub": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "Stage-3 refuted the proposed cut of the remote-devices sentence: it is the antecedent of the \"Otherwise\" fallback, so removing it makes the tell-the-user fallback unconditional. Kept pristine."
+  },
+  "system-prompt-worker-tools-context-skills": {
+    "verdict": "pristine-keep",
+    "version": "2.1.281",
+    "why": "Stage-3 refuted the long-standing cut of the delegate-skill-invocations sentence: its only other carrier (the coordinator skill-tool bullet) is gated on slash commands being enabled, while this text renders whenever the session is not simple mode. Restored to pristine."
   }
 }

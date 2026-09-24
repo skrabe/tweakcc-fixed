@@ -542,16 +542,6 @@
     "text": "the cloud session list could not be fetched",
     "verdict": "catalogue"
   },
-  "768784a3ce57cfe2": {
-    "verdict": "catalogue",
-    "desc": "Reason directory sync did not apply this turn: the snapshot did not finish within the time a turn may be held (released).",
-    "id": "system-reminder-dir-sync-not-applied-reason-released",
-    "label": "SYSTEM_REMINDER_DIRECTORY_SYNC_NOT_APPLIED_VAR_0",
-    "name": "System Reminder: Dir Sync Not-Applied Reason Released",
-    "promptId": "system-reminder-directory-sync-not-applied",
-    "reason": "tells the model why the user's edits are not in this checkout",
-    "text": "it did not finish within the time a turn may be held"
-  },
   "79f023b6989d7562": {
     "label": "TOOL_RESULT_SEND_MESSAGE_NO_AGENT_REACHABLE_VAR_1",
     "promptId": "tool-result-send-message-no-agent-reachable",
@@ -1274,16 +1264,6 @@
     "text": "the raw file is not saved in this session",
     "verdict": "catalogue"
   },
-  "078702bd81bcc0d5": {
-    "desc": "Consequence clause @18672664 interpolated into the first-read confirmation for another person's artifact database. States how far one approval reaches.",
-    "id": "tool-result-artifact-read-db-approval-covers-conversation",
-    "label": "TOOL_RESULT_ARTIFACT_READ_DB_PLAN_MODE_USER_APPROVAL_REQUIRED_VAR_1",
-    "name": "Tool Result: Artifact read_db — approval covers the conversation",
-    "promptId": "tool-result-artifact-read-db-plan-mode-user-approval-required",
-    "reason": "states the scope an approval grants, which changes what the model may retry",
-    "text": "approval covers reads of this artifact for the rest of the conversation",
-    "verdict": "catalogue"
-  },
   "a5310ffb89f4b4bc": {
     "desc": "True branch of the ask-rule attribution @18942599, appended to the artifact read/save and list_files consent asks. Names which rule produced the ask.",
     "id": "tool-result-artifact-consent-ask-rule-covers-artifact-reads",
@@ -1789,15 +1769,6 @@
     "id": "tool-result-cloud-session-run-cloud-ref-file-sync-off",
     "name": "Tool Result: Cloud session — start from GitHub with file sync off"
   },
-  "4b4201145f7aafec": {
-    "promptId": "tool-result-cloud-session-preflight-transient",
-    "label": "TOOL_RESULT_CLOUD_SESSION_PREFLIGHT_TRANSIENT_VAR_0",
-    "text": "to upload the branch and tracked changes without file sync (untracked files stay here), run CLAUDE_CODE_DIR_SYNC_ENGINE=none claude --cloud.",
-    "verdict": "catalogue",
-    "desc": "Remedy telling the model to set CLAUDE_CODE_DIR_SYNC_ENGINE=none and run claude --cloud so the branch and tracked changes upload without file sync.",
-    "id": "tool-result-cloud-session-dir-sync-engine-none",
-    "name": "Tool Result: Cloud session — upload without file sync"
-  },
   "0b8477232b0475a0": {
     "promptId": "system-reminder-tool-hosts-correction-lead",
     "label": "SYSTEM_REMINDER_TOOL_HOSTS_CORRECTION_LEAD_VAR_1",
@@ -1858,5 +1829,54 @@
     "desc": "Cause clause inside the directory-sync notice when the user's machine's latest upload cannot be used in this checkout.",
     "id": "system-reminder-dir-sync-latest-upload-unusable",
     "name": "System Reminder: Dir sync — latest upload unusable here"
+  },
+  "3194f4ebde4fcb86": {
+    "promptId": "system-prompt-worker-tools-context-skills",
+    "label": "SYSTEM_PROMPT_WORKER_TOOLS_CONTEXT_SKILLS_VAR_1",
+    "verdict": "glue",
+    "note": "labels or joins an interpolated value inside a sentence the parent prompt owns; no instruction of its own",
+    "text": "\"Use the /<name> skill\""
+  },
+  "546cc819ef768eef": {
+    "promptId": "tool-result-bash-dangerous-op-unset-variable-expansion-example",
+    "label": "TOOL_RESULT_BASH_DANGEROUS_OP_UNSET_VARIABLE_EXPANSION_EXAMPLE_VAR_2",
+    "verdict": "glue",
+    "note": "labels or joins an interpolated value inside a sentence the parent prompt owns; no instruction of its own",
+    "text": " (inside a command substitution)"
+  },
+  "33e39cadf1e8787b": {
+    "promptId": "data-task-notification-remote-task-blocked-on-mcp-server-question",
+    "label": "DATA_TASK_NOTIFICATION_REMOTE_TASK_BLOCKED_ON_MCP_SERVER_QUESTION_VAR_0",
+    "verdict": "glue",
+    "note": "labels or joins an interpolated value inside a sentence the parent prompt owns; no instruction of its own",
+    "text": "an unanswered MCP server question for more than "
+  },
+  "7524b2709fea3429": {
+    "promptId": "data-task-notification-remote-task-blocked-on-mcp-server-question",
+    "label": "DATA_TASK_NOTIFICATION_REMOTE_TASK_BLOCKED_ON_MCP_SERVER_QUESTION_VAR_0",
+    "verdict": "glue",
+    "note": "labels or joins an interpolated value inside a sentence the parent prompt owns; no instruction of its own",
+    "text": "one MCP server question after another for more than "
+  },
+  "d632e251e13956f7": {
+    "promptId": "data-task-notification-container-restarted-work-lost",
+    "label": "DATA_TASK_NOTIFICATION_CONTAINER_RESTARTED_WORK_LOST_VAR_0",
+    "verdict": "glue",
+    "note": "labels or joins an interpolated value inside a sentence the parent prompt owns; no instruction of its own",
+    "text": "(no description)"
+  },
+  "3ec5a24af09f8da4": {
+    "promptId": "system-reminder-tool-hosts-correction-lead",
+    "label": "SYSTEM_REMINDER_TOOL_HOSTS_CORRECTION_LEAD_VAR_1",
+    "verdict": "glue",
+    "note": "labels or joins an interpolated value inside a sentence the parent prompt owns; no instruction of its own",
+    "text": "was reported as interrupted"
+  },
+  "7b1f14b649a0d299": {
+    "promptId": "system-reminder-tool-hosts-project-upload-only",
+    "label": "SYSTEM_REMINDER_TOOL_HOSTS_PROJECT_UPLOAD_ONLY_VAR_1",
+    "verdict": "glue",
+    "note": "labels or joins an interpolated value inside a sentence the parent prompt owns; no instruction of its own",
+    "text": "its saved edits, new commits and branch switches"
   }
 }

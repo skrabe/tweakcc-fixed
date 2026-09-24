@@ -184,9 +184,39 @@
     "version": "2.1.276",
     "why": "module 119 chunk-n55wtmpy.js, s_ can_use_tool control_request matched_ask_rule .describe(): Field on the CLI->host can_use_tool permission RPC so hosts can treat ask-rule-forced prompts as rule-forced. Not a model tool parameter; $V never converts this schema."
   },
-  "tool-description-artifact-theme-aware-styling": {
+  "data-mcp-read-resource-control-request": {
+    "verdict": "not-model-facing",
+    "version": "2.1.281",
+    "why": "SDK control-protocol schema .describe() for the mcp_read_resource request (@internal); stdin/stdout protocol docs, never sent as a prompt or tool schema."
+  },
+  "data-remote-tools-reannounce-control-request": {
+    "verdict": "not-model-facing",
+    "version": "2.1.281",
+    "why": "@internal SDK control-protocol schema .describe() for remote_tools_reannounce @2251206; protocol docs, not model-facing."
+  },
+  "data-prompt-suggestions-paused-control-request": {
+    "verdict": "not-model-facing",
+    "version": "2.1.281",
+    "why": "@internal SDK control-protocol schema .describe() for set_prompt_suggestions_paused @2274438; not model-facing."
+  },
+  "data-sdk-set-model-system-prompt-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.281",
+    "why": "@internal set_model.system_prompt .describe() in the SDK control schema @2193924; not model-facing."
+  },
+  "data-self-hosted-runner-git-lfs-hook-warning": {
+    "verdict": "not-model-facing",
+    "version": "2.1.281",
+    "why": "[runner:warn] line the self-hosted runner prints to its operator log; not part of any model request."
+  },
+  "system-prompt-minimal-mode": {
+    "verdict": "not-model-facing",
+    "version": "2.1.281",
+    "why": ".option(\"--bare\", …) CLI --help text @16778079; shown by claude --help, never sent to the model."
+  },
+  "tool-description-artifact-external-resource-allowlist": {
     "verdict": "covered-reworded",
-    "version": "2.1.280",
-    "why": "Upstream's 2.1.278 body. CC 2.1.280 added the color-scheme: dark clause at both sites; ours catalogues the current text as tool-description-artifact-theme-aware and inside tool-description-artifact-page-implementation-requirements-app-wording."
+    "version": "2.1.281",
+    "why": "Upstream's 2.1.280 body. CC 2.1.281 moved unpkg into the allowed hosts; ours catalogues the current text as tool-description-artifact-cdn-allowlist."
   }
 }
