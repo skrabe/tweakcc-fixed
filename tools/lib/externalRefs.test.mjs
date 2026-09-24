@@ -63,6 +63,29 @@ describe('externalRefs', () => {
     expect(r.predicateRuns).toEqual(['<command-name>/loop</command-name>']);
   });
 
+  it('finds a const-bound indexOf needle near the prompt site (CC 2.1.281)', () => {
+    const src =
+      'var Q1x=". If you have other work";function cut(e){return e.indexOf(Q1x)}' +
+      'function deny(r){return`${r}. If you have other work that can wait, do it.`}';
+    const body = '${REASON}. If you have other work that can wait, do it.';
+    const entries = [
+      {
+        id: 'tool-result-fixture-denied',
+        pieces: ['${', '}. If you have other work that can wait, do it.'],
+        identifiers: [0],
+        identifierMap: { 0: 'REASON' },
+      },
+    ];
+    const r = externalRefs({
+      id: 'tool-result-fixture-denied',
+      bodies: [body],
+      corpus,
+      src,
+      entries,
+    });
+    expect(r.predicateRuns).toEqual(['. If you have other work']);
+  });
+
   it('flags a body that is the replacement half of a rewrite pair (CC 2.1.269)', () => {
     const body = 'one the person can open, in their organization';
     const r = externalRefs({

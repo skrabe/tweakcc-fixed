@@ -209,6 +209,7 @@ const packetFor = id => {
         needles,
         replacements,
         src: cliSrc,
+        entries,
       }),
       bundleChecked: Boolean(cliSrc),
     },

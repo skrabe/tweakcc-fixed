@@ -19,7 +19,11 @@
 //   quotedElsewhere — CAPS labels and [bracketed] markers this prompt emits that
 //                     another catalogued prompt names.
 //   predicateRuns   — literal runs the bundle passes straight to
-//                     startsWith/includes/endsWith.
+//                     startsWith/includes/endsWith, plus (given the catalogue
+//                     `entries`) every needle lib/searchNeedles.mjs finds near
+//                     the prompt's own site: const-bound (`var J4o="…"` then
+//                     `.indexOf(J4o)`), the indexOf/split/replace family, and
+//                     `===` compares.
 //   opensWithSlot   — the body starts with an interpolation; its value may be a
 //                     key some detector matches the rendered text against.
 //   rewriteReplacement — the body IS the replacement half of a rewrite pair.
@@ -31,6 +35,18 @@
 //
 // All five are leads, not verdicts: text on these lists is FROZEN
 // (verbatim-or-keep), and a wipe needs the lead checked in the bundle first.
+
+import { needleCarriers, proseNeedles, segmentsOf } from './searchNeedles.mjs';
+
+// One bundle scan per bundle: a packet run calls this once per prompt.
+let scanned = { src: null, segs: null, needles: null };
+const scanOf = src => {
+  if (scanned.src !== src) {
+    const segs = segmentsOf(src);
+    scanned = { src, segs, needles: proseNeedles(src, segs) };
+  }
+  return scanned;
+};
 
 const LABEL_RE = /\b[A-Z][A-Z0-9_-]{1,}(?: [A-Z][A-Z0-9_-]{1,})+\b/g;
 const BRACKET_RE = /\[[^\]\n${}]{3,60}\]/g;
@@ -51,6 +67,7 @@ export const externalRefs = ({
   needles = [],
   replacements = [],
   src = null,
+  entries = null,
 }) => {
   const own = bodies.join('\n');
   const rewriteNeedles = needles.filter(n => own.includes(n));
@@ -85,6 +102,13 @@ export const externalRefs = ({
           predicateRuns.push(probe);
           break;
         }
+      }
+    }
+    if (entries && entries.length) {
+      const { segs, needles: all } = scanOf(src);
+      const { rows } = needleCarriers(src, entries, { segs, needles: all });
+      for (const r of rows) {
+        if (!predicateRuns.includes(r.needle)) predicateRuns.push(r.needle);
       }
     }
   }
