@@ -79,7 +79,12 @@ describe.skipIf(!has('classify-and-name-prompts.workflow.js'))(
         version: '9.9.9',
         groups,
         validateResults: false,
-        expectedHashes: { c0: 0, c1: 0, c2: 0, c3: 0 },
+        expectedHashes: {
+          c0: ['0'.repeat(40)],
+          c1: ['1'.repeat(40)],
+          c2: ['2'.repeat(40)],
+          c3: ['3'.repeat(40)],
+        },
         evidencePaths: { c0: '/tmp/e0.json', c1: '/tmp/e1.json', c2: '/tmp/e2.json', c3: '/tmp/e3.json' },
       };
       const { timeline, at } = await runShaped(
@@ -96,6 +101,34 @@ describe.skipIf(!has('classify-and-name-prompts.workflow.js'))(
       // Under the old stage-major shape this was impossible by construction.
       expect(firstVerify).toBeLessThan(lastClassifyEnd);
       expect(at('verify:end:c1')).toBeLessThan(at('classify:end:c0'));
+    });
+
+    it('refuses expectedHashes given as counts before any agent runs', async () => {
+      // A count silently disabled hash repair and reconciliation, which let two
+      // corrupted hashes through as extra verdicts on CC 2.1.281.
+      const src = fs
+        .readFileSync(path.join(WF, 'classify-and-name-prompts.workflow.js'), 'utf8')
+        .replace(/^export const meta/m, 'const meta');
+      const input = {
+        version: '9.9.9',
+        groups: [['c0']],
+        expectedHashes: { c0: 60 },
+        evidencePaths: { c0: '/tmp/e0.json' },
+      };
+      let spawned = 0;
+      const ctx = {
+        args: input,
+        agent: async () => { spawned += 1; return null; },
+        pipeline: async () => [],
+        parallel: async () => [],
+        phase: () => {},
+        log: () => {},
+        JSON, Math, Number, Array, Object, String, Error, Set, Map, Promise, RegExp,
+      };
+      await expect(
+        vm.runInNewContext(`(async () => { ${src} })()`, ctx, { timeout: 5000 })
+      ).rejects.toThrow(/full list of 40-hex candidate hashes.*c0/s);
+      expect(spawned).toBe(0);
     });
   }
 );

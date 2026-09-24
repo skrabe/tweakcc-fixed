@@ -1,7 +1,7 @@
 // Partial-result salvage on retry.
 //
 // A group agent is handed 15-30 prompts and must return one object covering all
-// of them. A single bad id, a dropped entry or a malformed fence used to discard
+// of them. A single bad id, a dropped entry or a malformed answer used to discard
 // the whole answer and restart from prompt one — on CC 2.1.237 that hit 3 of 10
 // stage-1 agents, each re-judging ~24 prompts when a couple were wrong.
 //
@@ -22,17 +22,15 @@ const hasS3 = fs.existsSync(path.join(WF, S3));
 const CLS = 'classify-and-name-prompts.workflow.js';
 const hasCls = fs.existsSync(path.join(WF, CLS));
 
-// Pull agentWithRetry (and the textJson/parseTextJson it closes over) out of the
-// real script and run it against a scripted sequence of agent replies.
-const harness = (replies, { textJson = false, file = FILE } = {}) => {
+// Pull agentWithRetry out of the real script and run it against a scripted
+// sequence of agent replies.
+const harness = (replies, { file = FILE } = {}) => {
   const src = fs.readFileSync(path.join(WF, file), 'utf8');
   const fn = src.match(/async function agentWithRetry[\s\S]*?\n}\n/)[0];
   const prompts = [];
   const logs = [];
   let call = 0;
   const ctx = {
-    textJson,
-    parseTextJson: o => o,
     agent: async (prompt) => { prompts.push(prompt); return replies[call++]; },
     log: m => logs.push(String(m)),
     Array, Object, String, Error, Set, Map, Promise, JSON, Math, Number, console,
