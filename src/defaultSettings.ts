@@ -744,6 +744,7 @@ export const DEFAULT_SETTINGS: Settings = {
     swapRipgrepForFff: false,
     allowCustomAgentModels: false,
     enableContextLimitOverride: false,
+    enableModelContextTokens: false,
     enableModelCustomizations: true,
     enableVoiceMode: false,
     enableVoiceConciseOutput: true,
