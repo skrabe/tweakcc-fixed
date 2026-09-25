@@ -105,6 +105,7 @@ Each patch is tagged with how it behaves on `--apply`: **`[default on]`** applie
 
 - `autonomous-operation-all-models` **`[opt-in]`** — apply the Fable/Mythos autonomous prompt set to every model
 - `auto-mode-classifier-model` **`[opt-in]`** — pin the auto-mode safety classifier to a cheaper model
+- `refusal-fallback-model` **`[opt-in]`** — route a safeguard-flagged message by your own table, then switch back to your model once that turn is answered. `settings.misc.refusalFallbackRoutes` maps a refusal category to a model id or a chain of them and is merged over Claude Code's own routes; `settings.misc.refusalFallbackMaxReturns` caps consecutive returns (default `1`, `null` for no limit)
 
 </details>
 

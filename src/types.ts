@@ -113,6 +113,16 @@ export type TableFormat = 'default' | 'ascii' | 'clean' | 'clean-top-bottom';
 
 export type AutoModeClassifierModel = 'default' | 'sonnet' | 'haiku';
 
+/**
+ * Where a refusal-flagged message is retried, keyed by refusal category.
+ *
+ * A value is a model id or a chain walked until one is usable. Claude Code
+ * ships a table per flagged model, and this is merged over whichever of those
+ * applies, so a category named here is redirected and one left out keeps the
+ * route it shipped with.
+ */
+export type RefusalFallbackRoutes = Record<string, string | string[]>;
+
 export interface MiscConfig {
   showTweakccVersion: boolean;
   showPatchesApplied: boolean;
@@ -153,6 +163,15 @@ export interface MiscConfig {
   enableChannelsMode: boolean;
   maxEffortDefault: boolean;
   autonomousOperationAllModels: boolean;
+  refusalFallbackModel: boolean;
+  refusalFallbackRoutes: RefusalFallbackRoutes;
+  /**
+   * Consecutive returns to the session's own model before the fallback is left
+   * latched. `null` never stops returning. Each attempt on a model that keeps
+   * being flagged spends that model's rate limit and returns no answer, so the
+   * budget trades staying on the chosen model against that waste.
+   */
+  refusalFallbackMaxReturns: number | null;
   outputStyleTurnReminder: boolean;
   autoModeClassifierModel: AutoModeClassifierModel;
   suppressDeferredTools: boolean;
