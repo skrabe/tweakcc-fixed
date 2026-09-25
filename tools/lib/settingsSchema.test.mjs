@@ -23,10 +23,12 @@ const ROOT_KEYS =
 const settingsModule = `import{hk}from"/$bunfs/root/m1.js";
 var o=()=>({describe(){return this},optional(){return this}}),A=o,u=(x)=>x;
 var lazy=f(()=>hk());
+var NOTE="Project settings are ignored.";
 function build(e){return u({${ROOT_KEYS}
   permissions:u({allow:o().describe("Rules that allow a tool")}).describe("Permission rules"),
   hooks:lazy.optional().describe("Hook commands"),
   secret:u({inner:o().describe("never sent")}).describe("@internal Hidden setting"),
+  excluded:o().describe("Commands that run outside the sandbox. "+NOTE),
   long:o().describe("First half of a long description, " + 'second half in single quotes'),
   spell:o().describe(\`Pick one of \${list.join(", ")} or auto\`),
   ...gate&&{gated:o().describe("Only with the env flag")}})}`;
@@ -67,6 +69,17 @@ describe('findSettingsDescriptions', () => {
   it('drops an @internal property together with its subtree', () => {
     expect(byText('@internal Hidden setting')).toBeUndefined();
     expect(byText('never sent')).toBeUndefined();
+  });
+
+  it('follows an identifier operand to its literal declaration', () => {
+    const d = descriptions.find(x => x.keyPath === 'excluded');
+    expect(d.joined).toBe(
+      'Commands that run outside the sandbox. Project settings are ignored.'
+    );
+    expect(d.fragments).toHaveLength(2);
+    for (const f of d.fragments) {
+      expect(code.slice(f.start + 1, f.end - 1)).toBe(f.value);
+    }
   });
 
   it('keeps each `+` fragment at its own range', () => {

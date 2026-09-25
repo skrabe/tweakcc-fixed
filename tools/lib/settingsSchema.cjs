@@ -53,7 +53,15 @@ const propKeyName = p => {
 
 // Flatten a `.describe()` argument into its literal fragments. Returns null
 // for anything that is not built purely from string literals and templates.
-function literalFragments(node) {
+// An identifier operand is followed to its declaration when that is itself
+// literal: CC 2.1.282 appends a shared note constant to the sandbox
+// excludedCommands description (`"…sources. "+Md`), and without this the
+// whole description was invisible to the finder.
+function literalFragments(node, lookup, depth = 0) {
+  if (node.type === 'Identifier' && lookup && depth < 4) {
+    const init = lookup(node.name);
+    return init ? literalFragments(init, lookup, depth + 1) : null;
+  }
   if (node.type === 'StringLiteral') {
     return [{ start: node.start, end: node.end, value: node.value }];
   }
@@ -66,8 +74,8 @@ function literalFragments(node) {
     ];
   }
   if (node.type === 'BinaryExpression' && node.operator === '+') {
-    const l = literalFragments(node.left);
-    const r = literalFragments(node.right);
+    const l = literalFragments(node.left, lookup, depth);
+    const r = literalFragments(node.right, lookup, depth);
     return l && r ? [...l, ...r] : null;
   }
   return null;
@@ -345,7 +353,10 @@ function createFinder(code) {
             c.property.name === 'describe' &&
             node.arguments.length === 1
           ) {
-            const frags = literalFragments(node.arguments[0]);
+            const frags = literalFragments(node.arguments[0], name => {
+              const r = resolve(name, ctx.mod, ctx.scopes);
+              return r ? r.node : null;
+            });
             if (frags && !seenDescribe.has(node.start)) {
               seenDescribe.add(node.start);
               descriptions.push({
