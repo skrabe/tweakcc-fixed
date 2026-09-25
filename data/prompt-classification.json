@@ -65289,7 +65289,12 @@
     "name": "Tool Result: Artifact Db Batch Pinned Unsupported",
     "desc": "write_db batch error when the server cannot take batch writes or if_version pins, so nothing was applied."
   },
-  "b765af41d8b0eb87695f61f8430ebeb1186a8812": { "facing": "ui" },
+  "b765af41d8b0eb87695f61f8430ebeb1186a8812": {
+    "facing": "model",
+    "id": "data-settings-validation-allowlist-invalid-empty",
+    "name": "Data: Settings Validation allowlist invalid",
+    "desc": "Settings validation issue when an allowlist setting is present but not a valid list: CC enforces an empty allowlist, with the setting's consequence, until it is fixed."
+  },
   "357a8710cc4bd1f340eae5e22e12d9549e9b9ca5": {
     "facing": "model",
     "id": "tool-result-artifact-files-source-bare-url-no-path-fragment",
@@ -65556,7 +65561,12 @@
     "desc": "Remote-tool error when the host's MCP tools are unavailable in this session, so the named tool did not run."
   },
   "aa4e1978c3300090a4a2b62912f06df5aedbc327": { "facing": "internal" },
-  "4803848919e69483be9d9d3f10b8584cf43eacf8": { "facing": "ui" },
+  "4803848919e69483be9d9d3f10b8584cf43eacf8": {
+    "facing": "model",
+    "id": "data-settings-validation-allowlist-all-entries-invalid-empty",
+    "name": "Data: Settings Validation allowlist all entries invalid",
+    "desc": "Settings validation issue when every entry of an allowlist setting is invalid: CC enforces an empty allowlist, with the setting's consequence, until it is fixed."
+  },
   "0bcf23259612bd01b848e19e610852e9c5de53ed": {
     "facing": "model",
     "id": "tool-result-artifact-db-batch-version-mismatch",
@@ -80825,5 +80835,1244 @@
   "ce214671dffc378d5c6d1f640358494e94dadcc5": { "facing": "ui" },
   "61fe0f4cea555dcf5a4971c4e407b410a283d659": { "facing": "ui" },
   "99fe475789462ecc4860521a719ef35f48372017": { "facing": "ui" },
-  "83394126cc136f1817e9b34886d7433405dc987b": { "facing": "ui" }
+  "83394126cc136f1817e9b34886d7433405dc987b": { "facing": "ui" },
+  "b183c372cfb9402c1f68d45cecf4ebac46026e27": { "facing": "internal" },
+  "88f82c098f690845cd4b58b79a23cdbbd431af6e": {
+    "facing": "model",
+    "id": "tool-description-artifact-known-version-resubmission-guidance",
+    "name": "Tool Description: Artifact known-version resubmission guidance",
+    "desc": "Provides the merge-and-refetch guidance appended to an identical-content publish refusal when the live Artifact version is known"
+  },
+  "b0a5615362ff0be3037d81cefbe70a90c9fb75bc": {
+    "facing": "model",
+    "id": "tool-result-artifact-identical-resubmission-live-version-seen-same-turn",
+    "name": "Tool Result: Artifact Identical Resubmission Live Version Seen Same Turn",
+    "desc": "Identical-resubmission publish refusal tail saying the live version reached the model or was checked earlier this turn, so it can republish next turn once any missing changes are merged."
+  },
+  "bd282d0ba55654d456d67c2c6efcf28cbacfa416": { "facing": "ui" },
+  "abbfb00d1f881d1ce230740a00af499b5d3a8ad6": { "facing": "ui" },
+  "b54bd4feeb1e86559eb3bf767783c77fe0c292e0": { "facing": "ui" },
+  "7ef41a47bfadced4fa4d88b0c4020c8d1fee5676": { "facing": "ui" },
+  "142957da59560d4f8227e0d5b768c6837758fc1f": {
+    "facing": "model",
+    "id": "data-settings-validation-wsl-inherits-windows-settings-invalid",
+    "name": "Data: Settings Validation wslInheritsWindowsSettings Invalid",
+    "desc": "Settings validation issue when wslInheritsWindowsSettings is present but not a boolean: the source's WSL opt-in cannot be read and WSL fails it closed until fixed."
+  },
+  "4c0becfd22f5bf3fc5fd96e569bc06c40f648b68": { "facing": "ui" },
+  "be6f1dd077428af63da7d82f04b18d631be6c610": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-doc-shim-published",
+    "name": "Tool Result: Artifact live doc shim published",
+    "desc": "Artifact publish tool_result for a live-doc shim publish. It opens with the live-doc shim line (file, edits, copy/live paths, version, URL), then the standard publish status lines and closing guidance."
+  },
+  "acc89eac5bb067acb84cbed7a936a3ff94f5b02b": {
+    "facing": "model",
+    "id": "tool-result-cloud-session-file-sync-repo-setting-changed-after-startup",
+    "name": "Tool Result: Cloud Session File Sync Repo Setting Changed After Startup",
+    "desc": "First-upload refusal line when a repository settings file changed a git-steering setting after start-up that still applies; tells the model to run claude --cloud again."
+  },
+  "2621dd76f3c801bf3ec2bb6122d1f587e0aa49b8": { "facing": "ui" },
+  "a6f974bd7f9b14f3dbda845ec390bed3c9efa51d": { "facing": "ui" },
+  "24d5d23c953acf8d5f1f41d5078c22cc7cdc49cd": {
+    "facing": "model",
+    "id": "system-prompt-websearch-mode-selection-hint",
+    "name": "System Prompt: WebSearch mode selection hint",
+    "desc": "System-prompt hint added when WebSearch is available with fast/extended modes: use \"standard\" by default, \"extended\" for thin results or hard, recent, pricing or multi-step research, and batch planned searches in one turn."
+  },
+  "b423ab03d48f1d405395ff4953ec68af72efc803": { "facing": "ui" },
+  "03a3fa90ca21bec75ec3a1d3d33e28dc4375f8f0": {
+    "facing": "model",
+    "id": "data-model-catalog-opus-5-5-1m-long-description",
+    "name": "Data: Model Catalog Opus 5.5 1M",
+    "desc": "Model-facing descriptionForModel of the Opus 1M-context option in the selectable model list, now templated on the current display name."
+  },
+  "cb21e42d2ec112b249e8802206b7c8030d17dc9b": {
+    "facing": "model",
+    "id": "tool-result-artifact-identical-resubmission-merge-source",
+    "name": "Tool Result: Artifact Identical Resubmission Merge Source",
+    "desc": "identical_resubmission publish refusal telling the model to merge onto the live version's source and not resend unchanged content."
+  },
+  "89117f5ca9d80ccd5bdfd958d166c92ff3755283": {
+    "facing": "model",
+    "id": "tool-result-artifact-notification-call-no-one-to-answer-deny",
+    "name": "Tool Result: Artifact Notification Call No One To Answer Deny",
+    "desc": "checkPermissions deny for an artifact call needing a yes when no one can answer: in Cowork on a turn not started by the user, or in plan mode. It tells the model to raise it in chat and not retry."
+  },
+  "18a97b92a01f0f8882e66df1382adca805f3be10": {
+    "facing": "model",
+    "id": "tool-result-cloud-session-file-sync-repo-setting-steers-git",
+    "name": "Tool Result: Cloud Session File Sync Repo Setting Steers Git",
+    "desc": "First-upload refusal line when a settings file inside the repository sets a variable file sync's git would have to obey; tells the model to remove or move it and run claude --cloud again."
+  },
+  "50fbe4be37a815b2926fceff9b20ba5a31ac3203": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-publish-label",
+    "name": "Tool Parameter: Artifact Publish Label",
+    "desc": "Zod describe on the Artifact publish label field in the newer schema builder: a short optional name of at most the label-length limit, not a description."
+  },
+  "768d9d1725d13c84fabdb9ce785d304d6b63fb7e": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-version-label",
+    "name": "Tool Parameter: Artifact Version Label (Older Schema)",
+    "desc": "Optional Zod describe for the Artifact publish label field in the older schema builder: a short name up to the label-length limit, not a description."
+  },
+  "a1c8ac498e09dd6eb25b0624fb7415a8bbb4e87e": {
+    "facing": "model",
+    "id": "tool-result-cloud-session-file-sync-git-symlink-refused",
+    "name": "Tool Result: Cloud Session File Sync Git Symlink Refused",
+    "desc": "First-upload refusal line when a symbolic link sits in the repository's .git where git never makes one; tells the model to remove it and run claude --cloud again."
+  },
+  "09ef485ff215e6bf6377091c52591c2b56141c2d": {
+    "facing": "model",
+    "id": "tool-result-webfetch-duplicate-fetch-use-earlier-result",
+    "name": "Tool Result: WebFetch Duplicate Fetch Use Earlier Result",
+    "desc": "WebFetch result when the same URL and prompt were already fetched in this conversation: points to the earlier tool call and cache window, and says to reuse that result or call again if it is gone."
+  },
+  "f09377e58d277828217464aee9865220e5e1634a": {
+    "facing": "model",
+    "id": "tool-result-cloud-session-file-sync-tampered-git-object",
+    "name": "Tool Result: Cloud Session File Sync Tampered Git Object",
+    "desc": "First-upload refusal line when an object in the project's .git does not match its name (git fsck names it); tells the model to remove it or re-clone before starting the cloud session."
+  },
+  "bf90cb734e6020e72406b4a6b7877400f17d7d0a": {
+    "facing": "model",
+    "id": "data-model-catalog-opus-5-5-description",
+    "name": "Data: Model Catalog Opus 5.5",
+    "desc": "Model-facing catalog description of the current Opus in the selectable model list."
+  },
+  "c1e262c0df6cf23883ae0647e7776aae05770349": {
+    "facing": "model",
+    "id": "tool-result-cloud-session-folder-seed-bundle-seed-switched-off",
+    "name": "Tool Result: Cloud session folder seed switched off after sync choice",
+    "desc": "Cloud-session creation failure when the user chose to sync the folder but starting sessions from local files is switched off, with how to start without the folder's files or undo the choice"
+  },
+  "9e8e1d3c251cc8c16a4106a3d768447460da3a26": {
+    "facing": "model",
+    "id": "skill-claude-code-doctor-version-check-lookup",
+    "name": "Skill: Claude Code Doctor version check lookup",
+    "desc": "Check 7 of the Claude Code Doctor skill for non-Desktop sessions: how to find the installed version, the release channel (including the Homebrew cask rule) and the latest available version per install type, all read-only"
+  },
+  "3339fbb11196deb3ee2b8515b65ee70bc7d36a10": { "facing": "ui" },
+  "4ba37fef75fdd8f52dd415e8a4afa7b4bf5911ff": { "facing": "ui" },
+  "4e71c692e93c926407265f8e956cf4b7b389f3b5": {
+    "facing": "model",
+    "id": "data-settings-sandbox-excluded-commands-description-part-1",
+    "name": "Data: Settings sandbox excludedCommands description (part 1)",
+    "desc": "Settings-schema description of sandbox.excludedCommands: Bash permission-rule command patterns that always run outside the sandbox, a convenience that still goes through the permission flow, merged across settings sources"
+  },
+  "e5454bb5565ac67fcd3030a23b9b46cc37cb177f": {
+    "facing": "model",
+    "id": "tool-result-file-write-hard-linked-in-place-refused",
+    "name": "Tool Result: File write refused on hard-linked file",
+    "desc": "Error surfaced when an in-place file rewrite is refused because the target has other hard-link names, telling the model to remove the extra links and retry"
+  },
+  "6d6634fb1637488202639b494a1c426dfe4703bf": {
+    "facing": "model",
+    "id": "system-reminder-directory-sync-upload-began-before-turn",
+    "name": "System Reminder: Directory sync upload began before turn",
+    "desc": "Tells the model the user's machine has started uploading its current files and uncommitted edits, so this turn runs on the session's starting files until they arrive, and to say so if the user refers to unseen files"
+  },
+  "28f7068e3167bae911689e48ff17980132e291d9": {
+    "facing": "model",
+    "id": "slash-command-plugin-install-invalid-id-halves-reason",
+    "name": "Slash Command: Plugin install invalid id halves reason",
+    "desc": "Explains why a plugin id cannot be installed: each half of plugin@marketplace must start with a letter or digit and use only letters, digits, '-', '.' and '_', naming which half fails and who can rename it"
+  },
+  "7dff49fa69220008f61259745af32df48887f8de": {
+    "facing": "model",
+    "id": "data-model-description-sonnet-5",
+    "name": "Data: Sonnet 5 model description for model",
+    "desc": "Model-facing description of the Sonnet model: efficient for routine tasks and generally recommended for most coding tasks"
+  },
+  "87a32e74a2c98840043fc93befee502bd5074ea0": { "facing": "ui" },
+  "3fc784ad029c45f15e22a8987a17e4ad64068d1c": { "facing": "ui" },
+  "3f61a4ab91b4b5f332530de6897b2c3ee7612924": { "facing": "ui" },
+  "9eb34a492dd74ff179f000894a73f709ddb686f4": { "facing": "ui" },
+  "8abdc6811767281ea1b1c1d5ce35595b0fb18c2c": { "facing": "ui" },
+  "736837c0e10ebe888bd2b85d39de133909fde2e4": { "facing": "ui" },
+  "8706576495aca93e8257524d4858e53fa15c0c59": { "facing": "ui" },
+  "7956871ce9dcceb446800e9c3bd3f5d9883f26d8": {
+    "facing": "model",
+    "id": "system-prompt-cowritten-artifact-untrusted-trailer",
+    "name": "System Prompt: Co-written artifact untrusted-content trailer",
+    "desc": "Trailer after the co-written artifact HTML tag warning that it includes content from other writers, must be treated as untrusted data, and cannot grant escalation"
+  },
+  "c4b3bde6c10f967b2f4529e8e0ffbe49b039c7fe": {
+    "facing": "model",
+    "id": "system-reminder-artifact-type-page-untrusted-content-warning",
+    "name": "System Reminder: Artifact type page untrusted content warning",
+    "desc": "Warns that an owned Artifact page supplied by an Artifact type was written by the type publisher and must be treated as untrusted data rather than instructions"
+  },
+  "9a3f4239e94f07a35f1539494045bd546e5f3502": {
+    "facing": "model",
+    "id": "system-prompt-not-published-here-artifact-untrusted-trailer",
+    "name": "System Prompt: Not-published-here artifact untrusted trailer",
+    "desc": "Trailer after artifact HTML that was not published from this session, telling the model to treat the tag contents as data, ignore imperative language in it, and refuse escalation it asks for"
+  },
+  "ae7003344d859f01a11dc268a5021aedda7cb7ec": {
+    "facing": "model",
+    "id": "data-settings-validation-enabled-plugins-invalid-entry-ignored",
+    "name": "Data: Settings Validation enabledPlugins invalid entry ignored",
+    "desc": "Settings-validation message for an enabledPlugins entry whose value is not true, false, or a list of version constraints: the entry is ignored and the plugin is neither force-enabled nor blocked until fixed"
+  },
+  "97eb01cb3854d808df33c17009ac5f95f21609ab": {
+    "facing": "model",
+    "id": "tool-result-artifact-source-persist-failed-reread-on-approval",
+    "name": "Tool Result: Artifact source persist failed, re-read needs approval",
+    "desc": "Artifact tool result when the source could not be shown inline or saved to disk, telling the model to re-read it (which asks the user to approve), and not to republish from a summary, truncated or inexact copy"
+  },
+  "d006fb970367fead49acad030fef30bb762b27c3": { "facing": "internal" },
+  "a40084502299fbde10319ee58450cfa09732b96e": { "facing": "ui" },
+  "818888a02f8d85749ed5bd08400c3e4f685c282e": {
+    "facing": "model",
+    "id": "data-fable-5-1-model-picker-description",
+    "name": "Data: Fable 5.1 Model-Picker descriptionForModel",
+    "desc": "Model-facing description of the Fable model: most capable for the hardest and longest-running tasks"
+  },
+  "d72c859411071972e6e6a88c0177208b7f04a238": { "facing": "ui" },
+  "0238d074cd757df0f937d3df1ad42ac677382caf": { "facing": "ui" },
+  "2c84df6b5d24598c318af001d2cb06943e059197": { "facing": "ui" },
+  "18d9b524ff1c5ac26a0fb7e482105090a73b1342": { "facing": "internal" },
+  "a7ede1b33c4d8c22e3ceb1d3a116565cbe718ea3": { "facing": "internal" },
+  "84b12d2105a36c2eb7ef51198812c56c44be565f": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-published-at",
+    "name": "Tool Result: Artifact Published At Url",
+    "desc": "Artifact publish tool result reporting the published path, URL and version, followed by the appended notices"
+  },
+  "eeee1a9037175a078a7444a2941227d1b5e1b2ef": { "facing": "ui" },
+  "1d679e341a91a94648a5bee007ccc47b6b4bb284": { "facing": "internal" },
+  "dea151c861f8382db373c4d085dcbb317bbeba65": { "facing": "internal" },
+  "6137b760835d588d212d97218b081c9cea115321": { "facing": "internal" },
+  "2e6604855e7ae9baec3abdfc60eda5c3c270b033": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-committed-tree-legacy-form",
+    "name": "Tool Result: Git bundle committed tree in legacy form",
+    "desc": "Upload refusal when a committed tree is stored in a form git reads but no longer writes, telling the model to commit a change in that directory so git rewrites the tree, then retry"
+  },
+  "6efcba570b7692e0c16e735cf053b27763e58cab": { "facing": "internal" },
+  "23020901e175cd3adb7d5e83497c136247a1c302": {
+    "facing": "model",
+    "id": "system-reminder-mcp-servers-need-auth",
+    "name": "System Reminder: MCP servers need authentication",
+    "desc": "Lists MCP servers that need authentication before their tools can be used, and tells the model to ask the user to authorize them without requesting codes, tokens or callback URLs"
+  },
+  "b92adf056539e72e14251d033fb0b1f31b7d8246": {
+    "facing": "model",
+    "id": "data-memory-sync-file-not-saved-stays-local",
+    "name": "Data: Memory sync file not saved stays local",
+    "desc": "Notice that a memory file was not saved to shared memory for a server-refusal reason, stays local and will be lost when the machine is recycled, and that the user should be told"
+  },
+  "28b9d3ed753141cd47d3147e3a004af361bbbba1": { "facing": "ui" },
+  "1d85bfc7ce98bb6e69350e9b646d9134297b0624": { "facing": "ui" },
+  "d552d8a55f4445623eb1d856448b39b5814d6e6e": { "facing": "ui" },
+  "8eb02658ee34834f534c55a84f98497d6071efbd": { "facing": "ui" },
+  "1f283b2a13733d1252bf23ca8175fc6e9f4bd8a7": { "facing": "ui" },
+  "493a0473fa9380da769f5d512f9228a547479d4e": { "facing": "ui" },
+  "a552d7e2cba8163e3f33d738097afa9cd70cdcaa": {
+    "facing": "model",
+    "id": "tool-result-skill-unknown-did-you-mean-claude-ai-account-skill",
+    "name": "Tool Result: Skill unknown, did you mean claude.ai account skill",
+    "desc": "Skill tool validation error returned when an unknown skill name resolves to a skill synced from the user's claude.ai account under a former namespace, naming it and telling the model to invoke it by its full name"
+  },
+  "467b2f08d278af7a384079dbe7c441d16feeebe7": {
+    "facing": "model",
+    "id": "tool-result-artifact-updated-from-type",
+    "name": "Tool Result: Artifact updated from type",
+    "desc": "Artifact tool result after updating an Artifact created from an Artifact type"
+  },
+  "a17099eed8cf8763b870b76ad3dd15a02144f836": { "facing": "ui" },
+  "3180c7b8c7ac355de02848effb9d05f85a47b3bd": {
+    "facing": "model",
+    "id": "data-windows-transcript-read-ebadf-notice",
+    "name": "Data: Windows transcript read EBADF notice",
+    "desc": "Explains a Windows-only EBADF error reading the session transcript file likely caused by security or endpoint-management software intercepting file reads, and suggests excluding the .claude folder or allow-listing Claude Code before resuming"
+  },
+  "816cffec483ac8f8f17080ba412cd7f351d7c4bd": {
+    "facing": "model",
+    "id": "tool-description-artifact-type-staged-first-publish-sequence",
+    "name": "Tool Description: Artifact type staged first-publish sequence",
+    "desc": "Explains the staged multi-call publish sequence for an Artifact type whose first publish needs an index file plus an initial content file published immediately, followed by the remaining files in later calls"
+  },
+  "7a74899d033858ff4880f55d20b8ef54b2ec55a4": { "facing": "ui" },
+  "0b7a31537d0fdd7089f63ce73258553849d05179": {
+    "facing": "model",
+    "id": "data-cowritten-artifact-wrap-lead-not-published-here",
+    "name": "Data: Cowritten artifact wrap lead (not published from this session)",
+    "desc": "Lead line wrapping artifact HTML that was not published from this session, telling the model to treat the tag contents as data rather than instructions"
+  },
+  "73909713656b866861d840c687b46706bbb439eb": {
+    "facing": "model",
+    "id": "data-settings-sandbox-project-settings-ignored-when-locked-note",
+    "name": "Data: Settings sandbox project settings ignored when locked note",
+    "desc": "Settings-schema describe fragment noting that project settings values are ignored when managed settings or --settings lock allowUnsandboxedCommands or allowManagedDomainsOnly"
+  },
+  "afee6db055bdc3cffcaacc8b18d6f3294082143c": { "facing": "ui" },
+  "b986cb84c3a00ccb0e22681a8b9cf75a34a14f12": { "facing": "ui" },
+  "0efaef2971514b0582b74273237e544bef7fdc2a": { "facing": "ui" },
+  "d4349a268b82103a5951791480a1ece56863db22": { "facing": "ui" },
+  "997476df50e0f7b329d0a494a226599ecf701dd5": { "facing": "ui" },
+  "54f6ce003e04473a53881a3b8f2b2c4bbe95689f": {
+    "facing": "model",
+    "id": "data-settings-validation-blocked-marketplaces-all-entries-invalid",
+    "name": "Data: Settings validation blocked marketplaces all entries invalid",
+    "desc": "Settings load error when every blockedMarketplaces entry was invalid so none can be enforced"
+  },
+  "b9a979b8abd35f3c2575877184e6ac38f33d997c": {
+    "facing": "model",
+    "id": "data-settings-validation-grant-withheld-unreadable-sibling",
+    "name": "Data: Settings validation grant withheld (unreadable sibling)",
+    "desc": "Settings load error when a grant key was withheld because another key in the same block could not be read"
+  },
+  "cc1932a69b8c675565040aed3b4c28aa1e0bf851": {
+    "facing": "model",
+    "id": "data-settings-validation-grant-withheld-unreadable-sibling-floor",
+    "name": "Data: Settings validation grant withheld treated as floor",
+    "desc": "Settings load error when a grant key was withheld because a sibling could not be read and is treated as its floor value"
+  },
+  "7d60ce36448e683baacd6a0b11d55c0063f378e1": { "facing": "ui" },
+  "f03215e18ab1f87c902fba018376ee169c61e4b7": {
+    "facing": "model",
+    "id": "data-settings-validation-invalid-treated-as-restrictive-value",
+    "name": "Data: Settings validation invalid value treated as restrictive value",
+    "desc": "Settings load error when a locked key was invalid and is treated as its restrictive value until fixed"
+  },
+  "05deec1d102189555202cb9421cea27aa5a063bc": {
+    "facing": "model",
+    "id": "data-settings-validation-invalid-treated-as-floor",
+    "name": "Data: Settings validation invalid value treated as floor",
+    "desc": "Settings load error when a floored key was invalid and is treated as its floor value until fixed"
+  },
+  "0e3f590196bee8c88048ba8871e820b2dee897ba": {
+    "facing": "model",
+    "id": "data-settings-validation-array-entry-ignored-until-fixed",
+    "name": "Data: Settings validation array entry ignored until fixed",
+    "desc": "Settings load error for a single invalid array entry that was ignored and cannot take effect until fixed"
+  },
+  "43b91e9798cd730deb3cd2ecee1222faa0d6b347": {
+    "facing": "model",
+    "id": "data-settings-validation-invalid-ignored-until-fixed",
+    "name": "Data: Settings validation invalid value ignored until fixed",
+    "desc": "Settings load error when a key was present but invalid and was ignored until fixed"
+  },
+  "b1233f37941c3613bfd7ed09b65b9210db7ff569": {
+    "facing": "model",
+    "id": "data-settings-validation-not-object-locks-restrictive",
+    "name": "Data: Settings validation block not an object, locks restrictive",
+    "desc": "Settings load error when a settings block was not an object and its locks are treated as their restrictive values"
+  },
+  "712994c23d4645550f74d7df47c691b456aed938": {
+    "facing": "model",
+    "id": "data-settings-validation-not-object-ignored",
+    "name": "Data: Settings validation block not an object, ignored",
+    "desc": "Settings load error when a settings block was not an object and was ignored until fixed"
+  },
+  "f7e446c1bc955e841e279a7264de86a60c8bfaa9": { "facing": "ui" },
+  "6a1ad0758b9bfd89482f2d68f7aa41cebb1063a5": { "facing": "ui" },
+  "05bae12f7f4a781cb20b41176343ee998d3893fb": { "facing": "ui" },
+  "389ea364b1ff874d5312002db6ce63af74896492": {
+    "facing": "model",
+    "id": "data-settings-validation-lock-invalid-treated-as-restrictive",
+    "name": "Data: Settings validation lock invalid treated as restrictive",
+    "desc": "Settings load error when a lock key was present but invalid and is treated as its restrictive value until fixed"
+  },
+  "9bccf6f06635e2b8417f4d3df504ad766aee9c58": { "facing": "ui" },
+  "9fa0b8e7dcc44b705fd088c86cb54cb6fd99c265": {
+    "facing": "model",
+    "id": "data-settings-validation-strict-plugin-only-customization-invalid-treated-true",
+    "name": "Data: Settings validation strictPluginOnlyCustomization invalid treated as true",
+    "desc": "Settings load error when strictPluginOnlyCustomization was invalid and is treated as true until fixed"
+  },
+  "56a8691be41bbda49114e073a3a73ac1d2cc6000": {
+    "facing": "model",
+    "id": "data-settings-validation-enabled-plugins-all-entries-invalid",
+    "name": "Data: Settings validation enabledPlugins all entries invalid",
+    "desc": "Settings load error when every enabledPlugins entry was invalid so none is force-enabled or blocked"
+  },
+  "1dd64a34acae3c8a4a56b960a9f2f7c3b4ee8f1d": {
+    "facing": "model",
+    "id": "data-settings-validation-enabled-plugins-invalid-ignored",
+    "name": "Data: Settings validation enabledPlugins invalid ignored",
+    "desc": "Settings load error when enabledPlugins was not a map of plugin ids and was ignored"
+  },
+  "ecb89ce9780f9c04af24521dbba5c1e2ea25fd48": { "facing": "ui" },
+  "b3505d1cb18640432b91d0e43da16822719800dd": {
+    "facing": "model",
+    "id": "data-settings-validation-marketplace-name-looks-official",
+    "name": "Data: Settings validation marketplace name looks official",
+    "desc": "Settings load warning when an extraKnownMarketplaces entry was ignored because its name reads like an official Anthropic or Claude marketplace"
+  },
+  "905f8e85ce8679d77ab691e77e2a4c1231e031bd": {
+    "facing": "model",
+    "id": "data-settings-validation-strict-plugin-only-customization-type",
+    "name": "Data: Settings validation strictPluginOnlyCustomization type",
+    "desc": "Settings validation error fragment for a strictPluginOnlyCustomization value that is not true, false, or an array of surface names"
+  },
+  "0666a0057d71a09ae1e08448523af379b3e49706": { "facing": "ui" },
+  "cc4ad598e8361a3138239e5df6e19d670e9a7752": { "facing": "ui" },
+  "cb15f28522085637138d646dc1092913383c8acc": { "facing": "ui" },
+  "7c3eb730feed197bcd3728ad7c021665f93cca49": { "facing": "ui" },
+  "5dc0c9278fbbeec0b24a70b5fad320efbf147f89": { "facing": "ui" },
+  "23ed7c1d9af3f8238ef1a39ae52af76d58f19991": { "facing": "internal" },
+  "0cb88a83414ed68887e380646132c9af5ef4515b": { "facing": "internal" },
+  "5afe88fe998684c654182db2e0af805f4a7bd734": { "facing": "ui" },
+  "38276ecb6b43e812d6e2f86f0bc37e22a82b2f2a": { "facing": "ui" },
+  "514b4ded1388b1abe047689fa4c7a45609e880ea": { "facing": "ui" },
+  "56f463ee3adebe3f8587d1232365ec239065f7e3": { "facing": "ui" },
+  "c90400f916583578efd734db306bea3916e58e08": { "facing": "ui" },
+  "ec870f3ff4eac71d261a39af810aa5f95bbae22d": { "facing": "internal" },
+  "80591fb626d4b8120cfd1f3dbca555b6a50ff07d": { "facing": "internal" },
+  "ea7df4e36bb9bd12415cb094be55bcaad70fdfe0": { "facing": "internal" },
+  "4cd9dbcc6ff66dadc8de2b6a3bc70f4074072fd1": { "facing": "internal" },
+  "a0cbe5d17d8a556444a4239801919a395551f3fa": { "facing": "internal" },
+  "3c4a3f9bfe7faeb4d9e1a668f628367e44ea6875": { "facing": "ui" },
+  "c20410cd9e14e34144f7742e0d76d659f21139b4": { "facing": "ui" },
+  "9e1fbad5f533e77438d35ec9ed787946534922bd": { "facing": "internal" },
+  "f640bf806d33f4b3fdc12a48364fde2a3817c8b2": { "facing": "internal" },
+  "9f3c89fe426b39f33a37833c3f743879e9e09948": { "facing": "internal" },
+  "475f60380705cf7cc742ba59b412c9e24396ff7c": { "facing": "internal" },
+  "7b19099fa6a5338ec907a403b4b2984d22d7fe2e": { "facing": "internal" },
+  "9b27e1b27144f4e347ba8da87c2020f4d4088cd8": { "facing": "internal" },
+  "b3e92693e068013cf9d02643e1ec2c4747803f18": { "facing": "internal" },
+  "79affce305e7cdc7637b8f3d1b1a00232a416191": { "facing": "internal" },
+  "4dc90efe829362c427c6c887d3fc5ca11645a1fe": { "facing": "ui" },
+  "aa0f8c397ba44f7fbf1ae60bcebcace6beb22562": { "facing": "internal" },
+  "7dfdef6c6c6cfceb30c1b43d42efaffa58b4ae49": {
+    "facing": "model",
+    "id": "tool-result-dir-sync-private-git-dir-config-location-relative",
+    "name": "Tool result: dir sync private git dir config location relative",
+    "desc": "Cause clause saying a config-locating setting is a relative path that git under file sync's private git directory would resolve from another directory."
+  },
+  "9899f17fb6e55b455510fdee9472f123c0116e40": { "facing": "internal" },
+  "3990d61f7baa2a6e86e95e5da507f8230a9be5b1": { "facing": "internal" },
+  "6042c8e55e435215e0b139297a38f9da68da2ccd": { "facing": "ui" },
+  "eebbba9b7d98a4af539ffdef8d884d2e40e7737e": { "facing": "ui" },
+  "bc14a84667277be46c4c3e042f83130baefb3457": { "facing": "ui" },
+  "056f92108b3b18dc909d73cb954ca385ed4d61fe": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-admin-foreign-mount",
+    "name": "Tool result: git bundle admin entry foreign mount",
+    "desc": "Upload refusal reason when something is mounted over a linked worktree's administrative entry in .git/worktrees."
+  },
+  "ddc97a9c2b315004566c59a1bdc9adb1f6a1689f": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-attribute-source-claude-code-environment-label",
+    "name": "Tool result: git bundle attribute source Claude Code environment label",
+    "desc": "Label naming Claude Code's environment as where an attribute-affecting git setting was set, interpolated into upload refusals."
+  },
+  "5ea72d27e0a0cc68c2e95765903bc958c9add32e": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-attribute-source-move-rules-remedy",
+    "name": "Tool result: git bundle attribute source move rules remedy",
+    "desc": "Remedy telling the user to move attribute rules into a committed .gitattributes and remove the setting before retrying."
+  },
+  "a9022f3e97e2044582ef7faa598f30773c7356ea": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-attribute-source-remove-env-remedy",
+    "name": "Tool result: git bundle attribute source remove env remedy",
+    "desc": "Remedy telling the user to remove an environment-set git setting and restart Claude Code."
+  },
+  "95e034cb9ea86ce2ab5497f8e4d8c264a5ff9027": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-attribute-source-attributes-file-not-full-path",
+    "name": "Tool result: git bundle attributes file not a full path",
+    "desc": "Upload refusal cause when core.attributesFile is set to a non-absolute path."
+  },
+  "ce35464d1ba4391677c759c294e62ecd6237c57e": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-attribute-source-attributes-file-full-path-remedy",
+    "name": "Tool result: git bundle attributes file full path remedy",
+    "desc": "Remedy telling the user to set core.attributesFile to a full or ~/ path and retry."
+  },
+  "3b70fd9c68fe30a706f2011dc5d60b148eac2583": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-attribute-source-attributes-file-remedy",
+    "name": "Tool result: git bundle attributes file remedy",
+    "desc": "Remedy for core.attributesFile set outside the user's own config: move rules to .gitattributes or set it in user/system git config, then retry."
+  },
+  "2489ca9ab6bdb56660676ed2c3b33517b2cbb91f": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-attribute-source-ignore-case-set",
+    "name": "Tool result: git bundle core.ignoreCase set elsewhere",
+    "desc": "Upload refusal cause when core.ignoreCase, which affects .gitattributes matching, is set in an unfollowable place."
+  },
+  "6b603950bb568b3d0330d548d2e1b460dfcceb1c": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-attribute-source-ignore-case-remedy",
+    "name": "Tool result: git bundle core.ignoreCase remedy",
+    "desc": "Remedy telling the user to move core.ignoreCase into .git/config or ~/.gitconfig, then retry."
+  },
+  "44da94b35a6ec38caf692bb756bc6ef7372d9242": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-attribute-source-config-location-relative",
+    "name": "Tool result: git bundle config location relative path",
+    "desc": "Upload refusal cause when a config-locating environment variable is a relative path."
+  },
+  "e71f4f2308b17b82b3c857b7a2697853b56eac54": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-attribute-source-config-location-remedy",
+    "name": "Tool result: git bundle config location remedy",
+    "desc": "Remedy telling the user to set HOME (or the named variable) to a full path and restart Claude Code."
+  },
+  "66ef56ae864d2ac31f206fa3755a7b1a3f9621bf": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-attribute-source-env-config",
+    "name": "Tool result: git bundle env config attribute source",
+    "desc": "Upload refusal cause when environment-carried git config includes attribute-affecting settings or does not parse."
+  },
+  "6651e7b29647c68d29ea253cf84b51c33a4a7463": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-attribute-source-not-uploading",
+    "name": "Tool result: git bundle attribute source not uploading",
+    "desc": "Upload refusal wrapper explaining the upload cannot follow an attribute-affecting git setting, with cause and remedy slots."
+  },
+  "e5252460a70f1abd640d827ab6ee8dc8cf3701e7": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-linked-worktree-foreign-mount",
+    "name": "Tool result: git bundle linked worktree foreign mount",
+    "desc": "Linked-worktree refusal clause when the worktree's administrative directory has something mounted over it."
+  },
+  "aad0e4f38e4cd29d3196bf199f45b7daf1c1418b": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-linked-worktree-git-files-changed-while-read",
+    "name": "Tool result: git bundle linked worktree git files changed while read",
+    "desc": "Upload failure when a linked worktree's git files in .git changed while being read."
+  },
+  "2bd87f67e50768ac6f542916ccea0ef4cc1e9dfa": { "facing": "internal" },
+  "65024d450b3e7cd081103c323edb3553d596472f": { "facing": "internal" },
+  "82074750cac5fd1eaed4c05fb1289da254d5d9af": { "facing": "internal" },
+  "ef043fd9112b0ebdcd64f4cd2443651253bb38ee": { "facing": "internal" },
+  "91402f043bb596ab05350f6d4fbbd6bd3bd9de5c": { "facing": "internal" },
+  "9c03035c18a4340b3d5f541b01911d0cf924108f": { "facing": "ui" },
+  "22761a6b0d766566bf84135061261a17e4e287c2": {
+    "facing": "model",
+    "id": "tool-parameter-websearch-mode",
+    "name": "Tool parameter: WebSearch mode",
+    "desc": "WebSearch mode parameter description contrasting the standard and extended search modes."
+  },
+  "c42a769e04fb0e195baab707adf8518f09fca2b1": {
+    "facing": "model",
+    "id": "tool-description-bash-output-lost-temp-quota-consequence",
+    "name": "Bash output lost: temp quota consequence clause",
+    "desc": "Clause saying the command's output was lost and it may have failed because it could not write."
+  },
+  "41dc1b8d5d67f9a5528f1108cab3411c27a3a1f3": {
+    "facing": "model",
+    "id": "tool-description-bash-output-lost-temp-quota-restart-remedy",
+    "name": "Bash output lost: restart with CLAUDE_CODE_TMPDIR remedy",
+    "desc": "Remedy telling to restart Claude Code with CLAUDE_CODE_TMPDIR on another filesystem."
+  },
+  "b7cc99beda2b91d09db9ceabf17305713dc6bfd1": {
+    "facing": "model",
+    "id": "tool-description-bash-output-lost-edquot",
+    "name": "Bash output lost: disk quota full (EDQUOT)",
+    "desc": "Bash output-lost message when the disk quota on the temp directory's filesystem is full."
+  },
+  "7a5960f0bd64f82ac3ee67f435893f8b735649b8": {
+    "facing": "model",
+    "id": "tool-description-bash-output-lost-enospc",
+    "name": "Bash output lost: temp filesystem full (ENOSPC)",
+    "desc": "Bash output-lost message when the temp directory's filesystem or quota is full."
+  },
+  "c005703520b50d5a99c98680fc69a00b5865a233": { "facing": "internal" },
+  "edc94e2ce00d66103476c9290a4414a548012ce2": { "facing": "internal" },
+  "3ec6334409763fbfbd28b24533a1a1915fe651c7": { "facing": "internal" },
+  "5903eb1f01ea3f4b38b879a4b98d3c71e40cb54b": {
+    "facing": "model",
+    "id": "tool-result-webfetch-someone-elses-artifact-outside-org-notification-ask-lead",
+    "name": "Tool result: WebFetch outside-org artifact notification ask lead",
+    "desc": "Lead of the permission ask when a new-comments notification prompts reading an artifact created outside the user's organization."
+  },
+  "704e7c5813e8b84e6066c1eace2f08d0b8e43464": {
+    "facing": "model",
+    "id": "tool-result-webfetch-someone-elses-artifact-network-off-clause",
+    "name": "Tool result: WebFetch someone-else's artifact network-off clause",
+    "desc": "Conditional clause noting the session's network access is off, appended to the outside-org artifact ask lead."
+  },
+  "fec8b1d1b08cf3b70fa5ae354c6f73eacf4c57cd": {
+    "facing": "model",
+    "id": "tool-result-mcp-connect-disabled-for-project",
+    "name": "Tool result: MCP connect disabled for this project",
+    "desc": "MCP connect status line listing servers disabled for this project and how the user can re-enable them via /mcp."
+  },
+  "58ee75b887d08b9934f2f62f7115831dbc7ca537": { "facing": "internal" },
+  "b01d8c7dbed735c06b9bb4939516ab8e9ba68c8c": { "facing": "ui" },
+  "4d2a91791e798d3845f374e78e54bcd39073a313": { "facing": "internal" },
+  "a8296046de75b9d567dabfba7e142f53f559db24": { "facing": "internal" },
+  "393c357ef7ee353a3f000446209a36db79bc1977": { "facing": "internal" },
+  "710a2b245fcc90ddabd316769d4e93a743aac9f7": { "facing": "internal" },
+  "9efe982053bb53faa2748d37fd36bd0a8cd529df": { "facing": "ui" },
+  "223112287aa241936055ccf83f3af79c9376b3f0": { "facing": "ui" },
+  "d04331b3e525cd00b5bbd5a51bc0329881e0f07d": { "facing": "internal" },
+  "ce98256da5388e7905b93f51e251da9ec024d1c2": { "facing": "ui" },
+  "baf3a52b12a2642c5dfa29b58307a14ca71a5689": { "facing": "ui" },
+  "009d0ac47f7cc7c9e5c9b3ea4e748cedc09ac915": { "facing": "ui" },
+  "65ce1585a965adc6f9657bc6b87d1054862f47eb": { "facing": "ui" },
+  "87c2110f9960f4cb89f716fbe5dd0320b13f37c4": {
+    "facing": "model",
+    "id": "slash-command-plugin-uninstall-source-not-read-untrusted-workspace",
+    "name": "Slash Command: Plugin Uninstall — Settings File Not Read (Untrusted Workspace)",
+    "desc": "Yao() settings-source clause for a file not read because the workspace is not yet trusted; interpolated into the /plugin uninstall \"was not uninstalled\" result the model reads."
+  },
+  "ff7ffa4fa858fcaab5179cb047d1f56436a48b93": {
+    "facing": "model",
+    "id": "slash-command-plugin-uninstall-source-add-dir-settings",
+    "name": "Slash Command: Plugin Uninstall — Settings Source Is an Added Directory",
+    "desc": "Yao() clause naming a settings file from an --add-dir directory, which uninstall does not edit; part of the plugin uninstall refusal the model reads."
+  },
+  "b97d465ba73707cb92da84671ddb1db53f80fd1c": {
+    "facing": "model",
+    "id": "slash-command-plugin-uninstall-source-other-folder-settings",
+    "name": "Slash Command: Plugin Uninstall — Settings Source Is Another Folder",
+    "desc": "Yao() clause naming another folder's settings file, which uninstalling from here does not edit; part of the plugin uninstall refusal the model reads."
+  },
+  "10be72231cfc6c57984dcc1975e5d599ce28d20f": {
+    "facing": "model",
+    "id": "slash-command-plugin-uninstall-source-managed-settings",
+    "name": "Slash Command: Plugin Uninstall — Settings Source Is Managed Settings",
+    "desc": "Yao() clause saying the computer's managed settings enable the plugin and only an administrator can change them; part of the plugin uninstall refusal the model reads."
+  },
+  "6f486c122db16ce905ba63a72517f336a35ab0d1": {
+    "facing": "model",
+    "id": "slash-command-plugin-uninstall-source-flag-settings-file",
+    "name": "Slash Command: Plugin Uninstall — Settings Source Is the --settings File",
+    "desc": "Yao() clause for a --settings file that is on disk now and that later sessions would read, telling the user to switch the plugin off there; part of the uninstall refusal."
+  },
+  "1727a8ea3cb9a1ef7cb3bcd534a6765149be3659": {
+    "facing": "model",
+    "id": "slash-command-plugin-uninstall-source-flag-settings-given",
+    "name": "Slash Command: Plugin Uninstall — Settings Given at Start-Up",
+    "desc": "Yao() clause for settings passed with --settings or by the launching application, which uninstall cannot change; tells the user to switch it off where they are given or restart without them."
+  },
+  "40ce16a492f058ceb07193d56a860840421ec1a0": {
+    "facing": "model",
+    "id": "slash-command-plugin-install-invalid-id-npm-first-half",
+    "name": "Slash Command: Plugin Install — Invalid npm Plugin Id",
+    "desc": "Hkt() reason for an @npm plugin id whose first half is not a package name the npm marketplace accepts; interpolated into the invalid-id install refusal."
+  },
+  "3bd25056941c73cd82e152038fba36859b75f851": {
+    "facing": "model",
+    "id": "slash-command-plugin-install-dependency-invalid-id",
+    "name": "Slash Command: Plugin Install — Dependency Has Invalid Id",
+    "desc": "Install refusal when the requested plugin depends on a plugin whose id is invalid, followed by the reason the id is invalid."
+  },
+  "101eab9b6d52b0e6866a3f9c6b04098037574d81": {
+    "facing": "model",
+    "id": "slash-command-plugin-install-invalid-id",
+    "name": "Slash Command: Plugin Install — Invalid Plugin Id",
+    "desc": "Install refusal when the plugin's own id is invalid, followed by the reason the id is invalid."
+  },
+  "f4d210690516b982b1aa3cd1fa07d321acc50cce": {
+    "facing": "model",
+    "id": "slash-command-plugin-install-ui-not-switched-needs-fresh-listing",
+    "name": "Slash Command: Plugin Install (Menu) — Not Switched, Needs Fresh Listing",
+    "desc": "Error from the /plugin menu install path when switching a plugin to another marketplace copy needs a fresh marketplace listing; reaches the model through the bulk-install result."
+  },
+  "59b5e1637ae34d4246edb072bbb810760788d32e": { "facing": "ui" },
+  "d8598293e9f323e5e8f6ee2ed6e2b6c1036a171c": { "facing": "internal" },
+  "8810dc32955103206131676c09d053727c0e218e": {
+    "facing": "model",
+    "id": "system-reminder-coordinator-message-waiting-end-turn",
+    "name": "System Reminder: Coordinator Message Waiting Until Turn Ends",
+    "desc": "Critical reminder telling the agent a message from the project's coordinator session is queued and will arrive after it ends the current turn (default text; tengu_harmonic_cook can override)."
+  },
+  "46140541f95ef1f6732242fe55514e607b1b631d": {
+    "facing": "model",
+    "id": "system-reminder-mcp-servers-need-auth-non-interactive-lead",
+    "name": "System Reminder: MCP Servers Need Auth — Non-Interactive Lead",
+    "desc": "Lead sentence interpolated as ${Pt} into the MCP needs-auth reminder when the session is non-interactive, saying Claude cannot run the OAuth flow here."
+  },
+  "7d7c351a1a6e53926d43d3f66a46f2299af3e271": {
+    "facing": "model",
+    "id": "system-reminder-mcp-servers-need-auth-authorize-via-mcp",
+    "name": "System Reminder: MCP Servers Need Auth — Authorize via /mcp",
+    "desc": "Where-to-authorize clause (${Nt}) in the MCP needs-auth reminder when iy() is true: claude.ai connectors via their connector settings, other servers via /mcp."
+  },
+  "fe1ef87bfb80f95fe6fc7cd9a20ba697e62546f7": {
+    "facing": "model",
+    "id": "system-reminder-mcp-servers-need-auth-authorize-via-claude-mcp-or-interactive",
+    "name": "System Reminder: MCP Servers Need Auth — Authorize via claude mcp or Interactive /mcp",
+    "desc": "Where-to-authorize clause (${Nt}) in the MCP needs-auth reminder for non-interactive sessions: claude.ai connectors via connector settings, other servers via `claude mcp` or /mcp in an interactive session."
+  },
+  "eebadeeaf12170f08183353671ad984310512918": { "facing": "internal" },
+  "ed0da0311559613adf40e60d398e76eae673c1d2": { "facing": "internal" },
+  "7195ce911f09bf697956e784c837a8f0b0e67952": { "facing": "internal" },
+  "885cffd03f472d53ef345fcd3d51741ec02a6eb6": { "facing": "internal" },
+  "490dfa9cb25ed3dce8f7221a20e2eb42d82159be": { "facing": "ui" },
+  "846d97fdee50c1d24a7cc249d49846ea70f48ea0": { "facing": "ui" },
+  "8c9cbf265597da887325d6d952534a00f860f9fb": { "facing": "ui" },
+  "32032138d2c612de1d7386997f32d67d171284f8": { "facing": "ui" },
+  "b4d576e42cc37cb6feb338b499bcdcabadea0c27": { "facing": "internal" },
+  "7b937ebe8f1c4e3fe3c5bdb135aa2cf866d1d55a": {
+    "facing": "model",
+    "id": "tool-result-skill-permission-rule-covers-only-synced-skills",
+    "name": "Tool Result: Skill Permission — Rule Covers Only Synced Skills",
+    "desc": "Held-back Skill() allow-rule explanation that the rule only covers skills synced from the user's claude.ai account; appended to the Skill tool's permission ask."
+  },
+  "6b82844c92e30b73bccacfb2bcc6e8f5c74a4535": {
+    "facing": "model",
+    "id": "tool-result-skill-permission-rule-reserved-synced-namespace",
+    "name": "Tool Result: Skill Permission — Rule Does Not Cover Reserved Synced Namespace",
+    "desc": "Held-back Skill() rule explanation that the rule does not cover \"<prefix>:\" names reserved for claude.ai-synced skills; part of the Skill permission ask."
+  },
+  "aece758c026052993521dc440449d6ef1da8fd30": {
+    "facing": "model",
+    "id": "tool-result-skill-permission-rule-nonholder-needs-approval",
+    "name": "Tool Result: Skill Permission — Non-Holder Needs Approval Each Time",
+    "desc": "ue() nonholder case: the rule cannot pre-approve this skill because it comes from a plugin or is not synced, so it needs approval each time."
+  },
+  "b727f4bd86e15cf315846c332c76859dc0cfb0d5": {
+    "facing": "model",
+    "id": "tool-result-skill-permission-rule-covers-only-prefixed-names",
+    "name": "Tool Result: Skill Permission — Rule Covers Only Prefixed Names",
+    "desc": "ue() boundary case for a reserved prefix: the Skill() rule only covers names starting with \"<prefix>:\", with advice to add Skill(<name>)."
+  },
+  "c326a02f74bdde18cd020c4524f7d769c012ec80": {
+    "facing": "model",
+    "id": "tool-result-skill-permission-rule-covers-prefix-and-prefixed-names",
+    "name": "Tool Result: Skill Permission — Rule Covers Prefix and Prefixed Names",
+    "desc": "ue() boundary case: the Skill() rule only covers the prefix itself and names starting with \"<prefix>:\", with advice to add Skill(<name>)."
+  },
+  "1e9376c5a8de23c266a1c01cb0f1b796e631bda9": {
+    "facing": "model",
+    "id": "tool-result-skill-permission-rule-covers-old-name",
+    "name": "Tool Result: Skill Permission — Rule Covers Old Skill Name",
+    "desc": "ue() renamed case: the Skill() rule covers the skill's former name; tells the user to add the new name to allow it without asking."
+  },
+  "1fd18792225b4e9a9850ea7b2d61f643152ef6f8": {
+    "facing": "model",
+    "id": "tool-result-skill-not-loaded-proceed-without",
+    "name": "Tool Result: Skill Could Not Be Loaded",
+    "desc": "Skill tool validation error when a skill's definition could not be loaded, telling the model to proceed without it."
+  },
+  "45da70ef9080281e04abba10621b7d26999f3f7c": { "facing": "internal" },
+  "e366962810bdbb54bdf2bd3c8103dc89ad771fdd": {
+    "facing": "model",
+    "id": "data-artifact-type-design-first-publish-first",
+    "name": "Data: Artifact Type (Design) — First Publish Contents",
+    "desc": "The design type's firstPublish.first value: the entry artboard, project/Main.dc.html, and any support file it links to, written and published right after the index."
+  },
+  "c8d5c962544617cf8debdb7108657c19294eabaf": {
+    "facing": "model",
+    "id": "data-artifact-type-files-publish-call-args",
+    "name": "Data: Artifact Type — On-Files Publish Call Arguments",
+    "desc": "tt()'s publish-call argument fragment (`url`, `root`, `file_path` of the index, `files`:) interpolated into the on-files write-and-publish instructions for a new typed artifact."
+  },
+  "b017c37467ace43ee0c44133a47bb3f78f6380e6": {
+    "facing": "model",
+    "id": "data-artifact-type-files-in-brief-one-publish",
+    "name": "Data: Artifact Type — Files In Brief, One Publish",
+    "desc": "nt() summary for a type with no firstPublish: the index with its createdOnFiles object and the type's files, sent in one publish; interpolated into the new-content-on-files note."
+  },
+  "1b99461f555246ff84732c9b763afd9dfc32975a": {
+    "facing": "model",
+    "id": "data-artifact-type-files-in-brief-first-publish-then-rest",
+    "name": "Data: Artifact Type — Files In Brief, First Publish Then Rest",
+    "desc": "nt() summary for a type with firstPublish: the index with its createdOnFiles object and the entry file in a first publish, then the rest; interpolated into the new-content-on-files note."
+  },
+  "3ea36ee3c30f27c3927468191adb6f1f3297c6cc": {
+    "facing": "model",
+    "id": "data-artifact-type-new-content-on-files-note",
+    "name": "Data: Artifact Type — New Content On Files Note",
+    "desc": "Bracketed note appended after the type's instructions telling the model the new Artifact's content goes in files under project/ (summary interpolated from nt()), not in any store document."
+  },
+  "48d33726b60276b124b227b9d3301af7a52bc596": { "facing": "ui" },
+  "964fa3c69fe1f88dcc8606e6f8c2f0f1211ca81a": { "facing": "internal" },
+  "eae3cb0eb7dddcff5abdfea4bbfd6211d59309c9": { "facing": "internal" },
+  "4aa02f5d86e7c4900812e60200b861c7fdc2a274": { "facing": "internal" },
+  "13a470d93edec38eb4b9477321a7c684e41c1a83": { "facing": "internal" },
+  "4a8ed6f0c7dceba2401b3b283da7a3083c7e1bb7": { "facing": "ui" },
+  "07c85f79c5daf0edf693f4ab9012d66de632df3f": {
+    "facing": "model",
+    "id": "slash-command-plugin-install-not-switched-needs-fresh-listing",
+    "name": "Slash Command: Plugin Install — Not Switched, Needs Fresh Listing",
+    "desc": "Install refusal from the core install flow when switching a plugin to another marketplace copy needs a fresh listing; /plugin install hands it to the model."
+  },
+  "e7c27d18ba132afddfc9c0f156ce4923b071a7d4": {
+    "facing": "model",
+    "id": "slash-command-plugin-install-already-installed",
+    "name": "Slash Command: Plugin Install — Already Installed",
+    "desc": "Success message from /plugin install when the plugin is already installed at the requested scope, with optional manually-installed marker and version/refresh suffixes."
+  },
+  "5460ae97e450d5443e14b15560abac215f2a449e": {
+    "facing": "model",
+    "id": "slash-command-plugin-uninstall-settings-change-failed-suffix",
+    "name": "Slash Command: Plugin Uninstall — Settings Change Failed Suffix",
+    "desc": "Suffix appended to the plugin-not-uninstalled refusals when the settings write also failed, carrying the error message."
+  },
+  "328b9633cedd0ccc3127726705e0c5894084f9d1": { "facing": "internal" },
+  "616a244e3911ac6601776622a34f3cf4f9108e5b": { "facing": "internal" },
+  "2c530c5c0c10da53d11c84555ae408a3bef3b43d": {
+    "facing": "model",
+    "id": "tool-result-artifact-notification-call-cowork-no-responder-reason",
+    "name": "Tool Result: Artifact Notification Call — Cowork No Responder Reason",
+    "desc": "Safety-check decisionReason on the deny of an Artifact call made while a new-comments notice is pending, on a turn the user's message did not start, in a Cowork session with no one to answer the prompt."
+  },
+  "6b469af84027d3636e393b64c9105e06544ecab4": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-unowned-no-consent-surface",
+    "name": "Tool Result: Artifact Read — Unowned, No Consent Surface",
+    "desc": "Deny message when reading an artifact the user does not own (or whose ownership is unconfirmed) needs a person's approval and no one can answer the prompt in this session; tells Claude to tell the user in chat."
+  },
+  "607dc8647a2746494b1cd07db784419b3d7d11b2": {
+    "facing": "model",
+    "id": "tool-result-webfetch-artifact-notification-fetch-consent-ask",
+    "name": "Tool Result: WebFetch Artifact — Notification-Prompted Fetch Consent Ask",
+    "desc": "WebFetch consent ask for fetching an artifact prompted by the new-comments notification, noting its content enters this conversation; becomes the tool result on decline."
+  },
+  "263efcc8dbfcc82bcd8de82261abe14313e8e76a": {
+    "facing": "model",
+    "id": "tool-result-artifact-quickstart-install-tokens-json",
+    "name": "Tool Result: Artifact Quickstart — Install Design System tokens.json",
+    "desc": "Artifact quickstart instruction to install the design system by sending its saved tokens.json in the first call that publishes the deliverable, plus the slides designSystems unpinned note."
+  },
+  "22486cd361df9090c99622f1a1ae710c1154b0c6": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-state-set-foreign-owner",
+    "name": "Slash Command: Plugin Validate — Hooks Module state.set Foreign Owner",
+    "desc": "Plugin types/validate problem reported when a hooks module's $.state.set writes a key owned by another plugin."
+  },
+  "aee1c19f6d12008f5e33ea9e1dfa748e2707447f": {
+    "facing": "model",
+    "id": "slash-command-mcp-reconnect-disabled-for-project-terminal",
+    "name": "Slash Command: /mcp Reconnect — Server Disabled for Project (Terminal)",
+    "desc": "/mcp reconnect result when the named server is disabled for this project and iy() holds; tells the user to run /mcp in a terminal where this session runs to bring it back."
+  },
+  "9877902276e20f19bbde86002b89c71d99997889": {
+    "facing": "model",
+    "id": "slash-command-mcp-reconnect-all-disabled-for-project-terminal",
+    "name": "/mcp Reconnect All — Servers Disabled for Project (Terminal)",
+    "desc": "/mcp reconnect-all fragment counting servers disabled for this project (iy() branch), telling the user to run /mcp in a terminal where this session runs to bring them back."
+  },
+  "af64f52eb88e92fcf57c27c57ba4ad72428f6da6": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-pr-monorepo-unsupported",
+    "name": "Slash Command: Ultrareview — PR Review Unsupported in This Repository",
+    "desc": "Ultrareview precondition error when PR review is blocked for this (monorepo) repository, suggesting /code-review <PR> for a local review instead."
+  },
+  "55c63ae604a2dc22294b64563e78e03f1a8ee2d0": {
+    "facing": "model",
+    "id": "data-dir-sync-gitignore-busy",
+    "name": "Data: Dir Sync — .gitignore Busy",
+    "desc": "I_t() reason for a .gitignore that could not be read because it was busy or in use; interpolated into directory-sync refusals the model reads."
+  },
+  "9acefd542161b785ec2dd32e6dd307f67ca7506d": {
+    "facing": "model",
+    "id": "data-dir-sync-gitignore-too-many-rules-above",
+    "name": "Data: Dir Sync — .gitignore Too Many Rules With Those Above",
+    "desc": "I_t() reason for a .gitignore that, together with the ones above it, holds more rules than sync applies to one path; part of directory-sync refusals."
+  },
+  "79db6e9d54066ff0c141c5993b4d0330ae039d61": {
+    "facing": "model",
+    "id": "data-dir-sync-nested-gitignores-too-large",
+    "name": "Data: Dir Sync — Nested .gitignore Files Too Large",
+    "desc": "Directory-sync refusal detail when the .gitignore files in the folder's subdirectories together exceed what sync reads (rule-count or MiB cap)."
+  },
+  "ec4a46cee978308dd6434b778dbd1453dc9d4ee9": { "facing": "ui" },
+  "5b029715ce1d7cb7ed265a282fe37ea7d84adb82": { "facing": "ui" },
+  "a6fbb0c726964812672fe6cd99f5733821b04803": { "facing": "ui" },
+  "ef8fa3bd6f8b703147ca55e1f4107da449dc5aff": { "facing": "ui" },
+  "6abc4506c666e6b495101efc619b1e64244711cc": { "facing": "ui" },
+  "997831f241f4d6f1f38036deacbf201d4e96fc10": { "facing": "internal" },
+  "f54c7d9f236edb85fed97baf38dab7e40de73d1c": { "facing": "ui" },
+  "6e57d046d8de46ff03efff991e40f328c8a3658c": { "facing": "ui" },
+  "2c3bcb0ccda12407e5983ba45d78e795be935043": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-halt-line-start-gone",
+    "name": "System Reminder: Dir sync halt line — start snapshot gone",
+    "desc": "Halt line sent to the cloud session when the laptop's starting snapshot for a folder session is gone from its local sync store, so only a new cloud session from that folder can sync again."
+  },
+  "55af1087bbaa94c5a60f56d0ab0bf5ba1e4162b0": { "facing": "ui" },
+  "389275a0f95236ed570436269c924e1f4b1964ab": { "facing": "ui" },
+  "d30bad50daecddcd31a1e2d4bf2dffa448c55270": { "facing": "ui" },
+  "10c8c63eb173b30e687924a96a8d2b7c3fb8f27c": { "facing": "ui" },
+  "536611fb0ba9d96362d603ecae33ede0528ab470": { "facing": "ui" },
+  "08aa05424de9d16044288362b4a9577ebac80f21": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-file-summary-only-whatever-approved",
+    "name": "Tool Result: Artifact read file — summary only whatever is approved",
+    "desc": "Clause in the Artifact read file result saying that the text of a file of a cross-org or locked artifact only ever comes back as a summary, regardless of user approval."
+  },
+  "ce3a3bb145d894500a221dac20e96d46bb336a4b": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-nontext-saved-untrusted",
+    "name": "Tool Result: Artifact read non-text file saved (untrusted)",
+    "desc": "Artifact read result for a non-text file: notes it is not text and was saved to disk, optionally marking the contents untrusted."
+  },
+  "fcb870b49a311685c3ae37da3e7d904399ffc8a6": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-file-control-bytes-save-failed",
+    "name": "Tool Result: Artifact read file — control bytes, save failed",
+    "desc": "Artifact read file result when the file contains raw terminal control bytes (nothing inlined) and saving it to disk failed."
+  },
+  "fb8eb22c64bcee5db16f14d4275aa16077ffc097": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-file-control-bytes-saved",
+    "name": "Tool Result: Artifact read file — control bytes, saved to disk",
+    "desc": "Artifact read file result when the file contains raw terminal control bytes: nothing is inlined, the full file is saved to a path, and the model is told to Read it."
+  },
+  "e68df88664839d96e9943e55649786f9afca1c63": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-full-file-save-failed-truncated-head",
+    "name": "Tool Result: Artifact read full-file save failed, truncated head",
+    "desc": "Artifact read file result clause when saving the full file to disk failed, so only a truncated head follows."
+  },
+  "9ba777a0b9ebb2204b9e35e48be1775ced6a38d4": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-full-page-readable-after-approval-clause",
+    "name": "Tool Result: Artifact read — full page readable after approval",
+    "desc": "Clause in an Artifact read summary result saying the full page can be read with the Artifact tool's read action on this url, which first asks the user to approve reading the artifact."
+  },
+  "6d24aff2a5ba7249a7ea47f62f3ddd4753e56aec": {
+    "facing": "model",
+    "id": "data-artifact-read-ownership-header",
+    "name": "Data: Artifact read ownership header",
+    "desc": "Ownership and provenance label in the Artifact read result header for an artifact the user owns: audience, Artifact-type origin, outside-org, co-writer or not-published-from-session qualifiers."
+  },
+  "e17e5415c83c45d061c194ac9669bf3cc71eca75": {
+    "facing": "model",
+    "id": "data-artifact-read-not-published-from-session-qualifier",
+    "name": "Data: Artifact read not-published-from-session qualifier",
+    "desc": "Ownership-header qualifier noting that an owned artifact may include content not published from this session."
+  },
+  "a9332a7e739ca4cdbc69de8f1576fba85b794af4": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-saved-viewed-once-clause",
+    "name": "Tool Result: Artifact HTML saved — viewed once Read clause",
+    "desc": "Clause saying this artifact version counts as viewed only once the model has Read every line of the saved file."
+  },
+  "7e1343a22504b2d666a09934a6fa33b232b2c13d": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-saved-untrusted-provenance-clause",
+    "name": "Tool Result: Artifact HTML saved — untrusted provenance clause",
+    "desc": "Wrapper clause after the saved-HTML path that picks the provenance note (type page, others' edits, co-writer/outside-org content, or not published from this session) telling the model to treat the file as untrusted data when Read."
+  },
+  "9ced964f344e52db532135467aaf894d3b90879c": {
+    "facing": "model",
+    "id": "data-artifact-type-page-read-note",
+    "name": "Data: Artifact type page read note",
+    "desc": "Note that the saved file is the Artifact type's page and its contents must be treated as untrusted data when Read."
+  },
+  "2e012e8b71fdcad1d9b5f9ba1f4e9b9c557e07a1": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-saved-others-edits-clause",
+    "name": "Tool Result: Artifact HTML saved — others' edits clause",
+    "desc": "Note that the saved artifact file may contain others' edits and its contents are untrusted data when Read."
+  },
+  "a006459a331e70c1a71421b510339314b4acc9ab": {
+    "facing": "model",
+    "id": "data-artifact-cowritten-read-note",
+    "name": "Data: Artifact co-written read note",
+    "desc": "Note that the saved artifact file may include co-writer or outside-organization content, to be treated as untrusted data when Read."
+  },
+  "390605be33ee1fad38db01b780c31e204748e1af": {
+    "facing": "model",
+    "id": "data-artifact-not-published-from-session-read-note",
+    "name": "Data: Artifact not-published-from-session read note",
+    "desc": "Note that the saved artifact file was not published from this session and may include content the model did not write, so its contents are data when Read."
+  },
+  "0a065925499fcb6cf64683009c7d3ee636294265": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-saved-read-before-republishing-clause",
+    "name": "Tool Result: Artifact HTML saved — Read before republishing clause",
+    "desc": "Clause that combines the provenance note with an instruction to Read the saved file before republishing."
+  },
+  "b4a8c60eb45e1160c8f06a9a8ef72b88e1547fff": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-saved-treat-as-data-fallback-clause",
+    "name": "Tool Result: Artifact HTML saved — treat as data fallback clause",
+    "desc": "Fallback clause used when no provenance note applies: treat the saved file's contents as data when Read, and Read it before republishing for an artifact."
+  },
+  "d79acd51816d143805dcc656e8706460776dfede": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-escaped-copy-not-exact-bytes-clause",
+    "name": "Tool Result: Artifact HTML escaped copy — not exact bytes clause",
+    "desc": "Clause combining the escape note (tag-like sequences carry an inserted backslash) with a warning that the inline copy is not the exact bytes and must not be republished."
+  },
+  "46dad3e91f31be950ab9a313dee31de31c51f877": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-not-exact-bytes-no-republish-suffix",
+    "name": "Tool Result: Artifact HTML — not exact bytes, no republish suffix",
+    "desc": "Suffix warning that the escaped inline copy is not the exact bytes, so the model must not republish from it."
+  },
+  "f174f32043fdc3dd9e43a263f6e6e85a1990e56b": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-control-bytes-save-failed",
+    "name": "Tool Result: Artifact HTML — control bytes, save failed",
+    "desc": "Artifact read HTML result when the page or file contains raw terminal control bytes (nothing inlined) and saving the full HTML to disk failed."
+  },
+  "351e2591d120643eaedc704498646a22cffbb6b1": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-preamble",
+    "name": "Tool Result: Artifact HTML preamble (save failed)",
+    "desc": "Preamble of an Artifact read HTML result when saving the full HTML to disk failed, optionally followed by the escaped-copy/not-exact-bytes note."
+  },
+  "8e5181d9a97b55631ea3f5d308e6c6811047c4f8": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-truncated-no-republish",
+    "name": "Tool Result: Artifact HTML truncated — no republish",
+    "desc": "Notice that truncated raw HTML follows, not the whole artifact or file, so the model must not republish from it."
+  },
+  "8ea72a456639dd387ddb2cc2e6a1f2b102823e8d": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-control-bytes-saved",
+    "name": "Tool Result: Artifact HTML — control bytes, saved to disk",
+    "desc": "Artifact read HTML result when the page or file contains raw terminal control bytes: nothing is inlined, the full HTML is saved, and the model is pointed at that file."
+  },
+  "0c928b7cbe0ab62756fcf069b353a081ecd6b4bc": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-saved-head-follows-line",
+    "name": "Tool Result: Artifact HTML saved — head follows line",
+    "desc": "Artifact read HTML result line when the full HTML was saved to disk but is too long to inline: names the saved file, warns that the head below is not the whole artifact or file, and says the head follows."
+  },
+  "22f2851de8fb5919e2038823b222fffe8d447564": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-exact-saved-clause",
+    "name": "Tool Result: Artifact HTML — exact HTML saved clause",
+    "desc": "Clause for an escaped inline copy: gives the escape note, says the exact HTML is saved to a path, and appends the provenance/treat-as-data note."
+  },
+  "cea01479f6e6e6e67b53739690c048e49448d3b3": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-exact-save-failed-clause",
+    "name": "Tool Result: Artifact HTML — exact HTML save failed clause",
+    "desc": "Clause for an escaped inline copy when saving the exact HTML to disk failed, followed by the escaped-copy/not-exact-bytes warning."
+  },
+  "ab4219c01113af787dedf241e1bbdcc8b7eb1bab": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-exact-saved-truncated-no-republish",
+    "name": "Tool Result: Artifact HTML exact-saved — truncated, no republish",
+    "desc": "Escaped-copy branch notice that truncated raw HTML follows after the exact-save clause, not the whole artifact or file, so the model must not republish from it."
+  },
+  "750b1f0e679f1de2ed9e83a8af3bfe16635befa8": { "facing": "ui" },
+  "2eb79da9cbffde865818ebcb166e984033bb3155": { "facing": "ui" },
+  "82af101f869905c84ad20e02f9c539315d957b84": { "facing": "ui" },
+  "50a01b13d08b10ac25123611362e4177bde8288a": { "facing": "ui" },
+  "86e59724ae7b327949371c04ae9b7fd82a5498e9": { "facing": "ui" },
+  "51fe8ea3d2fa875022e7ec4c1d6c0da324fe31dc": { "facing": "internal" },
+  "a1d9ba65a1b668138bda35a26171f52dbf89384c": { "facing": "internal" },
+  "f331ce85db502609e0cb1250df1b1f03ff38581c": { "facing": "internal" },
+  "9979b7e43958e28479fc86e29f304c26aa293745": { "facing": "ui" },
+  "b8ba7c6710a55e678487b6a790cb0933464d3d74": { "facing": "internal" },
+  "cc5aafa1f79eba31ca44b3fbc3a95a7a196e7447": { "facing": "internal" },
+  "1992ee1f4d65f02efdd9d949180414c6c615bf6c": { "facing": "internal" },
+  "71b9c9c5f27b981367cf9b023051214cf1df065f": { "facing": "internal" },
+  "58d353eaeff8b461b24070d5e04f5553f2d0d1c1": { "facing": "ui" },
+  "41fbb1aa97000db37e316737055c4ce09140c617": { "facing": "internal" },
+  "e6a6157181963c3299467037fba49dc88cf1aa8f": { "facing": "ui" },
+  "e0a70e17a4c171b36e3eaf5b27d1b240a0bd56e8": { "facing": "ui" },
+  "02bebd3692df2a06049912cc24c4b2c38ed753c9": { "facing": "ui" },
+  "0648510d730da6688e1d4f7d04e0e23735d159d2": { "facing": "ui" },
+  "31daff43f3d4a47fb58bbd0937ed72e95f6c0f51": { "facing": "ui" },
+  "d9e4186b12346669b9a6591b382b08e7ab51aaab": { "facing": "ui" },
+  "9e1f4e25ef3409b71c7b8a46565c599de0ccd282": { "facing": "internal" },
+  "3556c8a1b2506e121a7118d013092e524ff4f18b": { "facing": "internal" },
+  "e0ea598205bb080d2e282e990e3dcc5f8bb06086": { "facing": "internal" },
+  "cde1645bee43bff6da98725f816dc5be1e706f93": { "facing": "ui" },
+  "0d257b2432808b11756d3d367cf5a40305de3291": { "facing": "ui" },
+  "0e5dd9c920b0b11cebd7281bd46dcc7ed7de243b": { "facing": "internal" },
+  "c82cf17bbb393a0bb127bb7e5739a67818218cd9": { "facing": "internal" },
+  "d475ba3615e7b87d1419001ff10ca6b51847d288": { "facing": "internal" },
+  "dd1bac08374c7b107aa6ba0639b1025191fdaf95": { "facing": "ui" },
+  "8bab7767df1c288647579c0e3aba44810bc70b00": { "facing": "ui" },
+  "1586cf23eac8e9ba4a215197886f40cae5123c02": { "facing": "ui" },
+  "2fe6b236bbaa6ad96a4a9641561407e756d36f88": { "facing": "ui" },
+  "f151a67ecb7cad4c0e7840ead638e7ff85a45cab": { "facing": "ui" },
+  "3c24090530914674a8dcdc8ac98dc0d7759588ab": { "facing": "ui" },
+  "15092100fdef4b69324ecae1b6e60b2fe4b3a732": { "facing": "ui" },
+  "eece01a3614710dadfbffad96622e43ddf68a770": { "facing": "ui" },
+  "6f231f2d9bd2a2e9c789a123c753da259bc82e4e": {
+    "facing": "model",
+    "id": "tool-result-artifact-edit-db-notification-triggered-needs-yes",
+    "name": "Tool Result: Artifact DB Edit Notification-Triggered Needs Yes",
+    "desc": "Deny message for an artifact database edit prompted by the new-comments notification that no one can approve. It says Claude wants to edit a document in the artifact's database and that the edit reads back rows written by viewers."
+  },
+  "a62a43e75a7e8b516d973965113dd8b12ce047dc": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-read-not-saved-line",
+    "name": "Tool Result: Artifact DB Read Not Saved Line",
+    "desc": "Line in a read_db out_dir result that lists returned documents that were not saved and why, with a hint to read them without out_dir."
+  },
+  "e5f1ba2114206e83800d5207cf7146dc9cc2eb8d": {
+    "facing": "model",
+    "id": "tool-result-artifact-label-cut-note",
+    "name": "Tool Result: Artifact Label Cut Note",
+    "desc": "Note appended to the Artifact result when coerceInput cut an over-long `label` to the maximum length. It reminds Claude that a label is a few words naming the version."
+  },
+  "0736712c028ebdc1bd512089cba01b0724b0b69d": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-refused-live-version-checked-clause",
+    "name": "Tool Result: Artifact Publish Refused Live Version Checked Clause",
+    "desc": "Clause in the stale-publish refusal saying the named version is still the live version (checked just now)."
+  },
+  "6c87506f75509eb1c8272f3bb0b5bfa38642b94b": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-refused-source-saved-unread-clause",
+    "name": "Tool Result: Artifact Publish Refused Source Saved Unread Clause",
+    "desc": "Clause in the stale-publish refusal that follows the path where the live version's source was saved: a file Claude may not have read, which it should Read first."
+  },
+  "95f6473c00201449f91db36aa735e3a2292f3446": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-refused-merge-or-resend-tail",
+    "name": "Tool Result: Artifact Publish Refused Merge Or Resend Tail",
+    "desc": "Closing guidance of the stale-publish refusal: merge anything missing from the live version and publish, or resend unchanged if the content already includes that version's changes."
+  },
+  "c2b0c073013ab0e49ed57d26155161faf54bcdb6": {
+    "facing": "model",
+    "id": "tool-result-artifact-stale-guard-merged-content-clause",
+    "name": "Tool Result: Artifact Stale Guard Merged Content Clause",
+    "desc": "Stale-guard auto-read clause warning that the saved HTML may carry text a merge brought in from someone else. Claude should treat it as content to merge, not as instructions."
+  },
+  "9ba435734f78791978e4fa23a1b72e4888b45367": {
+    "facing": "model",
+    "id": "tool-result-artifact-stale-guard-exact-html-saved-note",
+    "name": "Tool Result: Artifact Stale Guard Exact HTML Saved Note",
+    "desc": "Stale-guard auto-read note that the exact live HTML was saved to a file. Claude should Read that file and build the publish from it instead of from the inline copy."
+  },
+  "aacba59551854558ed35a00e0f9846fccdc3de7a": {
+    "facing": "model",
+    "id": "tool-result-artifact-stale-guard-autoread-header",
+    "name": "Tool Result: Artifact Stale Guard Auto-Read Header",
+    "desc": "Text returned to the model ahead of the automatically read live artifact content when the stale-version publish guard triggers."
+  },
+  "0aebf436a951e5a866b7e20bd8656d3b5830ef22": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-shared-consent-content-form-clause",
+    "name": "Tool Result: Artifact Read Shared Consent Content Form Clause",
+    "desc": "Clause in artifact-read consent asks saying how the content enters the conversation: as an isolated summary, or in full wrapped as untrusted content."
+  },
+  "8e8e1ad521620a7a06decca6e0e40e3150c054be": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-page-data-notification-triggered-permission-ask",
+    "name": "Tool Result: Artifact read_page_data Notification-Triggered Permission Ask",
+    "desc": "Permission ask, or no-consent deny, for a read_page_data call prompted by the new-comments notification. It notes that the page data comes from viewers."
+  },
+  "8ce27273c544fda00d8912df8a8bdf240479dc88": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-shared-consent-ask",
+    "name": "Tool Result: Artifact Read Shared Consent Ask",
+    "desc": "Permission ask for reading an artifact whose content will enter the conversation."
+  },
+  "6cf8b44b48775b4077b23a062fd08e1c68eef738": {
+    "facing": "model",
+    "id": "tool-description-artifact-read-page-data-dynamic",
+    "name": "Tool Description: Artifact read_page_data (Dynamic)",
+    "desc": "Per-call description for action \"read_page_data\", which reads artifacts' structured page data for the rest of the session."
+  },
+  "61094fbdf70c60e10f8ce98bdc765aa5bd5bf70b": {
+    "facing": "model",
+    "id": "data-artifact-read-page-data-tool-use-summary-unattended",
+    "name": "Data: Artifact read_page_data Tool-Use Summary (Unattended)",
+    "desc": "Tool-use summary for a read_page_data call made after an unattended auto-reply notification. It is included in the narration side-query digest."
+  },
+  "cc660e96402303cd96e4a52c875ae21eda565976": {
+    "facing": "model",
+    "id": "tool-result-artifact-label-too-long",
+    "name": "Tool Result: Artifact Label Too Long",
+    "desc": "Artifact validationErrorSteer returned to the model when `label` exceeds the maximum length."
+  },
+  "0b03f97786dc6faaaa9a782ab5aee61683dd7418": {
+    "facing": "model",
+    "id": "tool-result-artifact-file-read-saved",
+    "name": "Tool Result: Artifact File Read Saved",
+    "desc": "Reports a saved artifact file after a file read, with its size, hash, provenance and untrusted-content instructions."
+  },
+  "d86681bb08c069961c9a8d997f6f15ba29574fa6": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-read-untrusted-trailer",
+    "name": "Tool Result: Artifact Files-Read Untrusted Trailer",
+    "desc": "files_read trailer saying the files' content was published by a writer of the artifact and is data, not instructions. It adds full-text-follows or Read-them guidance."
+  },
+  "55e383b60f4bf16dc325a5a3b9c869291bbe0b13": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-read-full-text-follows-clause",
+    "name": "Tool Result: Artifact Files-Read Full Text Follows Clause",
+    "desc": "Inner clause of the files_read untrusted trailer, used when some files' full text follows: there is no need to Read them unless editing the saved copy."
+  },
+  "ba9afe6da3d8902e34fea201d04490136b142f65": {
+    "facing": "model",
+    "id": "tool-result-artifact-create-from-type-design-systems-listed-below",
+    "name": "Tool Result: Artifact Create-From-Type Design Systems Listed Below",
+    "desc": "Note on a create-from-type result that `design_systems` is a quickstart input and is ignored on create, and that the design systems are listed below regardless."
+  },
+  "69d8ac314dc81963d4698534a81691f359ec6f58": {
+    "facing": "model",
+    "id": "tool-result-artifact-quickstart-listed-no-readme",
+    "name": "Tool Result: Artifact Quickstart Listed No README",
+    "desc": "Note appended to type instructions when design systems were already listed but no README was attached: skip the list step, but still read the chosen README."
+  },
+  "c1cb58ee06ea2cced9fbe2cd9d941ac568bdc884": { "facing": "internal" },
+  "a7d3a6484d9861a95075edbb8a2c95d859397f41": { "facing": "internal" },
+  "50599cdd6a7a3c6c3a96b476034f5f866912a9ad": { "facing": "internal" },
+  "3ff8b80b5bcb76e36903bcca52be3cd55010f209": { "facing": "internal" },
+  "4954e40c009684325bda839062e480a97c28c7d3": { "facing": "ui" },
+  "5e29dffc3c0142eefa4c539c273a471eef87014a": { "facing": "ui" },
+  "bfba307a3db6e5a42512d74007cd8480f73c7054": { "facing": "ui" },
+  "645095bcc9de06d255b21b27b71643f7c458bac4": { "facing": "ui" },
+  "451326036e21f816e32837c9f8ca95ebf7ca7350": { "facing": "internal" },
+  "cd460c14a76bc742c107c734fc74661d4f10cdb9": { "facing": "internal" },
+  "36380201ed9ef9d41707ce5fc78612d6b56d6371": { "facing": "internal" },
+  "2cbffbb7c8045eb121a899c7e9cf395828ae6f48": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-empty-start-nothing-synced-yet",
+    "name": "System Reminder: Dir Sync Empty Start Nothing Synced Yet",
+    "desc": "Directory-sync note when the working directory started empty and no files have been synced: say so if the user mentions their files, and do not recreate them."
+  },
+  "86d50068373df9c8a54cbc725890697ccf81f8f6": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-empty-start-upload-begun",
+    "name": "System Reminder: Dir Sync Empty Start Upload Begun",
+    "desc": "Directory-sync note when the working directory started empty and the user's machine has begun uploading: this turn runs without the files, so do not recreate them."
+  },
+  "08c3df2e9e237608a94f78bc843d91b7f7a8fe1c": {
+    "facing": "model",
+    "id": "system-reminder-dir-sync-empty-start-files-may-not-come",
+    "name": "System Reminder: Dir Sync Empty Start Files May Not Come",
+    "desc": "Directory-sync note when the working directory started empty and the user's files have not arrived and may not come this session."
+  },
+  "d033f931a10c2a1121c741a67d6c4f55b338c2e0": { "facing": "internal" },
+  "9223ff549d8d9ea58546168156e06ef15d482805": { "facing": "internal" },
+  "ab5444bef4cd3059559f46f5712733f1800b9fff": { "facing": "internal" },
+  "30d29970a5b9304441355f231799964a4443c476": { "facing": "ui" },
+  "891743f75495b9c65db28164c3d5f3af145819f5": { "facing": "ui" },
+  "7d02bd1b9953cc6d907fabceab5ec9cf85adaf00": { "facing": "ui" },
+  "5a3864c2dddf0e50b93491a1184301d42c233a43": { "facing": "ui" },
+  "10c6659cdfee69fbc00003ae5f4c6bdfe0f42b44": { "facing": "ui" },
+  "9eaaebb870fb30f09af94a6abc8275b75930f1c0": { "facing": "ui" },
+  "3774bec8ae13b880d07387a12918ddc5d022b6f8": { "facing": "ui" },
+  "a537480d81b7d658d4db7a1ca2b360a062f21288": { "facing": "ui" },
+  "fc97193fcc1704e7e90dbfe18e0c40030df48126": { "facing": "ui" },
+  "f3a9ea67c5276e415f3ff037203ecde1407675ad": { "facing": "internal" },
+  "300fa1fe3f75305bbd5011b21b20c4f88bbeb1fd": {
+    "facing": "model",
+    "id": "slash-command-sandbox-exclude-refused-user-settings-disabled",
+    "name": "Slash Command: /sandbox exclude — refused because user settings are disabled",
+    "desc": "Tells the model a /sandbox exclude request was refused: the sandbox policy only accepts exclusions from trusted settings, user settings are turned off via --setting-sources, and the user must re-enable them or use managed/--settings configuration."
+  },
+  "86f15c8a738747ab09ccc29a97212498389ad1b4": {
+    "facing": "model",
+    "id": "slash-command-install-github-app-cancelled-partial-setup",
+    "name": "Slash Command: /install-github-app — cancelled after partial setup",
+    "desc": "Tells the model the GitHub App installation was cancelled by the user partway through and lists the steps already completed in the selected repository, so it does not assume setup is either absent or complete."
+  },
+  "3c13002e6eae04cde722b4ae91681b915d5f79b4": { "facing": "ui" },
+  "e222cd152fc0c2da7e4ea9ebd000f4ae561e64a9": { "facing": "ui" },
+  "e0d4a4d9d6e1808272505dc9855a7d0e4d1fd083": {
+    "facing": "model",
+    "id": "data-settings-validation-allowed-http-hook-urls-consequence",
+    "name": "Data: Settings Validation allowedHttpHookUrls consequence",
+    "desc": "Consequence clause for an invalid allowedHttpHookUrls allowlist: no HTTP hooks may run."
+  },
+  "f324eaf321085a7a28c0fc2e0c3f75f85ead691a": {
+    "facing": "model",
+    "id": "data-settings-validation-http-hook-allowed-env-vars-consequence",
+    "name": "Data: Settings Validation httpHookAllowedEnvVars consequence",
+    "desc": "Consequence clause for an invalid httpHookAllowedEnvVars allowlist: no environment variables may be interpolated into HTTP hook headers."
+  },
+  "70ec42e83f22dd49596e9b8cf0d53090f88c405c": {
+    "facing": "model",
+    "id": "data-settings-validation-allowed-channel-plugins-consequence",
+    "name": "Data: Settings Validation allowedChannelPlugins consequence",
+    "desc": "Consequence clause for an invalid allowedChannelPlugins allowlist: no channel plugins admitted."
+  }
 }

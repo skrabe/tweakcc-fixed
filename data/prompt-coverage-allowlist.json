@@ -14,11 +14,6 @@
     "version": "2.1.276",
     "why": "module 119 chunk-n55wtmpy.js, r4t set_chrome_browser_hints control_request .describe(): SDK control_request the host sends so claude-in-chrome can pick a browser. Protocol schema for the CLI, not a tool the model sees."
   },
-  "data-claude-code-gateway-customer-routed-inference-protocol": {
-    "verdict": "not-model-facing",
-    "version": "2.1.276",
-    "why": "module 1208 chunk-ghaf8c9v.js, eA() gateway-protocol markdown: eA({oidcConfigured, criEnabled}) builds the CRI contract as markdown and the only caller is GET /protocol, which returns text/markdown to the HTTP client. It is not interpolated into a system prompt, tool schema, or model message."
-  },
   "data-code-change-published-event-schema": {
     "verdict": "not-model-facing",
     "version": "2.1.276",
@@ -214,9 +209,34 @@
     "version": "2.1.281",
     "why": ".option(\"--bare\", …) CLI --help text @16778079; shown by claude --help, never sent to the model."
   },
-  "tool-description-artifact-external-resource-allowlist": {
-    "verdict": "covered-reworded",
-    "version": "2.1.281",
-    "why": "Upstream's 2.1.280 body. CC 2.1.281 moved unpkg into the allowed hosts; ours catalogues the current text as tool-description-artifact-cdn-allowlist."
+  "data-sdk-frame-intake-phases-ms-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.282",
+    "why": "SDK turn-timing frame_intake_phases_ms .describe(), starts with @internal: SDK control-protocol schema text for the host, never sent to the model."
+  },
+  "data-rate-limit-grace-signal": {
+    "verdict": "not-model-facing",
+    "version": "2.1.282",
+    "why": "rateLimitGraceActive .describe() in the SDK rate-limit status schema, starts with @internal: control-protocol schema text, never sent to the model."
+  },
+  "skill-doctor-slash-command": {
+    "verdict": "not-model-facing",
+    "version": "2.1.282",
+    "why": "NOT a facing call: the /doctor skill IS model-facing. Since 2.1.282 its Check 7 slot embeds the build-stamp object (GIT_SHA, BUILD_TIME), so isHardExcluded drops it for having no portable override target; pristine renders unmodified. Revisit if the matcher learns to generalize build-stamp interpolations."
+  },
+  "data-claude-code-gateway-customer-routed-inference-protocol": {
+    "verdict": "not-model-facing",
+    "version": "2.1.282",
+    "why": "Appended by SD() to the gateway protocol markdown when criEnabled; SD() is only served as the HTTP GET /protocol response (text/markdown) to gateway implementers, never placed in a model context."
+  },
+  "data-cloud-session-folder-sync-consent-dialog": {
+    "verdict": "not-model-facing",
+    "version": "2.1.282",
+    "why": "consent.attach_sync.body: body of the terminal Yes/No folder-sync consent dialog payload {folder,title,body,detail}; human-only UI copy."
+  },
+  "data-telemetry-variables-ignored-notice": {
+    "verdict": "not-model-facing",
+    "version": "2.1.282",
+    "why": "Pushed with statusOnly into the settings errors, split into statusNotices that reach only /status and the claude doctor terminal lines; filtered out of every model-facing settings error path."
   }
 }
