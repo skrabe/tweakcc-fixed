@@ -1,0 +1,480 @@
+{
+  "version": 1,
+  "description": "Synthetic effort calibration ranges; subjective labels assess routing, not downstream answer quality. Indices: low=0, medium=1, high=2, max=3.",
+  "cases": [
+    {
+      "id": "code-rename",
+      "domain": "coding",
+      "turns": [
+        {
+          "message": "Rename the local variable count to itemCount in this function; leave behavior unchanged.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "code-format",
+      "domain": "coding",
+      "turns": [
+        {
+          "message": "Format these three files with the configured formatter.",
+          "allowed": [0, 0],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "code-feature",
+      "domain": "coding",
+      "turns": [
+        {
+          "message": "Add pagination to the existing product list using its established endpoint and UI conventions.",
+          "allowed": [1, 1],
+          "fixture": 1
+        }
+      ]
+    },
+    {
+      "id": "code-bug",
+      "domain": "coding",
+      "turns": [
+        {
+          "message": "Fix the form clearing its selected country after an unrelated field changes; add a regression test.",
+          "allowed": [1, 2],
+          "fixture": 1
+        }
+      ]
+    },
+    {
+      "id": "code-deadlock",
+      "domain": "coding",
+      "turns": [
+        {
+          "message": "Diagnose a sporadic deadlock across our transaction coordinator and lease renewer. Logs contradict the documented lock order.",
+          "allowed": [2, 3],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "code-security-mechanical",
+      "domain": "coding",
+      "turns": [
+        {
+          "message": "Replace the expired certificate path in staging with the supplied validated new path; do not change TLS policy.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "code-auth-design",
+      "domain": "coding",
+      "turns": [
+        {
+          "message": "Design tenant isolation for shared database access, including authorization at every boundary and migration risks.",
+          "allowed": [2, 2],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "code-novel-proof",
+      "domain": "coding",
+      "turns": [
+        {
+          "message": "Derive and prove a new wait-free reclamation algorithm under weak memory with bounded space and arbitrary thread pauses.",
+          "allowed": [3, 3],
+          "fixture": 3
+        }
+      ]
+    },
+    {
+      "id": "code-tests",
+      "domain": "coding",
+      "turns": [
+        {
+          "message": "Run the named regression suite and report pass/fail; no diagnosis or fixes requested.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "code-migration",
+      "domain": "coding",
+      "turns": [
+        {
+          "message": "Plan a zero-downtime migration across independently deployed services with mixed schema versions and rollback correctness.",
+          "allowed": [2, 3],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "admin-calendar",
+      "domain": "administrative",
+      "turns": [
+        {
+          "message": "Move the existing internal check-in to the supplied open slot and preserve its attendees.",
+          "allowed": [0, 0],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "admin-email",
+      "domain": "administrative",
+      "turns": [
+        {
+          "message": "Draft a polite reply confirming the requested delivery date and thanking the sender.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "admin-reconcile",
+      "domain": "administrative",
+      "turns": [
+        {
+          "message": "Reconcile these invoice rows against purchase orders and flag duplicates using the supplied matching rules.",
+          "allowed": [1, 1],
+          "fixture": 1
+        }
+      ]
+    },
+    {
+      "id": "admin-bank-format",
+      "domain": "administrative",
+      "turns": [
+        {
+          "message": "Format the approved payment reference exactly as specified; do not decide or initiate a transfer.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "admin-policy",
+      "domain": "administrative",
+      "turns": [
+        {
+          "message": "Compare three conflicting retention policies and identify where the same records receive incompatible requirements.",
+          "allowed": [1, 2],
+          "fixture": 1
+        }
+      ]
+    },
+    {
+      "id": "admin-restructure",
+      "domain": "administrative",
+      "turns": [
+        {
+          "message": "Develop a staffing transition plan under overlapping contractual obligations, coverage constraints and uncertain demand.",
+          "allowed": [2, 2],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "writing-copyedit",
+      "domain": "writing",
+      "turns": [
+        {
+          "message": "Fix punctuation and typos in this paragraph without changing its meaning.",
+          "allowed": [0, 0],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "writing-draft",
+      "domain": "writing",
+      "turns": [
+        {
+          "message": "Draft a 700-word onboarding guide from the supplied outline and established product facts.",
+          "allowed": [1, 1],
+          "fixture": 1
+        }
+      ]
+    },
+    {
+      "id": "writing-tone",
+      "domain": "writing",
+      "turns": [
+        {
+          "message": "Make this completed announcement warmer and cut it to 120 words.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "writing-argument",
+      "domain": "writing",
+      "turns": [
+        {
+          "message": "Rebuild this argument so its causal claims survive the strongest counterarguments and distinguish evidence from assumptions.",
+          "allowed": [1, 2],
+          "fixture": 1
+        }
+      ]
+    },
+    {
+      "id": "writing-volume",
+      "domain": "writing",
+      "turns": [
+        {
+          "message": "Apply the identical approved heading substitution to all 300 pages; no rewriting.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "research-lookup",
+      "domain": "research",
+      "turns": [
+        {
+          "message": "Find the release date in the linked official release note and quote the date.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "research-compare",
+      "domain": "research",
+      "turns": [
+        {
+          "message": "Compare the documented limits of three services in a table with sources.",
+          "allowed": [1, 1],
+          "fixture": 1
+        }
+      ]
+    },
+    {
+      "id": "research-conflict",
+      "domain": "research",
+      "turns": [
+        {
+          "message": "Resolve apparently contradictory experimental results, checking confounding and competing causal mechanisms.",
+          "allowed": [2, 2],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "research-frontier",
+      "domain": "research",
+      "turns": [
+        {
+          "message": "Develop a novel theoretical account reconciling incompatible results, derive falsifiable predictions and prove its core theorem.",
+          "allowed": [2, 3],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "medical-format",
+      "domain": "high-stakes",
+      "turns": [
+        {
+          "message": "Alphabetize this supplied medication list without interpreting doses or giving clinical advice.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "legal-extract",
+      "domain": "high-stakes",
+      "turns": [
+        {
+          "message": "Extract the exact effective date from the supplied signed agreement. Do not interpret legal obligations.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "legal-conflicts",
+      "domain": "high-stakes",
+      "turns": [
+        {
+          "message": "Analyze inconsistent indemnity clauses across several agreements and identify interacting obligations and unresolved ambiguities.",
+          "allowed": [2, 2],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "finance-format",
+      "domain": "high-stakes",
+      "turns": [
+        {
+          "message": "Round these already-approved budget numbers to two decimal places using the stated rule.",
+          "allowed": [0, 0],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "finance-scenario",
+      "domain": "high-stakes",
+      "turns": [
+        {
+          "message": "Stress-test this financing plan across correlated shocks and identify assumptions that could reverse the recommendation.",
+          "allowed": [2, 2],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "ambiguous-ask",
+      "domain": "ambiguous",
+      "turns": [
+        {
+          "message": "Can you help me with the document?",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "ambiguous-next",
+      "domain": "ambiguous",
+      "turns": [
+        {
+          "message": "Continue.",
+          "allowed": [1, 2],
+          "fixture": 1,
+          "summary": "A normal feature implementation is halfway complete. Remaining work is validation and tests."
+        }
+      ]
+    },
+    {
+      "id": "context-many-routine",
+      "domain": "context",
+      "turns": [
+        {
+          "message": "Using the completed inventory above, export only the requested filenames as CSV.",
+          "allowed": [0, 1],
+          "fixture": 0,
+          "summary": "Completed routine file inventory. No analysis remains. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. Inventory entries were validated and categorized. "
+        }
+      ]
+    },
+    {
+      "id": "context-hard-clarify",
+      "domain": "context",
+      "turns": [
+        {
+          "message": "Investigate the distributed lease race and prove that the proposed recovery protocol cannot lose acknowledged writes.",
+          "allowed": [2, 3],
+          "fixture": 2
+        },
+        {
+          "message": "What does the abbreviation in your last sentence mean?",
+          "allowed": [0, 1],
+          "fixture": 0,
+          "summary": "The hard concurrency investigation is complete. The protocol was verified, findings delivered, and no implementation remains unless newly requested."
+        }
+      ]
+    },
+    {
+      "id": "context-hard-finish",
+      "domain": "context",
+      "turns": [
+        {
+          "message": "Investigate the distributed lease race and prove that the proposed recovery protocol cannot lose acknowledged writes.",
+          "allowed": [2, 3],
+          "fixture": 2
+        },
+        {
+          "message": "Thanks, that resolves it.",
+          "allowed": [0, 0],
+          "fixture": 0,
+          "summary": "The hard concurrency investigation is complete. The protocol was verified, findings delivered, and no implementation remains unless newly requested."
+        }
+      ]
+    },
+    {
+      "id": "context-hard-new",
+      "domain": "context",
+      "turns": [
+        {
+          "message": "Investigate the distributed lease race and prove that the proposed recovery protocol cannot lose acknowledged writes.",
+          "allowed": [2, 3],
+          "fixture": 2
+        },
+        {
+          "message": "New topic: write a one-sentence meeting acceptance.",
+          "allowed": [0, 1],
+          "fixture": 0,
+          "summary": "The hard concurrency investigation is complete. The protocol was verified, findings delivered, and no implementation remains unless newly requested."
+        }
+      ]
+    },
+    {
+      "id": "context-hard-implement",
+      "domain": "context",
+      "turns": [
+        {
+          "message": "Investigate the distributed lease race and prove that the proposed recovery protocol cannot lose acknowledged writes.",
+          "allowed": [2, 3],
+          "fixture": 2
+        },
+        {
+          "message": "Implement the agreed solution and verify the concurrency invariants.",
+          "allowed": [2, 2],
+          "fixture": 2,
+          "summary": "A difficult concurrency design is agreed; implementation and invariant verification remain."
+        }
+      ]
+    },
+    {
+      "id": "context-complete-polish",
+      "domain": "context",
+      "turns": [
+        {
+          "message": "Investigate the distributed lease race and prove that the proposed recovery protocol cannot lose acknowledged writes.",
+          "allowed": [2, 3],
+          "fixture": 2
+        },
+        {
+          "message": "Now shorten that finished plan to five bullets, preserving its conclusions.",
+          "allowed": [0, 1],
+          "fixture": 0,
+          "summary": "The hard concurrency investigation is complete. The protocol was verified, findings delivered, and no implementation remains unless newly requested."
+        }
+      ]
+    },
+    {
+      "id": "context-missing",
+      "domain": "context",
+      "turns": [
+        {
+          "message": "Proceed with the next step.",
+          "allowed": [1, 2],
+          "fixture": 1,
+          "omitted": true
+        }
+      ]
+    },
+    {
+      "id": "context-medium-followup",
+      "domain": "context",
+      "turns": [
+        {
+          "message": "Add the same validation to the second form.",
+          "allowed": [1, 1],
+          "fixture": 1,
+          "summary": "A standard validation rule was added to the first form and tested."
+        }
+      ]
+    }
+  ]
+}

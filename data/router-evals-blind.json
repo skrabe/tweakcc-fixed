@@ -1,0 +1,116 @@
+{
+  "version": 1,
+  "description": "Fresh final semantic holdout frozen before evaluating concise rubric; prior heldout/invariance sets are now reused validation sets. Labels measure routing calibration, not answer quality.",
+  "cases": [
+    {
+      "id": "blind-exact-value",
+      "domain": "fresh-semantic-holdout",
+      "turns": [
+        {
+          "message": "Return the already-verified total from the supplied summary; do not recompute or reinterpret it.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "blind-standard-adjust",
+      "domain": "fresh-semantic-holdout",
+      "turns": [
+        {
+          "message": "Extend this existing report with one additional calculated column using the supplied formula and verify it on representative rows.",
+          "allowed": [1, 1],
+          "fixture": 1
+        }
+      ]
+    },
+    {
+      "id": "blind-coupled-conflict",
+      "domain": "fresh-semantic-holdout",
+      "turns": [
+        {
+          "message": "Three components satisfy their local contracts but jointly violate a global invariant intermittently. Determine the missing interaction and establish a fix that holds across the relevant orderings.",
+          "allowed": [2, 3],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "blind-missing-input",
+      "domain": "fresh-semantic-holdout",
+      "turns": [
+        {
+          "message": "Please prepare the document. I have not yet said what document or provided any requirements.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "blind-finished-format",
+      "domain": "fresh-semantic-holdout",
+      "turns": [
+        {
+          "message": "All substantive decisions are approved. Apply the provided formatting template to the final text.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "blind-uncertain-approach",
+      "domain": "fresh-semantic-holdout",
+      "turns": [
+        {
+          "message": "The available approaches all depend on assumptions contradicted by the observations. Develop and validate a new explanation that reconciles the evidence.",
+          "allowed": [2, 3],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "blind-known-method",
+      "domain": "fresh-semantic-holdout",
+      "turns": [
+        {
+          "message": "Use our established process to compare the provided candidate options against the supplied requirements and document the tradeoffs.",
+          "allowed": [1, 2],
+          "fixture": 1
+        }
+      ]
+    },
+    {
+      "id": "blind-title-only",
+      "domain": "fresh-semantic-holdout",
+      "turns": [
+        {
+          "message": "Our unresolved investigation is highly complex, but this request is only to return the exact case identifier already shown above.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "blind-deeper-followup",
+      "domain": "fresh-semantic-holdout",
+      "turns": [
+        {
+          "message": "The first explanation failed its test. Investigate the remaining alternatives, including how changes in one assumption alter the other conclusions.",
+          "allowed": [2, 2],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "blind-transform-many",
+      "domain": "fresh-semantic-holdout",
+      "turns": [
+        {
+          "message": "Transform every record with the identical explicit mapping below. The data is already validated and no decisions about the mapping remain.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    }
+  ]
+}

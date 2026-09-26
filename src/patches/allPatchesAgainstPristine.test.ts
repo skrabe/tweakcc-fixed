@@ -73,6 +73,7 @@ import { writeAutonomousOperationAllModels } from './autonomousOperationAllModel
 import { writeOutputStyleTurnReminder } from './outputStyleTurnReminder';
 import { writeAutoModeClassifierModel } from './autoModeClassifierModel';
 import { writeComplexityRouter } from './complexityRouter';
+import { writeComplexityRouterModels } from './complexityRouterModels';
 import { writeFablePlan } from './fablePlan';
 import { writeAllowCustomAgentModels } from './allowCustomAgentModels';
 import { writeWorktreeMode } from './worktreeMode';
@@ -423,6 +424,7 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
       ...DEFAULT_SETTINGS.complexityRouter,
       enabled: true,
     }),
+  'complexity-router-models': writeComplexityRouterModels,
   'fable-plan': c =>
     writeFablePlan(c, { ...DEFAULT_SETTINGS.fablePlan, enabled: true }),
   'unlock-responsive-mode': c => writeResponsiveMode(c),

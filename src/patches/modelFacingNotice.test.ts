@@ -15,6 +15,7 @@ const MODEL_FACING_IDS = [
   'autonomous-operation-all-models',
   'auto-mode-classifier-model',
   'complexity-router',
+  'complexity-router-models',
   'fable-plan',
   'dream-mode',
   'lean-memory-types',

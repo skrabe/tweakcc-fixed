@@ -1,0 +1,1263 @@
+{
+  "date": "2026-09-26",
+  "method": "Real generated runtime, live Jev, synthetic tasks, mocked Haiku. Final user-steered daily-driver rubric evaluated once per model. All four corpora are reused validation after rubric revisions, not independent final holdout evidence. Labels were never revised after classification. No downstream task-quality or total-cost claim.",
+  "hashes": {
+    "router-evals.json": "777374545a250a5e42e78c5437d1cdcd95b03078854648eaffcb8ea40273e2fa",
+    "router-evals-heldout.json": "6346030992eae0bfeaa765d8dcd83a2a75b32f3f5d57f26950d1b58d133c3f8d",
+    "router-runtime-before.js": "e660f68e67f04018168063b46479d2de861a86600ef7c9d4f461c36e7cfbc4d8",
+    "router-runtime-final.js": "d38bea8a44bdbf51462fdc5d251165fb946479954e2d42ea3a5937eabae64eba",
+    "router-runtime-semantic.js": "bc7fc5c65ff09f15f310c93908eb447c1043485fb38ef81d925060edee850428",
+    "router-evals-invariance.json": "eee5fcc88d9fd2cb8258082f1526e3433b3ec9eaad955c249a5b4fc929a9824f",
+    "router-runtime-concise.js": "8720fe592c4931ee50ee100a7cc7ba8351272338269d1e768b99fa511adeee25",
+    "router-evals-blind.json": "ef300dde4fd5b0e51b258facc22bcf7118e18e49229e785c7a1291bb6e50edb2",
+    "router-runtime-daily.js": "c21a3b8b990df954e38fd5b287bd55d62d1bf5e111fdba2dc4726dc7fa784d60",
+    "router-runtime-neutral.js": "5d6884af5fd84fda2b67d209cb2e3560d5a4f579c68139c60276127b4ec10197",
+    "router-runtime-direct.js": "a453ad8a6be284829c0bbabbdf551d9fff45b7580b0ad3f354467f5cac4cc93a"
+  },
+  "baseline": {
+    "opus": {
+      "counts": {
+        "turns": 45,
+        "within": 34,
+        "over": 11,
+        "under": 0,
+        "missing": 0,
+        "fallback": 12
+      },
+      "latencyMs": {
+        "median": 303,
+        "p95": 362
+      },
+      "repeats": 1,
+      "scope": "calibration only, original policy and threshold0.65"
+    },
+    "fable": {
+      "counts": {
+        "turns": 45,
+        "within": 33,
+        "over": 12,
+        "under": 0,
+        "missing": 0,
+        "fallback": 13
+      },
+      "latencyMs": {
+        "median": 293,
+        "p95": 347
+      },
+      "repeats": 1,
+      "scope": "calibration only, original policy and threshold0.65"
+    }
+  },
+  "final": {
+    "opus": {
+      "counts": {
+        "turns": 90,
+        "within": 85,
+        "over": 4,
+        "under": 1,
+        "missing": 0,
+        "fallback": 12,
+        "noRequest": 0,
+        "noDecision": 0
+      },
+      "latencyMs": {
+        "median": 300,
+        "p95": 354
+      },
+      "distribution": {
+        "low": 25,
+        "medium": 30,
+        "high": 31,
+        "max": 4
+      },
+      "repeats": 1,
+      "responseModels": ["jev-1.13.0"],
+      "sets": {
+        "calibration": {
+          "turns": 45,
+          "within": 42,
+          "over": 3,
+          "under": 0,
+          "fallback": 6,
+          "rawWithin": 44
+        },
+        "reusedHeldout": {
+          "turns": 23,
+          "within": 21,
+          "over": 1,
+          "under": 1,
+          "fallback": 6,
+          "rawWithin": 23
+        },
+        "reusedInvariance": {
+          "turns": 12,
+          "within": 12,
+          "over": 0,
+          "under": 0,
+          "fallback": 0,
+          "rawWithin": 12
+        },
+        "reusedBlind": {
+          "turns": 10,
+          "within": 10,
+          "over": 0,
+          "under": 0,
+          "fallback": 0,
+          "rawWithin": 10
+        }
+      },
+      "outsideRanges": [
+        {
+          "id": "code-format",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 0,
+          "level": 1,
+          "confidence": 0.38,
+          "fallback": true
+        },
+        {
+          "id": "admin-calendar",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.53,
+          "fallback": false
+        },
+        {
+          "id": "finance-format",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 0,
+          "level": 1,
+          "confidence": 0.33,
+          "fallback": true
+        },
+        {
+          "id": "hold-logistics-label",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 0,
+          "level": 1,
+          "confidence": 0.38,
+          "fallback": true
+        },
+        {
+          "id": "hold-data-diagnose",
+          "turn": 1,
+          "allowed": [2, 2],
+          "rawLevel": 2,
+          "level": 1,
+          "confidence": 0.35,
+          "fallback": true
+        }
+      ]
+    },
+    "fable": {
+      "counts": {
+        "turns": 90,
+        "within": 86,
+        "over": 3,
+        "under": 1,
+        "missing": 0,
+        "fallback": 11,
+        "noRequest": 0,
+        "noDecision": 0
+      },
+      "latencyMs": {
+        "median": 302,
+        "p95": 349
+      },
+      "distribution": {
+        "low": 27,
+        "medium": 28,
+        "high": 31,
+        "max": 4
+      },
+      "repeats": 1,
+      "responseModels": ["jev-1.13.0"],
+      "sets": {
+        "calibration": {
+          "turns": 45,
+          "within": 43,
+          "over": 2,
+          "under": 0,
+          "fallback": 5,
+          "rawWithin": 44
+        },
+        "reusedHeldout": {
+          "turns": 23,
+          "within": 21,
+          "over": 1,
+          "under": 1,
+          "fallback": 6,
+          "rawWithin": 22
+        },
+        "reusedInvariance": {
+          "turns": 12,
+          "within": 12,
+          "over": 0,
+          "under": 0,
+          "fallback": 0,
+          "rawWithin": 12
+        },
+        "reusedBlind": {
+          "turns": 10,
+          "within": 10,
+          "over": 0,
+          "under": 0,
+          "fallback": 0,
+          "rawWithin": 10
+        }
+      },
+      "outsideRanges": [
+        {
+          "id": "admin-calendar",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.53,
+          "fallback": false
+        },
+        {
+          "id": "finance-format",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 0,
+          "level": 1,
+          "confidence": 0.32,
+          "fallback": true
+        },
+        {
+          "id": "hold-logistics-label",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 0,
+          "level": 1,
+          "confidence": 0.39,
+          "fallback": true
+        },
+        {
+          "id": "hold-data-diagnose",
+          "turn": 1,
+          "allowed": [2, 2],
+          "rawLevel": 2,
+          "level": 1,
+          "confidence": 0.33,
+          "fallback": true
+        }
+      ]
+    }
+  },
+  "previousCalibration": {
+    "opus": {
+      "counts": {
+        "turns": 136,
+        "within": 134,
+        "over": 2,
+        "under": 0,
+        "missing": 0,
+        "fallback": 15
+      },
+      "latencyMs": {
+        "median": 298,
+        "p95": 379
+      },
+      "repeats": 2,
+      "responseModels": ["jev-1.13.0"],
+      "sets": {
+        "calibration": {
+          "turns": 90,
+          "within": 88,
+          "over": 2,
+          "under": 0,
+          "fallback": 11
+        },
+        "heldout": {
+          "turns": 46,
+          "within": 46,
+          "over": 0,
+          "under": 0,
+          "fallback": 4
+        }
+      },
+      "outsideRanges": [
+        {
+          "id": "admin-calendar#1",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.33,
+          "fallback": true
+        },
+        {
+          "id": "admin-calendar#2",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.33,
+          "fallback": true
+        }
+      ]
+    },
+    "fable": {
+      "counts": {
+        "turns": 136,
+        "within": 133,
+        "over": 2,
+        "under": 1,
+        "missing": 0,
+        "fallback": 18
+      },
+      "latencyMs": {
+        "median": 297,
+        "p95": 366
+      },
+      "repeats": 2,
+      "responseModels": ["jev-1.13.0"],
+      "sets": {
+        "calibration": {
+          "turns": 90,
+          "within": 87,
+          "over": 2,
+          "under": 1,
+          "fallback": 14
+        },
+        "heldout": {
+          "turns": 46,
+          "within": 46,
+          "over": 0,
+          "under": 0,
+          "fallback": 4
+        }
+      },
+      "outsideRanges": [
+        {
+          "id": "admin-calendar#1",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.36,
+          "fallback": true
+        },
+        {
+          "id": "admin-calendar#2",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.36,
+          "fallback": true
+        },
+        {
+          "id": "admin-restructure#2",
+          "turn": 1,
+          "allowed": [2, 2],
+          "rawLevel": 2,
+          "level": 1,
+          "confidence": 0.38,
+          "fallback": true
+        }
+      ]
+    }
+  },
+  "previousCalibrationDescription": "Superseded rubric with domain examples. Retained for transparent comparison, not the currently installed semantic-only rubric.",
+  "status": "Final direct Jev choice policy: confidence informational only, no hybrid pin or automatic effort floors; medium fallback only when no usable decision exists.",
+  "previousSemanticCandidate": {
+    "opus": {
+      "counts": {
+        "turns": 136,
+        "within": 123,
+        "over": 12,
+        "under": 1,
+        "missing": 0,
+        "fallback": 37,
+        "noRequest": 0,
+        "noDecision": 0
+      },
+      "latencyMs": {
+        "median": 303,
+        "p95": 374
+      },
+      "repeats": 2,
+      "responseModels": ["jev-1.13.0"],
+      "sets": {
+        "calibration": {
+          "turns": 90,
+          "within": 80,
+          "over": 10,
+          "under": 0,
+          "fallback": 24
+        },
+        "heldout": {
+          "turns": 46,
+          "within": 43,
+          "over": 2,
+          "under": 1,
+          "fallback": 13
+        },
+        "invariance": {
+          "turns": 12,
+          "within": 11,
+          "over": 0,
+          "under": 1,
+          "fallback": 2
+        }
+      },
+      "outsideRanges": [
+        {
+          "id": "code-format#1",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.36,
+          "fallback": true
+        },
+        {
+          "id": "admin-calendar#1",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.34,
+          "fallback": true
+        },
+        {
+          "id": "admin-reconcile#1",
+          "turn": 1,
+          "allowed": [1, 1],
+          "rawLevel": 2,
+          "level": 2,
+          "confidence": 0.42,
+          "fallback": false
+        },
+        {
+          "id": "research-compare#1",
+          "turn": 1,
+          "allowed": [1, 1],
+          "rawLevel": 2,
+          "level": 2,
+          "confidence": 0.4,
+          "fallback": false
+        },
+        {
+          "id": "finance-format#1",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 2,
+          "level": 1,
+          "confidence": 0.15,
+          "fallback": true
+        },
+        {
+          "id": "hold-logistics-label#1",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 2,
+          "level": 1,
+          "confidence": 0.14,
+          "fallback": true
+        },
+        {
+          "id": "code-format#2",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.36,
+          "fallback": true
+        },
+        {
+          "id": "admin-calendar#2",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.36,
+          "fallback": true
+        },
+        {
+          "id": "admin-reconcile#2",
+          "turn": 1,
+          "allowed": [1, 1],
+          "rawLevel": 2,
+          "level": 2,
+          "confidence": 0.4,
+          "fallback": false
+        },
+        {
+          "id": "research-compare#2",
+          "turn": 1,
+          "allowed": [1, 1],
+          "rawLevel": 2,
+          "level": 2,
+          "confidence": 0.42,
+          "fallback": false
+        },
+        {
+          "id": "finance-format#2",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 2,
+          "level": 1,
+          "confidence": 0.15,
+          "fallback": true
+        },
+        {
+          "id": "hold-logistics-label#2",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 2,
+          "level": 1,
+          "confidence": 0.12,
+          "fallback": true
+        },
+        {
+          "id": "hold-code-proof#2",
+          "turn": 1,
+          "allowed": [3, 3],
+          "rawLevel": 3,
+          "level": 1,
+          "confidence": 0.39,
+          "fallback": true
+        },
+        {
+          "id": "invariance-actual-complexity",
+          "turn": 1,
+          "allowed": [2, 3],
+          "rawLevel": 3,
+          "level": 1,
+          "confidence": 0.37,
+          "fallback": true
+        }
+      ],
+      "invarianceResults": [
+        {
+          "id": "invariance-paraphrase-ready-a",
+          "allowed": [0, 1],
+          "rawLevel": 0,
+          "level": 0,
+          "confidence": 0.84,
+          "fallback": false
+        },
+        {
+          "id": "invariance-paraphrase-ready-b",
+          "allowed": [0, 1],
+          "rawLevel": 0,
+          "level": 0,
+          "confidence": 0.69,
+          "fallback": false
+        },
+        {
+          "id": "invariance-paraphrase-open-a",
+          "allowed": [2, 2],
+          "rawLevel": 2,
+          "level": 2,
+          "confidence": 0.89,
+          "fallback": false
+        },
+        {
+          "id": "invariance-paraphrase-open-b",
+          "allowed": [2, 2],
+          "rawLevel": 2,
+          "level": 2,
+          "confidence": 0.6,
+          "fallback": false
+        },
+        {
+          "id": "invariance-same-vocabulary-resolved",
+          "allowed": [0, 1],
+          "rawLevel": 0,
+          "level": 0,
+          "confidence": 0.99,
+          "fallback": false
+        },
+        {
+          "id": "invariance-same-vocabulary-unresolved",
+          "allowed": [2, 3],
+          "rawLevel": 2,
+          "level": 2,
+          "confidence": 0.8,
+          "fallback": false
+        },
+        {
+          "id": "invariance-quoted-complexity",
+          "allowed": [0, 1],
+          "rawLevel": 0,
+          "level": 0,
+          "confidence": 1,
+          "fallback": false
+        },
+        {
+          "id": "invariance-actual-complexity",
+          "allowed": [2, 3],
+          "rawLevel": 3,
+          "level": 1,
+          "confidence": 0.37,
+          "fallback": true
+        },
+        {
+          "id": "invariance-plain-language-hard",
+          "allowed": [2, 3],
+          "rawLevel": 2,
+          "level": 2,
+          "confidence": 0.72,
+          "fallback": false
+        },
+        {
+          "id": "invariance-complex-language-easy",
+          "allowed": [0, 1],
+          "rawLevel": 0,
+          "level": 1,
+          "confidence": 0.31,
+          "fallback": true
+        },
+        {
+          "id": "invariance-resolved-followup",
+          "allowed": [0, 1],
+          "rawLevel": 0,
+          "level": 0,
+          "confidence": 0.65,
+          "fallback": false
+        },
+        {
+          "id": "invariance-unresolved-followup",
+          "allowed": [2, 2],
+          "rawLevel": 2,
+          "level": 2,
+          "confidence": 0.86,
+          "fallback": false
+        }
+      ]
+    },
+    "fable": {
+      "counts": {
+        "turns": 136,
+        "within": 124,
+        "over": 11,
+        "under": 1,
+        "missing": 0,
+        "fallback": 38,
+        "noRequest": 0,
+        "noDecision": 0
+      },
+      "latencyMs": {
+        "median": 302,
+        "p95": 372
+      },
+      "repeats": 2,
+      "responseModels": ["jev-1.13.0"],
+      "sets": {
+        "calibration": {
+          "turns": 90,
+          "within": 81,
+          "over": 9,
+          "under": 0,
+          "fallback": 25
+        },
+        "heldout": {
+          "turns": 46,
+          "within": 43,
+          "over": 2,
+          "under": 1,
+          "fallback": 13
+        },
+        "invariance": {
+          "turns": 12,
+          "within": 11,
+          "over": 0,
+          "under": 1,
+          "fallback": 2
+        }
+      },
+      "outsideRanges": [
+        {
+          "id": "code-format#1",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.39,
+          "fallback": true
+        },
+        {
+          "id": "admin-calendar#1",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.33,
+          "fallback": true
+        },
+        {
+          "id": "admin-reconcile#1",
+          "turn": 1,
+          "allowed": [1, 1],
+          "rawLevel": 2,
+          "level": 2,
+          "confidence": 0.45,
+          "fallback": false
+        },
+        {
+          "id": "research-compare#1",
+          "turn": 1,
+          "allowed": [1, 1],
+          "rawLevel": 2,
+          "level": 2,
+          "confidence": 0.4,
+          "fallback": false
+        },
+        {
+          "id": "finance-format#1",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 2,
+          "level": 1,
+          "confidence": 0.15,
+          "fallback": true
+        },
+        {
+          "id": "hold-logistics-label#1",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.13,
+          "fallback": true
+        },
+        {
+          "id": "code-format#2",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.34,
+          "fallback": true
+        },
+        {
+          "id": "admin-calendar#2",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.37,
+          "fallback": true
+        },
+        {
+          "id": "admin-reconcile#2",
+          "turn": 1,
+          "allowed": [1, 1],
+          "rawLevel": 2,
+          "level": 2,
+          "confidence": 0.41,
+          "fallback": false
+        },
+        {
+          "id": "finance-format#2",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 2,
+          "level": 1,
+          "confidence": 0.17,
+          "fallback": true
+        },
+        {
+          "id": "hold-logistics-label#2",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 0,
+          "level": 1,
+          "confidence": 0.11,
+          "fallback": true
+        },
+        {
+          "id": "hold-code-proof#2",
+          "turn": 1,
+          "allowed": [3, 3],
+          "rawLevel": 3,
+          "level": 1,
+          "confidence": 0.36,
+          "fallback": true
+        },
+        {
+          "id": "invariance-actual-complexity",
+          "turn": 1,
+          "allowed": [2, 3],
+          "rawLevel": 3,
+          "level": 1,
+          "confidence": 0.34,
+          "fallback": true
+        }
+      ],
+      "invarianceResults": [
+        {
+          "id": "invariance-paraphrase-ready-a",
+          "allowed": [0, 1],
+          "rawLevel": 0,
+          "level": 0,
+          "confidence": 0.78,
+          "fallback": false
+        },
+        {
+          "id": "invariance-paraphrase-ready-b",
+          "allowed": [0, 1],
+          "rawLevel": 0,
+          "level": 0,
+          "confidence": 0.65,
+          "fallback": false
+        },
+        {
+          "id": "invariance-paraphrase-open-a",
+          "allowed": [2, 2],
+          "rawLevel": 2,
+          "level": 2,
+          "confidence": 0.88,
+          "fallback": false
+        },
+        {
+          "id": "invariance-paraphrase-open-b",
+          "allowed": [2, 2],
+          "rawLevel": 2,
+          "level": 2,
+          "confidence": 0.56,
+          "fallback": false
+        },
+        {
+          "id": "invariance-same-vocabulary-resolved",
+          "allowed": [0, 1],
+          "rawLevel": 0,
+          "level": 0,
+          "confidence": 0.99,
+          "fallback": false
+        },
+        {
+          "id": "invariance-same-vocabulary-unresolved",
+          "allowed": [2, 3],
+          "rawLevel": 2,
+          "level": 2,
+          "confidence": 0.83,
+          "fallback": false
+        },
+        {
+          "id": "invariance-quoted-complexity",
+          "allowed": [0, 1],
+          "rawLevel": 0,
+          "level": 0,
+          "confidence": 1,
+          "fallback": false
+        },
+        {
+          "id": "invariance-actual-complexity",
+          "allowed": [2, 3],
+          "rawLevel": 3,
+          "level": 1,
+          "confidence": 0.34,
+          "fallback": true
+        },
+        {
+          "id": "invariance-plain-language-hard",
+          "allowed": [2, 3],
+          "rawLevel": 2,
+          "level": 2,
+          "confidence": 0.73,
+          "fallback": false
+        },
+        {
+          "id": "invariance-complex-language-easy",
+          "allowed": [0, 1],
+          "rawLevel": 0,
+          "level": 1,
+          "confidence": 0.28,
+          "fallback": true
+        },
+        {
+          "id": "invariance-resolved-followup",
+          "allowed": [0, 1],
+          "rawLevel": 0,
+          "level": 0,
+          "confidence": 0.62,
+          "fallback": false
+        },
+        {
+          "id": "invariance-unresolved-followup",
+          "allowed": [2, 2],
+          "rawLevel": 2,
+          "level": 2,
+          "confidence": 0.86,
+          "fallback": false
+        }
+      ]
+    }
+  },
+  "previousConciseCandidate": {
+    "opus": {
+      "counts": {
+        "turns": 90,
+        "within": 80,
+        "over": 4,
+        "under": 6,
+        "missing": 0,
+        "fallback": 11,
+        "noRequest": 0,
+        "noDecision": 0
+      },
+      "latencyMs": {
+        "median": 304,
+        "p95": 394
+      },
+      "repeats": 1,
+      "responseModels": ["jev-1.13.0"],
+      "sets": {
+        "calibration": {
+          "turns": 45,
+          "within": 39,
+          "over": 3,
+          "under": 3,
+          "fallback": 4,
+          "rawWithin": 39
+        },
+        "reusedHeldout": {
+          "turns": 23,
+          "within": 20,
+          "over": 1,
+          "under": 2,
+          "fallback": 4,
+          "rawWithin": 22
+        },
+        "reusedInvariance": {
+          "turns": 12,
+          "within": 11,
+          "over": 0,
+          "under": 1,
+          "fallback": 2,
+          "rawWithin": 11
+        },
+        "freshHoldout": {
+          "turns": 10,
+          "within": 10,
+          "over": 0,
+          "under": 0,
+          "fallback": 1,
+          "rawWithin": 10
+        }
+      },
+      "outsideRanges": [
+        {
+          "id": "code-format",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.56,
+          "fallback": false
+        },
+        {
+          "id": "code-auth-design",
+          "turn": 1,
+          "allowed": [2, 2],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.49,
+          "fallback": false
+        },
+        {
+          "id": "admin-calendar",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.6,
+          "fallback": false
+        },
+        {
+          "id": "legal-conflicts",
+          "turn": 1,
+          "allowed": [2, 2],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.51,
+          "fallback": false
+        },
+        {
+          "id": "finance-format",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.44,
+          "fallback": false
+        },
+        {
+          "id": "finance-scenario",
+          "turn": 1,
+          "allowed": [2, 2],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.3,
+          "fallback": true
+        },
+        {
+          "id": "hold-logistics-label",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.54,
+          "fallback": false
+        },
+        {
+          "id": "hold-past-hard-simple",
+          "turn": 1,
+          "allowed": [2, 3],
+          "rawLevel": 2,
+          "level": 1,
+          "confidence": 0.39,
+          "fallback": true
+        },
+        {
+          "id": "hold-past-hard-continue",
+          "turn": 1,
+          "allowed": [2, 3],
+          "rawLevel": 2,
+          "level": 1,
+          "confidence": 0.39,
+          "fallback": true
+        },
+        {
+          "id": "invariance-paraphrase-open-b",
+          "turn": 1,
+          "allowed": [2, 2],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.25,
+          "fallback": true
+        }
+      ]
+    },
+    "fable": {
+      "counts": {
+        "turns": 90,
+        "within": 79,
+        "over": 4,
+        "under": 7,
+        "missing": 0,
+        "fallback": 11,
+        "noRequest": 0,
+        "noDecision": 0
+      },
+      "latencyMs": {
+        "median": 293,
+        "p95": 365
+      },
+      "repeats": 1,
+      "responseModels": ["jev-1.13.0"],
+      "sets": {
+        "calibration": {
+          "turns": 45,
+          "within": 39,
+          "over": 3,
+          "under": 3,
+          "fallback": 4,
+          "rawWithin": 38
+        },
+        "reusedHeldout": {
+          "turns": 23,
+          "within": 19,
+          "over": 1,
+          "under": 3,
+          "fallback": 4,
+          "rawWithin": 22
+        },
+        "reusedInvariance": {
+          "turns": 12,
+          "within": 11,
+          "over": 0,
+          "under": 1,
+          "fallback": 2,
+          "rawWithin": 11
+        },
+        "freshHoldout": {
+          "turns": 10,
+          "within": 10,
+          "over": 0,
+          "under": 0,
+          "fallback": 1,
+          "rawWithin": 10
+        }
+      },
+      "outsideRanges": [
+        {
+          "id": "code-format",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.58,
+          "fallback": false
+        },
+        {
+          "id": "code-auth-design",
+          "turn": 1,
+          "allowed": [2, 2],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.5,
+          "fallback": false
+        },
+        {
+          "id": "admin-calendar",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.6,
+          "fallback": false
+        },
+        {
+          "id": "legal-conflicts",
+          "turn": 1,
+          "allowed": [2, 2],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.49,
+          "fallback": false
+        },
+        {
+          "id": "finance-format",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.5,
+          "fallback": false
+        },
+        {
+          "id": "finance-scenario",
+          "turn": 1,
+          "allowed": [2, 2],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.3,
+          "fallback": true
+        },
+        {
+          "id": "hold-logistics-label",
+          "turn": 1,
+          "allowed": [0, 0],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.53,
+          "fallback": false
+        },
+        {
+          "id": "hold-past-hard-simple",
+          "turn": 1,
+          "allowed": [2, 3],
+          "rawLevel": 2,
+          "level": 1,
+          "confidence": 0.37,
+          "fallback": true
+        },
+        {
+          "id": "hold-past-hard-format",
+          "turn": 1,
+          "allowed": [2, 3],
+          "rawLevel": 2,
+          "level": 1,
+          "confidence": 0.39,
+          "fallback": true
+        },
+        {
+          "id": "hold-past-hard-continue",
+          "turn": 1,
+          "allowed": [2, 3],
+          "rawLevel": 2,
+          "level": 1,
+          "confidence": 0.37,
+          "fallback": true
+        },
+        {
+          "id": "invariance-paraphrase-open-b",
+          "turn": 1,
+          "allowed": [2, 2],
+          "rawLevel": 1,
+          "level": 1,
+          "confidence": 0.28,
+          "fallback": true
+        }
+      ]
+    }
+  },
+  "finalPolicyReplay": {
+    "mode": "recorded-decisions-policy-replay",
+    "apiCalls": 0,
+    "description": "Reused recorded final daily-driver Jev choices through direct-choice policy. No confidence gate, hybrid pin or incomplete-input effort floor. All request bodies match. Earlier final section records prior live policy, retained transparently; current results below are offline replays, not fresh API classifications.",
+    "models": {
+      "opus": {
+        "counts": {
+          "turns": 90,
+          "within": 89,
+          "over": 1,
+          "under": 0,
+          "missing": 0,
+          "fallback": 0,
+          "noRequest": 0,
+          "noDecision": 0
+        },
+        "requestMismatches": 0
+      },
+      "fable": {
+        "counts": {
+          "turns": 90,
+          "within": 88,
+          "over": 1,
+          "under": 1,
+          "missing": 0,
+          "fallback": 0,
+          "noRequest": 0,
+          "noDecision": 0
+        },
+        "requestMismatches": 0
+      }
+    }
+  },
+  "previousPolicyReplay": {
+    "mode": "recorded-decisions-policy-replay",
+    "apiCalls": 0,
+    "description": "Reused final daily-driver live choices, confidence and distributions through the neutral-medium fallback policy. Input bodies match exactly. These cases do not expose the real-world low-confidence-after-high failure; dedicated runtime regression tests cover it. Live latency in final refers to the prior recorded live run, not this replay.",
+    "models": {
+      "opus": {
+        "counts": {
+          "turns": 90,
+          "within": 85,
+          "over": 4,
+          "under": 1,
+          "missing": 0,
+          "fallback": 12,
+          "noRequest": 0,
+          "noDecision": 0
+        },
+        "requestMismatches": 0
+      },
+      "fable": {
+        "counts": {
+          "turns": 90,
+          "within": 86,
+          "over": 3,
+          "under": 1,
+          "missing": 0,
+          "fallback": 11,
+          "noRequest": 0,
+          "noDecision": 0
+        },
+        "requestMismatches": 0
+      }
+    }
+  }
+}

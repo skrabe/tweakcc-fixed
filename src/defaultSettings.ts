@@ -1,3 +1,4 @@
+import { DEFAULT_ROUTER_LEVELS } from './routerEffortGuidance';
 import { Settings, InputPatternHighlighter, Toolset, Theme } from './types';
 
 // The complexity-router classifier (Haiku) system prompt. Fully user-editable in
@@ -771,38 +772,18 @@ export const DEFAULT_SETTINGS: Settings = {
     offerClearContextOnPlanAccept: true,
   },
   complexityRouter: {
+    provider: 'haiku',
+    jevModel: 'jev-1.13.0',
+    jevTimeoutMs: 2000,
+    contextBudgetBytes: 24000,
+    summaryMaxChars: 6000,
     enabled: false,
     pinPerTask: true,
     messageCap: 100000,
     assistantCap: 100000,
     timeoutMs: 15000,
     systemPrompt: DEFAULT_ROUTER_SYSTEM_PROMPT,
-    levels: [
-      {
-        id: 'routine',
-        label: 'Routine',
-        help: 'Mechanical, well-scoped work: a rename, formatting, a search, a version bump, a one-line or single-file edit, or a direct factual question with a known answer',
-        effort: 'low',
-      },
-      {
-        id: 'standard',
-        label: 'Standard',
-        help: 'The everyday coding workflow: implement a normal feature, a localized change, a moderate bug fix, ordinary tool/file work. The default when the task is ordinary or you are unsure',
-        effort: 'medium',
-      },
-      {
-        id: 'hard',
-        label: 'Hard',
-        help: 'Demanding work that needs careful reasoning: architecture/design, cross-file or multi-module refactors, root-cause debugging, security/concurrency/performance review. Most genuinely hard coding lives here',
-        effort: 'high',
-      },
-      {
-        id: 'frontier',
-        label: 'Frontier',
-        help: 'Rare. Reserve for genuinely frontier problems - the deepest reasoning where even strong effort may fall short (novel algorithm design, subtle distributed/concurrency correctness) - or an explicit max-effort request like "ultrathink". Not just because a task is hard',
-        effort: 'max',
-      },
-    ],
+    levels: DEFAULT_ROUTER_LEVELS,
   },
   inputPatternHighlighters: [],
   inputPatternHighlightersTestText: 'Type test text here to see highlighting',

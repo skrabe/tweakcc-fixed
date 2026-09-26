@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "description": "Frozen before outputs: semantic paraphrases and shared vocabulary with different remaining work. Tests semantic routing, not category triggers. Labels assess effort calibration, not task quality.",
+  "cases": [
+    {
+      "id": "invariance-paraphrase-ready-a",
+      "domain": "semantic-invariance",
+      "turns": [
+        {
+          "message": "The reasoning is complete and the conclusions are verified. Put the provided conclusions into the supplied table without revisiting them.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "invariance-paraphrase-ready-b",
+      "domain": "semantic-invariance",
+      "turns": [
+        {
+          "message": "Everything substantive has already been checked. Transfer those established findings into the requested columns.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "invariance-paraphrase-open-a",
+      "domain": "semantic-invariance",
+      "turns": [
+        {
+          "message": "Several plausible explanations remain and each predicts different outcomes. Determine which survives the evidence and verify the consequences across the interacting parts.",
+          "allowed": [2, 2],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "invariance-paraphrase-open-b",
+      "domain": "semantic-invariance",
+      "turns": [
+        {
+          "message": "We have competing accounts with conflicting implications. Resolve them using the observations, then check the dependent consequences together.",
+          "allowed": [2, 2],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "invariance-same-vocabulary-resolved",
+      "domain": "semantic-invariance",
+      "turns": [
+        {
+          "message": "The distributed transaction correctness proof has been completed and independently verified. Return only its supplied title: Distributed Transaction Correctness.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "invariance-same-vocabulary-unresolved",
+      "domain": "semantic-invariance",
+      "turns": [
+        {
+          "message": "The distributed transaction correctness proof is incomplete: acknowledgments may precede durable replication during recovery. Resolve whether acknowledged writes can disappear and establish correctness.",
+          "allowed": [2, 3],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "invariance-quoted-complexity",
+      "domain": "semantic-invariance",
+      "turns": [
+        {
+          "message": "The phrase \"derive a novel proof of distributed transaction correctness\" is quoted in this text. Count the words in that phrase; do not perform the quoted task.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "invariance-actual-complexity",
+      "domain": "semantic-invariance",
+      "turns": [
+        {
+          "message": "Derive a novel proof of distributed transaction correctness for this previously unmodeled recovery protocol, accounting for arbitrary message reordering and independently durable logs.",
+          "allowed": [2, 3],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "invariance-plain-language-hard",
+      "domain": "semantic-invariance",
+      "turns": [
+        {
+          "message": "Two parts of the system can each believe the other finished first, and the evidence conflicts after a restart. Work out every relevant ordering and establish when records can be lost.",
+          "allowed": [2, 3],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "invariance-complex-language-easy",
+      "domain": "semantic-invariance",
+      "turns": [
+        {
+          "message": "For the completed adversarial asymptotic analysis of the Byzantine consensus protocol, copy the approved identifier from the provided header exactly.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "invariance-resolved-followup",
+      "domain": "semantic-invariance",
+      "turns": [
+        {
+          "message": "The earlier uncertainty is settled, the checks passed and the task is complete. Reply with the already-established final number only.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "invariance-unresolved-followup",
+      "domain": "semantic-invariance",
+      "turns": [
+        {
+          "message": "The earlier uncertainty remains, the checks contradict each other and the task is unfinished. Identify which assumptions fail and resolve the interaction before giving the final number.",
+          "allowed": [2, 2],
+          "fixture": 2
+        }
+      ]
+    }
+  ]
+}

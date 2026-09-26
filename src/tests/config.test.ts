@@ -266,6 +266,61 @@ describe('config.ts', () => {
         });
       const defLevels = DEFAULT_SETTINGS.complexityRouter.levels;
 
+      it('preserves legacy Haiku routing without enabling external data sharing', async () => {
+        vi.spyOn(fs, 'readFile').mockResolvedValue(
+          mkConfig({ enabled: true, pinPerTask: true })
+        );
+        const result = (await readConfigFile()).settings.complexityRouter;
+        expect(result.provider).toBe('haiku');
+        expect(result.enabled).toBe(true);
+        expect(result.pinPerTask).toBe(true);
+      });
+
+      it('preserves explicit Jev selection and adaptive effort while bounding context', async () => {
+        vi.spyOn(fs, 'readFile').mockResolvedValue(
+          mkConfig({
+            enabled: true,
+            provider: 'jev',
+            pinPerTask: false,
+            jevTimeoutMs: 1,
+            jevConfidenceThreshold: 0.73,
+            contextBudgetBytes: 200000,
+            summaryMaxChars: 200000,
+            jevModel: 'unsupported',
+          })
+        );
+        const result = (await readConfigFile()).settings.complexityRouter;
+        expect(result).toMatchObject({
+          provider: 'jev',
+          pinPerTask: false,
+          jevTimeoutMs: 250,
+          contextBudgetBytes: 28000,
+          summaryMaxChars: 12000,
+          jevModel: 'jev-1.13.0',
+        });
+        expect(result).not.toHaveProperty('jevConfidenceThreshold');
+      });
+
+      it('rejects malformed Jev settings and unknown providers', async () => {
+        vi.spyOn(fs, 'readFile').mockResolvedValue(
+          mkConfig({
+            provider: 'external',
+            jevTimeoutMs: '2000',
+            jevConfidenceThreshold: null,
+            contextBudgetBytes: [],
+            summaryMaxChars: -10,
+          })
+        );
+        const result = (await readConfigFile()).settings.complexityRouter;
+        expect(result).toMatchObject({
+          provider: 'haiku',
+          jevTimeoutMs: 2000,
+          contextBudgetBytes: 24000,
+          summaryMaxChars: 500,
+        });
+        expect(result).not.toHaveProperty('jevConfidenceThreshold');
+      });
+
       it('backfills an empty levels array to the defaults (no silent no-op)', async () => {
         vi.spyOn(fs, 'readFile').mockResolvedValue(
           mkConfig({ enabled: true, levels: [] })

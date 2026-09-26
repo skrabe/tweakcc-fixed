@@ -1,0 +1,244 @@
+{
+  "version": 1,
+  "description": "Frozen held-out synthetic effort intervals written before any classification outputs; low=0 medium=1 high=2 max=3. Labels assess routing, not answer quality.",
+  "cases": [
+    {
+      "id": "hold-support-tag",
+      "domain": "support",
+      "turns": [
+        {
+          "message": "Tag each support ticket using this explicit keyword-to-category mapping.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "hold-support-root",
+      "domain": "support",
+      "turns": [
+        {
+          "message": "Find why intermittent account merges lose organization memberships across two eventually consistent systems; conflicting audit trails need reconstruction.",
+          "allowed": [2, 3],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "hold-logistics-label",
+      "domain": "logistics",
+      "turns": [
+        {
+          "message": "Print the supplied approved destination in the required label template.",
+          "allowed": [0, 0],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "hold-logistics-plan",
+      "domain": "logistics",
+      "turns": [
+        {
+          "message": "Coordinate a warehouse move across three suppliers with uncertain lead times, perishable stock and no interruption to regulated cold-chain deliveries.",
+          "allowed": [2, 2],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "hold-education-quiz",
+      "domain": "education",
+      "turns": [
+        {
+          "message": "Write five basic comprehension questions from this short supplied passage, with answer keys.",
+          "allowed": [1, 1],
+          "fixture": 1
+        }
+      ]
+    },
+    {
+      "id": "hold-education-research",
+      "domain": "education",
+      "turns": [
+        {
+          "message": "Evaluate whether this intervention caused the observed gains given selection bias, clustered assignment, attrition and conflicting subgroup effects.",
+          "allowed": [2, 2],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "hold-data-map",
+      "domain": "data",
+      "turns": [
+        {
+          "message": "Convert the provided clean CSV to the supplied JSON schema using the exact field mapping.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "hold-data-diagnose",
+      "domain": "data",
+      "turns": [
+        {
+          "message": "Investigate an unexplained metric reversal after aggregation and identify whether cohort selection or instrumentation changes explain it.",
+          "allowed": [2, 2],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "hold-ops-restart",
+      "domain": "operations",
+      "turns": [
+        {
+          "message": "Restart the named local development worker and report whether the health endpoint becomes ready.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "hold-ops-risk",
+      "domain": "operations",
+      "turns": [
+        {
+          "message": "Design a disaster recovery test that detects split-brain risk across independent control planes while proving rollback cannot corrupt durable records.",
+          "allowed": [2, 3],
+          "fixture": 2
+        }
+      ]
+    },
+    {
+      "id": "hold-code-copy",
+      "domain": "coding",
+      "turns": [
+        {
+          "message": "Add the existing loading indicator to the second screen using exactly the same pattern.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "hold-code-standard",
+      "domain": "coding",
+      "turns": [
+        {
+          "message": "Implement a normal searchable settings list with debounce and tests, following the application conventions.",
+          "allowed": [1, 1],
+          "fixture": 1
+        }
+      ]
+    },
+    {
+      "id": "hold-code-proof",
+      "domain": "coding",
+      "turns": [
+        {
+          "message": "Construct a proof of a new sublinear streaming algorithm that tolerates adversarial adaptive queries with strict memory bounds.",
+          "allowed": [3, 3],
+          "fixture": 3
+        }
+      ]
+    },
+    {
+      "id": "hold-edit-summary",
+      "domain": "writing",
+      "turns": [
+        {
+          "message": "Summarize the supplied completed meeting notes into decisions and owners.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "hold-edit-contradictions",
+      "domain": "writing",
+      "turns": [
+        {
+          "message": "Resolve contradictions between the report findings and its executive conclusions while preserving uncertainty and evaluating competing explanations.",
+          "allowed": [1, 2],
+          "fixture": 1
+        }
+      ]
+    },
+    {
+      "id": "hold-unknown",
+      "domain": "ambiguous",
+      "turns": [
+        {
+          "message": "I have an issue with my account.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    },
+    {
+      "id": "hold-past-hard-simple",
+      "domain": "transition",
+      "turns": [
+        {
+          "message": "Diagnose divergent durable records after a recovery event involving independently replicated storage and transaction logs.",
+          "allowed": [2, 3],
+          "fixture": 2
+        },
+        {
+          "message": "Now give me just the exact name of the setting you changed.",
+          "allowed": [0, 1],
+          "fixture": 0,
+          "summary": "The difficult incident diagnosis is complete and delivered; the user now requests only a presentation or factual follow-up."
+        }
+      ]
+    },
+    {
+      "id": "hold-past-hard-format",
+      "domain": "transition",
+      "turns": [
+        {
+          "message": "Diagnose divergent durable records after a recovery event involving independently replicated storage and transaction logs.",
+          "allowed": [2, 3],
+          "fixture": 2
+        },
+        {
+          "message": "Convert the completed result to the supplied table format without reanalyzing it.",
+          "allowed": [0, 1],
+          "fixture": 0,
+          "summary": "The difficult incident diagnosis is complete and delivered; the user now requests only a presentation or factual follow-up."
+        }
+      ]
+    },
+    {
+      "id": "hold-past-hard-continue",
+      "domain": "transition",
+      "turns": [
+        {
+          "message": "Diagnose divergent durable records after a recovery event involving independently replicated storage and transaction logs.",
+          "allowed": [2, 3],
+          "fixture": 2
+        },
+        {
+          "message": "Continue the unresolved root-cause investigation and test the competing hypotheses.",
+          "allowed": [2, 2],
+          "fixture": 2,
+          "summary": "The complex incident remains unresolved. Two competing explanations require investigation."
+        }
+      ]
+    },
+    {
+      "id": "hold-medical-sort",
+      "domain": "high-stakes",
+      "turns": [
+        {
+          "message": "Sort the already-approved clinical appointment list by date without interpreting any clinical information.",
+          "allowed": [0, 1],
+          "fixture": 0
+        }
+      ]
+    }
+  ]
+}

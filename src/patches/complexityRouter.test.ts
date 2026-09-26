@@ -1,3 +1,4 @@
+import vm from 'node:vm';
 import { describe, expect, it, beforeEach } from 'vitest';
 import { writeComplexityRouter } from './complexityRouter';
 import { clearRequireFuncNameCache } from './helpers';
@@ -65,6 +66,12 @@ const SID_SHAPE = 'getSessionId(){return It()}';
 // onRestoreMessage with the "message_selector" source.
 const RESTORE_SHAPE =
   'function P9o(p){return me(Sb,{onRestoreMessage:(ut)=>Dlr(ut,"message_selector"),onSummarize:()=>0})}';
+
+beforeEach(() => {
+  (
+    globalThis as unknown as Record<string, unknown>
+  ).__tweakccRouterSelectedModel = () => 'm';
+});
 
 const FILE = `var head=1;${GB_SHAPE}${VPT_SHAPE}${KM_SHAPE}${ZE_SHAPE}${COMPACT_SHAPE}${RESTORE_SHAPE}${XQ_SHAPE}${HMM_SHAPE}var tail=2;`;
 
@@ -236,6 +243,90 @@ const extractWrappedResolver = (
 };
 
 describe('writeComplexityRouter', () => {
+  it.each([
+    ['claude-opus-5-5', 'medium'],
+    ['claude-fable-5-1', 'high'],
+  ])(
+    'isolates inherited %s subagent effort from the parent',
+    async (model, native) => {
+      const request =
+        'function duration(e,n,r,s,g){return{type:"system",subtype:"turn_duration",durationMs:e,messageCount:r}}' +
+        'function*query(e,n,r,s,g,h){let S=f=>f(),model=h.model;let effort=S(()=>lb(model,h.effortValue,{turnEffort:h.turnEffort,hookEffortValue:h.hookEffortValue}));yield effort}' +
+        'function finish(messages){return duration(D,V,U(messages,nC))}' +
+        'function render(m){let{message:l,addMargin:p,verb:h}=m,q="1s",W="now";return{children:`${h} for ${q}${W?` \\xB7 done ${W}`:""}`}}';
+      const patched = writeComplexityRouter(FILE_LB + request, cfg())!;
+      expect(patched).not.toBeNull();
+      const resolver = patched.slice(
+        patched.indexOf('function lb('),
+        patched.indexOf('function D(')
+      );
+      const pipeline = patched.slice(
+        patched.indexOf('function*query('),
+        patched.indexOf('function finish(')
+      );
+      const state = { effort: 'low', baseline: undefined as unknown };
+      let syncCalls = 0;
+      const context = vm.createContext({
+        model,
+        N_: () => true,
+        G: () => null,
+        dM: () => undefined,
+        T: () => native,
+        D: (value: unknown) => value,
+        i$: () => true,
+        T5: () => true,
+        __tweakccRouterSyncSelection: () => {
+          syncCalls++;
+          return model;
+        },
+        __tweakccRouterState: () => state,
+      });
+      vm.runInContext(resolver + pipeline, context);
+      const run = (options: Record<string, unknown>) => {
+        context.options = { model, ...options };
+        return vm.runInContext(
+          'query([],null,null,null,null,options).next().value',
+          context
+        );
+      };
+      expect(
+        run({
+          querySource: 'repl_main_thread',
+          agentId: 'child',
+          effortValue: 'max',
+        })
+      ).toBe('max');
+      expect(syncCalls).toBe(0);
+      expect(state.baseline).toBeUndefined();
+      expect(run({ querySource: 'repl_main_thread' })).toBe('low');
+      expect(state.baseline).toBeNull();
+      expect(
+        await Promise.all([
+          Promise.resolve().then(() =>
+            run({ querySource: 'agent', agentId: 'one' })
+          ),
+          Promise.resolve().then(() =>
+            run({ querySource: 'repl_main_thread' })
+          ),
+          Promise.resolve().then(() =>
+            run({ querySource: 'sdk', agentId: 'two' })
+          ),
+        ])
+      ).toEqual([native, 'low', native]);
+      expect(
+        run({ querySource: 'agent', agentId: 'one', turnEffort: 'high' })
+      ).toBe('high');
+      expect(
+        run({ querySource: 'agent', agentId: 'one', hookEffortValue: 'max' })
+      ).toBe('max');
+      expect(run({ querySource: 'route_complexity' })).toBe(native);
+      expect(run({ querySource: 'sdk' })).toBe('low');
+      expect(vm.runInContext('lb(model)', context)).toBe('low');
+      expect(state.effort).toBe('low');
+      expect(state.baseline).toBeNull();
+    }
+  );
+
   it('wraps the resolver, hooks the submit handler, and emits the Haiku classifier', () => {
     const out = writeComplexityRouter(FILE, cfg());
     expect(out).not.toBeNull();
@@ -243,7 +334,7 @@ describe('writeComplexityRouter', () => {
     expect(r).toContain('function __tweakccRouterClassify');
     expect(r).toContain('async function __tweakccRouterClassifyLlm');
     expect(r).toContain('var __st=__tweakccRouterState();');
-    expect(r).toContain('let __twkRE=__st.effort;');
+    expect(r).toContain('let __twkRE=__selected===e?__st.effort:void 0;');
     expect(r).toContain('if(__twkRE&&o==null&&(t==null||t===__st.baseline))');
     // The submit hook threads the in-use model (captured from r.options
     // .mainLoopModel above the throw) into the classifier for the <context> block.
@@ -261,9 +352,11 @@ describe('writeComplexityRouter', () => {
     expect(out).not.toBeNull();
     const r = out as string;
     expect(r).toContain('function __tweakccRouterClassify');
-    expect(r).toContain('let __twkRE=__st.effort;');
+    expect(r).toContain('let __twkRE=__selected===e?__st.effort:void 0;');
     // Wrap rides RIGHT AFTER the env read (=mH();), before CC's body.
-    expect(r).toContain('f=mH();var __st=__tweakccRouterState();');
+    expect(r).toContain(
+      'f=mH();var __request=arguments[3];if(!__request||(!__request.agentId&&(__request.querySource?.startsWith("repl_main_thread")||__request.querySource==="sdk"))){var __selected=__tweakccRouterSyncSelection();var __st=__tweakccRouterState();'
+    );
     expect(r).toContain('if(__twkRE&&f==null&&(o==null||o===__st.baseline))');
     // Support guards captured from the tail-called normalizer (K2/X2).
     expect(r).toContain('if(__twkRE==="max"&&!K2(e))__twkRE="high";');
@@ -282,7 +375,9 @@ describe('writeComplexityRouter', () => {
     const out = writeComplexityRouter(FILE_CA, cfg());
     expect(out).not.toBeNull();
     const r = out as string;
-    expect(r).toContain('l=U(e)!==null;var __st=__tweakccRouterState();');
+    expect(r).toContain(
+      'l=U(e)!==null;var __request=arguments[3];if(!__request||(!__request.agentId&&(__request.querySource?.startsWith("repl_main_thread")||__request.querySource==="sdk"))){var __selected=__tweakccRouterSyncSelection();var __st=__tweakccRouterState();'
+    );
     expect(r).toContain(
       'if(__twkRE&&s==null&&r==null&&(n==null||n===__st.baseline))'
     );
@@ -300,7 +395,7 @@ describe('writeComplexityRouter', () => {
     // Wrap rides RIGHT AFTER the env read (= $P();), which is after the
     // hook short-circuit — a defined hookEffortValue never reaches us.
     expect(r).toContain(
-      'if(f!==void 0){let v=typeof f==="number"&&d?hN(f):f;return P(v,e)}let s=n&&x$(e),l=A(e),c=$P();var __st=__tweakccRouterState();'
+      'if(f!==void 0){let v=typeof f==="number"&&d?hN(f):f;return P(v,e)}let s=n&&x$(e),l=A(e),c=$P();var __request=arguments[3];if(!__request||(!__request.agentId&&(__request.querySource?.startsWith("repl_main_thread")||__request.querySource==="sdk"))){var __selected=__tweakccRouterSyncSelection();var __st=__tweakccRouterState();'
     );
     expect(r).toContain(
       'if(__twkRE&&c==null&&r==null&&(o==null||o===__st.baseline))'
@@ -322,7 +417,7 @@ describe('writeComplexityRouter', () => {
     // Wrap still rides RIGHT AFTER the env read (= dM();), which now sits
     // alone rather than beside the launch-pin and default bindings.
     expect(r).toContain(
-      'if(s!==void 0){let E=typeof s==="number"&&f?BO(s):s;return D(E,e)}let d=dM();var __st=__tweakccRouterState();'
+      'if(s!==void 0){let E=typeof s==="number"&&f?BO(s):s;return D(E,e)}let d=dM();var __request=arguments[3];if(!__request||(!__request.agentId&&(__request.querySource?.startsWith("repl_main_thread")||__request.querySource==="sdk"))){var __selected=__tweakccRouterSyncSelection();var __st=__tweakccRouterState();'
     );
     // No pin term to consult: ENV, per-turn effort, and a FALLBACK diverging
     // from the launch baseline are the only things the router yields to.
@@ -346,9 +441,11 @@ describe('writeComplexityRouter', () => {
     const r = out as string;
     // Runtime + wrap emitted.
     expect(r).toContain('function __tweakccRouterClassify');
-    expect(r).toContain('let __twkRE=__st.effort;');
+    expect(r).toContain('let __twkRE=__selected===e?__st.effort:void 0;');
     // The router check rides RIGHT AFTER the env read (=tWe();), before CC's body.
-    expect(r).toContain('o=tWe();var __st=__tweakccRouterState();');
+    expect(r).toContain(
+      'o=tWe();var __request=arguments[3];if(!__request||(!__request.agentId&&(__request.querySource?.startsWith("repl_main_thread")||__request.querySource==="sdk"))){var __selected=__tweakccRouterSyncSelection();var __st=__tweakccRouterState();'
+    );
     expect(r).toContain('if(__twkRE&&o==null&&(t==null||t===__st.baseline))');
     // The support guards were captured from the NEW assignment form (FPe/Hoe),
     // proving the capture-group indices track the iQ shape, not the legacy one.
@@ -799,6 +896,53 @@ describe('writeComplexityRouter', () => {
     });
   });
 
+  it('does not classify ordinary model selections', async () => {
+    (
+      globalThis as unknown as Record<string, unknown>
+    ).__tweakccRouterSelectedModel = () => null;
+    const { gb, captured } = makeGB([{ level: 3, summary: 'unused' }]);
+    const classify = extractClassify(
+      writeComplexityRouter(FILE, cfg()) as string,
+      gb
+    );
+    await classify('Review the database migration', 'prompt', 'm');
+    expect(captured).toHaveLength(0);
+  });
+
+  it('restores native effort when switching away and never routes another model', () => {
+    setRouterState({ level: 1, effort: 'medium', baseline: undefined });
+    const resolve = extractWrappedResolver(
+      writeComplexityRouter(FILE, cfg()) as string
+    );
+    expect(resolve('m', undefined)).toBe('medium');
+    expect(resolve('other-model', undefined)).toBe('YIELDED');
+    (
+      globalThis as unknown as Record<string, unknown>
+    ).__tweakccRouterSelectedModel = () => null;
+    expect(resolve('m', undefined)).toBe('YIELDED');
+    expect(routerState().effort).toBeUndefined();
+  });
+
+  it('discards a late legacy classification after switching off', async () => {
+    let finish!: (result: unknown) => void;
+    setRouterState({ summary: 'previous context' });
+    const classify = extractClassify(
+      writeComplexityRouter(FILE, cfg()) as string,
+      () =>
+        new Promise(resolve => {
+          finish = resolve;
+        })
+    );
+    const pending = classify('Review correctness', 'prompt', 'm');
+    (
+      globalThis as unknown as Record<string, unknown>
+    ).__tweakccRouterSelectedModel = () => null;
+    finish({ level: 3, summary: 'stale context' });
+    await pending;
+    expect(routerState().effort).toBeUndefined();
+    expect(routerState().summary).toBe('previous context');
+  });
+
   describe('effort-resolver wrap precedence (real injected logic)', () => {
     beforeEach(() => {
       delete (globalThis as unknown as Record<string, unknown>).__tweakccRouter;
@@ -882,8 +1026,9 @@ describe('writeComplexityRouter', () => {
         'AbortController',
         'setTimeout',
         'clearTimeout',
+        '__tweakccRouterState',
         m[0] + ';return __tweakccRouterClassifyLlm;'
-      )(stubGB, km, AbortController, setTimeout, clearTimeout) as (
+      )(stubGB, km, AbortController, setTimeout, clearTimeout, () => ({})) as (
         input: string,
         max: number
       ) => Promise<{ level: number; summary?: string } | null>;

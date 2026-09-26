@@ -98,6 +98,7 @@ import { writeAutonomousOperationAllModels } from './autonomousOperationAllModel
 import { writeOutputStyleTurnReminder } from './outputStyleTurnReminder';
 import { writeAutoModeClassifierModel } from './autoModeClassifierModel';
 import { writeComplexityRouter } from './complexityRouter';
+import { writeComplexityRouterModels } from './complexityRouterModels';
 import { writeFablePlan } from './fablePlan';
 import { writeVoiceMode } from './voiceMode';
 import { writeChannelsMode } from './channelsMode';
@@ -496,7 +497,7 @@ const PATCH_DEFINITIONS = [
     name: '[EXPERIMENTAL] Complexity effort router',
     group: PatchGroup.FEATURES,
     description:
-      'Auto-route reasoning effort (thinking depth) by task complexity: routine work runs at low effort, the top tier only for genuinely frontier problems. Rides on your current model - no model switch, no prompt-cache churn. A one-shot Haiku side-call routes each prompt using a rolling TL;DR summary of the session (so terse follow-ups that continue hard work stay elevated; persisted across resume, reseeded from the main model summary on compaction). While on it drives effort, overriding your saved effortLevel default; an in-session /effort or CLAUDE_CODE_EFFORT_LEVEL still wins. Off by default.',
+      'Choose reasoning effort for each user message only while an Effort Router model entry is selected. Uses Haiku, or Jev decisions with asynchronous Haiku conversation summaries, and honors explicit effort overrides. Jev requires a TypeSafe API key and sends the current message and bounded conversation context to TypeSafe. Off by default.',
     modelFacing: true,
   },
   {
@@ -505,6 +506,14 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.FEATURES,
     description:
       'Adds a "fableplan" entry to /model: Fable while planning, Opus while executing, each at the reasoning effort you set for that model in /model (Claude Code\'s per-model effort). Mirrors the mechanism Claude Code already ships for opusplan, so it is a MODEL YOU SELECT — nothing changes for any other model, your selection stays "fableplan" throughout, and no model is ever switched underneath you mid-session. Also surfaces Claude Code\'s own "Yes, clear context (N% used)" option on the plan-approval dialog, which Claude Code defaults off: clearing hands only the plan to the executing model, where continuing re-sends the entire planning transcript to a different one. Off by default.',
+    modelFacing: true,
+  },
+  {
+    id: 'complexity-router-models',
+    name: 'Effort Router model entries',
+    group: PatchGroup.FEATURES,
+    description:
+      'Adds opt-in Opus 5.5 and Fable 5.1 + Effort Router entries to /model. Ordinary models keep native effort behavior. Selecting a router entry enables the configured effort provider; switching away stops routing and background summaries.',
     modelFacing: true,
   },
   {
@@ -1280,6 +1289,10 @@ export const applyCustomization = async (
     'fable-plan': {
       fn: c => writeFablePlan(c, config.settings.fablePlan),
       condition: config.settings.fablePlan.enabled,
+    },
+    'complexity-router-models': {
+      fn: c => writeComplexityRouterModels(c),
+      condition: config.settings.complexityRouter.enabled,
     },
     'allow-custom-agent-models': {
       fn: c => writeAllowCustomAgentModels(c),

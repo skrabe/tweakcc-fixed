@@ -234,6 +234,11 @@ export interface FablePlanConfig {
 }
 
 export interface ComplexityRouterConfig {
+  provider?: 'haiku' | 'jev';
+  jevModel?: string;
+  jevTimeoutMs?: number;
+  contextBudgetBytes?: number;
+  summaryMaxChars?: number;
   enabled: boolean;
   pinPerTask: boolean; // default TRUE - monotonic floor: routed level never drops below the session max (only escalates). Off = track each message up and down.
   messageCap: number; // max chars of a user message (new + previous) fed to the classifier
