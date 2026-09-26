@@ -95,6 +95,7 @@ import { writeResponsiveMode } from './responsiveMode';
 import { writeAllowCustomAgentModels } from './allowCustomAgentModels';
 import { writeMaxEffortDefault } from './maxEffortDefault';
 import { writeAutonomousOperationAllModels } from './autonomousOperationAllModels';
+import { writeRefusalFallbackModel } from './refusalFallbackModel';
 import { writeOutputStyleTurnReminder } from './outputStyleTurnReminder';
 import { writeAutoModeClassifierModel } from './autoModeClassifierModel';
 import { writeComplexityRouter } from './complexityRouter';
@@ -473,6 +474,14 @@ const PATCH_DEFINITIONS = [
     description:
       'Treats your selected model as Fable/Mythos everywhere CC branches on model family (flips the zQ gate): you get the autonomous-operation prompt (proceed without asking for reversible in-scope work; finish the job before ending the turn), the "# Communicating with the user" comms block in place of "# Text output", /loop dynamic-pacing behavior, and brief-mode comms shaping. Per-model feature-flag routing also follows fable but is inert on a local install',
     modelFacing: true,
+  },
+  {
+    id: 'refusal-fallback-model',
+    name: 'Route the refusal fallback, then switch back',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'When safeguards flag a message, Claude Code retries it on a fallback model from its own route table, keyed by the flagged model and the refusal category, and keeps the session on that model. This merges refusalFallbackRoutes from config.json over that table (a category you leave out keeps its stock route; a route is a model id or a chain of them) and switches the session back to its own model once the flagged turn is answered, with a line in the transcript. refusalFallbackMaxReturns in config.json (default 1, null for no limit) caps consecutive returns, so a conversation that keeps being flagged stays on the fallback instead of paying a refusal and a retry every turn',
+    modelFacing: false,
   },
   {
     id: 'output-style-turn-reminder',
@@ -1257,6 +1266,15 @@ export const applyCustomization = async (
     'autonomous-operation-all-models': {
       fn: c => writeAutonomousOperationAllModels(c),
       condition: !!config.settings.misc?.autonomousOperationAllModels,
+    },
+    'refusal-fallback-model': {
+      fn: c =>
+        writeRefusalFallbackModel(
+          c,
+          config.settings.misc?.refusalFallbackRoutes,
+          config.settings.misc?.refusalFallbackMaxReturns
+        ),
+      condition: !!config.settings.misc?.refusalFallbackModel,
     },
     'output-style-turn-reminder': {
       fn: c => writeOutputStyleTurnReminder(c),

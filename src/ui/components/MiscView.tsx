@@ -94,6 +94,9 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     enableChannelsMode: false,
     maxEffortDefault: false,
     autonomousOperationAllModels: false,
+    refusalFallbackModel: false,
+    refusalFallbackRoutes: {},
+    refusalFallbackMaxReturns: 1 as number | null,
     outputStyleTurnReminder: false,
     autoModeClassifierModel: 'default' as AutoModeClassifierModel,
     suppressDeferredTools: false,
@@ -831,6 +834,20 @@ export function MiscView({ onSubmit }: MiscViewProps) {
             ensureMisc();
             settings.misc!.autonomousOperationAllModels =
               !settings.misc!.autonomousOperationAllModels;
+          });
+        },
+      },
+      {
+        id: 'refusalFallbackModel',
+        title: 'Route the refusal fallback, then switch back',
+        description:
+          'When safeguards flag a message, Claude Code retries it on a fallback model from its own route table, keyed by the flagged model and the refusal category, and keeps the session there. With this on, refusalFallbackRoutes in config.json is merged over that table: a category you leave out keeps its stock route, and a route is a model id or a chain of them. Once the flagged turn is answered, the session switches back to its own model and the transcript says so. refusalFallbackMaxReturns in config.json (default 1, null for no limit) caps consecutive returns, so a conversation that keeps being flagged stays on the fallback rather than paying for a refusal and a retry every turn.',
+        getValue: () => settings.misc?.refusalFallbackModel ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.refusalFallbackModel =
+              !settings.misc!.refusalFallbackModel;
           });
         },
       },

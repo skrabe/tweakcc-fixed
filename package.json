@@ -24,7 +24,7 @@
     "test": "vitest run",
     "test:dev": "vitest",
     "test:matcher": "TWEAKCC_MATCHER_CORPUS=1 node tools/runGate.mjs npx vitest run --disableConsoleIntercept --pool=threads --poolOptions.threads.singleThread --testTimeout=1200000 --hookTimeout=1200000 src/systemPromptPieceMatcherCorpus.test.ts",
-    "test:pristine": "TWEAKCC_PRISTINE_PATCHES=1 node tools/runGate.mjs npx vitest run --testTimeout=1200000 --hookTimeout=1200000 src/patches/allPatchesAgainstPristine.test.ts",
+    "test:pristine": "TWEAKCC_PRISTINE_PATCHES=1 node tools/runGate.mjs npx vitest run --testTimeout=1200000 --hookTimeout=1200000 src/patches/allPatchesAgainstPristine.test.ts src/patches/refusalFallbackModelPristine.test.ts",
     "format": "prettier --write src",
     "version-bump:report": "node tools/versionBumpReport.js",
     "prepare": "husky",
