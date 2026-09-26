@@ -22,6 +22,9 @@ const STATE_FILE = path.join(
   '.claude-browser-bridge',
   'install-state.json'
 );
+// setup.mjs exits with this when everything is done except the Claude Desktop step, which has to
+// wait until the app is closed (it rewrites its settings file from memory while running).
+const DESKTOP_PENDING_EXIT = 3;
 // Must match the host exactly. The host hardcodes /tmp (not os.tmpdir(), which on macOS resolves to
 // a per-user /var/folders/… path) — mirror that or the status check reads the wrong path.
 const SOCK = `/tmp/claude-browser-bridge-${os.userInfo().username}.sock`;
@@ -55,6 +58,7 @@ type Screen =
   | 'scope'
   | 'busy'
   | 'extmodal'
+  | 'desktop'
   | 'done'
   | 'howto'
   | 'confirm-uninstall'
@@ -63,6 +67,9 @@ type Screen =
 
 interface InstallState {
   version: string;
+  // Written by bridge 0.13+. Older installs registered the MCP server as
+  // `claude-browser`, which Claude Desktop reserves and drops from its sessions.
+  mcpName?: string;
   scope: string;
   project?: string;
   browsers: string[];
@@ -149,6 +156,11 @@ export const BrowserBridgeView = ({ onBack }: { onBack: () => void }) => {
   const [log, setLog] = useState<string[]>([]);
   const [verifyErr, setVerifyErr] = useState<string | null>(null);
   const [err, setErr] = useState<string>('');
+  const [desktopFor, setDesktopFor] = useState<'install' | 'uninstall'>(
+    'install'
+  );
+  const [desktopErr, setDesktopErr] = useState<string | null>(null);
+  const [desktopNote, setDesktopNote] = useState<string | null>(null);
 
   const refresh = useCallback(() => {
     setState(readState());
@@ -159,6 +171,7 @@ export const BrowserBridgeView = ({ onBack }: { onBack: () => void }) => {
 
   const socketUp = fs.existsSync(SOCK);
   const installed = !!state;
+  const legacyName = installed && !state.mcpName;
 
   const goInstall = () => {
     setScope('global');
@@ -189,14 +202,19 @@ export const BrowserBridgeView = ({ onBack }: { onBack: () => void }) => {
           .filter(l => l.includes('[bridge]'))
           .map(l => l.replace('[bridge]', '').trim())
       );
-      if (r.code !== 0) {
+      if (r.code !== 0 && r.code !== DESKTOP_PENDING_EXIT) {
         setErr('Install failed:\n' + r.out.slice(-600));
         setScreen('error');
         return;
       }
       refresh();
       setSel(0);
-      setScreen('extmodal');
+      setDesktopNote(null);
+      if (r.code === DESKTOP_PENDING_EXIT) {
+        setDesktopFor('install');
+        setDesktopErr(null);
+        setScreen('desktop');
+      } else setScreen('extmodal');
     },
     [refresh]
   );
@@ -228,19 +246,59 @@ export const BrowserBridgeView = ({ onBack }: { onBack: () => void }) => {
         .filter(l => l.includes('[bridge]'))
         .map(l => l.replace('[bridge]', '').trim())
     );
-    if (r.code !== 0) {
+    if (r.code !== 0 && r.code !== DESKTOP_PENDING_EXIT) {
       setErr('Uninstall failed:\n' + r.out.slice(-600));
       refresh();
       setScreen('error');
       return;
     }
-    // Remove the cloned repo too — it only exists because Install fetched it, and the extension
-    // was loaded from it (so removing it also invalidates the unpacked extension in the browser).
-    fs.rmSync(BRIDGE_DIR, { recursive: true, force: true }); // force:true → no throw if already gone
     refresh();
     setSel(0);
-    setScreen('uninstall-done');
+    setDesktopNote(null);
+    if (r.code === DESKTOP_PENDING_EXIT) {
+      // The clone holds setup.mjs, which the desktop step still needs; remove it afterwards.
+      setDesktopFor('uninstall');
+      setDesktopErr(null);
+      setScreen('desktop');
+    } else finishUninstall();
   }, [refresh]);
+
+  // Remove the cloned repo too — it only exists because Install fetched it, and the extension
+  // was loaded from it (so removing it also invalidates the unpacked extension in the browser).
+  function finishUninstall() {
+    fs.rmSync(BRIDGE_DIR, { recursive: true, force: true }); // force:true → no throw if already gone
+    setSel(0);
+    setScreen('uninstall-done');
+  }
+
+  const leaveDesktop = (skipped: boolean) => {
+    if (skipped)
+      setDesktopNote(
+        desktopFor === 'install'
+          ? 'Claude Desktop still has its own Claude in Chrome. Close the app and run Reinstall from a regular terminal to turn it off.'
+          : 'Claude in Chrome is still off in Claude Desktop. To turn it back on, close the app and delete "chromeExtensionEnabled" from ~/Library/Application Support/Claude/claude_desktop_config.json.'
+      );
+    setSel(0);
+    if (desktopFor === 'install') setScreen('extmodal');
+    else finishUninstall();
+  };
+
+  const doDesktop = async () => {
+    setScreen('busy');
+    setBusyMsg('Updating Claude Desktop…');
+    const r = await run([SETUP, 'desktop']);
+    if (r.code === 0) {
+      leaveDesktop(false);
+      return;
+    }
+    setDesktopErr(
+      r.code === DESKTOP_PENDING_EXIT
+        ? 'Claude Desktop is still running. Quit it fully (Cmd+Q, not just the window), then retry.'
+        : 'Failed:\n' + r.out.slice(-400)
+    );
+    setSel(0);
+    setScreen('desktop');
+  };
 
   useInput((_input, key) => {
     if (key.escape) {
@@ -287,11 +345,11 @@ export const BrowserBridgeView = ({ onBack }: { onBack: () => void }) => {
     const items: SelectItem[] = [
       {
         name: 'Global',
-        desc: 'skill in ~/.claude/skills, MCP user scope, disable Claude in Chrome everywhere',
+        desc: 'skill in ~/.claude/skills, MCP user scope, disable Claude in Chrome everywhere (CLI and desktop app)',
       },
       {
         name: `Project (${path.basename(process.cwd())})`,
-        desc: `only for ${process.cwd()} — .mcp.json + project .claude/skills + disable only here`,
+        desc: `only for ${process.cwd()} — .mcp.json + project .claude/skills + disable only here (desktop app unchanged)`,
       },
     ];
     return (
@@ -356,6 +414,43 @@ export const BrowserBridgeView = ({ onBack }: { onBack: () => void }) => {
     );
   }
 
+  if (screen === 'desktop') {
+    const items: SelectItem[] = [
+      { name: "I've quit it →" },
+      { name: 'Skip for now' },
+    ];
+    return (
+      <Box flexDirection="column" gap={1}>
+        <Text bold color="cyan">
+          Quit Claude Desktop
+        </Text>
+        <Text>
+          {desktopFor === 'install'
+            ? 'To turn off the desktop app’s own Claude in Chrome, the app has to be closed: while it runs it rewrites its settings file from memory and would undo the change.'
+            : 'To turn Claude in Chrome back on in the desktop app, the app has to be closed: while it runs it rewrites its settings file from memory and would undo the change.'}
+        </Text>
+        <Text>
+          Quit it with <Text bold>Cmd+Q</Text>, then continue. Reopen it
+          afterwards.
+        </Text>
+        <Text dimColor>
+          Running this inside Claude Desktop? Quitting it ends this session:
+          pick Skip and rerun from a regular terminal.
+        </Text>
+        {desktopErr && <Text color="red">{desktopErr}</Text>}
+        <SelectInput
+          items={items}
+          selectedIndex={sel}
+          onSelect={setSel}
+          onSubmit={name => {
+            if (name === 'Skip for now') leaveDesktop(true);
+            else void doDesktop();
+          }}
+        />
+      </Box>
+    );
+  }
+
   if (screen === 'done')
     return (
       <Box flexDirection="column" gap={1}>
@@ -380,6 +475,7 @@ export const BrowserBridgeView = ({ onBack }: { onBack: () => void }) => {
             Chrome.
           </Text>
         </Box>
+        {desktopNote && <Text color="yellow">{desktopNote}</Text>}
         <SelectInput
           items={[{ name: 'Back' }]}
           selectedIndex={0}
@@ -431,10 +527,14 @@ export const BrowserBridgeView = ({ onBack }: { onBack: () => void }) => {
         </Text>
         <Text> </Text>
         <Text>
-          While on, Claude in Chrome is disabled for the scope you chose.
-          Uninstall
+          While on, Claude in Chrome is disabled for the scope you chose — a
+          global
         </Text>
-        <Text>restores it — but only if we were the one who disabled it.</Text>
+        <Text>
+          install also turns it off in the Claude desktop app. Uninstall
+          restores it —
+        </Text>
+        <Text>but only if we were the one who disabled it.</Text>
         <Text> </Text>
         <Text dimColor>Esc to go back</Text>
       </Box>
@@ -484,6 +584,7 @@ export const BrowserBridgeView = ({ onBack }: { onBack: () => void }) => {
           Removed our MCP entry, skill, native-host manifests, and the local
           repo. Claude in Chrome is back on (unless you had it off before us).
         </Text>
+        {desktopNote && <Text color="yellow">{desktopNote}</Text>}
         <Text color="yellow">
           One step we can&apos;t do for you: open{' '}
           <Text bold>brave://extensions</Text> and Remove the &quot;Better
@@ -512,7 +613,9 @@ export const BrowserBridgeView = ({ onBack }: { onBack: () => void }) => {
   else {
     actions.push({
       name: 'Reinstall / Repair',
-      desc: 're-run setup with current or new options',
+      desc: legacyName
+        ? 'update: renames the MCP server so the Claude desktop app keeps it'
+        : 're-run setup with current or new options',
     });
     actions.push({
       name: 'Uninstall',
@@ -555,6 +658,12 @@ export const BrowserBridgeView = ({ onBack }: { onBack: () => void }) => {
         </Text>
         <Text> Browsers found .... {detected().join(', ') || 'none'}</Text>
       </Box>
+      {legacyName && (
+        <Text color="yellow">
+          Update available: this install&apos;s MCP server name is dropped by
+          the Claude desktop app. Reinstall to fix it.
+        </Text>
+      )}
       <SelectInput
         items={actions}
         selectedIndex={sel}
