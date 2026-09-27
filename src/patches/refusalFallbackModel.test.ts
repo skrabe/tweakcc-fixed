@@ -130,21 +130,136 @@ afterEach(() => {
   }
 });
 
+/** The routes the patched supplier answers with, by running it. */
+const supplied = (file: string): Record<string, unknown> => {
+  const text = moduleText(file, 244);
+  const at = text.indexOf('function o0n(){');
+  // The supplier is followed by the line the patch publishes beside the switch
+  // message, which comes next in the fixture.
+  const end = text.indexOf('globalThis.__tweakccRefusalFallbackLine=', at);
+  return new Function(`${text.slice(at, end)};return o0n()`)() as Record<
+    string,
+    unknown
+  >;
+};
+
+/** The walk over a cut chain, written the way the bundle writes it. */
+const walk = (chain: string[], resolve: (m: string) => string | undefined) =>
+  chain.reduce<
+    | { model: string; skippedStages: string[]; remainingChain: string[] }
+    | undefined
+  >((found, stage, i) => {
+    if (found !== undefined) return found;
+    const model = resolve(stage);
+    return model === undefined
+      ? undefined
+      : {
+          model,
+          skippedStages: chain.slice(0, i),
+          remainingChain: chain.slice(i + 1),
+        };
+  }, undefined);
+
+/** Stand-in for the stock tables: one per flagged model. */
+const STOCK: Record<string, Record<string, string | string[]>> = {
+  'claude-fable-5-1': { bio: 'claude-opus-5', cyber: 'claude-opus-4-8' },
+  'claude-opus-5': { cyber: 'claude-opus-4-8' },
+};
+
+/** The patched walker, run with the supplier's routes as its override. */
+const router = (file: string) => {
+  const text = moduleText(file, 244);
+  const walker = text.slice(text.indexOf('function Dmr('));
+  const route = new Function(
+    '_2',
+    'Mmr',
+    'S2',
+    `${CHAIN_LENGTH}${CHAIN}${walker};return Dmr`
+  )(
+    (model: string) => STOCK[model] ?? {},
+    walk,
+    () => false
+  ) as (e: Record<string, unknown>) => {
+    matched: string;
+    model?: string;
+    reason?: string;
+    chainLength?: number;
+  };
+  const override = supplied(file);
+  return (
+    flagged: string,
+    category: string,
+    usable: (m: string) => boolean = () => true
+  ) =>
+    route({
+      originalModelCanonical: flagged,
+      apiRefusalCategory: category,
+      resolveTarget: (m: string) => (usable(m) ? m : undefined),
+      routesOverride: override,
+    });
+};
+
 describe('writeRefusalFallbackModel: routing', () => {
   it('merges the override over the defaults instead of replacing them', () => {
-    const out = patched(ROUTES);
+    const route = router(patched({ cyber: 'claude-opus-5-5' }));
+    expect(route('claude-fable-5-1', 'cyber')).toMatchObject({
+      matched: 'category',
+      model: 'claude-opus-5-5',
+    });
     // Replacing the table would leave a category the routes omit with no
-    // fallback at all, so the default table has to survive in the expression.
-    expect(out).toContain(
-      's=Object.assign({},_2(n),e.routesOverride??{}),g=r!=null'
+    // fallback at all.
+    expect(route('claude-fable-5-1', 'bio')).toMatchObject({
+      matched: 'category',
+      model: 'claude-opus-5',
+    });
+    expect(route('claude-fable-5-1', 'frontier_llm')).toMatchObject({
+      matched: 'none',
+      reason: 'unmapped',
+    });
+  });
+
+  it('falls back to the stock route when no configured model is usable', () => {
+    // The walker gives up on a mapped chain with no usable model before it
+    // looks anywhere else, so a typo would otherwise cost the retry.
+    const route = router(patched({ cyber: ['claude-opus-typo'] }));
+    expect(
+      route('claude-fable-5-1', 'cyber', m => m !== 'claude-opus-typo')
+    ).toMatchObject({ matched: 'category', model: 'claude-opus-4-8' });
+    // A category the stock table does not route has nothing behind it.
+    expect(
+      router(patched({ frontier_llm: 'claude-opus-typo' }))(
+        'claude-fable-5-1',
+        'frontier_llm',
+        m => m !== 'claude-opus-typo'
+      )
+    ).toMatchObject({ matched: 'none', reason: 'mapped_target_unresolvable' });
+  });
+
+  it('puts the stock route after the configured chain, once, within the chain limit', () => {
+    const chainOf = (routes: Record<string, string | string[]>) =>
+      router(patched(routes))('claude-fable-5-1', 'cyber', () => false)
+        .chainLength;
+    expect(chainOf({ cyber: 'claude-opus-5' })).toBe(2);
+    // Already in the chain, so not walked twice.
+    expect(chainOf({ cyber: ['claude-opus-4-8', 'claude-opus-5'] })).toBe(2);
+    // The walker's own cut keeps the configured models first.
+    expect(
+      chainOf({
+        cyber: ['claude-opus-5', 'claude-opus-5-5', 'claude-sonnet-5'],
+      })
+    ).toBe(3);
+    const route = router(
+      patched({
+        cyber: ['claude-opus-5', 'claude-opus-5-5', 'claude-sonnet-5'],
+      })
     );
-    expect(out).not.toContain('s=e.routesOverride??_2(n)');
+    expect(
+      route('claude-fable-5-1', 'cyber', m => m === 'claude-opus-4-8')
+    ).toMatchObject({ matched: 'none', reason: 'mapped_target_unresolvable' });
   });
 
   it('supplies the configured routes from the supplier the walker is given', () => {
-    expect(patched(ROUTES)).toContain(
-      `function o0n(){return ${JSON.stringify(ROUTES)}}`
-    );
+    expect(supplied(patched(ROUTES))).toEqual(ROUTES);
   });
 
   it('leaves an empty-body function that is not passed as routesOverride alone', () => {
@@ -165,9 +280,11 @@ describe('writeRefusalFallbackModel: config validation', () => {
       empty: [],
       blank: ['claude-opus-5', ' '],
     });
-    expect(out).toContain(
-      'function o0n(){return {"cyber":"claude-opus-5","bio":["claude-opus-5","claude-opus-4-8"]}}'
-    );
+    expect(supplied(out)).toEqual({
+      cyber: 'claude-opus-5',
+      bio: ['claude-opus-5', 'claude-opus-4-8'],
+      blank: ['claude-opus-5'],
+    });
     for (const category of ['frontier_llm', 'other', 'empty', 'blank']) {
       expect(
         warned().some(w => w.includes(`refusalFallbackRoutes.${category}`))
@@ -175,9 +292,50 @@ describe('writeRefusalFallbackModel: config validation', () => {
     }
   });
 
+  it('trims model ids, and skips a route left with none', () => {
+    const warned = warnings();
+    const out = patched({
+      cyber: ' claude-opus-5 ',
+      bio: ['claude-opus-4-8\n', ''],
+      frontier_llm: ['  '],
+    });
+    expect(supplied(out)).toEqual({
+      cyber: 'claude-opus-5',
+      bio: ['claude-opus-4-8'],
+    });
+    expect(warned()).toEqual([
+      'patch: refusalFallbackModel: refusalFallbackRoutes.bio has an empty model id; skipping it',
+      'patch: refusalFallbackModel: skipping refusalFallbackRoutes.frontier_llm: a route is a model id or a non-empty list of model ids',
+    ]);
+  });
+
+  it('keeps a __proto__ key as a route and names it as an unknown category', () => {
+    const warned = warnings();
+    const out = patched(
+      JSON.parse('{"__proto__":["claude-opus-5"],"cyber":"claude-opus-4-8"}')
+    );
+    expect(warned()).toEqual([
+      'patch: refusalFallbackModel: refusalFallbackRoutes.__proto__ is not a refusal category this Claude Code knows (cyber, bio, frontier_llm, reasoning_extraction), so it never matches',
+    ]);
+    const routes = supplied(out);
+    expect(Object.getPrototypeOf(routes)).toBe(Object.prototype);
+    expect(Object.keys(routes)).toEqual(['__proto__', 'cyber']);
+    expect(Object.getOwnPropertyDescriptor(routes, '__proto__')?.value).toEqual(
+      ['claude-opus-5']
+    );
+    // Merged in without touching a prototype, and matching nothing real.
+    const route = router(out);
+    expect(route('claude-fable-5-1', 'cyber')).toMatchObject({
+      model: 'claude-opus-4-8',
+    });
+    expect(route('claude-fable-5-1', 'bio')).toMatchObject({
+      model: 'claude-opus-5',
+    });
+  });
+
   it('ignores routes that are not a map, and says why', () => {
     const warned = warnings();
-    expect(patched(['claude-opus-5'])).toContain('function o0n(){return {}}');
+    expect(supplied(patched(['claude-opus-5']))).toEqual({});
     expect(warned()).toHaveLength(1);
   });
 
@@ -190,7 +348,10 @@ describe('writeRefusalFallbackModel: config validation', () => {
       'patch: refusalFallbackModel: refusalFallbackRoutes.Cyber is not a refusal category this Claude Code knows (cyber, bio, frontier_llm, reasoning_extraction), so it never matches',
     ]);
     // Named, not dropped: the build is the one that decides what matches.
-    expect(out).toContain('{"Cyber":"claude-opus-5","bio":"claude-opus-5"}');
+    expect(supplied(out)).toEqual({
+      Cyber: 'claude-opus-5',
+      bio: 'claude-opus-5',
+    });
   });
 
   it('names a chain longer than Claude Code tries', () => {
@@ -201,9 +362,7 @@ describe('writeRefusalFallbackModel: config validation', () => {
       'claude-sonnet-5',
       'claude-haiku-4-5',
     ];
-    expect(patched({ cyber: chain })).toContain(
-      JSON.stringify({ cyber: chain })
-    );
+    expect(supplied(patched({ cyber: chain }))).toEqual({ cyber: chain });
     expect(warned()).toEqual([
       'patch: refusalFallbackModel: refusalFallbackRoutes.cyber lists 4 models, and Claude Code tries only the first 3',
     ]);
@@ -245,7 +404,7 @@ describe('writeRefusalFallbackModel: the return', () => {
   it('publishes the return and its subscription beside the restore, emitting on its own hub', () => {
     const state = moduleText(patched(ROUTES), 15);
     expect(state).toContain(
-      'globalThis.__tweakccRefusalFallbackOnReturn=(__tweakccF)=>(globalThis.__tweakccRefusalFallbackHub??=new Mt(()=>Fe())).of(n()).subscribe(__tweakccF);globalThis.__tweakccRefusalFallbackReturn=()=>{let __tweakccS=n(),'
+      'globalThis.__tweakccRefusalFallbackOnReturn=(__tweakccF)=>(globalThis.__tweakccRefusalFallbackHub??=new Mt(()=>Fe())).of(n()).subscribe(__tweakccF);globalThis.__tweakccRefusalFallbackReturn=(__tweakccQ)=>{let __tweakccS=n(),'
     );
     expect(state).toMatch(
       /let __tweakccT=gn\(\);[^]*\(globalThis\.__tweakccRefusalFallbackHub\?\?=new Mt\(\(\)=>Fe\(\)\)\)\.of\(__tweakccS\)\.emit\(__tweakccT\);[^]*\};function gn\(\)/
@@ -302,7 +461,7 @@ describe('writeRefusalFallbackModel: the return', () => {
   it("returns at the end of an interactive turn and appends the line through the finally's own append", () => {
     const repl = moduleText(patched(ROUTES), 1405);
     expect(repl).toContain(
-      '}finally{try{let __tweakccN=globalThis.__tweakccRefusalFallbackReturn?.();'
+      '}finally{try{let __tweakccN=globalThis.__tweakccRefusalFallbackReturn?.(Yo?.num_turns>0);'
     );
     expect(repl).toContain(
       'ko({type:"append",messages:[__tweakccM]})}}catch{}'
@@ -315,7 +474,7 @@ describe('writeRefusalFallbackModel: the return', () => {
   it('returns at the end of a headless turn and queues the line ahead of the result', () => {
     const headless = moduleText(patched(ROUTES), 1223);
     expect(headless).toMatch(
-      /noteTurnEnded\(e,r,n\)\{try\{let __tweakccN=globalThis\.__tweakccRefusalFallbackReturn\?\.\(\);[^]*globalThis\.__tweakccRefusalFallbackEvent\?\.\(\{type:"system",subtype:"informational",content:__tweakccL\.content,level:__tweakccL\.level\}\)\}\}catch\{\}if\(this\.selector\.noteTurnEnded\(e\)/
+      /noteTurnEnded\(e,r,n\)\{try\{let __tweakccN=globalThis\.__tweakccRefusalFallbackReturn\?\.\(n\?\.num_turns>0\);[^]*globalThis\.__tweakccRefusalFallbackEvent\?\.\(\{type:"system",subtype:"informational",content:__tweakccL\.content,level:__tweakccL\.level\}\)\}\}catch\{\}if\(this\.selector\.noteTurnEnded\(e\)/
     );
   });
 
@@ -480,9 +639,12 @@ const world = (budget?: unknown) => {
   const unsubscribeApply = kft(setState);
   P2r(() => drops.push(current.id));
 
+  const turnEnd = (globalThis as Record<string, unknown>)
+    .__tweakccRefusalFallbackReturn as (queried: boolean) => unknown;
+
   return {
-    turnEnd: (globalThis as Record<string, unknown>)
-      .__tweakccRefusalFallbackReturn as () => unknown,
+    /** A turn's end; `queried` is whether the turn reached the model. */
+    turnEnd: (queried = true) => turnEnd(queried),
     kft,
     P2r,
     cn,
@@ -578,6 +740,18 @@ describe('the return, executed', () => {
     expect(run.turnEnd()).toBeUndefined();
     run.session.flag();
     expect(run.turnEnd()).toMatchObject({ held: false });
+  });
+
+  it('keeps the budget across a turn that never queried the model', () => {
+    // A local command or a hook that stops the turn says nothing about whether
+    // the model is still flagged.
+    const run = world();
+    run.session.flag();
+    run.turnEnd();
+    expect(run.turnEnd(false)).toBeUndefined();
+    run.session.flag();
+    expect(run.turnEnd()).toMatchObject({ held: true, returns: 1 });
+    expect(run.session.override).toBe('claude-opus-4-8');
   });
 
   it('starts the budget over when another conversation is resumed on the same root', () => {

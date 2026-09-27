@@ -10,7 +10,8 @@
 // from a supplier whose whole body is `{return}`. This patch answers the
 // supplier with the configured routes and makes the walker merge them over the
 // defaults, so a category the configuration omits keeps the route it shipped
-// with.
+// with, and one it names still falls back to that route when none of its own
+// models is usable.
 //
 // The return runs Claude Code's own restore, which unlatches and puts the
 // previous model back, and then does what each surface does with a restore's
@@ -82,12 +83,12 @@ const splice = (
  * categories it knows and how many models of a chain it tries. Either is left
  * out when its site is not found, and the check that needs it is skipped.
  */
-interface RouteLimits {
+export interface RouteLimits {
   categories?: Set<string>;
   chainLength?: number;
 }
 
-const routeLimits = (file: string): RouteLimits => {
+export const routeLimits = (file: string): RouteLimits => {
   const limits: RouteLimits = {};
 
   // A route is cut to its first N models before it is walked.
@@ -135,45 +136,59 @@ const routeLimits = (file: string): RouteLimits => {
 /**
  * The routes as a model id or a chain of them per category, keeping only the
  * entries the walker can use. Both settings come from a hand-edited config.json,
- * and a route that is neither throws in the walker at refusal time. A category
- * the build does not know, or a chain longer than it tries, is kept and named:
- * the first never matches and the second is cut short, and neither says so
- * when a message is flagged.
+ * and a route that is neither throws in the walker at refusal time. Ids are
+ * trimmed, since the catalogue lookup would miss one with a stray space. A
+ * category the build does not know, or a chain longer than it tries, is kept
+ * and named: the first never matches and the second is cut short, and neither
+ * says so when a message is flagged.
+ *
+ * The map has no prototype, so a `__proto__` key is kept and named like any
+ * other unknown category instead of vanishing into the object's prototype.
  */
 const validRoutes = (
   routes: unknown,
   limits: RouteLimits
 ): Record<string, string | string[]> => {
-  if (routes === undefined || routes === null) return {};
+  const valid: Record<string, string | string[]> = Object.create(null);
+  if (routes === undefined || routes === null) return valid;
   if (typeof routes !== 'object' || Array.isArray(routes)) {
     console.warn(
       'patch: refusalFallbackModel: refusalFallbackRoutes should map a refusal category to a model id or a list of them; ignoring it'
     );
-    return {};
+    return valid;
   }
-  const valid: Record<string, string | string[]> = {};
   for (const [category, route] of Object.entries(routes)) {
-    const chain: unknown[] = Array.isArray(route) ? route : [route];
-    if (
-      chain.length === 0 ||
-      !chain.every(model => typeof model === 'string' && model.trim() !== '')
-    ) {
+    const listed: unknown[] = Array.isArray(route) ? route : [route];
+    if (!listed.every(model => typeof model === 'string')) {
       console.warn(
         `patch: refusalFallbackModel: skipping refusalFallbackRoutes.${category}: a route is a model id or a non-empty list of model ids`
       );
       continue;
+    }
+    const chain = (listed as string[]).map(model => model.trim());
+    const kept = chain.filter(model => model !== '');
+    if (kept.length === 0) {
+      console.warn(
+        `patch: refusalFallbackModel: skipping refusalFallbackRoutes.${category}: a route is a model id or a non-empty list of model ids`
+      );
+      continue;
+    }
+    if (kept.length < chain.length) {
+      console.warn(
+        `patch: refusalFallbackModel: refusalFallbackRoutes.${category} has an empty model id; skipping it`
+      );
     }
     if (limits.categories && !limits.categories.has(category)) {
       console.warn(
         `patch: refusalFallbackModel: refusalFallbackRoutes.${category} is not a refusal category this Claude Code knows (${[...limits.categories].join(', ')}), so it never matches`
       );
     }
-    if (limits.chainLength !== undefined && chain.length > limits.chainLength) {
+    if (limits.chainLength !== undefined && kept.length > limits.chainLength) {
       console.warn(
-        `patch: refusalFallbackModel: refusalFallbackRoutes.${category} lists ${chain.length} models, and Claude Code tries only the first ${limits.chainLength}`
+        `patch: refusalFallbackModel: refusalFallbackRoutes.${category} lists ${kept.length} models, and Claude Code tries only the first ${limits.chainLength}`
       );
     }
-    valid[category] = route as string | string[];
+    valid[category] = Array.isArray(route) ? kept : kept[0];
   }
   return valid;
 };
@@ -200,18 +215,56 @@ const validMaxReturns = (maxReturns: unknown): number | null => {
 };
 
 /**
+ * The refusal route walker, found by the destructure plus the `??`, which
+ * appears once: its name, its argument, the original model's binding and the
+ * default table's function, all captured rather than assumed so they move with
+ * the release.
+ */
+export const findRouteWalker = (
+  file: string
+): {
+  index: number;
+  length: number;
+  head: string;
+  walker: string;
+  arg: string;
+  model: string;
+  table: string;
+} | null => {
+  const match = file.match(
+    /(function ([$\w]+)\(([$\w]+)\)\{let\{originalModelCanonical:([$\w]+),apiRefusalCategory:[$\w]+\}=\3,[$\w]+=)\3\.routesOverride\?\?([$\w]+)\(\4\)/
+  );
+  if (!match || match.index === undefined) return null;
+  const [whole, head, walker, arg, model, table] = match;
+  return {
+    index: match.index,
+    length: whole.length,
+    head,
+    walker,
+    arg,
+    model,
+    table,
+  };
+};
+
+/** What the walker's merge is spliced as; its presence marks a merged walker. */
+const MERGE_HEAD = '((__tweakccD,__tweakccO)=>{';
+
+/**
  * Splice 1: merge the override over the defaults.
  *
- * Anchored on the destructure plus the `??`, which appears once. The default
- * table's name is captured from the same match rather than assumed, so it moves
- * with the release.
+ * Categories the override leaves out keep their default route. A category it
+ * names walks the configured chain first and then the default route's models
+ * not already in it, because the walker stops at a mapped chain with no usable
+ * model before it considers anything else: a mistyped or unentitled model
+ * would otherwise mean no retry at all where stock retries. The default table
+ * depends on the flagged model, so the merge runs per call, and the walker's
+ * own cut still bounds the chain, keeping the configured models first.
  */
 const patchRouteMerge = (file: string): string | null => {
-  const pattern =
-    /(function [$\w]+\(([$\w]+)\)\{let\{originalModelCanonical:([$\w]+),apiRefusalCategory:[$\w]+\}=\2,[$\w]+=)\2\.routesOverride\?\?([$\w]+)\(\3\)/;
-  const match = file.match(pattern);
-  if (!match || match.index === undefined) {
-    if (/routesOverride\?\?\{\}\)/.test(file)) {
+  const walker = findRouteWalker(file);
+  if (!walker) {
+    if (file.includes(MERGE_HEAD)) {
       debug('patch: refusalFallbackModel: routes already merged, skipping');
       return file;
     }
@@ -220,37 +273,51 @@ const patchRouteMerge = (file: string): string | null => {
     );
     return null;
   }
-  const [, head, arg, model, table] = match;
+  const { head, arg, model, table } = walker;
   return splice(
     file,
-    match.index,
-    match[0].length,
-    `${head}Object.assign({},${table}(${model}),${arg}.routesOverride??{})`
+    walker.index,
+    walker.length,
+    `${head}${MERGE_HEAD}let __tweakccM=Object.assign(Object.create(null),__tweakccD);` +
+      'if(__tweakccO)for(let __tweakccK of Object.keys(__tweakccO))' +
+      '__tweakccM[__tweakccK]=[...new Set([].concat(__tweakccO[__tweakccK],Object.hasOwn(__tweakccD,__tweakccK)?__tweakccD[__tweakccK]:[]))];' +
+      `return __tweakccM})(${table}(${model}),${arg}.routesOverride)`
   );
+};
+
+/**
+ * The routes supplier, selected by two facts together: its body is
+ * `{return}`, and its name is passed as `routesOverride`. The body alone is not
+ * a discriminator, because many declarations in the bundle share it; only one
+ * of those is ever handed to the walker.
+ */
+export const findRouteSupplier = (
+  file: string
+): { index: number; length: number; name: string } | null => {
+  const match = [...file.matchAll(/function ([$\w]+)\(\)\{return\}/g)].find(
+    c => c[1] !== undefined && file.includes(`routesOverride:${c[1]}()`)
+  );
+  if (!match || match.index === undefined) return null;
+  return { index: match.index, length: match[0].length, name: match[1] };
 };
 
 /**
  * Splice 2: answer with the configured routes.
  *
- * The supplier is selected by two facts together: its body is `{return}`, and
- * its name is passed as `routesOverride`. The body alone is not a
- * discriminator, because many declarations in the bundle share it; only one of
- * those is ever handed to the walker.
+ * Parsed from JSON rather than written as an object literal, where a
+ * `__proto__` key would set the object's prototype instead of naming a route.
  */
 const patchRouteSupplier = (
   file: string,
   routes: Record<string, string | string[]>
 ): string | null => {
-  const serialized = JSON.stringify(routes);
-  if (file.includes(`{return ${serialized}}`)) {
+  const body = `{return JSON.parse(${JSON.stringify(JSON.stringify(routes))})}`;
+  if (file.includes(body)) {
     debug('patch: refusalFallbackModel: routes already supplied, skipping');
     return file;
   }
-  const candidates = [...file.matchAll(/function ([$\w]+)\(\)\{return\}/g)];
-  const match = candidates.find(
-    c => c[1] !== undefined && file.includes(`routesOverride:${c[1]}()`)
-  );
-  if (!match || match.index === undefined) {
+  const supplier = findRouteSupplier(file);
+  if (!supplier) {
     console.error(
       'patch: refusalFallbackModel: failed to find the refusal routes supplier'
     );
@@ -258,9 +325,9 @@ const patchRouteSupplier = (
   }
   return splice(
     file,
-    match.index,
-    match[0].length,
-    `function ${match[1]}(){return ${serialized}}`
+    supplier.index,
+    supplier.length,
+    `function ${supplier.name}()${body}`
   );
 };
 
@@ -287,10 +354,13 @@ const returnHub = (registry: string, emitter: string): string =>
  * spends the flagged model's rate limit and gives no answer. So the budget
  * counts CONSECUTIVE returns, and it is kept per session root, where the reset
  * hub keeps its emitters, so sessions ending turns in one process each have
- * their own. A turn that ends with no latch resets it, and so does a new session
- * id on the same root, since resuming another conversation re-latches through
- * the same writer. Once spent, the latch is left in place, which is what the
- * unpatched client does, and the surface is told once.
+ * their own. A turn that queried the model and ends with no latch resets it,
+ * and so does a new session id on the same root, since resuming another
+ * conversation re-latches through the same writer. A turn that never reached
+ * the model (a local command, a hook that stopped it) says nothing about
+ * whether the model is still flagged, so it leaves the count alone; each turn
+ * end passes whether its turn queried. Once spent, the latch is left in place,
+ * which is what the unpatched client does, and the surface is told once.
  *
  * https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback
  */
@@ -308,10 +378,10 @@ const RETURN_FUNCTIONS = (
         'return{held:!0,returns:__tweakccR.returns,model:__tweakccL.previousOverride??__tweakccL.previousModelForSession??__tweakccL.previousAppStateModel,fallback:__tweakccL.fallbackModel}}';
   return (
     `${ON_RETURN_GLOBAL}=(__tweakccF)=>${returnHub(registry, emitter)}.of(${state}()).subscribe(__tweakccF);` +
-    `${RETURN_GLOBAL}=()=>{` +
+    `${RETURN_GLOBAL}=(__tweakccQ)=>{` +
     `let __tweakccS=${state}(),__tweakccL=__tweakccS.modelSelection.refusalFallbackModelLatch(),__tweakccR=(${RUNS_GLOBAL}??=new ${registry}(()=>({}))).of(__tweakccS);` +
     'if(__tweakccR.session!==__tweakccS.id){__tweakccR.session=__tweakccS.id;__tweakccR.returns=0;__tweakccR.held=!1}' +
-    'if(!__tweakccL){__tweakccR.returns=0;__tweakccR.held=!1;return}' +
+    'if(!__tweakccL){if(__tweakccQ){__tweakccR.returns=0;__tweakccR.held=!1}return}' +
     hold +
     `let __tweakccT=${restore}();if(!__tweakccT)return;__tweakccR.returns++;` +
     `${returnHub(registry, emitter)}.of(__tweakccS).emit(__tweakccT);` +
@@ -533,9 +603,12 @@ const patchPublishEvent = (file: string): string | null => {
  *
  * The `finally` after `await this._runImpl(...)` runs once per turn, after any
  * retry the turn made, so the flagged message has been answered on the fallback
- * by then. The line goes into the transcript through the same append that
- * `finally` uses for its own messages. The splice is guarded so nothing it does
- * can keep the rest of the `finally` from running.
+ * by then. It runs too when the turn returned before querying the model, which
+ * leaves `_runImpl`'s result unset; a turn that queried it gets the engine's
+ * result message back, whose `num_turns` counts the model's turns. The line
+ * goes into the transcript through the same append that `finally` uses for its
+ * own messages. The splice is guarded so nothing it does can keep the rest of
+ * the `finally` from running.
  */
 const patchReturnOnReplTurnEnd = (file: string): string | null => {
   // The splice goes after `finally{`, which leaves the anchor matching, so the
@@ -547,7 +620,9 @@ const patchReturnOnReplTurnEnd = (file: string): string | null => {
     );
     return file;
   }
-  const turn = file.match(/=await this\._runImpl\([$\w]+,[^)]*\)\}finally\{/);
+  const turn = file.match(
+    /([$\w.]+)=await this\._runImpl\([$\w]+,[^)]*\)\}finally\{/
+  );
   if (!turn || turn.index === undefined) {
     console.error(
       "patch: refusalFallbackModel: failed to find the REPL's turn-end finally"
@@ -567,7 +642,7 @@ const patchReturnOnReplTurnEnd = (file: string): string | null => {
     return null;
   }
   const code =
-    `try{let __tweakccN=${RETURN_GLOBAL}?.();if(__tweakccN){` +
+    `try{let __tweakccN=${RETURN_GLOBAL}?.(${turn[1]}?.num_turns>0);if(__tweakccN){` +
     `let __tweakccL=${LINE_GLOBAL}?.(__tweakccN),__tweakccM=__tweakccL&&${MESSAGE_GLOBAL}?.(__tweakccL.content,__tweakccL.level);` +
     `if(__tweakccM)${append[1]}({type:"append",messages:[__tweakccM]})}}catch{}`;
   return splice(file, at, 0, code);
@@ -579,7 +654,9 @@ const patchReturnOnReplTurnEnd = (file: string): string | null => {
  * The dispatcher's three-parameter `noteTurnEnded`, reached once from the
  * result handler. Two sibling methods share the name: the selector's one-line
  * `noteTurnEnded(e){…}`, which this one delegates to, and an observer
- * broadcast. The three-parameter body discriminates.
+ * broadcast. The three-parameter body discriminates. Its third argument is the
+ * turn's result message, whose `num_turns` is 0 for a turn that never reached
+ * the model.
  */
 const patchReturnOnHeadlessTurnEnd = (file: string): string | null => {
   const turn = file.match(
@@ -602,7 +679,7 @@ const patchReturnOnHeadlessTurnEnd = (file: string): string | null => {
   const at =
     turn.index + `noteTurnEnded(${turn[1]},${turn[2]},${turn[3]}){`.length;
   const code =
-    `try{let __tweakccN=${RETURN_GLOBAL}?.();if(__tweakccN){` +
+    `try{let __tweakccN=${RETURN_GLOBAL}?.(${turn[3]}?.num_turns>0);if(__tweakccN){` +
     `let __tweakccL=${LINE_GLOBAL}?.(__tweakccN);` +
     `if(__tweakccL)${EVENT_GLOBAL}?.({type:"system",subtype:"informational",content:__tweakccL.content,level:__tweakccL.level})}}catch{}`;
   return splice(file, at, 0, code);
@@ -613,10 +690,11 @@ const patchReturnOnHeadlessTurnEnd = (file: string): string | null => {
  * flagged turn is answered, at most `maxReturns` times in a row.
  *
  * Categories absent from `routes` keep the route they shipped with, because the
- * override is merged rather than substituted. Each value is a model id or a
- * chain walked until one is usable, and the ids are full because every stage
- * goes through the catalogue lookup. Both arguments are validated here, since
- * they arrive from config.json as written.
+ * override is merged rather than substituted, and a category it names keeps its
+ * shipped route behind its own chain. Each value is a model id or a chain walked
+ * until one is usable, and the ids are full because every stage goes through
+ * the catalogue lookup. Both arguments are validated here, since they arrive
+ * from config.json as written.
  */
 export const writeRefusalFallbackModel = (
   oldFile: string,

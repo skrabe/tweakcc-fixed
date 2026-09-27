@@ -481,7 +481,7 @@ const PATCH_DEFINITIONS = [
     name: 'Route the refusal fallback, then switch back',
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
-      'When safeguards flag a message, Claude Code retries it on a fallback model from its own route table, keyed by the flagged model and the refusal category, and keeps the session on that model. This merges refusalFallbackRoutes from config.json over that table (a category you leave out keeps its stock route; a route is a model id or a chain of them) and switches the session back to its own model once the flagged turn is answered, with a line in the transcript. refusalFallbackMaxReturns in config.json (default 1, null for no limit) caps consecutive returns, so a conversation that keeps being flagged stays on the fallback instead of paying a refusal and a retry every turn',
+      'When safeguards flag a message, Claude Code retries it on a fallback model from its own route table, keyed by the flagged model and the refusal category, and keeps the session on that model. This merges refusalFallbackRoutes from config.json over that table (a category you leave out keeps its stock route, one you route falls back to the stock route when none of your models is usable, and a route is a model id or a chain of them) and switches the session back to its own model once the flagged turn is answered, with a line in the transcript. refusalFallbackMaxReturns in config.json (default 1, null for no limit) caps consecutive returns, so a conversation that keeps being flagged stays on the fallback instead of paying a refusal and a retry every turn',
     modelFacing: false,
   },
   {

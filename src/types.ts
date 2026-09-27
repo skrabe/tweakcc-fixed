@@ -119,7 +119,8 @@ export type AutoModeClassifierModel = 'default' | 'sonnet' | 'haiku';
  * A value is a model id or a chain walked until one is usable. Claude Code
  * ships a table per flagged model, and this is merged over whichever of those
  * applies, so a category named here is redirected and one left out keeps the
- * route it shipped with.
+ * route it shipped with. A named category still falls back to its shipped
+ * route when none of the models listed here is usable.
  */
 export type RefusalFallbackRoutes = Record<string, string | string[]>;
 

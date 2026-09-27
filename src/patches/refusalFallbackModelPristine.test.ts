@@ -9,10 +9,18 @@
 // Gated like that sweep, behind TWEAKCC_PRISTINE_PATCHES=1 (`pnpm test:pristine`),
 // because it needs a pristine cli.js on disk. Nothing here is lifted from the
 // bundle by a shape stricter than the patch's own anchors: what these read is
-// either named by the patch's splices or found the way the patch finds it, and
-// everything the bundle's code calls beyond that is stubbed without being named.
+// either named by the patch's splices or found by the patch's own finders.
+// Whatever that code calls is resolved by the name it calls, from the
+// declarations of its own module, and anything not declared there is stubbed
+// without being named.
+import ts from 'typescript';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { writeRefusalFallbackModel } from './refusalFallbackModel';
+import {
+  findRouteSupplier,
+  findRouteWalker,
+  routeLimits,
+  writeRefusalFallbackModel,
+} from './refusalFallbackModel';
 import { findStatementEnd } from './toolsets';
 import {
   findPristineCliJs,
@@ -68,266 +76,265 @@ const escapeName = (name: string): string => name.replace(/\$/g, '\\$');
 // Routing
 // ---------------------------------------------------------------------------
 //
-// This lifts the refusal routing out of the patched bundle and executes it
-// against the same inputs as the pristine one.
+// This runs the refusal walker and the routes supplier of the patched bundle
+// against the same inputs as the pristine one's. Both are found in the pristine
+// bundle by the patch's own finders, and each is then taken by name from the
+// same module of either bundle, whose splices change bodies but keep names and
+// module boundaries.
+
+const MODULE_MARK = '/*@@TWEAKCC_MODULE:';
+
+/** The header naming the module that holds `at`. */
+const moduleHeaderAt = (src: string, at: number): string => {
+  const start = src.lastIndexOf(MODULE_MARK, at);
+  if (start < 0) throw new Error('bundle has no module markers');
+  return src.slice(start, src.indexOf('@@*/', start) + 4);
+};
+
+/** The text of the module a header names. */
+const moduleText = (src: string, header: string): string => {
+  const start = src.indexOf(header);
+  if (start < 0) throw new Error(`no module ${header} in bundle`);
+  const end = src.indexOf(MODULE_MARK, start + header.length);
+  return src.slice(start + header.length, end < 0 ? undefined : end);
+};
+
+/** Each top-level declaration of a module, as an expression for its value. */
+const declarations = (text: string): Map<string, string> => {
+  const file = ts.createSourceFile(
+    'module.js',
+    text,
+    ts.ScriptTarget.Latest,
+    false,
+    ts.ScriptKind.JS
+  );
+  const source = (node: ts.Node): string =>
+    text.slice(node.getStart(file), node.end);
+  const out = new Map<string, string>();
+  for (const statement of file.statements) {
+    if (
+      (ts.isFunctionDeclaration(statement) ||
+        ts.isClassDeclaration(statement)) &&
+      statement.name
+    ) {
+      // Written as an expression, the declaration still names itself.
+      out.set(
+        statement.name.text,
+        `(${source(statement).replace(/^export\s+(default\s+)?/, '')})`
+      );
+    } else if (ts.isVariableStatement(statement)) {
+      for (const declaration of statement.declarationList.declarations) {
+        if (!ts.isIdentifier(declaration.name)) continue;
+        out.set(
+          declaration.name.text,
+          declaration.initializer
+            ? `(${source(declaration.initializer)})`
+            : 'undefined'
+        );
+      }
+    }
+  }
+  return out;
+};
+
+/**
+ * A module's declarations, each evaluated the first time something reads it,
+ * in a scope where the names it reads resolve the same way. A name the module
+ * does not declare and that is not a global is a stub returning nothing.
+ */
+const moduleScope = (text: string): ((name: string) => unknown) => {
+  const declared = declarations(text);
+  const values = new Map<string, unknown>();
+  const stub = () => undefined;
+  const scope: Record<string, unknown> = new Proxy(
+    {},
+    {
+      has: (_, key) =>
+        typeof key === 'string' && (declared.has(key) || !(key in globalThis)),
+      get: (_, key) => {
+        if (typeof key !== 'string') return undefined;
+        if (values.has(key)) return values.get(key);
+        const code = declared.get(key);
+        if (code === undefined) return stub;
+        const value = new Function('scope', `with (scope) { return ${code}; }`)(
+          scope
+        );
+        values.set(key, value);
+        return value;
+      },
+    }
+  );
+  return name => scope[name];
+};
 
 interface RefusalResult {
   matched: string;
-  model: string | undefined;
+  model?: string;
   reason?: string;
-}
-interface RefusalRouter {
-  route: (e: Record<string, unknown>) => RefusalResult;
-  routes: () => Record<string, string | string[]> | undefined;
-  /** The route tables the bundle ships, one per kind of flagged model. */
-  tables: Array<Record<string, unknown>>;
+  [key: string]: unknown;
 }
 
-/** `NAME=VALUE` as declared, the declaration nearest to `anchor`. */
-const definitionNear = (
-  src: string,
-  name: string,
-  value: string,
-  anchor: number
-): string => {
-  const pattern = new RegExp(`(?<![$\\w.])${escapeName(name)}=${value}`, 'g');
-  let best: RegExpMatchArray | undefined;
-  for (const match of src.matchAll(pattern)) {
-    if (
-      best === undefined ||
-      Math.abs(match.index! - anchor) < Math.abs(best.index! - anchor)
-    ) {
-      best = match;
-    }
-  }
-  if (best === undefined) throw new Error(`no ${name} declaration in bundle`);
-  return best[0];
-};
-
-/** The names one build gives the refusal routing. */
-interface RefusalRouterNames {
+/** Where the pristine bundle keeps the walker and the supplier, by name. */
+interface RoutingSites {
   walker: string;
-  selector: string;
-  predicate: string;
-  tables: string[];
-  normalize: string;
-  walk: string;
-  chainLimit: string;
-  catchAll: string;
+  walkerModule: string;
   supplier: string;
+  supplierModule: string;
 }
 
-/** Where the walker is declared; its head survives the patch unchanged. */
-const walkerAt = (src: string, walker: string): number =>
-  matchOrThrow(
-    src.match(
-      new RegExp(
-        `function ${escapeName(walker)}\\([$\\w]+\\)\\{let\\{originalModelCanonical:`
-      )
-    ),
-    'refusal walker'
-  ).index!;
-
-/**
- * Name every piece of the refusal routing by its shape. Minified names change
- * with each build and are reused across modules; the shapes hold. Read from
- * the pristine bundle and reused for the patched one, whose splices change
- * bodies but keep every name.
- */
-const refusalRouterNames = (src: string): RefusalRouterNames => {
-  const head = matchOrThrow(
-    src.match(
-      /function ([$\w]+)\(([$\w]+)\)\{let\{originalModelCanonical:[$\w]+,apiRefusalCategory:[$\w]+\}=\2,[$\w]+=\2\.routesOverride\?\?([$\w]+)\(/
-    ),
-    'refusal walker'
-  );
-  const [, walker, , selector] = head;
-  const at = head.index!;
-  const [, , normalize, walk] = matchOrThrow(
-    grabFunction(src, walker, at).match(
-      /let ([$\w]+)=([$\w]+)\([$\w]+\),[$\w]+=([$\w]+)\(\1,[$\w]+\.resolveTarget\)/
-    ),
-    'refusal chain walk'
-  );
-  const selectorBody = grabFunction(src, selector, at);
-  const [, predicate] = matchOrThrow(
-    selectorBody.match(/if\(([$\w]+)\([$\w]+\)\)return /),
-    'refusal table predicate'
-  );
-  const tables = [...selectorBody.matchAll(/return ([$\w]+)/g)].map(
-    match => match[1]
-  );
-  const [, chainLimit] = matchOrThrow(
-    grabFunction(src, normalize, at).match(/\.slice\(0,([$\w]+)\)/),
-    'refusal chain limit'
-  );
-  const [, catchAll] = matchOrThrow(
-    src.match(
-      /function ([$\w]+)\(\)\{let [$\w]+=process\.env\.CLAUDE_CODE_REFUSAL_FALLBACK_CATCH_ALL\b/
-    ),
-    'refusal catch-all switch'
-  );
-  const [, supplier] = matchOrThrow(
-    src.match(/routesOverride:([$\w]+)\(\)/),
-    'refusal routes supplier'
-  );
+const routingSites = (src: string): RoutingSites => {
+  const walker = findRouteWalker(src);
+  if (!walker) throw new Error('no refusal walker in bundle');
+  const supplier = findRouteSupplier(src);
+  if (!supplier) throw new Error('no refusal routes supplier in bundle');
   return {
-    walker,
-    selector,
-    predicate,
-    tables,
-    normalize,
-    walk,
-    chainLimit,
-    catchAll,
-    supplier,
+    walker: walker.walker,
+    walkerModule: moduleHeaderAt(src, walker.index),
+    supplier: supplier.name,
+    supplierModule: moduleHeaderAt(src, supplier.index),
   };
 };
 
+type Router = (
+  flagged: string,
+  category: string,
+  usable?: (model: string) => boolean
+) => RefusalResult;
+
 /**
- * Evaluate just the routing functions, with their environment stubbed to the
- * branch a normal session takes: the legacy-table predicate false, and the
- * catch-all off, which is what it is without
- * CLAUDE_CODE_REFUSAL_FALLBACK_CATCH_ALL.
+ * The bundle's routing as the main loop calls it: the supplier's routes as the
+ * override, and a resolver standing for "can this session use that model".
  */
-const buildRefusalRouter = (
-  src: string,
-  names: RefusalRouterNames
-): RefusalRouter => {
-  const at = walkerAt(src, names.walker);
-  const tables = names.tables.map(table =>
-    definitionNear(src, table, '\\{[^}]*\\}', at)
-  );
-  const routing = [names.selector, names.normalize, names.walk, names.walker]
-    .map(name => grabFunction(src, name, at))
-    .join(' ');
-  const supplier = grabFunction(
-    src,
-    names.supplier,
-    src.indexOf(`routesOverride:${names.supplier}()`)
-  );
-  return (
-    new Function(`
-      var ${definitionNear(src, names.chainLimit, '\\d+', at)};
-      var ${tables.join(',')};
-      var ${names.predicate} = () => false;
-      var ${names.catchAll} = () => false;
-      ${routing} ${supplier}
-      return {
-        route: ${names.walker},
-        routes: ${names.supplier},
-        tables: [${names.tables.join(',')}],
-      };
-    `) as () => RefusalRouter
-  )();
+const routerOf = (src: string, sites: RoutingSites): Router => {
+  const walkerScope = moduleScope(moduleText(src, sites.walkerModule));
+  const supplierScope =
+    sites.supplierModule === sites.walkerModule
+      ? walkerScope
+      : moduleScope(moduleText(src, sites.supplierModule));
+  const walk = walkerScope(sites.walker) as (
+    e: Record<string, unknown>
+  ) => RefusalResult;
+  const supply = supplierScope(sites.supplier) as () => unknown;
+  return (flagged, category, usable = model => !REJECTED.has(model)) =>
+    walk({
+      originalModelCanonical: flagged,
+      apiRefusalCategory: category,
+      armedFallbackModel: 'claude-armed-fallback',
+      armedTargetIsRefusingModel: false,
+      resolveTarget: (model: string) => (usable(model) ? model : undefined),
+      routesOverride: supply(),
+    });
 };
 
-const EVERY_MODEL = [
+/** Models no session can use: a typo, or one the account is not entitled to. */
+const REJECTED = new Set(['claude-nonexistent-1', 'claude-nonexistent-2']);
+
+const FLAGGED = [
+  'claude-fable-5-1',
+  'claude-opus-5-5',
   'claude-opus-5',
   'claude-opus-4-8',
-  'claude-opus-5-5',
-  'claude-fable-5-1',
+  'claude-sonnet-5',
 ];
-/** The client's "can this session use that model" hook. */
-const modelsUsable =
-  (allowed: string[]) =>
-  (m: string): string | undefined =>
-    allowed.includes(m) ? m : undefined;
+
+const pick = ({ matched, model, reason }: RefusalResult) => ({
+  matched,
+  model,
+  ...(reason ? { reason } : {}),
+});
 
 // Every expectation about a route the configuration leaves alone is read from
 // the stock routing of the same bundle, never written down, so these hold
 // whatever a release puts in its tables.
 describe.skipIf(skipReason !== null)('refusal routing, executed', () => {
-  let names: RefusalRouterNames;
-  let stock: RefusalRouter;
+  let sites: RoutingSites;
+  let stock: Router;
+  let categories: string[];
 
   beforeAll(() => {
-    names = refusalRouterNames(pristine!.source);
-    stock = buildRefusalRouter(pristine!.source, names);
+    sites = routingSites(pristine!.source);
+    stock = routerOf(pristine!.source, sites);
+    categories = [
+      ...(routeLimits(pristine!.source).categories ?? ['cyber', 'bio']),
+    ];
   });
 
   /** The routing of the bundle patched with `routes`. */
-  const patchedWith = (
-    routes: Record<string, string | string[]>
-  ): RefusalRouter =>
-    buildRefusalRouter(
-      writeRefusalFallbackModel(pristine!.source, routes) as string,
-      names
-    );
-
-  const ask = (
-    r: RefusalRouter,
-    model: string,
-    category: string,
-    resolve: (m: string) => string | undefined
-  ): RefusalResult => {
-    const out = r.route({
-      originalModelCanonical: model,
-      apiRefusalCategory: category,
-      resolveTarget: resolve,
-      routesOverride: r.routes(),
-    });
-    return {
-      matched: out.matched,
-      model: out.model,
-      ...(out.reason ? { reason: out.reason } : {}),
-    };
+  const patchedWith = (routes: Record<string, string | string[]>): Router => {
+    const src = writeRefusalFallbackModel(pristine!.source, routes);
+    if (src === null) throw new Error('patch failed on the pristine bundle');
+    return routerOf(src, sites);
   };
 
+  /** The categories stock routes by its table for `flagged`. */
+  const stockRouted = (flagged: string): string[] =>
+    categories.filter(c => stock(flagged, c).matched === 'category');
+
   it('routes a configured category to the head of its chain', () => {
-    for (const flagged of EVERY_MODEL) {
-      const shipped = ask(stock, flagged, 'cyber', modelsUsable(EVERY_MODEL));
-      // A head the stock route already picks would pass unpatched.
-      const head = EVERY_MODEL.find(
-        m => m !== shipped.model && m !== flagged
-      ) as string;
-      expect(
-        ask(
-          patchedWith({ cyber: [head] }),
-          flagged,
-          'cyber',
-          modelsUsable(EVERY_MODEL)
-        ),
-        flagged
-      ).toEqual({ matched: 'category', model: head });
+    const patched = patchedWith(
+      Object.fromEntries(categories.map(c => [c, 'claude-user-choice']))
+    );
+    for (const flagged of FLAGGED) {
+      for (const category of categories) {
+        expect(
+          pick(patched(flagged, category)),
+          `${flagged} ${category}`
+        ).toEqual({ matched: 'category', model: 'claude-user-choice' });
+      }
     }
   });
 
-  it('drops a rung only when the head of the chain is unusable', () => {
+  it('walks a configured chain in order', () => {
+    const category = categories[0]!;
     const patched = patchedWith({
-      cyber: ['claude-opus-5', 'claude-opus-4-8'],
+      [category]: ['claude-user-first', 'claude-user-second'],
     });
     expect(
-      ask(
-        patched,
-        'claude-fable-5-1',
-        'cyber',
-        modelsUsable(['claude-opus-4-8'])
+      pick(patched(FLAGGED[0]!, category, m => m !== 'claude-user-first'))
+    ).toEqual({ matched: 'category', model: 'claude-user-second' });
+  });
+
+  it('falls back to the stock route when no configured model is usable', () => {
+    // CC's walker stops at a mapped chain with no usable model before it looks
+    // anywhere else, so without the stock route behind it a typo costs the
+    // retry that stock makes.
+    const patched = patchedWith(
+      Object.fromEntries(
+        categories.map(c => [
+          c,
+          ['claude-nonexistent-1', 'claude-nonexistent-2'],
+        ])
       )
-    ).toEqual({ matched: 'category', model: 'claude-opus-4-8' });
-    expect(ask(patched, 'claude-fable-5-1', 'cyber', modelsUsable([]))).toEqual(
-      {
-        matched: 'none',
-        model: undefined,
-        reason: 'mapped_target_unresolvable',
-      }
     );
+    let backed = 0;
+    for (const flagged of FLAGGED) {
+      for (const category of stockRouted(flagged)) {
+        backed++;
+        expect(
+          pick(patched(flagged, category)),
+          `${flagged} ${category}`
+        ).toEqual(pick(stock(flagged, category)));
+      }
+    }
+    expect(backed).toBeGreaterThan(0);
   });
 
   it('routes every category the configuration leaves out exactly as stock does', () => {
     // Replacing the table rather than merging would leave these unmapped.
-    const patched = patchedWith({ cyber: 'claude-opus-5-5' });
-    const left = new Set(stock.tables.flatMap(table => Object.keys(table)));
-    left.delete('cyber');
-    expect(left.size).toBeGreaterThan(0);
-    for (const flagged of EVERY_MODEL) {
-      for (const category of [...left, 'nosuch']) {
-        expect(
-          ask(patched, flagged, category, modelsUsable(EVERY_MODEL)),
-          `${flagged} ${category}`
-        ).toEqual(ask(stock, flagged, category, modelsUsable(EVERY_MODEL)));
+    const configured = FLAGGED.flatMap(stockRouted)[0];
+    expect(configured).toBeDefined();
+    const patched = patchedWith({ [configured!]: 'claude-user-choice' });
+    let compared = 0;
+    for (const flagged of FLAGGED) {
+      for (const category of [...categories, 'nosuch']) {
+        if (category === configured) continue;
+        if (stock(flagged, category).matched === 'category') compared++;
+        expect(patched(flagged, category), `${flagged} ${category}`).toEqual(
+          stock(flagged, category)
+        );
       }
     }
+    expect(compared).toBeGreaterThan(0);
   });
 });
 
