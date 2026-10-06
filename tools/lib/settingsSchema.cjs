@@ -220,7 +220,7 @@ function collectDeclarations(statements, into) {
   return into;
 }
 
-function createFinder(code) {
+function createFinder(code, { warn } = {}) {
   const segments = splitModuleBundle(code) || [
     { name: '<bundle>', start: 0, source: code },
   ];
@@ -229,7 +229,7 @@ function createFinder(code) {
 
   function loadModule(seg) {
     if (modules.has(seg.name)) return modules.get(seg.name);
-    const ast = parseModuleSegment(seg, null, 'settingsSchema');
+    const ast = parseModuleSegment(seg, null, 'settingsSchema', warn);
     let mod = null;
     if (ast) {
       const top = collectDeclarations(ast.program.body, new Map());
@@ -619,8 +619,8 @@ function createFinder(code) {
   return { run };
 }
 
-function findSettingsDescriptions(code) {
-  return createFinder(code).run();
+function findSettingsDescriptions(code, opts = {}) {
+  return createFinder(code, opts).run();
 }
 
 // The bundle as --apply's matcher sees it: its search regex accepts a quote,

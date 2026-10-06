@@ -1,7 +1,6 @@
 const parser = require('@babel/parser');
 
-const MODULE_SENTINEL_RE =
-  /\n\/\*@@TWEAKCC_MODULE:(\d+):([^@]*)@@\*\/\n/g;
+const MODULE_SENTINEL_RE = /\n\/\*@@TWEAKCC_MODULE:(\d+):([^@]*)@@\*\/\n/g;
 
 /**
  * Shift every `start`/`end` in a freshly-parsed AST by `delta`.
@@ -49,7 +48,7 @@ function splitModuleBundle(code) {
   return segments;
 }
 
-function parseModuleSegment(seg, parseOptions, skipLabel) {
+function parseModuleSegment(seg, parseOptions, skipLabel, warn) {
   try {
     const ast = parser.parse(
       seg.source,
@@ -64,7 +63,7 @@ function parseModuleSegment(seg, parseOptions, skipLabel) {
     // A handful of vendored minified libraries (mermaid, hljs) are not valid
     // ESM on their own. Skipping them loses nothing — they carry no prompts —
     // but a silent skip would look like coverage, so say which and why.
-    console.warn(
+    (warn || console.warn)(
       `${skipLabel || 'extractStrings'}: skipping unparseable module ${seg.name}: ${err.message.split('\n')[0]}`
     );
     return null;
