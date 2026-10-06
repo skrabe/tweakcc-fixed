@@ -28,16 +28,24 @@
 //   4. the alias -> concrete model switch
 //   5. the `/model` picker options
 //   6. the per-model effort lookup
+// and, on later builds, the picker's effort row (8), the clear-context option
+// (7) and the per-request effort callers (9).
 //
 // Effort is Claude Code's own: each model keeps its level in
 // `settings.modelSettings.<model>.effortLevel` (what `/model` writes when you
 // adjust effort on a model), falling back to that model's built-in default. CC
 // looks that table up by the SESSION model, and a fableplan session resolves to
 // the exec model, so without help a Fable plan turn would run at Opus's level.
-// `uM` knows which model answers this request, records it in a global, and the
-// table lookup reads it — so each side of the pairing gets the level you set
-// for that model. An explicit `/effort` for the session still applies to both.
+// The table lookup therefore asks the same question `uM` asks — is fableplan
+// selected, and is THIS request in plan mode — from the permission mode it is
+// handed, so each side of the pairing gets the level you set for that model.
+// An explicit `/effort` for the session still applies to both.
 //
+// No state passes between the two sites. An earlier version had `uM` record
+// the model it chose in a global for the lookup to read, but CC also calls
+// `uM` as a probe (`uM({permissionMode:"plan",…})` to ask "what would plan mode
+// use"), and every probe repointed the next real request's effort at Fable.
+// The answer is now a pure function of the selection and the request's mode.
 // Earlier versions pinned their own plan/exec levels from tweakcc's config and
 // answered before Claude Code's resolver; that shadowed `/effort` and the
 // per-model table entirely, and was retired once CC grew per-model levels.
@@ -56,15 +64,43 @@
 
 import { FablePlanConfig } from '../types';
 import { debug } from '../utils';
-import { showDiff } from './index';
+import { escapeIdent, showDiff } from './index';
 
 const ALIAS = 'fableplan';
 
-// Written by the model resolver, read by the per-model effort lookup. `__tweakcc`
-// is the repo's patched-binary marker prefix, so a binary carrying it is
-// correctly detected as patched. A global rather than a call because the two
-// sites live in different bundle modules.
-const MODEL_GLOBAL = 'globalThis.__tweakccFablePlanModel';
+// Fableplan's answer for a permission mode: the planning model in plan mode
+// while fableplan is selected, otherwise undefined. Defined beside `uM`, where
+// the selected-alias getter and the alias-to-model function are in scope, and
+// read by the per-model effort lookup, which lives in another bundle module and
+// can reach neither. Stateless: every call recomputes from its own argument.
+// `__tweakcc` is the repo's patched-binary marker prefix.
+const MODEL_FOR = 'globalThis.__tweakccFablePlanModelFor';
+
+// Set on the app state handed to the effort lookup by the per-request effort
+// resolver, carrying that request's effective permission mode (session mode
+// with the context's permission layers applied, the same value `uM` is given).
+const MODE_KEY = '__tweakccPermissionMode';
+
+const MODULE_MARK = '/*@@TWEAKCC_MODULE:';
+
+// The bundle module enclosing `at`; the whole file on a single-module bundle.
+const moduleBounds = (file: string, at: number): [number, number] => {
+  const start = file.lastIndexOf(MODULE_MARK, at);
+  if (start === -1) return [0, file.length];
+  const next = file.indexOf(MODULE_MARK, start + 1);
+  return [start, next === -1 ? file.length : next];
+};
+
+// Whether `name` is callable in the module enclosing `at`: declared there, or
+// imported there under that same name. A code-split bundle keeps exported
+// names unique across chunks, so an unaliased import is the same function.
+const boundInModule = (file: string, at: number, name: string): boolean => {
+  const [start, end] = moduleBounds(file, at);
+  const mod = file.slice(start, end);
+  const n = escapeIdent(name);
+  if (new RegExp(`(?:^|[^$\\w.])function ${n}\\(`).test(mod)) return true;
+  return new RegExp(`import\\{(?:[^}]*,)?${n}(?:,[^}]*)?\\}from"`).test(mod);
+};
 
 /**
  * Splice 1 — the alias whitelist.
@@ -111,10 +147,15 @@ const patchAliasWhitelist = (file: string): string | null => {
 /**
  * Splice 2 — the per-request model resolver.
  *
- * Inserted immediately after the destructuring so it answers before the
- * opusplan and haiku branches, and falls through to Claude Code's own
- * resolution for every other alias. `as(alias)` is CC's alias -> concrete model
- * function, so org model restrictions and `[1m]` handling apply unchanged.
+ * Plan mode only, mirroring how CC's own opusplan answers: while fableplan is
+ * selected, a plan-mode request uses the planning model. Every other request
+ * falls through to Claude Code's own resolution, which for fableplan's exec
+ * side is already right: the session model IS the exec model, because the
+ * alias resolves through the arm splice 4 cloned. `as(alias)` is CC's alias ->
+ * concrete model function, so `[1m]` handling applies unchanged.
+ *
+ * Also defines `MODEL_FOR` beside the resolver, at module scope, so the effort
+ * lookup can ask the same question without reaching names it cannot see.
  */
 const patchPlanResolver = (
   file: string,
@@ -124,15 +165,14 @@ const patchPlanResolver = (
   // Method -1 — CC >= 2.1.268: the resolver returns `{model,clampWarning}` and
   // a thin wrapper logs the warning, so every early return is an object.
   const patternObj =
-    /(function ([$\w]+)\(([$\w]+)\)\{let\{permissionMode:([$\w]+),mainLoopModel:([$\w]+),exceeds200kTokens:([$\w]+)=!1\}=\3;)(if\(\4!=="plan"\)return\{model:\5,clampWarning:null\};let [$\w]+=([$\w]+)\(\),)/;
+    /(function ([$\w]+)\(([$\w]+)\)\{let\{permissionMode:([$\w]+),mainLoopModel:([$\w]+),exceeds200kTokens:([$\w]+)=!1\}=\3;)(if\(\4!=="plan"\)return\{model:\5,clampWarning:null\};)(let [$\w]+=([$\w]+)\(\),)/;
   const matchObj = file.match(patternObj);
 
   // Method 0 — CC >= 2.1.251: the inlined opusplan/haiku branches became a
   // pairing table, and the selected-alias getter moved past an early
-  // `if(mode!=="plan")return main`. Call the getter ourselves so we still
-  // intercept before that return (exec-side resolution + effort).
+  // `if(mode!=="plan")return main`.
   const pattern0 =
-    /(function ([$\w]+)\(([$\w]+)\)\{let\{permissionMode:([$\w]+),mainLoopModel:([$\w]+),exceeds200kTokens:([$\w]+)=!1\}=\3;)(if\(\4!=="plan"\)return \5;let [$\w]+=([$\w]+)\(\),)/;
+    /(function ([$\w]+)\(([$\w]+)\)\{let\{permissionMode:([$\w]+),mainLoopModel:([$\w]+),exceeds200kTokens:([$\w]+)=!1\}=\3;)(if\(\4!=="plan"\)return \5;)(let [$\w]+=([$\w]+)\(\),)/;
   const match0 = matchObj ? null : file.match(pattern0);
 
   const pattern1 =
@@ -146,20 +186,32 @@ const patchPlanResolver = (
     );
     return null;
   }
-  const prefix = match[1];
   const mode = match[4];
   const tableShape = matchObj ?? match0;
-  const selected = tableShape ? `${match[8]}()` : match[7];
-  const tail = tableShape ? match[7] : '';
-  const resolvedModel = `${aliasToModel}(${mode}==="plan"?"${config.planModel}":"${config.execModel}")`;
-  // The model and the effort lookup key come out of ONE branch. The global is
-  // cleared on the way past for every other alias, so switching away from
-  // fableplan cannot leave a stale model steering the effort table.
-  const injection =
-    `if(${selected}==="${ALIAS}"){${MODEL_GLOBAL}=${resolvedModel};` +
-    `${matchObj ? `return{model:${MODEL_GLOBAL},clampWarning:null}` : `return ${MODEL_GLOBAL}`}}` +
-    `${MODEL_GLOBAL}=void 0;`;
-  const replacement = prefix + injection + tail;
+  const getter = tableShape ? match[9] : match[8];
+  // The getter is called by this very function, so it is in scope here. The
+  // alias-to-model function was found by shape anywhere in the bundle, so on a
+  // code-split bundle it must be confirmed callable in THIS module.
+  if (!boundInModule(file, match.index, aliasToModel)) {
+    console.error(
+      `patch: fablePlan: ${aliasToModel} is not in scope at the plan-mode model resolver`
+    );
+    return null;
+  }
+  const planModel = `${aliasToModel}("${config.planModel}")`;
+  // Like opusplan, every plan-mode request goes to the planning model while
+  // the alias is selected, whatever model it was handed. The effort lookup
+  // asks the same question through MODEL_FOR, so the two always agree.
+  const modelFor =
+    `${MODEL_FOR}=(m)=>m==="plan"&&${getter}()==="${ALIAS}"?` +
+    `${planModel}:void 0;`;
+  const replacement = tableShape
+    ? `${modelFor}${match[1]}${match[7]}` +
+      `if(${getter}()==="${ALIAS}")return${
+        matchObj ? `{model:${planModel},clampWarning:null}` : ` ${planModel}`
+      };${match[8]}`
+    : `${modelFor}${match[1]}` +
+      `if(${mode}==="plan"&&${match[7]}==="${ALIAS}")return ${planModel};`;
   const newFile =
     file.slice(0, match.index) +
     replacement +
@@ -311,17 +363,75 @@ const patchModelPicker = (
  *   if(!ee(e.settingsEffortTable))return e.settingsEffortTable.default;
  *   return Z(e.settingsEffortTable,n??e.mainLoopModelForSession??…)`
  *
- * `n` is the session model, which for fableplan resolves to the exec model.
- * Prefer the model `uM` recorded for this request, so a plan turn reads the
- * planning model's own entry. Nothing else in the resolver changes: env
- * overrides, an explicit session `/effort`, per-turn effort and the per-model
- * caps and defaults all still apply, and every other alias passes through
- * because the global is only set while fableplan is selected.
+ * `n` is the model the caller asks about; left unset, the session model, which
+ * for fableplan resolves to the exec model. Ask `MODEL_FOR` with the request's
+ * permission mode first: in plan mode, splice 2 routes the request to the
+ * planning model whatever `n` is, so its effort is read there too; otherwise
+ * `n` keys on itself. The mode is the one splice 9 attaches for a request,
+ * else the session's own (`e.toolPermissionContext`). Nothing
+ * else in the resolver changes: env overrides, an explicit session `/effort`,
+ * per-turn effort and the per-model caps and defaults all still apply, and
+ * every other alias passes through because `MODEL_FOR` answers only while
+ * fableplan is selected and the mode is plan.
+ *
+ * Returns the lookup function's own name for splice 9.
  */
-const patchEffortLookup = (file: string): string | null => {
-  if (file.includes(`settingsEffortTable,${MODEL_GLOBAL}??`)) {
-    debug('patch: fablePlan: effort lookup already keyed — skipping');
-    return file;
+const patchEffortLookup = (
+  file: string
+): { file: string; resolver: string | undefined; block: boolean } | null => {
+  const key = (state: string): string =>
+    `${MODEL_FOR}?.(${state}.${MODE_KEY}??${state}.toolPermissionContext?.mode)??`;
+  // The function whose `inherit` arm this is (for splice 9 to find its
+  // callers) and its model parameter, which must lead the key expression.
+  const resolverAt = (
+    at: number,
+    state: string
+  ): { name: string; model: string } | undefined => {
+    const fn = file
+      .slice(file.lastIndexOf('function ', at), at)
+      .match(/^function ([$\w]+)\(([$\w]+),([$\w]+)[,)]/);
+    return fn && fn[2] === state ? { name: fn[1], model: fn[3] } : undefined;
+  };
+  const noModelArg = (): null => {
+    console.error(
+      "patch: fablePlan: failed to find the per-model effort lookup's model argument"
+    );
+    return null;
+  };
+
+  // CC >= 2.1.291: the arm became a block that names the model before looking
+  // it up, so a carried fallback effort can hold it, and the default shortcut
+  // also checks for that carry:
+  //   case"inherit":{if(e.settingsEffortTable===void 0)return;
+  //     if(xe(e.settingsEffortTable)&&!K())return e.settingsEffortTable.default;
+  //     let d=n??e.mainLoopModelForSession??…;
+  //     return r&&Jwt(d)!==void 0?void 0:re(e.settingsEffortTable,d)}
+  // Keying `d` covers both the hold check and the lookup.
+  const block =
+    /(case"inherit":\{if\(([$\w]+)\.settingsEffortTable===void 0\)return;if\(!?[$\w]+\(\2\.settingsEffortTable\)(?:&&!?[$\w]+\(\))?\)return \2\.settingsEffortTable\.default;let ([$\w]+)=)([^;]*?\2\.mainLoopModelForSession[^;]*;return [^;]*?[$\w]+\(\2\.settingsEffortTable,\3\)\})/;
+  const blockMatch = file.match(block);
+  if (blockMatch && blockMatch.index !== undefined) {
+    const fn = resolverAt(blockMatch.index, blockMatch[2]);
+    if (!fn) return noModelArg();
+    const resolver = fn.name;
+    if (blockMatch[4].startsWith(`${MODEL_FOR}?.(`)) {
+      debug('patch: fablePlan: effort lookup already keyed — skipping');
+      return { file, resolver, block: true };
+    }
+    if (!blockMatch[4].startsWith(`${fn.model}??`)) return noModelArg();
+    const replacement = `${blockMatch[1]}${key(blockMatch[2])}${blockMatch[4]}`;
+    const newFile =
+      file.slice(0, blockMatch.index) +
+      replacement +
+      file.slice(blockMatch.index + blockMatch[0].length);
+    showDiff(
+      file,
+      newFile,
+      replacement,
+      blockMatch.index,
+      blockMatch.index + blockMatch[0].length
+    );
+    return { file: newFile, resolver, block: true };
   }
   // The table guard flipped polarity in CC 2.1.280 — `if(!ee(TABLE))` became
   // `if(se(TABLE))`, the negation moving into the predicate — so match either.
@@ -335,24 +445,157 @@ const patchEffortLookup = (file: string): string | null => {
       debug(
         'patch: fablePlan: no per-model effort table in this build — effort follows the session'
       );
-      return file;
+      return { file, resolver: undefined, block: false };
     }
     console.error(
       'patch: fablePlan: failed to find the per-model effort lookup'
     );
     return null;
   }
-  const replacement = `${match[1]}${MODEL_GLOBAL}??`;
-  const newFile =
-    file.slice(0, match.index) +
-    replacement +
-    file.slice(match.index + match[0].length);
+  const fn = resolverAt(match.index, match[2]);
+  if (!fn) return noModelArg();
+  const resolver = fn.name;
+  const after = match.index + match[0].length;
+  if (file.startsWith(`${MODEL_FOR}?.(`, after)) {
+    debug('patch: fablePlan: effort lookup already keyed — skipping');
+    return { file, resolver, block: false };
+  }
+  if (!file.startsWith(`${fn.model}??`, after)) return noModelArg();
+  const replacement = `${match[1]}${key(match[2])}`;
+  const newFile = file.slice(0, match.index) + replacement + file.slice(after);
+  showDiff(file, newFile, replacement, match.index, after);
+  return { file: newFile, resolver, block: false };
+};
+
+/**
+ * Splice 9 — hand the effort lookup each request's own permission mode.
+ *
+ * Every effort caller that has a request context passes only the app state,
+ * whose mode is the session's. A request's effective mode can differ — a
+ * subagent or SDK message carries a `permission_mode` layer — and that is the
+ * mode `uM` routes the request on. Three caller shapes have a context:
+ *
+ *   A. the per-request resolvers (CC 2.1.291 module of `de`):
+ *        `function bh(e){return Sh(e.permissionLayers)??Kl(e.getAppState(),p(e),…)}`
+ *      handed `de(e).mode`, CC's effective-permission-context function;
+ *   B. hook input, whose context is optional:
+ *        `function yd(e,n,r,s){…b=Kl(s?.getAppState?.()??{},h,{withHold:…})`
+ *      handed `de(s).mode` when there is a context;
+ *   C. subagent spawn and resume:
+ *        `function bln({…,model:r,effortState:n,…}){let l=Czn(n),i=Kl(n,r),…`
+ *      where `r` is already what `uM` routed the subagent to at spawn, with the
+ *      subagent's own mode (`LF(…,mode)`), so it keys on itself, unmapped.
+ *
+ * Callers with no request context (status, bridge, picker, prompt sections)
+ * keep the session's mode.
+ */
+const ROUTED = 'routed';
+
+const patchEffortContext = (
+  file: string,
+  resolver: string | undefined,
+  required: boolean
+): string | null => {
+  const fail = (what: string): string | null => {
+    if (!required) {
+      debug(`patch: fablePlan: ${what} — effort follows the session's mode`);
+      return file;
+    }
+    console.error(`patch: fablePlan: ${what}`);
+    return null;
+  };
+  if (!resolver) return fail('failed to name the per-model effort lookup');
+  const ctxFn =
+    /function ([$\w]+)\(([$\w]+)\)\{let ([$\w]+)=\2\.getAppState\(\)\.toolPermissionContext[,;]/;
+  const ctx = file.match(ctxFn);
+  if (!ctx || ctx.index === undefined) {
+    return fail('failed to find the effective permission context function');
+  }
+  const de = ctx[1];
+  const r = escapeIdent(resolver);
+  const edits: [number, number, string][] = [];
+
+  // A — in any module with both the lookup and `de` in scope.
+  const perRequest = new RegExp(
+    `([^$\\w.]${r}\\()([$\\w]+)\\.getAppState\\(\\),([$\\w]+)\\(\\2\\)(?=[,)])`,
+    'g'
+  );
+  // B — `Kl(ctx?.getAppState?.()??{},`
+  const optional = new RegExp(
+    `([^$\\w.]${r}\\()([$\\w]+)\\?\\.getAppState\\?\\.\\(\\)\\?\\?\\{\\},`,
+    'g'
+  );
+  // C — the spawn helper's destructured `model` and `effortState`.
+  const spawn = /model:([$\w]+),effortState:([$\w]+)[,}]/g;
+  const inScope = (at: number, ...names: string[]): boolean =>
+    names.every(n => boundInModule(file, at, n));
+
+  const found = { a: 0, b: 0, c: 0 };
+  for (const c of file.matchAll(perRequest)) {
+    if (c.index === undefined || !inScope(c.index, resolver, de)) continue;
+    found.a++;
+    edits.push([
+      c.index,
+      c.index + c[0].length,
+      `${c[1]}{...${c[2]}.getAppState(),${MODE_KEY}:${de}(${c[2]}).mode},${c[3]}(${c[2]})`,
+    ]);
+  }
+  for (const c of file.matchAll(optional)) {
+    if (c.index === undefined || !inScope(c.index, resolver, de)) continue;
+    found.b++;
+    edits.push([
+      c.index,
+      c.index + c[0].length,
+      `${c[1]}{...${c[2]}?.getAppState?.()??{},${MODE_KEY}:${c[2]}?.getAppState?${de}(${c[2]}).mode:void 0},`,
+    ]);
+  }
+  for (const c of file.matchAll(spawn)) {
+    if (c.index === undefined || !inScope(c.index, resolver)) continue;
+    // The call sits in the body of the function this destructuring opens.
+    const body = c.index + c[0].length;
+    const next = file.indexOf('function ', body);
+    const call = new RegExp(
+      `[^$\\w.]${r}\\(${escapeIdent(c[2])},${escapeIdent(c[1])}\\)`
+    ).exec(file.slice(body, next === -1 ? undefined : next));
+    if (!call) continue;
+    found.c++;
+    const at = body + call.index + 1;
+    edits.push([
+      at,
+      at + call[0].length - 1,
+      `${resolver}({...${c[2]},${MODE_KEY}:"${ROUTED}"},${c[1]})`,
+    ]);
+  }
+
+  const already = {
+    a: file.includes(`.getAppState(),${MODE_KEY}:${de}(`),
+    b: file.includes(`??{},${MODE_KEY}:`),
+    c: file.includes(`${MODE_KEY}:"${ROUTED}"`),
+  };
+  for (const [k, what] of [
+    ['a', 'the per-request effort resolver'],
+    ['b', 'the hook-input effort caller'],
+    ['c', 'the subagent-spawn effort caller'],
+  ] as const) {
+    if (found[k] === 0 && !already[k]) {
+      const out = fail(`failed to find ${what}`);
+      if (out === null) return null;
+    }
+  }
+  if (edits.length === 0) {
+    debug('patch: fablePlan: effort callers already pass the mode — skipping');
+    return file;
+  }
+  let newFile = file;
+  for (const [start, end, text] of edits.sort((x, y) => y[0] - x[0])) {
+    newFile = newFile.slice(0, start) + text + newFile.slice(end);
+  }
   showDiff(
     file,
     newFile,
-    replacement,
-    match.index,
-    match.index + match[0].length
+    edits.map(e => e[2]).join(' … '),
+    edits[edits.length - 1][0],
+    edits[edits.length - 1][0]
   );
   return newFile;
 };
@@ -557,7 +800,13 @@ export const writeFablePlan = (
 
   const efforted = patchEffortLookup(file);
   if (!efforted) return null;
-  file = efforted;
+  file = efforted.file;
+
+  // Required where the lookup has its 2.1.291 shape, which is where the
+  // per-request caller is known; older shapes keep the session's mode.
+  const contexted = patchEffortContext(file, efforted.resolver, efforted.block);
+  if (!contexted) return null;
+  file = contexted;
 
   const effortRow = patchPickerEffortRow(file, config);
   if (!effortRow) return null;

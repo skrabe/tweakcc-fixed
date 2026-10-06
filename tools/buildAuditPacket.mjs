@@ -73,6 +73,12 @@ import {
 import { fileURLToPath } from 'node:url';
 import { partitionContiguous, agentsFor } from './lib/packByWeight.mjs';
 import { writeMarkdownParts, partByteCap } from './lib/packetParts.mjs';
+import {
+  resolveCaptureDir,
+  capturedTools,
+  makeToolStatus,
+  captureLine,
+} from './lib/deferredTools.mjs';
 
 // Ids one stage-1 agent audits. Set from the 2.1.288 batching replay (see
 // memory showtime-token-cost): per-agent cost there was dominated by the fixed
@@ -362,6 +368,22 @@ const packetFor = id => {
 const toolsDir = path.dirname(fileURLToPath(import.meta.url));
 const version = JSON.parse(fs.readFileSync(jsonPath, 'utf8')).version;
 const absOut = path.resolve(outDir);
+
+// Which tool carriers are always-on (lib/deferredTools.mjs): the turnProbe
+// capture's tools[] (TWEAKCC_CAPTURES, else the one `driver check` recorded for
+// this version). Without one the packet says so and marks nothing.
+const captureDir = resolveCaptureDir(version);
+const capture = captureDir ? capturedTools(captureDir) : null;
+const toolStatus = makeToolStatus(
+  capture,
+  id => (byId.get(id) || [{}])[0].name || '',
+  id => {
+    const i = index ? index.byId.get(id) : undefined;
+    if (i !== undefined) return [index.docs[i].body || ''];
+    return (byId.get(id) || []).map(reconstructPristine);
+  }
+);
+const captureNote = captureLine(captureDir, capture);
 const corpusBlock = {
   catalogue,
   activeSet,
@@ -426,7 +448,13 @@ for (const id of ids) {
   entryOf.set(id, entry);
   models.set(
     id,
-    mdModel({ index, src: cliSrc, prompt: entry, entries: byId.get(id) })
+    mdModel({
+      index,
+      src: cliSrc,
+      prompt: entry,
+      entries: byId.get(id),
+      toolStatus,
+    })
   );
 }
 const catalogueVersion = id => {
@@ -492,6 +520,7 @@ const renderMd = (n, slice) => {
           id: cid,
           claims,
           inGroup: false,
+          toolStatus,
         })
       );
     }
@@ -501,6 +530,7 @@ const renderMd = (n, slice) => {
     group: `g${n}`,
     version,
     count: slice.length,
+    captureNote,
     paths: {
       'verdicts file': p.verdicts,
       'active set': activeSet,
@@ -611,6 +641,11 @@ console.log(
           : ' (no bundle: coRender hints unresolved)')
     : 'corpus index: none (no active set resolved)'
 );
+console.log(
+  capture
+    ? `tool carriers: capture ${capture.file} (${capture.names.length} always-on tools)`
+    : 'tool carriers: NO turnProbe capture for this version — tool carriers unmarked (run driver check, or set TWEAKCC_CAPTURES)'
+);
 console.log(`active set: ${activeSet}`);
 console.log(`reminders: ${remindersDir || 'none'}`);
 console.log(`sets: ${allSets.join(', ')}`);
@@ -628,6 +663,9 @@ fs.writeFileSync(
       idsFile: path.resolve(idsPath),
       corpus: corpusBlock,
       bundleSha: index ? index.bundleSha : null,
+      capture: capture
+        ? { dir: captureDir, file: capture.file, tools: capture.names }
+        : null,
       packing: { idsPerAgent, agents, partBytes },
       groupCount: groups.length,
       groups,

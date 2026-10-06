@@ -15,11 +15,19 @@ export interface ReminderOverride {
   isSuppressed: boolean;
 }
 
+// A body is spliced into a JS template line by line, so a CR left in a
+// CRLF-saved .md becomes an extra line break per line in the reminder. Every
+// path that reads a body folds line endings with this one function.
+export const normalizeLineEndings = (text: string): string =>
+  text.replace(/\r\n?/g, '\n');
+
 export const parseReminderMarkdown = (
   id: string,
   markdown: string
 ): ReminderOverride => {
-  const parsed = matter(markdown, { delimiters: ['<!--', '-->'] });
+  const parsed = matter(normalizeLineEndings(markdown), {
+    delimiters: ['<!--', '-->'],
+  });
   const data = parsed.data as Record<string, unknown>;
   const body = (parsed.content ?? '').replace(/^\n+/, '').replace(/\n+$/, '');
   return {

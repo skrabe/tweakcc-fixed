@@ -34,6 +34,8 @@ import {
 // ---------------------------------------------------------------------------
 // LCC decision rule
 
+import { TOOL_STATUS_NOTE } from './deferredTools.mjs';
+
 export const LCC_RULES_FROM = '### The decision rule';
 export const LCC_RULES_THROUGH = '### Test for every cut';
 
@@ -388,7 +390,13 @@ export const SITES_WITH_CODE = 2;
 
 // Everything the md renders for one id, computed once so grouping can re-render
 // cheaply. `prompt` is the JSON packet entry buildAuditPacket wrote.
-export const mdModel = ({ index, src, prompt, entries }) => {
+export const mdModel = ({
+  index,
+  src,
+  prompt,
+  entries,
+  toolStatus = () => null,
+}) => {
   const self = index ? index.byId.get(prompt.id) : undefined;
   const search = index
     ? precomputeSearch(index, prompt.id, prompt.pristineBodies)
@@ -500,7 +508,15 @@ export const mdModel = ({ index, src, prompt, entries }) => {
     n.withBody = PLAUSIBLE.has(n.rel) || Number(n.similarity) >= NEIGHBOUR_BODY;
     if (n.withBody) addCarrier(n.id, []);
   }
-  return { prompt, search, shownCarriers, sites, leads, carrierClaims };
+  return {
+    prompt,
+    search,
+    shownCarriers,
+    sites,
+    leads,
+    carrierClaims,
+    toolStatus,
+  };
 };
 
 const DEPLOYED_LABEL = {
@@ -677,12 +693,18 @@ export const renderId = m => {
   const listed = new Set(m.shownCarriers.map(c => c.id));
   if (m.leads.tool && m.leads.tool.length) {
     lead.push(
-      `this tool's own description/schema (same-tool: PROVABLE co-render — confirm it is this tool's): ${
+      `this tool's own description/schema (same-tool: PROVABLE co-render only for an ALWAYS-ON tool — confirm it is this tool's): ${
         m.leads.tool
           .filter(x => !listed.has(x.id))
           .map(
             x =>
-              `\`${x.id}\` ~${x.similarity}${x.withBody ? '' : ' (no body below)'}`
+              `\`${x.id}\` ~${x.similarity}${x.withBody ? '' : ' (no body below)'}${
+                (m.toolStatus || (() => null))(x.id) === 'deferred'
+                  ? ' (DEFERRED tool: co-render with this result NOT proven)'
+                  : (m.toolStatus || (() => null))(x.id) === 'unresolved'
+                    ? ' (tool unresolved: check tools[])'
+                    : ''
+              }`
           )
           .join(', ') || 'as listed above'
       }${m.leads.toolMore > 0 ? ` (+${m.leads.toolMore} more ids of the "${m.leads.toolKey}" family)` : ''}`
@@ -720,6 +742,7 @@ export const renderCarrier = ({
   id,
   claims,
   inGroup,
+  toolStatus = () => null,
 }) => {
   const idx = index.byId.get(id);
   if (idx === undefined) return `### \`${id}\`\nnot in the corpus\n`;
@@ -753,6 +776,8 @@ export const renderCarrier = ({
     );
   }
   if (inGroup) facts.push('also assigned in this packet');
+  const ts = toolStatus(id);
+  if (ts) facts.push(TOOL_STATUS_NOTE[ts]);
   L.push(facts.join(' · '));
   if (d.suppressed) {
     L.push('');
@@ -813,7 +838,14 @@ export const renderGroupMd = ({
   return wrapLong(parts.join('\n'));
 };
 
-export const renderHeader = ({ group, version, count, paths, commands }) =>
+export const renderHeader = ({
+  group,
+  version,
+  count,
+  paths,
+  commands,
+  captureNote = '',
+}) =>
   [
     `# Stage-1 audit packet ${group} — Claude Code ${version} (${count} ids)`,
     '',
@@ -834,6 +866,7 @@ export const renderHeader = ({ group, version, count, paths, commands }) =>
     '- Per id: pristine body (`${LABEL}` slots), deployed state, previous-version change, slots, externalRefs, bundle sites (code for the first two functions: head, ~200 chars either side, literal shortened in ⟪…⟫), concatenated fragments, the precomputed search, leads.',
     '- "Corpus search (precomputed)" IS auditCorpusSearch\'s output for every claim sentence of every assigned body (same index: active set incl. inline-*.md, system-reminders, catalogue pristine). Search again only for other phrasings or terms.',
     `- ${CORENDER_NOTE}`,
+    ...(captureNote ? [`- ${captureNote}`] : []),
     '- "# Carriers" holds every carrier named once: state (SUPPRESSED/SHADOWED/STALE vs catalogue) and deployed text, complete or the matching sentences ±1. Quote from it.',
     `- Lines over ${WRAP_AT} chars are wrapped at a space (quotes are checked ignoring whitespace).`,
     '',

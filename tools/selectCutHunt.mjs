@@ -24,6 +24,7 @@ import { openIndex, resolveCarrier } from './lib/auditCorpus.mjs';
 import { cutLeads, leadScore } from './lib/cutLeads.mjs';
 import { partitionContiguous, agentsFor } from './lib/packByWeight.mjs';
 import { writeMarkdownParts, partByteCap } from './lib/packetParts.mjs';
+import { capturedTools, makeToolStatus, TOOL_STATUS_NOTE } from './lib/deferredTools.mjs';
 
 // Keeps one hunter re-reads. Set from the 2.1.288 batching replay (see memory
 // showtime-token-cost): per-agent cost there was dominated by the fixed
@@ -69,10 +70,11 @@ const fence = t => {
   return `${f}text\n${t}\n${f}`;
 };
 
-const leadLine = l =>
-  `- ${l.kind} → \`${l.carrier}\` (${l.rel}${l.share != null ? `, restates ${Math.round(l.share * 100)}% of the claims` : ''}${l.similarity != null ? `, similarity ${l.similarity}` : ''})`;
+const STATUS_TAG = { deferred: ' — DEFERRED tool: conditional carrier, co-render NOT proven', unresolved: ' — tool unresolved: check the capture tools[] before citing' };
+const leadLine = (l, toolStatus = () => null) =>
+  `- ${l.kind} → \`${l.carrier}\` (${l.rel}${l.share != null ? `, restates ${Math.round(l.share * 100)}% of the claims` : ''}${l.similarity != null ? `, similarity ${l.similarity}` : ''})${STATUS_TAG[toolStatus(l.carrier)] || ''}`;
 
-export function renderHuntMd({ group, version, ids, stage1, leadsById, parts, commands, extraCarriers }) {
+export function renderHuntMd({ group, version, ids, stage1, leadsById, parts, commands, extraCarriers, toolStatus = () => null }) {
   const L = [];
   L.push(`# Cut hunt ${group} — Claude Code ${version} (${ids.length} ids)`);
   L.push('');
@@ -96,7 +98,7 @@ export function renderHuntMd({ group, version, ids, stage1, leadsById, parts, co
     if (v.slopCheck) L.push(`slopCheck: ${v.slopCheck}`);
     const leads = leadsById.get(id) || [];
     L.push(leads.length ? '**Cut leads:**' : '**Cut leads:** none in the packet evidence; hunt from the body, the slop check and the corpus search.');
-    for (const l of leads) L.push(leadLine(l));
+    for (const l of leads) L.push(leadLine(l, toolStatus));
   });
   L.push('');
   const all = new Map([...parts.carriers, ...extraCarriers]);
@@ -132,6 +134,14 @@ function main() {
   const stage1 = new Map(result.verdicts.map(v => [v.id, v]));
   const c = man.corpus;
   const { index } = openIndex({ catalogue: c.catalogue, activeSet: c.activeSet, remindersDir: c.remindersDir || null, bundle: c.bundle || null, cachePath: c.index || null });
+  // Tool-carrier marks from the capture the stage-1 build used (its carriers
+  // already carry them; the extra lead carriers and lead lines get them here).
+  let capture = null;
+  try { capture = man.capture && man.capture.dir ? capturedTools(man.capture.dir) : null; } catch { capture = null; }
+  if (!capture) console.warn('selectCutHunt: the stage-1 manifest names no turnProbe capture — tool carriers are unmarked');
+  const names = new Map();
+  if (capture) for (const p of JSON.parse(fs.readFileSync(c.catalogue, 'utf8')).prompts || []) if (p.id && !names.has(p.id)) names.set(p.id, p.name || '');
+  const toolStatus = makeToolStatus(capture, id => names.get(id) || '', id => { const i = index.byId.get(id); return i === undefined ? [] : [index.docs[i].body || '']; });
 
   const rows = [];
   const entry = new Map();
@@ -188,10 +198,11 @@ function main() {
         const d = r.doc;
         const state = d.suppressed ? 'SUPPRESSED (renders nothing)' : d.shadowedBy && d.shadowedBy.length ? `SHADOWED by ${d.shadowedBy.join(', ')}` : 'live';
         const body = d.body.length > 1500 ? `${d.body.slice(0, 1500)}\n… (${d.body.length - 1500} more chars: ${d.path || 'catalogue pristine'})` : d.body;
-        extraCarriers.set(l.carrier, `${state} · ${d.path || 'catalogue pristine (no override)'}\ndeployed text (${d.body.length} chars):\n${fence(body)}`);
+        const ts = toolStatus(l.carrier);
+        extraCarriers.set(l.carrier, `${state} · ${d.path || 'catalogue pristine (no override)'}${ts ? ` · ${TOOL_STATUS_NOTE[ts]}` : ''}\ndeployed text (${d.body.length} chars):\n${fence(body)}`);
       }
     }
-    return { P, commands, md: renderHuntMd({ group: name, version: man.version, ids, stage1, leadsById, parts, commands: { ...commands, queries: P.queries }, extraCarriers }) };
+    return { P, commands, md: renderHuntMd({ group: name, version: man.version, ids, stage1, leadsById, parts, commands: { ...commands, queries: P.queries }, extraCarriers, toolStatus }) };
   };
   // ceil(keeps / idsPerAgent) groups in packet order, cut where the rendered
   // sizes even out; an id weighs its one-id packet less the shared header.

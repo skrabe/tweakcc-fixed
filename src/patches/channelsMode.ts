@@ -56,19 +56,52 @@
 import { showDiff } from './index';
 
 /**
- * Patch 1: Bypass tengu_harbor flag — force isChannelsEnabled() to return true
+ * Patch 1: Bypass tengu_harbor flag — force isChannelsEnabled() to return true.
+ *
+ * Method 1 (CC >= 2.1.291): the gate also requires the allow_channels route:
+ *   function aL(){return nn("allow_channels")&&k("tengu_harbor",!1)}
+ * Method 2 (older CC): function qX_(){return A9("tengu_harbor",!1)}
  */
 const patchChannelsEnabled = (file: string): string | null => {
-  const pattern = /function [$\w]+\(\)\{return [$\w]+\("tengu_harbor",!1\)/;
-  const match = file.match(pattern);
+  const patterns = [
+    /function [$\w]+\(\)\{return [$\w]+\("allow_channels"\)&&[$\w]+\("tengu_harbor",!1\)/,
+    /function [$\w]+\(\)\{return [$\w]+\("tengu_harbor",!1\)/,
+  ];
+  for (const pattern of patterns) {
+    const match = file.match(pattern);
+    if (!match || match.index === undefined) continue;
 
-  if (!match || match.index === undefined) {
-    console.error('patch: channelsMode: failed to find tengu_harbor gate');
-    return null;
+    const insertIndex = match.index + match[0].indexOf('{') + 1;
+    const insertion = 'return !0;';
+
+    const newFile =
+      file.slice(0, insertIndex) + insertion + file.slice(insertIndex);
+
+    showDiff(file, newFile, insertion, insertIndex, insertIndex);
+    return newFile;
   }
 
+  console.error('patch: channelsMode: failed to find tengu_harbor gate');
+  return null;
+};
+
+/**
+ * Patch 1b (CC >= 2.1.291, optional): the "disabled" probe. The startup
+ * banner and the gate's `disabled` branch call a separate function that
+ * returns true while tengu_harbor is off:
+ *   function bdt(){if(!k("tengu_harbor",!1))return!0;let e=Nf("allow_channels");...}
+ * Without forcing it false the banner reads "ignored (Channels are not
+ * currently available)" even though the gates are bypassed. Absent in older
+ * CC builds, so a miss is a no-op.
+ */
+const patchChannelsDisabledProbe = (file: string): string => {
+  const pattern =
+    /function [$\w]+\(\)\{if\(![$\w]+\("tengu_harbor",!1\)\)return!0;/;
+  const match = file.match(pattern);
+  if (!match || match.index === undefined) return file;
+
   const insertIndex = match.index + match[0].indexOf('{') + 1;
-  const insertion = 'return !0;';
+  const insertion = 'return !1;';
 
   const newFile =
     file.slice(0, insertIndex) + insertion + file.slice(insertIndex);
@@ -250,6 +283,8 @@ const patchServerDevWarning = (file: string): string | null => {
 export const writeChannelsMode = (oldFile: string): string | null => {
   let newFile = patchChannelsEnabled(oldFile);
   if (!newFile) return null;
+
+  newFile = patchChannelsDisabledProbe(newFile);
 
   newFile = patchGateFunction(newFile);
   if (!newFile) return null;

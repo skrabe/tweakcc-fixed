@@ -52946,5 +52946,4300 @@
     "verdict": "pristine-keep",
     "version": "2.1.288",
     "why": "checkPermissions ask message for a file write in plan mode; it is the whole message the model and user see (behavior ask, decisionReason mode plan). Wiping would yield an empty ask message, and there is nothing to trim in one short sentence."
+  },
+  "agent-prompt-compact-security-constraints-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique security contract: user-stated constraints must survive compaction verbatim; frozen text, no coverage."
+  },
+  "agent-prompt-conversation-summarization-capped-variant": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique output-shape contract (2000-word cap, <summary> tags) and the only rendered copy of the custom-instructions pointer in this arm."
+  },
+  "agent-prompt-conversation-summarization-lean-variant": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique mechanics of what survives compaction plus security/attribution contracts; frozen (five, until, only)."
+  },
+  "agent-prompt-conversation-summarization-short-variant": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique summary contract; frozen enumerations and ordering; no proven co-rendering carrier."
+  },
+  "agent-prompt-webfetch-partial-page-content-lead": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime context for the extraction model (offset/length)."
+  },
+  "agent-prompt-you-should-know-explainer-language-fallback-output-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Completes the sentence begun by agent-prompt-you-should-know-explainer-language-session-instruction; output-only contract unique; kept whole."
+  },
+  "agent-prompt-you-should-know-explainer-language-session-instruction": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Middle fragment of a sentence crossing into agent-prompt-you-should-know-explainer-language-fallback-output-only; cutting it would break the sentence; language-selection rule is unique."
+  },
+  "agent-prompt-you-should-know-language-keep-labels-english": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Frozen output-format contract (learn:, tag:, explain:, none, tag values) the parser depends on; completes the sentence from agent-prompt-you-should-know-language-session-instruction."
+  },
+  "agent-prompt-you-should-know-language-session-instruction": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Middle of a sentence crossing agent-prompt-you-should-know-language-write-learn-line-lead and agent-prompt-you-should-know-language-keep-labels-english; unique language rule."
+  },
+  "agent-prompt-you-should-know-language-write-learn-line-lead": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Opening of the language sentence continued by agent-prompt-you-should-know-language-session-instruction; unique."
+  },
+  "data-artifact-comment-reply-this-thread-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Security/scope contract for the forked comment agent; frozen (every, only)."
+  },
+  "data-bash-mode-no-result-received": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Runtime error string surfaced to the model; unique."
+  },
+  "data-cloud-session-bundle-notice-launch-folder-unreachable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique user-facing remedy for an upload condition."
+  },
+  "data-mcp-connect-claudeai-proxy-third-party": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error tag for the MCP proxy path."
+  },
+  "data-mcp-connect-sdk-server-in-print": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Exact runtime error string naming print.ts; unique."
+  },
+  "data-meta-lost-session-timers-header": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime notice header."
+  },
+  "data-meta-lost-session-timers-reschedule": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Opens with the header slot (fk); unique reschedule instruction, frozen (each)."
+  },
+  "data-plugin-command-desktop-add-marketplace-hint": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique exact CLI commands and ordering (then); frozen."
+  },
+  "data-plugin-command-desktop-org-limits-marketplaces": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique message arm."
+  },
+  "data-plugin-command-unavailable-in-desktop-app": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique desktop-app UI path; prefix of the /plugin message."
+  },
+  "data-settings-disable-claude-ai-connectors-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique setting semantics (any-source-true precedence)."
+  },
+  "data-settings-idle-compaction-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique setting semantics (true does not enable)."
+  },
+  "data-settings-validation-denied-mcp-servers-server-name-whitespace-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Exact validation message."
+  },
+  "data-settings-validation-policy-helper-path-invisible-chars": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Exact validation message."
+  },
+  "data-settings-validation-policy-helper-path-not-absolute": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Exact validation message shared across several sites."
+  },
+  "data-settings-validation-policy-helper-path-windows-exe-ps1": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Exact validation message."
+  },
+  "data-settings-validation-policy-helper-script-invalid-utf8": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Exact validation message."
+  },
+  "data-settings-validation-policy-helper-script-nul-bytes": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Exact validation message."
+  },
+  "data-settings-validation-sandbox-denied-resolved-address-invalid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique format contract; frozen."
+  },
+  "data-task-notification-artifact-other-thread-awaiting-reply": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique ordering contract (after this one)."
+  },
+  "data-task-notification-artifact-threads-left-for-others": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Prompt-injection guard for foreign threads; unique security contract."
+  },
+  "data-task-notification-container-restarted-timers-lost": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique notification with conditional arms; frozen."
+  },
+  "data-task-notification-shell-checkin-summary": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Runtime summary line; unique."
+  },
+  "data-task-notification-shell-checkin-trailing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique mechanics (check-in backoff, triage, end turn); frozen."
+  },
+  "data-working-tree-upload-refusal-for-git-dubious-ownership": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error and env-var contract; frozen."
+  },
+  "data-working-tree-upload-refusal-for-missing-git-objects-folders": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique safety-ordered remedy; frozen."
+  },
+  "data-working-tree-upload-refusal-for-unread-git-config-environment-variable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique remedy naming env vars and paths; frozen."
+  },
+  "skill-claude-api-managed-agents-onboarding-source-tier": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique security contract for onboarding source tiers; frozen."
+  },
+  "skill-claude-api-managed-agents-quickstart-guide-unreadable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional skill fragment; only copy of the fallback behaviour when the build guide cannot be read; frozen slots and ordering."
+  },
+  "skill-claude-api-managed-agents-quickstart-none-offer": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique branch instruction for kind==='none'; conditional; opens with the list slot, which must stay."
+  },
+  "skill-claude-api-managed-agents-quickstart-read-guide": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional instruction for the docs-on-disk case; opens with the list slot."
+  },
+  "skill-claude-api-managed-agents-quickstart-unknown-name": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional branch with an ordering contract (until they answer) that is frozen."
+  },
+  "skill-claude-api-managed-agents-quickstarts-list": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Opening slot of three sibling branches; carries the command name and path; conditional skill section."
+  },
+  "slash-command-branch-conversation-too-long-storage": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime error tag for /branch; conditional."
+  },
+  "slash-command-branch-no-conversation": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error tag interpolated into the /branch failure message."
+  },
+  "slash-command-branch-no-messages": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error tag for /branch."
+  },
+  "slash-command-chrome-browser-not-connected": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional error text with a distinct cause (that specific browser); keep."
+  },
+  "slash-command-chrome-reconnect-browser-tools-back": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique success result for reconnect; opens with the reconnect message slot."
+  },
+  "slash-command-chrome-unreachable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Distinct error (bridge unreachable, same claude.ai account hint); conditional."
+  },
+  "slash-command-copy-temp-dir-unavailable-diskless": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique diskless-session error contract."
+  },
+  "slash-command-import-file-exceeds-max-bytes": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Names IMPORT_MAX_FILE_BYTES, a frozen limit reference."
+  },
+  "slash-command-import-mcp-add-enterprise-exclusive-control": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique policy error; conditional."
+  },
+  "slash-command-import-mcp-add-managed-plugin-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error with actionable remedy."
+  },
+  "slash-command-plugin-install-archive-empty": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique install failure with remedy."
+  },
+  "slash-command-plugin-install-archive-integrity-mismatch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Integrity contract with sha256 values; frozen."
+  },
+  "slash-command-plugin-install-archive-missing-declared-paths": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique packaging remedy."
+  },
+  "slash-command-plugin-install-archive-no-plugin-root": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Frozen enumeration of plugin root markers."
+  },
+  "slash-command-plugin-install-archive-only-unsafe-component-paths": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique install failure."
+  },
+  "slash-command-plugin-install-cache-archive-path-stray-link": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error with ordering (remove, then retry)."
+  },
+  "slash-command-plugin-install-cache-compare-directory-moved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error reason."
+  },
+  "slash-command-plugin-install-cache-compare-unknown-entry": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error reason."
+  },
+  "slash-command-plugin-install-cache-list-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error tag."
+  },
+  "slash-command-plugin-install-cache-path-stray-link": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error with ordering."
+  },
+  "slash-command-plugin-install-cache-path-traversal": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Security error contract; keep verbatim."
+  },
+  "slash-command-plugin-install-cache-path-unexaminable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error."
+  },
+  "slash-command-plugin-install-claudeai-archive-git-layout": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal reason."
+  },
+  "slash-command-plugin-install-claudeai-archive-no-content": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique claude.ai install error."
+  },
+  "slash-command-plugin-install-claudeai-archive-unsafe-zip": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal reason."
+  },
+  "slash-command-plugin-install-claudeai-no-plugins-scope": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error with timing fact."
+  },
+  "slash-command-plugin-install-claudeai-not-installable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error enumerating two causes; frozen."
+  },
+  "slash-command-plugin-install-command-source-not-reviewed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Security consent contract: command not run until reviewed; frozen."
+  },
+  "slash-command-plugin-install-copy-directory-became-link": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A conditional install error that is the only copy of its cause and fix. Nothing in it is duplicated or slop."
+  },
+  "slash-command-plugin-install-copy-directory-swapped": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique conditional error naming the mid-copy directory swap."
+  },
+  "slash-command-plugin-install-copy-reparse-point": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique Windows reparse-point refusal. It is conditional and has no co-rendering carrier."
+  },
+  "slash-command-plugin-install-copy-symlink-target-swapped": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique conditional error."
+  },
+  "slash-command-plugin-install-dependencies-listing-will-not-keep-loading-warning": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique conditional warning carrying an exact CLI command."
+  },
+  "slash-command-plugin-install-dependency-conversion-marker": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique conditional error."
+  },
+  "slash-command-plugin-install-dependency-liveness-record-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique conditional error."
+  },
+  "slash-command-plugin-install-directory-listing-no-repository": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique conditional refusal."
+  },
+  "slash-command-plugin-install-directory-listing-repository-too-long": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique conditional refusal with a remediation contract."
+  },
+  "slash-command-plugin-install-directory-policy-not-checked-yet": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique fallback reason inside a policy-unavailable message."
+  },
+  "slash-command-plugin-install-git-ref-leading-dash": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique validation-gate error (frozen)."
+  },
+  "slash-command-plugin-install-github-clone-ssh-retry-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique conditional error with concrete remediation."
+  },
+  "slash-command-plugin-install-headers-helper-not-inlined": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional, with no co-rendering carrier."
+  },
+  "slash-command-plugin-install-headers-helper-remote-policy-unconsented": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique conditional refusal."
+  },
+  "slash-command-plugin-install-installed-copy-in-use": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique conditional error. Every sentence is frozen and load-bearing."
+  },
+  "slash-command-plugin-install-invalid-sha": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique validation contract (frozen numbers)."
+  },
+  "slash-command-plugin-install-marketplace-entry-invalid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique conditional error."
+  },
+  "slash-command-plugin-install-marketplace-headers-helper-disabled-by-policy": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique conditional refusal with exact setting names. It opens with slot c (marketplace label), not a detector literal."
+  },
+  "slash-command-plugin-install-npm-download-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A required prefix for the npm pack failure."
+  },
+  "slash-command-plugin-install-npm-invalid-package-name": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique conditional refusal."
+  },
+  "slash-command-plugin-install-npm-invalid-version-spec": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique validation error."
+  },
+  "slash-command-plugin-install-npm-no-integrity": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique security-gate error."
+  },
+  "slash-command-plugin-install-npm-no-tarball-url": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique error with an externally matched prefix."
+  },
+  "slash-command-plugin-install-npm-no-version-matches": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique error with an externally matched prefix."
+  },
+  "slash-command-plugin-install-npm-pack-no-tarball": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique error."
+  },
+  "slash-command-plugin-install-npm-package-name-mismatch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique security refusal."
+  },
+  "slash-command-plugin-install-npm-registry-invalid-address": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique validation error."
+  },
+  "slash-command-plugin-install-npm-registry-unencrypted": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique security refusal with an exact command."
+  },
+  "slash-command-plugin-install-npm-resolve-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A required prefix with an externally matched literal."
+  },
+  "slash-command-plugin-install-npm-tarball-bad-checksum": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional error reason thrown only when a tarball header fails validation. It is the only text naming this cause and has nothing to cut."
+  },
+  "slash-command-plugin-install-npm-tarball-contains-link": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional refusal reason. Its rule (links are not allowed in a plugin package) appears nowhere else and the slots carry the link type and path."
+  },
+  "slash-command-plugin-install-npm-tarball-device-entry": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional refusal reason for device/FIFO tar entries. Unique and minimal."
+  },
+  "slash-command-plugin-install-npm-tarball-duplicate-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional error reason whose path slot is the actionable detail. Unique."
+  },
+  "slash-command-plugin-install-npm-tarball-entry-outside-package": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Security refusal (path escaping the package folder) carrying the path. It is a unique, frozen-style error contract."
+  },
+  "slash-command-plugin-install-npm-tarball-entry-too-large": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional refusal carrying a size threshold (frozen). Unique."
+  },
+  "slash-command-plugin-install-npm-tarball-negative-size": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error reason."
+  },
+  "slash-command-plugin-install-npm-tarball-no-files": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error reason. Nothing to cut."
+  },
+  "slash-command-plugin-install-npm-tarball-too-large": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional error carrying a size limit and an install outcome. Unique."
+  },
+  "slash-command-plugin-install-npm-tarball-too-many-entries": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional refusal carrying a numeric limit (frozen). Unique."
+  },
+  "slash-command-plugin-install-npm-tarball-truncated": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error reason."
+  },
+  "slash-command-plugin-install-npm-tarball-unsupported-entry-type": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Concatenated with the expression Ht(ke,Yxr) and a closing quote. The sentence crosses the fragment boundary, so it is kept whole; trimming would break the quoted type. Unique conditional error."
+  },
+  "slash-command-plugin-install-records-not-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional error that keeps the file name and its untouched state. Unique."
+  },
+  "slash-command-plugin-install-records-update-no-outcome": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional internal error. Nothing to cut."
+  },
+  "slash-command-plugin-install-rescreen-conversion-marker": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional error. The re-screen cause and the 'retry the install' recovery are unique to this throw. The ordering word 'after' freezes it."
+  },
+  "slash-command-plugin-install-sha-pin-verification-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional security error carrying slot values, a sentinel and diagnostic causes. All load-bearing."
+  },
+  "slash-command-plugin-install-source-path-missing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error."
+  },
+  "slash-command-plugin-install-staged-copy-list-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error."
+  },
+  "slash-command-plugin-install-staged-tree-replaced-before-archive": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional error. The 'before archiving' cause is unique to this arm."
+  },
+  "slash-command-plugin-install-staged-tree-replaced-before-dependencies": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error arm (an install of dependencies)."
+  },
+  "slash-command-plugin-install-staged-tree-replaced-before-publish": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error arm."
+  },
+  "slash-command-plugin-install-subdir-not-found": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error carrying the repo, path and ref slots."
+  },
+  "slash-command-plugin-install-subdir-symlink-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional security refusal."
+  },
+  "slash-command-plugin-install-tree-not-symlink-free": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional refusal."
+  },
+  "slash-command-plugin-install-version-dir-replaced": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error naming the exact required directory layout."
+  },
+  "slash-command-plugin-install-version-dir-unexaminable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error."
+  },
+  "slash-command-plugin-install-vouch-conversion-marker": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error (vouch failure plus marker not withdrawn)."
+  },
+  "slash-command-plugin-marketplace-add-file-url-not-local": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional security refusal with a unique rule and a platform note."
+  },
+  "slash-command-plugin-marketplace-add-git-url-backslash-authority": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional security refusal carrying an exact escape literal."
+  },
+  "slash-command-plugin-marketplace-add-git-url-control-characters": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional refusal."
+  },
+  "slash-command-plugin-marketplace-add-git-url-percent-00": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation-gate error (the %00 token is frozen); it only renders when the check fires, so it costs nothing otherwise. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-add-git-url-scheme-missing-slashes": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation error that names the required form scheme://, which is frozen text. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-add-git-url-scp-like-scheme": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique rule with the user@host:path form and '://' literal, both frozen; conditional error text. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-add-git-url-square-bracket": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique security rationale and exception, with frozen literals (%5B, %5D, the IPv6 example). Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-add-git-url-unparseable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique parse error that enumerates the supported forms; frozen. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-add-manifest-write-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A minimal runtime error that carries the backend error detail. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-add-name-is-clone-folder": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique collision explanation and remedy; it contains the frozen path pattern .bak and is conditional. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-add-no-replace-publish-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique ordered remedy: remove first with the exact command, or else delete the path. Frozen. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-add-npm-source-not-implemented": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique unsupported-source error. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-add-reserved-built-in-name": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique reserved-name rule. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-add-reserved-claudeai-prefix": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique reserved prefix plus the exact CLI form (claude plugin marketplace add --claudeai <name>), which is frozen. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-add-ssh-git-url-invalid-host-or-user": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation rules; the enumeration and the ?/# literals are frozen. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-backup-path-is-registered-marketplace": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique backup-path collision; the ordering 'first' and the command are frozen. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-cache-read-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Minimal runtime error that carries the backend detail. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-cache-read-no-item": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique backend-state error. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-catalog-write-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Minimal runtime error with the backend detail. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-claudeai-refresh-diskless": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique reason why the marketplace was not refreshed. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-claudeai-refresh-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique status-carrying error. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-clone-dir-is-registered-marketplace": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique clone-dir collision; the ordering 'first' and the command are frozen. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-config-save-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Minimal runtime error. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-corrupted-install-location": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique diagnosis; the filename and the ordered remedy are frozen. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-finalize-cache-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "The remedy (delete this exact path, then retry) is unique and frozen. Conditionally rendered, so it costs zero when off."
+  },
+  "slash-command-plugin-marketplace-install-location-owned-by-other": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error naming the installLocation collision; concatenated with an uncatalogued tail (sentence crosses boundary), so it is kept whole and the tail is untouched."
+  },
+  "slash-command-plugin-marketplace-name-escapes-cache-directory": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique path-escape security error for the marketplace cache; conditional, costs nothing until thrown."
+  },
+  "slash-command-plugin-marketplace-name-not-plain-directory": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation/security refusal emitted at three sites; nothing covers it."
+  },
+  "slash-command-plugin-marketplace-refresh-not-found-available-list": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique actionable error (lists valid names); conditional."
+  },
+  "slash-command-plugin-marketplace-refresh-unsupported-source-type": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique terse error string; nothing to cut."
+  },
+  "slash-command-plugin-marketplace-staging-cleanup-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique recovery instruction naming the staging directory path; frozen text cannot be reworded, deleting it would lose the path."
+  },
+  "slash-command-plugin-marketplace-untrusted-source": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique security error with its remediation; conditional."
+  },
+  "slash-command-plugin-marketplace-url-connect-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique connection-failure diagnostic for URL marketplaces; exclusive siblings never co-render."
+  },
+  "slash-command-plugin-marketplace-url-download-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Generic fallback error; unique, nothing to cut."
+  },
+  "slash-command-plugin-marketplace-url-download-timeout": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique timeout diagnostic; 'timed out' is matched outside the prompt, keep verbatim."
+  },
+  "slash-command-plugin-marketplace-url-http-error": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique HTTP-status diagnostic; conditional."
+  },
+  "slash-command-plugin-validate-command-source-or-content": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique schema constraint naming the source/content fields."
+  },
+  "slash-command-plugin-validate-command-source-printable-ascii": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique field-specific validation message with exact threshold."
+  },
+  "slash-command-plugin-validate-file-extension-leading-dot": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique schema validation message."
+  },
+  "slash-command-plugin-validate-file-not-found": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error string at its sites; nothing to cut."
+  },
+  "slash-command-plugin-validate-file-over-size-cap-not-read": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique reason fragment for oversize/non-regular files."
+  },
+  "slash-command-plugin-validate-headers-helper-printable-ascii": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique field-specific validation message."
+  },
+  "slash-command-plugin-validate-hooks-json-hooks-or-modules-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique schema constraint naming exact keys hooks/modules."
+  },
+  "slash-command-plugin-validate-hooks-module-file-not-linked": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error string; nothing to cut."
+  },
+  "slash-command-plugin-validate-lsp-extension-to-language-empty": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique schema validation message."
+  },
+  "slash-command-plugin-validate-marketplace-name-control-chars": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique field-specific validation message."
+  },
+  "slash-command-plugin-validate-marketplace-name-path-separators": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation message, located in the marketplace name schema (@739514)."
+  },
+  "slash-command-plugin-validate-mcp-claudeai-proxy-type-lead": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error lead; concatenated with slash-command-plugin-validate-mcp-claudeai-proxy-type-tail across a sentence boundary, both kept whole."
+  },
+  "slash-command-plugin-validate-mcp-claudeai-proxy-type-tail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique remediation; concatenated with slash-command-plugin-validate-mcp-claudeai-proxy-type-lead and an uncatalogued tail across sentence boundaries, all kept whole."
+  },
+  "slash-command-plugin-validate-mcp-host-only-server-type": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique host-only type error and consequence; conditional."
+  },
+  "slash-command-plugin-validate-mcpb-file-path-extension": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique schema validation message with exact extensions."
+  },
+  "slash-command-plugin-validate-module-not-regular-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error string; opens with a slot and is kept unchanged."
+  },
+  "slash-command-plugin-validate-module-resolves-outside-plugin-folder": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique security error whose text is matched externally; keep verbatim."
+  },
+  "slash-command-plugin-validate-monitor-on-skill-invoke-name": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique schema validation message with exact trigger prefix."
+  },
+  "slash-command-plugin-validate-plugin-name-control-chars": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique field-specific validation message."
+  },
+  "slash-command-plugin-validate-source-unsupported-placeholder": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation contract with literal enum value 'unsupported'; frozen."
+  },
+  "slash-command-plugin-validate-types-dts-extension": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique '.d.ts' requirement (filename/extension literal, frozen)."
+  },
+  "slash-command-plugin-validate-types-inside-plugin-dir": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique '..' path containment contract; frozen."
+  },
+  "slash-command-plugin-validate-user-config-option-invisible-chars": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique per-field validation error; enumeration frozen."
+  },
+  "slash-command-plugin-validate-user-config-option-surrounding-space": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation contract."
+  },
+  "slash-command-terminal-setup-alacritty-no-config-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error string for /terminal-setup."
+  },
+  "system-cloud-gateway-not-signed-in": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error for Cloud gateway provider with /login remedy."
+  },
+  "system-foundry-resource-invalid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique env var validation contract (range, env var names); frozen."
+  },
+  "system-gcp-path-env-var-invalid-characters": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "opensWithSlot and a sentence crosses into the uncatalogued concat neighbour; cutting would break the sentence. Unique character-class contract."
+  },
+  "system-prompt-bash-call-cost-guidance": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Flag-gated (tengu_velvet_moon) unique guidance; frozen sentences without proven co-rendering coverage stay verbatim."
+  },
+  "system-prompt-user-pays-per-token-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Flag-gated unique scope/cost signal."
+  },
+  "system-reminder-async-rewake-hook-unquoted-path-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Spliced into the cannot-be-opened sentence; unique diagnosis."
+  },
+  "system-reminder-async-rewake-hook-unquoted-path-summary": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "opensWithSlot; unique summary text."
+  },
+  "system-reminder-environment-untrusted-downloads-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Security contract with flag and filename literals; frozen and unique."
+  },
+  "system-reminder-hook-script-hooks-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique reason string filled into a hook error."
+  },
+  "system-reminder-pdf-reference-readable-whole": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only copy of the readable-whole instruction for this branch; pages parameter name frozen."
+  },
+  "system-reminder-proactivity-level-high": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "User-selected mode text that explicitly overrides base git rules; only copy; frozen enumerations."
+  },
+  "system-reminder-proactivity-level-high-recurring-job-option": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Fragment of the schedule clause; unique."
+  },
+  "system-reminder-proactivity-level-high-schedule-instead-of-waiting": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique wait-scheduling instruction for the high level; enumeration frozen."
+  },
+  "system-reminder-proactivity-level-low": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "User-selected mode; unique gate on edits and commits."
+  },
+  "system-reminder-proactivity-level-medium": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "User-selected mode; only copy."
+  },
+  "system-reminder-proactivity-setting-announcement-header": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "opensWithSlot whose heading jtt() is matched by Wtt via startsWith; scope contract unique."
+  },
+  "system-reminder-proactivity-setting-withdrawn": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "mTe() literal is matched by Wtt via startsWith (predicate) so it is mechanics; keep verbatim."
+  },
+  "system-reminder-stop-hook-output-withheld-account-memory": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique placeholder."
+  },
+  "system-reminder-tool-hosts-escaped-spelling-legend": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique spelling legend and injection guard."
+  },
+  "task-notification-ultraplan-lost-connection": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique."
+  },
+  "tool-description-agent-token-budget-note-all": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only the selected variant renders; unique when chosen."
+  },
+  "tool-description-agent-token-budget-note-forks": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique when selected."
+  },
+  "tool-description-agent-token-budget-note-fresh": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique when selected."
+  },
+  "tool-description-offer-claude-in-chrome-setup": {
+    "verdict": "trim",
+    "version": "2.1.291",
+    "why": "Delete the one sentence the same-tool schema fully covers; keep everything else verbatim."
+  },
+  "tool-description-offer-claude-in-chrome-setup-short": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Short description; unique when used."
+  },
+  "tool-parameter-offer-chrome-setup-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only schema description of the parameter."
+  },
+  "tool-parameter-webfetch-offset": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique continuation parameter semantics."
+  },
+  "tool-result-agent-already-running-or-resuming": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error."
+  },
+  "tool-result-agent-name-main-session-reserved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation error."
+  },
+  "tool-result-agent-resume-resumer-stopping": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique blocked-action contract."
+  },
+  "tool-result-agent-resume-transcript-load-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique."
+  },
+  "tool-result-agent-still-stopping": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique remedy."
+  },
+  "tool-result-agent-stop-pending-cannot-start-monitors": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique."
+  },
+  "tool-result-agent-teammate-iterm2-send-command-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error."
+  },
+  "tool-result-agent-teammate-iterm2-session-id-parse-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool error that is the only report of this failure mode; carries the raw stdout the model needs to diagnose. Unique, nothing to cut."
+  },
+  "tool-result-agent-teammate-iterm2-split-pane-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional error string, unique failure report with stderr payload; keep."
+  },
+  "tool-result-agent-teammate-pane-control-character": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Security/validation gate message naming the offending code point; unique mechanics, conditional, keep verbatim."
+  },
+  "tool-result-agent-toolset-bash-command-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation-gate error tied to the parameter name command; conditional and unique; keep."
+  },
+  "tool-result-agent-toolset-edit-file-path-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Names the parameter file_path for the edit tool; conditional, only copy at render time; keep."
+  },
+  "tool-result-agent-toolset-edit-file-too-large": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Carries size/limit numbers and the unique fact that edit loads the whole file and cannot modify it (steers away from retrying edit). Frozen threshold text; keep."
+  },
+  "tool-result-agent-toolset-edit-not-regular-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional error identifying the path and reason; unique at render time; keep."
+  },
+  "tool-result-agent-toolset-edit-old-string-not-found": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Names old_string and file; conditional and unique; keep."
+  },
+  "tool-result-agent-toolset-edit-old-string-not-unique": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Gives occurrence count and uniqueness requirement for this tool; conditional, unique; keep."
+  },
+  "tool-result-agent-toolset-edit-old-string-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation gate naming old_string; keep."
+  },
+  "tool-result-agent-toolset-edit-read-only-directory": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Tells the model the path and the read-only directory blocking it; unique conditional error; keep."
+  },
+  "tool-result-agent-toolset-glob-absolute-pattern": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation gate plus the exact fix (relative pattern, optional path); unique, conditional; keep verbatim."
+  },
+  "tool-result-agent-toolset-glob-dotdot-pattern": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation gate naming '..'; unique; keep."
+  },
+  "tool-result-agent-toolset-glob-pattern-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation gate naming pattern; keep."
+  },
+  "tool-result-agent-toolset-grep-pattern-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation gate naming the pattern parameter for grep; conditional and the only copy at render time; keep."
+  },
+  "tool-result-agent-toolset-path-outside-workdir": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Sandbox boundary error, security contract, unique; keep."
+  },
+  "tool-result-agent-toolset-read-file-path-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation gate naming file_path; keep."
+  },
+  "tool-result-agent-toolset-read-file-too-large": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Byte limit plus exact view_range remedy; frozen e.g./number text; unique; keep."
+  },
+  "tool-result-agent-toolset-read-not-regular-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error; keep."
+  },
+  "tool-result-agent-toolset-read-view-range-shape": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Shape contract for view_range; keep verbatim."
+  },
+  "tool-result-agent-toolset-write-file-path-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation gate naming file_path; keep."
+  },
+  "tool-result-agent-toolset-write-read-only-directory": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error naming path and blocking directory; keep."
+  },
+  "tool-result-agent-type-ambiguous": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique disambiguation mechanics with enumerated candidates; conditional; keep verbatim."
+  },
+  "tool-result-anchored-path-not-plain-relative": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Path validation contract; unique; keep."
+  },
+  "tool-result-appifact-repl-remote-caller-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Security refusal for remote callers; unique; keep."
+  },
+  "tool-result-artifact-action-routing-no-arm": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional error that identifies the action and the routing mismatch; unique; keep."
+  },
+  "tool-result-artifact-asset-action-requires-hex-asset-id": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation gate with format and action name; frozen number; keep."
+  },
+  "tool-result-artifact-asset-read-destination-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Approval-race error saying nothing was fetched and to retry; unique state report; keep."
+  },
+  "tool-result-artifact-asset-target-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Approval mismatch error naming the parameters and saying nothing was done; unique; keep."
+  },
+  "tool-result-artifact-asset-upload-pin-mismatch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool result thrown only on asset_upload_pin_mismatch; it is the only text the model gets at that moment and carries the retry instruction. Frozen (enumeration, 'then' ordering of retry); unique."
+  },
+  "tool-result-artifact-asset-upload-source-unverified": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only copy of the source_unverified upload error and its recovery step; conditional, costs nothing until thrown. Frozen (parameter name file_path)."
+  },
+  "tool-result-artifact-auto-open-after-first-write-with-file-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Error result must exist to explain the auto_open_with_files rejection; contains parameter/enum names (frozen). Keep."
+  },
+  "tool-result-artifact-autoedit-attribution-unstaged": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime error (autoedit_attribution_unstaged) with the outcome contract 'nothing was published'; conditional, only copy."
+  },
+  "tool-result-artifact-comments-cursor-invalid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation-gate error (comments_bad_cursor / errorCode 10); frozen (must, parameter name, action name). Unique; keep verbatim."
+  },
+  "tool-result-artifact-comments-degraded": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only text the model receives on comments_degraded; tells it the failure is transient and to retry. Conditional, unique at render time."
+  },
+  "tool-result-artifact-comments-target-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Consent/approval-integrity error with outcome and recovery contract; frozen (parameter names, ordering). Unique at render time."
+  },
+  "tool-result-artifact-comments-url-must-be-artifact-url": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only copy of the comments_bad_url error; contains a rewrite-table needle, so verbatim keep."
+  },
+  "tool-result-artifact-consent-scope-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique security/consent-contract error (consent_scope_changed); frozen (enumeration, 'after' ordering). Keep."
+  },
+  "tool-result-artifact-contract-no-pin-sentinel": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation-gate message with sentinel value (frozen number/sentinel); only statement that 0.0.0 is invalid. Keep verbatim."
+  },
+  "tool-result-artifact-copy-from-bad-urls": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only copy of asset_copy_bad_url error; 'two different' constraint unique; frozen (parameter names, number). Keep."
+  },
+  "tool-result-artifact-copy-from-target-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only text for asset_copy_target_changed with 'nothing was copied' outcome; frozen enumeration. Keep."
+  },
+  "tool-result-artifact-create-from-type-eval-stub-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error for type_url_stub_mode (validateInput errorCode 16 and call throw); conditional, only copy."
+  },
+  "tool-result-artifact-db-as-level-invalid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Lists the enum values (frozen) on db_as_level_invalid; slot contract must be kept. Keep verbatim."
+  },
+  "tool-result-artifact-db-batch-duplicate-entry-document": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only error naming the offending entry for db_batch_duplicate; frozen ('at most once', 'earlier'). opensWithSlot—no cut, so no detector risk. Keep."
+  },
+  "tool-result-artifact-db-batch-entries-added-removed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only text for this call-path's db_write_source_changed; frozen (enumeration, retry ordering). Keep."
+  },
+  "tool-result-artifact-db-batch-entry-file-path-added": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only copy of the batch-entry db_write_source_unapproved message with index slot; frozen (parameter names, 'afterwards'). Keep."
+  },
+  "tool-result-artifact-db-batch-entry-file-path-removed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only copy of batch-entry file_path-removed error; frozen. Keep."
+  },
+  "tool-result-artifact-db-batch-entry-op-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only text for per-entry db_op_changed with the index; frozen parameter path. Keep."
+  },
+  "tool-result-artifact-db-batch-entry-segment-invalid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only error naming the failed batch entry with the exact numeric limits (frozen); no cut planned, so slot detector check moot. Keep."
+  },
+  "tool-result-artifact-db-batch-writes-changed-or-single": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only copy of the Tr-helper db_write_source_changed message incl. the 'approved as a single write' cause; frozen enumeration. Keep."
+  },
+  "tool-result-artifact-db-batch-writes-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional error result carrying exact rejected field names and the writes-only contract; unique and load-bearing at the moment of failure."
+  },
+  "tool-result-artifact-db-data-file-path-not-accepted-for-op": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional error result naming the offending op; unique per-failure diagnostic, zero cost when not raised."
+  },
+  "tool-result-artifact-db-field-invalid-key": {
+    "verdict": "wipe-merge",
+    "version": "2.1.291",
+    "why": "Strongest cut: wipe-merge onto the field's own schema description. Holds: every claim — one top-level key, no dots/slashes/brackets/quotes/backslashes/control or invisible formatting characters, not a reserved __name__ key — is stated verbatim in the co-rendering describe of the same field, and the zod error still carries the path `field`, so the model loses nothing it cannot read from the schema. Whole frozen sentence deleted, nothing reworded; externalRefs none; no concat neighbours."
+  },
+  "tool-result-artifact-db-file-path-nul": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation error with outcome statement (nothing read or sent)."
+  },
+  "tool-result-artifact-db-if-version-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Distinct approval-pin mismatch error (db_pin_changed); tells model nothing was written and to retry."
+  },
+  "tool-result-artifact-db-op-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique db_op_changed diagnostic with no-write outcome and retry guidance."
+  },
+  "tool-result-artifact-db-op-collection-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional missing-field error; names exact parameters."
+  },
+  "tool-result-artifact-db-read-names-lookup-now-documents": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique approval-mismatch error for names lookup turned document read."
+  },
+  "tool-result-artifact-db-read-out-dir-added": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique db_read_target_unapproved diagnostic."
+  },
+  "tool-result-artifact-db-read-out-dir-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime error for read_db out_dir change."
+  },
+  "tool-result-artifact-db-read-out-dir-now-names": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique approval-mismatch error in profiles read path."
+  },
+  "tool-result-artifact-db-read-out-dir-removed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime error with outcome and retry guidance."
+  },
+  "tool-result-artifact-db-read-target-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique db_target_changed diagnostic for read_db."
+  },
+  "tool-result-artifact-db-segment-invalid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation-gate error with threshold; frozen mechanics."
+  },
+  "tool-result-artifact-db-url-must-be-artifact-url": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Runtime bad-url error naming the action; unique when raised."
+  },
+  "tool-result-artifact-db-write-batch-rewritten": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique db_write_source_changed diagnostic."
+  },
+  "tool-result-artifact-db-write-file-path-added": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique single-write source-change error."
+  },
+  "tool-result-artifact-db-write-file-path-removed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique single-write source-change error."
+  },
+  "tool-result-artifact-db-write-readback-unjudged": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique db_op_unjudged diagnostic."
+  },
+  "tool-result-artifact-db-write-target-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditionally rendered tool error (db_target_changed); unique runtime outcome and recovery instruction, costs zero unless thrown."
+  },
+  "tool-result-artifact-delete-not-available": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only signal that the delete action is schema-off in this session (delete_schema_off); conditional error, unique."
+  },
+  "tool-result-artifact-file-not-found": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional error carrying the missing path; unique and load-bearing."
+  },
+  "tool-result-artifact-file-read-live-copy-approval-mismatch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error (file_target_changed on live copy read); frozen enumeration, keep verbatim."
+  },
+  "tool-result-artifact-file-read-out-dir-target-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error with parameter name and outcome; frozen, keep."
+  },
+  "tool-result-artifact-file-read-permission-check-expired": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error (file_read_write_moved); keep."
+  },
+  "tool-result-artifact-file-target-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error for list_files/read_file approval drift; frozen parameter enumeration, keep."
+  },
+  "tool-result-artifact-files-needs-file-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation error (errorCode 7 / type_url_files_need_file_path) with unique corrective shape; keep."
+  },
+  "tool-result-artifact-list-assets-bad-cursor": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Error string for asset_list_bad_cursor; an empty error message would lose the cause of the failure. Keep."
+  },
+  "tool-result-artifact-list-type-ask-rule-added-after-check": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error with recovery instruction (list_type_rule_ask_retry); keep."
+  },
+  "tool-result-artifact-list-type-ask-rule-listing-incomplete": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error (list_type_name_unread); keep."
+  },
+  "tool-result-artifact-list-type-deny-rule-by-link": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique deny-rule error (list_type_rule_denied, link form); keep."
+  },
+  "tool-result-artifact-list-type-deny-rule-by-name": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique deny-rule error (name form); keep."
+  },
+  "tool-result-artifact-list-type-link-unnamed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error (list_type_rule_unresolved); keep."
+  },
+  "tool-result-artifact-list-type-name-or-url-exactly-one": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation error string (list_type_name_bad); keep."
+  },
+  "tool-result-artifact-live-edit-action-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error (live_edit_target_changed); keep."
+  },
+  "tool-result-artifact-live-edit-review-page-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional refusal (pr_review_live_edit_refused) with command path; keep."
+  },
+  "tool-result-artifact-live-edit-unavailable-build": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error, so it costs nothing until it is returned. It is the only signal that live-edit is compiled out (deny/validate/call paths), and no co-rendering carrier says so."
+  },
+  "tool-result-artifact-live-edit-workshop-page-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional error carrying the only statement of the workshop-page restriction and its remedy (workshop_live_edit_refused). No co-rendering carrier covers it."
+  },
+  "tool-result-artifact-member-needs-executor": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Thrown error string naming the missing executor (call.runEngine). It is a frozen identifier, unique, and appears only when this fails."
+  },
+  "tool-result-artifact-open-could-not-confirm": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional open error whose slot contract carries the err detail and the follow-up suffix. Unique, so the slots must stay."
+  },
+  "tool-result-artifact-out-dir-nul": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation message for out_dir. Frozen 'must' plus a sentinel name (NUL). It is the only text telling the model why out_dir was rejected."
+  },
+  "tool-result-artifact-pin-action-unavailable-session": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional error (pin_schema_off) and the only signal that pin/unpin is gated off in this session."
+  },
+  "tool-result-artifact-pin-target-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Consent-integrity error with an ordering contract (nothing changed; retry for a re-check). Frozen, and no co-rendering carrier covers it."
+  },
+  "tool-result-artifact-pr-review-bottom-line-first-publish-cap": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Runtime limit (numbers and field path) that the model must reproduce to fix the payload. Frozen and unique."
+  },
+  "tool-result-artifact-pr-review-concern-body-first-publish-cap": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime limit with numbers and concern id. Frozen."
+  },
+  "tool-result-artifact-pr-review-concern-question-mark": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only text stating that a concern question must end with '?'. It is a validation gate."
+  },
+  "tool-result-artifact-pr-review-decisions-state-choice-invalid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation contract with the enum value \"skip\". Frozen."
+  },
+  "tool-result-artifact-pr-review-decisions-state-requires-republish": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only statement that decisions_state needs republish. Ordering/validation contract and frozen ('only')."
+  },
+  "tool-result-artifact-pr-review-delta-diagram-edge-unknown-node": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation error for delta_diagram edges; nothing else conveys it."
+  },
+  "tool-result-artifact-pr-review-delta-diagram-node-ids-unique": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation constraint ('must'), frozen."
+  },
+  "tool-result-artifact-pr-review-didnt-change-first-publish-cap": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime limit; frozen numbers and field name."
+  },
+  "tool-result-artifact-pr-review-followups-first-publish-cap": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime limit; frozen."
+  },
+  "tool-result-artifact-pr-review-identity-check-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional error (pr_review_identity_mismatch) carrying the identity-check reason. Unique."
+  },
+  "tool-result-artifact-pr-review-island-disallowed-character": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique compose-invariant error; nothing else renders it."
+  },
+  "tool-result-artifact-pr-review-live-binding-invalid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error naming the \"live\": null remedy. Frozen."
+  },
+  "tool-result-artifact-pr-review-manifest-invalid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error carrying the manifest validation detail."
+  },
+  "tool-result-artifact-pr-review-mermaid-fence-count-mismatch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique compose-invariant error with count slots; tells the model the publish was refused."
+  },
+  "tool-result-artifact-pr-review-no-visual-reason-blank": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation gate for the no-visual reason."
+  },
+  "tool-result-artifact-pr-review-one-delta-diagram": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique limit (at most one delta_diagram across explainer and visual); frozen enumeration/limit."
+  },
+  "tool-result-artifact-pr-review-payload-too-large": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime size cap; frozen, so verbatim."
+  },
+  "tool-result-artifact-pr-review-republish-bad-target": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error (pr_review_republish_bad_target)."
+  },
+  "tool-result-artifact-pr-review-republish-force-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error naming the force parameter restriction. Frozen."
+  },
+  "tool-result-artifact-pr-review-republish-mermaid-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error with an actionable remedy and status for the user."
+  },
+  "tool-result-artifact-pr-review-republish-no-version": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime error for a conditional republish path; carries the retry-then-diagnose instruction found nowhere else. Conditional tool result costs nothing until thrown. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-pr-review-republish-without-target": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique fix instruction with exact parameter names; only copy of this contract. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-pr-review-stamp-binding-invalid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error with exact JSON fix key; frozen enum/parameter text kept verbatim. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-pr-review-targeted-requires-republish": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique recovery contract with exact field names; only copy at the moment it is thrown. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-pr-review-template-mismatch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation-gate contract (byte-for-byte blocks, no scripts/handlers/fetching elements/CSS network functions, only canonical GitHub URL); frozen enumeration kept verbatim. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-pr-review-template-part-underivable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique internal-desync error naming the failing part; nothing to cut. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-preview-browser-ignored-host-rules": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime error; minimal. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-preview-file-missing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error with the path slot and frozen ordering text; keep verbatim. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-preview-frame-not-loaded": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique minimal error. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-preview-gave-up-before-browser": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique minimal abort error. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-preview-measurement-no-data": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique minimal error. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-preview-measurement-too-much-data": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique minimal error signalling a size cap. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-preview-no-page-loaded": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique minimal ordering error. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-preview-not-compiled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique build-capability error. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-preview-page-navigated-away": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique: tells the model preview renders only this file and the viewer blocks navigation; keep. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-preview-page-reloaded-during-checks": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique minimal error. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-preview-read-blocked-rule": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique per-action error; frozen parameter/tool names kept verbatim. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-preview-unexpected-skeleton": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique minimal internal error. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-preview-wrapper-load-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique minimal error carrying the browser errorText. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-publish-approval-already-used": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique replay-guard error telling the model nothing was created and to retry; keep. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-publish-copy-source-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation error; frozen (each, enumeration) kept verbatim. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-publish-copy-source-other-org-and-unconfirmed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique combined-condition error; keep. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-publish-copy-source-unapproved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique approval-gate error with retry instruction. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-publish-file-path-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique required-field error naming file_path. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-publish-files-source-unverified": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error with concrete checks (known extension, no duplicates) and stop rule; frozen text kept verbatim. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-publish-root-base-unverified": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique root-base approval-pin error; sentence crosses into the uncatalogued 'approval — retry the publish' literal, which stays untouched since this is kept. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-publish-stale-version-guard": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique stale-version guard error; concatenated with a0r(De,it) expression which stays as-is. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-publish-target-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique publish-action approval-mismatch error with retry instruction. Conditional tool result: zero cost until thrown, sole copy when it is."
+  },
+  "tool-result-artifact-publish-target-gone": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Sole error text for the publish_target_gone throw: tag-bearing marker element with url, the dropped-link contract, and the ordering 'tell the user ... before you republish' (frozen). Conditional tool result costs nothing until it fires; wiping would blank the error."
+  },
+  "tool-result-artifact-publish-target-other-org": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Opens with the slug slot and the Npt reason; the only text of this publish_target_other_org error. 'Nothing was published' is a state fact the model cannot infer."
+  },
+  "tool-result-artifact-read-db-cursor-with-order-by": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation-gate error naming query.cursor/query.order_by (frozen parameter names); wiping would return an empty db_op_mismatch error."
+  },
+  "tool-result-artifact-read-db-data-file-path-not-accepted": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Parameter-gate error with frozen names data, file_path, read_db; must remain verbatim as the error message."
+  },
+  "tool-result-artifact-read-db-doc-id-required-get": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Frozen parameter/enum names (doc_id, db_op \"get\"); the only text of this error."
+  },
+  "tool-result-artifact-read-db-query-not-accepted-get": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation-gate error with frozen names; keep verbatim."
+  },
+  "tool-result-artifact-read-db-where-order-by-query-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Frozen ONLY/parameter names in a validation-gate error; the only text of this throw."
+  },
+  "tool-result-artifact-read-file-out-dir-must-be-local-path-prefixed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Opens with the file-path slot; the file_read_network_path error text with frozen read_file/out_dir names and 'only' restriction."
+  },
+  "tool-result-artifact-read-file-path-looks-like-asset-id": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Input-validation message for the path refine; only text telling the model read_file wants a published path, not an asset id."
+  },
+  "tool-result-artifact-read-page-data-derive-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error contract (act on nothing from this read) for read_page_data_derive_failed."
+  },
+  "tool-result-artifact-read-page-data-fetch-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only text of read_page_data_fetch_failed; carries the error detail slot."
+  },
+  "tool-result-artifact-read-page-data-island-ambiguous": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique stop contract and cause enumeration for read_page_data_island_ambiguous."
+  },
+  "tool-result-artifact-read-page-data-island-out-of-contract": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error/stop contract for read_page_data_out_of_contract."
+  },
+  "tool-result-artifact-read-page-data-public-other-org": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique remedy (read the page or its files instead) for read_page_data_public."
+  },
+  "tool-result-artifact-read-page-data-schema-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only text of this read_page_data_schema_unavailable throw."
+  },
+  "tool-result-artifact-read-page-data-target-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Approval-pin mismatch error with nothing-was-read state and retry instruction; unique to this throw."
+  },
+  "tool-result-artifact-read-target-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only text of read_target_changed; state + retry contract."
+  },
+  "tool-result-artifact-read-url-not-session-artifact": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation-gate error (read_bad_url) with frozen must/url/action names; keep verbatim."
+  },
+  "tool-result-artifact-reply-action-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Thrown runtime error string, only feedback the model gets for this failure; unique per-action outcome; conditional so costs zero otherwise. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-reply-missing-fields": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Thrown validation error (reply_missing_field); the error string itself must exist when thrown; frozen parameter names. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-reply-text-blank-after-rewrites": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error for the reply_empty_text gate; conditional tool result. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-reply-text-hidden-code-points-emoji": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Thrown error for reply_hidden_code_points gate; remedy (plain text, no emoji, ordinary spaces) is load-bearing recovery info. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-reply-text-too-large-after-rewrites": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Thrown reply_text_too_long error carrying runtime byte count and limit; unique. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-resolve-action-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Thrown resolve_target_changed error; outcome 'nothing was changed' plus retry is unique feedback. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-resolve-missing-fields": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Thrown resolve_missing_field error; required. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-room-send-consent-surface-gone": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Thrown room_send_consent_gone error; unique stop-retry contract. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-room-send-refused-after-rewrites": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Thrown room_send_invalid error carrying runtime reason enum; unique. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-room-send-target-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Thrown room_send_target_changed error; unique outcome+retry. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-room-send-topic-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Thrown room_send_missing_field error; required. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-rooms-not-compiled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Error thrown by Ll() when rooms are absent from the build; unique. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-root-read-approval-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Opening half of a sentence completed by the uncatalogued neighbour literal 'a Read permission approval here — retry the publish so it can be asked'; cutting it would break the sentence; unique error. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-sync-not-available": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Deny/validation message for sync unavailability at three sites; unique. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-sync-target-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Thrown sync_target_changed error; unique. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-thread-id-invalid-after-rewrites": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Thrown reply/resolve_thread_id_invalid error; unique. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-thumbnail-dimensions-out-of-range": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Thrown thumbnail_invalid error with runtime dimensions and limit; unique. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-thumbnail-dimensions-unreadable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Thrown thumbnail_invalid error for malformed header; unique. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-thumbnail-far-over-size-limit": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Thrown error when thumbnail is far over 1 MB; unique. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-thumbnail-file-missing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Thrown error carrying the runtime errMsg; opensWithSlot, no wipe; unique. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-thumbnail-not-png-or-jpeg": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Thrown thumbnail_invalid error; unique. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-thumbnail-over-size-limit": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Thrown error carrying the actual size; unique. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-thumbnail-unsupported-jpeg-encoding": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Thrown thumbnail_invalid error for unsupported JPEG encoding; unique remedy. Conditional tool result: zero cost unless the failure occurs."
+  },
+  "tool-result-artifact-type-check-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool error, the only copy of what failed and that a retry is the remedy; nothing co-rendering conveys it."
+  },
+  "tool-result-artifact-type-check-failed-404": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error text with a status detail (404) and retry instruction; frozen number and ordering-free mechanics."
+  },
+  "tool-result-artifact-type-file-write-own-files-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional error, unique remedy for writing a type's files; keep."
+  },
+  "tool-result-artifact-type-url-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional error carrying parameter name and the nothing-created/retry contract; frozen and unique."
+  },
+  "tool-result-artifact-type-url-not-artifact": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only copy of the type_url validation failure at this gate; frozen (parameter name, must)."
+  },
+  "tool-result-artifact-type-url-removed-after-approval": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error with nothing-published/retry contract."
+  },
+  "tool-result-artifact-type-url-stray-fields": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Exact parameter names to remove (url, pr_review, capabilities, contract, deadline, force) are frozen and unique; keep verbatim."
+  },
+  "tool-result-artifact-upload-asset-call-file-path-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Call-time error naming file_path and the action enum; frozen and the only copy at this gate."
+  },
+  "tool-result-artifact-upload-asset-file-not-opened": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional error whose 'Nothing was sent.' is the outcome contract; keep."
+  },
+  "tool-result-artifact-upload-asset-files-changed-since-approval": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error for the batch path; enumeration is frozen."
+  },
+  "tool-result-artifact-upload-asset-none-confirmed-stored": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique recovery/ordering contract (Before sending again, list the assets) and 300-char message cap; frozen."
+  },
+  "tool-result-artifact-upload-asset-read-blocked-rule": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Security/permission error for the batch path; unique where it renders."
+  },
+  "tool-result-artifact-upload-asset-read-rule-blocked": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Permission-denial error naming file_path and outcome; frozen, unique per site."
+  },
+  "tool-result-artifact-upload-asset-target-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error for the upload approval mismatch."
+  },
+  "tool-result-artifact-upload-asset-url-not-artifact": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only copy of this validation at the upload_asset gate; frozen (must, url, action enum)."
+  },
+  "tool-result-artifact-url-not-an-artifact-bare": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Shared rL helper error ('invalid_url'), minimal and unique where thrown."
+  },
+  "tool-result-artifact-verify-target-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error for the verify approval mismatch."
+  },
+  "tool-result-artifact-version-not-available": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only signal that the version action is unavailable in this build; keep."
+  },
+  "tool-result-artifact-version-target-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error for the version approval mismatch."
+  },
+  "tool-result-artifact-watch-target-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime error (watch_target_changed) for the watch action; its outcome ('nothing was armed') and remedy exist nowhere else; error text is the only signal the model gets."
+  },
+  "tool-result-artifact-write-db-query-not-accepted": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation-gate error (db_op_mismatch) naming parameter `query` and action write_db; frozen and unique."
+  },
+  "tool-result-attachment-network-path-unsupported": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime refusal naming UNC and /net autofs; frozen (path, enumeration) and the sole signal when thrown."
+  },
+  "tool-result-bash-builtin-gh-api-off-nonessential-traffic": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal naming CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC as the cause; frozen env var; only signal at the failure point."
+  },
+  "tool-result-bash-builtin-gh-branch-placeholder-unknown": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error naming the {branch} placeholder and the remedy (spell it out)."
+  },
+  "tool-result-bash-builtin-gh-endpoint-control-characters": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation-gate error enumerating rejected characters; frozen enumeration and unique."
+  },
+  "tool-result-bash-builtin-gh-env-host-gh-host-hint": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Concatenated tail of env-host-not-used for the GH_HOST arm; carries the unique remedy (--hostname, unset GH_HOST); frozen flag/env-var names."
+  },
+  "tool-result-bash-builtin-gh-env-host-gh-repo-hint": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "GH_REPO-arm remedy completing the env-host-not-used sentence; frozen GH_REPO=OWNER/REPO and --hostname; unique."
+  },
+  "tool-result-bash-builtin-gh-env-host-not-used": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Opens with the env var slot and is the head of a + concat whose tail is the gh-host/gh-repo hint; cutting it would break the sentence; unique refusal reason."
+  },
+  "tool-result-bash-builtin-gh-field-requires-equals-value": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique parse error telling the model a -f/-F field needs key=value; frozen syntax."
+  },
+  "tool-result-bash-builtin-gh-header-control-character": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation error naming the offending header; nothing else covers it."
+  },
+  "tool-result-bash-builtin-gh-header-not-allowed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal that lists the allowed headers (a fact the model cannot infer); regex text quotedElsewhere — kept verbatim."
+  },
+  "tool-result-bash-builtin-gh-input-file-unreadable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime error; 'could not read' is a predicateRun literal, so it is frozen; the only signal when the --input read fails."
+  },
+  "tool-result-bash-builtin-gh-jq-not-installed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Runtime refusal of --jq; names jq/PATH and the workaround; frozen tool/flag names; keep."
+  },
+  "tool-result-bash-builtin-gh-paginate-non-get": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation gate plus the non-obvious method default (POST with fields unless -X GET); frozen flags."
+  },
+  "tool-result-bash-builtin-gh-placeholder-before-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique rule (placeholders filled only in path/query); frozen ('only', placeholder names)."
+  },
+  "tool-result-bash-builtin-gh-placeholder-changes-host": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal cause (host would change); frozen placeholder enumeration."
+  },
+  "tool-result-bash-builtin-gh-placeholder-multi-segment-repo": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error explaining a nested project path is not OWNER/REPO; frozen."
+  },
+  "tool-result-bash-builtin-gh-redirect-location-not-url": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal reason; the only signal when it is thrown."
+  },
+  "tool-result-bash-builtin-gh-repo-placeholder-ambiguous-any-host": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime error plus remedy (GH_REPO=OWNER/REPO, --hostname); frozen names."
+  },
+  "tool-result-bash-builtin-gh-repo-placeholder-ambiguous-served-host": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error with the [HOST/] remedy variant; frozen names."
+  },
+  "tool-result-bash-builtin-gh-repo-placeholder-remote-other-host": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique explanation that the checkout's remote is on another host; it leads into the I() refusal slot."
+  },
+  "tool-result-bash-git-config-shell-active-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique security-guard error; preserve."
+  },
+  "tool-result-bash-linux-sandbox-no-unnamed-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique reason fragment with the per-location error details; needed to diagnose sandbox profile failure."
+  },
+  "tool-result-bash-sandbox-bridge-sockets-create-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique sandbox init failure reason; frozen (number slot)."
+  },
+  "tool-result-bash-sandbox-credentials-envvar-extract-no-match": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique config error naming the entry, pattern and the enum values warn/deny; frozen."
+  },
+  "tool-result-bash-sandbox-credentials-extract-capture-group-undefined": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Head of a + concat whose sentence crosses into the uncatalogued 'capture group 1 is undefined' literal; cutting it would break that sentence, and the error is unique."
+  },
+  "tool-result-bash-sandbox-credentials-file-extract-no-match": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique config error for credentials.files with enum remedy; frozen."
+  },
+  "tool-result-bash-sandbox-dependencies-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique sandbox init failure that lists the missing dependencies."
+  },
+  "tool-result-bash-sandbox-http-bridge-start-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique init failure reason naming the HTTP bridge."
+  },
+  "tool-result-bash-sandbox-mux-proxy-port-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique sandbox init failure reason."
+  },
+  "tool-result-bash-sandbox-path-entry-error": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Opens with the wrapped error slot; the parenthetical naming the settings source is unique diagnostic information."
+  },
+  "tool-result-bash-sandbox-required-init-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error contract: tells the model the sandbox is required and failed, with the concrete retry remedy (fix settings / restart, --settings pinned). Thrown only on this path; nothing else conveys it."
+  },
+  "tool-result-bash-sandbox-sigv4-signed-header-missing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Deny reason naming the exact header absent from a SigV4 re-signed request; frozen (contains slot/quote) and unique."
+  },
+  "tool-result-bash-sandbox-socks-bridge-start-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Distinct init-failure reason identifying the SOCKS bridge as the failed component; 36 chars, nothing to cut."
+  },
+  "tool-result-bash-sandbox-task-output-dir-not-plain": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal contract: sandboxed commands are refused until the temp-root task output directory chain is restored; contains 'until' ordering — frozen, unique."
+  },
+  "tool-result-bash-sandbox-tls-terminate-ca-not-pem": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only conveys which file is not a PEM of which type; nothing duplicated, nothing to trim; opens with a slot so no wipe considered."
+  },
+  "tool-result-bash-sandbox-tls-terminate-ca-pair-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Config validation rule (caCertPath and caKeyPath together, 'must') — frozen mechanics, unique."
+  },
+  "tool-result-bash-sandbox-tls-terminate-mitm-proxy-exclusive": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique config validation contract naming network.tlsTerminate and network.mitmProxy; frozen."
+  },
+  "tool-result-bash-sandbox-windows-ca-state-dir-missing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Error naming the missing state dir and the exact remedy command `npx sandbox-runtime windows-install` (predicateRuns literal, ordering 'first') — frozen mechanics."
+  },
+  "tool-result-bash-sandbox-windows-ca-user-not-provisioned": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Reports provisioned/cred flags and the exact remedy command; predicateRuns literal; frozen and unique."
+  },
+  "tool-result-bash-sandbox-windows-git-bash-missing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique remedy pair: install Git Bash or run unsandboxed via dangerouslyDisableSandbox (parameter name, frozen)."
+  },
+  "tool-result-bash-sandbox-windows-per-exec-fs-allow-unsupported": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Head of a Windows limitation error naming filesystem.allowRead/allowWrite; unique; sentence continues into tool-result-bash-sandbox-windows-srt-win-exec-denies-only, kept whole."
+  },
+  "tool-result-bash-sandbox-windows-per-exec-set-at-session-level": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Tail of the concatenated error carrying the remedy (set denies at session level via initialize()); unique; kept whole with its neighbours."
+  },
+  "tool-result-bash-sandbox-windows-programdata-unset": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Names the missing ProgramData env var; 22 chars, unique, frozen."
+  },
+  "tool-result-bash-sandbox-windows-srt-win-exec-denies-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Middle fragment explaining srt-win exec only exposes per-exec denies (restrictive 'only', tool name) — frozen; sentence crosses both boundaries, kept whole."
+  },
+  "tool-result-bash-sandbox-windows-user-sid-missing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Names `srt-win user status` and the inconsistent provisioned-without-SID state; unique."
+  },
+  "tool-result-bash-script-call-limit-exceeded": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique security contract: count, cap and why the cap exists (prevents retry/workaround of an exfiltration guard). Numbers/slots frozen."
+  },
+  "tool-result-bash-sed-edit-file-changed-since-preview": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal reason for the simulated sed edit; opens with a slot (path); nothing to cut."
+  },
+  "tool-result-bash-sed-edit-outside-allowed-directories": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal with concrete remedy (use the Edit tool or add the directory); opens with a slot; frozen."
+  },
+  "tool-result-bash-worktree-cwd-gone-recovery-outside": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique case (recovery target outside the worktree) with the report-not-retry contract; slots and ordering frozen."
+  },
+  "tool-result-bash-worktree-git-runtime-word-before-subcommand": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal reason fragment (runtime word before git subcommand); 'before' ordering frozen; paired remedy sibling kept too."
+  },
+  "tool-result-bash-worktree-git-spell-options-literally": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique remedy (spell options/subcommand literally, quote patterns meant for git); nothing to cut."
+  },
+  "tool-result-bash-worktree-isolation-other-worktree": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal for a cwd in a different worktree with re-run remedy; 'must' and slots frozen."
+  },
+  "tool-result-cloud-session-branch-ahead-of-remote-notice": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique notice: N commits ahead, session starts without them and without uncommitted changes, push and restart remedy; numbers/slots frozen."
+  },
+  "tool-result-cloud-session-github-app-access-hint": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique suffix telling the user a GitHub-based start works if the Claude GitHub App has access; leading '. ' completes the upload-failure sentence; keep."
+  },
+  "tool-result-cloud-session-host-cannot-clone": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique suffix for this failure path; leading '. ' completes the host sentence; keep."
+  },
+  "tool-result-cloud-session-no-default-environment": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error with the 1500-char threshold and configured-default diagnostics; frozen."
+  },
+  "tool-result-cloud-session-send-unattested-machine": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal reason for device-bound sessions when enrollment hint is unavailable; nothing to cut."
+  },
+  "tool-result-cloud-session-send-unattested-machine-enroll": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal reason plus the /login enrollment remedy; keep."
+  },
+  "tool-result-cloud-session-service-message-not-shown": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique explanation of why the message is withheld and the --debug remedy (flag name frozen)."
+  },
+  "tool-result-cloud-session-starts-empty-notice": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique notice: three reasons the cloud session starts empty and that nothing is copied; enum keys frozen; opens with a slot-like enum lookup so no wipe."
+  },
+  "tool-result-cloud-session-unusable-session-id": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error: a session may have been created (look at claude.ai/code), update remedy; frozen URL."
+  },
+  "tool-result-cloud-sessions-need-claude-ai-sign-in": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique auth requirement with exact remedy `claude auth login` / /login; frozen."
+  },
+  "tool-result-cloud-sessions-unable-to-get-organization-uuid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Short unique error naming the failed lookup; nothing to cut."
+  },
+  "tool-result-computer-use-clipboard-round-trip-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique executor error explaining why clipboard-paste typing failed; 35 chars, keep."
+  },
+  "tool-result-computer-use-input-unsupported-platform": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-computer-use-lock-create-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-computer-use-pbcopy-exit-code": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-computer-use-pbpaste-exit-code": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-croncreate-durable-unavailable-project-config-root": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-custom-oauth-url-not-approved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-backstop-safety-trip": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-base-url-not-first-party": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-copy-files-tokenless-backstop": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-delete-paths-outside-plan": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-delete-reserved-paths": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-grant-mint-bearer-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-grant-record-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-plan-token-mismatch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-project-grant-ineligible-op": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-project-grant-no-prompt": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-project-grant-non-interactive": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-project-grant-not-shown": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-register-paths-outside-plan": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-shared-handshake-cancelled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-sse-unsupported": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-unregister-paths-outside-plan": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-write-files-both-data-and-localpath": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-write-files-localpath-needs-localdir": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-write-files-localpath-not-regular-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-write-files-localpath-outside-dir": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-write-files-localpath-resolves-outside": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-write-files-localpath-too-large": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-write-paths-outside-plan": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool-result error: it costs nothing until thrown, and when thrown it carries a unique error contract and remedy that nothing co-rendering conveys. Keep pristine."
+  },
+  "tool-result-design-write-reserved-paths": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime guard error naming reserved paths (CLAUDE.md, .claude/) and that the plan cannot override it; frozen paths, conditional tool result."
+  },
+  "tool-result-desktop-tool-each-call-reviewed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique contract that desktop-acting calls are always reviewed and cannot be auto-approved by allow rules, hooks or plugins; conditional, frozen enumeration."
+  },
+  "tool-result-device-bridge-host-older-connection-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique cause, remedy and retry gate for an incompatible older connection; frozen ordering word 'until'."
+  },
+  "tool-result-edit-missing-parent-message": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only error text the Edit call returns when parentMessage is missing; 45 chars, nothing to cut, wiping would leave an empty error."
+  },
+  "tool-result-edit-nothing-to-change-after-lint": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique explanation that stripping invisible characters and defusing harness tags made new_string equal old_string, plus the no-write outcome; frozen param names."
+  },
+  "tool-result-edit-sensitive-file-ask": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique reason (sensitive file) for the edit permission ask; nothing to trim."
+  },
+  "tool-result-enter-plan-mode-agent-context": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only text returned when call() runs in an agent context; frozen tool name, wiping would blank the error."
+  },
+  "tool-result-enterworktree-locked-by-other-session": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique lock cause with lockReason and the wait-or-choose-another remedy; frozen enumeration."
+  },
+  "tool-result-enterworktree-managed-dir-is-symlink": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique symlink rejection with resolved path; frozen 'must'."
+  },
+  "tool-result-enterworktree-managed-dir-missing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error when the managed worktrees dir does not exist; nothing to cut."
+  },
+  "tool-result-enterworktree-name-dot-segments": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation rule (no '.' or '..' segments); frozen sentinels."
+  },
+  "tool-result-enterworktree-name-invalid-characters": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Frozen validation error with a claim (non-empty segment) the schema lacks; keep verbatim."
+  },
+  "tool-result-enterworktree-name-path-exclusive": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation-gate error message naming both parameters; frozen param names, 50 chars."
+  },
+  "tool-result-enterworktree-name-reserved-git": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique reserved-name rule; frozen."
+  },
+  "tool-result-enterworktree-name-too-long": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Runtime cap error with limit and got-length; frozen number."
+  },
+  "tool-result-enterworktree-network-automount-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique rejection reason; nothing to cut."
+  },
+  "tool-result-enterworktree-no-write-access-not-switched": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique contract that the switch was not made because write access would not follow; nothing to cut."
+  },
+  "tool-result-enterworktree-not-in-git-repository": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique precondition error; nothing to cut."
+  },
+  "tool-result-enterworktree-not-linked-worktree-of-repo": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique rejection reason with repo path; nothing to cut."
+  },
+  "tool-result-enterworktree-not-registered-worktree": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error with actionable 'git -C <repo> worktree list' command; frozen command."
+  },
+  "tool-result-enterworktree-not-under-managed-dir": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime gate error with frozen path .claude/worktrees/; keep."
+  },
+  "tool-result-enterworktree-path-is-current-directory": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique rejection; nothing to cut."
+  },
+  "tool-result-enterworktree-pinned-cwd-requires-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique requirement that pinned-cwd sessions pass `path`; frozen param name."
+  },
+  "tool-result-enterworktree-resolves-to-automount-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error with the resolved path; nothing to cut."
+  },
+  "tool-result-enterworktree-resolves-to-unc-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error with the resolved path; nothing to cut."
+  },
+  "tool-result-enterworktree-unc-network-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique rejection reason; nothing to cut."
+  },
+  "tool-result-enterworktree-worktree-prunable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Conditional tool error, unique cause (prunable: directory/admin files missing or broken); costs nothing until thrown. Frozen (contains a slot path/ordering-free but quantified cause) and unique."
+  },
+  "tool-result-exitplanmode-plan-approval-inbox-write-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only copy of the failure outcome 'plan not submitted; try again' for ExitPlanMode in teammate mode; conditional error."
+  },
+  "tool-result-exitworktree-not-in-worktree-session": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error; minimal already."
+  },
+  "tool-result-file-upload-file-shrank": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional upload error stating the cause."
+  },
+  "tool-result-file-upload-read-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error template; slot contract must stay."
+  },
+  "tool-result-git-allow-protocol-invalid-transport": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Frozen validation contract naming env var GIT_ALLOW_PROTOCOL and allowed characters; unique."
+  },
+  "tool-result-git-bundle-ambiguous-filter-driver": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional refusal; frozen sentences (quoted names, enumerations, ordering 'then retry')."
+  },
+  "tool-result-git-bundle-bad-config": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional refusal; frozen command text."
+  },
+  "tool-result-git-bundle-check-unfinished": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional error with slot and frozen command."
+  },
+  "tool-result-git-bundle-do-not-run-git-here": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Shared remedy constant (IOt) spliced into refusals; unique security contract, frozen ('Do not')."
+  },
+  "tool-result-git-bundle-fresh-clone-remedy-lead": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Fragment constant (OOt) completing other sentences; frozen (paths, ordering 'then'), cutting would break the host sentence."
+  },
+  "tool-result-git-bundle-git-config-unreadable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional refusal."
+  },
+  "tool-result-git-bundle-git-did-not-run": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional refusal; frozen command and PATH remedy."
+  },
+  "tool-result-git-bundle-git-dir-entry-not-plain-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Shared tail constant (r$e) for HEAD/packed-refs/refs refusals; unique, frozen throughout."
+  },
+  "tool-result-git-bundle-git-stderr-withheld": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Sentinel: the bundle compares stderr === Rqo to decide the git fsck hint (git-step-failed), so the literal is mechanics and must stay verbatim."
+  },
+  "tool-result-git-bundle-git-step-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Opens with slot (command name); unique error template, slot contract and frozen fsck text kept."
+  },
+  "tool-result-git-bundle-head-not-plain": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional refusal lead with path and slot."
+  },
+  "tool-result-git-bundle-included-config-inside-checkout-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Array element joined into included-config-refusal; unique reason; kept whole so neighbour remedy sentence is unaffected."
+  },
+  "tool-result-git-bundle-included-config-inside-keep-outside-remedy": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique remedy for this arm."
+  },
+  "tool-result-git-bundle-included-config-inside-remove-line-remedy": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique for its arm; frozen ('then retry')."
+  },
+  "tool-result-git-bundle-included-config-list-files-hint": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique command; frozen."
+  },
+  "tool-result-git-bundle-included-config-list-includes-hint": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique command; frozen."
+  },
+  "tool-result-git-bundle-included-config-not-text-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique reason; array element paired with tool-result-git-bundle-included-config-not-text-remedy, which also stays pristine, so no sentence is broken."
+  },
+  "tool-result-git-bundle-included-config-not-text-remedy": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique remedy with slot contract; paired element tool-result-git-bundle-included-config-not-text-reason also kept pristine."
+  },
+  "tool-result-git-bundle-included-config-ordinary-file-remedy": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique remedy for the reachable non-include arm."
+  },
+  "tool-result-git-bundle-included-config-reachable-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique reason; frozen enumeration; kept whole beside its remedy element."
+  },
+  "tool-result-git-bundle-included-config-reachable-remove-line-remedy": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique for its arm; adds 'by its plain path at an ordinary local file'."
+  },
+  "tool-result-git-bundle-included-config-refusal": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Template whose lead 'Not uploading this working tree: ' is matched by a regex replace in bundle-upload-credential-previous-way-error, so it is mechanics and stays verbatim."
+  },
+  "tool-result-git-bundle-keep-folder-unpushed-work": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Shared remedy constant (DOt); unique data-loss warning, frozen ('only')."
+  },
+  "tool-result-git-bundle-launch-folder-unresolved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional refusal."
+  },
+  "tool-result-git-bundle-not-a-repository": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional refusal."
+  },
+  "tool-result-git-bundle-objects-changed-while-preparing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique conditional refusal; frozen paths and ordering."
+  },
+  "tool-result-git-bundle-objects-missing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Names the bundle-readback failure, the likely damaged .git/objects, and the git fsck/repair/re-clone remedy; only the opening label is shared with sibling refusals, which are alternative switch arms."
+  },
+  "tool-result-git-bundle-objects-not-plain": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Frozen enumeration of what the objects folder must not hold, the folder-count limit slot, and the ls -lR .git/objects diagnostic; no other carrier states these."
+  },
+  "tool-result-git-bundle-objects-unlisted": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique remedy: find a ref holding refs/ twice in git for-each-ref, rename or delete it on the remote too; siblings share only the opening label and are alternative arms."
+  },
+  "tool-result-git-bundle-packed-refs-not-plain": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Names packed-refs and its usual path as the offending entry; sibling not-plain values are alternative map entries, not co-rendering."
+  },
+  "tool-result-git-bundle-private-seed-ref-unwritable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Private-git-dir arm of the seed-ref error, naming the directory to check; tool-result-git-bundle-seed-ref-unwritable is the other ternary arm, so it never co-renders."
+  },
+  "tool-result-git-bundle-ref-storage-env-variable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Names GIT_REFERENCE_BACKEND and the remedy (start claude without it, check settings env block); the workflow-env carriers are about a different variable."
+  },
+  "tool-result-git-bundle-ref-storage-ignored-setting": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Frozen enumeration of candidate config files and the remove-the-key remedy; no carrier holds it."
+  },
+  "tool-result-git-bundle-ref-storage-repository-config": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Names extensions.refStorage in the repository config and the ordinary-clone remedy; the misplaced-git-entry carrier is a different refusal and does not co-render."
+  },
+  "tool-result-git-bundle-ref-storage-setting": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Wrapper that frames the ref-storage reason and states nothing was uploaded; other refusals are alternative switch cases."
+  },
+  "tool-result-git-bundle-refs-not-plain": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Names refs/heads, refs/tags, refs/remotes and the find .git/refs diagnostic command; unique."
+  },
+  "tool-result-git-bundle-silent-failure-retry": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Remedy for a silent git stop (retry, git --version); no carrier matched."
+  },
+  "tool-result-git-bundle-stash-create-no-message-detail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Detail clause for a messageless stash create failure; no carrier matched."
+  },
+  "tool-result-git-bundle-too-large-history": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Reports the history size against the max-bytes limit; the squashed variant is a different return path, not co-rendering."
+  },
+  "tool-result-git-bundle-too-large-squashed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Reports the size even without history against the limit; the history variant is a separate return, not coverage."
+  },
+  "tool-result-git-bundle-trailing-bytes": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique diagnosis (bundle not ending with its pack, damaged/foreign pack file) and fresh-clone remedy; objects-missing is an exclusive switch arm."
+  },
+  "tool-result-git-bundle-unknown-repository-extension": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Names the unknown repository extension error and the update-git remedy; git-did-not-run is a different module-scope map entry, never co-rendered."
+  },
+  "tool-result-git-bundle-unlisted-objects-detail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Detail with object counts and the empty-tree caveat, interpolated into objects-unlisted; opens with a slot; unique."
+  },
+  "tool-result-git-bundle-work-tree-replaced": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "States the folder was moved/replaced during preparation and to look for another program; unique."
+  },
+  "tool-result-glob-directory-does-not-exist": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Runtime error carrying the cwd and a did-you-mean suggestion; the glob path parameter texts do not convey the failure or the suggestion."
+  },
+  "tool-result-grep-path-does-not-exist": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Runtime error carrying the cwd and a did-you-mean suggestion; other path-missing texts belong to different tools."
+  },
+  "tool-result-grep-ripgrep-could-not-start": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "States nothing was searched and matches may still exist, the OS reason, retry advice and what to tell the user; the shared Retry in a moment carriers belong to other tools."
+  },
+  "tool-result-grep-ripgrep-rejected-pattern": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Reports that ripgrep rejected the pattern, with stderr; no carrier matched."
+  },
+  "tool-result-grep-task-output-directory": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique rule: grep or read one specific task output path, not the tasks directory."
+  },
+  "tool-result-hook-git-bash-not-found": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Hook-specific Git Bash error with the install URL and the shell powershell config alternative; the skill and sandbox variants are different functions."
+  },
+  "tool-result-hook-input-over-size-limit": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Exact hook-input size error; the artifact carrier is unrelated."
+  },
+  "tool-result-hook-plugin-directory-missing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Names the missing plugin directory; it concatenates with the reinstall suffix, which stays untouched."
+  },
+  "tool-result-hook-plugin-user-config-shell-form": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "States the shell re-parse hazard and leads into the exec-form remedy; it concatenates with the following literal, so it cannot be cut alone."
+  },
+  "tool-result-hook-powershell-not-found": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Names pwsh/powershell missing on PATH and the remove-shell remedy; unique."
+  },
+  "tool-result-hook-preview-no-file-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Detail clause spliced into the hook-preview-failed result; unique."
+  },
+  "tool-result-hook-unknown-decision-type": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Exact error with the valid enum approve, block; the permissionDecision sibling is a different switch with a different enum."
+  },
+  "tool-result-hook-unknown-permission-decision-type": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Exact error with the valid enum allow, deny, ask, defer; unique enum."
+  },
+  "tool-result-image-file-empty": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Exact 0-byte image error; read-image-file-empty is a different module/path."
+  },
+  "tool-result-image-resize-cannot-be-sent": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Composes the reason and advice for an unsendable image; the other resize errors are different throws. It concatenates with the format-conversion literal, which stays untouched."
+  },
+  "tool-result-image-resize-dimensions-unverifiable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error: the image cannot be resized because its dimensions could not be verified against the rejectMaxWidth x rejectMaxHeight px API limit; frozen (number slots, threshold). Conditional tool result costs nothing when off."
+  },
+  "tool-result-image-resize-no-processing-no-header": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique failure cause (image processing unavailable and header unreadable) that tells the model why the image is unusable; kept whole so the concatenated format-conversion sentence still follows it."
+  },
+  "tool-result-lsp-client-not-started": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique LSP error state (client not started, e.g. after a crash); 22-char error string, nothing to cut."
+  },
+  "tool-result-lsp-server-not-initialized": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error state (server started but initialize not completed); minimal error string."
+  },
+  "tool-result-lsp-server-stdio-not-available": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique spawn failure (no stdin/stdout pipes) in the LSP start path; minimal error string."
+  },
+  "tool-result-mcp-answer-stream-ended-outcome-unknown": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique MCP error with a safety contract: outcome unknown (enumeration, frozen) and 'Check what it did before you repeat it' (ordering word, frozen) prevents duplicate side effects."
+  },
+  "tool-result-mcp-connect-blocked-by-policy": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error naming the server blocked by managed policy; minimal error string."
+  },
+  "tool-result-mcp-connect-server-disabled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error with the actionable recovery path /mcp (path/command name, frozen)."
+  },
+  "tool-result-mcp-connection-closed-unreadable-message": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error: connection closed on an unreadable server message, result not read, plus the re-run safety check (ordering 'before', frozen)."
+  },
+  "tool-result-mcp-credential-store-unreadable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique MCP error with a retry contract (nothing sent, so retry is safe); short and load-bearing."
+  },
+  "tool-result-mcp-http-unsupported-compression": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error naming unsupported encodings (br, zstd) vs supported (gzip, deflate) — enumerations, frozen; explains why the response was not read."
+  },
+  "tool-result-mcp-resource-server-no-resources": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique capability error for MCP resource tools; minimal error string."
+  },
+  "tool-result-mcp-resource-server-not-connected": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique resource-tool error naming the disconnected server; minimal error string."
+  },
+  "tool-result-mcp-resource-server-not-found": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error that lists available server names so the model can correct the server argument; minimal."
+  },
+  "tool-result-mcp-response-schema-invalid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error stating the MCP server returned a malformed result with the validation detail; minimal."
+  },
+  "tool-result-mcp-response-too-large-not-read": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error carrying the MB cap (number, frozen) and the re-run contract: check before running again and ask for less data (ordering, frozen)."
+  },
+  "tool-result-mcp-session-channel-tool-not-routed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error explaining a machine-owned MCP tool cannot run here; short and load-bearing."
+  },
+  "tool-result-mcp-tool-call-aborted-account-changed-before-reauth": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique abort reason (account changed before re-authentication) with the ordering word 'before' (frozen)."
+  },
+  "tool-result-mcp-tool-call-aborted-account-changed-during-reauth": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique abort reason (account changed during re-authentication); minimal error string."
+  },
+  "tool-result-mcp-unicode-sanitization-max-iterations": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique sanitizer error with the iteration cap slot (number, frozen) and the input excerpt; minimal."
+  },
+  "tool-result-module-chain-no-core": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique module-handler chain error naming the $.<event> and why no core exists; minimal error string."
+  },
+  "tool-result-monitor-interrupted-before-start": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique Monitor state: interrupted before start, nothing running (ordering 'before', frozen) — tells the model no cleanup is needed."
+  },
+  "tool-result-monitor-ws-host-private-range": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique SSRF refusal reason naming the host and the blocked range enumeration (frozen)."
+  },
+  "tool-result-monitor-ws-host-resolve-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique DNS failure error for the Monitor websocket host; minimal, externally matched literal kept."
+  },
+  "tool-result-monitor-ws-host-resolve-failed-detail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique DNS-lookup-throw error including the resolver message; minimal, externally matched literal kept."
+  },
+  "tool-result-monitor-ws-host-resolves-private-range": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique SSRF refusal naming host and resolved address with the range enumeration (frozen)."
+  },
+  "tool-result-net-automount-hosts-read-ask": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique permission-ask reason naming /net automount and the DNS lookup / NFS mount risk (path, enumeration, frozen)."
+  },
+  "tool-result-notebook-read-invalid-json": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique Read error explaining the notebook is not valid JSON with likely causes (enumeration, frozen) and the parser message."
+  },
+  "tool-result-notebook-read-not-regular-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique Read error for device/FIFO/socket notebook paths (enumeration, frozen); minimal."
+  },
+  "tool-result-notebookedit-missing-parent-message": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique NotebookEdit internal-contract error (tool name, frozen); minimal error string."
+  },
+  "tool-result-offer-chrome-setup-connected": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Trim refuted in stage 3: the tool is deferred (shouldDefer), so its description reaches the model only via an earlier ToolSearch result that compaction can drop; co-rendering with this result is not proven, so the sentence stays."
+  },
+  "tool-result-offer-chrome-setup-not-now": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Trim refuted in stage 3: the tool is deferred (shouldDefer), so its description reaches the model only via an earlier ToolSearch result that compaction can drop; co-rendering with this result is not proven, so the sentence stays."
+  },
+  "tool-result-offer-chrome-setup-try-chrome-tool-first": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation error that redirects the call; contains a tool name and ordering word (first) — frozen mechanics."
+  },
+  "tool-result-pdf-too-large-read-by-pages": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only text replacing the oversized PDF; carries the pages parameter, example range and per-call cap slot — frozen."
+  },
+  "tool-result-permission-ask-served-mcp-slash-in-name": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique permission-ask reason for the slash-in-name case; shown to user/model at the ask."
+  },
+  "tool-result-permission-prompt-tool-invalid-result-shape": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Error contract naming the required result shape; frozen (enum value, parameter names)."
+  },
+  "tool-result-plugin-directory-marketplace-toggle-diskless": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal reason for diskless sessions; short status fragment."
+  },
+  "tool-result-plugin-eval-path-automounter-map-dir-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Opens with slot (fixture label: path); unique refusal with paths /net, /network, /home — frozen."
+  },
+  "tool-result-plugin-eval-path-automounter-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal reason with frozen paths (/Network, /net)."
+  },
+  "tool-result-plugin-eval-path-network-reaching-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal for UNC/automount paths."
+  },
+  "tool-result-plugin-eval-path-symlink-network-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal reason for symlinked network paths."
+  },
+  "tool-result-plugin-eval-path-unexaminable-component-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal; enumeration frozen."
+  },
+  "tool-result-plugin-hook-environment-not-loaded": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Minimal error string; nothing to cut."
+  },
+  "tool-result-plugin-list-invalid-length": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Minimal unique error string with the got-value slot."
+  },
+  "tool-result-poll-main-thread-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal telling a subagent Poll is unavailable to it; contains 'only' — frozen."
+  },
+  "tool-result-powershell-session-channel-not-routed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime error with machine slot; contains 'only' — frozen."
+  },
+  "tool-result-powershell-unsafe-quote-codepoint": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error with codepoint slot explaining the tokenizer behaviour."
+  },
+  "tool-result-project-delete-file-upload": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error contract (tool name, only, claude.ai route) — frozen."
+  },
+  "tool-result-project-read-download-size-mismatch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error lead fragment; kept unchanged so the sentence across the boundary with tool-result-project-read-corrupt-download-retry stays whole."
+  },
+  "tool-result-project-read-file-too-large": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique limit error with byte slots — frozen (number/threshold)."
+  },
+  "tool-result-project-write-earlier-copy-not-removed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique recovery contract after a partial write; frozen (never/do-not guarding data, tool names)."
+  },
+  "tool-result-project-write-exceeds-max-size": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal with token-count slots and recovery action."
+  },
+  "tool-result-project-write-localpath-missing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Minimal unique error."
+  },
+  "tool-result-project-write-localpath-not-readable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Minimal unique error."
+  },
+  "tool-result-project-write-localpath-not-regular-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Minimal unique error; contains must — frozen."
+  },
+  "tool-result-project-write-localpath-outside-cwd": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Minimal unique error contract; frozen."
+  },
+  "tool-result-project-write-localpath-resolves-outside-cwd": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Distinct symlink-resolution failure; minimal."
+  },
+  "tool-result-project-write-localpath-too-large": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique byte-limit error with slot — frozen."
+  },
+  "tool-result-project-write-localpath-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error with recovery instruction (pass text as content)."
+  },
+  "tool-result-project-write-nul-bytes": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique refusal with state guarantee (nothing changed) and remediation; frozen (enumeration, then)."
+  },
+  "tool-result-project-write-save-unconfirmed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique ordered recovery contract (project_read before any other write/delete); frozen."
+  },
+  "tool-result-projects-no-project-attached": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only place stating Project tools need a session started inside a claude.ai Project; conditional error, zero cost when off."
+  },
+  "tool-result-prompt-shell-command-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Error contract carrying the failing pattern and command output; unique."
+  },
+  "tool-result-prompt-shell-command-rejected-by-tool": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation-gate error with slots; nothing else says no command ran because the shell tool rejected it."
+  },
+  "tool-result-prompt-shell-crlf-line-ending-hint": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique, non-inferable diagnosis of the replacement character at line end; conditional on \\r in the command."
+  },
+  "tool-result-prompt-shell-permission-check-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Error contract with pattern and denial message; unique."
+  },
+  "tool-result-prompt-shell-unprintable-characters-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique explanation of the rendered marker and the fix locations; part of the same error text."
+  },
+  "tool-result-proposegoal-agent-context-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime gate error."
+  },
+  "tool-result-proposegoal-already-pending": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Trim refuted in stage 3: the tool is deferred (shouldDefer), so its description reaches the model only via an earlier ToolSearch result that compaction can drop; co-rendering with this result is not proven, so the sentence stays."
+  },
+  "tool-result-proposegoal-cannot-clear": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique gate error with the actionable remedy at the failure point."
+  },
+  "tool-result-proposegoal-condition-empty": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation error."
+  },
+  "tool-result-proposegoal-condition-too-long": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Trim refuted in stage 3: the tool is deferred (shouldDefer), so its description reaches the model only via an earlier ToolSearch result that compaction can drop; co-rendering with this result is not proven, so the sentence stays."
+  },
+  "tool-result-proposegoal-no-interactive-dialog": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime gate error."
+  },
+  "tool-result-proposeskills-description-angle-brackets": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation error contract; retry instruction unique."
+  },
+  "tool-result-proposeskills-target-required-for-improvement": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation-gate error message; must name what failed."
+  },
+  "tool-result-read-file-content-exceeds-max-tokens": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Error contract with token counts and remedy; unique per error class."
+  },
+  "tool-result-read-file-too-large": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Error contract with size slots and remedy."
+  },
+  "tool-result-read-image-file-empty": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Error contract."
+  },
+  "tool-result-read-image-invalid-magic-bytes": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique non-inferable diagnostic with frozen tool/command names."
+  },
+  "tool-result-read-line-range-too-large": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error with frozen threshold and remedy."
+  },
+  "tool-result-read-mcp-resource-account-memory-subagent-withheld": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique gate error with remedy."
+  },
+  "tool-result-read-notifications-main-conversation-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime gate error."
+  },
+  "tool-result-read-pdf-extracted-page-read-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Error contract with code and path."
+  },
+  "tool-result-read-pdf-extracted-pages-list-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Error contract with code and path."
+  },
+  "tool-result-read-permission-ask-not-granted-yet": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Permission ask message contract; unique per reason."
+  },
+  "tool-result-remote-call-not-confirmed-after-answer": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique deny message stating the call did not run."
+  },
+  "tool-result-remote-environments-fetch-http-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Error contract with HTTP status."
+  },
+  "tool-result-remote-environments-first-party-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique provider gate error."
+  },
+  "tool-result-remote-host-path-spelling-home-unknown": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Enum-value fragment spliced into the refusal sentence; unique."
+  },
+  "tool-result-remote-tool-background-command-no-status": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error with frozen number (16) and causes."
+  },
+  "tool-result-remote-tool-background-task-output-file-not-status": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique fact that the output file does not show running status."
+  },
+  "tool-result-remote-tool-host-policy-changed-during-check": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A conditional tool result and the only signal for this refusal; it tells the model a retry is the right response, which no other text does for this case. It opens with the target-name slot, and nothing needs cutting."
+  },
+  "tool-result-remote-tool-partial-removal-rest-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "This is the only signal that part of the removal happened and that only the rest should be retried. The model cannot infer that partial state."
+  },
+  "tool-result-remote-tool-permission-rules-check-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A conditional refusal whose three claims (call not run, retry futile, error not a rule refusal) appear nowhere else. They decide what the model does next, so all are kept."
+  },
+  "tool-result-remote-tool-recheck-before-remove-nothing-removed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "The only signal that the removal was aborted with nothing removed and that a resend is the fix."
+  },
+  "tool-result-runner-spawn-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A runtime error string with diagnostic data (error message and spawned command) that the model needs to debug the runner. It is unique."
+  },
+  "tool-result-sandbox-invalid-ip-or-cidr-range": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A frozen error tag naming the bad entry. It is the only place the model learns which configured address is invalid."
+  },
+  "tool-result-schedulewakeup-delay-reason-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A validation-gate error: it names the missing fields, and an empty error result would leave the model unable to correct its call. The schema does not cover `reason`."
+  },
+  "tool-result-schedulewakeup-noop-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "The only signal of the `noop` requirement at runtime. It is a validation-gate contract with parameter names, so it is frozen."
+  },
+  "tool-result-schedulewakeup-prompt-required": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "The validation-gate error names the failing parameter. A blank thrown error loses the 'which field' information the model needs to fix the call."
+  },
+  "tool-result-search-deny-rule-path-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "The only explanation of this refusal, and it tells the model a retry is appropriate."
+  },
+  "tool-result-search-directory-not-traversable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique cause (no execute permission) that the model cannot infer."
+  },
+  "tool-result-search-path-could-not-be-opened": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique runtime error with an errno tag; it is frozen and conditional."
+  },
+  "tool-result-search-ripgrep-path-only-deny-rules": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique configuration constraint with an actionable fix; it contains PATH and paths, so it is frozen."
+  },
+  "tool-result-sendfile-dispatch-needs-permission-pipeline": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "An internal invariant error naming call.ask. It is short, unique and frozen (it contains a parameter name)."
+  },
+  "tool-result-sendmessage-dispatch-needs-executor": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique invariant error naming canUseTool; it is frozen."
+  },
+  "tool-result-sendmessage-plan-approve-lead-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique permission rule (only the lead approves) returned at runtime; it is a restrictive 'Only' sentence, so it is frozen."
+  },
+  "tool-result-sendmessage-plan-reject-lead-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique lead-only rule for rejection; it is frozen."
+  },
+  "tool-result-served-project-hook-not-accepted": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique safety-relevant notice: the hook is not enforced and there is an exact CLI remedy. The command name is frozen."
+  },
+  "tool-result-served-tool-path-too-long": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "The only signal of the path-length limit, with its threshold, which is frozen."
+  },
+  "tool-result-session-no-working-directory": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique runtime error that explains why path expansion failed."
+  },
+  "tool-result-settings-change-not-written-managed-dir-unresolved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A conditional refusal: the cause, the report-to-user step and the do-not-retry contract are all needed when it fires."
+  },
+  "tool-result-skill-fork-no-agent-available": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique runtime error."
+  },
+  "tool-result-skill-name-ambiguous-at-dispatch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique dispatch-time ambiguity error that carries the remedy (use the full name)."
+  },
+  "tool-result-skill-requires-git-bash": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique skill-frontmatter remedy (`shell: powershell`) carrying a URL and enum values; it is frozen."
+  },
+  "tool-result-structured-output-schema-mismatch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "The only feedback telling the model why its StructuredOutput call failed; it is essential for the retry."
+  },
+  "tool-result-subagent-spawn-hook-teammate-retyped": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique cause that names the offending agent type."
+  },
+  "tool-result-subagent-spawn-hook-teammate-rewrite-ruled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "The runtime refusal for the teammate path; blanking it would give an empty error."
+  },
+  "tool-result-suspicious-windows-path-read-ask": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique ask message for the read path's suspicious-Windows-pattern check."
+  },
+  "tool-result-swarm-tmux-create-session-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique runtime error."
+  },
+  "tool-result-swarm-tmux-create-window-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique runtime error."
+  },
+  "tool-result-swarm-tmux-current-pane-unknown": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique runtime error."
+  },
+  "tool-result-swarm-tmux-pane-count-unknown-current-window": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique runtime error."
+  },
+  "tool-result-swarm-tmux-pane-count-unknown-swarm-window": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique runtime error."
+  },
+  "tool-result-task-output-diskless-no-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "A unique runtime error that tells the model no output file exists in a diskless session."
+  },
+  "tool-result-task-output-diskless-not-written": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Runtime error string that is the model's only signal why a task output write failed in a diskless session; unique and load-bearing."
+  },
+  "tool-result-taskcreate-list-highest-id-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime error explaining why TaskCreate failed; frozen [Tasks] tag; nothing covers it."
+  },
+  "tool-result-taskcreate-no-free-task-id": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique diagnostic with a number/slot and cause enumeration (frozen); keep verbatim."
+  },
+  "tool-result-taskcreate-write-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime error carrying the error code; nothing to cut."
+  },
+  "tool-result-taskstop-observer-cannot-stop-itself": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique rule (an observer cannot stop itself) and the remedy (task UI or main-session TaskStop) appear nowhere else."
+  },
+  "tool-result-taskstop-task-owned-by-other-agent": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique ownership-check error naming owner and caller; keep."
+  },
+  "tool-result-teammate-launcher-not-unwrapped": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique remedy suffix (fix the launcher setting, then retry); body opensWithSlot and is not cut, so no detector risk."
+  },
+  "tool-result-teammate-name-main-reserved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Runtime error for the teammate spawn path; the only text the model receives when it fails; keep."
+  },
+  "tool-result-teammate-name-reserved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique list of reserved names plus agent-id-shape rule for teammates; frozen enumeration; keep."
+  },
+  "tool-result-teammate-send-command-to-pane-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique tmux-backend runtime error; nothing to cut."
+  },
+  "tool-result-temp-dir-not-a-directory": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Security contract (possible attacker-planted symlink) unique to this branch; keep verbatim."
+  },
+  "tool-result-temp-dir-not-readable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique EACCES-unreadable diagnosis and remedy with a frozen mode number; keep."
+  },
+  "tool-result-temp-dir-owned-by-other-uid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only text the model gets for this failure branch; security contract; keep."
+  },
+  "tool-result-temp-dir-owned-by-other-uid-at-open": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only text for the EACCES-at-open branch; keep verbatim."
+  },
+  "tool-result-temp-dir-set-claude-code-tmpdir-remedy": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Frozen env var name and unique remedy appended to every refused temp-dir error; keep."
+  },
+  "tool-result-tool-results-path-refused-link": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime refusal for the tool-results directory; keep."
+  },
+  "tool-result-tool-wrapper-not-run-placement-changed-after-permission-check": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique ordering contract (placement changed after permission check) plus the retry instruction; body opensWithSlot (tool name) and is not cut; keep."
+  },
+  "tool-result-unc-path-read-ask": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique security reason for this ask; keep."
+  },
+  "tool-result-web-search-unavailable-foundry": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique deployment-specific error; keep."
+  },
+  "tool-result-webfetch-ccs-direct-needs-proxy": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime error naming the missing proxy; keep."
+  },
+  "tool-result-webfetch-content-length-shown-status": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Output-shape header text the model reads to know how much was shown; opensWithSlot and not cut; keep."
+  },
+  "tool-result-webfetch-domain-blocked": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique DomainBlockedError text; keep."
+  },
+  "tool-result-webfetch-dotless-host-use-bash-curl": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Trim refuted in stage 3: the tool is deferred (shouldDefer), so its description reaches the model only via an earlier ToolSearch result that compaction can drop; co-rendering with this result is not proven, so the sentence stays."
+  },
+  "tool-result-webfetch-fetch-deadline-exceeded": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime timeout error with a frozen threshold slot; keep."
+  },
+  "tool-result-webfetch-hook-approved-uncheckable-arguments": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique deny reason and remedy naming exact parameters (frozen); keep."
+  },
+  "tool-result-webfetch-offset-past-end": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique past-end result with page length; it is the whole tool result; keep."
+  },
+  "tool-result-webfetch-overflow-final-chars-not-read-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique coverage disclosure (final N characters not read) in the header; keep."
+  },
+  "tool-result-webfetch-partial-answer-coverage-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique range disclosure telling the model which part of the page the answer covers; keep."
+  },
+  "tool-result-webfetch-read-on-with-offset-hint": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Carries the concrete offset value and the call shape; spliced into other notes; keep verbatim."
+  },
+  "tool-result-websearch-budget-continue-with-gathered": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique instruction in the non-refill budget-exhausted result; keep."
+  },
+  "tool-result-websearch-budget-do-not-wait-for-refill": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique anti-stall instruction for the refilling-budget case; keep."
+  },
+  "tool-result-websearch-budget-limit-per-turn": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime fact (per-turn cap shared by all agents) spliced into the budget-exhausted result; conditional, zero cost when off."
+  },
+  "tool-result-websearch-budget-limit-refills": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only carrier of the refill-rate fact; frozen (number/threshold), conditional tool result."
+  },
+  "tool-result-websearch-budget-limit-session-no-refill": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique fact that the session budget does not refill; conditional."
+  },
+  "tool-result-websearch-budget-more-searches-needed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique remediation path naming env var; frozen, keep verbatim."
+  },
+  "tool-result-websearch-session-budget-exhausted": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Error/limit contract with unique anti-circumvention guard; frozen enumeration and tool names."
+  },
+  "tool-result-workflow-adopted-resume-missing-content-pin": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error reason plus recovery instruction; conditional."
+  },
+  "tool-result-workflow-adopted-resume-script-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error reason with re-approve recovery; conditional."
+  },
+  "tool-result-workflow-agent-bash-command-clamp-entry-invalid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation-gate error with exact rule format; frozen. Concatenated tail expression untouched since kept."
+  },
+  "tool-result-workflow-agent-bash-command-clamp-malformed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation error naming opts.bashCommandClamp contract; frozen, concatenated with its 'got ...' tail which stays intact."
+  },
+  "tool-result-workflow-agent-disallowed-tools-malformed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation error for opts.disallowedTools; frozen (e.g., enumeration), concatenated tail intact."
+  },
+  "tool-result-workflow-agent-remote-isolation-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique availability error; conditional."
+  },
+  "tool-result-workflow-agent-schema-invalid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error string; conditional."
+  },
+  "tool-result-workflow-agent-schema-unsatisfiable-not-started": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique status/recovery contract; opensWithSlot, kept verbatim so no detector concern."
+  },
+  "tool-result-workflow-agent-structured-output-not-called": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique failure report naming StructuredOutput; conditional."
+  },
+  "tool-result-workflow-agent-structured-output-retry-cap": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique limit error; frozen number. Sentence crosses into the uncatalogued '${…} failed … with no valid output' fragment, which stays intact since this is kept."
+  },
+  "tool-result-workflow-agent-type-denied-by-permission-rule": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error naming rule and source for workflow agent(); conditional."
+  },
+  "tool-result-workflow-agent-type-not-found": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error with actionable list; conditional."
+  },
+  "tool-result-workflow-child-invalid-argument": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique API-shape error; frozen param names."
+  },
+  "tool-result-workflow-child-not-found": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error with list of available workflows; conditional."
+  },
+  "tool-result-workflow-child-script-path-restricted": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "First fragment of a sentence crossing into tool-result-workflow-child-script-path-restricted-name-only; both kept intact."
+  },
+  "tool-result-workflow-child-script-path-restricted-name-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Frozen env var CLAUDE_WORKFLOW_NAME_ONLY; sentence crosses tool-result-workflow-child-script-path-restricted and the trailing literal, all kept intact."
+  },
+  "tool-result-workflow-founding-address-mismatch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error string; conditional, zero cost when not thrown."
+  },
+  "tool-result-workflow-launch-needs-executor": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error; conditional."
+  },
+  "tool-result-workflow-meta-computed-keys": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique meta validation rule; conditional."
+  },
+  "tool-result-workflow-meta-methods-accessors": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique meta validation rule; conditional."
+  },
+  "tool-result-workflow-meta-negative-unary-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique meta validation rule (frozen 'only'); conditional."
+  },
+  "tool-result-workflow-meta-non-literal-node-type": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation error; conditional."
+  },
+  "tool-result-workflow-meta-plain-properties-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique meta validation rule; conditional."
+  },
+  "tool-result-workflow-meta-reserved-key": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation error; conditional."
+  },
+  "tool-result-workflow-meta-sparse-array": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation rule; conditional."
+  },
+  "tool-result-workflow-meta-spread-not-allowed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation rule; conditional."
+  },
+  "tool-result-workflow-meta-template-interpolation": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique validation rule; conditional."
+  },
+  "tool-result-workflow-meta-unsupported-key-type": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Workflow meta parser error naming the offending AST key type; a runtime validation error the script author must read verbatim. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-missing-input-or-run-id": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Input validation refine message listing the four accepted inputs (script, name, scriptPath, runId); tool-result-workflow-missing-input is an older three-field variant without runId and is not a co-rendering carrier of this text. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-parallel-expects-array": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "TypeError for non-array argument to parallel(); the sibling parallel-expects-functions is thrown under a different condition (array of non-functions), so it never co-renders with this one. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-parallel-expects-functions": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Only place telling the script author to wrap calls as () => agent(...); thrown on a different condition from parallel-expects-array, so no co-rendering carrier. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-pipeline-expects-array": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique runtime error for pipeline() argument shape; no carrier states it. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-pipeline-stages-must-be-functions": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique error carrying the expected pipeline(items, item => ..., result => ...) call shape. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-placement-options-not-object": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation error stating the accepted placement-options shape {top: true}; unique. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-placement-top-not-boolean": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation error for the top option type; siblings are thrown on different conditions of the same validator and never co-render. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-placement-unknown-option": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation error naming the only allowed placement option; thrown on a separate branch from the other placement errors. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-remote-agent-no-structured-output": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Wrapper sentence naming the agent({isolation:remote, schema}) call; the interpolated cause carriers only fill the slot and do not state this wrapper. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-result-is-function": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Runtime error contract for a function-valued workflow result; JSON-serializable siblings are different conditions. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-retract-expects-address": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique argument-type error for retract(); no carrier. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-run-killed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Run-op error naming the killed run id; corpus hits only share the phrase workflow run. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-run-lost-on-resume": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique recovery guidance (read its facts, or launch again) for a run restored from the journal; no carrier. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-run-not-founded": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Run-op error for an unfounded run; separate condition from the killed/lost siblings. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-run-restored-cannot-found": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "found() error for a lost run; the lost-on-resume sibling is a different method and condition, so it is not coverage. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-runid-not-a-field": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation error when run ops are unavailable; unique, no carrier. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-script-await-using-unsupported": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Compile-time syntax restriction unique to this error; no carrier. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-script-identifier-reserved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Reserved-identifier compile error; corpus hits share only the fragments Identifier and is reserved. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-script-import-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Compile/runtime restriction on dynamic import(); unique. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-script-with-unsupported": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Compile restriction on with statements; the await-using sibling is a different check and never co-renders. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-token-budget-exceeded": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Budget error with numbers plus the in-flight-agents-complete/results-preserved contract; unique. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-world-atleast-bad-count": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Validation error for the atleast(N, pattern) threshold; unique. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-world-fact-not-object": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Fact-shape validation error naming the required topic field; unique. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-world-fact-reserved-key": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Error naming a host-reserved fact key; the not-object sibling is the alternative throw, so it does not co-render. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-world-full": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Row-cap error with the self-firing-rule diagnosis; killed-runaway-row-cap is a different (kill) path and not co-rendering. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-world-pattern-not-object": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Pattern-shape error stating the matching semantics (subsets, arrays exact, v(\"x\") binds); unique. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-world-placement-missing-row": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Placement error for a missing row; short and unique. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-world-row-retracted": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Placement error for a retracted scope; unique. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-workflow-world-settled-no-row": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Error for awaiting a missing address; unique. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-working-directory-path-missing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Path-missing error with an unknown concat boundary to neighbours; the grep/glob near-duplicates are other tools and do not co-render. Kept whole, so no cross-boundary cut. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-worktree-create-already-exists-not-reusable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Unique recovery guidance naming git worktree remove and --worktree; no co-rendering carrier. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-worktree-create-branch-checked-out-elsewhere": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Error for a branch checked out elsewhere; the already-exists sibling is an alternative throw and does not co-render. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-worktree-create-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Generic git worktree add failure with git error; the cleanup-note sibling is the alternative throw. Concat neighbour pHe(g) untouched since kept whole. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-worktree-create-failed-with-cleanup-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Head of the cleanup-note error concatenated with pHe(g); kept whole, so the neighbour half is unaffected. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-worktree-create-hook-did-not-run": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Hook error giving the two causes (workspace not trusted or matcher mismatch); unique. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-worktree-create-hook-no-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "Hook error carrying the per-hook-type contract (stdout path; hookSpecificOutput.worktreePath); unique. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-worktree-create-lstat-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "lstat failure error; siblings sharing Cannot create worktree are different conditions. Conditional tool result, costs nothing until thrown and is then the only copy."
+  },
+  "tool-result-worktree-git-dir-unconfirmed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "unique runtime error thrown from wpe when Fde refuses; the only signal telling the model git was skipped and why; no co-rendering carrier"
+  },
+  "tool-result-worktree-leftover-folder-foreign-git": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "unique error: names the .git-file-points-elsewhere condition and the remove-or-rename remedy; thrown alone as the tool result"
+  },
+  "tool-result-worktree-location-inside-repository": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "placeholder value substituted into a sentence; its wording distinguishes inside vs outside the repo; nothing else conveys it"
+  },
+  "tool-result-worktree-location-outside-repository": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "placeholder value substituted into a sentence; unique inside/outside distinction; keep"
+  },
+  "tool-result-worktree-orphan-git-remote-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "unique error naming the failing git remote step, git's stderr and the manual-remove remedy; frozen slots/backticked command"
+  },
+  "tool-result-worktree-orphan-remove-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "unique error: removal of the orphaned dir failed, with the cause; the only signal to remove manually"
+  },
+  "tool-result-worktree-orphan-rev-list-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "unique error naming rev-list failure on the branch and the manual-remove remedy"
+  },
+  "tool-result-worktree-orphan-rev-parse-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "unique error naming rev-parse failure on the branch and the manual-remove remedy"
+  },
+  "tool-result-worktree-orphan-unpushed-commits": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "unique error and ordering remedy; frozen 'then retry'"
+  },
+  "tool-result-worktree-registration-left-in-place": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "unique statement that the registration was left in place; --worktree flag name is frozen"
+  },
+  "tool-result-write-in-place-fallback-failed-content-preserved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "unique and load-bearing: tells the model the target was truncated and where the new content survives (recovery path)"
+  },
+  "tool-result-write-missing-parent-message": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "unique to the Write tool's call path; terse error, nothing to trim"
+  },
+  "tool-result-write-path-in-other-worktree": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "opensWithSlot is the agent noun, not a detector target; unique validation error with its remedy; keep"
+  },
+  "tool-result-write-permission-ask-not-granted-yet": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "the user-facing/tool-result message for this denied write; unique per path"
+  },
+  "tool-result-write-refusing-staging-under-non-directory-parent": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "unique error naming the staging-dir refusal"
+  },
+  "tool-result-write-refusing-symlinked-parent-directory": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "unique error naming the symlinked parent directory refusal"
+  },
+  "tool-result-write-refusing-symlinked-parent-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "unique error naming the symlinked/non-directory path refusal"
+  },
+  "tool-result-write-refusing-through-symlink-onofollow": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "unique error; O_NOFOLLOW tag is frozen"
+  },
+  "tool-result-write-refusing-through-symlink-target": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "unique error and remedy"
+  },
+  "tool-result-write-settings-file-ask": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "the only message for the settings-file circuit breaker; carries the link-note slot; keep"
+  },
+  "tool-result-write-settings-file-link-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "unique conditional note appended inside the settings-file ask; dropping it loses which settings file is reached"
+  },
+  "tool-result-write-suspicious-windows-path-ask": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "unique message for the suspiciousWindowsPath circuit breaker on writes"
+  },
+  "tool-result-write-verification-size-mismatch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.291",
+    "why": "unique error: on-disk size mismatch and the network drive / cloud sync cause hint; numbers/enumeration frozen"
+  },
+  "system-prompt-resume-continue-prompt-4": {
+    "verdict": "trim",
+    "version": "2.1.291",
+    "why": "Carries the existing restart-notice trim from system-prompt-resume-continue-prompt-3: CC 2.1.291 inserted an output-limit continuation at -2, shifting the collision suffixes by one, so the same pristine body now sits at -4."
   }
 }

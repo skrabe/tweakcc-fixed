@@ -4246,5 +4246,77 @@
     "facing": "ui",
     "hash": "7236880bc646ab865efe5570461ef7668540ceb4",
     "why": "ruled ui in a 2.1.288 catalogue correction: same git-stderr note path as the transport-mismatch notes, truncated before any model route"
+  },
+  "tool-result-read-automounter-lookup-path-deny": {
+    "verdict": "archived",
+    "version": "2.1.291",
+    "facing": "internal",
+    "hash": "fb48b554b7806398c101e05765bcb0fa75109b21",
+    "why": "ruled internal in the 2.1.291 classify: the text survives verbatim at ror() @4837899 but sits behind r?.refuseAutomounterShapes, a property set nowhere in the bundle (1 occurrence, the read); ror's only callers Nf @4837374 and T @36965422 pass two arguments and its re-export layeredReadVerdictForPaths is never read, so the deny is dead code"
+  },
+  "tool-result-artifact-quickstart-design-systems-hook-note": {
+    "verdict": "archived",
+    "version": "2.1.291",
+    "why": "gone from the 2.1.291 bundle: every 25-char window of the body probed, only the generic \" list the design systems \" survives (in unrelated quickstart text); \"a PreToolUse hook may cover\" and \"so the hook sees\" count 0. The design_systems_note slot now carries listing-failure fallbacks, a different role, so no successor"
+  },
+  "tool-result-bash-brace-ambiguous-group-or-argument-too-complex": {
+    "verdict": "archived",
+    "version": "2.1.291",
+    "why": "model-to-UI move: the reason is shortened to \"a { that may open a group or may be an argument\" (tail moved out), and the Ve shell reader is private to chunk-p0nrmf10; its unreadable reason only renders inside \"it could not be read to the end as shell (...)\" (cache ui) via vo -> Ro -> PNn hook-forwarding held notices -> e.onLine, the local user's cloud-hooks status lines. No model route, so the id is not carried"
+  },
+  "tool-result-bash-dollar-brace-transform-expansion-too-complex": {
+    "verdict": "archived",
+    "version": "2.1.291",
+    "why": "model-to-UI move: the reason is shortened to \"a ${ …@P } expansion\" @28876063/@28877095 in the same private Ve shell reader, whose unreadable reason reaches only the cloud-hooks forwarding notices (vo -> Ro -> PNn -> e.onLine) through the ui-cached \"it could not be read to the end as shell (...)\" wrapper. No model route"
+  },
+  "tool-result-cloud-session-explicit-ref-cannot-be-honored": {
+    "verdict": "archived",
+    "version": "2.1.291",
+    "why": "model-to-UI move: the sentence survives split into cd=`${no} ${N4t(e.explicitRef)} cannot be honored: ` @9859879 and `${cd}${x2e()} — or ${cl} instead.` in w0, behind e.explicitRef. Every explicitRef setter is a CLI entry (vBr/Wi interactive --remote, hr headless pool, pn/T_r claude --cloud) writing onCreateFail to stderr; the Agent tool's remote launch (w0 call @16087435) passes no explicitRef, so the model-bound caller cannot reach this branch"
+  },
+  "tool-result-git-bundle-squashed-root-create-failed": {
+    "verdict": "archived",
+    "version": "2.1.291",
+    "why": "folded into the generic git-step helper: the label \"git bundle create for the squashed root\" is now an argument to Ale() @9718969, whose template `${e} failed (${n.code})...` is tool-result-git-bundle-git-step-failed (successor). The old specific template is gone"
+  },
+  "tool-result-remote-tool-background-task-output-file-completion-line": {
+    "verdict": "archived",
+    "version": "2.1.291",
+    "why": "gone: no 25-char window of either literal run is in the bundle (\"ends with a line saying how it ended\", \"[exited with code N]\", \"could have printed that line\" count 0). The completion-marker guidance was replaced by a different instruction, tool-result-remote-tool-background-task-output-file-not-status plus tool-result-remote-tool-background-task-check-via-task-tool (check status with the task tool), so no same-role successor"
+  },
+  "tool-result-subagent-spawn-hook-fork-names-no-agent-types": {
+    "verdict": "archived",
+    "version": "2.1.291",
+    "why": "gone: \"a fork names none\" counts 0. bn() now has no fork arm; its empty-list branch is the generic \"none is available\" (glue, slot-literal allowlist 27174e16f396ef97), and the parent deny tool-result-subagent-spawn-hook-unknown-agent-type is unchanged. The slot-literal catalogue entry 11d18a397672c221 was pruned with that successor recorded"
+  },
+  "slash-command-plugin-marketplace-add-file-url-drive-letter-note": {
+    "verdict": "archived",
+    "version": "2.1.291",
+    "why": "absorbed in 2.1.291: the literal survives once in the bundle (python count 1), now inside the newly catalogued parent template slash-command-plugin-marketplace-add-file-url-not-local, the conditional tail `${/^file:\\/\\/[a-z]:/i.test(…)?\" A drive letter such as C: counts as a local path only on Windows.\":\"\"}` of the file: URL refusal. No separate site remains, so the id is retired and the parent carries the text. Successor: slash-command-plugin-marketplace-add-file-url-not-local"
+  },
+  "tool-result-artifact-upload-asset-list-assets-known-unstored": {
+    "verdict": "archived",
+    "version": "2.1.291",
+    "why": "absorbed in 2.1.291: the literal survives once in the bundle (python count 1), now inside the newly catalogued parent template tool-result-artifact-upload-asset-none-confirmed-stored, the second arm of the trailing ternary (\"Before sending again, list the assets…; only these are known not to be: […]\"). No separate site remains, so the id is retired and the parent carries the text. Successor: tool-result-artifact-upload-asset-none-confirmed-stored"
+  },
+  "tool-result-artifact-upload-asset-list-assets-before-resend": {
+    "verdict": "archived",
+    "version": "2.1.291",
+    "why": "absorbed in 2.1.291: the literal survives once in the bundle (python count 1), now inside the newly catalogued parent template tool-result-artifact-upload-asset-none-confirmed-stored, the first arm of the trailing ternary (\" Before sending again, list the assets to see what is stored.\"). No separate site remains, so the id is retired and the parent carries the text. Successor: tool-result-artifact-upload-asset-none-confirmed-stored"
+  },
+  "tool-result-artifact-upload-asset-none-stored-item": {
+    "verdict": "archived",
+    "version": "2.1.291",
+    "why": "absorbed in 2.1.291: the literal survives once in the bundle (python count 1), now inside the newly catalogued parent template tool-result-artifact-upload-asset-none-confirmed-stored, the per-item .map() template inside the \"No file is confirmed stored.\" list (the gate's window pointed at tool-result-artifact-upload-asset-failed-line, whose body differs: \"- ${}: … — ${…}\"). No separate site remains, so the id is retired and the parent carries the text. Successor: tool-result-artifact-upload-asset-none-confirmed-stored"
+  },
+  "tool-result-bash-sandbox-required-init-failed-fix-settings": {
+    "verdict": "archived",
+    "version": "2.1.291",
+    "why": "absorbed in 2.1.291: the literal survives once in the bundle (python count 1), now inside the newly catalogued parent template tool-result-bash-sandbox-required-init-failed, the configBuildFailed arm of the \"Sandbox is required but failed to initialize\" ternary. No separate site remains, so the id is retired and the parent carries the text. Successor: tool-result-bash-sandbox-required-init-failed"
+  },
+  "tool-result-agent-type-ambiguous-none-available": {
+    "verdict": "archived",
+    "version": "2.1.291",
+    "why": "absorbed in 2.1.291: the literal survives once in the bundle (python count 1), now inside the newly catalogued parent template tool-result-agent-type-ambiguous, the else arm (no available match) of the ambiguous-agent-type ternary. No separate site remains, so the id is retired and the parent carries the text. Successor: tool-result-agent-type-ambiguous"
   }
 }
