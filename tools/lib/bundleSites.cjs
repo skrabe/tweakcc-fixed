@@ -15,7 +15,10 @@ const crypto = require('crypto');
 const v8 = require('v8');
 const parser = require('@babel/parser');
 const { splitModuleBundle, parseModuleSegment } = require('./moduleBundle.cjs');
-const { buildSettingsIndex } = require('./settingsSchema.cjs');
+const {
+  buildSettingsIndex,
+  findSettingsDescriptions,
+} = require('./settingsSchema.cjs');
 
 // Bump when the shape of a cached product changes without a source change in
 // the files hashed below (never needed in practice: they are hashed whole).
@@ -237,6 +240,8 @@ function templateShape(node, code) {
     pieces[pi] = decodeUnicodeEscapesInPiece(pieces[pi]);
   }
 
+  // A Map, not a plain object, so a slot named `__proto__` gets a label like
+  // any other (an object key of that name mislabelled it); pinned by a test.
   const varToLabel = new Map();
   for (const name of identifierList) {
     if (!varToLabel.has(name)) varToLabel.set(name, varToLabel.size);
@@ -316,18 +321,29 @@ function collectNodeSites(ast, code, sites) {
 
 // Parse every module once and collect its sites. `settings` is the
 // settings-schema description index (start offset -> entry), which is also a
-// pure function of the bundle.
+// pure function of the bundle. `warnings` keeps the unparseable-module notices
+// so a cache hit can repeat them.
 function collectBundleSites(code) {
-  const settings = [...buildSettingsIndex(code).entries()];
+  const warnings = [];
+  const warn = msg => {
+    warnings.push(msg);
+    console.warn(msg);
+  };
+  const settings = [
+    ...buildSettingsIndex(
+      code,
+      findSettingsDescriptions(code, { warn })
+    ).entries(),
+  ];
   const sites = [];
   const segments = splitModuleBundle(code);
   if (!segments) {
     collectNodeSites(parser.parse(code, PARSE_OPTIONS), code, sites);
-    return { settings, sites, modules: null };
+    return { settings, sites, modules: null, warnings };
   }
   let parsed = 0;
   for (const seg of segments) {
-    const ast = parseModuleSegment(seg);
+    const ast = parseModuleSegment(seg, null, null, warn);
     if (!ast) continue;
     parsed++;
     collectNodeSites(ast, code, sites);
@@ -336,6 +352,7 @@ function collectBundleSites(code) {
     settings,
     sites,
     modules: { parsed, total: segments.length },
+    warnings,
   };
 }
 
@@ -394,11 +411,13 @@ function bundleCacheKey({ code, source = sourceHash(), options }) {
   return h.digest('hex');
 }
 
+// Per-user, never a shared temp dir: the key is computable from public inputs,
+// so another local user could otherwise plant an entry under it.
 function cacheDir() {
-  return (
-    process.env.TWEAKCC_EXTRACT_CACHE_DIR ||
-    path.join(os.tmpdir(), 'tweakcc-extract-cache')
-  );
+  if (process.env.TWEAKCC_EXTRACT_CACHE_DIR)
+    return process.env.TWEAKCC_EXTRACT_CACHE_DIR;
+  const base = process.env.XDG_CACHE_HOME || path.join(os.homedir(), '.cache');
+  return path.join(base, 'tweakcc', 'extract');
 }
 
 function cacheDisabled() {
@@ -406,27 +425,69 @@ function cacheDisabled() {
   return Boolean(v) && v !== '0';
 }
 
+// A version bump extracts the current and previous darwin bundles plus the two
+// Linux bundles for cross-platform tagging, so four entries cover a bump.
+const KEEP_ENTRIES = 4;
+const STALE_TMP_MS = 60 * 60 * 1000;
+const ENTRY_RE = /^sites-[0-9a-f]{64}\.v8$/;
+
 function readCache(file) {
   try {
-    return v8.deserialize(fs.readFileSync(file));
+    const product = v8.deserialize(fs.readFileSync(file));
+    // The mtime is the recency the pruning below keeps entries by.
+    const now = new Date();
+    fs.utimesSync(file, now, now);
+    return product;
   } catch {
     return null;
   }
 }
 
+function pruneCache(dir, keep = KEEP_ENTRIES, now = Date.now()) {
+  let names;
+  try {
+    names = fs.readdirSync(dir);
+  } catch {
+    return;
+  }
+  const entries = [];
+  for (const name of names) {
+    const file = path.join(dir, name);
+    let stat;
+    try {
+      stat = fs.statSync(file);
+    } catch {
+      continue;
+    }
+    if (name.endsWith('.tmp')) {
+      if (now - stat.mtimeMs > STALE_TMP_MS) fs.rmSync(file, { force: true });
+    } else if (ENTRY_RE.test(name)) {
+      entries.push({ file, mtime: stat.mtimeMs });
+    }
+  }
+  entries.sort((a, b) => b.mtime - a.mtime);
+  for (const { file } of entries.slice(keep)) fs.rmSync(file, { force: true });
+}
+
 // Write to a temp name and rename, so a concurrent or interrupted run never
 // leaves a truncated entry behind under the real key.
 function writeCache(file, product) {
+  const tmp = `${file}.${process.pid}.${crypto.randomUUID()}.tmp`;
   try {
-    fs.mkdirSync(path.dirname(file), { recursive: true });
-    const tmp = `${file}.${process.pid}.${Date.now()}.tmp`;
-    fs.writeFileSync(tmp, v8.serialize(product));
+    fs.mkdirSync(path.dirname(file), { recursive: true, mode: 0o700 });
+    fs.writeFileSync(tmp, v8.serialize(product), { mode: 0o600 });
     fs.renameSync(tmp, file);
-    return true;
   } catch (err) {
+    fs.rmSync(tmp, { force: true });
     console.warn(`extractStrings: could not write site cache: ${err.message}`);
     return false;
   }
+  try {
+    pruneCache(path.dirname(file));
+  } catch (err) {
+    console.warn(`extractStrings: could not prune site cache: ${err.message}`);
+  }
+  return true;
 }
 
 // The bundle's sites, from the cache when an entry for this exact key exists.
@@ -440,7 +501,10 @@ function loadBundleSites(code, { useCache = true } = {}) {
   const key = bundleCacheKey({ code });
   const file = path.join(cacheDir(), `sites-${key}.v8`);
   const hit = readCache(file);
-  if (hit && hit.key === key) return { ...hit, cache: 'hit', file };
+  if (hit && hit.key === key) {
+    for (const msg of hit.warnings || []) console.warn(msg);
+    return { ...hit, cache: 'hit', file };
+  }
   const product = collectBundleSites(code);
   writeCache(file, { key, ...product });
   return { ...product, cache: 'miss', file };
@@ -459,5 +523,7 @@ module.exports = {
   defaultOptions,
   bundleCacheKey,
   cacheDir,
+  pruneCache,
+  KEEP_ENTRIES,
   loadBundleSites,
 };

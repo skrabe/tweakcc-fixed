@@ -4560,19 +4560,35 @@ function sameVarPattern(template, node, code) {
 
 // Whether a range sits strictly inside one of `ranges` (equal bounds do not
 // count). Built once per backfill: the plain scan was O(captures) per node and
-// ran over every node of the bundle.
+// ran over every node of the bundle. Reproduces that scan for any input:
+// `start >= s && end <= e && !(start === s && end === e)`, where an end that is
+// not a number compares through ToNumber and is never `===` the query.
 function nestedRangeIndex(ranges) {
-  const sorted = ranges.slice().sort((a, b) => a[0] - b[0]);
-  const starts = sorted.map(r => r[0]);
+  const usable = [];
+  for (const [s, e] of ranges) {
+    const end = Number(e);
+    // NaN fails every relational comparison, so such a range nests nothing.
+    if (typeof s !== 'number' || Number.isNaN(s) || Number.isNaN(end)) continue;
+    usable.push({ s, end, strict: typeof e === 'number' });
+  }
+  usable.sort((a, b) => a.s - b.s);
+  const starts = usable.map(r => r.s);
   const prefixMaxEnd = [];
   let max = -Infinity;
-  for (const [, end] of sorted) {
-    max = Math.max(max, end);
+  for (const r of usable) {
+    max = Math.max(max, r.end);
     prefixMaxEnd.push(max);
   }
-  const maxEndAt = new Map();
-  for (const [start, end] of sorted) {
-    if (!(maxEndAt.get(start) >= end)) maxEndAt.set(start, end);
+  // Per start: the largest end, and the ends that can never be `===` a query.
+  const atStart = new Map();
+  for (const r of usable) {
+    let slot = atStart.get(r.s);
+    if (!slot) {
+      slot = { max: -Infinity, loose: new Set() };
+      atStart.set(r.s, slot);
+    }
+    slot.max = Math.max(slot.max, r.end);
+    if (!r.strict) slot.loose.add(r.end);
   }
   return (start, end) => {
     let lo = 0;
@@ -4583,7 +4599,8 @@ function nestedRangeIndex(ranges) {
       else hi = mid;
     }
     if (lo > 0 && prefixMaxEnd[lo - 1] >= end) return true;
-    return maxEndAt.has(start) && maxEndAt.get(start) > end;
+    const slot = atStart.get(start);
+    return Boolean(slot) && (slot.max > end || slot.loose.has(end));
   };
 }
 
@@ -5823,3 +5840,4 @@ module.exports.slotLiteralCandidates = slotLiteralCandidates;
 module.exports.slotLiteralVerdict = slotLiteralVerdict;
 module.exports.applySlotLiteralNames = applySlotLiteralNames;
 module.exports.applySettingsDescriptionNames = applySettingsDescriptionNames;
+module.exports.nestedRangeIndex = nestedRangeIndex;
