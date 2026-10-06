@@ -8,11 +8,13 @@ const injection = REMINDER_REGISTRY.find(
   r => r.id === 'user-sent-new-message'
 )!;
 
-// The substituted override body (substitutePlaceholders turns `{{message}}` into
-// the `${H}` interpolation the apply() then rebinds to the matched delta param).
+// A substituted, EDITED override body (substitutePlaceholders turns `{{message}}`
+// into the `${H}` interpolation the apply() then rebinds to the matched delta
+// param). It must differ from every stock body the entry ever shipped: an
+// unedited stub leaves pristine untouched and would never reach these anchors.
 const defaultBody =
   'The user sent a new message while you were working:\n${H}\n\n' +
-  "IMPORTANT: After completing your current task, you MUST address the user's message above. Do not ignore it.";
+  "IMPORTANT: After completing your current task, you MUST address the user's message above. Edited.";
 
 // 2.1.169 shape: `case"auto-continuation":` prepended, `default:` split into its
 // own [MESSAGE FROM NON-USER SOURCE] case after the user-message return.

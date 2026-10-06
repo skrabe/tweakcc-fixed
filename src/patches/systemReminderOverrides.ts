@@ -4,6 +4,7 @@ import * as path from 'node:path';
 import {
   ensureReminderOverrideFile,
   loadReminderOverride,
+  normalizeLineEndings,
   substitutePlaceholders,
 } from '../systemReminderSync';
 import { showDiff } from './index';
@@ -30,6 +31,13 @@ export interface ReminderInjection {
   // on, so the named-prompt pass cannot match a second time. loadShadowSet
   // unions these into the shadow set (alongside runtime .md `shadows:`).
   shadows?: string[];
+  // Every defaultBody this entry shipped before the current one, verbatim from
+  // git history. Sync never rewrites an existing .md, so a file still holding
+  // one of these is unedited and gets the same no-op as the current stub.
+  previousDefaultBodies?: string[];
+  // The body is a switch, not reminder text (mcp-per-server-router): an
+  // unedited body must still apply, so the stock-body no-op skips it.
+  bodyIsMarker?: boolean;
   apply: (
     content: string,
     body: string,
@@ -102,11 +110,89 @@ interface ReminderSlot {
   placeholder: string;
   // Recovers the replacement expression from the pristine template.
   resolve: (template: string, param: string) => string | null;
+  // May render empty; see buildContent for how a line holding only optional
+  // placeholders drops.
+  optional?: boolean;
 }
 
 const propSlot = (placeholder: string, prop: string): ReminderSlot => ({
   placeholder,
   resolve: (template, param) => slotExpr(template, param, prop),
+});
+
+// CC's own "N pages | page count unknown" expression, recovered by shape from
+// wherever the pristine handler interpolates it (2.1.291: the readableWhole
+// preamble). Older shapes never interpolate it, so synthesize an equivalent.
+const pageCountTextSlot = (placeholder: string): ReminderSlot => ({
+  placeholder,
+  resolve: (template, param) =>
+    template.match(
+      new RegExp(
+        `\\$\\{(${param}\\.pageCount===null\\?"page count unknown":(?:\`(?:[^\`\\\\]|\\\\.|\\$\\{[^}]*\\})*\`|"[^"]*"))\\}`
+      )
+    )?.[1] ??
+    `${param}.pageCount===null?"page count unknown":${param}.pageCount+(${param}.pageCount===1?" page":" pages")`,
+});
+
+// CC's "this model cannot be sent a PDF file, only its pages as images…"
+// sentence, as pristine's own expression with its alternate emptied: the
+// `${e.wholeRefusedByModel?`…`:"…"}` interpolation whose consequent is a
+// template (2.1.291: the page-count-known branch, which also carries the
+// `pages: "1-N"` hint). Builds without the refusal never refuse, so the
+// segment is the empty string there; a build that has the flag in a shape this
+// does not recognise fails loud.
+const refusalTernary = (
+  template: string,
+  param: string
+): { head: string; refused: string; otherwise: string } | null => {
+  const head = `${param}.wholeRefusedByModel?`;
+  let emptied: { head: string; refused: string; otherwise: string } | null =
+    null;
+  for (const x of interpolations(template)) {
+    if (!x.startsWith(head) || x[head.length] !== '`') continue;
+    const end = literalEnd(x, head.length);
+    if (end < 0 || x[end + 1] !== ':') continue;
+    const t = {
+      head,
+      refused: x.slice(head.length, end + 1),
+      otherwise: x.slice(end + 2),
+    };
+    // A re-splice also sees this patch's own `{{model_refused_note}}` copy,
+    // whose alternate it emptied; pristine's full ternary wins when present.
+    if (t.otherwise !== '""') return t;
+    emptied ??= t;
+  }
+  return emptied;
+};
+
+const modelRefusedSlot = (placeholder: string): ReminderSlot => ({
+  placeholder,
+  optional: true,
+  resolve: (template, param) => {
+    const t = refusalTernary(template, param);
+    if (t) return `${t.head}${t.refused}:""`;
+    return template.includes('wholeRefusedByModel') ? null : '""';
+  },
+});
+
+// The same interpolation whole: the refusal sentence for a refused model,
+// else pristine's "This PDF is too large to read all at once." Builds that
+// predate the refusal only ever said the latter, so it is that literal there.
+const unreadableReasonSlot = (placeholder: string): ReminderSlot => ({
+  placeholder,
+  resolve: (template, param) => {
+    const t = refusalTernary(template, param);
+    // Only the emptied copy survives (a re-splice of a body that used just
+    // {{model_refused_note}}): pristine's "too large" sentence is gone, so
+    // fail loud rather than render an empty reason.
+    if (t)
+      return t.otherwise === '""'
+        ? null
+        : `${t.head}${t.refused}:${t.otherwise}`;
+    return template.includes('wholeRefusedByModel')
+      ? null
+      : '"This PDF is too large to read all at once."';
+  },
 });
 
 // A tool name interpolated from module scope rather than from the handler's
@@ -139,6 +225,10 @@ interface MatchedEntry {
   wrapFn: string;
   metaFn: string;
   template: string;
+  // Block-bodied handlers (`key:(e)=>{if(…)return …;return W([…])}`): the text
+  // between the handler's `{` and its final `return`, kept verbatim when the
+  // override replaces only that final return. Absent for expression bodies.
+  blockPreamble?: string;
 }
 
 const matchSimpleEntry = (
@@ -195,6 +285,70 @@ const matchComposedEntry = (
   };
 };
 
+// The same entry once Anthropic gave the handler a block body. CC 2.1.291
+// split `pdf_reference` into an early `return` for a PDF the model can read
+// whole (`readableWhole`) and a final `return` for the too-large note this
+// override targets: `key:(e)=>{if(…)return W([M({content:`…`,isMeta:!0})]);
+// return W([M({content:(…)+`…`,isMeta:!0})])}`. Only the final return is the
+// too-large note, so only it is rebuilt from the override body; the early
+// branch is preserved verbatim. Suppression still replaces the whole handler.
+const matchBlockEntry = (content: string, key: string): MatchedEntry | null => {
+  const head = new RegExp(`${key}:\\(([$\\w]+)\\)=>\\{`);
+  const m = content.match(head);
+  if (!m || m.index === undefined) return null;
+  const bodyOpen = m.index + m[0].length - 1;
+  const bodyClose = matchingBrace(content, bodyOpen);
+  if (bodyClose < 0) return null;
+  const body = content.slice(bodyOpen + 1, bodyClose);
+  const returnRe = /return ([$\w]+)\(\[([$\w]+)\(\{content:/g;
+  let last: RegExpExecArray | null = null;
+  for (let r = returnRe.exec(body); r; r = returnRe.exec(body)) last = r;
+  // A handler this patch already spliced ends in emitReminder's empty-aware
+  // form, `return((c)=>c.trim()===""?[]:W([M({content:c,isMeta:!0})]))(X)`.
+  // Its last plain `return W([M({content:` is then the early return, so the
+  // emitted form must win when it comes later, or re-applying returns null.
+  const emittedRe =
+    /return ?\(\(c\)=>c\.trim\(\)===""\?\[\]:([$\w]+)\(\[([$\w]+)\(\{content:c,isMeta:!0\}\)\]\)\)\(/g;
+  let emitted: RegExpExecArray | null = null;
+  for (let r = emittedRe.exec(body); r; r = emittedRe.exec(body)) emitted = r;
+  if (emitted && (!last || emitted.index > last.index)) {
+    const argOpen = bodyOpen + 1 + emitted.index + emitted[0].length - 1;
+    const argClose = matchingBrace(content, argOpen);
+    if (argClose !== bodyClose - 1) return null;
+    return {
+      index: m.index,
+      length: bodyClose + 1 - m.index,
+      hParam: m[1],
+      wrapFn: emitted[1],
+      metaFn: emitted[2],
+      template:
+        body.slice(0, emitted.index) + content.slice(argOpen + 1, argClose),
+      blockPreamble: body.slice(0, emitted.index),
+    };
+  }
+  if (!last) return null;
+  const objOpen =
+    bodyOpen + 1 + last.index + last[0].length - 1 - 'content:'.length;
+  if (content[objOpen] !== '{') return null;
+  const objClose = matchingBrace(content, objOpen);
+  if (objClose < 0) return null;
+  const tail = ',isMeta:!0';
+  const objBody = content.slice(objOpen + 1, objClose);
+  if (!objBody.startsWith('content:') || !objBody.endsWith(tail)) return null;
+  if (content.slice(objClose + 1, bodyClose) !== ')])') return null;
+  return {
+    index: m.index,
+    length: bodyClose + 1 - m.index,
+    hParam: m[1],
+    wrapFn: last[1],
+    metaFn: last[2],
+    template:
+      body.slice(0, last.index) +
+      objBody.slice('content:'.length, objBody.length - tail.length),
+    blockPreamble: body.slice(0, last.index),
+  };
+};
+
 const applySimpleEntry = (
   content: string,
   key: string,
@@ -204,34 +358,41 @@ const applySimpleEntry = (
 ): string | null => {
   const patchName = key.replace(/_/g, '-');
   const found =
-    matchSimpleEntry(content, key) ?? matchComposedEntry(content, key);
+    matchSimpleEntry(content, key) ??
+    matchComposedEntry(content, key) ??
+    matchBlockEntry(content, key);
   if (!found) {
     if (new RegExp(`${key}:\\([$\\w]+\\)=>\\[\\]`).test(content))
       return content;
     console.error(`patch: reminder ${patchName}: failed to find anchor`);
     return null;
   }
-  const { index, length, hParam, wrapFn, metaFn, template } = found;
+  const { index, length, hParam, wrapFn, metaFn, template, blockPreamble } =
+    found;
   let replacement: string;
   if (isSuppressed) {
     replacement = `${key}:(${hParam})=>[]`;
   } else {
-    let built = body;
-    for (const slot of slots) {
-      if (!built.includes(slot.placeholder)) continue;
-      const expr = slot.resolve(template, hParam);
-      if (expr === null) {
-        // Emitting the body anyway would splice a live `${H.filename}` into
-        // cli.js — a ReferenceError at reminder time that no apply-side gate
-        // sees. Fail the patch instead.
-        console.error(
-          `patch: reminder ${patchName}: no pristine expression for ${slot.placeholder}`
-        );
-        return null;
-      }
-      built = built.split(slot.placeholder).join(`\${${expr}}`);
-    }
-    replacement = `${key}:(${hParam})=>${wrapFn}([${metaFn}({content:\`${built}\`,isMeta:!0})])`;
+    // An unresolved slot fails the patch: emitting the body anyway would
+    // splice a live `${H.filename}` into cli.js — a ReferenceError at reminder
+    // time that no apply-side gate sees.
+    const resolved = resolveSlots(
+      patchName,
+      body,
+      slots.map(slot => ({
+        token: slot.placeholder,
+        expr: body.includes(slot.placeholder)
+          ? slot.resolve(template, hParam)
+          : null,
+        optional: slot.optional,
+      }))
+    );
+    if (resolved === null) return null;
+    const call = emitReminder(wrapFn, metaFn, body, resolved);
+    replacement =
+      blockPreamble === undefined
+        ? `${key}:(${hParam})=>${call}`
+        : `${key}:(${hParam})=>{${blockPreamble}return ${call}}`;
   }
   const newContent =
     content.slice(0, index) + replacement + content.slice(index + length);
@@ -239,11 +400,16 @@ const applySimpleEntry = (
   return newContent;
 };
 
-// Index of the `}` matching the `{` at `openIdx`, or -1. Brace-balanced and
-// aware of the three JS string contexts plus `${…}` inside a template literal,
-// so a `{` in `T(\`… ${gFn} …\`,{level:"error"})` cannot end the walk early.
+const CLOSERS: Record<string, string> = { '{': '}', '(': ')', '[': ']' };
+
+// Index of the bracket matching the `{`, `(` or `[` at `openIdx`, or -1.
+// Balanced and aware of the three JS string contexts plus `${…}` inside a
+// template literal, so a `{` in `T(\`… ${gFn} …\`,{level:"error"})` cannot end
+// the walk early.
 const matchingBrace = (content: string, openIdx: number): number => {
-  if (content[openIdx] !== '{') return -1;
+  const open = content[openIdx];
+  const close = CLOSERS[open];
+  if (close === undefined) return -1;
   let depth = 0;
   let inTpl = false;
   let inSingle = false;
@@ -273,14 +439,444 @@ const matchingBrace = (content: string, openIdx: number): number => {
       inDouble = true;
     } else if (c === '`' && prev !== '\\') {
       inTpl = true;
-    } else if (c === '{') {
+    } else if (c === open) {
       depth++;
-    } else if (c === '}') {
+    } else if (c === close) {
       depth--;
       if (depth === 0) return i;
     }
   }
   return -1;
+};
+
+// Index of the delimiter closing the string or template literal that opens at
+// `i`, or -1. Template interpolations are skipped as balanced code.
+const literalEnd = (src: string, i: number): number => {
+  const q = src[i];
+  for (let j = i + 1; j < src.length; j++) {
+    const c = src[j];
+    if (c === '\\') j++;
+    else if (c === q) return j;
+    else if (q === '`' && c === '$' && src[j + 1] === '{') {
+      j = matchingBrace(src, j + 1);
+      if (j < 0) return -1;
+    }
+  }
+  return -1;
+};
+
+// Index of the first `stop` character at bracket depth 0 (outside every string
+// and template) at or after `from`, the index where the enclosing bracket
+// closes, or `src.length`.
+const topLevelIndex = (src: string, from: number, stop: string): number => {
+  let depth = 0;
+  for (let i = from; i < src.length; i++) {
+    const c = src[i];
+    if (c === '"' || c === "'" || c === '`') {
+      i = literalEnd(src, i);
+      if (i < 0) return src.length;
+    } else if (c in CLOSERS) {
+      depth++;
+    } else if (c === ')' || c === ']' || c === '}') {
+      if (depth === 0) return i;
+      depth--;
+    } else if (depth === 0 && c === stop) {
+      return i;
+    }
+  }
+  return src.length;
+};
+
+const splitTopLevel = (src: string, sep: string): string[] => {
+  const parts: string[] = [];
+  let from = 0;
+  while (from <= src.length) {
+    const at = topLevelIndex(src, from, sep);
+    parts.push(src.slice(from, at));
+    if (at >= src.length || src[at] !== sep) break;
+    from = at + 1;
+  }
+  return parts;
+};
+
+// The `${…}` expressions of a template literal's source, outermost only.
+const interpolations = (tpl: string): string[] => {
+  const out: string[] = [];
+  for (let i = 0; i < tpl.length; i++) {
+    if (tpl[i] === '\\') i++;
+    else if (tpl[i] === '$' && tpl[i + 1] === '{') {
+      const end = matchingBrace(tpl, i + 1);
+      if (end < 0) break;
+      out.push(tpl.slice(i + 2, end));
+      i = end;
+    }
+  }
+  return out;
+};
+
+const escapeRe = (s: string): string =>
+  s.replace(/[$.*+?^()[\]{}|\\]/g, '\\$&');
+
+// One statement of a reminder case body, as far as the content builder needs.
+type CaseStatement =
+  | { kind: 'if'; cond: string; body: string; isBlock: boolean }
+  | { kind: 'let'; decls: string[] }
+  | { kind: 'return'; expr: string; start: number }
+  | { kind: 'expr'; expr: string };
+
+const parseStatements = (src: string): CaseStatement[] | null => {
+  const out: CaseStatement[] = [];
+  let i = 0;
+  while (i < src.length) {
+    while (i < src.length && /[\s;]/.test(src[i])) i++;
+    if (i >= src.length) break;
+    if (src.startsWith('if(', i)) {
+      const condEnd = matchingBrace(src, i + 2);
+      if (condEnd < 0) return null;
+      const cond = src.slice(i + 3, condEnd);
+      const j = condEnd + 1;
+      if (src[j] === '{') {
+        const blockEnd = matchingBrace(src, j);
+        if (blockEnd < 0) return null;
+        out.push({
+          kind: 'if',
+          cond,
+          body: src.slice(j + 1, blockEnd),
+          isBlock: true,
+        });
+        i = blockEnd + 1;
+        continue;
+      }
+      const end = topLevelIndex(src, j, ';');
+      out.push({ kind: 'if', cond, body: src.slice(j, end), isBlock: false });
+      i = end + 1;
+      continue;
+    }
+    const end = topLevelIndex(src, i, ';');
+    const text = src.slice(i, end);
+    const decl = text.match(/^(?:let|const|var)\s+/);
+    if (decl)
+      out.push({
+        kind: 'let',
+        decls: splitTopLevel(text.slice(decl[0].length), ','),
+      });
+    else if (/^return\b/.test(text))
+      out.push({ kind: 'return', expr: text.slice(6).trim(), start: i });
+    else out.push({ kind: 'expr', expr: text });
+    i = end + 1;
+  }
+  return out;
+};
+
+// A case body that builds its reminder by pushing (or `+=`-appending) optional
+// segments onto one local and returns that local once. Every reminder CC emits
+// from a list-shaped delta has this shape (memory_update, mcp_instructions_delta,
+// agent_listing_delta, task_reminder): each optional segment sits behind its own
+// `if(…)`, carrying pristine's emptiness guard and escaping. Parsing that out,
+// rather than spelling the prose, lets an override body place each segment —
+// with its condition — wherever it wants, while the case's own preamble (early
+// returns, `ei()`-guarded locals, the `b.length===0` gate) is kept verbatim.
+interface SegmentIf {
+  cond: string;
+  // Block-local `name=init` declarations the pushed values may reference.
+  decls: string[];
+  values: string[];
+}
+
+interface PushBuilder {
+  preamble: string;
+  wrapFn: string;
+  metaFn: string;
+  arr: string;
+  locals: Map<string, string>;
+  ifs: SegmentIf[];
+  // Values pushed unconditionally in the final return's comma prefix, and
+  // those push expressions verbatim (re-emitted, so a re-splice still sees them).
+  tail: string[];
+  tailExprs: string[];
+}
+
+// The emit at the end of a builder case's final return: pristine's
+// `W([M({content:X,isMeta:!0})])`, or the empty-aware form emitReminder writes,
+// so a handler this patch already spliced parses again.
+const matchEmit = (
+  expr: string
+): { wrapFn: string; metaFn: string; content: string | null } | null => {
+  const plain = expr.match(
+    /^([$\w]+)\(\[([$\w]+)\(\{content:([\s\S]*),isMeta:!0\}\)\]\)$/
+  );
+  if (plain) return { wrapFn: plain[1], metaFn: plain[2], content: plain[3] };
+  const ours = expr.match(
+    /^\(\(c\)=>c\.trim\(\)===""\?\[\]:([$\w]+)\(\[([$\w]+)\(\{content:c,isMeta:!0\}\)\]\)\)\(/
+  );
+  return ours ? { wrapFn: ours[1], metaFn: ours[2], content: null } : null;
+};
+
+// The local a case body pushes (or `+=`-appends) its segments onto.
+const builderTarget = (stmts: CaseStatement[]): string | null => {
+  for (const s of stmts) {
+    const exprs =
+      s.kind === 'if'
+        ? s.isBlock
+          ? (parseStatements(s.body) ?? []).flatMap(t =>
+              t.kind === 'expr' ? splitTopLevel(t.expr, ',') : []
+            )
+          : splitTopLevel(s.body, ',')
+        : s.kind === 'expr'
+          ? splitTopLevel(s.expr, ',')
+          : [];
+    for (const e of exprs) {
+      const m = e.trim().match(/^([$\w]+)(?:\.push\(|\+=)/);
+      if (m) return m[1];
+    }
+  }
+  return null;
+};
+
+const pushedValues = (exprs: string[], arr: string): string[] | null => {
+  const values: string[] = [];
+  const push = new RegExp(`^${escapeRe(arr)}\\.push\\(`);
+  for (const raw of exprs) {
+    const e = raw.trim();
+    if (e === '') continue;
+    if (push.test(e)) {
+      const open = e.indexOf('(');
+      if (matchingBrace(e, open) !== e.length - 1) return null;
+      values.push(e.slice(open + 1, -1));
+    } else if (e.startsWith(`${arr}+=`)) {
+      values.push(e.slice(arr.length + 2));
+    } else {
+      return null;
+    }
+  }
+  return values;
+};
+
+const parsePushBuilder = (caseBody: string): PushBuilder | null => {
+  const stmts = parseStatements(caseBody);
+  if (!stmts) return null;
+  const ret = stmts[stmts.length - 1];
+  if (!ret || ret.kind !== 'return') return null;
+  const parts = splitTopLevel(ret.expr, ',');
+  const emit = matchEmit(parts[parts.length - 1]);
+  if (!emit) return null;
+  // Pristine returns the local itself (`g.join(…)` or `g`); an already-spliced
+  // handler returns its own template, so read the local off the pushes.
+  const arr =
+    emit.content?.match(/^([$\w]+)(?:\.join\([\s\S]*\))?$/)?.[1] ??
+    builderTarget(stmts);
+  if (!arr) return null;
+  const tail = pushedValues(parts.slice(0, -1), arr);
+  if (!tail) return null;
+  const locals = new Map<string, string>();
+  const ifs: SegmentIf[] = [];
+  for (const s of stmts.slice(0, -1)) {
+    if (s.kind === 'let') {
+      for (const d of s.decls) {
+        const eq = d.indexOf('=');
+        if (eq > 0) locals.set(d.slice(0, eq).trim(), d.slice(eq + 1));
+      }
+    } else if (s.kind === 'if') {
+      let decls: string[] = [];
+      let exprs: string[];
+      if (s.isBlock) {
+        const inner = parseStatements(s.body);
+        if (!inner) continue;
+        exprs = [];
+        for (const t of inner) {
+          if (t.kind === 'let') decls = decls.concat(t.decls);
+          else if (t.kind === 'expr') exprs.push(...splitTopLevel(t.expr, ','));
+          else exprs.push('\0');
+        }
+      } else {
+        exprs = splitTopLevel(s.body, ',');
+      }
+      const values = pushedValues(exprs, arr);
+      if (values && values.length > 0)
+        ifs.push({ cond: s.cond, decls, values });
+    } else if (s.kind === 'expr') {
+      const values = pushedValues(splitTopLevel(s.expr, ','), arr);
+      if (values && values.length > 0)
+        ifs.push({ cond: '!0', decls: [], values });
+    }
+  }
+  return {
+    preamble: caseBody.slice(0, ret.start),
+    wrapFn: emit.wrapFn,
+    metaFn: emit.metaFn,
+    arr,
+    locals,
+    ifs,
+    tail,
+    tailExprs: parts.slice(0, -1),
+  };
+};
+
+// The local a builder binds to `<param>.<prop>` (bare, or through a guard such
+// as `ei(e.paths)`), or null.
+const localFor = (
+  b: PushBuilder,
+  param: string,
+  prop: string
+): string | null => {
+  const re = new RegExp(`^(?:[$\\w]+\\()*${escapeRe(param)}\\.${prop}\\)*$`);
+  for (const [name, init] of b.locals) if (re.test(init.trim())) return name;
+  return null;
+};
+
+const mentions = (src: string, ident: string): boolean =>
+  new RegExp(`(^|[^$\\w.])${escapeRe(ident)}(?![$\\w])`).test(src);
+
+// The `if` whose condition AND first pushed value both reference `local`.
+const segmentFor = (b: PushBuilder, local: string | null): SegmentIf | null =>
+  local === null
+    ? null
+    : (b.ifs.find(
+        s => mentions(s.cond, local) && mentions(s.values[0], local)
+      ) ?? null);
+
+// A leading newline in an appended segment is the builder's joiner, not
+// content: the override body supplies its own line breaks.
+const stripLeadingNewlines = (value: string): string =>
+  value.startsWith('`')
+    ? '`' + value.slice(1).replace(/^(?:\n|\\n)+/, '')
+    : value;
+
+// The value an `if` pushes at `index`, guarded by its condition: `""` when
+// pristine would have skipped the push.
+const guardedValue = (seg: SegmentIf, index: number): string => {
+  const v = stripLeadingNewlines(seg.values[index]);
+  const body =
+    seg.decls.length > 0
+      ? `(()=>{let ${seg.decls.join(',')};return ${v}})()`
+      : v;
+  return `(${seg.cond})?${body}:""`;
+};
+
+// The interpolation inside a segment's first value that reads `local`, guarded
+// by the segment's condition — the raw data a body can frame with its own prose.
+const guardedData = (
+  seg: SegmentIf | null,
+  local: string | null
+): string | null => {
+  if (!seg || local === null) return null;
+  const v = seg.values[0];
+  const inner = v.startsWith('`')
+    ? interpolations(v.slice(1, -1)).find(x => mentions(x, local))
+    : undefined;
+  return inner === undefined ? null : `(${seg.cond})?${inner}:""`;
+};
+
+// A resolved placeholder: the token as it appears in a substituted body, the
+// pristine expression it becomes, and whether it may legitimately render empty.
+interface ResolvedSlot {
+  token: string;
+  expr: string;
+  optional: boolean;
+}
+
+// The JS expression for a reminder's `content:`. A body line that holds at
+// least one optional placeholder and no required one is a conditional line: it
+// renders only when one of its optional placeholders is non-empty, exactly as
+// pristine skips a push whose `if` fails. When such a line drops and it stood
+// alone between blank lines, one adjacent blank line goes with it, so dropping
+// a whole paragraph never leaves a blank run, a leading blank or a trailing
+// blank. A body with no conditional line compiles to one template literal,
+// byte-identical to what a plain substitution emits.
+const buildContent = (
+  body: string,
+  slots: ResolvedSlot[]
+): { expr: string; mayBeEmpty: boolean } => {
+  const ordered = [...slots].sort((a, b) => b.token.length - a.token.length);
+  const lines = body.split('\n').map(line => {
+    let rendered = '';
+    let bare = '';
+    let optional = 0;
+    let required = 0;
+    for (let i = 0; i < line.length; ) {
+      // User text arrives template-escaped, so `\${…}` is literal text that
+      // merely looks like a token.
+      if (line[i] === '\\') {
+        rendered += line.slice(i, i + 2);
+        bare += line.slice(i, i + 2);
+        i += 2;
+        continue;
+      }
+      const slot = ordered.find(s => line.startsWith(s.token, i));
+      if (slot) {
+        rendered += `\${${slot.expr}}`;
+        if (slot.optional) optional++;
+        else required++;
+        i += slot.token.length;
+      } else {
+        rendered += line[i];
+        bare += line[i];
+        i++;
+      }
+    }
+    return { rendered, bare, conditional: optional > 0 && required === 0 };
+  });
+  const mayBeEmpty = slots.some(s => s.optional && body.includes(s.token));
+  if (!lines.some(l => l.conditional))
+    return {
+      expr: '`' + lines.map(l => l.rendered).join('\n') + '`',
+      mayBeEmpty,
+    };
+  const items = lines.map(l =>
+    l.conditional ? `[\`${l.rendered}\`,\`${l.bare}\`]` : `\`${l.rendered}\``
+  );
+  const expr =
+    '((L)=>{let o=[];for(let i=0;i<L.length;i++){let x=L[i];' +
+    'if(typeof x==="string"){o.push(x);continue}' +
+    'if(x[0]!==x[1]){o.push(x[0]);continue}' +
+    'if((!o.length||o[o.length-1]==="")&&(i+1>=L.length||L[i+1]===""))' +
+    '{if(o.length)o.pop();else i++}}' +
+    'return o.join("\\n")})([' +
+    items.join(',') +
+    '])';
+  return { expr, mayBeEmpty };
+};
+
+// The handler's return value for a built body. When the body uses an optional
+// placeholder it can render to nothing (`{{existing_tasks}}` on an empty task
+// list); pristine says nothing there by returning `[]`, the same value every
+// handler in this registry returns when suppressed, so an empty render does
+// too rather than wrapping "" — which strip-empty-system-reminders would turn
+// into a "(no content)" reminder. A body without optional placeholders keeps
+// the plain wrapper call.
+const emitReminder = (
+  wrapFn: string,
+  metaFn: string,
+  body: string,
+  slots: ResolvedSlot[]
+): string => {
+  const { expr, mayBeEmpty } = buildContent(body, slots);
+  const call = (c: string) =>
+    `${wrapFn}([${metaFn}({content:${c},isMeta:!0})])`;
+  return mayBeEmpty
+    ? `((c)=>c.trim()===""?[]:${call('c')})(${expr})`
+    : call(expr);
+};
+
+// Resolves every slot the body uses, or reports the first that has no pristine
+// expression on this build and returns null.
+const resolveSlots = (
+  patchName: string,
+  body: string,
+  slots: Array<{ token: string; expr: string | null; optional?: boolean }>
+): ResolvedSlot[] | null => {
+  const out: ResolvedSlot[] = [];
+  for (const s of slots) {
+    if (!body.includes(s.token)) continue;
+    if (s.expr === null) {
+      console.error(
+        `patch: reminder ${patchName}: no pristine expression for ${s.token}`
+      );
+      return null;
+    }
+    out.push({ token: s.token, expr: s.expr, optional: s.optional ?? false });
+  }
+  return out;
 };
 
 const findCaseBody = (
@@ -315,35 +911,16 @@ const findCaseBody = (
 // (`return K.push(rm6),HT([U6({content:`), so skip any non-`;` chars before the
 // match. Prefer the last match (case bodies sometimes call the wrappers earlier
 // with different ids for unrelated subcases).
+// null when the case emits no such call: the caller fails loud rather than
+// guess a name (a guessed `o5`/`j6` crashes with "j6 is not a function").
 const discoverWrappers = (
   caseBody: string
-): { arrayWrap: string; msgCtor: string } => {
+): { arrayWrap: string; msgCtor: string } | null => {
   const re = /return\s+[^;]*?([$\w]+)\(\[([$\w]+)\(\{content:/g;
   let last: RegExpExecArray | null = null;
   let m: RegExpExecArray | null;
   while ((m = re.exec(caseBody)) !== null) last = m;
-  return last
-    ? { arrayWrap: last[1], msgCtor: last[2] }
-    : { arrayWrap: 'o5', msgCtor: 'j6' };
-};
-
-// Capture the whole `if(<condition>)return[]` feature-gate CONDITION verbatim
-// from the start of a case body, so the rewrite reuses the exact guard. Returning
-// the full condition — not a single identifier with a hardcoded fallback — is
-// load-bearing: the guard's shape AND its minified names churn across versions and
-// platforms (2.1.204 was a single `if(!ZI())return[]`; 2.1.205 is a two-clause
-// `if(!ZI()||YY())return[]`; linux renames both). The old single-identifier regex
-// silently missed the two-clause shape and fell back to a hardcoded name (`GX`) —
-// which a later build reused for an unrelated `class GX extends Error`, so the
-// rewrite emitted `if(!GX())` → "Cannot call a class constructor GX without new"
-// on every task-reminder render (a lazy path a parse-only apply check never hits).
-// The condition is a `||`/`&&` chain of `!?FN()` calls; null = shape drifted →
-// caller fails loud rather than guessing.
-const discoverFeatureGuard = (caseBody: string): string | null => {
-  const m = caseBody.match(
-    /^\s*if\((!?[$\w]+\(\)(?:(?:\|\||&&)!?[$\w]+\(\))*)\)return\s*\[\]/
-  );
-  return m ? m[1] : null;
+  return last ? { arrayWrap: last[1], msgCtor: last[2] } : null;
 };
 
 // Pull the case-handler's delta-parameter name — the object each reminder reads
@@ -353,13 +930,76 @@ const discoverFeatureGuard = (caseBody: string): string | null => {
 // injections must discover it rather than hardcode `H` (which otherwise emits a
 // runtime `H is not defined` on linux-arm64). Same platform-minified-name
 // hazard the discoverWrappers / discoverFeatureGuard helpers above guard against.
-const discoverDeltaParam = (caseBody: string, sampleProp: string): string => {
-  const m = caseBody.match(new RegExp(`([$\\w]+)\\.${sampleProp}\\b`));
-  return m ? m[1] : 'H';
+const discoverDeltaParam = (
+  caseBody: string,
+  sampleProp: string
+): string | null =>
+  caseBody.match(new RegExp(`([$\\w]+)\\.${sampleProp}(?![$\\w])`))?.[1] ??
+  null;
+
+// A case this patch already suppressed has lost the prose findCaseBody keys
+// on; suppressing it again is a no-op rather than a failure.
+const isSuppressedCase = (content: string, key: string): boolean =>
+  content.includes(`case"${key}":{return [];}`);
+
+interface BuilderSlot {
+  token: string;
+  expr: string | null;
+  optional?: boolean;
+}
+
+// Splices a push-builder reminder case (see parsePushBuilder): the case's own
+// preamble — early returns, guarded locals, the pushes and any emptiness gate —
+// stays verbatim and only the final `return` is rebuilt from the override body,
+// so each placeholder can name pristine's locals. Suppression empties the case.
+const applyBuilderCase = (
+  content: string,
+  patchName: string,
+  found: { bodyStart: number; bodyEnd: number },
+  body: string,
+  isSuppressed: boolean,
+  sampleProp: string,
+  slotsFor: (b: PushBuilder, param: string, caseBody: string) => BuilderSlot[]
+): string | null => {
+  const { bodyStart, bodyEnd } = found;
+  const caseBody = content.slice(bodyStart, bodyEnd);
+  let newBody: string;
+  if (isSuppressed) {
+    newBody = 'return [];';
+  } else {
+    const b = parsePushBuilder(caseBody);
+    if (b === null) {
+      console.error(
+        `patch: reminder ${patchName}: case body is not the push-builder shape`
+      );
+      return null;
+    }
+    // Without a visible delta param no slot can be bound; a body that uses
+    // none still applies, one that uses any fails in resolveSlots.
+    const p = discoverDeltaParam(caseBody, sampleProp);
+    const slots =
+      p === null
+        ? slotsFor(b, '\0', caseBody).map(s => ({ ...s, expr: null }))
+        : slotsFor(b, p, caseBody);
+    const resolved = resolveSlots(patchName, body, slots);
+    if (resolved === null) return null;
+    const ret = [
+      ...b.tailExprs,
+      emitReminder(b.wrapFn, b.metaFn, body, resolved),
+    ].join(',');
+    newBody = `${b.preamble}return ${ret}`;
+  }
+  const newContent =
+    content.slice(0, bodyStart) + newBody + content.slice(bodyEnd);
+  showDiff(content, newContent, newBody, bodyStart, bodyEnd);
+  return newContent;
 };
 
 const CLAUDEMD_INJECTION: ReminderInjection = {
   id: 'claudemd-context',
+  previousDefaultBodies: [
+    "As you answer the user's questions, you can use the following context:\n{{context_blocks}}\n\n      IMPORTANT: this context may or may not be relevant to your tasks. You should not respond to this context unless it is highly relevant to your task.",
+  ],
   name: 'claudeMd context wrapper',
   description:
     "Per-turn <system-reminder> that bundles { claudeMd, userEmail, currentDate } into a 'As you answer the user's questions...' block. Empty .md body = suppress entirely.",
@@ -367,10 +1007,11 @@ const CLAUDEMD_INJECTION: ReminderInjection = {
     context_blocks:
       '${Object.entries(_).map(([q,K])=>`# ${q}\\n${K}`).join(`\\n`)}',
   },
+  // CC 2.1.291 wording (the suffix constant after the context blocks).
   defaultBody: `As you answer the user's questions, you can use the following context:
 {{context_blocks}}
 
-      IMPORTANT: this context may or may not be relevant to your tasks. You should not respond to this context unless it is highly relevant to your task.`,
+      Claude Code attached this context automatically; it isn't part of the user's message. It describes the user's own account and workspace, so they don't need it reported back.`,
   apply(content, body, isSuppressed) {
     // The `content:` value is an EXPRESSION, not a literal. CC 2.1.261 hoisted
     // the reminder's prefix and suffix out of the wrapper into two module-level
@@ -479,18 +1120,28 @@ const SKILLS_INJECTION: ReminderInjection = {
 
 const MCP_INSTRUCTIONS_INJECTION: ReminderInjection = {
   id: 'mcp-instructions',
+  previousDefaultBodies: [
+    '# MCP Server Instructions\n\nThe following MCP servers have provided instructions for how to use their tools and resources:\n\n{{added_blocks}}',
+  ],
   name: 'MCP server instructions block',
   description:
-    'The "# MCP Server Instructions..." block. Empty .md body = suppress entirely. Per-server pruning lives in mcp-<name>.md files.',
+    'The "# MCP Server Instructions..." delta block. Empty .md body = suppress entirely. Per-server pruning lives in mcp-<name>.md files. ' +
+    'A delta can add servers, remove them, or both: {{added_section}} is the whole pristine heading + instruction blocks and {{removed_section}} the pristine "have disconnected… no longer apply" list, each empty when that half of the delta is; ' +
+    '{{added_blocks}} / {{removed_names}} are the bare guarded data for your own wording; {{ambient_note}} is the ambient-context suffix pristine adds with a removal. ' +
+    'A line holding only such placeholders (plus your own text) disappears when they are all empty, with one adjacent blank line.',
   placeholders: {
+    added_section: '${H.addedSection}',
+    removed_section: '${H.removedSection}',
     added_blocks: '${H.addedBlocks.join(`\\n\\n`)}',
     removed_names: '${H.removedNames.join(`\\n`)}',
+    ambient_note: '${H.ambientNote}',
   },
-  defaultBody: `# MCP Server Instructions
-
-The following MCP servers have provided instructions for how to use their tools and resources:
-
-{{added_blocks}}`,
+  defaultBody: '{{added_section}}\n\n{{removed_section}}\n\n{{ambient_note}}',
+  // Pristine pushes the added block only when there are added blocks AND
+  // names, the disconnect list plus the ambient suffix only when servers were
+  // removed, and returns nothing when neither applies — all over `ei()`-guarded
+  // locals. A flat template always printed the added heading (empty on a
+  // removal-only delta) and lost the disconnect notice.
   apply(content, body, isSuppressed) {
     const found = findCaseBody(
       content,
@@ -498,37 +1149,88 @@ The following MCP servers have provided instructions for how to use their tools 
       '# MCP Server Instructions'
     );
     if (!found) {
+      if (isSuppressed && isSuppressedCase(content, 'mcp_instructions_delta'))
+        return content;
       console.error(
         'patch: reminder mcp-instructions: failed to find case body'
       );
       return null;
     }
-    const { bodyStart, bodyEnd } = found;
-    const caseBody = content.slice(bodyStart, bodyEnd);
-    const { arrayWrap, msgCtor } = discoverWrappers(caseBody);
-    const p = discoverDeltaParam(caseBody, 'addedBlocks');
-    const bodyForBuild = body.replace(/\$\{H\./g, `\${${p}.`);
-    const newBody = isSuppressed
-      ? 'return [];'
-      : `if(${p}.addedBlocks.length===0&&${p}.removedNames.length===0)return [];return ${arrayWrap}([${msgCtor}({content:\`${bodyForBuild}\`,isMeta:!0})])`;
-    const newContent =
-      content.slice(0, bodyStart) + newBody + content.slice(bodyEnd);
-    showDiff(content, newContent, newBody, bodyStart, bodyEnd);
-    return newContent;
+    return applyBuilderCase(
+      content,
+      'mcp-instructions',
+      found,
+      body,
+      isSuppressed,
+      'addedBlocks',
+      (b, p) => {
+        const addedLocal = localFor(b, p, 'addedBlocks');
+        const removedLocal = localFor(b, p, 'removedNames');
+        const added = segmentFor(b, addedLocal);
+        const removed = segmentFor(b, removedLocal);
+        return [
+          {
+            token: '${H.addedSection}',
+            expr: added && guardedValue(added, 0),
+            optional: true,
+          },
+          {
+            token: '${H.removedSection}',
+            expr: removed && guardedValue(removed, 0),
+            optional: true,
+          },
+          {
+            token: '${H.addedBlocks.join(`\\n\\n`)}',
+            expr: guardedData(added, addedLocal),
+            optional: true,
+          },
+          {
+            token: '${H.removedNames.join(`\\n`)}',
+            expr: guardedData(removed, removedLocal),
+            optional: true,
+          },
+          {
+            token: '${H.ambientNote}',
+            expr:
+              removed && removed.values.length > 1
+                ? guardedValue(removed, 1)
+                : null,
+            optional: true,
+          },
+        ];
+      }
+    );
   },
 };
 
 const AGENT_LISTING_INJECTION: ReminderInjection = {
   id: 'agent-listing',
+  previousDefaultBodies: [
+    'Available agent types for the Agent tool:\n{{listing}}',
+  ],
   name: 'Agent listing reminder',
   description:
-    'The "Available agent types for the Agent tool" block emitted at session start. Empty .md body = suppress entirely.',
+    'The agent-type listing delta: the full list at session start, then additions and removals. Empty .md body = suppress entirely. ' +
+    '{{added_section}} is the pristine heading plus agent lines, {{removed_section}} the pristine "no longer available" list, each empty when that half of the delta is. ' +
+    '{{heading}} is pristine\'s heading alone ("Available agent types for the Agent tool:" on the initial listing, "New agent types are now available for the Agent tool:" after), empty when nothing was added; ' +
+    '{{listing}} / {{removed}} are the bare guarded lists. {{concurrency_note}} is the launch-in-parallel note (initial listing only, when CC asks for it); {{ambient_note}} is the suffix pristine adds with a removal. ' +
+    'A line holding only such placeholders (plus your own text) disappears when they are all empty, with one adjacent blank line.',
   placeholders: {
+    added_section: '${H.addedSection}',
+    removed_section: '${H.removedSection}',
+    heading: '${H.heading}',
     listing: '${H.addedLines.join(`\\n`)}',
     removed: '${H.removedTypes.map((K)=>`- ${K}`).join(`\\n`)}',
+    concurrency_note: '${H.concurrencyNote}',
+    ambient_note: '${H.ambientNote}',
   },
-  defaultBody: `Available agent types for the Agent tool:
-{{listing}}`,
+  defaultBody:
+    '{{added_section}}\n\n{{removed_section}}\n\n{{ambient_note}}\n\n{{concurrency_note}}',
+  // Pristine picks the heading by `isInitial`, appends a removal block plus
+  // the ambient suffix only when types were removed, adds the concurrency note
+  // only on an initial listing that asks for it, and returns nothing when no
+  // segment applies. A flat template showed "Available agent types…" on every
+  // later delta and dropped removals.
   apply(content, body, isSuppressed) {
     const found = findCaseBody(
       content,
@@ -536,21 +1238,81 @@ const AGENT_LISTING_INJECTION: ReminderInjection = {
       'Available agent types for the Agent tool:'
     );
     if (!found) {
+      if (isSuppressed && isSuppressedCase(content, 'agent_listing_delta'))
+        return content;
       console.error('patch: reminder agent-listing: failed to find case body');
       return null;
     }
-    const { bodyStart, bodyEnd } = found;
-    const caseBody = content.slice(bodyStart, bodyEnd);
-    const { arrayWrap, msgCtor } = discoverWrappers(caseBody);
-    const p = discoverDeltaParam(caseBody, 'addedLines');
-    const bodyForBuild = body.replace(/\$\{H\./g, `\${${p}.`);
-    const newBody = isSuppressed
-      ? 'return [];'
-      : `if(${p}.addedLines.length===0&&${p}.removedTypes.length===0)return [];return ${arrayWrap}([${msgCtor}({content:\`${bodyForBuild}\`,isMeta:!0})])`;
-    const newContent =
-      content.slice(0, bodyStart) + newBody + content.slice(bodyEnd);
-    showDiff(content, newContent, newBody, bodyStart, bodyEnd);
-    return newContent;
+    return applyBuilderCase(
+      content,
+      'agent-listing',
+      found,
+      body,
+      isSuppressed,
+      'addedLines',
+      (b, p) => {
+        const addedLocal = localFor(b, p, 'addedLines');
+        const removedLocal = localFor(b, p, 'removedTypes');
+        const added = segmentFor(b, addedLocal);
+        const removed = segmentFor(b, removedLocal);
+        const note = b.ifs.find(s =>
+          s.cond.includes(`${p}.showConcurrencyNote`)
+        );
+        // The heading is the block-local the added value interpolates
+        // (`let w=e.isInitial?"…":"…";b.push(`${w}\n…`)`).
+        let heading: string | null = null;
+        if (added) {
+          const names = new Map(
+            added.decls.map(d => {
+              const eq = d.indexOf('=');
+              return [d.slice(0, eq).trim(), d.slice(eq + 1)] as const;
+            })
+          );
+          const v = added.values[0];
+          const ref = v.startsWith('`')
+            ? interpolations(v.slice(1, -1)).find(x => names.has(x))
+            : undefined;
+          if (ref !== undefined)
+            heading = `(${added.cond})?(${names.get(ref)}):""`;
+        }
+        return [
+          {
+            token: '${H.addedSection}',
+            expr: added && guardedValue(added, 0),
+            optional: true,
+          },
+          {
+            token: '${H.removedSection}',
+            expr: removed && guardedValue(removed, 0),
+            optional: true,
+          },
+          { token: '${H.heading}', expr: heading, optional: true },
+          {
+            token: '${H.addedLines.join(`\\n`)}',
+            expr: guardedData(added, addedLocal),
+            optional: true,
+          },
+          {
+            token: '${H.removedTypes.map((K)=>`- ${K}`).join(`\\n`)}',
+            expr: guardedData(removed, removedLocal),
+            optional: true,
+          },
+          {
+            token: '${H.concurrencyNote}',
+            expr: note ? guardedValue(note, 0) : null,
+            optional: true,
+          },
+          {
+            token: '${H.ambientNote}',
+            expr:
+              removed && removed.values.length > 1
+                ? guardedValue(removed, 1)
+                : null,
+            optional: true,
+          },
+        ];
+      }
+    );
   },
 };
 
@@ -709,6 +1471,9 @@ const ULTRATHINK_INJECTION: ReminderInjection = {
 
 const DATE_CHANGE_INJECTION: ReminderInjection = {
   id: 'date-change',
+  previousDefaultBodies: [
+    "The date has changed. Today's date is now {{new_date}}. DO NOT mention this to the user explicitly because they are already aware.",
+  ],
   name: 'Date change reminder',
   description:
     'Fires when the system date rolls over mid-session. Conditional. Empty .md body = silent date rollover.',
@@ -916,6 +1681,9 @@ const TOOL_ERROR_INJECTION: ReminderInjection = {
 
 const LOCAL_CMD_CAVEAT_INJECTION: ReminderInjection = {
   id: 'local-command-caveat',
+  previousDefaultBodies: [
+    'Caveat: The messages below were generated by the user while running local commands. DO NOT respond to these messages or otherwise consider them in your response unless the user explicitly asks you to.',
+  ],
   name: 'Local-command caveat wrapper',
   description:
     'Wraps output of !shell-command with anti-confusion framing. Empty .md body = no caveat (security-relevant; suppressing means the model may misinterpret command output as user input).',
@@ -982,17 +1750,37 @@ const COMPACT_FILE_REF_INJECTION: ReminderInjection = {
 
 const PDF_REF_INJECTION: ReminderInjection = {
   id: 'pdf-reference',
+  previousDefaultBodies: [
+    'PDF file: {{filename}} ({{page_count}} pages, {{file_size}}). This PDF is too large to read all at once. You MUST use the {{read_tool}} tool with the pages parameter to read specific page ranges (e.g., pages: "1-5"). Do NOT call {{read_tool}} without the pages parameter or it will fail. Start by reading the first few pages to understand the structure, then read more as needed. Maximum 20 pages per request.',
+  ],
   name: 'PDF too-large note',
   description:
-    'Conditional note when a referenced PDF is too large for direct read. Empty .md body = silent omission.',
+    'Conditional note when a referenced PDF is too large for direct read, or the model cannot take it whole. Empty .md body = silent omission. ' +
+    'Use {{page_count_text}} ("N pages" / "page count unknown"), not "{{page_count}} pages", which prints "null pages" when the count is unknown. ' +
+    '{{unreadable_reason}} is pristine\'s refusal sentence for a model that cannot be sent the PDF, else "This PDF is too large to read all at once."; ' +
+    '{{model_refused_note}} is only the refusal sentence (empty otherwise, so a line holding only it disappears). The readable-whole branch stays pristine.',
   placeholders: {
     filename: '${H.filename}',
     page_count: '${H.pageCount}',
+    page_count_text: '${H.pageCountText}',
     file_size: '${l7(H.fileSize)}',
     read_tool: '${uq}',
+    model_refused_note: '${H.modelRefusedNote}',
+    unreadable_reason: '${H.unreadableReason}',
   },
+  // Renders correctly on every branch the body replaces: {{page_count_text}}
+  // never prints "null pages" and {{unreadable_reason}} switches to the
+  // refusal sentence for a model that cannot take the PDF whole.
   defaultBody:
-    'PDF file: {{filename}} ({{page_count}} pages, {{file_size}}). This PDF is too large to read all at once. You MUST use the {{read_tool}} tool with the pages parameter to read specific page ranges (e.g., pages: "1-5"). Do NOT call {{read_tool}} without the pages parameter or it will fail. Start by reading the first few pages to understand the structure, then read more as needed. Maximum 20 pages per request.',
+    'PDF file: {{filename}} ({{page_count_text}}, {{file_size}}). {{unreadable_reason}} You MUST use the {{read_tool}} tool with the pages parameter to read specific page ranges (e.g., pages: "1-5"). Do NOT call {{read_tool}} without the pages parameter or it will fail. Start by reading the first few pages to understand the structure, then read more as needed. Maximum 20 pages per request.',
+  // One body replaces EVERY too-large / model-refused / page-count-unknown
+  // branch of pristine's final return; the readableWhole branch (a PDF the
+  // model can read whole) stays pristine. A body therefore renders for PDFs
+  // whose pageCount is null — use {{page_count_text}} ("page count unknown" |
+  // "N page(s)") rather than "{{page_count}} pages", which prints "null pages".
+  // {{model_refused_note}} is pristine's "this model cannot be sent a PDF
+  // file…" sentence when the model refused the whole file, else empty; a line
+  // holding only it drops when empty.
   apply(content, body, isSuppressed) {
     return applySimpleEntry(
       content,
@@ -1000,11 +1788,14 @@ const PDF_REF_INJECTION: ReminderInjection = {
       [
         propSlot('${H.filename}', 'filename'),
         propSlot('${H.pageCount}', 'pageCount'),
+        pageCountTextSlot('${H.pageCountText}'),
         propSlot('${l7(H.fileSize)}', 'fileSize'),
         // The Read tool name is a bare module-level identifier here (`${Qs}`),
         // distinguished from the two byte-size/page slots by not referencing
         // the handler parameter at all.
         toolNameSlot('${uq}'),
+        modelRefusedSlot('${H.modelRefusedNote}'),
+        unreadableReasonSlot('${H.unreadableReason}'),
       ],
       body,
       isSuppressed
@@ -1014,9 +1805,11 @@ const PDF_REF_INJECTION: ReminderInjection = {
 
 const EDITED_TEXT_FILE_INJECTION: ReminderInjection = {
   id: 'edited-text-file',
+  previousDefaultBodies: [
+    "Note: {{filename}} changed on disk since you last read it. That's usually deliberate, so take it as the current state rather than reverting it; if the change looks wrong, say so rather than undoing it yourself \u2014 otherwise no need to call it out. Here are the relevant changes (shown with line numbers):\n{{snippet}}",
+    "Note: {{filename}} was modified, either by the user or by a linter. This change was intentional, so make sure to take it into account as you proceed (ie. don't revert it unless the user asks you to). Don't tell the user this, since they are already aware. Here are the relevant changes (shown with line numbers):\n{{snippet}}",
+  ],
   name: 'Edited-text-file post-edit note',
-  description:
-    'Conditional note injected after a file is edited (by user or linter). Empty .md body = silent edits.',
   // Consumes the whole ternary, including the branch the externally-modified
   // named prompt anchors on. Both named prompts must be shadowed: the
   // budget-exceeded one matches the spliced prefix a second time, and
@@ -1038,51 +1831,75 @@ const EDITED_TEXT_FILE_INJECTION: ReminderInjection = {
   placeholders: {
     filename: '${H.filename}',
     snippet: '${H.snippet}',
+    changes: '${H.changes}',
+    read_tool: '${H.readTool}',
   },
   // CC 2.1.234 rewrote this entirely and hoisted the shared opening sentence
-  // into a local const; this mirrors the non-empty-snippet branch, which is the
-  // one a single-template override collapses to.
+  // into a local const. {{changes}} carries both branches that follow it.
   defaultBody:
-    "Note: {{filename}} changed on disk since you last read it. That's usually deliberate, so take it as the current state rather than reverting it; if the change looks wrong, say so rather than undoing it yourself \u2014 otherwise no need to call it out. Here are the relevant changes (shown with line numbers):\n{{snippet}}",
+    "Note: {{filename}} changed on disk since you last read it. That's usually deliberate, so take it as the current state rather than reverting it; if the change looks wrong, say so rather than undoing it yourself \u2014 otherwise no need to call it out. {{changes}}",
+  description:
+    'Conditional note injected after a file changes on disk (by the user or a linter). Empty .md body = silent edits. ' +
+    'Pristine has two branches: with a diff snippet ("Here are the relevant changes (shown with line numbers):" + the snippet) and without one, when the snippet budget ran out ("The changes are not shown here; use <Read> if you need the current content."). ' +
+    '{{changes}} is that pristine tail for whichever branch fires; {{snippet}} is the bare snippet (empty on the no-snippet branch, so a line holding only it disappears); {{read_tool}} is the Read tool name.',
   apply(content, body, isSuppressed) {
     // Method 1 (2.1.234+): the shared opening sentence is hoisted into a local
     // const and both ternary branches interpolate it, and the filename runs
     // through the reminder escaper. Anchored on the key plus the code shape, so
     // the (freely reworded) prose in either branch does not break it.
     const hoisted =
-      /edited_text_file:\(([$\w]+)\)=>\{let ([$\w]+)=`((?:[^`\\]|\\.)*)`;return ([$\w]+)\(\[([$\w]+)\(\{content:\1\.snippet===""\?`(?:[^`\\]|\\.)*`:`(?:[^`\\]|\\.)*`,isMeta:!0\}\)\]\)\}/;
+      /edited_text_file:\(([$\w]+)\)=>\{let ([$\w]+)=(`(?:[^`\\]|\\.)*`);return ([$\w]+)\(\[([$\w]+)\(\{content:\1\.snippet===""\?(`(?:[^`\\]|\\.)*`):(`(?:[^`\\]|\\.)*`),isMeta:!0\}\)\]\)\}/;
     const hoistedMatch = content.match(hoisted);
     if (hoistedMatch && hoistedMatch.index !== undefined) {
-      const [, hParam, , prefixTpl, o5Name, j6Name] = hoistedMatch;
+      const [
+        region,
+        hParam,
+        prefixVar,
+        prefixTpl,
+        o5Name,
+        j6Name,
+        empty,
+        full,
+      ] = hoistedMatch;
       let replacement: string;
       if (isSuppressed) {
         replacement = `edited_text_file:(${hParam})=>[]`;
       } else {
-        // The filename slot lives in the hoisted prefix, the snippet slot in
-        // the second branch; resolve each against the whole matched region.
-        const region = hoistedMatch[0];
-        const fileExpr = slotExpr(prefixTpl, hParam, 'filename');
-        const snippetExpr = slotExpr(region, hParam, 'snippet');
-        if (
-          (body.includes('${H.filename}') && fileExpr === null) ||
-          (body.includes('${H.snippet}') && snippetExpr === null)
-        ) {
-          console.error(
-            'patch: reminder edited-text-file: no pristine expression for a placeholder'
-          );
-          return null;
-        }
-        const bodyForBuild = body
-          .split('${H.filename}')
-          .join(`\${${fileExpr}}`)
-          .split('${H.snippet}')
-          .join(`\${${snippetExpr}}`);
-        replacement = `edited_text_file:(${hParam})=>${o5Name}([${j6Name}({content:\`${bodyForBuild}\`,isMeta:!0})])`;
+        // Each branch opens with the hoisted sentence (`${n} …`); {{changes}}
+        // is what follows it, under pristine's own `snippet===""` test.
+        const lead = new RegExp(`^\`\\$\\{${escapeRe(prefixVar)}\\}\\s*`);
+        const changes =
+          lead.test(empty) && lead.test(full)
+            ? `${hParam}.snippet===""?${empty.replace(lead, '`')}:${full.replace(lead, '`')}`
+            : null;
+        const resolved = resolveSlots('edited-text-file', body, [
+          {
+            token: '${H.filename}',
+            expr: slotExpr(prefixTpl, hParam, 'filename'),
+          },
+          {
+            token: '${H.snippet}',
+            expr: slotExpr(region, hParam, 'snippet'),
+            optional: true,
+          },
+          { token: '${H.changes}', expr: changes },
+          {
+            token: '${H.readTool}',
+            expr:
+              interpolations(empty.slice(1, -1)).find(
+                x => /^[$\w]+$/.test(x) && x !== prefixVar && x !== hParam
+              ) ?? null,
+          },
+        ]);
+        if (resolved === null) return null;
+        // The hoisted const stays declared: a branch-specific segment may still
+        // reference it.
+        replacement = `edited_text_file:(${hParam})=>{let ${prefixVar}=${prefixTpl};return ${emitReminder(o5Name, j6Name, body, resolved)}}`;
       }
       const newContent =
         content.slice(0, hoistedMatch.index) +
         replacement +
-        content.slice(hoistedMatch.index + hoistedMatch[0].length);
+        content.slice(hoistedMatch.index + region.length);
       showDiff(
         content,
         newContent,
@@ -1100,10 +1917,23 @@ const EDITED_TEXT_FILE_INJECTION: ReminderInjection = {
       m => {
         const [, hParam, o5Name, j6Name] = m;
         if (isSuppressed) return `edited_text_file:(${hParam})=>[]`;
-        const bodyForBuild = body
-          .replace(/\$\{H\.filename\}/g, `\${${hParam}.filename}`)
-          .replace(/\$\{H\.snippet\}/g, `\${${hParam}.snippet}`);
-        return `edited_text_file:(${hParam})=>${o5Name}([${j6Name}({content:\`${bodyForBuild}\`,isMeta:!0})])`;
+        // This shape spells the Read tool by name, so {{read_tool}} is that
+        // literal and {{changes}} restates the two matched branch tails.
+        const slots: ResolvedSlot[] = [
+          {
+            token: '${H.filename}',
+            expr: `${hParam}.filename`,
+            optional: false,
+          },
+          { token: '${H.snippet}', expr: `${hParam}.snippet`, optional: true },
+          {
+            token: '${H.changes}',
+            expr: `${hParam}.snippet===""?\`The diff was omitted because other modified files in this turn already exceeded the snippet budget; use the Read tool if you need the current content.\`:\`Here are the relevant changes (shown with line numbers):\n\${${hParam}.snippet}\``,
+            optional: false,
+          },
+          { token: '${H.readTool}', expr: '"Read"', optional: false },
+        ];
+        return `edited_text_file:(${hParam})=>${emitReminder(o5Name, j6Name, body, slots)}`;
       },
       'edited-text-file',
       c => /edited_text_file:\([$\w]+\)=>\[\]/.test(c)
@@ -1352,20 +2182,38 @@ const AGENT_MENTION_INJECTION: ReminderInjection = {
 
 const MEMORY_UPDATE_INJECTION: ReminderInjection = {
   id: 'memory-update',
+  previousDefaultBodies: [
+    '{{source}} updated your memory directory: {{summary}}\nFiles changed: {{paths}}\nYour loaded copy of {{in_context_paths}} is now stale relative to disk \u2014 Read it again if you need current contents.\nThis is ambient context \u2014 do not narrate it to the user unless they ask or it is directly relevant to their request.',
+  ],
   name: 'Memory-update reminder',
   description:
-    'Fires after dream / consolidation writes new memory files. Conditional. Empty .md body = silent updates.',
+    'Fires after dream / consolidation writes new memory files. Conditional. Empty .md body = silent updates. ' +
+    '{{source}} names the process that wrote; {{summary}} is its summary. ' +
+    '{{files_changed}} is the "Files changed: …" line and {{stale_copy}} the "Your loaded copy of … is now stale" line, each empty when it does not apply; ' +
+    '{{paths}} / {{in_context_paths}} are the bare escaped path lists for your own wording. ' +
+    'A line holding only such optional placeholders (plus your own text) disappears when they are all empty. ' +
+    '{{ambient_note}} is the "This is ambient context" suffix. The sync_unsaved summary-only branch always stays pristine.',
   // The stale-copy sentence is part of this reminder's body, so this patch
   // splices the region the named prompt would otherwise anchor on.
   shadows: ['system-reminder-memory-update-loaded-copy-stale'],
   placeholders: {
-    source: '${YT3[H.source]}',
+    source: '${H.sourceLabel}',
     summary: '${H.summary}',
+    files_changed: '${H.filesChangedLine}',
+    stale_copy: '${H.staleCopyLine}',
     paths: '${H.paths.join(", ")}',
     in_context_paths: '${H.inContextPaths.join(", ")}',
+    ambient_note: '${H.ambientNote}',
   },
   defaultBody:
-    '{{source}} updated your memory directory: {{summary}}\nFiles changed: {{paths}}\nYour loaded copy of {{in_context_paths}} is now stale relative to disk — Read it again if you need current contents.\nThis is ambient context — do not narrate it to the user unless they ask or it is directly relevant to their request.',
+    '{{source}} updated your memory directory: {{summary}}\n{{files_changed}}\n{{stale_copy}}\n{{ambient_note}}',
+  // CC builds this reminder from pushes: a header, "Files changed" only when
+  // paths is non-empty, the stale-copy line only when inContextPaths is, each
+  // list `ei()`-guarded and escaped (`uu`), then the ambient suffix. One flat
+  // template rendered "Files changed: " with nothing after it on most updates,
+  // and its `${YT3[H.source]}` label went stale when the map became a function
+  // (`Zvn(e.source)`, 2.1.291; `Ggn` in 2.1.288): the splice then read an
+  // unbound name and threw on every update while --apply reported success.
   apply(content, body, isSuppressed) {
     const found = findCaseBody(
       content,
@@ -1373,26 +2221,60 @@ const MEMORY_UPDATE_INJECTION: ReminderInjection = {
       'updated your memory directory'
     );
     if (!found) {
+      if (isSuppressed && isSuppressedCase(content, 'memory_update'))
+        return content;
       console.error('patch: reminder memory-update: failed to find case body');
       return null;
     }
-    const { bodyStart, bodyEnd } = found;
-    const caseBody = content.slice(bodyStart, bodyEnd);
-    const { arrayWrap, msgCtor } = discoverWrappers(caseBody);
-    const p = discoverDeltaParam(caseBody, 'summary');
-    // The `${YT3[H.source]}` placeholder hardcodes both the delta param and the
-    // source-label map var; discover the map var (Mac: YT3, linux-arm64: Xj3).
-    const sourceMap = caseBody.match(/\$\{([$\w]+)\[/)?.[1] ?? 'YT3';
-    const bodyForBuild = body
-      .replace(/\$\{YT3\[H\.source\]\}/g, `\${${sourceMap}[${p}.source]}`)
-      .replace(/\$\{H\./g, `\${${p}.`);
-    const newBody = isSuppressed
-      ? 'return [];'
-      : `return ${arrayWrap}([${msgCtor}({content:\`${bodyForBuild}\`,isMeta:!0})])`;
-    const newContent =
-      content.slice(0, bodyStart) + newBody + content.slice(bodyEnd);
-    showDiff(content, newContent, newBody, bodyStart, bodyEnd);
-    return newContent;
+    return applyBuilderCase(
+      content,
+      'memory-update',
+      found,
+      body,
+      isSuppressed,
+      'summary',
+      (b, p, caseBody) => {
+        // The source label is a call (`Zvn(e.source)`) or a map read
+        // (`YT3[e.source]`) depending on the build; either way it is the one
+        // interpolation built from `<param>.source`.
+        const sourceRe = new RegExp(
+          `^(?:(?:[$\\w]+\\()+${escapeRe(p)}\\.source\\)+|[$\\w]+\\[${escapeRe(p)}\\.source\\])$`
+        );
+        const source =
+          interpolations(caseBody).find(x => sourceRe.test(x)) ?? null;
+        const pathsLocal = localFor(b, p, 'paths');
+        const staleLocal = localFor(b, p, 'inContextPaths');
+        const files = segmentFor(b, pathsLocal);
+        const stale = segmentFor(b, staleLocal);
+        return [
+          { token: '${H.sourceLabel}', expr: source },
+          // The pre-2.1.291 token, still produced by older .md bodies.
+          { token: '${YT3[H.source]}', expr: source },
+          { token: '${H.summary}', expr: slotExpr(caseBody, p, 'summary') },
+          {
+            token: '${H.filesChangedLine}',
+            expr: files && guardedValue(files, 0),
+            optional: true,
+          },
+          {
+            token: '${H.staleCopyLine}',
+            expr: stale && guardedValue(stale, 0),
+            optional: true,
+          },
+          {
+            token: '${H.paths.join(", ")}',
+            expr: guardedData(files, pathsLocal),
+            optional: true,
+          },
+          {
+            token: '${H.inContextPaths.join(", ")}',
+            expr: guardedData(stale, staleLocal),
+            optional: true,
+          },
+          { token: '${H.ambientNote}', expr: b.tail[0] ?? null },
+        ];
+      }
+    );
   },
 };
 
@@ -1429,15 +2311,25 @@ const VERIFY_PLAN_INJECTION: ReminderInjection = {
     }
     const { bodyStart, bodyEnd } = found;
     const caseBody = content.slice(bodyStart, bodyEnd);
-    const { arrayWrap, msgCtor } = discoverWrappers(caseBody);
-    // `${J7}` placeholder hardcodes the plan-verifier tool var (Mac: J7,
-    // linux-arm64: J_); discover it from the pristine "NOT the X tool" phrase.
-    const verifierTool =
-      caseBody.match(/\(NOT the \$\{([$\w]+)\} tool/)?.[1] ?? 'J7';
-    const bodyForBuild = body.replace(/\$\{J7\}/g, `\${${verifierTool}}`);
-    const newBody = isSuppressed
-      ? 'return [];'
-      : `let K=\`${bodyForBuild}\`;return ${arrayWrap}([${msgCtor}({content:K,isMeta:!0})])`;
+    let newBody = 'return [];';
+    if (!isSuppressed) {
+      const wrappers = discoverWrappers(caseBody);
+      // `${J7}` stands for the plan-verifier tool var (Mac: J7, linux-arm64:
+      // J_); discover it from the pristine "NOT the X tool" phrase.
+      const verifierTool =
+        caseBody.match(/\(NOT the \$\{([$\w]+)\} tool/)?.[1] ?? null;
+      if (
+        wrappers === null ||
+        (body.includes('${J7}') && verifierTool === null)
+      ) {
+        console.error(
+          'patch: reminder verify-plan-reminder: no pristine wrapper or verifier-tool expression'
+        );
+        return null;
+      }
+      const bodyForBuild = body.split('${J7}').join(`\${${verifierTool}}`);
+      newBody = `let K=\`${bodyForBuild}\`;return ${wrappers.arrayWrap}([${wrappers.msgCtor}({content:K,isMeta:!0})])`;
+    }
     const newContent =
       content.slice(0, bodyStart) + newBody + content.slice(bodyEnd);
     showDiff(content, newContent, newBody, bodyStart, bodyEnd);
@@ -1507,22 +2399,31 @@ const BUDGET_USD_INJECTION: ReminderInjection = {
 
 const TASK_LIST_REMINDER_INJECTION: ReminderInjection = {
   id: 'task-list-reminder',
+  previousDefaultBodies: [
+    "The task tools haven't been used to track work in this session yet. Now is a good time to consider whether the work warrants using them. Use this to demonstrate thoroughness, organize complex tasks, and avoid losing track of multi-step work (e.g. multi-bug fixes, feature implementations, etc). Don't use them on small or trivial tasks where they would feel intrusive.\n\nIf you've already started work without using the task tools, use `TaskCreate` to add tasks for the work you've already completed (with status `completed`) and a task for whatever you're currently working on (with status `in_progress`). Remember, in a single response, never have more than one task `in_progress` (the one you're actively working on) and you should mark a task as `completed` immediately after starting and finishing the work (don't wait until you're done). Also consider cleaning up the task list if it has become stale. Only use these if relevant to the current work. This is just a gentle reminder - ignore if not applicable.\n\nHere are the existing tasks:\n\n{{tasks}}",
+  ],
   name: 'Task-list status reminder',
   description:
-    'Fires every turn while TaskList has entries. Wraps the current task list with reminder text about using TaskCreate. Empty .md = suppress entirely.',
+    'Periodic nudge, while the task tools sit unused, to consider tracking work with them. Empty .md = suppress entirely. ' +
+    'The task list is usually EMPTY: {{existing_tasks}} is pristine\'s "Here are the existing tasks:" block and {{tasks}} the bare list ("#id. [status] subject" lines), both empty when there are no tasks, so a line holding only them (plus your own text) disappears. ' +
+    '{{task_create_tool}} and {{task_update_tool}} are the tool names.',
   // Rewrites the task-reminder region to new phrasing before the named prompt
   // (anchored on the old phrasing) runs, leaving it unmatchable.
   shadows: ['system-reminder-task-tools-reminder'],
   placeholders: {
     tasks: '${q}',
+    existing_tasks: '${H.existingTasks}',
+    task_create_tool: '${H.taskCreateTool}',
+    task_update_tool: '${H.taskUpdateTool}',
   },
-  defaultBody: `The task tools haven't been used to track work in this session yet. Now is a good time to consider whether the work warrants using them. Use this to demonstrate thoroughness, organize complex tasks, and avoid losing track of multi-step work (e.g. multi-bug fixes, feature implementations, etc). Don't use them on small or trivial tasks where they would feel intrusive.
+  defaultBody: `The task tools haven't been used recently. If you're working on tasks that would benefit from tracking progress, consider using {{task_create_tool}} to add new tasks and {{task_update_tool}} to update task status (set to in_progress when starting, completed when done). Also consider cleaning up the task list if it has become stale. Only use these if relevant to the current work. This is just a gentle reminder - ignore if not applicable.
 
-If you've already started work without using the task tools, use \`TaskCreate\` to add tasks for the work you've already completed (with status \`completed\`) and a task for whatever you're currently working on (with status \`in_progress\`). Remember, in a single response, never have more than one task \`in_progress\` (the one you're actively working on) and you should mark a task as \`completed\` immediately after starting and finishing the work (don't wait until you're done). Also consider cleaning up the task list if it has become stale. Only use these if relevant to the current work. This is just a gentle reminder - ignore if not applicable.
-
-Here are the existing tasks:
-
-{{tasks}}`,
+{{existing_tasks}}`,
+  // The case's own preamble is kept verbatim, feature gate included
+  // (`if(!vQ())return[]`; two-clause `if(!ZI()||YY())` in 2.1.205). An earlier
+  // version re-emitted the gate from a single-identifier regex with a hardcoded
+  // fallback name, which a later build reused for a class — every render threw.
+  // Pristine appends the task block only when the list is non-empty.
   apply(content, body, isSuppressed) {
     const found = findCaseBody(
       content,
@@ -1530,34 +2431,54 @@ Here are the existing tasks:
       'Here are the existing tasks'
     );
     if (!found) {
+      if (isSuppressed && isSuppressedCase(content, 'task_reminder'))
+        return content;
       console.error(
         'patch: reminder task-list-reminder: failed to find case body'
       );
       return null;
     }
-    const { bodyStart, bodyEnd } = found;
-    const caseBodyText = content.slice(bodyStart, bodyEnd);
-    const { arrayWrap, msgCtor } = discoverWrappers(caseBodyText);
-    const guard = discoverFeatureGuard(caseBodyText);
-    if (guard === null) {
-      console.error(
-        'patch: reminder task-list-reminder: failed to find the feature-gate guard'
-      );
-      return null;
-    }
-    const p = discoverDeltaParam(caseBodyText, 'content');
-    const newBody = isSuppressed
-      ? 'return [];'
-      : `if(${guard})return[];let q=${p}.content.map((O)=>\`#\${O.id}. [\${O.status}] \${O.subject}\`).join(\`\\n\`);return ${arrayWrap}([${msgCtor}({content:\`${body}\`,isMeta:!0})])`;
-    const newContent =
-      content.slice(0, bodyStart) + newBody + content.slice(bodyEnd);
-    showDiff(content, newContent, newBody, bodyStart, bodyEnd);
-    return newContent;
+    return applyBuilderCase(
+      content,
+      'task-list-reminder',
+      found,
+      body,
+      isSuppressed,
+      'content',
+      (b, p) => {
+        const listRe = new RegExp(`^${escapeRe(p)}\\.content\\.map\\(`);
+        const list =
+          [...b.locals].find(([, init]) => listRe.test(init.trim()))?.[0] ??
+          null;
+        const block = segmentFor(b, list);
+        // The two tool names are the intro's bare module-scope
+        // interpolations, create then update.
+        const intro = b.locals.get(b.arr) ?? '';
+        const tools = intro.startsWith('`')
+          ? interpolations(intro.slice(1, -1)).filter(
+              x => /^[$\w]+$/.test(x) && x !== p && !b.locals.has(x)
+            )
+          : [];
+        return [
+          { token: '${q}', expr: list, optional: true },
+          {
+            token: '${H.existingTasks}',
+            expr: block && guardedValue(block, 0),
+            optional: true,
+          },
+          { token: '${H.taskCreateTool}', expr: tools[0] ?? null },
+          { token: '${H.taskUpdateTool}', expr: tools[1] ?? null },
+        ];
+      }
+    );
   },
 };
 
 const TASK_NOTIFICATION_FRAMING_INJECTION: ReminderInjection = {
   id: 'task-notification-framing',
+  previousDefaultBodies: [
+    '[SYSTEM NOTIFICATION - NOT USER INPUT]\nThis is an automated background-task event, NOT a message from the user.\nDo NOT interpret this as user acknowledgement, confirmation, or response to any pending question.\n\n{{content}}',
+  ],
   name: 'Task-notification framing wrapper',
   description:
     'The "[SYSTEM NOTIFICATION - NOT USER INPUT]" text wrapping background-task event content. Fires when a run_in_background completes/errors. Empty .md = no framing (just the content).',
@@ -1634,6 +2555,9 @@ No human input has been received since the last genuine user message in this con
 
 const USER_NEW_MSG_INJECTION: ReminderInjection = {
   id: 'user-sent-new-message',
+  previousDefaultBodies: [
+    "The user sent a new message while you were working:\n{{message}}\n\nIMPORTANT: After completing your current task, you MUST address the user's message above. Do not ignore it.",
+  ],
   name: 'User-sent-new-message wrapper',
   description:
     'Wraps a user message that arrives mid-turn. Carries the "This is how Claude Code surfaces messages the user sends mid-turn … Address the message above as you continue this turn" framing (reworded in CC 2.1.205 from the old imperative "IMPORTANT: … you MUST address … Do not ignore it"). Empty .md = no wrapping (just the message text).',
@@ -1735,6 +2659,7 @@ const MCP_PER_SERVER_ROUTER_INJECTION: ReminderInjection = {
   placeholders: {},
   defaultBody:
     'This file is a marker that enables per-MCP-server overrides. Edit per-server content in mcp-<server-name>.md alongside this file. Leave this file with content (any content) to enable routing; empty it to disable.',
+  bodyIsMarker: true,
   apply(content, _body, isSuppressed) {
     if (isSuppressed) return content;
     // The loop body is a comma expression whose length is Anthropic's business,
@@ -1766,6 +2691,22 @@ const MCP_PER_SERVER_ROUTER_INJECTION: ReminderInjection = {
     ]
       .map(m => ';' + m[0].split(`${jVar}.instructions`).join('_c'))
       .join('');
+    // CC 2.1.291 appends client-side blocks (computer-use, claude-in-chrome)
+    // to their server's entry in a second loop over `{serverName,block}`
+    // records, creating the entry when the first loop left none — so a server
+    // whose .md is empty came back carrying only its extra block. Suppression
+    // covers that loop too; a custom body still leaves the extra block alone.
+    // The search runs to the end of the enclosing function body: the loop is
+    // a sibling statement of the first one, wherever CC puts it.
+    const after = match.index + fullMatch.length;
+    const rest = content.slice(after, topLevelIndex(content, after, ''));
+    const extraLoop = rest.match(
+      /^[^]*?for\(let ([$\w]+) of [$\w]+\)\{(?=if\(![$\w]+\.has\(\1\.serverName\)\))/
+    );
+    if (!extraLoop && rest.includes('.serverName'))
+      console.log(
+        "patch: reminder mcp-per-server-router: client-side block loop has a new shape; an emptied mcp-<name>.md will not drop that server's extra block"
+      );
     const replacement =
       `function __tweakccMcpOverride(_n,_d){try{` +
       `let _f=require('fs'),_p=require('os').homedir()+'/.tweakcc/system-reminders/mcp-'+_n+'.md';` +
@@ -1780,17 +2721,18 @@ const MCP_PER_SERVER_ROUTER_INJECTION: ReminderInjection = {
       `let _c=__tweakccMcpOverride(${jVar}.name,${jVar}.instructions);` +
       `if(_c){${mapVar}.set(${jVar}.name,\`## \${${jVar}.name}\n\${_c}\`)${extraRebound}}` +
       `}`;
+    let tail = '';
+    let end = after;
+    if (extraLoop) {
+      const rec = extraLoop[1];
+      tail =
+        extraLoop[0] +
+        `if(__tweakccMcpOverride(${rec}.serverName,"")===null)continue;`;
+      end = after + extraLoop[0].length;
+    }
     const newContent =
-      content.slice(0, match.index) +
-      replacement +
-      content.slice(match.index + fullMatch.length);
-    showDiff(
-      content,
-      newContent,
-      replacement,
-      match.index,
-      match.index + fullMatch.length
-    );
+      content.slice(0, match.index) + replacement + tail + content.slice(end);
+    showDiff(content, newContent, replacement + tail, match.index, end);
     return newContent;
   },
 };
@@ -1825,6 +2767,38 @@ const OUTPUT_TOKEN_USAGE_INJECTION: ReminderInjection = {
       c => /output_token_usage:\([$\w]+\)=>\[\]/.test(c)
     );
   },
+};
+
+// An unedited .md — its body equals the entry's current defaultBody or one it
+// shipped earlier — leaves the pristine handler untouched. A defaultBody is one
+// flat rendering of a handler that CC may branch, rewrite or reword at any
+// release; splicing it would flatten those branches into the stub's single one
+// and pin prose CC has since changed (claudemd-context's suffix, the old
+// mcp-instructions stub that dropped the disconnect notice). Only a body the
+// user actually edited is worth the splice. Suppression is never a no-op.
+//
+// The comparison keeps every meaningful character (agent-mention's stock body
+// ends in a space): it only folds CRLF line endings and drops the one trailing
+// newline the .md format adds.
+const normalizeBody = (body: string): string =>
+  normalizeLineEndings(body).replace(/\n$/, '');
+
+const withStockBodyNoop = (injection: ReminderInjection): ReminderInjection => {
+  if (injection.bodyIsMarker) return injection;
+  let stock: Set<string> | null = null;
+  return {
+    ...injection,
+    apply(content, body, isSuppressed) {
+      stock ??= new Set(
+        [injection.defaultBody, ...(injection.previousDefaultBodies ?? [])]
+          .map(b => substitutePlaceholders(b, injection.placeholders))
+          .filter(r => r.errors.length === 0)
+          .map(r => normalizeBody(r.result))
+      );
+      if (!isSuppressed && stock.has(normalizeBody(body))) return content;
+      return injection.apply(content, body, isSuppressed);
+    },
+  };
 };
 
 export const REMINDER_REGISTRY: ReminderInjection[] = [
@@ -1863,7 +2837,7 @@ export const REMINDER_REGISTRY: ReminderInjection[] = [
   USER_NEW_MSG_INJECTION,
   STOP_HOOK_GOAL_INJECTION,
   MCP_PER_SERVER_ROUTER_INJECTION,
-];
+].map(withStockBodyNoop);
 
 const discoverMcpServerNames = async (): Promise<string[]> => {
   const candidates = [
@@ -1968,7 +2942,12 @@ export const applySystemReminderOverrides = async (
 
     let state: ReminderApplyResult['state'];
     if (override.isSuppressed) state = 'suppressed';
-    else if (override.body === injection.defaultBody.trim()) state = 'default';
+    else if (
+      [injection.defaultBody, ...(injection.previousDefaultBodies ?? [])].some(
+        b => normalizeBody(b) === normalizeBody(override.body)
+      )
+    )
+      state = 'default';
     else state = 'override';
 
     results.push({

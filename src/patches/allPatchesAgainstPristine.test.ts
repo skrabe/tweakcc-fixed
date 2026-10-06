@@ -646,62 +646,101 @@ describe.skipIf(skipReason !== null)('every patch vs. pristine cli.js', () => {
 // and reworded two bodies, breaking six of these at once — and the first report
 // came from a user (skrabe/lobotomized-claude-code#25), because `--apply` only
 // runs a reminder whose `.md` exists locally and nothing else exercised them.
-// Each entry is driven twice: with its own defaultBody (the vanilla path) and
-// suppressed (the empty-body path), against the real pristine bundle.
+// An unedited body (the entry's own defaultBody) leaves pristine untouched, so
+// it no longer reaches the anchor. Each entry is therefore driven three ways:
+// its stock body (must be a no-op), an edited body (the stock body plus a
+// probe line, which must change the file, carry the probe into it and splice
+// parseable JS), and
+// suppressed (the empty-body path, also parse-checked).
 describe.skipIf(skipReason !== null)(
   'every system-reminder injection vs. pristine cli.js',
   () => {
+    const PROBE_TEXT = 'Probe line from the pristine gate.';
+    const PROBE = `\n${PROBE_TEXT}`;
+    // Reminders whose feature this build does not ship: an edited body has
+    // nothing to splice, so returning the file unchanged is correct.
+    const EXPECTED_REMINDER_NOOP: Record<string, string> = {
+      'thinking-reminder': 'no thinking_reminder handler in this build',
+      'verify-plan-reminder': 'CC >= 2.1.187 removed the verify-plan case body',
+    };
     const results = new Map<
       string,
-      { body: string | null; suppressed: string | null }
+      {
+        stock: string | null;
+        edited: string | null;
+        suppressed: string | null;
+        editedParse: string | null;
+        suppressedParse: string | null;
+      }
     >();
 
     beforeAll(() => {
+      const scratch = fs.mkdtempSync(
+        path.join(os.tmpdir(), 'tweakcc-pristine-reminders-')
+      );
+      const oracle = makeOracle(bun!, scratch, pristine!.source);
       const source = pristine!.source;
+      const run = (
+        id: string,
+        label: string,
+        f: () => string | null
+      ): string | null => {
+        try {
+          return f();
+        } catch (error) {
+          console.error(
+            `reminder ${id} threw (${label}): ${(error as Error).message}`
+          );
+          return null;
+        }
+      };
+      const parse = (r: string | null, label: string): string | null =>
+        r === null || r === source ? null : oracle.check(r, label);
       for (const entry of REMINDER_REGISTRY) {
         const { result: body } = substitutePlaceholders(
           entry.defaultBody,
           entry.placeholders
         );
-        let applied: string | null;
-        let suppressed: string | null;
-        try {
-          applied = entry.apply(source, body, false);
-        } catch (error) {
-          applied = null;
-          console.error(
-            `reminder ${entry.id} threw: ${(error as Error).message}`
-          );
-        }
-        try {
-          suppressed = entry.apply(source, body, true);
-        } catch (error) {
-          suppressed = null;
-          console.error(
-            `reminder ${entry.id} threw (suppressed): ${(error as Error).message}`
-          );
-        }
-        results.set(entry.id, { body: applied, suppressed });
+        const stock = run(entry.id, 'stock', () =>
+          entry.apply(source, body, false)
+        );
+        const edited = run(entry.id, 'edited', () =>
+          entry.apply(source, body + PROBE, false)
+        );
+        const suppressed = run(entry.id, 'suppressed', () =>
+          entry.apply(source, body, true)
+        );
+        results.set(entry.id, {
+          stock,
+          edited,
+          suppressed,
+          editedParse: parse(edited, `reminder-${entry.id}-edited`),
+          suppressedParse: parse(suppressed, `reminder-${entry.id}-suppressed`),
+        });
       }
       const rows = REMINDER_REGISTRY.map(e => {
         const r = results.get(e.id)!;
         const label = (v: string | null) =>
           v === null ? 'NULL' : v === pristine!.source ? 'no-op' : 'applied';
-        return `  ${e.id.padEnd(40)} default=${label(r.body).padEnd(8)} suppressed=${label(r.suppressed)}`;
+        return (
+          `  ${e.id.padEnd(40)} stock=${label(r.stock).padEnd(8)} ` +
+          `edited=${label(r.edited).padEnd(8)} suppressed=${label(r.suppressed).padEnd(8)}` +
+          (r.editedParse || r.suppressedParse ? ' PARSE-ERROR' : '')
+        );
       }).join('\n');
       console.log(
         `reminder registry (${REMINDER_REGISTRY.length} entries) vs ${pristine!.path}:\n${rows}`
       );
-    });
+    }, 1200000);
 
     it.each(REMINDER_REGISTRY.map(e => e.id))(
-      '%s finds its anchor with its default body and when suppressed',
+      '%s finds its anchor for an edited body and when suppressed, and splices parseable JS',
       id => {
         const r = results.get(id)!;
         expect(
-          r.body,
-          `reminder ${id} returned null against the pristine bundle with its ` +
-            'own defaultBody: its anchor no longer matches this Claude Code ' +
+          r.edited,
+          `reminder ${id} returned null against the pristine bundle for an ` +
+            'edited body: its anchor no longer matches this Claude Code ' +
             'build. Re-derive the registry entry from cli.js — and prefer ' +
             'anchoring on the registry KEY and code shape over the English ' +
             'prose, which Anthropic rewords freely.'
@@ -709,11 +748,41 @@ describe.skipIf(skipReason !== null)(
         expect(
           r.suppressed,
           `reminder ${id} returned null on the SUPPRESS path (empty body) ` +
-            'while the default path matched — the two take different branches ' +
+            'while the edited path matched — the two take different branches ' +
             'and both must find the site.'
         ).not.toBeNull();
+        expect(
+          r.editedParse,
+          `reminder ${id} spliced unparseable JS`
+        ).toBeNull();
+        if (!(id in EXPECTED_REMINDER_NOOP)) {
+          // Non-null and parseable is not enough: a drifted anchor plus a
+          // broad idempotency check returns the file unchanged and passes.
+          expect(
+            r.edited !== pristine!.source,
+            `reminder ${id} returned the file unchanged for an edited body ` +
+              'but is not in EXPECTED_REMINDER_NOOP: a silent dead anchor.'
+          ).toBe(true);
+          if (!REMINDER_REGISTRY.find(e => e.id === id)!.bodyIsMarker)
+            expect(
+              r.edited!.includes(PROBE_TEXT),
+              `reminder ${id} spliced, but the edited body's probe line is ` +
+                'not in the output'
+            ).toBe(true);
+        }
+        expect(
+          r.suppressedParse,
+          `reminder ${id} spliced unparseable JS when suppressed`
+        ).toBeNull();
       },
       600000
+    );
+
+    it.each(REMINDER_REGISTRY.filter(e => !e.bodyIsMarker).map(e => e.id))(
+      '%s leaves pristine untouched for its stock body',
+      id => {
+        expect(results.get(id)!.stock).toBe(pristine!.source);
+      }
     );
   }
 );
