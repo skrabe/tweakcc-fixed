@@ -11,6 +11,12 @@ import { writeChannelsMode } from './channelsMode';
 //  4. ChannelsNotice banner:  jsx children-array (current) or concatenated string (legacy)
 //  5. server dev-flag warning: if(!E.dev)Q.push({entry:E,why:"server: entries need --dangerously-load-development-channels"})
 const GATE_ENABLED = 'function qX_(){return A9("tengu_harbor",!1)}';
+// CC >= 2.1.291: the gate also requires the allow_channels route, and a
+// separate probe returns true (= "disabled") while tengu_harbor is off.
+const GATE_ENABLED_291 =
+  'function aL(){return nn("allow_channels")&&k("tengu_harbor",!1)}';
+const DISABLED_PROBE_291 =
+  'function bdt(){if(!k("tengu_harbor",!1))return!0;let e=Nf("allow_channels");return e!==null}';
 const GATE_RELAY = 'function pQ7(){return A9("tengu_harbor_permissions",!1)}';
 const GATE_SERVER =
   '{ok:!1,reason:"server did not declare claude/channel capability"};if(!isChannelsEnabled())return{action:"skip"};';
@@ -76,6 +82,30 @@ describe('writeChannelsMode', () => {
     );
     // Its surrounding context survives (only the if-block was excised).
     expect(out).toContain('e=5;;f=6;');
+  });
+
+  it('patches the CC 2.1.291 allow_channels gate and disabled probe', () => {
+    const input =
+      `a=1;function JGn(){let e=k("tengu_harbor_ledger",[]);return e}` +
+      `${GATE_ENABLED_291}${DISABLED_PROBE_291};b=2;${GATE_SERVER}c=3;` +
+      `${GATE_RELAY};d=4;${NOTICE_JSX};e=5;${SERVER_DEV_WARNING};f=6;`;
+    const out = writeChannelsMode(input);
+    expect(out).not.toBeNull();
+    expect(out).toContain(
+      'function aL(){return !0;return nn("allow_channels")&&k("tengu_harbor",!1)}'
+    );
+    expect(out).toContain(
+      'function bdt(){return !1;if(!k("tengu_harbor",!1))return!0;'
+    );
+    expect(out).toContain('k("tengu_harbor_ledger",[])');
+    expect(out).toContain(
+      'reason:"server did not declare claude/channel capability"};return{action:"register"};'
+    );
+  });
+
+  it('leaves older builds without the disabled probe untouched there', () => {
+    const out = writeChannelsMode(FIXTURE);
+    expect(out).not.toContain('return !1;');
   });
 
   it('rewrites the banner without $-substitution damage to identifiers', () => {

@@ -78,7 +78,7 @@ const writeAgentsMdWalkPrecheck = (
   const altNamesJson = JSON.stringify(altNames);
 
   const fnSite =
-    /(?<![$\w])([$\w]+)=async\(([$\w]+),([$\w]+)\)=>([$\w]+)\.has\(\2\)\?([$\w]+)\(\2,\3,([$\w]+),([$\w]+)\):([$\w]+)\(\2,\3,\6,([$\w]+),0,void 0,void 0,\7\)/;
+    /(?<![$\w])([$\w]+)=async\(([$\w]+),([$\w]+)(?:,([$\w]+))?\)=>([$\w]+)\.has\(\2\)\?([$\w]+)\(\2,\3,([$\w]+),([$\w]+)\):([$\w]+)\(\2,\3,\7,([$\w]+),0,void 0,void 0,\8(?:,\4)?\)/;
   const userSite =
     /([$\w]+)\.has\(([$\w]+)\)\?([$\w]+)\(\2,"User",([$\w]+),([$\w]+)\):await ([$\w]+)\(\2,"User",\4,!0,0,void 0,([$\w]+!==void 0\?\{backend:[$\w]+,key:[$\w]+\.state\("user-memory"\)\}:void 0),\5\)/;
 
@@ -99,6 +99,7 @@ const writeAgentsMdWalkPrecheck = (
       fnName,
       pathP,
       typeP,
+      extraP,
       absentSet,
       marker,
       processed,
@@ -106,13 +107,15 @@ const writeAgentsMdWalkPrecheck = (
       loader,
       includeExternal,
     ] = fnMatch;
+    const params = extraP ? `${pathP},${typeP},${extraP}` : `${pathP},${typeP}`;
+    const tail = extraP ? `,${extraP}` : '';
     const replacement =
-      `${fnName}=async(${pathP},${typeP})=>{if(${absentSet}.has(${pathP})){` +
+      `${fnName}=async(${params})=>{if(${absentSet}.has(${pathP})){` +
       `if(${pathP}.endsWith("/CLAUDE.md")||${pathP}.endsWith("\\\\CLAUDE.md")){` +
       `for(let alt of ${altNamesJson}){let altPath=${pathP}.slice(0,-9)+alt;` +
-      `let found=await ${loader}(altPath,${typeP},${processed},${includeExternal},0,void 0,void 0,${exclude});if(found.length)return found}}` +
+      `let found=await ${loader}(altPath,${typeP},${processed},${includeExternal},0,void 0,void 0,${exclude}${tail});if(found.length)return found}}` +
       `return ${marker}(${pathP},${typeP},${processed},${exclude})}` +
-      `return ${loader}(${pathP},${typeP},${processed},${includeExternal},0,void 0,void 0,${exclude})}`;
+      `return ${loader}(${pathP},${typeP},${processed},${includeExternal},0,void 0,void 0,${exclude}${tail})}`;
     const start = fnMatch.index;
     newFile =
       newFile.slice(0, start) +
@@ -160,7 +163,10 @@ const writeAgentsMdWalkPrecheck = (
 //     else{let s=gr();o=await XY(s,e,vIo,(a)=>{i=a.isDirectory()})}
 //     if(o===null){…skipping…return{info:null,includePaths:[]}}
 //     return md_(o,e,t,r)}catch(o){return Td_(o,e),{info:null,includePaths:[]}}}
-// A missing file leaves this reader by one of three exits, none of them the
+// CC >=2.1.291 adds a 5th param (a custom reader) and a leading branch
+// `if(g){let w=await g(e,L);return w===void 0?{info:null,includePaths:[]}:md_(w,e,t,r)}`
+// ahead of the backend branch; it is kept verbatim and the reroute recurses
+// with both optional params dropped. A missing file leaves this reader by one of three exits, none of them the
 // `o===null` branch: the backend read returns from its own switch, as
 // `absent` or as an `error` whose code is ENOENT/ENOTDIR, and the local read
 // stats the file before reading it, so its ENOENT is thrown into the catch.
@@ -174,23 +180,25 @@ const writeAgentsMdAsyncBackend = (
   altNames: string[]
 ): string | null => {
   const funcPattern =
-    /(async function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+),([$\w]+))\)\{try\{let ([$\w]+),([$\w]+)=!1;(if\(\6\)\{[\s\S]*?\}else\{[\s\S]*?\})if\(\7===null\)\{([\s\S]*?\[CLAUDE\.md\] skipping[\s\S]*?return\{info:null,includePaths:\[\]\})\}return ([$\w]+)\(\7,\3,\4,\5\)\}catch\(([$\w]+)\)\{return ([$\w]+)\(\12,\3\),\{info:null,includePaths:\[\]\}\}\}/;
+    /(async function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+),([$\w]+)(?:,([$\w]+))?)\)\{try\{let ([$\w]+),([$\w]+)=!1;((?:if\([$\w]+\)\{let [$\w]+=await [$\w]+\([$\w]+,[$\w]+\);return [$\w]+===void 0\?\{info:null,includePaths:\[\]\}:[$\w]+\([^()]*\)\})?)(if\(\6\)\{[\s\S]*?\}else\{[\s\S]*?\})if\(\8===null\)\{([\s\S]*?\[CLAUDE\.md\] skipping[\s\S]*?return\{info:null,includePaths:\[\]\})\}return ([$\w]+)\(\8,\3,\4,\5\)\}catch\(([$\w]+)\)\{return ([$\w]+)\(\14,\3\),\{info:null,includePaths:\[\]\}\}\}/;
 
   const m = file.match(funcPattern);
   if (!m || m.index === undefined) return null;
 
-  const funcSig = m[1]; // async function XPs(e,t,r,n
+  const funcSig = m[1]; // async function XPs(e,t,r,n[,custom]
   const funcName = m[2]; // XPs
   const pathParam = m[3]; // e
   const typeParam = m[4]; // t
   const thirdParam = m[5]; // r
-  const contentVar = m[7]; // o
-  const dirFlag = m[8]; // i
-  const backendBranch = m[9]; // if(n){…}else{…}
-  const nullBody = m[10]; // if(E(`[CLAUDE.md] skipping …`)…return{…}
-  const processor = m[11]; // md_
-  const catchVar = m[12]; // o (catch-scoped)
-  const errorHandler = m[13]; // Td_
+  const customReader = m[7]; // g (CC >=2.1.291 only)
+  const contentVar = m[8]; // o
+  const dirFlag = m[9]; // i
+  const customBranch = m[10]; // if(g){…return w===void 0?…:md_(w,e,t,r)} or ''
+  const backendBranch = m[11]; // if(n){…}else{…}
+  const nullBody = m[12]; // if(E(`[CLAUDE.md] skipping …`)…return{…}
+  const processor = m[13]; // md_
+  const catchVar = m[14]; // o (catch-scoped)
+  const errorHandler = m[15]; // Td_
 
   const altNamesJson = JSON.stringify(altNames);
 
@@ -203,7 +211,7 @@ const writeAgentsMdAsyncBackend = (
   const reroute =
     `if(!didReroute&&(${pathParam}.endsWith("/CLAUDE.md")||${pathParam}.endsWith("\\\\CLAUDE.md"))){` +
     `for(let alt of ${altNamesJson}){let altPath=${pathParam}.slice(0,-9)+alt;` +
-    `try{let rerouteResult=await ${funcName}(altPath,${typeParam},${thirdParam},void 0,true);if(rerouteResult.info)return rerouteResult}catch{}}}`;
+    `try{let rerouteResult=await ${funcName}(altPath,${typeParam},${thirdParam},void 0,${customReader ? 'void 0,' : ''}true);if(rerouteResult.info)return rerouteResult}catch{}}}`;
 
   // A missing file never reaches the null branch below. The backend read
   // returns from its own switch, as `absent` or as an `error` whose code is
@@ -214,6 +222,15 @@ const writeAgentsMdAsyncBackend = (
   const absentReturn = 'case"absent":return{info:null,includePaths:[]}';
   const errorReturn =
     /case"error":return ([$\w]+)\(([$\w]+)\.code,([$\w]+)\),\{info:null,includePaths:\[\]\}/;
+  const customBranchWithReroute = customReader
+    ? customBranch.replace(
+        /^(if\([$\w]+\)\{let ([$\w]+)=await [$\w]+\([^()]*\);)/,
+        (head, _all, result) =>
+          `${head}if(${result}===void 0&&!didReroute&&(${pathParam}.endsWith("/CLAUDE.md")||${pathParam}.endsWith("\\\\CLAUDE.md"))){` +
+          `for(let alt of ${altNamesJson}){let altPath=${pathParam}.slice(0,-9)+alt;` +
+          `try{let rerouteResult=await ${funcName}(altPath,${typeParam},${thirdParam},void 0,${customReader},true);if(rerouteResult.info)return rerouteResult}catch{}}}`
+      )
+    : customBranch;
   const backendBranchWithReroute = backendBranch
     .replace(
       absentReturn,
@@ -227,7 +244,7 @@ const writeAgentsMdAsyncBackend = (
     );
 
   const replacement =
-    `${funcSig},didReroute){try{let ${contentVar},${dirFlag}=!1;${backendBranchWithReroute}` +
+    `${funcSig},didReroute){try{let ${contentVar},${dirFlag}=!1;${customBranchWithReroute}${backendBranchWithReroute}` +
     `if(${contentVar}===null){` +
     reroute +
     `${nullBody}}` +

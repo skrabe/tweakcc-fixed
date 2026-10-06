@@ -1,3 +1,5 @@
+import vm from 'node:vm';
+
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { writeFablePlan } from './fablePlan';
@@ -64,6 +66,75 @@ const EFFORT_LOOKUP_280 = EFFORT_LOOKUP.replace(
   'if(se(e.settingsEffortTable))'
 );
 
+// CC >= 2.1.291: the inherit arm is a block that names the model first, so a
+// carried fallback effort can hold the lookup, and the default shortcut also
+// checks for that carry.
+const EFFORT_LOOKUP_291 =
+  'function Qk(e,n,{withHold:r=!0}={}){let s=e.sessionEffort??Y;switch(s.kind){case"level":return s.value;case"default":return;' +
+  'case"inherit":{if(e.settingsEffortTable===void 0)return;if(qe(e.settingsEffortTable)&&!J())return e.settingsEffortTable.default;' +
+  'let d=n??e.mainLoopModelForSession??e.mainLoopModel??dl();return r&&Hx(d)!==void 0?void 0:Z(e.settingsEffortTable,d)}}}';
+
+// CC 2.1.291's per-request effort resolver and the effective-permission-context
+// function it sits beside, which `uM` callers read the request's mode from.
+const EFFORT_CALLER_291 =
+  'function de(e){let o=e.getAppState().toolPermissionContext;for(let t of e.permissionLayers??[])' +
+  'if(t.kind==="permission_mode")o={...o,mode:t.mode};return o}' +
+  'function bh(e){return Sh(e.permissionLayers)??Qk(e.getAppState(),p(e),{withHold:jr(e)})}' +
+  'function bq(e){return bh(e)===void 0?Qk(e.getAppState(),p(e),{withHold:!1}):void 0}' +
+  // hook input: the context is optional
+  'function yd(e,n,r,s){let h=s?.options?.mainLoopModel,b=Qk(s?.getAppState?.()??{},h,{withHold:jr(s??{})});return b}' +
+  // subagent spawn: `model` is already routed with the subagent's own mode
+  'function Cz(e){return Qk(e,dl())}' +
+  'function bln({agentDefinition:e,isFork:t,model:r,effortState:n,inheritedLayers:s}){let l=Cz(n),i=Qk(n,r);return i}';
+
+const KEY_291 =
+  'let d=globalThis.__tweakccFablePlanModelFor?.(e.__tweakccPermissionMode??e.toolPermissionContext?.mode)' +
+  '??n??e.mainLoopModelForSession??e.mainLoopModel??dl();';
+
+// A runnable 2.1.291-shaped bundle: every site the patch needs, as code that
+// executes, so the tests can drive real requests through the patched output.
+const RUNNABLE_291 = [
+  'var SEL="fableplan";function setSel(v){SEL=v}function wy(){return SEL}',
+  'var Wl=["sonnet","opus","haiku","fable","best","opusplan"],Xl=["sonnet","opus","haiku","fable"];',
+  'function Ah(e){return Wl.includes(e)}function Om(){return"claude-opus-5"}function Fm(){return"claude-fable-5"}',
+  'function Bd(e){let t=0;switch(e){case"fable":return Fm(t);case"opus":return Om(t);default:return null}}',
+  'function xt(e){let t=e.trim(),r=t.toLowerCase();if(Ah(r))switch(r){case"fable":return Fm();' +
+    'case"opusplan":return Om();case"opus":return Om();default:}return t}',
+  'function Pk(e,t){let r=Bk(e),n=X.ANTHROPIC_CUSTOM_MODEL_OPTION;return r}',
+  'function am(e){return Hcr(e).model}',
+  'function Hcr(e){let{permissionMode:n,mainLoopModel:r,exceeds200kTokens:s=!1}=e;' +
+    'if(n!=="plan")return{model:r,clampWarning:null};let g=wy(),h=g==="opusplan"?Om():null;' +
+    'return{model:h??r,clampWarning:null}}',
+  'function qe(t){return Object.keys(t.byModel).length===0}function J(){return!1}function Hx(m){return}',
+  'function re(t,m){return t.byModel[m]??t.default}function dl(){return xt(wy())}',
+  'function Qk(e,n,{withHold:r=!0}={}){let s=e.sessionEffort??{kind:"inherit"};switch(s.kind){' +
+    'case"level":return s.value;case"default":return;' +
+    'case"inherit":{if(e.settingsEffortTable===void 0)return;if(qe(e.settingsEffortTable)&&!J())return e.settingsEffortTable.default;' +
+    'let d=n??e.mainLoopModelForSession??e.mainLoopModel??dl();return r&&Hx(d)!==void 0?void 0:re(e.settingsEffortTable,d)}}}',
+  'function Sh(l){let o;for(let n of l??[])if(n.kind==="effort")o=n.effort;return o}function jr(e){return!0}',
+  'function p(e){return e.options.mainLoopModel}',
+  'function LF(m,mode){return am({permissionMode:mode??"default",mainLoopModel:m})}',
+  EFFORT_CALLER_291,
+].join('');
+
+type Runtime = {
+  setSel: (alias: string) => void;
+  am: (args: { permissionMode: string; mainLoopModel: string }) => string;
+  bh: (ctx: unknown) => string | undefined;
+  de: (ctx: unknown) => { mode: string };
+  yd: (a: unknown, b: unknown, c: unknown, ctx?: unknown) => string | undefined;
+  LF: (model: string, mode?: string) => string;
+  bln: (args: {
+    agentDefinition: unknown;
+    isFork: boolean;
+    model: string;
+    effortState: unknown;
+  }) => string | undefined;
+};
+
+const run = (src: string): Runtime =>
+  vm.runInNewContext(`${src};({setSel,am,bh,de,yd,LF,bln})`) as Runtime;
+
 describe('writeFablePlan', () => {
   beforeEach(() => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -79,13 +150,16 @@ describe('writeFablePlan', () => {
 
   it('resolves the plan model only for its own alias', () => {
     const out = writeFablePlan(cli, config())!;
-    expect(out).toContain('o==="fableplan"');
+    // Plan mode only: the exec side is CC's own resolution of the session model.
     expect(out).toContain(
-      'globalThis.__tweakccFablePlanModel=as(t==="plan"?"fable":"opus");'
+      '=e,o=tW();if(t==="plan"&&o==="fableplan")return as("fable");'
     );
-    // and clears the model global on the way past every other alias, so
-    // switching away cannot leave a stale model steering the effort table
-    expect(out).toContain('globalThis.__tweakccFablePlanModel=void 0;');
+    // The stateless answer for the effort lookup, defined beside the resolver.
+    expect(out).toContain(
+      'globalThis.__tweakccFablePlanModelFor=(m)=>m==="plan"&&tW()==="fableplan"?as("fable"):void 0;function uM('
+    );
+    // Nothing the resolver does is remembered between calls.
+    expect(out).not.toContain('__tweakccFablePlanModel=');
     // CC's own branches survive untouched — this must not change any other model
     expect(out).toContain(
       'if((o==="opusplan"||o==="opusplan[1m]")&&t==="plan"&&!n)'
@@ -103,10 +177,10 @@ describe('writeFablePlan', () => {
   it('keys the per-model effort lookup on the answering model', () => {
     // The table is looked up by the SESSION model, which for fableplan resolves
     // to the exec model, so a plan turn would read Opus's level. The lookup must
-    // prefer the model uM recorded for this request.
+    // ask fableplan's answer for this request's permission mode first.
     const out = writeFablePlan(cli + EFFORT_LOOKUP, config())!;
     expect(out).toContain(
-      'return Z(e.settingsEffortTable,globalThis.__tweakccFablePlanModel??n??e.mainLoopModelForSession??'
+      'return Z(e.settingsEffortTable,globalThis.__tweakccFablePlanModelFor?.(e.__tweakccPermissionMode??e.toolPermissionContext?.mode)??n??e.mainLoopModelForSession??'
     );
     // tweakcc no longer pins its own levels or shadows the effort resolver
     expect(out).not.toContain('__tweakccFablePlanEffort');
@@ -119,11 +193,277 @@ describe('writeFablePlan', () => {
   it('keys the effort lookup through the CC 2.1.280 inverted table guard', () => {
     const out = writeFablePlan(cli + EFFORT_LOOKUP_280, config())!;
     expect(out).toContain(
-      'return Z(e.settingsEffortTable,globalThis.__tweakccFablePlanModel??n??e.mainLoopModelForSession??'
+      'return Z(e.settingsEffortTable,globalThis.__tweakccFablePlanModelFor?.(e.__tweakccPermissionMode??e.toolPermissionContext?.mode)??n??e.mainLoopModelForSession??'
     );
     // The guard itself is left exactly as CC wrote it.
     expect(out).toContain('if(se(e.settingsEffortTable))');
     expect(writeFablePlan(out, config())).toBe(out);
+  });
+
+  it('keys the CC 2.1.291 block-form effort lookup, hold check included', () => {
+    const out = writeFablePlan(
+      cli + EFFORT_LOOKUP_291 + EFFORT_CALLER_291,
+      config()
+    )!;
+    expect(out).not.toBeNull();
+    // One key feeds both the carried-effort hold and the table lookup.
+    expect(out).toContain(
+      KEY_291 + 'return r&&Hx(d)!==void 0?void 0:Z(e.settingsEffortTable,d)}'
+    );
+    expect(out).toContain(
+      'if(qe(e.settingsEffortTable)&&!J())return e.settingsEffortTable.default;'
+    );
+    expect(out.split('__tweakccFablePlanModelFor?.(').length - 1).toBe(1);
+    // Both per-request callers hand over the request's effective mode.
+    expect(out).toContain(
+      '??Qk({...e.getAppState(),__tweakccPermissionMode:de(e).mode},p(e),{withHold:jr(e)})}'
+    );
+    expect(out).toContain(
+      '?Qk({...e.getAppState(),__tweakccPermissionMode:de(e).mode},p(e),{withHold:!1}):void 0}'
+    );
+    expect(out).toContain(
+      'b=Qk({...s?.getAppState?.()??{},__tweakccPermissionMode:s?.getAppState?de(s).mode:void 0},h,'
+    );
+    expect(out).toContain(
+      'let l=Cz(n),i=Qk({...n,__tweakccPermissionMode:"routed"},r);'
+    );
+    // the session-scoped caller keeps the session's mode
+    expect(out).toContain('function Cz(e){return Qk(e,dl())}');
+    expect(writeFablePlan(out, config())).toBe(out);
+  });
+
+  it('fails loudly when the CC 2.1.291 hook-input or spawn effort caller drifts', () => {
+    for (const [from, to] of [
+      ['Qk(s?.getAppState?.()??{},h', 'Qk(s?.getAppState?.()??0,h'],
+      ['i=Qk(n,r)', 'i=Qk(r,n)'],
+    ]) {
+      const drifted = EFFORT_CALLER_291.replace(from, to);
+      expect(drifted).not.toBe(EFFORT_CALLER_291);
+      expect(
+        writeFablePlan(cli + EFFORT_LOOKUP_291 + drifted, config())
+      ).toBeNull();
+    }
+  });
+
+  it('fails loudly when the CC 2.1.291 per-request effort caller drifts', () => {
+    const drifted = EFFORT_CALLER_291.replaceAll(
+      'Qk(e.getAppState(),p(e)',
+      'Qk(e.getAppState(),p(e,1)'
+    );
+    expect(
+      writeFablePlan(cli + EFFORT_LOOKUP_291 + drifted, config())
+    ).toBeNull();
+  });
+
+  it("a plan-mode probe of the resolver cannot move the next request's effort", () => {
+    // CC asks the resolver "what would plan mode use" as a probe
+    // (`uM({permissionMode:"plan",mainLoopModel:s})`). The effort an exec
+    // request reads must depend on that request alone.
+    const out = writeFablePlan(RUNNABLE_291, config());
+    expect(out).not.toBeNull();
+    const rt = run(out!);
+    const state = {
+      toolPermissionContext: { mode: 'default' },
+      settingsEffortTable: {
+        default: 'medium',
+        byModel: { 'claude-fable-5': 'max', 'claude-opus-5': 'low' },
+      },
+    };
+    const ctx = {
+      getAppState: () => state,
+      options: { mainLoopModel: 'claude-opus-5' },
+      permissionLayers: [],
+    };
+    const exec = { permissionMode: 'default', mainLoopModel: 'claude-opus-5' };
+    expect(rt.am(exec)).toBe('claude-opus-5');
+    expect(rt.bh(ctx)).toBe('low');
+    expect(rt.am({ ...exec, permissionMode: 'plan' })).toBe('claude-fable-5');
+    expect(rt.bh(ctx)).toBe('low');
+    expect(rt.am(exec)).toBe('claude-opus-5');
+
+    // A real plan turn reads the planning model's level, and stops on exit.
+    state.toolPermissionContext.mode = 'plan';
+    expect(rt.am({ ...exec, permissionMode: 'plan' })).toBe('claude-fable-5');
+    expect(rt.bh(ctx)).toBe('max');
+    state.toolPermissionContext.mode = 'default';
+    expect(rt.bh(ctx)).toBe('low');
+  });
+
+  it('keys effort on the mode the request is routed on, layers included', () => {
+    const rt = run(writeFablePlan(RUNNABLE_291, config())!);
+    const state = {
+      toolPermissionContext: { mode: 'plan' },
+      settingsEffortTable: {
+        default: 'medium',
+        byModel: { 'claude-fable-5': 'max', 'claude-opus-5': 'low' },
+      },
+    };
+    // A context whose permission layer puts it in default mode while the
+    // session plans: routed to the exec model, so it reads the exec level.
+    const layered = {
+      getAppState: () => state,
+      options: { mainLoopModel: 'claude-opus-5' },
+      permissionLayers: [{ kind: 'permission_mode', mode: 'default' }],
+    };
+    const mode = rt.de(layered).mode;
+    expect(
+      rt.am({ permissionMode: mode, mainLoopModel: 'claude-opus-5' })
+    ).toBe('claude-opus-5');
+    expect(rt.bh(layered)).toBe('low');
+    // And the reverse: a plan layer on a default-mode session.
+    state.toolPermissionContext.mode = 'default';
+    const planLayer = {
+      ...layered,
+      permissionLayers: [{ kind: 'permission_mode', mode: 'plan' }],
+    };
+    expect(rt.bh(planLayer)).toBe('max');
+  });
+
+  it('a subagent keys effort on the model its own mode routes it to', () => {
+    // A fableplan parent plans and spawns a Haiku subagent. Routing mirrors
+    // opusplan: the subagent's own effective mode decides, and the effort
+    // lookup follows whatever the router picked.
+    const rt = run(writeFablePlan(RUNNABLE_291, config())!);
+    const state = {
+      toolPermissionContext: { mode: 'plan' },
+      settingsEffortTable: {
+        default: 'medium',
+        byModel: {
+          'claude-fable-5': 'max',
+          'claude-opus-5': 'low',
+          'claude-haiku-5': 'high',
+        },
+      },
+    };
+    type Ctx = {
+      getAppState: () => typeof state;
+      options: { mainLoopModel: string };
+      permissionLayers: { kind: string; mode: string }[];
+    };
+    const parent: Ctx = {
+      getAppState: () => state,
+      options: { mainLoopModel: 'claude-opus-5' },
+      permissionLayers: [],
+    };
+    const route = (ctx: Ctx) =>
+      rt.am({
+        permissionMode: rt.de(ctx).mode,
+        mainLoopModel: ctx.options.mainLoopModel,
+      });
+    expect(route(parent)).toBe('claude-fable-5');
+    expect(rt.bh(parent)).toBe('max');
+
+    // Default-mode layer: runs Haiku, reads Haiku's level.
+    const subagent: Ctx = {
+      getAppState: () => state,
+      options: { mainLoopModel: 'claude-haiku-5' },
+      permissionLayers: [{ kind: 'permission_mode', mode: 'default' }],
+    };
+    expect(route(subagent)).toBe('claude-haiku-5');
+    expect(rt.bh(subagent)).toBe('high');
+
+    // Inheriting plan mode: routed to Fable like opusplan, reads Fable's level.
+    const inPlan: Ctx = { ...subagent, permissionLayers: [] };
+    expect(route(inPlan)).toBe('claude-fable-5');
+    expect(rt.bh(inPlan)).toBe('max');
+
+    expect(rt.bh(parent)).toBe('max');
+  });
+
+  it('a default-mode Haiku subagent of a planning session reads Haiku, at spawn and in hooks', () => {
+    const rt = run(writeFablePlan(RUNNABLE_291, config())!);
+    const state = {
+      toolPermissionContext: { mode: 'plan' },
+      settingsEffortTable: {
+        default: 'medium',
+        byModel: {
+          'claude-fable-5': 'max',
+          'claude-opus-5': 'low',
+          'claude-haiku-5': 'high',
+        },
+      },
+    };
+    // Spawn: routed with the subagent's own mode, then its effort is read.
+    const model = rt.LF('claude-haiku-5', 'default');
+    expect(model).toBe('claude-haiku-5');
+    expect(
+      rt.bln({ agentDefinition: {}, isFork: false, model, effortState: state })
+    ).toBe('high');
+    // Hook input from inside that subagent.
+    const sub = {
+      getAppState: () => state,
+      options: { mainLoopModel: 'claude-haiku-5' },
+      permissionLayers: [{ kind: 'permission_mode', mode: 'default' }],
+    };
+    expect(rt.yd({}, '/', 'default', sub)).toBe('high');
+    // A plan-mode spawn is routed to Fable like opusplan, and reads Fable.
+    const planned = rt.LF('claude-haiku-5', 'plan');
+    expect(planned).toBe('claude-fable-5');
+    expect(
+      rt.bln({
+        agentDefinition: {},
+        isFork: false,
+        model: planned,
+        effortState: state,
+      })
+    ).toBe('max');
+    // No context: hook input keeps the session's mode.
+    expect(rt.yd({}, '/', 'plan')).toBe(undefined);
+  });
+
+  it('leaves every other alias and every exec-side model to Claude Code', () => {
+    const rt = run(writeFablePlan(RUNNABLE_291, config())!);
+    const state = {
+      toolPermissionContext: { mode: 'plan' },
+      settingsEffortTable: {
+        default: 'medium',
+        byModel: { 'claude-fable-5': 'max', 'claude-opus-5': 'low' },
+      },
+    };
+    const ctx = {
+      getAppState: () => state,
+      options: { mainLoopModel: 'claude-opus-5' },
+      permissionLayers: [],
+    };
+    // An exec-side request keeps whatever model it was given, e.g. a subagent
+    // configured for haiku.
+    expect(
+      rt.am({ permissionMode: 'default', mainLoopModel: 'claude-haiku-5' })
+    ).toBe('claude-haiku-5');
+    rt.setSel('opus');
+    expect(
+      rt.am({ permissionMode: 'plan', mainLoopModel: 'claude-opus-5' })
+    ).toBe('claude-opus-5');
+    expect(rt.bh(ctx)).toBe('low');
+  });
+
+  it('refuses to call an alias-to-model function from another bundle module', () => {
+    // On a code-split bundle the resolver found by shape must be callable
+    // where the plan-mode branch is spliced.
+    const mark = (n: number) =>
+      `/*@@TWEAKCC_MODULE:${n}:/$bunfs/root/chunk-${n}.js@@*/`;
+    const asFn = cli.match(/function as\(e\)\{[\s\S]*?return null\}/)![0];
+    const split = mark(1) + asFn + mark(2) + cli.replace(asFn, '');
+    expect(writeFablePlan(split, config())).toBeNull();
+  });
+
+  it('fails loudly when the lookup no longer leads with its model argument', () => {
+    const drifted = EFFORT_LOOKUP_291.replace(
+      'let d=n??e.mainLoopModelForSession??',
+      'let d=e.mainLoopModelForSession??n??'
+    );
+    expect(drifted).not.toBe(EFFORT_LOOKUP_291);
+    expect(
+      writeFablePlan(cli + drifted + EFFORT_CALLER_291, config())
+    ).toBeNull();
+  });
+
+  it('fails loudly when the CC 2.1.291 effort lookup key drifts', () => {
+    const drifted = EFFORT_LOOKUP_291.replace(
+      'Z(e.settingsEffortTable,d)',
+      'Z(e.settingsEffortTable,d2)'
+    );
+    expect(writeFablePlan(cli + drifted, config())).toBeNull();
   });
 
   it('fails loudly when the per-model effort lookup drifts', () => {
@@ -152,7 +492,9 @@ describe('writeFablePlan', () => {
       cli,
       config({ planModel: 'opus', execModel: 'sonnet' })
     )!;
-    expect(out).toContain('as(t==="plan"?"opus":"sonnet")');
+    expect(out).toContain('if(t==="plan"&&o==="fableplan")return as("opus");');
+    // the exec side rests on the exec model's own arm
+    expect(out).toContain('case"fableplan":return n?aM(vJ(yk())):yk();');
     expect(out).toContain('"label":"Opus Plan Mode"');
   });
 
@@ -194,10 +536,9 @@ describe('writeFablePlan', () => {
     const out = writeFablePlan(cli251, config());
     expect(out).not.toBeNull();
     expect(out).toContain('"opusplan","fableplan"]');
-    expect(out).toContain('lf()==="fableplan"');
-    expect(out).toContain('Ot(t==="plan"?"fable":"opus")');
     expect(out).toContain(
-      'if(t!=="plan")return r;let u=lf(),d=qde(u);if(d===null)return r;return r}'
+      'if(t!=="plan")return r;if(lf()==="fableplan")return Ot("fable");' +
+        'let u=lf(),d=qde(u);if(d===null)return r;return r}'
     );
     expect(out).toContain(
       'function yT(e,o,{honorLaunchPin:t=!0}={}){if(!lg(e))return;'
@@ -220,12 +561,13 @@ describe('writeFablePlan', () => {
     const out = writeFablePlan(src, config());
     expect(out).not.toBeNull();
     expect(out).toContain(
-      'if(lf()==="fableplan"){globalThis.__tweakccFablePlanModel=Ot(t==="plan"?"fable":"opus");' +
-        'return{model:globalThis.__tweakccFablePlanModel,clampWarning:null}}' +
-        'globalThis.__tweakccFablePlanModel=void 0;if(t!=="plan")return{model:r,clampWarning:null};'
+      'globalThis.__tweakccFablePlanModelFor=(m)=>m==="plan"&&lf()==="fableplan"?Ot("fable"):void 0;' +
+        'function YQt(e){let{permissionMode:t,mainLoopModel:r,exceeds200kTokens:o=!1}=e;' +
+        'if(t!=="plan")return{model:r,clampWarning:null};' +
+        'if(lf()==="fableplan")return{model:Ot("fable"),clampWarning:null};let u=lf(),'
     );
     expect(out).toContain(
-      'settingsEffortTable,globalThis.__tweakccFablePlanModel??n??'
+      'settingsEffortTable,globalThis.__tweakccFablePlanModelFor?.(e.__tweakccPermissionMode??e.toolPermissionContext?.mode)??n??'
     );
     expect(writeFablePlan(out!, config())).toBe(out);
   });

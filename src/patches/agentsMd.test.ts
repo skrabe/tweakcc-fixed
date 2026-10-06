@@ -260,4 +260,84 @@ describe('agentsMd', () => {
       expect(writeAgentsMd(backendReader + ';' + site, altNames)).toBeNull();
     });
   });
+  describe('writeAgentsMd custom-reader shape (CC >=2.1.291)', () => {
+    const reader =
+      'async function gMe(e,n,r,s,g){try{let h,b=!1;if(g){let w=await g(e,ZB);return w===void 0?{info:null,includePaths:[]}:mMe(w,e,n,r)}' +
+      'if(s){let w=await A3n(s);switch(w.kind){' +
+      'case"absent":return{info:null,includePaths:[]};' +
+      'case"error":return Okt(w.code,e),{info:null,includePaths:[]};' +
+      'case"skipped":b=w.isDirectory,h=null;break;case"content":h=w.content;break}}' +
+      'else{let w=oe();h=await _H(w,e,ZB,(M)=>{b=M.isDirectory()})}' +
+      'if(h===null){t(`[CLAUDE.md] skipping ${e}: not a regular file or exceeds ${ZB} byte limit`);return{info:null,includePaths:[]}}' +
+      'return mMe(h,e,n,r)}catch(h){return x3n(h,e),{info:null,includePaths:[]}}}';
+    const walk =
+      'hn=async(ln,Kn,eo)=>Wt.has(ln)?vkt(ln,Kn,V,_e):XF(ln,Kn,V,he,0,void 0,void 0,_e,eo);' +
+      'W.push(...await hn(Se,"Managed"));' +
+      'if(Ce){if(W.push(...Wt.has(Ne)?vkt(Ne,"User",V,_e):await XF(Ne,"User",V,!0,0,void 0,g!==void 0?{backend:g,key:De.state("user-memory")}:void 0,_e)),!Wt.has(Ue))W.push(...await _oe({rulesDir:Ue}))}';
+    const file = reader + ';' + walk;
+
+    it('keeps the custom-reader branch and appends didReroute after it', () => {
+      const result = writeAgentsMd(file, altNames)!;
+      expect(result).not.toBeNull();
+      expect(result).toContain(
+        'async function gMe(e,n,r,s,g,didReroute){try{let h,b=!1;if(g){let w=await g(e,ZB);if(w===void 0&&!didReroute'
+      );
+      expect(result).toContain(
+        'return w===void 0?{info:null,includePaths:[]}:mMe(w,e,n,r)}if(s){'
+      );
+      expect(result).toContain('case"absent":{if(!didReroute');
+      expect(result).toContain(
+        'let rerouteResult=await gMe(altPath,n,r,void 0,void 0,true)'
+      );
+    });
+
+    it('reroutes inside the custom-reader branch through the same reader', () => {
+      const result = writeAgentsMd(file, altNames)!;
+      expect(result).toContain(
+        'if(g){let w=await g(e,ZB);if(w===void 0&&!didReroute&&(e.endsWith("/CLAUDE.md")||e.endsWith("\\\\CLAUDE.md"))){for(let alt of ["AGENTS.md"'
+      );
+      expect(result).toContain(
+        'try{let rerouteResult=await gMe(altPath,n,r,void 0,g,true);if(rerouteResult.info)return rerouteResult}catch{}}}return w===void 0?{info:null,includePaths:[]}:mMe(w,e,n,r)}'
+      );
+    });
+
+    it('returns the alternative file when the custom reader only knows AGENTS.md', async () => {
+      const result = writeAgentsMd(reader, altNames)!;
+      const mMe =
+        'function mMe(c,e){return{info:{content:c,path:e},includePaths:[]}}';
+      const run = new Function(
+        `${mMe};const ZB=1;${result.replace('async function gMe', 'globalThis.gMe=async function gMe')};return globalThis.gMe`
+      )();
+      const g = async (p: string) =>
+        p.endsWith('AGENTS.md') ? 'alt body' : undefined;
+      const found = await run('/p/CLAUDE.md', 'Project', 'x', undefined, g);
+      expect(found.info.path).toBe('/p/AGENTS.md');
+      const none = await run(
+        '/p/CLAUDE.md',
+        'Project',
+        'x',
+        undefined,
+        async () => undefined
+      );
+      expect(none.info).toBeNull();
+    });
+
+    it('threads the extra loader argument through the project walk site', () => {
+      const result = writeAgentsMd(file, altNames)!;
+      expect(result).toContain('hn=async(ln,Kn,eo)=>{if(Wt.has(ln)){');
+      expect(result).toContain(
+        'let found=await XF(altPath,Kn,V,he,0,void 0,void 0,_e,eo);if(found.length)return found'
+      );
+      expect(result).toContain('return vkt(ln,Kn,V,_e)}');
+      expect(result).toContain('return XF(ln,Kn,V,he,0,void 0,void 0,_e,eo)}');
+    });
+
+    it('rewrites both walk sites', () => {
+      const result = writeAgentsMd(file, altNames)!;
+      expect(result.match(/if\(found\.length\)return found/g)).toHaveLength(2);
+      expect(result).toContain(
+        'let found=await XF(altPath,"User",V,!0,0,void 0,void 0,_e);if(found.length)return found'
+      );
+    });
+  });
 });
