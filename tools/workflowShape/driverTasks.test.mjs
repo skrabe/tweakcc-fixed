@@ -307,8 +307,14 @@ describe.skipIf(!hasDriver)('driver output is compact by default', () => {
   beforeAll(() => {
     T = fs.mkdtempSync(path.join(os.tmpdir(), 'driver-compact-'));
     FAKE = path.join(T, 'repo');
+    write('repo/data/prompts/prompts-9.9.8.json', { version: '9.9.8', prompts: [{ id: 'a', pieces: ['hello'], identifiers: [], identifierMap: {} }] });
     write('repo/data/prompts/prompts-9.9.9.json', { version: '9.9.9', prompts: [{ id: 'a', pieces: ['hello'], identifiers: [], identifierMap: {} }] });
     write('repo/tools/promptExtractor.js', '');
+    // validate runs the content-swap gate from the checkout it is pointed at.
+    for (const f of ['checkContentSwap.mjs', 'lib/contentSwap.mjs', 'lib/overrideSets.cjs']) {
+      fs.mkdirSync(path.dirname(path.join(FAKE, 'tools', f)), { recursive: true });
+      fs.copyFileSync(path.join(REPO, 'tools', f), path.join(FAKE, 'tools', f));
+    }
     md('tc/lobotomized-claude-code/system-prompts-x/a.md');
   });
   afterAll(() => fs.rmSync(T, { recursive: true, force: true }));
@@ -322,10 +328,10 @@ describe.skipIf(!hasDriver)('driver output is compact by default', () => {
     expect(r.code).toBe(0);
     expect(r.lines).toEqual([
       `· full log: ${path.join(T, 'tmp/showtime-validate.log')}`,
-      '✓ validate 9.9.9: all 1 set(s) clean',
+      '✓ validate 9.9.9: all 1 set(s) clean; ccVersion null: 0; content swap: 0 unacknowledged',
     ]);
     expect(fs.readFileSync(path.join(T, 'tmp/showtime-validate.log'), 'utf8')).toContain('system-prompts-x: orphan=0 UNKNOWN_N=0 unbound=0');
-    expect(fs.readFileSync(path.join(T, 'run.log'), 'utf8')).toMatch(/^\d\d:\d\d\tvalidate 9\.9\.9: validate 9\.9\.9: all 1 set\(s\) clean$/m);
+    expect(fs.readFileSync(path.join(T, 'run.log'), 'utf8')).toMatch(/^\d\d:\d\d\tvalidate 9\.9\.9: validate 9\.9\.9: all 1 set\(s\) clean; ccVersion null: 0; content swap: 0 unacknowledged$/m);
   });
 
   it('prints the whole failing step with its detail lines, and keeps the exit code', () => {
@@ -337,7 +343,8 @@ describe.skipIf(!hasDriver)('driver output is compact by default', () => {
       'Validate override sets against 9.9.9',
       '✗ system-prompts-x: orphan=1 UNKNOWN_N=0 unbound=0',
       '    orphan   gone',
-      '✗ validate 9.9.9: 1 problem(s) across 1 set(s)',
+      `· full log: ${path.join(T, 'tmp/showtime-validate.log')}`,
+      '✗ validate 9.9.9: 1 problem(s) across 1 set(s); ccVersion null: 0; content swap: 0 unacknowledged',
     ]);
   });
 
@@ -346,6 +353,7 @@ describe.skipIf(!hasDriver)('driver output is compact by default', () => {
     expect(r.code).toBe(0);
     expect(r.lines[0]).toBe('Validate override sets against 9.9.9');
     expect(r.lines).toContain('✓ system-prompts-x: orphan=0 UNKNOWN_N=0 unbound=0');
-    expect(r.lines[r.lines.length - 1]).toBe('✓ validate 9.9.9: all 1 set(s) clean');
+    expect(r.lines).toContain('✓ ccVersion: null: 0');
+    expect(r.lines[r.lines.length - 1]).toBe('✓ validate 9.9.9: all 1 set(s) clean; ccVersion null: 0; content swap: 0 unacknowledged');
   });
 });

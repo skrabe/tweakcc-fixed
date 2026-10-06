@@ -35,7 +35,7 @@ export const INDEX_FORMAT = 7;
 export const MODEL_DEFAULT = 'MODEL_DEFAULT';
 export const REMINDER_PREFIX = 'system-reminders/';
 export const CORENDER_NOTE =
-  'coRender is an UNPROVEN syntactic hint. Coverage needs proof that whenever the target renders, the carrier renders too: ternary/if arms are alternatives, a suppressed or shadowed carrier renders nothing, and a value computed beside the target can still be dropped. Exception, "same-tool": a tool\'s own description and input schema render with every result of that tool, so that co-render is PROVABLE — confirm the carrier is that tool\'s description/schema (the id family match is a lead) and it is proven.';
+  'coRender is an UNPROVEN syntactic hint. Coverage needs proof that whenever the target renders, the carrier renders too: ternary/if arms are alternatives, a suppressed or shadowed carrier renders nothing, and a value computed beside the target can still be dropped. Exception, "same-tool": an ALWAYS-ON tool\'s own description and input schema render with every result of that tool, so that co-render is PROVABLE — confirm the carrier is that tool\'s description/schema (the id family match is a lead) and that the tool is in the turnProbe capture\'s tools[], and it is proven. A DEFERRED tool (absent from tools[]) reaches the model only through a ToolSearch result compaction can drop: its description is a conditional carrier and the same-tool exception does not hold for it, except between two pieces of its own tool object.';
 
 // A tool's description and parameter schema are sent with every request that
 // can carry that tool's result, so a tool-result text and its own tool's

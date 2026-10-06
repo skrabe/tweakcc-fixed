@@ -17,13 +17,21 @@
 //
 //   node tools/realignPackets.mjs <prev.json> <cur.json> \
 //        --ids=a,b,c            (or --ids=@<file with one id per line>)
-//        --sets=<abs dir>[,<abs dir>…] --out=<dir>
+//        --sets=<abs dir>[,<abs dir>…] --out=<dir> [--allow-moved=<id,…>]
 //
 // Writes <out>/<id>.md per id and <out>/tasks.json — the `tasks` array the
 // workflow takes verbatim.
+//
+// Refuses (writes nothing, exit 1) when any requested id's content moved
+// (tools/lib/contentSwap.mjs): its old pristine now lives at another id, or it
+// now holds another id's old pristine. A realign keyed by id then grafts the
+// new occupant's pristine over a trim of something else — CC 2.1.291 lost the
+// system-prompt-resume-continue-prompt-3 trim that way. Re-map those overrides
+// by content first, then pass their ids in --allow-moved.
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
 import path from 'node:path';
+import { contentSwapSweep, realignHazard } from './lib/contentSwap.mjs';
 
 const require = createRequire(import.meta.url);
 const {
@@ -51,6 +59,7 @@ if (ids.startsWith('@')) {
     .join(',');
 }
 const idList = ids.split(',').filter(Boolean);
+const allowMoved = new Set(opt('allow-moved').split(',').filter(Boolean));
 
 if (!prevPath || !curPath || !idList.length || !parsed.specified || !outDir) {
   console.error(
@@ -62,9 +71,12 @@ const resolved = resolveOverrideSets(parsed, { fallback: 'none' });
 printAuditedSets(resolved);
 const setDirs = resolved.map(s => s.dir);
 
+const promptsOf = new Map();
 const load = p => {
   const byId = new Map();
-  for (const entry of JSON.parse(fs.readFileSync(p, 'utf8')).prompts) {
+  const prompts = JSON.parse(fs.readFileSync(p, 'utf8')).prompts;
+  promptsOf.set(p, prompts);
+  for (const entry of prompts) {
     if (!entry.id) continue;
     if (!byId.has(entry.id)) byId.set(entry.id, []);
     byId.get(entry.id).push(entry);
@@ -98,6 +110,28 @@ const stripFrontMatter = text => {
 
 const prev = load(prevPath);
 const cur = load(curPath);
+
+const sweep = contentSwapSweep(promptsOf.get(prevPath), promptsOf.get(curPath));
+const refused = idList
+  .map(id => [id, realignHazard(sweep, id)])
+  .filter(([id, why]) => why && !allowMoved.has(id));
+if (refused.length) {
+  for (const [id, why] of refused) {
+    console.error(`REFUSED ${id}: ${why}`);
+  }
+  console.error(
+    `\n${refused.length} realign task(s) refused: the override was trimmed against content that moved to another id. ` +
+      'Re-map each by CONTENT (move the trim to the id its old pristine now lives at; tools/checkContentSwap.mjs lists them), ' +
+      'then rerun with --allow-moved=<id,…>. Nothing was written.'
+  );
+  // A tasks.json left by an earlier run must not survive to be launched.
+  fs.rmSync(path.join(outDir, 'tasks.json'), { force: true });
+  process.exit(1);
+}
+for (const id of idList) {
+  const why = realignHazard(sweep, id);
+  if (why) console.log(`allowed (content moved, re-mapped): ${id}: ${why}`);
+}
 fs.mkdirSync(outDir, { recursive: true });
 
 const tasks = [];
