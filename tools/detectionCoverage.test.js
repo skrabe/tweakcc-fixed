@@ -78,10 +78,21 @@ describe('detectionCoverage: prose gate', () => {
 });
 
 describe('detectionCoverage: drop contexts', () => {
-  it('drops a thrown vendored SDK message', () => {
+  it('leaves thrown messages to the classifier instead of dropping them', () => {
+    // A tool's thrown error is the tool_result the model reads, so the site
+    // alone is not evidence of facing.
     expect(
       isDroppedByContext(
-        'You must install the identity-broker plugin package.',
+        'Cannot enter worktree: the target is the current working directory.',
+        'if(L8i===void 0)throw Error('
+      )
+    ).toBe(false);
+  });
+
+  it('still drops a vendored SDK message by its package scope', () => {
+    expect(
+      isDroppedByContext(
+        'Install @azure/identity-broker to use the broker credential.',
         'if(L8i===void 0)throw Error('
       )
     ).toBe(true);
@@ -165,5 +176,29 @@ describe('detectionCoverage: composites are evidence, not stored prompts', () =>
         b.includes('Do not use workflows')
     );
     expect(joined).toBeUndefined();
+  });
+});
+
+describe('detectionCoverage: defers to the classification cache', () => {
+  const ex = require('./promptExtractor.js');
+  const { isJudgedNotModelFacing } = require('./detectionCoverage.js');
+  const text =
+    'Cannot enter worktree: the target is the current working directory.';
+
+  it('silences only a ui/internal verdict on the assembled text', () => {
+    try {
+      for (const [facing, silent] of [
+        ['ui', true],
+        ['internal', true],
+        ['model', false],
+      ]) {
+        ex._setClassificationCacheForTests({ [ex.sha1Hex(text)]: { facing } });
+        expect(isJudgedNotModelFacing(text)).toBe(silent);
+      }
+      ex._setClassificationCacheForTests({ _: {} });
+      expect(isJudgedNotModelFacing(text)).toBe(false);
+    } finally {
+      ex._setClassificationCacheForTests(null);
+    }
   });
 });

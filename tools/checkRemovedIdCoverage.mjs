@@ -385,9 +385,11 @@ if (buckets['in-catalogue'].length) {
 
 // `no-probe-surface` needs a decision too: the gate could not test it, and
 // leaving it out of this count is what makes an untested id read as settled.
+// An archived `gone` id is decided, so it leaves the count; it stays in the
+// "truly removed" total.
 const removed =
   buckets['IN-BUNDLE'].length +
-  buckets.gone.length +
+  buckets.gone.filter(id => allowlist[id]?.verdict !== 'archived').length +
   buckets['no-probe-surface'].length;
 console.log(
   `removed-id coverage: ${prevById.size - curIds.size >= 0 ? '' : ''}` +

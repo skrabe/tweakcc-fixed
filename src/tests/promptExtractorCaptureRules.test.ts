@@ -43,23 +43,30 @@ describe('leadShowsDropContext (2.7.0 rules)', () => {
     expect(ext.leadShowsDropContext(lead)).toBe(false);
   });
 
-  it('drops Error-subclass constructor messages (super("…"))', () => {
-    expect(
-      ext.leadShowsDropContext('class X extends Error{constructor(){super(')
-    ).toBe(true);
+  // super( / Promise.reject( / zod refine used to drop here. An error thrown in
+  // a tool's call path is the tool_result the model reads, so they moved to
+  // leadShowsExceptionContext: the site no longer decides facing, the
+  // classifier does.
+  it('no longer drops Error-subclass constructor messages (super("…"))', () => {
+    const lead = 'class X extends Error{constructor(){super(';
+    expect(ext.leadShowsDropContext(lead)).toBe(false);
+    expect(ext.leadShowsExceptionContext(lead)).toBe(true);
   });
 
-  it('drops rejected-promise reasons', () => {
-    expect(ext.leadShowsDropContext('return Promise.reject(')).toBe(true);
-    expect(ext.leadShowsDropContext('return Promise.reject(new Error(')).toBe(
-      true
-    );
+  it('no longer drops rejected-promise reasons', () => {
+    for (const lead of [
+      'return Promise.reject(',
+      'return Promise.reject(new Error(',
+    ]) {
+      expect(ext.leadShowsDropContext(lead)).toBe(false);
+      expect(ext.leadShowsExceptionContext(lead)).toBe(true);
+    }
   });
 
-  it('drops zod .refine() validation messages', () => {
-    expect(ext.leadShowsDropContext('.refine((e)=>e.length>0,{message:')).toBe(
-      true
-    );
+  it('no longer drops zod .refine() validation messages', () => {
+    const lead = '.refine((e)=>e.length>0,{message:';
+    expect(ext.leadShowsDropContext(lead)).toBe(false);
+    expect(ext.leadShowsExceptionContext(lead)).toBe(true);
   });
 
   it('drops highlight.js grammar keys (keyword lists, lexer regexes)', () => {
@@ -225,8 +232,9 @@ describe('looksLikeEnglishProse', () => {
 });
 
 // ---------------------------------------------------------------------------
-// shouldCapture — decision order: drop context > cache verdict > hard
-// excludes > static gates.
+// shouldCapture — decision order: UI-only drop context > curated verdicts >
+// cache verdict (hard excludes still win) > exception site (candidate only) >
+// static gates.
 // ---------------------------------------------------------------------------
 describe('shouldCapture', () => {
   const PROSE_GATE_REJECT =
@@ -262,6 +270,39 @@ describe('shouldCapture', () => {
         500
       )
     ).toBe(false);
+  });
+
+  it("an exception site defers to the cache: 'model' captures, 'ui' drops", () => {
+    for (const lead of [
+      'throw new Error(',
+      'constructor(e){super(',
+      'return Promise.reject(',
+      '.refine((e)=>e.length>0,{message:',
+    ]) {
+      ext._setClassificationCacheForTests({
+        [sha1(PROSE_GATE_REJECT)]: { facing: 'model' },
+      });
+      expect(
+        ext.shouldCapture(PROSE_GATE_REJECT, PROSE_GATE_REJECT, lead, 500)
+      ).toBe(true);
+      ext._setClassificationCacheForTests({
+        [sha1(PROSE_GATE_REJECT)]: { facing: 'ui' },
+      });
+      expect(
+        ext.shouldCapture(PROSE_GATE_REJECT, PROSE_GATE_REJECT, lead, 500)
+      ).toBe(false);
+    }
+  });
+
+  it('an unclassified exception-site string is never captured directly', () => {
+    // Even one the static gates would admit: the classifier decides it.
+    const passing =
+      'You must always check the golden path and edge cases. You should verify everything twice before you report success to the user.';
+    ext._setClassificationCacheForTests({});
+    expect(ext.shouldCapture(passing, passing, 'x=', 500)).toBe(true);
+    expect(ext.shouldCapture(passing, passing, 'throw new Error(', 500)).toBe(
+      false
+    );
   });
 
   it("a hard exclude beats a cache 'model' verdict", () => {

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -9,6 +9,7 @@ const extractStrings = require('./promptExtractor.js');
 const {
   leadShowsModelFacingContext,
   leadShowsDropContext,
+  leadShowsExceptionContext,
   contentIsModelFacingShortPrompt,
   validateInput,
   ADMIT_FLOOR,
@@ -49,11 +50,6 @@ describe('promptExtractor below-floor capture', () => {
   });
 
   describe('leadShowsDropContext (stable non-model-facing emission sites)', () => {
-    it('drops thrown exceptions', () => {
-      expect(leadShowsDropContext('throw new Error(')).toBe(true);
-      expect(leadShowsDropContext('throw new ndH(')).toBe(true);
-      expect(leadShowsDropContext('throw Z(')).toBe(true);
-    });
     it('drops console + stderr/stdout writes', () => {
       expect(leadShowsDropContext('console.error(')).toBe(true);
       expect(leadShowsDropContext('console.log(')).toBe(true);
@@ -63,13 +59,42 @@ describe('promptExtractor below-floor capture', () => {
       expect(
         leadShowsDropContext('wA.createElement(dP,{color:"warning"},')
       ).toBe(true);
+      expect(leadShowsDropContext('Y.jsx(T,{dimColor:!0,children:')).toBe(true);
       expect(leadShowsDropContext('.option(')).toBe(true);
       expect(leadShowsDropContext('.command(')).toBe(true);
+    });
+    it('no longer drops exception sites — their errors can be tool_results', () => {
+      expect(leadShowsDropContext('throw new Error(')).toBe(false);
+      expect(leadShowsDropContext('throw new ndH(')).toBe(false);
+      expect(leadShowsDropContext('super(')).toBe(false);
+      expect(leadShowsDropContext('Promise.reject(new Error(')).toBe(false);
     });
     it('does NOT fire on model-facing sites', () => {
       expect(leadShowsDropContext('{type:"string",description:')).toBe(false);
       expect(leadShowsDropContext('{name:X,description:')).toBe(false);
       expect(leadShowsDropContext('return ')).toBe(false);
+    });
+  });
+
+  describe('leadShowsExceptionContext (keyword-anchored, never a minified name)', () => {
+    it('recognises throw / new XError( / super( / Promise.reject( / zod refine', () => {
+      expect(leadShowsExceptionContext('throw new Error(')).toBe(true);
+      expect(leadShowsExceptionContext('throw new ndH(')).toBe(true);
+      expect(leadShowsExceptionContext('throw Z(')).toBe(true);
+      expect(leadShowsExceptionContext('throw ')).toBe(true);
+      expect(leadShowsExceptionContext('x=new TypeError(')).toBe(true);
+      expect(leadShowsExceptionContext('constructor(e){super(')).toBe(true);
+      expect(leadShowsExceptionContext('return Promise.reject(new Q(')).toBe(
+        true
+      );
+      expect(leadShowsExceptionContext('.refine(e=>e.length>0,{message:')).toBe(
+        true
+      );
+    });
+    it('does not fire on ordinary sites', () => {
+      expect(leadShowsExceptionContext('return ')).toBe(false);
+      expect(leadShowsExceptionContext('{type:"text",text:')).toBe(false);
+      expect(leadShowsExceptionContext('console.error(')).toBe(false);
     });
   });
 
@@ -104,20 +129,25 @@ describe('promptExtractor below-floor capture', () => {
   });
 
   describe('end-to-end extractStrings on a synthetic snippet', () => {
-    const run = code => {
+    const extract = code => {
       const f = path.join(
         os.tmpdir(),
         `pe-test-${process.pid}-${Math.random().toString(36).slice(2)}.js`
       );
       fs.writeFileSync(f, code);
       try {
-        return extractStrings(f).prompts.map(p =>
-          (p.pieces || []).filter(x => typeof x === 'string').join('')
-        );
+        const r = extractStrings(f);
+        return {
+          bodies: r.prompts.map(p =>
+            (p.pieces || []).filter(x => typeof x === 'string').join('')
+          ),
+          candidates: r.gateCandidates.map(c => c.body),
+        };
       } finally {
         fs.unlinkSync(f);
       }
     };
+    const run = code => extract(code).bodies;
 
     it('captures a model-facing JSON-schema param below the old 500 floor', () => {
       const desc =
@@ -128,13 +158,174 @@ describe('promptExtractor below-floor capture', () => {
       expect(bodies).toContain(desc);
     });
 
-    it('drops a thrown error of the same length', () => {
+    describe('exception sites are classified, not dropped', () => {
+      const { _setClassificationCacheForTests, sha1Hex } = extractStrings;
       const msg =
-        'The complete question to ask the user. Should be clear and specific.';
-      const bodies = run(
-        `function f(){throw new Error(${JSON.stringify(msg)})}`
-      );
-      expect(bodies).not.toContain(msg);
+        'Cannot enter worktree: the target is the current working directory.';
+      const verdict = facing =>
+        _setClassificationCacheForTests({ [sha1Hex(msg)]: { facing } });
+      afterEach(() => _setClassificationCacheForTests(null));
+
+      it('makes an unclassified thrown prose string a candidate, not a capture', () => {
+        _setClassificationCacheForTests({ _: {} });
+        for (const site of [
+          `function f(){throw new Error(${JSON.stringify(msg)})}`,
+          `function f(){throw new ndH(${JSON.stringify(msg)})}`,
+          `class E extends Error{constructor(){super(${JSON.stringify(msg)})}}`,
+          `function f(){return Promise.reject(new Error(${JSON.stringify(msg)}))}`,
+          `var s=z.string().refine(e=>e,{message:${JSON.stringify(msg)}});`,
+        ]) {
+          const { bodies, candidates } = extract(site);
+          expect(bodies).not.toContain(msg);
+          expect(candidates).toContain(msg);
+        }
+      });
+
+      it('makes a thrown template literal a candidate under its decoded body', () => {
+        _setClassificationCacheForTests({ _: {} });
+        const { candidates } = extract(
+          'function f(e){throw new Error(`Cannot enter worktree: ${e} is the current working directory.`)}'
+        );
+        expect(
+          candidates.some(c => c.startsWith('Cannot enter worktree: '))
+        ).toBe(true);
+      });
+
+      it('does not make thrown identifiers, paths or enum values candidates', () => {
+        _setClassificationCacheForTests({ _: {} });
+        for (const junk of [
+          'ERR_INVALID_ARG_TYPE_FOR_THE_PROVIDED_CALLBACK_FUNCTION',
+          '/usr/local/lib/node_modules/some/deep/package/path.js',
+          'properties.input_schema.properties.command.type',
+        ]) {
+          const { candidates } = extract(
+            `function f(){throw new Error(${JSON.stringify(junk)})}`
+          );
+          expect(candidates).not.toContain(junk);
+        }
+      });
+
+      it('drops a thrown string whose cached verdict is ui or internal', () => {
+        for (const facing of ['ui', 'internal']) {
+          verdict(facing);
+          const { bodies, candidates } = extract(
+            `function f(){throw new Error(${JSON.stringify(msg)})}`
+          );
+          expect(bodies).not.toContain(msg);
+          expect(candidates).not.toContain(msg);
+        }
+      });
+
+      it('catalogues a thrown string whose cached verdict is model', () => {
+        verdict('model');
+        const { bodies } = extract(
+          `function f(){throw new Error(${JSON.stringify(msg)})}`
+        );
+        expect(bodies).toContain(msg);
+      });
+
+      it('never lets a cached model verdict override a UI-only site', () => {
+        // The cache is content-keyed: a verdict earned at a tool-result site
+        // must not catalogue the Ink/console copy of the same words.
+        verdict('model');
+        for (const site of [
+          `var e=X.createElement(B,{color:"red"},${JSON.stringify(msg)});`,
+          `var e=Y.jsx(T,{dimColor:!0,children:${JSON.stringify(msg)}});`,
+          `console.warn(${JSON.stringify(msg)});`,
+          `process.stdout.write(${JSON.stringify(msg)});`,
+        ]) {
+          expect(run(site)).not.toContain(msg);
+        }
+        expect(
+          run(`var r={type:"text",text:${JSON.stringify(msg)}};`)
+        ).toContain(msg);
+      });
+
+      it('drops UI-only sites before slot-literal and settings verdicts too', () => {
+        // Both are matched by text, so they share the cache's content-keyed
+        // hazard: the console.error twin of the /plugin validate message.
+        const { shouldCapture } = extractStrings;
+        _setClassificationCacheForTests({ _: {} });
+        for (const opts of [
+          { slotLiteral: true },
+          { settingsDescription: true },
+        ]) {
+          for (const lead of [
+            'return console.error(',
+            'e(n,{dimColor:!0,children:',
+            'process.stderr.write(',
+          ]) {
+            expect(shouldCapture(msg, msg, lead, 500, opts)).toBe(false);
+          }
+          expect(shouldCapture(msg, msg, 'let s=', 500, opts)).toBe(true);
+          expect(shouldCapture(msg, msg, 'throw new Error(', 500, opts)).toBe(
+            true
+          );
+        }
+      });
+
+      it('makes an unpunctuated thrown error clause a candidate', () => {
+        _setClassificationCacheForTests({ _: {} });
+        const clause =
+          'comments could not be read reliably right now — try again';
+        const { bodies, candidates } = extract(
+          `function f(){throw new He(${JSON.stringify(clause)})}`
+        );
+        expect(bodies).not.toContain(clause);
+        expect(candidates).toContain(clause);
+      });
+
+      it('makes a short thrown error a candidate — no length floor', () => {
+        _setClassificationCacheForTests({ _: {} });
+        for (const short of [
+          'bash: command is required',
+          'Plugin path is not a directory: ${p}',
+          'not an artifact URL: ${p}',
+        ]) {
+          const lit = short.includes('${')
+            ? `\`${short}\``
+            : JSON.stringify(short);
+          const { bodies, candidates } = extract(
+            `function f(p){throw new Error(${lit})}`
+          );
+          expect(bodies).not.toContain(short);
+          expect(
+            candidates.some(c => c.startsWith(short.replace('${p}', '')))
+          ).toBe(true);
+        }
+        // The floor stays for unsignalled strings at ordinary sites.
+        expect(
+          extract('var s="bash: command is required";').candidates
+        ).toEqual([]);
+      });
+
+      it('keeps the exception prose bar off keyword tables and regex sources', () => {
+        _setClassificationCacheForTests({ _: {} });
+        for (const junk of [
+          'array bigint bool byte char datetime decimal double single',
+          '^(?:[a-z]+\\s)+\\d+$|^(?:foo|bar|baz)[-_]?qux$',
+          'CLAUDE_CODE_SOME_FLAG CLAUDE_CODE_OTHER_FLAG CLAUDE_CODE_THIRD',
+        ]) {
+          const { candidates } = extract(
+            `function f(){throw new Error(${JSON.stringify(junk)})}`
+          );
+          expect(candidates).not.toContain(junk);
+        }
+      });
+
+      it('still drops unclassified console and jsx-children strings silently', () => {
+        _setClassificationCacheForTests({ _: {} });
+        for (const site of [
+          `console.error(${JSON.stringify(msg)});`,
+          `var e=Y.jsx(T,{dimColor:!0,children:${JSON.stringify(msg)}});`,
+          `var e=X.createElement(B,{color:"red"},${JSON.stringify(msg)});`,
+          `process.stderr.write(${JSON.stringify(msg)});`,
+        ]) {
+          const { bodies, candidates } = extract(site);
+          expect(bodies).not.toContain(msg);
+          expect(candidates).not.toContain(msg);
+        }
+      });
     });
 
     it('drops a createElement (Ink UI) child', () => {

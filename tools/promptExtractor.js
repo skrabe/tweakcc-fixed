@@ -3471,13 +3471,14 @@ function leadShowsModelFacingContext(lead, text = '') {
 // (b) Lead-in context that marks a NON-model-facing emission site. All STABLE
 // JS keywords / built-ins / library method names (NOT minified identifiers), so
 // they keep working across versions. A match drops the string regardless of how
-// prompt-like its prose is (the emission site overrides the tone).
+// prompt-like its prose is (the emission site overrides the tone) — unless a
+// classification-cache verdict, read at this exact emission site, says the
+// model sees it (see shouldCapture).
+//
+// Only sites whose output can never reach the model belong here. Exception
+// messages used to: they do not (see leadShowsExceptionContext).
 function leadShowsDropContext(lead) {
   const tail = lead.slice(-120);
-  // Thrown exception messages (internal): `throw ...`, `throw new X(`, `new
-  // <Anything>Error|Exception(`.
-  if (/\bthrow\s+(?:new\s+)?[$\w.]*\(?\s*$/.test(tail)) return true;
-  if (/\bnew\s+[$\w]*(?:Error|Exception)[$\w]*\(\s*$/.test(tail)) return true;
   // Console / leveled-logger diagnostics (internal).
   if (/\bconsole\.(?:log|error|warn|info|debug|trace)\(\s*$/.test(tail))
     return true;
@@ -3502,13 +3503,6 @@ function leadShowsDropContext(lead) {
   // jsxs() call).
   if (/\bchildren:\s*\[?\s*$/.test(tail)) return true;
   if (/\bchildren:\s*\[[^\]]*,\s*$/.test(tail)) return true;
-  // Subclass constructor delegation — `super("...")` is an Error-subclass
-  // message (internal) at every observed site.
-  if (/\bsuper\(\s*$/.test(tail)) return true;
-  // Rejected-promise reasons (internal error strings).
-  if (/\bPromise\.reject\(\s*(?:new\s+[$\w.]*\(\s*)?$/.test(tail)) return true;
-  // Zod `.refine({..., message: "..."})` — validation failure copy (internal).
-  if (/\.refine\((?:[^()]|\([^()]*\))*message:\s*$/.test(tail)) return true;
   // highlight.js language-definition grammar keys — keyword lists and lexer
   // regexes for the markdown code-highlighter, never model-facing. All keys
   // are stable hljs API vocabulary.
@@ -3518,6 +3512,32 @@ function leadShowsDropContext(lead) {
     )
   )
     return true;
+  return false;
+}
+
+// (b2) Lead-in context that marks an EXCEPTION message: `throw …`, `new
+// <Anything>Error|Exception(`, `super(` (Error-subclass constructors),
+// `Promise.reject(`, and a zod `.refine(…, {message:})`. These used to drop
+// outright, but an error thrown inside a tool's call path becomes the
+// tool_result the model reads (the gh stand-in's "{owner}/{repo} would be the
+// repository of …" reaches Bash stderr; EnterWorktree's "Cannot enter
+// worktree: … is the current working directory." is the whole result). Zod
+// refine messages reach the model too: a tool-input validation failure is
+// returned to it as an InputValidationError tool_result, and settings
+// validation errors are surfaced to it as well.
+//
+// The site alone cannot say which route a given message takes, so it decides
+// nothing about facing. It only withholds direct capture: an unclassified
+// string here becomes a classification candidate (when it reads as prose), and
+// the classifier's verdict — model, ui or internal — is what the next
+// extraction acts on.
+function leadShowsExceptionContext(lead) {
+  const tail = lead.slice(-120);
+  if (/\bthrow\s+(?:new\s+)?[$\w.]*\(?\s*$/.test(tail)) return true;
+  if (/\bnew\s+[$\w]*(?:Error|Exception)[$\w]*\(\s*$/.test(tail)) return true;
+  if (/\bsuper\(\s*$/.test(tail)) return true;
+  if (/\bPromise\.reject\(\s*(?:new\s+[$\w.]*\(\s*)?$/.test(tail)) return true;
+  if (/\.refine\((?:[^()]|\([^()]*\))*message:\s*$/.test(tail)) return true;
   return false;
 }
 
@@ -4055,6 +4075,26 @@ function looksLikeEnglishProse(text) {
   return /[.,:;!?)](\s|$)/.test(text) || /\n/.test(text.trim());
 }
 
+// The prose bar for an EXCEPTION message. Error text is often a single clause
+// with no terminal punctuation ("comments could not be read reliably right now
+// — try again"), which looksLikeEnglishProse rejects for want of a sentence
+// boundary. This accepts a run of real words instead: interpolations removed,
+// at least three lowercase-bodied words making up most of the tokens, and one
+// function word. Identifiers, paths and schema paths are one token; regex
+// sources and keyword tables fail the word share or carry no function word.
+const ERROR_WORD = /^[("'`]?[A-Za-z][a-z]+(?:['’-][a-z]+)*[)"'`.,:;!?]*$/;
+function looksLikeErrorPhrase(text) {
+  const plain = text.replace(/\$\{[^}]*\}/g, ' ');
+  const ascii = plain.replace(/[^\x20-\x7e\n\t]/g, '');
+  if (ascii.length / plain.length < 0.9) return false;
+  const tokens = plain.split(/\s+/).filter(Boolean);
+  const words = tokens.filter(t => ERROR_WORD.test(t));
+  if (words.length < 3 || words.length / tokens.length < 0.6) return false;
+  return words.some(w =>
+    PROSE_STOPWORDS.has(w.toLowerCase().replace(/[^a-z]/g, ''))
+  );
+}
+
 // Strings rejected ONLY by the prose-quality gates (they cleared the drop
 // contexts, the hard excludes, and the floor) that read like English prose.
 // These are the classification candidates the prose gates used to eat
@@ -4071,16 +4111,23 @@ function recordGateCandidate(body, lead) {
 }
 
 // The capture decision for one emission site. Order:
-//   1. Structural drop contexts (jsx children, throw, console, hljs grammar…)
-//      always drop — candidates are never recorded from these sites, so no
-//      cache verdict can exist to argue with them.
-//   2. A classification-cache verdict is authoritative for everything else —
-//      it was produced by reading this exact content's emission site — so a
-//      'model' verdict rescues a string the prose gates would drop, and a
-//      'ui'/'internal' verdict drops a string the gates would admit. Hard
-//      structural excludes still win over a 'model' verdict.
-//   3. No verdict -> the static gates decide; a prose-gate-only rejection
-//      that looks like English prose becomes a classification candidate.
+//   1. UI-only drop contexts (jsx children, console, terminal writes, --help
+//      builders, hljs grammar) always drop. Their output provably never reaches
+//      the model, and no verdict can argue with that: the cache is keyed on
+//      CONTENT, not site, so a 'model' verdict earned at a tool-result site
+//      would otherwise catalogue every Ink copy of the same words ("Auto-compact
+//      is currently disabled (see /config)" is UI-only in 2.1.291 yet carries a
+//      model verdict). A string that is model-facing at some other site is
+//      caught there, or by the identical-site backfill.
+//   2. Curated verdicts (slot-literal `catalogue`, settings-schema
+//      descriptions), then the classification cache — authoritative for
+//      everything else, exception sites included: a 'model' verdict captures, a
+//      'ui'/'internal' verdict drops. Hard structural excludes still win.
+//   3. Exception sites (throw, new XError(, super(, Promise.reject(, zod
+//      refine) are never captured unclassified: a prose string there becomes
+//      a classification candidate, so the classifier decides its facing.
+//   4. Otherwise the static gates decide; a prose-gate-only rejection that
+//      looks like English prose becomes a classification candidate.
 function shouldCapture(text, cacheBody, lead, minLength, opts = {}) {
   if (leadShowsDropContext(lead)) return false;
   // A slot-literal `catalogue` verdict says a human read this exact string at
@@ -4097,6 +4144,7 @@ function shouldCapture(text, cacheBody, lead, minLength, opts = {}) {
   const cls = classifyByCache(cacheBody);
   if (cls) {
     if (isHardExcluded(text)) return false;
+    if (cls.facing === 'model') return true;
     // A CURATED assignment outranks the cached verdict. The cache is written by
     // an LLM classification pass reading each string's emission site, and it is
     // right often enough to be the authority for below-floor capture — but it is
@@ -4109,9 +4157,18 @@ function shouldCapture(text, cacheBody, lead, minLength, opts = {}) {
     // tool description: the model reads it on every session that exposes the
     // tool. Naming a prompt in NEW_PROMPT_ASSIGNMENTS is a human decision about
     // one specific string, so it wins; everything else still defers to the cache.
-    if (cls.facing !== 'model' && !lookupNewPromptAssignment(text))
-      return false;
-    if (cls.facing === 'model') return true;
+    if (!lookupNewPromptAssignment(text)) return false;
+  }
+  if (leadShowsExceptionContext(lead)) {
+    // No length floor: a short tool error ("Path does not exist: ${p}") is
+    // the whole tool_result. The prose bars keep identifiers and enums out.
+    if (
+      validateInput(text, 1, { bypassQuality: true }) &&
+      (looksLikeEnglishProse(cacheBody) || looksLikeErrorPhrase(cacheBody))
+    ) {
+      recordGateCandidate(cacheBody, lead);
+    }
+    return false;
   }
   const signalled = leadShowsModelFacingContext(lead, text);
   const eff = signalled ? 1 : Math.min(minLength, ADMIT_FLOOR);
@@ -6012,12 +6069,14 @@ module.exports.normalizeIdGroups = normalizeIdGroups;
 // Exported for the test suite (below-floor capture rules — battleproof guarantee).
 module.exports.leadShowsModelFacingContext = leadShowsModelFacingContext;
 module.exports.leadShowsDropContext = leadShowsDropContext;
+module.exports.leadShowsExceptionContext = leadShowsExceptionContext;
 module.exports.contentIsModelFacingShortPrompt =
   contentIsModelFacingShortPrompt;
 module.exports.validateInput = validateInput;
 module.exports.ADMIT_FLOOR = ADMIT_FLOOR;
 module.exports.shouldCapture = shouldCapture;
 module.exports.looksLikeEnglishProse = looksLikeEnglishProse;
+module.exports.looksLikeErrorPhrase = looksLikeErrorPhrase;
 module.exports.isHardExcluded = isHardExcluded;
 // Exposed so a test can assert that no curated assignment claims a document that
 // merely QUOTES a prompt — the failure mode that force-captured the changelog.

@@ -131,6 +131,19 @@ describe('checkRemovedIdCoverage: prompts with little literal text', () => {
     );
   });
 
+  it('stops counting a removal as needing a decision once it is archived', () => {
+    const cli = write('cli-gone2.js', 'function q(){return "unrelated"}');
+    const prev = write('prev-gone2.json', { prompts: [realRemoval] });
+    const cur = write('cur-gone2.json', { prompts: [] });
+    expect(run(cli, prev, cur)).toMatch(/1 truly removed \(1 need a decision\)/);
+    const allow = write('allow-gone2.json', {
+      'tool-result-fixture-genuinely-absent': { verdict: 'archived' },
+    });
+    expect(run(cli, prev, cur, allow)).toMatch(
+      /1 truly removed \(0 need a decision\)/
+    );
+  });
+
   it('reports no-probe-surface rather than a removal when it cannot test either way', () => {
     const out = run(
       write('cli-np.js', 'function q(){return "x"}'),

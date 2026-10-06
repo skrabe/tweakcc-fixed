@@ -33,6 +33,10 @@ const {
   splitModuleBundle,
   parseModuleSegment,
 } = require('./lib/moduleBundle.cjs');
+const {
+  classifyByCache,
+  setCcVersionForCacheLookups,
+} = require('./promptExtractor.js');
 
 const ALLOWLIST = path.join(
   __dirname,
@@ -88,9 +92,10 @@ function looksLikeProse(text) {
 function isDroppedByContext(text, lead) {
   const s = norm(text);
   const tail = norm(lead);
-  // `throw Error(`, `throw new Iu(` — the error class sits between the keyword
-  // and the paren, and it is a minified name, so match it loosely.
-  if (/\bthrow\s+(new\s+)?[$\w.]*\(\s*$/.test(tail)) return true;
+  // Exception sites (`throw …(`, `new XError(`, `super(`) are deliberately NOT
+  // here. An error thrown inside a tool's call path is the tool_result the
+  // model reads, so the extractor no longer drops them: it hands them to the
+  // classifier, and this gate defers to that same verdict (see main).
   if (/\bconsole\.[$\w]+\(\s*$/.test(tail)) return true;
   if (/\bprocess\.(stdout|stderr)\.write\(\s*$/.test(tail)) return true;
   if (/\.(createElement|option|command)\(\s*$/.test(tail)) return true;
@@ -101,6 +106,12 @@ function isDroppedByContext(text, lead) {
   if (/\[(suggestion|success|warning):/.test(s)) return true; // TUI demo frames
   if (/^@internal\b/.test(s)) return true; // internal config-schema descriptions
   return false;
+}
+
+// A classification-cache verdict of ui/internal for the assembled text.
+function isJudgedNotModelFacing(text) {
+  const facing = classifyByCache(text)?.facing;
+  return facing === 'ui' || facing === 'internal';
 }
 
 // --------------------------------------------------------------------------
@@ -251,6 +262,8 @@ function main() {
 
   const code = fs.readFileSync(cliPath, 'utf8');
   const corpus = buildCorpus(jsonPath);
+  const version = path.basename(jsonPath).match(/prompts-(.+)\.json$/)?.[1];
+  setCcVersionForCacheLookups(version);
   const allowlist = loadAllowlist();
 
   const findings = [];
@@ -261,6 +274,11 @@ function main() {
     if (!looksLikeProse(c.text)) continue;
     if (isDroppedByContext(c.text, lead)) continue;
     if (isCaptured(corpus, c.text)) continue;
+    // The extractor hands every composite it cannot place to the classifier,
+    // keyed by the same assembled text, and obeys the verdict. A ui/internal
+    // verdict is a reviewed emission site, the same thing an allowlist row
+    // records, so it stays silent here too.
+    if (isJudgedNotModelFacing(c.text)) continue;
     // Coverage is judged per FRAGMENT, not on the joined text. The joined form
     // exists only at runtime, so the extractor never stores it — cataloguing it
     // would guarantee a "Could not find" at every apply, since no regex built
@@ -378,6 +396,7 @@ module.exports = {
   collectComposites,
   looksLikeProse,
   isDroppedByContext,
+  isJudgedNotModelFacing,
   isCaptured,
   buildCorpus,
 };
