@@ -451,5 +451,61 @@
     "text": "no certificate in it",
     "verdict": "glue",
     "reason": "cause clause in Ie()'s parenthesis (tool-result-bash-builtin-gh-proxy-ca-unreadable, \"could not read this session's GitHub proxy CA bundle (${e}).\"); the other caller passes the raw error message; no instruction"
+  },
+  "feeff89fb9a6e7ed": {
+    "builder": "Bs",
+    "param": "e",
+    "text": "ANTHROPIC_GOOGLE_CLOUD_PROJECT",
+    "verdict": "glue",
+    "reason": "glue: env-var name passed as e to Bs(e,n) @7094512 by the anthropicGoogleCloud client setup @7100960, interpolated as the subject of system-gcp-path-env-var-invalid-characters (\"${e} may only contain letters, digits, hyphens, and underscores — …\"). It names which variable failed the charset gate; the instruction is the fixed sentence, and the name is a value, not prose to override"
+  },
+  "9d474f460e0678a7": {
+    "builder": "Bs",
+    "param": "e",
+    "text": "ANTHROPIC_GOOGLE_CLOUD_LOCATION",
+    "verdict": "glue",
+    "reason": "glue: env-var name passed as e to Bs(e,n) @7094512 by the anthropicGoogleCloud client setup @7100960, interpolated as the subject of system-gcp-path-env-var-invalid-characters (\"${e} may only contain letters, digits, hyphens, and underscores — …\"). It names which variable failed the charset gate; the instruction is the fixed sentence, and the name is a value, not prose to override"
+  },
+  "b4bbd1a4fd8bd7a1": {
+    "builder": "Bs",
+    "param": "e",
+    "text": "ANTHROPIC_GOOGLE_CLOUD_WORKSPACE_ID",
+    "verdict": "glue",
+    "reason": "glue: env-var name passed as e to Bs(e,n) @7094512 by the anthropicGoogleCloud client setup @7100960, interpolated as the subject of system-gcp-path-env-var-invalid-characters (\"${e} may only contain letters, digits, hyphens, and underscores — …\"). It names which variable failed the charset gate; the instruction is the fixed sentence, and the name is a value, not prose to override"
+  },
+  "915c8ad2fe9e7ec7": {
+    "builder": "Bs",
+    "param": "e",
+    "text": "GOOGLE_CLOUD_PROJECT",
+    "verdict": "glue",
+    "reason": "glue: env-var name passed as e to Bs(e,n) @7094512 by the anthropicGoogleCloud client setup @7100960, interpolated as the subject of system-gcp-path-env-var-invalid-characters (\"${e} may only contain letters, digits, hyphens, and underscores — …\"). It names which variable failed the charset gate; the instruction is the fixed sentence, and the name is a value, not prose to override"
+  },
+  "e655c3e61dccbe8e": {
+    "builder": "Bs",
+    "param": "e",
+    "text": "google_cloud_project",
+    "verdict": "glue",
+    "reason": "glue: env-var name passed as e to Bs(e,n) @7094512 by the anthropicGoogleCloud client setup @7100960, interpolated as the subject of system-gcp-path-env-var-invalid-characters (\"${e} may only contain letters, digits, hyphens, and underscores — …\"). It names which variable failed the charset gate; the instruction is the fixed sentence, and the name is a value, not prose to override"
+  },
+  "2a3b774d9f9b4ce7": {
+    "builder": "vi",
+    "param": "e",
+    "text": "dbProfiles.db_profiles",
+    "verdict": "glue",
+    "reason": "glue: routing-arm label passed as e to vi(e,n), which throws P(`Artifact ${e}: no arm for ${r} (routing table and handler disagree)`) (tool-result-artifact-action-routing-no-arm) only when the Artifact tool routing table and a handler disagree. An internal dotted handler path, no instruction (call @32839324 in uTo, the db_profiles tool_result mapper)"
+  },
+  "7e8eb7abe46f483b": {
+    "builder": "vi",
+    "param": "e",
+    "text": "db.toAutoClassifierInput",
+    "verdict": "glue",
+    "reason": "glue: routing-arm label passed as e to vi(e,n), which throws P(`Artifact ${e}: no arm for ${r} (routing table and handler disagree)`) (tool-result-artifact-action-routing-no-arm) only when the Artifact tool routing table and a handler disagree. An internal dotted handler path, no instruction (call @32883207, db.toAutoClassifierInput fallthrough)"
+  },
+  "d2d4acdcc15532bf": {
+    "builder": "vi",
+    "param": "e",
+    "text": "db.getToolUseSummary",
+    "verdict": "glue",
+    "reason": "glue: routing-arm label passed as e to vi(e,n), which throws P(`Artifact ${e}: no arm for ${r} (routing table and handler disagree)`) (tool-result-artifact-action-routing-no-arm) only when the Artifact tool routing table and a handler disagree. An internal dotted handler path, no instruction (call @32886666, db.getToolUseSummary fallthrough)"
   }
 }

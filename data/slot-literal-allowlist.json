@@ -1109,16 +1109,6 @@
     "text": "is listed twice; values are unique",
     "verdict": "catalogue"
   },
-  "11d18a397672c221": {
-    "desc": "Else branch of the agent-type list in MDn() @7634771, interpolated into the deny for a hook naming an undispatchable subagentType. Names the rule that a fork exposes no agent types at all.",
-    "id": "tool-result-subagent-spawn-hook-fork-names-no-agent-types",
-    "label": "TOOL_RESULT_SUBAGENT_SPAWN_HOOK_UNKNOWN_AGENT_TYPE_VAR_1",
-    "name": "Tool Result: subagent spawn hook — a fork names no agent types",
-    "promptId": "tool-result-subagent-spawn-hook-unknown-agent-type",
-    "reason": "states why no agent type is available, which the model cannot derive",
-    "text": "a fork names none",
-    "verdict": "catalogue"
-  },
   "482816212be80e14": {
     "desc": "Scope suffix on the /advisor result @15438174, chosen when the change is session-only. Carries the action that makes it permanent.",
     "id": "slash-command-advisor-session-only-suffix",
@@ -2164,5 +2154,104 @@
     "name": "Tool Result: PreToolUse hook gave no verdict",
     "desc": "Reason a served-call PreToolUse hook refused the call: it ended in a non-blocking error without having run by contract, so it gave no verdict.",
     "reason": "2.1.288 rewording of \"could not render a verdict\" (r in Kzo() @10359203); same role, so the id is kept"
+  },
+  "39c67024c901bdec": {
+    "verdict": "glue",
+    "label": "TOOL_RESULT_GIT_BUNDLE_SPLIT_INDEX_VAR_0",
+    "promptId": "tool-result-git-bundle-split-index",
+    "reason": "middle quasi of p$e=`${OOt} retry there. ${DOt}` @9733354; joins the catalogued remedy lead (OOt, tool-result-git-bundle-fresh-clone-remedy-lead, which ends \"then\") to the catalogued keep-this-folder note (DOt); the instruction content lives in those two values",
+    "text": " retry there. "
+  },
+  "8bab7506b37c4bb2": {
+    "verdict": "glue",
+    "promptId": "tool-result-git-bundle-included-config-refusal",
+    "reason": "The checker resolved identifier r across functions: the hardlinked-changed-files site @9766818 binds its slot to b=r(\"hardlinked\"), a local helper; this literal is the r slot of _ko() @9757653, whose template `Not uploading this working tree: ${r} ${h}.${s} ${b}` is tool-result-git-bundle-included-config-refusal. Noun phrase naming which configuration file holds the include (included branch); the refusal sentence around it carries the constraint.",
+    "text": "a file that your git configuration includes"
+  },
+  "f041f6bdbdc57ed9": {
+    "verdict": "glue",
+    "promptId": "tool-result-git-bundle-included-config-refusal",
+    "reason": "The checker resolved identifier r across functions: the hardlinked-changed-files site @9766818 binds its slot to b=r(\"hardlinked\"), a local helper; this literal is the r slot of _ko() @9757653, whose template `Not uploading this working tree: ${r} ${h}.${s} ${b}` is tool-result-git-bundle-included-config-refusal. Noun phrase naming the repository config file (repository branch); the refusal sentence carries the constraint.",
+    "text": "this repository’s own git configuration file"
+  },
+  "e045e355de3bb732": {
+    "verdict": "glue",
+    "promptId": "tool-result-git-bundle-included-config-refusal",
+    "reason": "The checker resolved identifier r across functions: the hardlinked-changed-files site @9766818 binds its slot to b=r(\"hardlinked\"), a local helper; this literal is the r slot of _ko() @9757653, whose template `Not uploading this working tree: ${r} ${h}.${s} ${b}` is tool-result-git-bundle-included-config-refusal. Noun phrase naming the user/system config file (fallback branch); the refusal sentence carries the constraint.",
+    "text": "your own or the system-wide git configuration file"
+  },
+  "337d7e2a58a7641b": {
+    "verdict": "catalogue",
+    "desc": "Hint in the included-config upload refusal that git config --show-origin --get-regexp include lists each include line and its file.",
+    "id": "tool-result-git-bundle-included-config-list-includes-hint",
+    "name": "Tool Result: Git bundle included config list includes hint",
+    "promptId": "tool-result-git-bundle-included-config-refusal",
+    "reason": "The checker resolved identifier s across functions: the hardlinked-changed-files site @9766818 binds its slot to b=r(\"hardlinked\"), a local helper; this literal is the s slot of _ko() @9757653, whose template `Not uploading this working tree: ${r} ${h}.${s} ${b}` is tool-result-git-bundle-included-config-refusal. A command the model runs to find the offending include line; the --name-only sibling for the other branch is tool-result-git-bundle-included-config-list-files-hint. Path: UDt case included_config -> _ko(e.writable??\"included_indirect\") @9761678, so n is true by default and this arm renders -> bundle error -> w0 onBundleFail @9845545 -> Agent tool Bt error to the model.",
+    "text": " `git config --show-origin --get-regexp include` lists each include line and its file."
+  },
+  "564f546c56605d44": {
+    "verdict": "not-a-slot",
+    "promptId": "slash-command-resume-session-not-found",
+    "reason": "resolver artifact: the prompt site @40432814 (`Session ${ge.bold(o.arg)} was not found.`) has no B in its slots; the checker bound B to `let B=` in the background-session name resolver nt() @14850213 in another module, which writes to process.stderr for `claude logs/attach`, never into this prompt",
+    "text": "The task text of "
+  },
+  "88a0f8218ff7e47d": {
+    "verdict": "glue",
+    "label": "DATA_TASK_NOTIFICATION_ARTIFACT_OTHER_THREAD_AWAITING_REPLY_VAR_0",
+    "promptId": "data-task-notification-artifact-other-thread-awaiting-reply",
+    "reason": "thread marker label gOr @15594158 quoted inside the notification sentence (\"marked \\\"${gOr}\\\"\"); names the marker the model sees in a comments read, the instruction is the surrounding sentence",
+    "text": "Claude: activated"
+  },
+  "444c1449b7d3ac73": {
+    "verdict": "glue",
+    "label": "DATA_TASK_NOTIFICATION_ARTIFACT_THREADS_LEFT_FOR_OTHERS_VAR_0",
+    "promptId": "data-task-notification-artifact-threads-left-for-others",
+    "reason": "thread marker label fzn @15594182 quoted inside the notification sentence; same constant is the row prefix of the catalogued comments-listing label, the instruction is the surrounding sentence",
+    "text": "Claude: NOT activated"
+  },
+  "27174e16f396ef97": {
+    "verdict": "glue",
+    "label": "TOOL_RESULT_SUBAGENT_SPAWN_HOOK_UNKNOWN_AGENT_TYPE_VAR_1",
+    "promptId": "tool-result-subagent-spawn-hook-unknown-agent-type",
+    "reason": "2.1.291 successor of the 2.1.288 catalogue entry 11d18a397672c221 (\"a fork names none\", id tool-result-subagent-spawn-hook-fork-names-no-agent-types), pruned because its literal is gone from the bundle (python count 0). bn() @ the unknown-agent-type deny now has no fork arm: S=h.length>0?`available: ${h.join(\", \")}`:\"none is available\". The generic empty-list parenthetical labels the agent list; the deny sentence carries the instruction, so the old id is archived in data/removed-id-allowlist.json rather than carried.",
+    "text": "none is available"
+  },
+  "b11eb587411b5ad0": {
+    "verdict": "catalogue",
+    "desc": "Remedy appended to every refused temp-directory error: set CLAUDE_CODE_TMPDIR to a directory you control, or have an administrator remove the planted one.",
+    "id": "tool-result-temp-dir-set-claude-code-tmpdir-remedy",
+    "label": "TOOL_RESULT_TEMP_DIR_NOT_A_DIRECTORY_VAR_1",
+    "name": "Tool Result: Temp dir — set CLAUDE_CODE_TMPDIR remedy",
+    "promptId": "tool-result-temp-dir-not-a-directory",
+    "reason": "o=\"…\" @601201 in Tke(), appended as the closing remedy of the not-a-directory, owned-by-another-uid and unreadable temp-dir refusals. It is the only actionable instruction in those errors.",
+    "text": "Set CLAUDE_CODE_TMPDIR to a directory you control, or ask an administrator to remove it."
+  },
+  "184e3dd1a5313a90": {
+    "verdict": "glue",
+    "label": "TOOL_RESULT_BASH_SANDBOX_CREDENTIALS_FILE_EXTRACT_NO_MATCH_VAR_1",
+    "promptId": "tool-result-bash-sandbox-credentials-file-extract-no-match",
+    "reason": "head quasi shared by both jwt arms of J (`decode \"jwt\" with pattern \"${V}\" …`); quasi of J @5622033, the reason clause spliced into tool-result-bash-sandbox-credentials-file-extract-no-match (\"credentials.files entry \\\"${b.path}\\\": ${J} (onExtractNoMatch: \\\"error\\\"). Fix the config…\"). It describes which pattern matched nothing; the remedy is the parent sentence. No instruction",
+    "text": "decode \"jwt\" with pattern \""
+  },
+  "a0bfee4bbc0f7c6e": {
+    "verdict": "glue",
+    "label": "TOOL_RESULT_BASH_SANDBOX_CREDENTIALS_FILE_EXTRACT_NO_MATCH_VAR_1",
+    "promptId": "tool-result-bash-sandbox-credentials-file-extract-no-match",
+    "reason": "tail quasi of the maskClaims arm of J; quasi of J @5622033, the reason clause spliced into tool-result-bash-sandbox-credentials-file-extract-no-match (\"credentials.files entry \\\"${b.path}\\\": ${J} (onExtractNoMatch: \\\"error\\\"). Fix the config…\"). It describes which pattern matched nothing; the remedy is the parent sentence. No instruction",
+    "text": "\" that matched no verified JWT with maskable claims (maskClaims: "
+  },
+  "e412a031169b7d40": {
+    "verdict": "glue",
+    "label": "TOOL_RESULT_BASH_SANDBOX_CREDENTIALS_FILE_EXTRACT_NO_MATCH_VAR_1",
+    "promptId": "tool-result-bash-sandbox-credentials-file-extract-no-match",
+    "reason": "tail quasi of the plain-jwt arm of J; quasi of J @5622033, the reason clause spliced into tool-result-bash-sandbox-credentials-file-extract-no-match (\"credentials.files entry \\\"${b.path}\\\": ${J} (onExtractNoMatch: \\\"error\\\"). Fix the config…\"). It describes which pattern matched nothing; the remedy is the parent sentence. No instruction",
+    "text": "\" that matched no verified JWT"
+  },
+  "cb6a8276e844da7f": {
+    "verdict": "glue",
+    "label": "TOOL_RESULT_BASH_SANDBOX_CREDENTIALS_FILE_EXTRACT_NO_MATCH_VAR_1",
+    "promptId": "tool-result-bash-sandbox-credentials-file-extract-no-match",
+    "reason": "tail quasi of the extract arm of J (`extract pattern \"${V}\" that matched nothing`); quasi of J @5622033, the reason clause spliced into tool-result-bash-sandbox-credentials-file-extract-no-match (\"credentials.files entry \\\"${b.path}\\\": ${J} (onExtractNoMatch: \\\"error\\\"). Fix the config…\"). It describes which pattern matched nothing; the remedy is the parent sentence. No instruction",
+    "text": "\" that matched nothing"
   }
 }
