@@ -1,20 +1,101 @@
 {
+  "agent-prompt-claude-guide-agent": {
+    "bodyHash": "b0f08ef0f8d7",
+    "pristineHash": "44da1bb645a0",
+    "valueHash": "ecd919ac0e65",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "SEARCH_TOOL_NAMES": "Value is the tool-name list \"<Glob>, <Grep>, and <Read>\" (or \"<Read>, `find`, and `grep`\"). Renders `Use Glob, Grep, and Read for local CLAUDE.md and `.claude/` references.`, pristine step 7 reworded into a complete imperative."
+    }
+  },
+  "agent-prompt-security-monitor-for-autonomous-agent-actions": {
+    "bodyHash": "3620c31330bd",
+    "pristineHash": "e123dd3bfe8c",
+    "valueHash": "17ebd6269667",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "PASTED_CONTENT_TRUST_RULE_BLOCK": "Value is \"\" or \" <runtime rule block>\". It renders inside the <cc_automode_session_rules><cross_session_messages_rule> container, as in pristine, where it followed the cut rule 9. Separately, the trim also dropped pristine's closing </cc_automode_session_rules> tag (pristine leaves <cross_session_messages_rule> unclosed too); that tag balance is outside this gate."
+    }
+  },
+  "agent-prompt-summarization-no-tools-guard": {
+    "bodyHash": "bdc466481a52",
+    "pristineHash": "00a56291676b",
+    "valueHash": "4589f08ef6fa",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "SUMMARY_REPLY_SHAPE_DESCRIPTION": "Renders `Your response is an <analysis> block followed by a <summary> block.` (or \"a <summary> block\"), reworded from \"Your entire response must be plain text: …\". The shape is still predicated of the response. Unknown because tQt is exported."
+    }
+  },
+  "system-prompt-harness-instructions": {
+    "bodyHash": "bd52c78247b5",
+    "pristineHash": "dba035c633f2",
+    "valueHash": "88dca249fc3d",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "PASTED_CONTENT_GUIDANCE_BULLET": "Value is \"\" or \"\\n - <bullet>\". It opens its own bullet line; its left neighbour is now the guidance call's output instead of the cut \"Hooks may intercept …\" sentence."
+    }
+  },
   "system-reminder-cloud-review-launch-note": {
     "bodyHash": "39e7bf684884",
     "pristineHash": "4986b369b135",
-    "valueHash": "6aa89bc75e23",
+    "valueHash": "9e38f1311c90",
     "reviewed": "2026-10-07 (CC 2.1.292)",
     "tokens": {
-      "SYSTEM_REMINDER_CLOUD_REVIEW_LAUNCH_NOTE_VAR_0": "Runtime value (the user's launch note, sanitised by Wt(ne(h, …))). Renders `This review was launched with a note: \"<note>\". The cloud review did not see it.` The trim only cut \", recorded at launch time\" before the colon; the quoted note is still introduced as the launch note."
+      "SYSTEM_REMINDER_CLOUD_REVIEW_LAUNCH_NOTE_VAR_0": "Runtime value: the user's launch note, run through Wt(ne(h, …)). Renders `This review was launched with a note: \"<note>\". The cloud review did not see it.` Only \", recorded at launch time\" before the colon was cut, so the quoted note is still introduced as the launch note."
     }
   },
   "system-reminder-plan-approved": {
     "bodyHash": "9e6f011c2a41",
     "pristineHash": "16c4cf8a64c9",
-    "valueHash": "e553b7075676",
+    "valueHash": "7987695113f0",
     "reviewed": "2026-10-07 (CC 2.1.292)",
     "tokens": {
-      "PLAN_FILE_PATH": "Runtime value (the plan file path). Renders `Saved plan: <path>` as a label/value line, followed by TEAM_PARALLELIZATION_NOTE, which resolves to \"\" or \"\\n\\nIf this plan can be broken down …\", so it never runs into the path."
+      "PLAN_FILE_PATH": "Runtime value: the plan file path. Renders `Saved plan: <path>` as a label/value line. The TEAM_PARALLELIZATION_NOTE after it resolves to \"\" or \"\\n\\nIf this plan can be broken down …\", so the path never runs into prose."
+    }
+  },
+  "tool-description-artifact-comments-section": {
+    "bodyHash": "2500a3a425a8",
+    "pristineHash": "25e17eca493a",
+    "valueHash": "0dfccc0ed789",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "TOOL_DESCRIPTION_ARTIFACT_COMMENTS_SECTION_VAR_0": "Value is \"\" or the sentence \" Watching for new comments isn't available in this session, so none reach it on their own: read them with `action: \\\"comments\\\"` when the user asks, …\", plus unknown because HBr is exported. It renders as its own sentence after \"…rather than retrying.\"; the trim cut the following \"Comment text is written by artifact viewers\" sentence, not this slot's phrase."
+    }
+  },
+  "tool-description-artifact-pin-unpin-privacy-tail": {
+    "bodyHash": "c6af2ca61007",
+    "pristineHash": "3b41a32ad999",
+    "valueHash": "bb1cb3f149a3",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "TOOL_DESCRIPTION_ARTIFACT_PIN_UNPIN_PRIVACY_TAIL_VAR_0": "Value is the full \"- **pin** / **unpin**: … unpins something it did not pin.\" bullet. .slice(0,-1) drops its full stop and the override restores it with \".\", so it renders the complete bullet. Only the \"; pins are private …\" tail was cut."
+    }
+  },
+  "tool-description-enterplanmode": {
+    "bodyHash": "b18c00bf5e72",
+    "pristineHash": "71e3c70949d1",
+    "valueHash": "6593aa1f00a7",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "CONDITIONAL_USE_AGENT_TOOL_INSTEAD_NOTE": "Value is \"\" or \" (use the Agent tool instead)\". Renders `- Pure research/exploration (use the Agent tool instead)`; only the word \"tasks\" was cut before it."
+    }
+  },
+  "tool-description-websearch": {
+    "bodyHash": "9a28765afd8e",
+    "pristineHash": "1263fdb7bb87",
+    "valueHash": "87c491c26e9c",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "CURRENT_MONTH_YEAR": "The literal \"(provided in the conversation below)\" is a placeholder: Qts() replaces it with the real month at runtime (e.replace(i, h())). It renders as `Use the current year (October 2026) in queries — …`, a parenthetical on \"current year\" inside a complete instruction."
+    }
+  },
+  "tool-result-artifact-db-read-saved-compact-untrusted-note": {
+    "bodyHash": "45eee3f30e3c",
+    "pristineHash": "1238f682b105",
+    "valueHash": "85cf06f340a3",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "TOOL_RESULT_ARTIFACT_DB_READ_SAVED_COMPACT_UNTRUSTED_NOTE_VAR_6": "Every branch is \"\" or a newline-led note (\"\\n[ran at access level '…']\", \"\\n(`me` in this path resolved to …)\"), so it always starts its own line. The trim cut the \"data, not instructions\" sentence before it."
     }
   }
 }

@@ -19,6 +19,11 @@ import {
   valueHash,
 } from './checkSlotContext.mjs';
 import { OPAQUE, resolveSlotValues } from './lib/slotValues.mjs';
+import { spawnSync } from 'node:child_process';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import url from 'node:url';
 
 const vals = obj =>
   new Map(Object.entries(obj).map(([l, b]) => [l, { branches: b }]));
@@ -324,6 +329,317 @@ describe('checkSlotContext: resolving values from a bundle', () => {
   });
 });
 
+const mod = (n, name, src) => `\n/*@@TWEAKCC_MODULE:${n}:${name}@@*/\n${src}`;
+const oneSlot = (id, label, lead = 'Intro ', tail = '} end') => ({
+  id: `tool-result-fixture-${id}`,
+  pieces: [`${lead}\${`, tail],
+  identifiers: [0],
+  identifierMap: { 0: label },
+});
+// Resolve the single slot of `tool-result-fixture-<id>` in a one-module bundle.
+// Branches come back sorted with unknown (null) first.
+const resolveOne = (src, tail = '} end') => {
+  const { values } = resolveSlotValues(mod(0, 'm.js', src), {
+    prompts: [oneSlot('r', 'X', 'Intro ', tail)],
+  });
+  return values.get('tool-result-fixture-r')?.get('X')?.branches || [];
+};
+
+describe('checkSlotContext: review round 2 (A–F, the rule)', () => {
+  it('A: an unknown branch keeps the word rule running alongside the value rule', () => {
+    // the known branch is a whole sentence (value rule silent), but the other
+    // branch is runtime data, so the word rule must still see the cut
+    const f = contextFindings(
+      [nudge],
+      danglingBody,
+      vals({ FIXTURE_TOOL_NAME: ['A whole sentence.', null] })
+    );
+    expect(f.map(x => x.kind)).toEqual(['unknown']);
+  });
+
+  it('A: values that are all `other` keep the word rule', () => {
+    expect(classifyValue('(provided in the conversation below)')).toBe('other');
+    const f = contextFindings(
+      [nudge],
+      danglingBody,
+      vals({ FIXTURE_TOOL_NAME: ['(provided in the conversation below)'] })
+    );
+    expect(f.map(x => x.kind)).toEqual(['unknown']);
+  });
+
+  it('B: connective-led and comma-ended values are fragments before names', () => {
+    expect(classifyValue(' and assigned to teammates')).toBe('fragment');
+    expect(classifyValue('which follows')).toBe('fragment');
+    expect(classifyValue(' and ')).toBe('fragment');
+    expect(classifyValue('in')).toBe('fragment');
+    expect(classifyValue('Stop.')).toBe('sentence');
+    expect(classifyValue('Read')).toBe('name');
+    expect(classifyValue('undefined')).toBe('name');
+  });
+
+  it('C: a neighbouring slot that can be empty exposes the boundary behind it', () => {
+    const p = fixture(
+      'neighbour',
+      ['Before.${', '} Tasks${', '}.'],
+      ['E', 'T']
+    );
+    const fragment = [' and assigned to teammates'];
+    for (const e of [[''], ['Done here.'], ['', 'Done here.']]) {
+      const f = contextFindings(
+        [p],
+        'Done.${E}${T}.',
+        vals({ E: e, T: fragment })
+      );
+      expect(f.map(x => [x.label, x.kind])).toEqual([['T', 'fragment']]);
+    }
+    // a neighbour whose value ends mid-phrase is a word, so no boundary
+    expect(
+      contextFindings(
+        [p],
+        'Done.${E}${T}.',
+        vals({ E: ['Tasks'], T: fragment })
+      )
+    ).toEqual([]);
+  });
+
+  it('D: a value that is only ever "" is never a finding', () => {
+    expect(
+      contextFindings([nudge], danglingBody, vals({ FIXTURE_TOOL_NAME: [''] }))
+    ).toEqual([]);
+  });
+
+  it('E: valueHash tells an unknown branch from the literal text "null"', () => {
+    expect(valueHash(vals({ X: [null] }))).not.toBe(
+      valueHash(vals({ X: ['null'] }))
+    );
+  });
+});
+
+describe('checkSlotContext: review round 2 (G–M, the resolver)', () => {
+  it('G: an initialised binding also takes every later assignment', () => {
+    expect(
+      resolveOne(
+        'let x="Complete.";x=" and frag";function f(){return`Intro ${x} end`}'
+      )
+    ).toEqual([' and frag', 'Complete.']);
+  });
+
+  it('H: assignments are collected per binding, not per spelling, and from closures', () => {
+    expect(
+      resolveOne(
+        'let x;{let x;x="SHADOW";}x="Correct.";function f(){return`Intro ${x} end`}'
+      )
+    ).toEqual(['Correct.']);
+    expect(
+      resolveOne(
+        'let x="A.";function g(){x="From closure.";}function f(){return`Intro ${x} end`}'
+      )
+    ).toEqual(['A.', 'From closure.']);
+  });
+
+  it('I: loop, destructuring and hoisted var bindings never borrow an outer const', () => {
+    expect(
+      resolveOne(
+        'const x="OUTER";function f(a){for(const x of a){`Intro ${x} end`}}'
+      )
+    ).toEqual([null]);
+    expect(
+      resolveOne(
+        'const x="OUTER";function f(o){const{x}=o;return`Intro ${x} end`}'
+      )
+    ).toEqual([null]);
+    expect(
+      resolveOne(
+        'const x="OUTER";function f(c){if(c){var x=c.v}return`Intro ${x} end`}'
+      )
+    ).toEqual([null]);
+  });
+
+  it('J: an aliased import resolves under its exported name', () => {
+    const src =
+      mod(0, 'names.js', 'var T="ReadNotifications",q="WRONG";export{T};') +
+      mod(
+        1,
+        'p.js',
+        'import{T as q}from"names.js";function f(){return`Intro ${q} end`}'
+      );
+    const { values } = resolveSlotValues(src, {
+      prompts: [oneSlot('import', 'X')],
+    });
+    expect(values.get('tool-result-fixture-import').get('X').branches).toEqual([
+      'ReadNotifications',
+    ]);
+  });
+
+  it('K: a function that can fall through renders "undefined"; so does a missing argument', () => {
+    expect(
+      resolveOne(
+        'function g(c){if(c)return"Yes."}function f(){return`Intro ${g()} end`}',
+        '()} end'
+      )
+    ).toEqual(['Yes.', 'undefined']);
+    expect(
+      resolveOne(
+        'function h(a,b){return`Intro ${b} end`}h("x");h("y","Given.");'
+      )
+    ).toEqual(['Given.', 'undefined']);
+  });
+
+  it('L: an escaping function keeps an unknown branch; a private one does not', () => {
+    expect(
+      resolveOne('function h(a){return`Intro ${a} end`}h("Only.");')
+    ).toEqual(['Only.']);
+    expect(
+      resolveOne('function h(a){return`Intro ${a} end`}h("Only.");export{h};')
+    ).toEqual([null, 'Only.']);
+    expect(
+      resolveOne(
+        'function h(a){return`Intro ${a} end`}h("Only.");setTimeout(h);'
+      )
+    ).toEqual([null, 'Only.']);
+    expect(
+      resolveOne(
+        'function h(a){return`Intro ${a} end`}h("Only.");const alias=h;'
+      )
+    ).toEqual([null, 'Only.']);
+  });
+
+  it('L: arguments of another function sharing a helper name never leak in', () => {
+    // two scopes each declare their own `h`; only the outer one is the
+    // template's function
+    expect(
+      resolveOne(
+        'function h(a){return`Intro ${a} end`}h("Mine.");function other(){function h(z){return z}h("Diagnostic noise")}'
+      )
+    ).toEqual(['Mine.']);
+  });
+
+  it('M: results do not depend on query order, cycles included', () => {
+    const src = mod(
+      0,
+      'm.js',
+      [
+        'let a="A.";let b=a+" more";a=b;',
+        'function r(n){return n?r(n-1):"Base."}',
+        'function f(){return`One ${a} end`}',
+        'function g(){return`Two ${b} end`}',
+        'function k(){return`Three ${r()} end`}',
+      ].join('')
+    );
+    const cat = {
+      prompts: [
+        oneSlot('m1', 'A', 'One '),
+        oneSlot('m2', 'B', 'Two '),
+        oneSlot('m3', 'R', 'Three '),
+      ],
+    };
+    const fwd = resolveSlotValues(src, cat).values;
+    const rev = resolveSlotValues(src, cat, { reverse: true }).values;
+    for (const id of fwd.keys())
+      expect(valueHash(rev.get(id))).toBe(valueHash(fwd.get(id)));
+    // a binding on a cycle is unknown, whichever end the query started from
+    expect(fwd.get('tool-result-fixture-m1').get('A').branches).toEqual([null]);
+    expect(fwd.get('tool-result-fixture-m2').get('B').branches).toEqual([null]);
+  });
+});
+
+describe('checkSlotContext: planted-defect recall (synthetic)', () => {
+  const cases = [
+    [' and potentially assigned to teammates', 'fragment'],
+    [' "str_replace" edits one field in place,', 'fragment'],
+    ['which follows', 'fragment'],
+    ['ReadNotifications', 'name'],
+    ['https://example.com/llms.txt', 'name'],
+  ];
+  it.each(cases)('flags %j moved to a sentence start', (value, kind) => {
+    const p = fixture('plant', ['Use it with ${', '} here today.'], ['V']);
+    const body =
+      kind === 'name'
+        ? 'Use it with.\n${V}.\nhere today.'
+        : 'Use it with.\n${V} here today.';
+    expect(
+      contextFindings([p], body, vals({ V: [value] })).map(x => x.kind)
+    ).toEqual([kind]);
+  });
+});
+
+describe('checkSlotContext: F, the gate refuses to pass having checked nothing', () => {
+  const tool = path.join(
+    path.dirname(url.fileURLToPath(import.meta.url)),
+    'checkSlotContext.mjs'
+  );
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'slot-context-'));
+  const set = path.join(dir, 'set');
+  fs.mkdirSync(set);
+  fs.writeFileSync(
+    path.join(set, 'tool-result-fixture-gate.md'),
+    '<!--\nccVersion: 9.9.9\n-->\nTrimmed ${X}\n'
+  );
+  const catalogue = path.join(dir, 'prompts-9.9.9.json');
+  fs.writeFileSync(
+    catalogue,
+    JSON.stringify({
+      version: '9.9.9',
+      prompts: [oneSlot('gate', 'X', 'Pristine text ')],
+    })
+  );
+  const bundle = (name, src) => {
+    const f = path.join(dir, name);
+    fs.writeFileSync(f, src);
+    return f;
+  };
+  const allow = path.join(dir, 'allow.json');
+  fs.writeFileSync(allow, '{}');
+  const run = (...args) =>
+    spawnSync(
+      process.execPath,
+      [tool, catalogue, `--allowlist=${allow}`, ...args],
+      {
+        encoding: 'utf8',
+        env: { ...process.env, TWEAKCC_CONFIG_DIR: dir },
+      }
+    );
+  const good = bundle(
+    'good.js',
+    mod(
+      0,
+      'm.js',
+      'var meta={VERSION:"9.9.9"};var X="Value.";function f(){return`Pristine text ${X} end`}'
+    )
+  );
+
+  it('runs on a matching pristine bundle', () => {
+    const r = run(`--cli=${good}`, `--set=${set}`, '--all');
+    expect(r.status).toBe(0);
+  });
+
+  it('exits 2 when the bundle locates too few catalogued templates', () => {
+    const patched = bundle(
+      'patched.js',
+      mod(
+        0,
+        'm.js',
+        'var meta={VERSION:"9.9.9"};function f(){return`Patched ${X} end`}'
+      )
+    );
+    const r = run(`--cli=${patched}`, `--set=${set}`, '--all');
+    expect(r.status).toBe(2);
+    expect(r.stderr).toMatch(/PRISTINE/);
+  });
+
+  it('exits 2 for an --ids file that names nothing', () => {
+    const empty = path.join(dir, 'empty.txt');
+    fs.writeFileSync(empty, '');
+    const r = run(`--cli=${good}`, `--set=${set}`, `--ids=${empty}`);
+    expect(r.status).toBe(2);
+  });
+
+  it('exits 2 for an empty --sets= with --all', () => {
+    const r = run(`--cli=${good}`, '--sets=', '--all');
+    expect(r.status).toBe(2);
+  });
+});
+
 describe('checkSlotContext: a boundary is not a surviving side', () => {
   it('flags a dangling slot even when another pristine occurrence touches an edge', () => {
     const p = fixture(
@@ -574,6 +890,7 @@ describe('checkSlotContext: CLI arguments', () => {
       all: true,
       outPath: 'out.json',
       cliPath: null,
+      allowPath: null,
       errors: [],
     });
     const r = parseCliArgs([
