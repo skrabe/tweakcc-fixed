@@ -199,6 +199,18 @@ describe('writeToolFetchingUseMemo', () => {
     );
     expect(out).toContain(fallbackFor('s', 'readonly'));
   });
+
+  it('keeps the extra addDisplayOnlyTools argument on CC >=2.1.292', () => {
+    const src =
+      'derive(){let h=this.store.getState(),be=[],Me=this.combinedInitialToolsFor(h,k),' +
+      '{tools:Ne,allowedAgentTypes:He}=this.computeToolPool(h,Me,k);' +
+      'return{commands:Pe,tools:Ne,renderingTools:this.addDisplayOnlyTools(Ne,this.isThinClient&&NAe(h)),allowedAgentTypes:He}}';
+    const out = writeToolFetchingUseMemo(src, TS, 'readonly')!;
+    expect(out).toContain(
+      'renderingTools:this.addDisplayOnlyTools(__tf(Ne,h),this.isThinClient&&NAe(h)),allowedAgentTypes:He'
+    );
+    expect(out).toContain('derive(){const __ts=');
+  });
 });
 
 describe('writeComputeToolsFilter', () => {
