@@ -5,7 +5,7 @@
 // siblings might already carry the claim — so the packet assembles all of it
 // once, and the fan-out spends its budget on judgment instead of lookup.
 //
-//   node tools/buildAuditPacket.mjs <prompts.json> <ids-file> <outDir> [--ids-per-agent N]
+//   node tools/buildAuditPacket.mjs <prompts.json> <ids-file> <outDir> [--ids-per-agent N] [--no-capture]
 //
 // <ids-file> is one prompt id per line. Writes <outDir>/audit-packet-NN.md —
 // the whole markdown packet the stage-1 agent reads (tools/lib/auditPacketMd.mjs:
@@ -32,6 +32,12 @@
 // same function and the nearest deployed bodies. On CC 2.1.288 the 441-id
 // packets carried ~187k characters of override frontmatter that no verdict
 // used.
+//
+// Each tool carrier is marked always-on or DEFERRED from a turnProbe wire
+// capture (TWEAKCC_CAPTURES, else the one `driver check` recorded for the
+// version). Without one every tool carrier goes to stage 1 unmarked, so the
+// build exits 2 unless --no-capture (or TWEAKCC_NO_CAPTURE=1) says the run is
+// deliberate; the manifest's `capture` stays null then.
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
@@ -89,16 +95,18 @@ const parsed = parseOverrideArgs(process.argv.slice(2));
 const resolved = resolveOverrideSets(parsed, { fallback: 'applied' });
 const flagArgs = [];
 const posArgs = [];
+let noCapture = ['1', 'true'].includes(process.env.TWEAKCC_NO_CAPTURE);
 for (let i = 0; i < parsed.rest.length; i++) {
   const a = parsed.rest[i];
-  if (a === '--ids-per-agent') flagArgs.push(['ids-per-agent', parsed.rest[++i]]);
+  if (a === '--no-capture') noCapture = true;
+  else if (a === '--ids-per-agent') flagArgs.push(['ids-per-agent', parsed.rest[++i]]);
   else if (a.startsWith('--ids-per-agent=')) flagArgs.push(['ids-per-agent', a.slice(16)]);
   else posArgs.push(a);
 }
 const [jsonPath, idsPath, outDirArg, staleGroupSize] = posArgs;
 if (!jsonPath || !idsPath) {
   console.error(
-    'usage: buildAuditPacket.mjs <prompts.json> <ids-file> [outDir] [--ids-per-agent N]'
+    'usage: buildAuditPacket.mjs <prompts.json> <ids-file> [outDir] [--ids-per-agent N] [--no-capture]'
   );
   process.exit(2);
 }
@@ -147,7 +155,16 @@ const activeSet = active ? active.dir : '';
 const allSets = setEntries.map(s => s.name);
 printAuditedSets(setEntries);
 
-const prompts = JSON.parse(fs.readFileSync(jsonPath, 'utf8')).prompts;
+const catalogueJson = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+const prompts = catalogueJson.prompts;
+// Checked before the corpus index is built: a missing capture is a setup error,
+// not something to find out after the packets are written.
+if (!noCapture && !resolveCaptureDir(catalogueJson.version)) {
+  console.error(
+    `buildAuditPacket: no turnProbe capture for CC ${catalogueJson.version} — every tool carrier would reach stage 1 unmarked (always-on vs DEFERRED). Run \`driver check\` first (it records the capture), or point TWEAKCC_CAPTURES at a capture dir holding req-*.json. Pass --no-capture (or TWEAKCC_NO_CAPTURE=1) only for a deliberate run without one.`
+  );
+  process.exit(2);
+}
 // The realign workflow's prompt tells the agent to read "the complete old
 // pristine -> new pristine change", and the packet never carried the old body:
 // the agent had to go find one id inside a 3 MB previous-version JSON, or judge
@@ -371,7 +388,8 @@ const absOut = path.resolve(outDir);
 
 // Which tool carriers are always-on (lib/deferredTools.mjs): the turnProbe
 // capture's tools[] (TWEAKCC_CAPTURES, else the one `driver check` recorded for
-// this version). Without one the packet says so and marks nothing.
+// this version). Only a --no-capture run gets here without one; the packet then
+// says so and marks nothing.
 const captureDir = resolveCaptureDir(version);
 const capture = captureDir ? capturedTools(captureDir) : null;
 const toolStatus = makeToolStatus(

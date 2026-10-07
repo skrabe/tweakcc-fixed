@@ -111,6 +111,9 @@ const fm = (name, extra = '') =>
 let dir;
 let inputs;
 beforeAll(() => {
+  // The builder refuses to run without a turnProbe capture; these tests build
+  // packets without one on purpose.
+  process.env.TWEAKCC_NO_CAPTURE = '1';
   dir = fs.mkdtempSync(path.join(os.tmpdir(), 'audit-corpus-'));
   const set = path.join(dir, 'lcc', 'system-prompts-lcc');
   const rem = path.join(dir, 'lcc', 'system-reminders');
@@ -842,6 +845,47 @@ describe('markdown packet', () => {
     );
     expect(r.status).toBe(2);
     expect(r.stderr).toMatch(/every stage-1 keep is hunted/);
+  });
+
+  it('refuses to build without a turnProbe capture unless opted out', () => {
+    const idsFile = path.join(dir, 'nocap.txt');
+    fs.writeFileSync(idsFile, 't-jq\n');
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'no-captures-'));
+    const run = (extra, env = {}) =>
+      spawnSync(
+        'node',
+        [
+          path.join(TOOLS, 'buildAuditPacket.mjs'),
+          inputs.catalogue,
+          idsFile,
+          path.join(dir, 'nocap-out'),
+          ...extra,
+        ],
+        {
+          env: {
+            ...process.env,
+            TWEAKCC_CONFIG_DIR: path.join(dir, 'cfg'),
+            TWEAKCC_NO_CAPTURE: '',
+            TWEAKCC_CAPTURES: tmp,
+            ...env,
+          },
+          encoding: 'utf8',
+        }
+      );
+    const refused = run([]);
+    expect(refused.status).toBe(2);
+    expect(refused.stderr).toMatch(/TWEAKCC_CAPTURES/);
+    expect(refused.stderr).toMatch(/driver check/);
+    expect(fs.existsSync(path.join(dir, 'nocap-out', 'audit-manifest.json'))).toBe(false);
+    for (const [extra, env] of [[['--no-capture'], {}], [[], { TWEAKCC_NO_CAPTURE: '1' }]]) {
+      const ok = run(extra, env);
+      expect(ok.status).toBe(0);
+      expect(ok.stdout).toMatch(/NO turnProbe capture/);
+      const man = JSON.parse(
+        fs.readFileSync(path.join(dir, 'nocap-out', 'audit-manifest.json'), 'utf8')
+      );
+      expect(man.capture).toBeNull();
+    }
   });
 
   it('refuses the retired size knobs', () => {
