@@ -155,43 +155,36 @@ function assembleComposite(node) {
   return null;
 }
 
-// A template literal's pieces, split around each top-level identifier inside
-// its interpolations, and the label-encoded identifier order (0,1,1,2 = first
-// var, second var, second var again, third).
-function templateShape(node, code) {
-  const { expressions } = node;
-  const contentStart = node.start + 1;
-  const fullContent = code.substring(contentStart, node.end - 1);
-
-  const allIdentifiers = [];
-  const traverseExpr = (exprNode, isTopLevel = true) => {
+// Every top-level identifier inside a template literal's interpolations, in
+// source order, as { node, parent }. This is the slot order a catalogue entry's
+// `identifiers` array follows, so tools that need the AST node behind slot N
+// (tools/lib/slotValues.mjs) read it from here rather than re-deriving it.
+function templateIdentifierNodes(node) {
+  const out = [];
+  const traverseExpr = (exprNode, isTopLevel, parent) => {
     if (!exprNode || typeof exprNode !== 'object') return;
 
     if (exprNode.type === 'Identifier' && isTopLevel) {
-      allIdentifiers.push({
-        name: exprNode.name,
-        start: exprNode.start - contentStart,
-        end: exprNode.end - contentStart,
-      });
+      out.push({ node: exprNode, parent });
     }
 
     if (exprNode.type === 'CallExpression') {
-      traverseExpr(exprNode.callee, true);
+      traverseExpr(exprNode.callee, true, exprNode);
       if (exprNode.arguments) {
-        exprNode.arguments.forEach(arg => traverseExpr(arg, true));
+        exprNode.arguments.forEach(arg => traverseExpr(arg, true, exprNode));
       }
       return;
     }
 
     if (exprNode.type === 'MemberExpression') {
-      traverseExpr(exprNode.object, true);
+      traverseExpr(exprNode.object, true, exprNode);
       return;
     }
 
     if (exprNode.type === 'TemplateLiteral') {
       if (exprNode.expressions) {
         exprNode.expressions.forEach(nestedExpr =>
-          traverseExpr(nestedExpr, true)
+          traverseExpr(nestedExpr, true, exprNode)
         );
       }
       return;
@@ -201,7 +194,7 @@ function templateShape(node, code) {
       if (exprNode.properties) {
         exprNode.properties.forEach(prop => {
           if (prop.value) {
-            traverseExpr(prop.value, false);
+            traverseExpr(prop.value, false, prop);
           }
         });
       }
@@ -212,15 +205,29 @@ function templateShape(node, code) {
       if (key === 'loc' || key === 'start' || key === 'end') continue;
       const value = exprNode[key];
       if (Array.isArray(value)) {
-        value.forEach(v => traverseExpr(v, true));
+        value.forEach(v => traverseExpr(v, true, exprNode));
       } else if (value && typeof value === 'object') {
-        traverseExpr(value, true);
+        traverseExpr(value, true, exprNode);
       }
     }
   };
-  for (const expr of expressions) traverseExpr(expr, true);
+  for (const expr of node.expressions) traverseExpr(expr, true, node);
+  out.sort((a, b) => a.node.start - b.node.start);
+  return out;
+}
 
-  allIdentifiers.sort((a, b) => a.start - b.start);
+// A template literal's pieces, split around each top-level identifier inside
+// its interpolations, and the label-encoded identifier order (0,1,1,2 = first
+// var, second var, second var again, third).
+function templateShape(node, code) {
+  const contentStart = node.start + 1;
+  const fullContent = code.substring(contentStart, node.end - 1);
+
+  const allIdentifiers = templateIdentifierNodes(node).map(({ node: n }) => ({
+    name: n.name,
+    start: n.start - contentStart,
+    end: n.end - contentStart,
+  }));
 
   const pieces = [];
   const identifierList = [];
@@ -518,6 +525,7 @@ module.exports = {
   literalOf,
   assembleComposite,
   templateShape,
+  templateIdentifierNodes,
   collectBundleSites,
   sourceHash,
   defaultOptions,
