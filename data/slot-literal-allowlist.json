@@ -1445,16 +1445,6 @@
     "verdict": "glue",
     "reason": "labels the interpolated list of saved-file directories"
   },
-  "2103a6f3036ebd9c": {
-    "promptId": "slash-command-plugin-install-marketplace-needs-source",
-    "label": "SLASH_COMMAND_PLUGIN_INSTALL_MARKETPLACE_NEEDS_SOURCE_VAR_0",
-    "text": "Usage: /plugin install <plugin> --marketplace <source>",
-    "verdict": "catalogue",
-    "reason": "the usage line returned when /plugin install gets --marketplace without a source",
-    "id": "slash-command-plugin-install-marketplace-usage",
-    "name": "Slash Command: /plugin install --marketplace usage",
-    "desc": "Usage line telling the model the exact /plugin install --marketplace <source> form."
-  },
   "5f40c2e9bc78ef7d": {
     "promptId": "tool-result-artifact-share-menu-plan-allows",
     "label": "TOOL_RESULT_ARTIFACT_SHARE_MENU_PLAN_ALLOWS_VAR_0",
@@ -2253,5 +2243,36 @@
     "promptId": "tool-result-bash-sandbox-credentials-file-extract-no-match",
     "reason": "tail quasi of the extract arm of J (`extract pattern \"${V}\" that matched nothing`); quasi of J @5622033, the reason clause spliced into tool-result-bash-sandbox-credentials-file-extract-no-match (\"credentials.files entry \\\"${b.path}\\\": ${J} (onExtractNoMatch: \\\"error\\\"). Fix the config…\"). It describes which pattern matched nothing; the remedy is the parent sentence. No instruction",
     "text": "\" that matched nothing"
+  },
+  "5a4283c2e60b664b": {
+    "promptId": "tool-result-grep-ripgrep-target-unreadable",
+    "label": "TOOL_RESULT_GREP_RIPGREP_TARGET_UNREADABLE_VAR_0",
+    "reason": "one value of the ripgrep failure-cause ternary (siblings: permission denied, input/output error) spliced into the parenthesis before the os error code; it names the cause, the instruction is the trailing retry/tell-the-user sentence. No instruction",
+    "verdict": "glue",
+    "text": "the file Claude Code opened was not passed to ripgrep"
+  },
+  "e438c0a978c15c74": {
+    "promptId": "tool-result-grep-ripgrep-target-unreadable",
+    "label": "TOOL_RESULT_GREP_RIPGREP_TARGET_UNREADABLE_VAR_0",
+    "reason": "fallback value of the ripgrep failure-cause ternary, spliced before the os error code; names the cause only. No instruction",
+    "verdict": "glue",
+    "text": "an operating system error"
+  },
+  "2e270cc33e092b28": {
+    "promptId": "system-reminder-queued-notifications-delivery",
+    "label": "NOTIFICATION_READ_TIME_NOTE",
+    "reason": "field label of the per-notification arrival-age note (` · reached this session ${age} before this read`); labels an interpolated duration. No instruction",
+    "verdict": "glue",
+    "text": " · reached this session "
+  },
+  "58c478a13d14d76e": {
+    "promptId": "tool-result-mcp-server-needs-reauth-connector-settings",
+    "label": "TOOL_RESULT_MCP_SERVER_NEEDS_REAUTH_CONNECTOR_SETTINGS_VAR_1",
+    "desc": "Parenthetical in the MCP needs-sign-in-again tool result on claude.ai-connector sessions, telling the model the user reconnects the server in their claude.ai connector settings (the alternative arm says run /mcp).",
+    "id": "tool-result-mcp-server-needs-reauth-connector-settings-reconnect-hint",
+    "name": "Tool Result: MCP server needs re-auth — claude.ai connector reconnect hint",
+    "reason": "tells the model where the user reconnects the server; the model relays it",
+    "verdict": "catalogue",
+    "text": "the user can reconnect it in their claude.ai connector settings"
   }
 }

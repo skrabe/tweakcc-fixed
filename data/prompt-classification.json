@@ -101600,5 +101600,1527 @@
     "id": "tool-result-bash-sandbox-windows-srt-win-exec-denies-only",
     "name": "Tool Result: Bash sandbox Windows — srt-win exec exposes only per-exec denies",
     "desc": "Middle fragment of the Windows per-exec filesystem refusal: on Windows `srt-win exec` only exposes per-exec denies."
+  },
+  "6a20d89da45eb27126f22e21cb5ff2abd70d9255": { "facing": "internal" },
+  "84765e772b89666c6a96cfe7fbf46de2caafbcc0": {
+    "facing": "model",
+    "id": "data-settings-validation-marketplace-name-looks-official",
+    "name": "Data: Settings validation marketplace name looks official",
+    "desc": "Settings-validation warning that an extraKnownMarketplaces entry was ignored because its name looks like an official Anthropic marketplace, with how to rename or remove it"
+  },
+  "934384e3eb65cee0edb17377b8a07ff2baad840a": {
+    "facing": "model",
+    "id": "tool-result-artifact-policy-unverifiable-403-summary",
+    "name": "Tool Result: Artifact policy unverifiable 403 summary",
+    "desc": "Opening sentence of the artifact-unavailable result when Anthropic's API refused the organization policy check (HTTP 403) for a cloud session"
+  },
+  "de2a3bcac9f415ac4ab984acd3dd568d02087d5e": {
+    "facing": "model",
+    "id": "tool-result-artifact-policy-unverifiable-403-instructions",
+    "name": "Tool Result: Artifact policy unverifiable 403 instructions",
+    "desc": "Tells the model the organization policy request was refused with HTTP 403 in a cloud session, not to retry, and what to tell the user"
+  },
+  "97f18c5d2617659f987742a11353e28cbf12b767": { "facing": "internal" },
+  "f426bb5a4b4783a6bd2833d4f76c18b14a08e311": { "facing": "internal" },
+  "44027fc7fe15c5169fec5a0b1b123438215cbd14": { "facing": "internal" },
+  "3d638763a941325d022b06dd7cd89647feff7c49": { "facing": "internal" },
+  "6ff2a1a9d569a80d14b8a9dc2ed180f87474bccd": { "facing": "internal" },
+  "d98b68baada1e1d91686643cf34c3f23e06671df": { "facing": "internal" },
+  "f854ada167c386b9c5ea69c8f46e31c918152329": { "facing": "internal" },
+  "ad3eb7a6bcd014ecfbf8bdcd5825a7fdef2e525e": { "facing": "internal" },
+  "819f66225167b00cd79595f5a9fab95d623bd5cc": { "facing": "internal" },
+  "8e44c93f026e54be4fb7241db40e6c8bf650ce74": { "facing": "internal" },
+  "7b54525b9f9099449a0cb6501b48a37ef88264e4": { "facing": "internal" },
+  "6cf16fb9e9f92023c19c879d71768245f77c730e": {
+    "facing": "model",
+    "id": "tool-result-read-refusing-fd-path-unverifiable",
+    "name": "Tool Result: Read refusing when opened path is unverifiable",
+    "desc": "Read refusal when /proc/self/fd could not report where the file was opened, so it cannot be told apart from a path the session may not read"
+  },
+  "9d5d372dcee0a5e94e2dd53fe19d84580ba9b134": {
+    "facing": "model",
+    "id": "tool-result-read-symlink-changed-reason-opened-elsewhere",
+    "name": "Tool Result: Read symlink changed reason opened elsewhere",
+    "desc": "Reason fragment in the Read refusal that the file opened at a different path than approved"
+  },
+  "52c4df153c58d39095690a1d999eddb565ac5a3a": {
+    "facing": "model",
+    "id": "tool-result-read-symlink-changed-reason-after-open",
+    "name": "Tool Result: Read symlink changed reason after open",
+    "desc": "Reason fragment in the Read refusal that the path re-resolved elsewhere once opened"
+  },
+  "067428ce52626ebee9e333d217b5f65c9fdb6a11": { "facing": "internal" },
+  "9eda205bbbc0ab53baa9d5bea7a18479bc811030": { "facing": "internal" },
+  "af762d1b7d6bdd555804d2cd183624e77b5eb379": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-scan-lost-track-of-const-read",
+    "name": "Slash Command: Plugin validate hooks module scan lost track of const read",
+    "desc": "Hooks-module validation refusal when the scan lost track of a read of a state const and cannot show every use is a plain read"
+  },
+  "7e3148790fcd33c2ceecf4dbbae5af7034dadea4": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-parameter-read-shadowed-by-body",
+    "name": "Slash Command: Plugin validate hooks module parameter read shadowed by body",
+    "desc": "Hooks-module validation refusal for a name read among a function's parameters whose body redeclares it"
+  },
+  "44a6066a1e72532655ee786d456028db15746d2e": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-dollar-callee-shadows-import",
+    "name": "Slash Command: Plugin validate hooks module $ callee shadows import",
+    "desc": "Hooks-module validation refusal when $ is passed to a name declared again over the call, shadowing the import of that name"
+  },
+  "8cb14ec20b9b8ba85c967a18e079940f134e75e8": { "facing": "internal" },
+  "f8977b51eadfc4ccaa683e33ca6eeaa7ea06b2e3": { "facing": "internal" },
+  "e6e18d02b335128d562510f8fa348df0e86e152a": { "facing": "internal" },
+  "aa33efe901dff1279580a8d538383c76496a18bd": { "facing": "internal" },
+  "9f576d7d0713588ce364388708f267e50dfb389a": { "facing": "internal" },
+  "30df5fe5966afc0712bd4be80c54847c36280745": { "facing": "internal" },
+  "f5be5db3656cb7761a139cdbb38325c725383fac": {
+    "facing": "model",
+    "id": "tool-result-hook-result-unreadable-by-site",
+    "name": "Tool Result: Hook result unreadable by site",
+    "desc": "Problem text when a hooks-module hook's result cannot be read by its site, carried into the failing tool call"
+  },
+  "d79fbc426b5af7687bdc2dfb7757c67382651071": { "facing": "internal" },
+  "52cb00578f1edf29dd301e3c8f9c8a2cf5ed70d8": {
+    "facing": "model",
+    "id": "tool-result-hooks-catch-reentry-refused-op",
+    "name": "Tool Result: Hooks .catch re-entry refused host op",
+    "desc": "Refusal when a hooks-module .catch asked for re-entry and then tries a host op other than calling its own next()"
+  },
+  "1dbd679b02dae645b28aa6f68e0f83448d331ac0": { "facing": "ui" },
+  "58723ed4ac0647cb5f36ef6cea05e000332b78fe": { "facing": "ui" },
+  "796343f9b3c56d4a9ba839a9bfd23cfebb685887": { "facing": "ui" },
+  "dfe3ada1edb2188db41d81b94c2ccc191c2314a4": { "facing": "ui" },
+  "ff5b7c1500c17f635c63e5534c39c83ac6ceef7a": { "facing": "ui" },
+  "8cf9508d904ade6937922ad287c3fa258be16bc9": { "facing": "ui" },
+  "1616d645bd5121b57070486d64adadd21751f4e2": {
+    "facing": "model",
+    "id": "tool-result-grep-ripgrep-target-unreadable-retry-guidance",
+    "name": "Tool Result: Grep ripgrep target unreadable retry guidance",
+    "desc": "Guidance appended when ripgrep could not read its target for a non-permission reason: retry once, then tell the user, and do not fall back to a shell recursive search"
+  },
+  "5cf058bbc1a4bd40a65ffd1d63dfe9ba261d3f4d": {
+    "facing": "model",
+    "id": "tool-result-grep-no-shell-recursive-search-fallback",
+    "name": "Tool Result: Grep no shell recursive search fallback",
+    "desc": "Instruction fragment not to run a recursive search in the shell instead (grep -r, find, rg)"
+  },
+  "94d32d9de21d5f4558883dae2b2a82b26c0c81bb": {
+    "facing": "model",
+    "id": "tool-result-grep-ripgrep-target-unreadable-permission-guidance",
+    "name": "Tool Result: Grep ripgrep target unreadable permission guidance",
+    "desc": "Guidance when ripgrep was denied permission to read its target: tell the user the path could not be read"
+  },
+  "2feb07a3c77fff187b756612c242a5f692a322f2": {
+    "facing": "model",
+    "id": "tool-result-grep-ripgrep-target-unreadable",
+    "name": "Tool Result: Grep ripgrep target unreadable",
+    "desc": "Grep error that ripgrep could not read the path it was given, so nothing was searched and this is not a no-matches result"
+  },
+  "823257aca44e1517aa66900daa8427cc1168c3f9": { "facing": "internal" },
+  "eb868f5803097b2969aa25a8342757f0ddd67d66": { "facing": "internal" },
+  "2d0b36a13b0eeaaee927e4d870748952850a142d": { "facing": "internal" },
+  "aef2e61537015f9dc569f0442c6b5067a20738e4": { "facing": "internal" },
+  "967706e8fe31bc7d90789c587a72062e6bb342ea": { "facing": "internal" },
+  "3f6d29b5edee3ab01c12aed2ae93c4a48dc7ff1c": { "facing": "internal" },
+  "862669fe2a041b282a0d9bd8d8e783b965649a1b": { "facing": "internal" },
+  "4c02df3ee75e7b64668ec5b596c0ec3938bd9b02": { "facing": "internal" },
+  "eff456db9cdadee62e8dbed1f9a4e4e1158a61cc": { "facing": "internal" },
+  "1a2cb0709779c1e43872f2f112968ab59dd07a92": { "facing": "internal" },
+  "25b7b73f6b03e6fae3c62f8cabd479222674643f": { "facing": "ui" },
+  "7d555f54d702acba75f2f4446606524a05c0b309": {
+    "facing": "model",
+    "id": "tool-parameter-bash-run_in_background-timeout-limit",
+    "name": "Tool Parameter: Bash run_in_background timeout limit",
+    "desc": "run_in_background parameter description when background timeouts apply, explaining timeout as the background run limit with default and max"
+  },
+  "2df403424af964fa189984a281b54dbb49b445bd": {
+    "facing": "model",
+    "id": "tool-description-bash-run-in-background-deadline-suffix",
+    "name": "Tool Description: Bash run_in_background deadline suffix",
+    "desc": "Suffix in the shell tool prompt explaining the background timeout default, maximum and that the command is stopped at the limit"
+  },
+  "8f39d6795eb857b65374bcd988e6d72c052ec91c": {
+    "facing": "model",
+    "id": "tool-description-publishplugin-upload-and-replace",
+    "name": "Tool Description: PublishPlugin upload and replace",
+    "desc": "Explains that on the person's yes the plugin is uploaded, scanned and submitted to the organization, and to call again with replace: true only after asking"
+  },
+  "fa8317b29f9afa6bdb62cd0a283e0340e6bf9f68": {
+    "facing": "model",
+    "id": "tool-description-publishplugin-only-channel",
+    "name": "Tool Description: PublishPlugin only publishing channel",
+    "desc": "Tells the model to publish plugins only through this tool, to the signed-in organization, and to relay the result lines as-is"
+  },
+  "c84d5e45e4e85e11fb0f831db0d3b1bba400856a": {
+    "facing": "model",
+    "id": "tool-description-publishplugin-file-listing-and-consent-flow",
+    "name": "Tool Description: PublishPlugin file listing and consent flow",
+    "desc": "Explains that PublishPlugin lists the plugin's own files, shows the person the folder, organization, count, size and file names, sends nothing before their yes in any permission mode, and writes a manifest first for folders without one"
+  },
+  "a91971f8d5a978b3a62628e46ea263a2228d0e4f": {
+    "facing": "model",
+    "id": "tool-description-publishplugin-when-to-use",
+    "name": "Tool Description: PublishPlugin when to use",
+    "desc": "When to use PublishPlugin (sharing a plugin or mod with the team or organization) and which folder to pass"
+  },
+  "6c5026004adb808582bbc7cc88de0c4de3c99c76": {
+    "facing": "model",
+    "id": "tool-description-publishplugin",
+    "name": "Tool Description: PublishPlugin",
+    "desc": "Short description of the PublishPlugin tool: publish a local plugin folder to the organization's claude.ai library after the person approves"
+  },
+  "50fd6788fe79091950277b4761b049558df449b7": {
+    "facing": "model",
+    "id": "system-reminder-container-restarted-tasks-stopped-list",
+    "name": "System Reminder: Container restarted tasks stopped list",
+    "desc": "Lists background tasks that were running and are now stopped after a container restart, asking to re-create them if still needed"
+  },
+  "aa35416d0b7e92df1ca31a059ee0403bcdaf8cd8": { "facing": "ui" },
+  "5daa1e67b6bc383e0be443067846ce96f012cad5": {
+    "facing": "model",
+    "id": "system-reminder-left-running-programs-not-running",
+    "name": "System Reminder: Left-running programs not running",
+    "desc": "Reminder that programs left running by earlier commands are no longer running on this machine after a worker move, listing them and advising to check output before relying on results"
+  },
+  "405bf29eec526f25e47cb6b5ecb313448c7b4e1d": { "facing": "internal" },
+  "f43630e0ac39f5359e7da1468e0c2f902472edf8": { "facing": "internal" },
+  "d0189e07d8b41b276a97d7e0dffb599aa00b3e6a": {
+    "facing": "model",
+    "id": "tool-result-bash-background-terminates-with-turn",
+    "name": "Tool Result: Bash background terminates with turn",
+    "desc": "Tells the model a backgrounded command's result reaches it only if it finishes before its final response, since it is terminated then"
+  },
+  "184492d83d616ff4d7f109f245a0121d86da6559": { "facing": "internal" },
+  "b8b465c9827132819539b9854e4bfbf16979fa4c": {
+    "facing": "model",
+    "id": "tool-result-grep-aliased-path-parameter-note",
+    "name": "Tool Result: Grep aliased path parameter note",
+    "desc": "Note appended to the Grep tool result when the model passed file_path instead of path, saying file_path was read as path or ignored"
+  },
+  "8a3702fe399972bcca7fb6f18ded3f2c31b81511": {
+    "facing": "model",
+    "id": "tool-result-grep-file-path-repeated-path-ignored",
+    "name": "Tool Result: Grep file_path repeated path ignored",
+    "desc": "Clause of the Grep aliased-parameter note used when file_path duplicated path and was ignored"
+  },
+  "b76772a9db1c4f15c22d29b396f09095d256c718": {
+    "facing": "model",
+    "id": "tool-description-bash-run-in-background-detached",
+    "name": "Tool Description: Bash run_in_background detached",
+    "desc": "Bash tool description line explaining that run_in_background runs the command detached and re-invokes the model when it exits"
+  },
+  "4f86a6c23a5e7c605ac4063366d72c19013c622f": {
+    "facing": "model",
+    "id": "tool-description-bash-run-in-background-timeout-limit-clause",
+    "name": "Tool Description: Bash run_in_background timeout limit clause",
+    "desc": "Optional clause in the Bash run_in_background description line saying that with it the timeout is how long the command may run in the background, with default and max, after which it is stopped and the model re-invoked"
+  },
+  "e10d4ec7597056f38b9f7131bb0132cb9bc08186": { "facing": "internal" },
+  "5755c545db278816c30db56683bc77240c89c9b9": { "facing": "internal" },
+  "b097174fcfa8313ba6a9c27d215c6ddb91d33623": { "facing": "internal" },
+  "05a0e6e32d82c67d2ba8286996f04b8e9259771d": { "facing": "internal" },
+  "1c168cfcb68939b062e7777fec05fbccaf642926": { "facing": "internal" },
+  "e4539af194af3ab9a3ff8f2b246bbf4e030f2932": { "facing": "internal" },
+  "47d777ac306cd6646c37759225a9881d4981f838": {
+    "facing": "model",
+    "id": "tool-result-webfetch-permission-earlier-request-unanswered",
+    "name": "Tool Result: WebFetch earlier permission request unanswered",
+    "desc": "WebFetch tool error when the URL permission request was not sent because the user had not answered an earlier one in time, telling the model to ask for the URL or retry"
+  },
+  "3847ec13751cc8f59b6d8e07885243670f4661c4": { "facing": "internal" },
+  "b62aa7d9fff50ded08c05b5bede9746abe172862": { "facing": "internal" },
+  "1774b8f9554e1672cb14a9628feef54d6c6ef9c6": { "facing": "internal" },
+  "c6533813fefb15d472450c8fcca60aad5f2cfd1f": { "facing": "internal" },
+  "ba709df62805cb82799a07a93651ec60bb74028b": { "facing": "internal" },
+  "b6db8206dd951d31094ad0f6d32cba75f80d229f": { "facing": "ui" },
+  "9f8a1a6fe900e5ee8cb50e5acbe4e1935d2f24ce": { "facing": "internal" },
+  "ade7d8c6877311fb6cde8b176d4e6688cc1d0b2e": {
+    "facing": "model",
+    "id": "tool-result-skill-fork-agent-plugin-load-failed",
+    "name": "Tool Result: Skill fork agent plugin load failed",
+    "desc": "Skill tool error when a forked skill's agent type could not be loaded from its plugin and the skill runs on no other agent"
+  },
+  "d80b1cf05c0c11571f36f52f718b371ed78d86a4": { "facing": "internal" },
+  "ff17580ef3811324407482e16294d188f8de4976": { "facing": "internal" },
+  "c3e42f5798c2cb08c912df0f8eeff9e8038d7f36": { "facing": "internal" },
+  "1a85cee65c34c57ea4f6fc43cdd7dd8c9986bd74": { "facing": "internal" },
+  "d93e739c3b909e0619429d6a4e6b7bf282286ee2": { "facing": "internal" },
+  "d85e094873dc583366a8fa3808d64c2aeffa6182": { "facing": "internal" },
+  "7484d13a24f5222f2ef1fea85f001900497a033e": { "facing": "internal" },
+  "6dd5ef532a39a66ad44b936efb7211385da211d8": {
+    "facing": "model",
+    "id": "tool-result-read-invalid-pages-param",
+    "name": "Tool Result: Read invalid pages parameter",
+    "desc": "Read tool validation error for an invalid pages parameter, asking for one page or one range and to read several ranges separately"
+  },
+  "378bef2a910c26fec4ec32a2aaeaa5c0fd726fcb": { "facing": "internal" },
+  "8d963e0286de6b19238ee2c8bdf3b725ef1dc85b": { "facing": "internal" },
+  "b67f524812d0b71a413622529edaa586f6bf84be": { "facing": "ui" },
+  "b860160e676d79741e80b40750f88b196925bfc0": { "facing": "ui" },
+  "a69b36c765072bcab5d015b6b01bd72ff4b015c5": { "facing": "internal" },
+  "e2bb8a61deed9306b0b1d62d13c99ff022cfda45": { "facing": "internal" },
+  "c2dd21493c743bb0fd5affd742496a74a0590d0c": { "facing": "internal" },
+  "dd7afe21539e6e79297c8d58cc598d4a2d681f53": { "facing": "ui" },
+  "fe802ef0a87e7a440dc637c8c1eca7379ba444dc": { "facing": "ui" },
+  "bf604cb807475a03b11362dd28e7df5f96311c59": { "facing": "ui" },
+  "137f8bce51c1cfbc813952706a11c47dfa74db27": { "facing": "ui" },
+  "65d6679b90c66981bf9b77a446ba662f48b0e38c": { "facing": "ui" },
+  "87d4a5d86d868a061b6b20a493dee71ec503f10b": { "facing": "ui" },
+  "20563a210d77fa9e1beec9cdb29723a6e6793e24": { "facing": "internal" },
+  "0a1be7c2ffe54c950a6fdfcd4a47c5b51b231e66": { "facing": "internal" },
+  "7fa69d7bafcb891cb5d0558b0f71521b06e45b55": { "facing": "internal" },
+  "bb5928ef71f1e8e6921d373a77a3f601e1b348b4": { "facing": "internal" },
+  "bba642bd7b27f8918808b30fe0b918c539f4950b": { "facing": "internal" },
+  "dd1d0fe7b40bc9c3a37519d89965c9d30c727956": { "facing": "ui" },
+  "25d8cbe024fbe570bc3115b7da420324969cea58": { "facing": "internal" },
+  "ba51deefc9e23ae3c1929464ba331822330d7201": {
+    "facing": "model",
+    "id": "system-reminder-at-mention-reference-too-large",
+    "name": "System Reminder: @-mention reference too large",
+    "desc": "Meta message for an @-mentioned file too large to attach, telling the model to read it in portions with offset/limit or search instead"
+  },
+  "1401106f4de386ae8ecbcbf993e811594de9e094": {
+    "facing": "model",
+    "id": "system-reminder-at-mention-reference-not-attached",
+    "name": "System Reminder: @-mention reference not attached",
+    "desc": "Meta message for @-mentioned files whose contents are not attached automatically in this session, telling the model to read them with its file tools"
+  },
+  "d3d174538ad5683ea3eac8584ad69c332077a950": {
+    "facing": "model",
+    "id": "system-reminder-at-mention-reference",
+    "name": "System Reminder: @-mention reference",
+    "desc": "Meta message for @-mentioned files that could not be examined and were not attached, telling the model to read them with its file tools"
+  },
+  "ec70ecd143b252302a790c5610cc0042a7995115": {
+    "facing": "model",
+    "id": "system-reminder-pdf-reference-still-arriving",
+    "name": "System Reminder: PDF reference still arriving",
+    "desc": "Meta message for an attached PDF whose files were still downloading when the turn began, telling the model to read it with the Read tool and how to page large PDFs"
+  },
+  "d564fa04f3d2f9fccd3692661c80f049e1096604": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-unasked-shape-refused",
+    "name": "Tool Result: Artifact publish unasked shape refused",
+    "desc": "Artifact publish tool error when a publish made without asking does more than create a new artifact, saying nothing was published and later publishes need the usual permission check"
+  },
+  "a6015af2c97f9c2c5b6379cbaecd185147c048de": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-unasked-gateway-not-carried",
+    "name": "Tool Result: Artifact publish unasked gateway not carried",
+    "desc": "Artifact publish tool error when an unasked publish could not be carried by the cloud session gateway, saying nothing was published and the retry needs the permission check"
+  },
+  "4a3b5cfef3300391866450ac5e984bd26efc35de": { "facing": "internal" },
+  "7d94eb07f2cd7092db3d73cf2375de66260f1e8f": { "facing": "internal" },
+  "489b27da428c2cb4c323235881f416586531ce85": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-server-error-503",
+    "name": "Tool Result: Artifact publish server error 503",
+    "desc": "Artifact publish tool error base text when the stranded-deploy retry could not be sent, stating the publish failed with a server error (503)"
+  },
+  "23ad1c360c1f2d7a379fad080e27c93eedad432d": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-content-not-stored-retry-unsent",
+    "name": "Tool Result: Artifact publish retry unsent clause",
+    "desc": "Clause appended to the artifact content-not-stored error when the automatic retry could not go through the cloud session gateway"
+  },
+  "106f8aa25eaded0f7546cdce7759a7821ab3edf4": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-content-not-stored-retry-cancelled",
+    "name": "Tool Result: Artifact publish retry cancelled clause",
+    "desc": "Clause appended to the artifact content-not-stored error when the publish was cancelled before the automatic retry was sent"
+  },
+  "06367c78c9673e06be9c20c3255e2d3767ce4056": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-looks-like-artifact-id-pass-full-link",
+    "name": "Tool Result: Artifact URL looks like bare id",
+    "desc": "Artifact tool validation error when the url looks like a bare artifact id, telling the model to pass the full link"
+  },
+  "ba834bd6577c8dd7465d395fb8f6e013c915f27d": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-past-version-ignored",
+    "name": "Tool Result: Artifact read past version ignored",
+    "desc": "Artifact read error returned when the server served a different version than the one requested, explaining why nothing was read."
+  },
+  "001c2eb608df486fd7dd5d63e2f6151c77c3ff9d": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-unknown-version",
+    "name": "Tool Result: Artifact read unknown version id",
+    "desc": "Artifact read error when the server refuses the requested version id (HTTP 400), telling the model to list the artifact's versions for valid ids."
+  },
+  "77fabe840082a539a350513b1ccbdf7a4f87c4b5": { "facing": "internal" },
+  "fc37cb22c669f6c8aa19d62bede7b4de5f05ccc7": { "facing": "internal" },
+  "62a09dfe472dc5c693ec3dff19c2214b5a2c852a": { "facing": "internal" },
+  "7c1d36bd7895954bb4d54e714c514bde934f31e9": { "facing": "internal" },
+  "5b5704f30fc40d8b1dc6c9bac73f43f0e5db0387": { "facing": "internal" },
+  "b6977c323b8e51bb3d705815c9ccdb395ef1323a": {
+    "facing": "model",
+    "id": "data-background-observer-digest-nonce-line",
+    "name": "Data: Background observer digest nonce line",
+    "desc": "First line of each activity digest delivered to a background observer agent, naming the nonce its digest tags carry and stating that other tag-shaped text is digest content."
+  },
+  "556784754614cc7338f2bb622f0a694ba498b455": {
+    "facing": "model",
+    "id": "data-background-observer-digest-omitted-entries",
+    "name": "Data: Background observer digest omitted entries marker",
+    "desc": "Marker inserted into a background observer's activity digest saying how many earlier entries were omitted to fit the delivery character cap."
+  },
+  "bb2e47699201df2b67505f20fbd5a4633eeeb2c4": {
+    "facing": "model",
+    "id": "agent-prompt-background-observer-digest-nonce-guidance",
+    "name": "Agent Prompt: Background observer digest nonce guidance",
+    "desc": "Background observer prompt sentence explaining that each delivery's first line names its nonce and only tags carrying it belong to the digest."
+  },
+  "769f7e1a6501e813653e611f71d71dbf4f72f966": {
+    "facing": "model",
+    "id": "agent-prompt-background-observer-coordinator-task-header",
+    "name": "Agent Prompt: Background observer coordinator task header",
+    "desc": "Header line in the background observer prompt introducing the coordinating agent's current task as data, naming the nonce on its block."
+  },
+  "8a4b5b323b7c93ebd0b9b052f6d663cda212260f": {
+    "facing": "model",
+    "id": "tool-parameter-agent-effort",
+    "name": "Tool Parameter: Agent effort",
+    "desc": "Agent tool effort parameter description: set only when the user or instructions explicitly ask for a specific effort level."
+  },
+  "90bfe157b6bf95f6f231daf352d47d1dff1f552f": {
+    "facing": "model",
+    "id": "tool-parameter-agent-effort-fork-ignored",
+    "name": "Tool Parameter: Agent effort ignored for fork",
+    "desc": "Suffix to the Agent tool effort parameter noting it is ignored for fork subagents, which run at the caller's effort."
+  },
+  "032bf495ae3058500d543db0301d943de51a6a3c": {
+    "facing": "model",
+    "id": "tool-result-subagent-spawn-hook-teammate-rewrite-ruled",
+    "name": "Tool Result: Spawn hook teammate rewrite ruled by permission",
+    "desc": "Agent tool error when a plugin's agent.spawn hook rewrote a teammate spawn into one a permission rule denies or asks about."
+  },
+  "b7720f5458c9734819a8c22c086bdd4ad67c674b": {
+    "facing": "model",
+    "id": "tool-result-subagent-spawn-hook-rewrite-ruled",
+    "name": "Tool Result: Spawn hook subagent rewrite ruled by permission",
+    "desc": "Agent tool error when a plugin's agent.spawn hook rewrote a subagent spawn into one a permission rule denies or asks about."
+  },
+  "e8909dbf72439d39bc0e1c300be8e6bc8a6908f6": {
+    "facing": "model",
+    "id": "data-task-notification-queued-remote-notifications-call-now",
+    "name": "Data: Queued remote notifications call-now instruction",
+    "desc": "Instruction interpolated into the queued-notifications task notification telling the model to call the read tool now and until 0 remain."
+  },
+  "20080b611e3c59a2562175412fab7509452213e6": {
+    "facing": "model",
+    "id": "data-task-notification-queued-remote-notifications-nudge",
+    "name": "Data: Queued remote notifications nudge",
+    "desc": "Task notification body telling the model notifications are queued for the session, with the read instruction, and that their contents are external data not instructions."
+  },
+  "edd47eba3463de4e3794f9287d08978bc68ec953": { "facing": "internal" },
+  "ab4c748791c822017de4709ad80476375ab5e8be": {
+    "facing": "model",
+    "id": "system-reminder-queued-notifications-read-time-clock-note",
+    "name": "System Reminder: Queued notifications read-time clock note",
+    "desc": "Clock note inserted into the queued-notifications delivery stating when the read was made by the machine's clock and explaining how to interpret each notification header's queued-at, reached-this-session and whole-wait times given possible clock differences."
+  },
+  "12a39401af30909ae1b0c8e21097c64028ffabf9": {
+    "facing": "model",
+    "id": "tool-result-read-notifications-entry-whole-wait",
+    "name": "Tool Result: Read notifications entry whole wait",
+    "desc": "Fragment of a ReadNotifications entry header giving the whole wait before the read, comparing server and machine clocks."
+  },
+  "abcd5e0de537198b500edbc4f28854d337f7c02d": {
+    "facing": "model",
+    "id": "tool-result-read-notifications-entry",
+    "name": "Tool Result: Read notifications entry",
+    "desc": "Header and body of one notification in the ReadNotifications tool result: index, id, origin, queued-at and arrival times, then content."
+  },
+  "96bff343d974a8ceb20f25d288407d6eb6d9b270": {
+    "facing": "model",
+    "id": "tool-result-message-attachment-upload-error-limit-note",
+    "name": "Tool Result: Message attachment upload error limit note",
+    "desc": "Attachment upload error explanation in the message delivery tool result, noting a suspected account upload limit and a size guaranteed to fit."
+  },
+  "1fdccb3415be9160fe9bc78933f273dfde0bc263": {
+    "facing": "model",
+    "id": "tool-result-message-attachment-path-not-approved",
+    "name": "Tool Result: Message attachment path not approved",
+    "desc": "Per-attachment error in the message delivery tool result when a file path now resolves to something that was not approved."
+  },
+  "27ffa8063eb4e7b0c6b5396a6ba52cc6192840e2": {
+    "facing": "model",
+    "id": "tool-parameter-readnotifications-arrived-at",
+    "name": "Tool Parameter: ReadNotifications arrived_at",
+    "desc": "ReadNotifications output schema field description for when a notification reached the session's queue by the machine's clock."
+  },
+  "11a4559ab0005ae0c0feda0cbafdeb0d0eba5cf8": {
+    "facing": "model",
+    "id": "tool-parameter-readnotifications-read-at",
+    "name": "Tool Parameter: ReadNotifications read_at",
+    "desc": "ReadNotifications output schema field description for when the call read the queue by the machine's clock."
+  },
+  "fa893c484ae44449d9a2f74286364bb058d461cb": {
+    "facing": "model",
+    "id": "tool-result-headless-agent-unsandboxed-execution-denied",
+    "name": "Tool Result: Headless agent unsandboxed execution denied",
+    "desc": "Permission deny message when a background agent's shell call asks for dangerouslyDisableSandbox, telling it not to retry."
+  },
+  "cb9f45608250374623f6ae1d003625fe2702a398": {
+    "facing": "model",
+    "id": "tool-result-headless-agent-run-in-background-denied",
+    "name": "Tool Result: Headless agent run_in_background denied",
+    "desc": "Permission deny message when a background agent's shell call sets run_in_background, telling it to run in the foreground."
+  },
+  "f6904280013f65aa8ca5b140a04967acb45c072c": { "facing": "ui" },
+  "a8543a88ca2516d824d62e5e94a92828fe5bc32d": { "facing": "ui" },
+  "6a8bce87370832800c74577ec20107653437f923": {
+    "facing": "model",
+    "id": "tool-result-automemory-windows-dot-dot-denied",
+    "name": "Tool Result: Auto-memory Windows dot-dot denied",
+    "desc": "Permission deny message for the memory agent on Windows with blockReadsOutsideWorkingDirectories when a shell command contains '..'."
+  },
+  "7ca0f4d64aaab9bb2012e47ded729f8b8c9f09d4": {
+    "facing": "model",
+    "id": "tool-result-automemory-hook-ask-denied",
+    "name": "Tool Result: Auto-memory hook ask denied",
+    "desc": "Permission deny message when a PreToolUse hook asks for confirmation but the headless memory agent cannot ask the user."
+  },
+  "5375fb28295a98d410cd218bf28bb2a035062d01": {
+    "facing": "model",
+    "id": "tool-result-automemory-rule-check-failed",
+    "name": "Tool Result: Auto-memory rule check failed",
+    "desc": "Permission deny message when the memory agent could not evaluate configured permission rules and fails closed."
+  },
+  "1c56d9ac233fa766f031dd21d21af0ef8856472d": { "facing": "ui" },
+  "e15bf694984e65d2c9876994f1c015bdbb393af5": { "facing": "internal" },
+  "c91a8ea00c4c78f59c6b5fa344de39ad27242ef3": { "facing": "ui" },
+  "e2998e3b0730041bd8f562b219326c251583aa8e": { "facing": "internal" },
+  "98c6993a877bce22f697a7562e5d2696af695cc5": { "facing": "internal" },
+  "dd2f0f6fffe51a6ae4449bc64b3bbe6ad4e83a45": {
+    "facing": "model",
+    "id": "tool-result-artifact-asset-content-unexpected-status",
+    "name": "Tool Result: Artifact asset content unexpected status",
+    "desc": "Artifact asset read error for an unexpected HTTP status from the artifact service or content host."
+  },
+  "0051dcd6ffe17516618d0b1f958642aaf9c0352f": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-action-preview-clause",
+    "name": "Tool Parameter: Artifact action preview clause",
+    "desc": "Clause of the Artifact tool action description explaining the 'preview' action in the real artifact viewer and when to use it."
+  },
+  "6e047288330021900f41597e6d4518717dad9409": {
+    "facing": "model",
+    "id": "tool-description-artifact-preview-paragraph",
+    "name": "Tool Description: Artifact preview paragraph",
+    "desc": "Artifact tool prompt paragraph describing the preview action, when to use it, what it proves, and what to do if it stops."
+  },
+  "46045bb3991a916cdcab65f17e554fb17924ec4a": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-action-versions-clause",
+    "name": "Tool Parameter: Artifact action versions clause",
+    "desc": "Clause of the Artifact tool action description explaining listing kept versions and reading a version to restore it."
+  },
+  "0c07b23db7e9833c87caddc71658d15a8fb6b953": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-version-from-list",
+    "name": "Tool Parameter: Artifact version from list",
+    "desc": "Artifact tool version parameter description: a version id from a list of the same url, for read only."
+  },
+  "af5c53893edfdae48c6e59fd420ab29f8a568633": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-versions-not-owner",
+    "name": "Tool Result: Artifact list versions not owner",
+    "desc": "Artifact tool error when listing versions fails because only the owner can list an artifact's versions."
+  },
+  "ec6e4e0c926db540a67013d321585325da1db9fd": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-file-path-preview-viewer",
+    "name": "Tool Parameter: Artifact file_path preview viewer",
+    "desc": "Suffix of the Artifact tool file_path parameter for the real-viewer preview: the page's .html file to look at."
+  },
+  "6dfda4ec0b9be7967fa93772915f240f60eded5e": { "facing": "ui" },
+  "239c8494f84eb8133335fc1db5c4431f6865859e": {
+    "facing": "model",
+    "id": "system-reminder-workflow-resume-unedited-script",
+    "name": "System Reminder: Workflow resume unedited script",
+    "desc": "Workflow failure notification line telling the model how to resume with the unedited script when the script is withheld from SDK events."
+  },
+  "b6bdfe848520812123678e82fad389cdb6b5df2f": { "facing": "internal" },
+  "9bf82f444940f93fdffadbf0d5f9e6d02b9527f5": { "facing": "internal" },
+  "703dc27dbaca0fe89fee43c8072ec1baf7ffdcf8": { "facing": "ui" },
+  "1be75f3cc1c2da15c6600edd0bfd87a6a55a162e": { "facing": "ui" },
+  "d08257f65564a0d6b9b742d9fbc813acedcbffb5": { "facing": "ui" },
+  "e9de596da71bc79e39418e260e43dbc7c3bd5838": { "facing": "ui" },
+  "1dd79be0c7fded97267e59b2d028968523866190": { "facing": "ui" },
+  "669219249a354c14b47a9fece3db6552a87328d8": { "facing": "ui" },
+  "7bb31a2593f379f411813d7f50ad9a279403a86d": { "facing": "ui" },
+  "a0e7cd5f01c856f43f9365dcf79d24cc85227ebd": { "facing": "ui" },
+  "23af6193490d81a0112fd88a62b2f6cc434eefc1": {
+    "facing": "model",
+    "id": "system-reminder-browser-extension-not-connected-alternatives-fallback",
+    "name": "System Reminder: Browser extension not connected — alternatives fallback",
+    "desc": "Sentence appended to browser-extension-not-connected messages telling Claude it may continue with alternatives (web search, or asking the user to do the browser step)."
+  },
+  "9d70c19d5d4db70ba87dbaa16e0e60278adb9984": { "facing": "internal" },
+  "e9ca0b40d60852194427fc46032a240ff53d922a": {
+    "facing": "model",
+    "id": "tool-result-workflow-agent-spawn-denied-by-plugin",
+    "name": "Tool Result: Workflow agent spawn denied by plugin",
+    "desc": "Error thrown from a workflow agent() call when a plugin's agent.spawn hook denies the spawn, carrying the plugin's deny reason."
+  },
+  "ed42eb9b9f8f46e90d94d69ece1d2e167112a1a9": {
+    "facing": "model",
+    "id": "slash-command-advisor-fable-consent-required",
+    "name": "Slash Command: /advisor model consent required",
+    "desc": "/advisor message when the chosen advisor model needs consent first: tells the user to run the model command (in an interactive terminal session when needed) to review and enable it, then set it as advisor."
+  },
+  "10a9d035310f44c1e1ab004ee597ffcf465ac0ea": {
+    "facing": "model",
+    "id": "slash-command-plugin-install-marketplace-needs-source",
+    "name": "Slash Command: /plugin install --marketplace needs source",
+    "desc": "/plugin install usage error when --marketplace has no source (owner/repo or URL), with usage line."
+  },
+  "6a62c60f525a34be611f8712a271eba2f497f35a": {
+    "facing": "model",
+    "id": "slash-command-plugin-install-marketplace-named-twice",
+    "name": "Slash Command: /plugin install marketplace named twice",
+    "desc": "/plugin install usage error when the marketplace is named both via plugin@marketplace and --marketplace."
+  },
+  "e167bb0f13e640205a585e6d3fefa9d4a6d59f85": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-preflight-check-failed",
+    "name": "Slash Command: /ultrareview preflight check failed",
+    "desc": "/ultrareview message when the eligibility check could not run, so the review stopped before uploading code; suggests retrying or reviewing via a pull request."
+  },
+  "9f72a5fc2c36bde71595e44b064f6f01ca16ee94": { "facing": "internal" },
+  "f403911514eb91b0171f5d370b8b22e0bdcbf6ae": { "facing": "internal" },
+  "64f7f18220cef2f11c911ab55b5dea5749c38bea": { "facing": "internal" },
+  "0c37f12a134e4dc0728f5b20d77a54cee46ddc29": { "facing": "ui" },
+  "6ba8607525ebf961fec7bdc5d57c6145ecae8bbc": { "facing": "ui" },
+  "ce090d81ea7ff083b796864cb10345ccc498671a": { "facing": "ui" },
+  "661047246ea6b322ab64a9234899ad6550de28b2": { "facing": "ui" },
+  "75a04f049ba5273aa5f135fc5778bf45ce20ea91": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-forked-skill-org-skills-off",
+    "name": "Tool Result: Agent resume refused — forked skill turned off by org",
+    "desc": "Error when resuming an agent that ran as a forked skill which the organization's Skills setting currently turns off."
+  },
+  "ae0dd4ebf0d5bfd4b0abb87074e3d084d7e64b5d": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-plugin-agent-type-load-failed",
+    "name": "Tool Result: Agent resume — plugin agent type failed to load",
+    "desc": "Error when an agent cannot be resumed because its agent type could not be loaded from its plugin."
+  },
+  "f445c928e21ab1e1ef6ec46dc4b91f2bdb50957b": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-state-set-foreign-owner",
+    "name": "Slash Command: /plugin validate state.set foreign owner",
+    "desc": "/plugin validate finding: a hooks module's state.set refers to a key owned by another plugin."
+  },
+  "f2d9a7e674ab79007ba88ba559d61cd576548b8a": { "facing": "internal" },
+  "8173b98e399bc9542655f48d42490a45d4a9c02f": { "facing": "internal" },
+  "037dda4725437cf1f8e541215cfebd2cb6217660": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-gitignore-unreadable",
+    "name": "Tool Result: Plugin publish — .gitignore unreadable",
+    "desc": "Plugin publish tool error when a .gitignore in the folder cannot be read."
+  },
+  "7bf44e57c7becb14d579e9cf6fada4111902d62f": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-gitignore-line-unreadable",
+    "name": "Tool Result: Plugin publish — .gitignore line unreadable",
+    "desc": "Plugin publish tool error when a line of a .gitignore cannot be parsed."
+  },
+  "9f3558f89be4f8431e2b2a260735e6059f67b717": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-changed-file-added",
+    "name": "Tool Result: Plugin publish — file added since read",
+    "desc": "Refusal detail line naming a file that became part of the upload after the folder was read."
+  },
+  "5e88de746bff1aa54842802e0479b0767bbb2b87": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-changed-file-removed",
+    "name": "Tool Result: Plugin publish — file no longer included since read",
+    "desc": "Refusal detail line naming a file that is no longer part of the upload since the folder was read."
+  },
+  "794a60c37fa309761b66933a98bc5a8cb2b2244f": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-invalid-folder-name-finding",
+    "name": "Tool Result: Plugin publish — invalid name from folder",
+    "desc": "Validation finding when the plugin name derived from the folder is invalid, telling to rename the folder."
+  },
+  "e89acb39145cc56bcbb1e89c914a89b9aac02a56": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-stopped-shelved",
+    "name": "Tool Result: Plugin publish stopped — upload on shelf",
+    "desc": "Stop-state note: the upload reached the user's own shelf but was not submitted."
+  },
+  "d5430294ce59f179a40aaa7ac569890ac950c8ee": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-stopped-uploading",
+    "name": "Tool Result: Plugin publish stopped — during upload",
+    "desc": "Stop-state note: the upload was in flight and may have arrived on claude.ai; nothing was submitted."
+  },
+  "53d649fd8d6b9ceb62c7373555b16607f80be71e": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-stopped-submitting",
+    "name": "Tool Result: Plugin publish stopped — during submission",
+    "desc": "Stop-state note: the submission was in flight and may have reached the organization."
+  },
+  "4654155e73f7c054172cef90ad8f90eb9d692d8e": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-plan-writes-manifest",
+    "name": "Tool Result: Plugin publish plan — writes manifest first",
+    "desc": "Publish plan line saying the manifest will be written first to the given path."
+  },
+  "8ba24609c461db411578b958be93ebe87df7af9c": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-plan-entries-stay",
+    "name": "Tool Result: Plugin publish plan — entries stay on machine",
+    "desc": "Publish plan line counting entries that stay behind (secrets, links, ignored files)."
+  },
+  "3157307194847d85a584a7e54b57696de0330c09": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-plan-step-upload-shelf",
+    "name": "Tool Result: Plugin publish plan — upload to shelf step",
+    "desc": "Publish plan step: first uploads to the user's own claude.ai shelf where it is scanned."
+  },
+  "2e007a541d398e309183050b130639f195d33311": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-plan-step-submit-review",
+    "name": "Tool Result: Plugin publish plan — submit for review step",
+    "desc": "Publish plan step: then submits to the organization for admin review, or publishes at once without review."
+  },
+  "d48a98487e72de1eeb170eeb4956f3aa8f597677": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-plan-step-replaces",
+    "name": "Tool Result: Plugin publish plan — replaces existing",
+    "desc": "Publish plan step in replace mode: replaces the plugin of this name on the shelf."
+  },
+  "a2ddcf5d9ceed444742a2eb2091668d9a0e96e4c": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-plan-sends-secrets-file",
+    "name": "Tool Result: Plugin publish plan — sends sensitive file",
+    "desc": "Publish plan warning: a named file will be sent including any keys or tokens in it."
+  },
+  "a9138e17f0970b4554c804fa249d07ffe374290f": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-plan-withheld-entries",
+    "name": "Tool Result: Plugin publish plan — withheld entries",
+    "desc": "Publish plan warning that unnamed entries stay behind because session rules deny reading them."
+  },
+  "524e33d3f2d051b37117a75b4db85b094ce46662": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-plan-full-list-withheld",
+    "name": "Tool Result: Plugin publish plan — full list pointer (withheld)",
+    "desc": "Line pointing to the file listing every file and named left-out entry, when some are withheld."
+  },
+  "e0159f2f56d588c32cee470b3d85ee029e4291f1": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-plan-full-list",
+    "name": "Tool Result: Plugin publish plan — full list pointer",
+    "desc": "Line pointing to the file listing every file and what stays behind."
+  },
+  "4376a016ae762016b4cf1de889ebdc76cdc0d453": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-outcome-on-shelf",
+    "name": "Tool Result: Plugin publish outcome — on shelf, not submitted",
+    "desc": "Publish outcome: uploaded to own shelf but not submitted because the scan was still running."
+  },
+  "cfd40eb492f43f5493bd678b5c14e83ba1b7229d": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-outcome-publishing",
+    "name": "Tool Result: Plugin publish outcome — publishing",
+    "desc": "Publish outcome: uploaded and approved, on its way into the org library."
+  },
+  "303e457e6491e5d12bc77a441b12782546bc7983": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-outcome-in-review",
+    "name": "Tool Result: Plugin publish outcome — in review",
+    "desc": "Publish outcome: uploaded and sent for administrator review."
+  },
+  "61ef42dcd5e77277e29e3f62dd8f1d3a15c40306": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-in-progress",
+    "name": "Tool Result: Plugin publish refused — earlier submission in progress",
+    "desc": "Refusal: an earlier submission of this plugin is still being published."
+  },
+  "ed73a867f21187d1f99efff55bd45959099e4377": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-name-conflict",
+    "name": "Tool Result: Plugin publish refused — name conflict",
+    "desc": "Refusal: an item with this name is already in the org library."
+  },
+  "bc374f567cbc4e95c7ba1cd5266a761956c6d23e": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-not-served",
+    "name": "Tool Result: Plugin publish refused — not offered for org",
+    "desc": "Refusal: claude.ai doesn't offer publishing from Claude Code for the organization yet."
+  },
+  "2d2955bd54a82c4464e240bad70b71aa0e429a6f": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-busy",
+    "name": "Tool Result: Plugin publish refused — busy",
+    "desc": "Refusal: claude.ai was busy or did not answer; publish again shortly."
+  },
+  "e96680f60b1ca6de48daa3477daf3f1ff56132f4": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-cloud-session",
+    "name": "Tool Result: Plugin publish refused — cloud session",
+    "desc": "Refusal: publishing from a cloud session isn't offered yet."
+  },
+  "bd9a50366d94de7bfa3c08c148597da88619bb5b": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-third-party",
+    "name": "Tool Result: Plugin publish refused — third-party provider",
+    "desc": "Refusal: publishing goes through claude.ai and this session uses another provider."
+  },
+  "8e4cea2a34038e105f37427808456025b8102064": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-signed-out",
+    "name": "Tool Result: Plugin publish refused — signed out",
+    "desc": "Refusal: publishing needs a claude.ai sign-in via /login."
+  },
+  "a78e50665ca9a1c4fba304014d2eeee7647956e7": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-flag-off",
+    "name": "Tool Result: Plugin publish refused — unavailable in session",
+    "desc": "Refusal: publishing plugins isn't available in this session."
+  },
+  "7effcf62fefa67babedcb0565438993d8204d162": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-nobody-to-ask",
+    "name": "Tool Result: Plugin publish refused — nobody to ask",
+    "desc": "Refusal: publishing needs the user's answer and this session has nobody to ask."
+  },
+  "713032aabd0d6234dc6df887462efe7a27397db2": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-other-question",
+    "name": "Tool Result: Plugin publish refused — answer to another question",
+    "desc": "Refusal: the answer received was for a different question, so nothing was sent."
+  },
+  "82adfa9464bcbb54d63ac28008407361a6aa5a85": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-folder-changed",
+    "name": "Tool Result: Plugin publish refused — folder changed",
+    "desc": "Refusal: the folder changed while being published."
+  },
+  "6652a5da96d0c09de1b4b10483d1644d1ab0ecc8": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-scan-failed",
+    "name": "Tool Result: Plugin publish refused — security scan failed",
+    "desc": "Refusal: the plugin failed the claude.ai security scan and stays on the user's shelf."
+  },
+  "96cb49de8e7a6c06f3c66644cc7dbf90a493c75b": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-findings",
+    "name": "Tool Result: Plugin publish refused — validation findings",
+    "desc": "Refusal header when the plugin fails validation; findings follow."
+  },
+  "dd073b5d791decec00de491861948faaf42bcb0c": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-scan-pending",
+    "name": "Tool Result: Plugin publish refused — scan pending",
+    "desc": "Refusal: the security scan is still running; publish again later."
+  },
+  "069f81a7d898d27a583b2f2ed87a4fe71c0dafdf": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-no-organization",
+    "name": "Tool Result: Plugin publish refused — organization unknown",
+    "desc": "Refusal: the app-started session didn't say which organization it is signed in to."
+  },
+  "a2f0ef32e6b1323444f628b006bd3708d815b9d8": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-needs-org-settings",
+    "name": "Tool Result: Plugin publish refused — needs org settings change",
+    "desc": "Refusal: the update needs an org settings change by an administrator."
+  },
+  "ac6f36bc85b4f21d5a105a1a4a247ef04befb719": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-publishing-off",
+    "name": "Tool Result: Plugin publish refused — member submissions off",
+    "desc": "Refusal: the organization doesn't accept member submissions; upload remains on the user's shelf."
+  },
+  "42554a8484217bce5b3c5228e0d3d3fe43abb6a7": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-creation-off",
+    "name": "Tool Result: Plugin publish refused — plugin creation off",
+    "desc": "Refusal: the organization has plugin creation turned off."
+  },
+  "59fbb245fd1871bc59fcce33e8b51e835306626f": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-legal-attestation",
+    "name": "Tool Result: Plugin publish refused — attestation required",
+    "desc": "Refusal: the organization requires an attestation; publish from claude.ai."
+  },
+  "d2dffbd8a9882dab60bd3bfd5055f58a447bf574": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-library-full",
+    "name": "Tool Result: Plugin publish refused — library full",
+    "desc": "Refusal: the organization's library is full."
+  },
+  "3c8343c18f8eee226432434ebbef29c310c7b54b": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-policy",
+    "name": "Tool Result: Plugin publish refused — org policy",
+    "desc": "Refusal: organization policy doesn't allow publishing from Claude Code."
+  },
+  "5d452265fb3abfe88b2dc1f5bb7857c85f06dfd9": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-shelf-full",
+    "name": "Tool Result: Plugin publish refused — uploads full",
+    "desc": "Refusal: the user's uploads on claude.ai are full."
+  },
+  "9c186a2b8e27d475c6209d5d781f661377b7cd28": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-bare",
+    "name": "Tool Result: Plugin publish refused — --bare",
+    "desc": "Refusal: publishing is off under --bare."
+  },
+  "b9b83c04b35725eb6cff94b591c47d0ef6858431": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-traffic-off",
+    "name": "Tool Result: Plugin publish refused — nonessential traffic disabled",
+    "desc": "Refusal: publishing is off while nonessential traffic is disabled."
+  },
+  "e823d0d14b7cd00918ed51f1f86e903ff8ebb04b": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-network-path",
+    "name": "Tool Result: Plugin publish refused — network path",
+    "desc": "Refusal: the path names a network location publishing does not open."
+  },
+  "0b2eb7c0300e5a474bb7bfabf397badddff82615": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-read-denied",
+    "name": "Tool Result: Plugin publish refused — read denied",
+    "desc": "Refusal: session permissions don't allow reading the folder or a file to be sent."
+  },
+  "4f6567e06075208bf7c4ff0fd150644790871c2b": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-write-denied",
+    "name": "Tool Result: Plugin publish refused — write denied",
+    "desc": "Refusal: session permissions don't allow writing the manifest the publish would add."
+  },
+  "b17f407019848bdf8b66a89069685bf73f16dd96": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-no-folder",
+    "name": "Tool Result: Plugin publish refused — no folder",
+    "desc": "Refusal: no folder at the given path."
+  },
+  "fdedcdb4f8d86bc3ce60de0dc71b26607c2544eb": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-not-a-plugin",
+    "name": "Tool Result: Plugin publish refused — not a plugin",
+    "desc": "Refusal: the folder holds no plugin components."
+  },
+  "7015f41963d2878bffd7b81bb3ebe2e195de0585": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-too-many-files",
+    "name": "Tool Result: Plugin publish refused — too many files",
+    "desc": "Refusal: the plugin has more files than the send limit; exclude via .gitignore."
+  },
+  "1c3e9df6009bcbeeb2fac9e29cb7caa09ba59071": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-too-large",
+    "name": "Tool Result: Plugin publish refused — too large",
+    "desc": "Refusal: the plugin exceeds the maximum publish size."
+  },
+  "e0589a310ff8a8f1ccfcbf09103eab7e08241601": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-unreadable",
+    "name": "Tool Result: Plugin publish refused — folder unreadable",
+    "desc": "Refusal: part of the folder couldn't be read."
+  },
+  "b24fe15035b6713f7af0868f5c72b48620c56e7a": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-manifest-unwritten",
+    "name": "Tool Result: Plugin publish refused — manifest not written",
+    "desc": "Refusal: the manifest couldn't be written to .claude-plugin/plugin.json."
+  },
+  "8690f0074efa36c060c3b7f07d0c3c870d43a9c8": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-failed",
+    "name": "Tool Result: Plugin publish refused — error",
+    "desc": "Refusal: publishing ran into an error and stopped."
+  },
+  "7de6643d9a1998d59654f2bfe59c7fb068a1f127": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-exists",
+    "name": "Tool Result: Plugin publish refused — already in uploads",
+    "desc": "Refusal: a plugin of this name is already in the user's uploads and was not replaced."
+  },
+  "2307bdce561bc65f8e20487ebe0cb84bd2bb7447": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-invalid",
+    "name": "Tool Result: Plugin publish refused — server validation failed",
+    "desc": "Refusal: claude.ai rejected the plugin because it failed validation."
+  },
+  "12cea91e9480d9e3e9f979baaa84c5926ae511aa": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-nothing-new",
+    "name": "Tool Result: Plugin publish refused — version already published",
+    "desc": "Refusal: this version is already in the organization's library."
+  },
+  "897c5b1a2b6cc008669b9d0cfffe30461a9e2146": {
+    "facing": "model",
+    "id": "tool-result-plugin-publish-refused-needs-admin",
+    "name": "Tool Result: Plugin publish refused — needs administrator",
+    "desc": "Refusal: the update needs an administrator to publish it from claude.ai."
+  },
+  "85984208eb081c77fe995bfa3108922be83f40dd": {
+    "facing": "model",
+    "id": "tool-parameter-publish-plugin-question-staying-count",
+    "name": "Tool Parameter: Publish plugin question staying count",
+    "desc": "Describes the count of entries that stay on the machine in the publish-plugin question schema"
+  },
+  "1df69c87e0abac4aaa8c41899a7eca523ef95b28": {
+    "facing": "model",
+    "id": "tool-parameter-publish-plugin-question-unnamed",
+    "name": "Tool Parameter: Publish plugin question unnamed counts",
+    "desc": "Describes the optional counts of files and entries the over-bound lists do not name in the publish-plugin question schema"
+  },
+  "941a9e526b1cfbf9ca2f1e5575d2e589ee2d0e71": {
+    "facing": "model",
+    "id": "tool-parameter-publish-plugin-question-stays",
+    "name": "Tool Parameter: Publish plugin question named stays",
+    "desc": "Describes the list of entries that stay and are named, each with a reason, in the publish-plugin question schema"
+  },
+  "c46b199e2d9ed4767aaee39756e0edc550ecb3dd": {
+    "facing": "model",
+    "id": "tool-parameter-publish-plugin-question-files",
+    "name": "Tool Parameter: Publish plugin question files",
+    "desc": "Describes the list of files sent, ordered by path, in the publish-plugin question schema"
+  },
+  "9306b82efceacfdc30c4f7442f0389ed5814b413": {
+    "facing": "model",
+    "id": "tool-parameter-publish-plugin-question-list",
+    "name": "Tool Parameter: Publish plugin question list file",
+    "desc": "Describes the list file (sha256 and path) naming every file sent and every named staying entry in the publish-plugin question schema"
+  },
+  "8f86015bbb7b6ff11c43b878b9b15e739303d9ac": {
+    "facing": "model",
+    "id": "tool-parameter-publish-plugin-question-writes",
+    "name": "Tool Parameter: Publish plugin question manifest write",
+    "desc": "Describes the optional manifest a yes writes into the plugin folder first, in the publish-plugin question schema"
+  },
+  "cb653913fd628b447612935e988be346381f75f2": {
+    "facing": "model",
+    "id": "tool-parameter-publish-plugin-question-sends",
+    "name": "Tool Parameter: Publish plugin question sends total",
+    "desc": "Describes the total file count and size sent, in the publish-plugin question schema"
+  },
+  "575f235ccf962283d36916b8168b5be97608fa58": {
+    "facing": "model",
+    "id": "tool-parameter-publish-plugin-question-digest",
+    "name": "Tool Parameter: Publish plugin question digest",
+    "desc": "Describes the digest a yes binds the publish to, in the publish-plugin question schema"
+  },
+  "f9a96d9f91671a1e19b083a87d687c9cc05489c1": {
+    "facing": "model",
+    "id": "tool-parameter-publish-plugin-question-steps",
+    "name": "Tool Parameter: Publish plugin question steps",
+    "desc": "Describes the ordered sentences of what a yes sets off, in the publish-plugin question schema"
+  },
+  "ab08c2c46f42a0a0f52285f8b1cc909730aebf3c": {
+    "facing": "model",
+    "id": "tool-parameter-publish-plugin-question-warnings",
+    "name": "Tool Parameter: Publish plugin question warnings",
+    "desc": "Describes the warnings shown to the person (secret-like file names sent, unnamed staying entries) in the publish-plugin question schema"
+  },
+  "91d504a7edc72cfc57d8a743db68240e0411357e": {
+    "facing": "model",
+    "id": "tool-parameter-publish-plugin-question-mode",
+    "name": "Tool Parameter: Publish plugin question mode",
+    "desc": "Describes whether a same-named plugin on the shelf is replaced, in the publish-plugin question schema"
+  },
+  "e059dbd0ace7383eec230b9271e61f57c95ecb1f": {
+    "facing": "model",
+    "id": "tool-parameter-publish-plugin-question-file-runs",
+    "name": "Tool Parameter: Publish plugin question file runnable",
+    "desc": "Describes whether a sent file is sent as runnable, in the publish-plugin question schema"
+  },
+  "eb39fdc89be8c1f3073e0f398bc65516cbd27add": {
+    "facing": "model",
+    "id": "tool-parameter-publish-plugin-shown",
+    "name": "Tool Parameter: Publish plugin shown",
+    "desc": "Tells the model to leave out the shown field, which the publish-plugin tool fills with the question text"
+  },
+  "56013ecbc2cdd442a095e1e84129527907e9ae10": {
+    "facing": "model",
+    "id": "tool-parameter-publish-plugin-question",
+    "name": "Tool Parameter: Publish plugin question",
+    "desc": "Tells the model to leave out the question field, which the publish-plugin tool fills with the question as data"
+  },
+  "13a4c32153db348ca83b611942fb3b44a08c36a2": {
+    "facing": "model",
+    "id": "tool-parameter-publish-plugin-path",
+    "name": "Tool Parameter: Publish plugin path",
+    "desc": "Describes the publish-plugin path parameter: the local plugin folder holding .claude-plugin/plugin.json or a mod's hooks"
+  },
+  "2a2dda4d7cb6c4014915c92837f66b10e3b32ac1": {
+    "facing": "model",
+    "id": "tool-parameter-publish-plugin-replace",
+    "name": "Tool Parameter: Publish plugin replace",
+    "desc": "Describes the publish-plugin replace flag: true only when the person said to replace a same-named uploaded plugin"
+  },
+  "c5d17331d57d44714e749171ef07a6b4fa17df01": {
+    "facing": "model",
+    "id": "tool-parameter-publish-plugin-description",
+    "name": "Tool Parameter: Publish plugin description",
+    "desc": "Describes the publish-plugin description parameter, used only for a manifest written for a folder without one"
+  },
+  "97be2d4f615c27b5bf7b2413bd28570332490171": {
+    "facing": "model",
+    "id": "tool-parameter-publish-plugin-destination",
+    "name": "Tool Parameter: Publish plugin destination",
+    "desc": "Describes the publish-plugin destination parameter: the signed-in organization's library"
+  },
+  "91b29bb1c245e3d0565a083ba8f150d84efa5431": { "facing": "ui" },
+  "8a1850722f335d6f61e5e66c883bb919b3066d35": { "facing": "ui" },
+  "c46b0f947cd1d889e58562939f041f8a2783450a": { "facing": "internal" },
+  "2527a18711587b2c737f18fa6983ae6265bf93ba": { "facing": "ui" },
+  "d2a8fad45589ea60d6ad0b5eace65d55c6477f1b": { "facing": "ui" },
+  "03617bbe787082ec0870f999ee4dbcdad321605c": { "facing": "ui" },
+  "1e3f4b871e5ee68920fd0a1877a3614a50e34b09": { "facing": "ui" },
+  "d5c0ce61f916c889ecf9e455703b48a136d16d87": { "facing": "ui" },
+  "bb6f6920f6bd07d01bcb9372165aa3a8b388df72": { "facing": "ui" },
+  "ea9e68708952325ce8c0d9027e616275ba997b9f": { "facing": "ui" },
+  "58c046189a045e4bf4bc4cbc60c66d69313a8fda": { "facing": "ui" },
+  "17e3bde0aa464a4d293894a73a56e91d5952bc7a": {
+    "facing": "model",
+    "id": "tool-description-artifact-when-to-use",
+    "name": "Tool Description: Artifact when to use",
+    "desc": "Deferred-tool listing hint for the artifact tool: publishes and reads claude.ai pages, load it before writing documents or when others are readers"
+  },
+  "fa006f42ca7591ef79b472da5b795c6792d9ed25": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-action-one-of-omit-publish",
+    "name": "Tool Parameter: Artifact action one of (omit means publish)",
+    "desc": "Describes the artifact tool action parameter's allowed values, publish as default, and conditional clauses"
+  },
+  "50b28b9f8913da914b2d2be2b586507f65758e01": {
+    "facing": "model",
+    "id": "tool-parameter-artifact-preview-file-path-emulator",
+    "name": "Tool Parameter: Artifact preview file path (emulator)",
+    "desc": "Describes the artifact preview file_path parameter when previewing in the artifact viewer emulator"
+  },
+  "e0f052ee4d206021e0a93b7cf490c22b67adceca": { "facing": "internal" },
+  "bed05c569694b52c7f34491fd0fc87a372a3a9a4": {
+    "facing": "model",
+    "id": "tool-permission-artifact-list-versions-ask",
+    "name": "Tool Permission: Artifact list versions ask",
+    "desc": "Permission ask message describing listing an artifact's kept versions (read-only)"
+  },
+  "6d37b62feac00d55f08d47298068c108d9ee8a96": {
+    "facing": "model",
+    "id": "tool-result-artifact-versions-record-unreadable",
+    "name": "Tool Result: Artifact versions record unreadable",
+    "desc": "Tool result telling the model a stored version-listing record is unreadable and to rerun list"
+  },
+  "1e6c1a7f5bdb68e071a8aaa04f3e7fe1d7b48baf": {
+    "facing": "model",
+    "id": "tool-result-artifact-versions-dates-unreadable",
+    "name": "Tool Result: Artifact versions dates unreadable",
+    "desc": "Note appended to the version listing when dates could not be read"
+  },
+  "b9fa2c3b9131ad2b53d30541e70ebc36f94d40e9": {
+    "facing": "model",
+    "id": "tool-result-artifact-versions-more-kept",
+    "name": "Tool Result: Artifact versions more kept",
+    "desc": "Note appended to the version listing when older versions are not listed"
+  },
+  "b952e0f00185c254d6fa58bbfd86f835f80d7ed7": {
+    "facing": "model",
+    "id": "tool-result-artifact-version-must-be-list-id",
+    "name": "Tool Result: Artifact version must be list id",
+    "desc": "Validation error telling the model version must be an id from action list for this url"
+  },
+  "2caa6e593d8d18aaa0c6fb9b51e97981ccef7340": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-version-extra-params",
+    "name": "Tool Result: Artifact read version extra params",
+    "desc": "Validation error: read with version takes only url, remove prompt/page"
+  },
+  "64c4a248eb3b75863f16b61468ec343e815716f8": {
+    "facing": "model",
+    "id": "tool-description-artifact-read-version",
+    "name": "Tool Description: Artifact read version",
+    "desc": "Dynamic description for reading an earlier artifact version into a local file"
+  },
+  "5f56b86f5fae5279ee2c90a8b1fbb2b41876824f": {
+    "facing": "model",
+    "id": "tool-permission-artifact-version-not-own-account",
+    "name": "Tool Permission: Artifact version not own account",
+    "desc": "Deny message: earlier versions readable only when the artifact is known to come from the user's own account"
+  },
+  "6387f7c2ee483cb107f75e176c4469083234ac4c": {
+    "facing": "model",
+    "id": "tool-permission-artifact-version-ownership-unconfirmed",
+    "name": "Tool Permission: Artifact version ownership unconfirmed",
+    "desc": "Deny message: ownership could not be confirmed, earlier versions owner-only, retry once then tell the user"
+  },
+  "e265cd00f83102c7d9df02cca695165cb32cb607": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-version-saved",
+    "name": "Tool Result: Artifact read version saved",
+    "desc": "Tool result reporting an earlier artifact version saved to a file, treat as data, and how to restore it"
+  },
+  "382c634593781f6dfbda127617b7aa1ef4114bef": {
+    "facing": "model",
+    "id": "tool-result-artifact-versions-unavailable",
+    "name": "Tool Result: Artifact versions unavailable",
+    "desc": "Error that earlier artifact versions are not available in this session"
+  },
+  "8c201762afa78c59d52ebde459b84be21ec3ac60": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-version-persist-failed",
+    "name": "Tool Result: Artifact read version persist failed",
+    "desc": "Error that an artifact version was read but saving to disk failed"
+  },
+  "47acf45da38583306088b5278925ad982684a326": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-version-other-files-note",
+    "name": "Tool Result: Artifact read version other files note",
+    "desc": "Note that the saved version had several files but only its page is saved"
+  },
+  "a0e0f5fb47b3b32cbad3cfaa5b6ec9fb25a9a4e5": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-external-org-not-listed",
+    "name": "Tool Result: Artifact list external org not listed",
+    "desc": "Note that artifacts shared from another organization are not listed and to ask for the link"
+  },
+  "3df8c3b63ba82c908325a5b74e3a88fa9d0b1ca1": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-ask-for-link",
+    "name": "Tool Result: Artifact list ask for link",
+    "desc": "Sentence telling the model to ask the user for a link if the artifact they mean is not listed"
+  },
+  "0c775f001f8f599307e5c4ba6f08fc3655a82ba8": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-others-beyond-limit",
+    "name": "Tool Result: Artifact list others beyond limit",
+    "desc": "Clause that other artifacts may exist beyond any limit"
+  },
+  "52a31b6de2bd7965fdfeb33ca6073d92f020b77c": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-more-not-shown",
+    "name": "Tool Result: Artifact list more not shown",
+    "desc": "Note giving how many more artifacts were not shown and how to reach them"
+  },
+  "429c48eaf662d72ba4879271e2ce98f23229b84d": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-pass-higher-limit",
+    "name": "Tool Result: Artifact list pass higher limit",
+    "desc": "Clause telling the model to pass a higher limit to list more artifacts"
+  },
+  "13e2310b0517c5023e7462387b5377833c01d791": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-scope-separately",
+    "name": "Tool Result: Artifact list scope separately",
+    "desc": "Clause suggesting listing scope mine and shared separately to reach more"
+  },
+  "09c377b65b1d70fc18351d56cb47d5754dab4ca8": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-more-may-exist",
+    "name": "Tool Result: Artifact list more may exist",
+    "desc": "Note that more artifacts may exist when the listing was truncated"
+  },
+  "be1313b6d26a2aac60cdce6927a41a4e23a0df16": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-higher-limit-may-list-more",
+    "name": "Tool Result: Artifact list higher limit may list more",
+    "desc": "Clause that a higher limit may list more artifacts"
+  },
+  "dd56b0773aa12fcd3572f340e8d19c72e9d92047": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-count-lower-bound",
+    "name": "Tool Result: Artifact list count lower bound",
+    "desc": "Note that not every artifact could be listed so the count is a lower bound"
+  },
+  "7477f678611360eaeb8f88345c40690e5da33568": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-external-order-clause",
+    "name": "Tool Result: Artifact list external order clause",
+    "desc": "Ordering clause that artifacts from another organization come last in no particular order"
+  },
+  "5911e9bf76c67e7377c9b1fe28e624e2ba5d2d60": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-order-all-scope",
+    "name": "Tool Result: Artifact list order (all scope)",
+    "desc": "Ordering description for scope all: own artifacts first, then shared ones"
+  },
+  "d29b95c9a91eec838e2bb5a619e78fe94a8e7165": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-none-truncated",
+    "name": "Tool Result: Artifact list none listed truncated",
+    "desc": "Tool result when no artifacts were listed but the listing was incomplete"
+  },
+  "986a03be8208e32498e7f7073ca340502a9584a5": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-count-header",
+    "name": "Tool Result: Artifact list count header",
+    "desc": "Header line of the artifact listing giving the count, scope and ordering"
+  },
+  "d16173c948d255ab5cd0897f640126b9222ab710": {
+    "facing": "model",
+    "id": "tool-permission-artifact-preview-emulator-consent-ask",
+    "name": "Tool Permission: Artifact preview emulator consent ask",
+    "desc": "Permission ask message for looking at a page in the artifact viewer emulator"
+  },
+  "96e24394a78dc1aa7e456141496fc82d42a956a4": {
+    "facing": "model",
+    "id": "tool-result-artifact-preview-emulator-extra-params",
+    "name": "Tool Result: Artifact preview emulator extra params",
+    "desc": "Validation error: emulator preview takes only file_path, remove other params"
+  },
+  "3ccc96982a4ed9531d5aa411c410cb3cabda318f": {
+    "facing": "model",
+    "id": "data-artifact-preview-emulator-auto-classifier-input",
+    "name": "Data: Artifact preview emulator auto classifier input",
+    "desc": "Auto-mode classifier summary of an emulator artifact preview action"
+  },
+  "d1cea9683018407dfc1b5a722acd05792d2ea9cb": {
+    "facing": "model",
+    "id": "data-artifact-preview-auto-classifier-input",
+    "name": "Data: Artifact preview auto classifier input",
+    "desc": "Auto-mode classifier summary of a local artifact preview render"
+  },
+  "8f0e0889e678cebb0c258ba87833e005d36da555": {
+    "facing": "model",
+    "id": "tool-description-artifact-preview-emulator",
+    "name": "Tool Description: Artifact preview (emulator)",
+    "desc": "Tool description for previewing a local page in the real artifact viewer in a cloud session"
+  },
+  "5f193e40e0c57bf294ac6ffb06c8db7ae3efdb17": {
+    "facing": "model",
+    "id": "tool-result-artifact-preview-viewer-files-unexpected",
+    "name": "Tool Result: Artifact preview viewer files unexpected",
+    "desc": "Reason that the artifact viewer files were not as expected so the look did not run"
+  },
+  "c7d4162443d3c3a0fc001d9152f3a4f6fa96e13a": {
+    "facing": "model",
+    "id": "tool-result-artifact-preview-picture-label",
+    "name": "Tool Result: Artifact preview picture label",
+    "desc": "Label text block preceding each preview picture"
+  },
+  "a024b4fae66a1298ce93693de4b86587f0ec8fc7": {
+    "facing": "model",
+    "id": "tool-result-artifact-preview-record-unreadable-look",
+    "name": "Tool Result: Artifact preview record unreadable (look)",
+    "desc": "Tool result telling the model a stored emulator preview record is unreadable and to re-run preview"
+  },
+  "1204796c5ca43a6efeeca1486bf7b8008933bfc8": {
+    "facing": "model",
+    "id": "tool-result-artifact-preview-tell-person-could-not-check",
+    "name": "Tool Result: Artifact preview tell person could not check",
+    "desc": "Instruction to tell the person in one clause the look failed and carry on without checking another way"
+  },
+  "5f6c3b8fda70d0ee54a721aa56964ea72b903c86": {
+    "facing": "model",
+    "id": "tool-result-artifact-preview-pictures-not-attached",
+    "name": "Tool Result: Artifact preview pictures not attached",
+    "desc": "Note that some preview pictures are not attached because too large or stored record"
+  },
+  "340b4d0563261657d1aeab3c1f8cb09b36763d36": {
+    "facing": "model",
+    "id": "tool-result-artifact-preview-page-never-started",
+    "name": "Tool Result: Artifact preview page never started",
+    "desc": "Note that the page never started so the picture shows the viewer"
+  },
+  "9918f8f5c4c3ffb9274f05d85a8cb7d3108cf692": {
+    "facing": "model",
+    "id": "tool-result-artifact-preview-look-interrupted",
+    "name": "Tool Result: Artifact preview look interrupted",
+    "desc": "Tool result that the preview look was interrupted"
+  },
+  "70e2add1e10cfcdd3bced32d22c5c3fd7381b2bb": {
+    "facing": "model",
+    "id": "tool-result-artifact-preview-viewer-could-not-run",
+    "name": "Tool Result: Artifact preview viewer could not run",
+    "desc": "Tool result that the artifact viewer could not run, for a quoted reason"
+  },
+  "e82c3d1d0776c38418d2da83ad2e0d857be3b09e": {
+    "facing": "model",
+    "id": "tool-result-artifact-preview-could-not-look",
+    "name": "Tool Result: Artifact preview could not look",
+    "desc": "Tool result that the preview could not look at the page, with the outcome reason"
+  },
+  "e97b1ecfd6b670df0be91aaba7ece32adaf68e3d": {
+    "facing": "model",
+    "id": "tool-description-artifact-read-dynamic",
+    "name": "Tool Description: Artifact read dynamic",
+    "desc": "Per-call description for the artifact read action: the version-read text or the default read text, plus the unattended auto-reply notification suffix"
+  },
+  "1d8385bbdd87eb07dcb6a2aedc359607dca91e60": {
+    "facing": "model",
+    "id": "tool-description-artifact-read-dynamic-default-text",
+    "name": "Tool Description: Artifact read dynamic — default text",
+    "desc": "Fallback literal inside the artifact read per-call description, used when no version-read text applies"
+  },
+  "495d8b77c835d801f46f328978370bd446a33a04": {
+    "facing": "model",
+    "id": "tool-result-enable-mcp-claude-in-chrome",
+    "name": "Tool Result: Enable MCP Claude in Chrome",
+    "desc": "Tool result telling the model Claude in Chrome needs no enabling and which tools to use"
+  },
+  "c271f99fb7aa6320d6f9849675a4e2e7dcb4c9b1": {
+    "facing": "model",
+    "id": "tool-result-claude-browser-enable-already-connected",
+    "name": "Tool Result: Claude browser enable already connected",
+    "desc": "Tool result telling the model the desktop app browser needs no enabling and which tools to use"
+  },
+  "c79e579ced4445d634e5b772f681e726fd4db9fd": {
+    "facing": "model",
+    "id": "tool-description-computer-use-unlinked-chat-guidance",
+    "name": "Tool Description: Computer use unlinked chat guidance",
+    "desc": "Tells the model that a chat not linked to a computer cannot be linked by any tool, to explain this plainly to the user, continue with available tools, and use computer tools only if they later appear"
+  },
+  "b3d91004323af90d52f492bcf586363ec72f5988": {
+    "facing": "model",
+    "id": "tool-result-proposeskills-skill-md-no-instructions",
+    "name": "Tool Result: ProposeSkills skillMd no instructions",
+    "desc": "Input validation error: skillMd has no instructions; call again with a complete SKILL.md, and do not propose deletions"
+  },
+  "2f324c1ab25b62c42841c8d9b00401349f2549dd": {
+    "facing": "model",
+    "id": "tool-result-project-write-over-max-size",
+    "name": "Tool Result: Project write over max size",
+    "desc": "Project write refusal when the write would exceed the project's maximum knowledge size; warns not to delete docs to retry and to tell the user the project is out of room"
+  },
+  "cc85af5d3413312e283d50c52978c8d533500752": {
+    "facing": "model",
+    "id": "tool-result-project-write-localpath-protected-file",
+    "name": "Tool Result: Project write local_path protected file",
+    "desc": "project_write refusal when local_path names a credential file, a device, or Claude Code's own config/token files"
+  },
+  "e83108a9ca021e228da8d60594d2e9772bfa8104": {
+    "facing": "model",
+    "id": "tool-result-project-write-localpath-hard-link",
+    "name": "Tool Result: Project write local_path hard link",
+    "desc": "project_write refusal when the file at local_path has more than one hard link; asks to pass its text as content instead"
+  },
+  "c32f95ca67b6cb2c3e8270b145c6f951e1ef711e": {
+    "facing": "model",
+    "id": "tool-result-project-write-localpath-needs-permission",
+    "name": "Tool Result: Project write local_path needs permission",
+    "desc": "project_write refusal when the session may not read the local_path file without asking (permission rule, network path, unfollowable links), so it cannot be uploaded by path"
+  },
+  "1226523df7eec1671e5b28e75950ff96bc261a97": { "facing": "internal" },
+  "9c1fa9356c0fed340b792df5b476f804d9fecdd9": {
+    "facing": "model",
+    "id": "tool-result-workflow-hidden-script-not-loaded",
+    "name": "Tool Result: Workflow hidden script not loaded",
+    "desc": "Workflow tool error when resuming a run that hides its script before this session has loaded it; wait for the background resume or start a new run without resumeFromRunId"
+  },
+  "f0c8efaa90e66bb87057ab1c7b24e50ec2cc8d9d": {
+    "facing": "model",
+    "id": "tool-result-workflow-hidden-script-edited",
+    "name": "Tool Result: Workflow hidden script edited",
+    "desc": "Workflow tool error when resuming a hidden-script run with a changed script; it can only resume with the original unedited script file"
+  },
+  "aacc2028db7d29af36ef44435c0785ede92f5a8c": { "facing": "internal" },
+  "63e68bfa87eea49a9f8c71e2d47e0dc00e5badb9": { "facing": "internal" },
+  "fbfe2a8e0bb6d3da3c5020d8aa4eb2fc40b312fb": { "facing": "internal" },
+  "a44159151d7d59fdc3a7b8419a00c3c37aec0109": { "facing": "internal" },
+  "c9388e5731e68248367e29a321b07439d7ed8139": { "facing": "internal" },
+  "45371e505db162f366f554f58968d6b649dcf95a": { "facing": "internal" },
+  "394306d4abfed1c73025d2ddcb13f10d4ddf8c46": {
+    "facing": "model",
+    "id": "tool-result-permission-request-unanswered-deadline",
+    "name": "Tool Result: Permission request unanswered deadline",
+    "desc": "Permission denial message injected when nobody answers a permission request before its deadline; tells the model not to retry, say what approval was needed, and continue without it"
+  },
+  "17518d9c1981f8b296704a138146e7401a175edf": { "facing": "internal" },
+  "bec87e93d0b8e801bc5780458578c0f888125965": { "facing": "internal" },
+  "39465b7b04ce11c79c59d3b6be63905ebe4d91a7": { "facing": "internal" },
+  "9567c8a50ba56db2d22fa1840ef30e586686af25": { "facing": "internal" },
+  "61daa8f3a23e840b104187e643d31eab98b809b8": { "facing": "internal" },
+  "933b1cd4202b4016084202ba38dc997135458d11": { "facing": "internal" },
+  "d8357b2ce1456855c09070a60481e7ee16d48b67": { "facing": "internal" },
+  "be08b2b84f388d66898670aa748ea7a0ed1d80dd": {
+    "facing": "model",
+    "id": "system-reminder-container-restarted-resumable-agents",
+    "name": "System Reminder: Container restarted resumable agents",
+    "desc": "After a container restart, lists the stopped built-in agents that can be resumed by messaging their agent id with the send-message tool, and says every other stopped task is lost"
+  },
+  "545d30973bf820b3f26052d5ab3bdbf25450780b": {
+    "facing": "model",
+    "id": "data-task-notification-container-restarted-work-resumable",
+    "name": "Data: Task notification container restarted work resumable",
+    "desc": "Container-restart task notification phrase used when some stopped agents can be resumed: none of the work reports back on its own, followed by the resumable-agents note, then re-create anything else"
+  },
+  "bc395e685fbf8f5aac8888dec2562708ef5eb054": {
+    "facing": "model",
+    "id": "data-task-notification-container-restarted-work-lost-clause",
+    "name": "Data: Task notification container restarted work-lost clause",
+    "desc": "Container-restart task notification clause used when no stopped agents can be resumed: the work is lost with no result or further notification, re-create it"
+  },
+  "fdc1a927136481a3b7ce063b462d6551632c1f30": {
+    "facing": "model",
+    "id": "data-task-notification-container-restarted-work-lost",
+    "name": "Data: Task notification container restarted work lost",
+    "desc": "Task notification after a container restart listing background work that never reported back, with a slot for the lost/resumable clause, asking to re-create it if needed or tell the user what was lost"
+  },
+  "5b753a1f33a3d98630eaf5ea8b1f4757b6f691a7": { "facing": "internal" },
+  "b8ff78528f5f0c13f7ab4df94080a5015d26de19": { "facing": "internal" },
+  "a3c325a86979cf66c65999558aa0b870c723cbec": { "facing": "internal" },
+  "dada6d2c5a73881129959c08c23b30d873a2e864": { "facing": "internal" },
+  "f8ee7a4068e50793d046f3de3d64687eef948229": { "facing": "internal" },
+  "d6b04ec1bbea980fdffb3047e0d7bf8eeeb15377": { "facing": "internal" },
+  "c00ea1c984990ce36ce68e1e7c7d7221ee6a9aee": { "facing": "internal" },
+  "a4c118d58a3239a07472c58e684ba85975ee53a1": { "facing": "internal" },
+  "03727de26c90ae5e727c50a66e860b2a18bc7e2c": {
+    "facing": "model",
+    "id": "tool-result-mcp-server-needs-reauth-connector-settings",
+    "name": "Tool Result: MCP server needs reauth via connector settings",
+    "desc": "MCP tool error when a claude.ai-connected server needs the user to sign in again, pointing to the claude.ai connector settings instead of /mcp"
+  },
+  "925b7246574fca896e1302c352dc60c431467c7b": { "facing": "internal" },
+  "2e7668344f5b198e00d0dcd8eecf1bc2e4e5942e": { "facing": "internal" },
+  "e1137e6cadea1abe282d66a7121b012a175fa1c9": { "facing": "internal" },
+  "3830a292233541773ce1e0b532682a42ffb922a3": { "facing": "internal" },
+  "d4db06aa38b63c1885cadbe4e538797a77196603": { "facing": "internal" },
+  "898e5172a5cc97e15422355577d7b4667adc8ca1": { "facing": "internal" },
+  "fbb8f7ab16c7a90d64502df030ea045e0024f476": { "facing": "internal" },
+  "3997fb5081b32e17753f6a6a070023624a29605b": { "facing": "internal" },
+  "c3778026bfbd16e617f799628a5303d105b512cf": { "facing": "internal" },
+  "c18a219bac823a32ea9d32351301c480d363bd04": { "facing": "internal" },
+  "97e67796495f1c2ea480c01d08ef7b8c35a8477f": { "facing": "ui" },
+  "e811abecf0ffd149f6201ab310e37504b00c2722": { "facing": "ui" },
+  "0cf5928f5bbf8668573e08908a324734e4e04812": { "facing": "internal" },
+  "38da91761ca458e6f347ac4f38d69bef7f3daf37": { "facing": "ui" },
+  "804db1d29df0174fe79677e6bdaed89f13f9f9be": { "facing": "internal" },
+  "1a2b48a3a7ef687415cdf027a36c0b899e84d36c": { "facing": "internal" },
+  "a8ccfeb76c2ffdfefee32ac970d77d5a5b745afe": { "facing": "ui" },
+  "1c715e1744579c9c1c9e291548d7540017eb8cfe": {
+    "facing": "model",
+    "id": "agent-prompt-background-agent-state-classifier-ask-opens-message-rule",
+    "name": "Agent Prompt: Background agent state classifier ask-opens-message rule",
+    "desc": "Classifier section for agents told to state their one needed ask first: read the whole tail, treat an unanswered question or need as a blocked gate wherever it sits, with DNS-cutover examples"
+  },
+  "b58618ed4a21ef0db8bd76588bb698c4b296bb67": {
+    "facing": "model",
+    "id": "agent-prompt-project-thread-status-card-classifier-ask-opens-message-rule",
+    "name": "Agent Prompt: Project thread status card classifier ask-opens-message rule",
+    "desc": "Status-card classifier section for threads told to state their one needed ask first: an unanswered question or need sets needs_reply or needs_approval wherever it sits, with a DNS-cutover example"
+  },
+  "3334ed0692d89e8bb824759c683ea944f316378d": {
+    "facing": "model",
+    "id": "tool-result-mcp-task-not-backgrounded-limit",
+    "name": "Tool Result: MCP task not backgrounded at limit",
+    "desc": "MCP tool result when a server-side task could not be moved to the background because the per-user-message background task limit was reached; a cancel was sent and the model should tell the user"
+  },
+  "d147cd5c5848f5b2fb2eef803b69e40801b1dded": { "facing": "ui" },
+  "b63b1113a411604a363923d468a42891843dddd8": { "facing": "ui" },
+  "a819cb3cd9595e9878bf70070bbe1cbf896a04b0": { "facing": "ui" },
+  "548e49acda35ec22a938992b4ddb4ff98b2b2a59": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-outcome-unknown-cancelled-reason",
+    "name": "Tool Result: Artifact publish outcome unknown — cancelled before a later request",
+    "desc": "Reason clause spliced into the artifact publish outcome-unknown result when the publish was cancelled after deploy but before a later request went out"
+  },
+  "9eab1d66d6064449caf160af1f2b446c14413f0a": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-outcome-unknown-gateway-reason",
+    "name": "Tool Result: Artifact publish outcome unknown — later request blocked by gateway",
+    "desc": "Reason clause spliced into the artifact publish outcome-unknown result when a later request after deploy could not go through the cloud session's gateway"
   }
 }

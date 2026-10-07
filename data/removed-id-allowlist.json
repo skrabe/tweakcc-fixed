@@ -4318,5 +4318,40 @@
     "verdict": "archived",
     "version": "2.1.291",
     "why": "absorbed in 2.1.291: the literal survives once in the bundle (python count 1), now inside the newly catalogued parent template tool-result-agent-type-ambiguous, the else arm (no available match) of the ambiguous-agent-type ternary. No separate site remains, so the id is retired and the parent carries the text. Successor: tool-result-agent-type-ambiguous"
+  },
+  "slash-command-plugin-install-marketplace-usage": {
+    "verdict": "archived",
+    "version": "2.1.292",
+    "why": "Removed in 2.1.292: the /plugin install usage line with --marketplace is gone (python count 0 for 'Usage: /plugin install'); no successor in the catalogue."
+  },
+  "tool-result-artifact-list-empty-truncated": {
+    "verdict": "archived",
+    "version": "2.1.292",
+    "why": "Removed in 2.1.292: the empty-listing-window note is gone from the bundle (python count 0); the artifact list result was restructured and has no empty-window variant."
+  },
+  "tool-result-artifact-list-truncation-note": {
+    "verdict": "archived",
+    "version": "2.1.292",
+    "why": "Replaced in 2.1.292 by tool-result-artifact-list-more-not-shown, a rewrite (exact not-shown count, per-scope limits, no-next-page arm), not near-identical, so the new id is audited fresh."
+  },
+  "tool-result-artifact-read-extra-params-error": {
+    "verdict": "archived",
+    "version": "2.1.292",
+    "why": "Removed in 2.1.292 (python count 0); the nearest new prompt, tool-result-artifact-read-version-extra-params, covers only the version-read case."
+  },
+  "tool-result-attachment-not-sent-path-not-approved": {
+    "verdict": "archived",
+    "version": "2.1.292",
+    "why": "Replaced in 2.1.292 by tool-result-message-attachment-path-not-approved, reworded without the resolved path; not near-identical, audited fresh."
+  },
+  "tool-result-bash-background-session-ending": {
+    "verdict": "archived",
+    "version": "2.1.292",
+    "why": "Removed in 2.1.292: the no-further-input arm of the background-terminates ternary is gone; tool-result-bash-background-terminates-with-turn now renders only the final-response arm."
+  },
+  "tool-result-project-write-exceeds-max-size": {
+    "verdict": "archived",
+    "version": "2.1.292",
+    "why": "Replaced in 2.1.292 by tool-result-project-write-over-max-size, a rewrite that adds retry and user-reporting instructions; audited fresh rather than inheriting the old pristine-keep verdict."
   }
 }
