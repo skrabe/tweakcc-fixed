@@ -18,12 +18,20 @@ import {
   slotOccurrences,
   valueHash,
 } from './checkSlotContext.mjs';
-import { OPAQUE, resolveSlotValues } from './lib/slotValues.mjs';
+import {
+  BundleResolver,
+  OPAQUE,
+  resolveSlotValues,
+} from './lib/slotValues.mjs';
+import { createRequire } from 'node:module';
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import url from 'node:url';
+
+const acornParse = src =>
+  createRequire(import.meta.url)('acorn').parse(src, { ecmaVersion: 'latest' });
 
 const vals = obj =>
   new Map(Object.entries(obj).map(([l, b]) => [l, { branches: b }]));
@@ -452,7 +460,7 @@ describe('checkSlotContext: review round 2 (G–M, the resolver)', () => {
       resolveOne(
         'const x="OUTER";function f(c){if(c){var x=c.v}return`Intro ${x} end`}'
       )
-    ).toEqual([null]);
+    ).toEqual([null, 'undefined']);
   });
 
   it('J: an aliased import resolves under its exported name', () => {
@@ -530,16 +538,261 @@ describe('checkSlotContext: review round 2 (G–M, the resolver)', () => {
       prompts: [
         oneSlot('m1', 'A', 'One '),
         oneSlot('m2', 'B', 'Two '),
-        oneSlot('m3', 'R', 'Three '),
+        oneSlot('m3', 'R', 'Three ', '()} end'),
       ],
     };
     const fwd = resolveSlotValues(src, cat).values;
     const rev = resolveSlotValues(src, cat, { reverse: true }).values;
     for (const id of fwd.keys())
       expect(valueHash(rev.get(id))).toBe(valueHash(fwd.get(id)));
-    // a binding on a cycle is unknown, whichever end the query started from
-    expect(fwd.get('tool-result-fixture-m1').get('A').branches).toEqual([null]);
+    // a binding on a cycle keeps its own non-cyclic branches plus unknown,
+    // whichever end the query started from
+    expect(fwd.get('tool-result-fixture-m1').get('A').branches).toEqual([
+      null,
+      'A.',
+    ]);
     expect(fwd.get('tool-result-fixture-m2').get('B').branches).toEqual([null]);
+    expect(fwd.get('tool-result-fixture-m3').get('R').branches).toEqual([
+      null,
+      'Base.',
+    ]);
+  });
+});
+
+describe('checkSlotContext: review round 3 (fail-safe resolver)', () => {
+  it('1: a reassigned parameter adds unknown', () => {
+    for (const body of [
+      'x??=o.p;',
+      'x=x||o.p;',
+      'if(c)x=o.p;',
+      'x=" and more";',
+    ])
+      expect(
+        resolveOne(
+          `function h(x,c,o){${body}return\`Intro \${x} end\`}h("Given.");`
+        )
+      ).toContain(null);
+  });
+
+  it('2: a reassigned function declaration adds unknown to its returns', () => {
+    expect(
+      resolveOne(
+        'function f(){return"Fixed."}f=()=>o.p;function g(){return`Intro ${f()} end`}',
+        '()} end'
+      )
+    ).toEqual([null, 'Fixed.']);
+  });
+
+  it('3: an explicit undefined argument takes the default', () => {
+    expect(
+      resolveOne(
+        'function h(x=" and more"){return`Intro ${x} end`}h(undefined);h(void 0);'
+      )
+    ).toEqual([' and more']);
+    // a value that may or may not be undefined, with a default: unknown too
+    expect(
+      resolveOne(
+        'let u;if(c)u="Set.";function h(x=" and more"){return`Intro ${x} end`}h(u);'
+      )
+    ).toEqual([null, ' and more', 'Set.']);
+  });
+
+  it('4: an opaque neighbour exposes the boundary behind it', () => {
+    const p = fixture('opaque', ['Before.${', '} Tasks${', '}.'], ['E', 'T']);
+    const f = contextFindings(
+      [p],
+      'Done.${E}${T}.',
+      vals({ E: [OPAQUE], T: [' and are assigned to teammates'] })
+    );
+    // E itself is `other`, so the word rule also reports it; what matters is
+    // that T is seen at the sentence start behind the opaque E
+    expect(f.map(x => [x.label, x.kind])).toContainEqual(['T', 'fragment']);
+  });
+
+  it('5: an unevaluable or computed string transform is unknown', () => {
+    expect(
+      resolveOne(
+        'const s="Hello.";function f(){return`Intro ${s.slice(2*1)} end`}',
+        '.slice(2*1)} end'
+      )
+    ).toEqual([null]);
+    expect(
+      resolveOne(
+        'const s="Hello.";function f(){return`Intro ${s.slice(0,4)} end`}',
+        '.slice(0,4)} end'
+      )
+    ).toEqual(['Hell']);
+    expect(
+      resolveOne(
+        'const s="  Hi.  ";function f(){return`Intro ${s.trim()} end`}',
+        '.trim()} end'
+      )
+    ).toEqual(['Hi.']);
+    // a computed `s[m](0,4)` is no method match: not rendered, so no value
+    expect(
+      resolveOne(
+        'const s="Hello.",m="slice";function f(){return`Intro ${s[m](0,4)} end`}',
+        '[m](0,4)} end'
+      )
+    ).toEqual([]);
+  });
+
+  it('6: a conditionally initialised binding may render "undefined"', () => {
+    expect(
+      resolveOne('let x;if(c)x="Set.";function f(){return`Intro ${x} end`}')
+    ).toEqual(['Set.', 'undefined']);
+    expect(
+      resolveOne(
+        'function f(c){let x;if(c)x="A.";else x="B.";return`Intro ${x} end`}'
+      )
+    ).toEqual(['A.', 'B.']);
+  });
+
+  it('7: `&&` renders the left side when it is falsy', () => {
+    expect(
+      resolveOne(
+        'const a=0;function f(){return`Intro ${a&&"Yes."} end`}',
+        '&&"Yes."} end'
+      )
+    ).toEqual([]);
+    const v = new BundleResolver('');
+    const mod = { refs: new Map() };
+    const parse = src => acornParse(src).body[0].expression;
+    expect(v.branches(mod, parse('x===1&&"Yes."'), 0)).toEqual([
+      'false',
+      'Yes.',
+    ]);
+    expect(v.branches(mod, parse('0&&"Yes."'), 0)).toEqual(['0', 'Yes.']);
+    expect(v.branches(mod, parse('"set"&&"Yes."'), 0)).toEqual(['Yes.']);
+    expect(v.branches(mod, parse('o.p&&"Yes."'), 0)).toEqual([null, 'Yes.']);
+  });
+
+  it('8: an async function or generator renders unknown', () => {
+    expect(
+      resolveOne(
+        'async function g(){return"Done."}function f(){return`Intro ${g()} end`}',
+        '()} end'
+      )
+    ).toEqual([null]);
+    expect(
+      resolveOne(
+        'function*g(){return"Done."}function f(){return`Intro ${g()} end`}',
+        '()} end'
+      )
+    ).toEqual([null]);
+  });
+
+  it('9: one `other` branch among sentences keeps the word rule', () => {
+    const f = contextFindings(
+      [nudge],
+      danglingBody,
+      vals({
+        FIXTURE_TOOL_NAME: [
+          'A whole sentence.',
+          '(provided in the conversation below)',
+        ],
+      })
+    );
+    expect(f.map(x => x.kind)).toEqual(['unknown']);
+  });
+
+  it('10: a whitespace-only value is empty and skipped', () => {
+    expect(
+      contextFindings(
+        [nudge],
+        danglingBody,
+        vals({ FIXTURE_TOOL_NAME: ['   ', ''] })
+      )
+    ).toEqual([]);
+  });
+
+  it('11: default, namespace and dynamic imports, and export default, are seen', () => {
+    // a default import resolves
+    const src =
+      mod(0, 'a.js', 'var T="Named.";export default T;') +
+      mod(
+        1,
+        'b.js',
+        "import D,{x}from'a.js';function f(){return`Intro ${D} end`}"
+      );
+    const { values } = resolveSlotValues(src, { prompts: [oneSlot('d', 'X')] });
+    expect(values.get('tool-result-fixture-d').get('X').branches).toEqual([
+      'Named.',
+    ]);
+    // a parameter of a function its module also exposes by namespace import
+    // (or `import()`), or by export default, escapes
+    for (const other of ["import*as N from'h.js';N.h(1);", 'import("h.js");']) {
+      const s2 =
+        mod(0, 'h.js', 'function h(a){return`Intro ${a} end`}h("Only.");') +
+        mod(1, 'o.js', other);
+      const r = resolveSlotValues(s2, { prompts: [oneSlot('n', 'X')] });
+      expect(r.values.get('tool-result-fixture-n').get('X').branches).toEqual([
+        null,
+        'Only.',
+      ]);
+    }
+    expect(
+      resolveOne(
+        'export default function h(a){return`Intro ${a} end`}h("Only.");'
+      )
+    ).toEqual([null, 'Only.']);
+  });
+
+  it('12: a real completion check decides whether a function falls through', () => {
+    const ret = body =>
+      resolveOne(
+        `function g(c){${body}}function f(){return\`Intro \${g()} end\`}`,
+        '()} end'
+      );
+    expect(ret('if(c)return"A.";else return"B."')).toEqual(['A.', 'B.']);
+    expect(ret('switch(c){case 1:return"A.";default:return"B."}')).toEqual([
+      'A.',
+      'B.',
+    ]);
+    expect(ret('try{return"A."}catch{return"B."}')).toEqual(['A.', 'B.']);
+    expect(ret('if(c)return"A."')).toEqual(['A.', 'undefined']);
+    expect(ret('switch(c){case 1:return"A."}')).toEqual(['A.', 'undefined']);
+    expect(ret('if(c){return"A."}log()')).toEqual(['A.', 'undefined']);
+  });
+
+  it('13: each call of a shared helper keeps its own arguments', () => {
+    const src = mod(
+      0,
+      'm.js',
+      [
+        'function f(p){return p}',
+        'let x=f("A whole sentence.");let y=f(" and more");',
+        'function a(){return`One ${x} end`}',
+        'function b(){return`Two ${y} end`}',
+      ].join('')
+    );
+    const { values } = resolveSlotValues(src, {
+      prompts: [oneSlot('x', 'X', 'One '), oneSlot('y', 'Y', 'Two ')],
+    });
+    expect(values.get('tool-result-fixture-x').get('X').branches).toEqual([
+      'A whole sentence.',
+    ]);
+    expect(values.get('tool-result-fixture-y').get('Y').branches).toEqual([
+      ' and more',
+    ]);
+  });
+
+  it('14: a recursive helper keeps its known branches, in either order', () => {
+    const src = mod(
+      0,
+      'm.js',
+      'function r(n){return n?r(n-1):" and the base"}function k(){return`Intro ${r(3)} end`}'
+    );
+    const cat = { prompts: [oneSlot('rec', 'X', 'Intro ', '(3)} end')] };
+    const fwd = resolveSlotValues(src, cat).values;
+    const rev = resolveSlotValues(src, cat, { reverse: true }).values;
+    expect(fwd.get('tool-result-fixture-rec').get('X').branches).toEqual([
+      null,
+      ' and the base',
+    ]);
+    expect(valueHash(rev.get('tool-result-fixture-rec'))).toBe(
+      valueHash(fwd.get('tool-result-fixture-rec'))
+    );
   });
 });
 
@@ -632,6 +885,18 @@ describe('checkSlotContext: F, the gate refuses to pass having checked nothing',
     fs.writeFileSync(empty, '');
     const r = run(`--cli=${good}`, `--set=${set}`, `--ids=${empty}`);
     expect(r.status).toBe(2);
+  });
+
+  it('15: rejects empty --ids before it ever reads the bundle', () => {
+    const empty = path.join(dir, 'empty2.txt');
+    fs.writeFileSync(empty, '\n\n');
+    const r = run(
+      `--cli=${path.join(dir, 'no-such-bundle.js')}`,
+      `--set=${set}`,
+      `--ids=${empty}`
+    );
+    expect(r.status).toBe(2);
+    expect(r.stderr).toMatch(/names no ids/);
   });
 
   it('exits 2 for an empty --sets= with --all', () => {

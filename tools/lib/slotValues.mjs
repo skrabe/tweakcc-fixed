@@ -22,24 +22,35 @@
 // A slot's value is the set of every string it can render:
 //   - a string literal, or a template literal (nested `${}` kept opaque);
 //   - a variable: its initializer AND every later `=` assignment to that same
-//     binding, including from nested closures; a compound assignment, a
-//     destructuring or for-of/for-in binding is runtime data;
+//     binding, including from nested closures, plus "undefined" when it is
+//     declared without an initializer and not definitely assigned before
+//     every read;
 //   - an import, followed under its EXPORTED name to the defining module;
-//   - every branch of `?:`, `||` and `??`, the right side of `&&` plus "";
+//   - every branch of `?:`, `||` and `??`; for `&&`, the right side plus the
+//     left side's falsy rendering ("false", "0", "", "null", "undefined");
 //   - `+` concatenation of resolved parts;
-//   - a call's every `return`, plus "undefined" when the body can fall
-//     through (any body whose last statement is not a return or throw);
+//   - a call's every `return`, plus "undefined" when the body can complete
+//     normally (a real completion check, not a last-statement guess). Where a
+//     return is a function of the parameters, each call site substitutes its
+//     own arguments, so `x=f("A")` and `y=f(" and more")` stay apart;
 //   - a parameter: the argument at every call site of THAT function (the
 //     approach of tools/checkParamSlotLiterals.mjs, with real references
-//     instead of names), "undefined" for a missing non-default argument, and
-//     unknown as well when the function escapes — exported, passed or stored
-//     as a value, aliased, or reassigned — since its other callers are unseen.
-// Anything else (member reads, method calls, computed numbers) is an UNKNOWN
-// branch, null. Unknown is reported, never guessed.
+//     instead of names); a missing or explicit-`undefined` argument takes the
+//     default, or renders "undefined" without one.
+//
+// FAIL SAFE. Anything the resolver does not model exactly contributes an
+// UNKNOWN branch (null) rather than being skipped, so checkSlotContext keeps
+// its word rule running for that slot. Unknown includes: runtime data
+// (member reads, computed numbers, user text), any method call except the
+// literal-argument string transforms below, async functions and generators,
+// a parameter or function binding that is ever reassigned, a function that
+// escapes (exported, default-exported, namespace- or dynamically imported,
+// passed or stored as a value), destructuring and loop bindings, and an
+// argument that may or may not be `undefined` when a default exists.
 //
 // Caching never depends on query order: results are memoised per binding and
-// per function, and a binding on a dependency cycle resolves to unknown for
-// every member of its cycle (see `memo`).
+// per function, and a dependency cycle (`s = s + " more"`, a recursive helper)
+// keeps each member's own non-cyclic branches plus unknown (see `memo`).
 
 import { createRequire } from 'node:module';
 
@@ -99,15 +110,25 @@ const literalNumber = a =>
     : a.type === 'UnaryExpression' && a.operator === '-'
       ? -literalNumber(a.argument)
       : NaN;
+// Apply a string transform when it can be evaluated exactly; otherwise the
+// result is unknown.
 const applyMethod = (call, value) => {
   if (value === null) return null;
   const name = call.callee.property.name;
   if (name === 'slice') {
     const nums = call.arguments.map(literalNumber);
-    return nums.some(Number.isNaN) ? value : value.slice(...nums);
+    return nums.some(Number.isNaN) ? null : value.slice(...nums);
   }
+  if (call.arguments.length) return null;
   return value[name]();
 };
+const isStringMethodCall = expr =>
+  expr.type === 'CallExpression' &&
+  expr.callee.type === 'MemberExpression' &&
+  !expr.callee.computed &&
+  expr.callee.object.type === 'Identifier' &&
+  expr.callee.property.type === 'Identifier' &&
+  STRING_METHODS.has(expr.callee.property.name);
 
 // Which identifier nodes in one (Babel) interpolation are RENDERED, and how:
 // `value` (the binding's own value), `call` (the function's return), or a
@@ -135,11 +156,7 @@ const renderedRoles = (expr, out = new Map()) => {
       break;
     case 'CallExpression':
       if (expr.callee.type === 'Identifier') out.set(expr.callee, 'call');
-      else if (
-        expr.callee.type === 'MemberExpression' &&
-        expr.callee.object.type === 'Identifier' &&
-        STRING_METHODS.has(expr.callee.property.name)
-      )
+      else if (isStringMethodCall(expr))
         out.set(expr.callee.object, { method: expr });
       break;
     case 'TemplateLiteral':
@@ -215,7 +232,16 @@ const buildModule = (name, source) => {
     scopeManager.scopes.find(s => s.type === 'module') ||
     scopeManager.globalScope;
   const exports = new Map();
+  let reExportsAll = false;
   for (const stmt of ast.body) {
+    if (stmt.type === 'ExportAllDeclaration') reExportsAll = true;
+    if (stmt.type === 'ExportDefaultDeclaration') {
+      const d = stmt.declaration;
+      if (d.id) exports.set('default', { local: d.id.name });
+      else if (d.type === 'Identifier')
+        exports.set('default', { local: d.name });
+      continue;
+    }
     if (stmt.type !== 'ExportNamedDeclaration') continue;
     const from = stmt.source ? stmt.source.value : null;
     for (const sp of stmt.specifiers || []) {
@@ -239,8 +265,100 @@ const buildModule = (name, source) => {
     refs,
     moduleScope,
     exports,
+    reExportsAll,
   };
 };
+
+// Can control reach the end of `node` (and so run the statement after it)?
+// Conservative: anything not modelled can complete.
+const loopBodyBreaks = node => {
+  let found = false;
+  const walk = (n, depth) => {
+    if (!n || found || typeof n !== 'object') return;
+    if (Array.isArray(n)) {
+      for (const x of n) walk(x, depth);
+      return;
+    }
+    if (typeof n.type !== 'string' || isFunction(n)) return;
+    if (n.type === 'BreakStatement' && (depth === 0 || n.label)) {
+      found = true;
+      return;
+    }
+    const nested = /^(For|ForIn|ForOf|While|DoWhile|Switch)Statement$/.test(
+      n.type
+    );
+    for (const key of Object.keys(n)) {
+      if (key === 'range' || key === 'loc') continue;
+      walk(n[key], depth + (nested ? 1 : 0));
+    }
+  };
+  walk(node, 0);
+  return found;
+};
+export const canComplete = node => {
+  if (!node) return true;
+  switch (node.type) {
+    case 'ReturnStatement':
+    case 'ThrowStatement':
+      return false;
+    case 'BlockStatement':
+      return node.body.every(canComplete);
+    case 'IfStatement':
+      return (
+        !node.alternate ||
+        canComplete(node.consequent) ||
+        canComplete(node.alternate)
+      );
+    case 'TryStatement': {
+      if (node.finalizer && !canComplete(node.finalizer)) return false;
+      return (
+        canComplete(node.block) ||
+        (!!node.handler && canComplete(node.handler.body))
+      );
+    }
+    case 'SwitchStatement': {
+      if (!node.cases.some(c => c.test === null)) return true;
+      if (node.cases.some(c => loopBodyBreaks(c.consequent))) return true;
+      const last = node.cases[node.cases.length - 1];
+      return last.consequent.every(canComplete);
+    }
+    case 'LabeledStatement':
+      return canComplete(node.body) || loopBodyBreaks(node.body);
+    case 'WhileStatement':
+    case 'ForStatement': {
+      const infinite =
+        node.type === 'ForStatement'
+          ? !node.test
+          : node.test.type === 'Literal' && node.test.value === true;
+      return !infinite || loopBodyBreaks(node.body);
+    }
+    case 'DoWhileStatement':
+      return canComplete(node.body) || loopBodyBreaks(node.body);
+    default:
+      return true;
+  }
+};
+
+const FALSY_RENDERINGS = new Set([
+  '',
+  'false',
+  '0',
+  'null',
+  'undefined',
+  'NaN',
+]);
+const BOOLEAN_OPERATORS = new Set([
+  '==',
+  '!=',
+  '===',
+  '!==',
+  '<',
+  '<=',
+  '>',
+  '>=',
+  'in',
+  'instanceof',
+]);
 
 export class BundleResolver {
   constructor(source) {
@@ -256,6 +374,8 @@ export class BundleResolver {
     this.current = null;
     this.counter = 0;
     this.depthLimited = 0;
+    this.cycleNull = new Set();
+    this.substituting = new Set();
     this.importers = null;
   }
 
@@ -268,15 +388,16 @@ export class BundleResolver {
   }
 
   // Memoise a computation over the value-dependency graph with Tarjan's
-  // strongly-connected-components bookkeeping. A binding that depends on
-  // itself (`s = s + " more"`, mutually recursive helpers) has no finite
-  // literal set, so every member of a cyclic component resolves to unknown.
-  // Component membership is a property of the graph, not of which slot was
-  // queried first, so cached results never depend on query order; a value
-  // computed inside an unfinished component is provisional and is replaced
-  // when its root closes.
+  // strongly-connected-components bookkeeping. When a component closes and
+  // it is cyclic, each member is recomputed ONCE with every member of the
+  // component reading as unknown: the result keeps the member's own branches
+  // that do not run through the cycle, plus unknown. That recomputation sees
+  // the same inputs whichever member the query entered by, so cached results
+  // never depend on query order (the first, provisional pass does, which is
+  // why it is thrown away).
   memo(key, compute) {
     if (this.cache.has(key)) return this.cache.get(key);
+    if (this.cycleNull.has(key)) return [null];
     const frame = this.frames.get(key);
     if (frame && frame.onStack) {
       const cur = this.current;
@@ -284,7 +405,13 @@ export class BundleResolver {
       if (cur === frame) frame.self = true;
       return [null];
     }
-    const mine = { key, index: this.counter, low: this.counter, onStack: true };
+    const mine = {
+      key,
+      compute,
+      index: this.counter,
+      low: this.counter,
+      onStack: true,
+    };
     this.counter++;
     this.frames.set(key, mine);
     this.tarjan.push(mine);
@@ -304,12 +431,26 @@ export class BundleResolver {
         f.onStack = false;
         members.push(f);
       } while (f !== mine);
-      const cyclic = members.length > 1 || mine.self;
-      for (const m of members) {
-        this.cache.set(m.key, cyclic ? [null] : result);
-        this.frames.delete(m.key);
+      for (const m of members) this.frames.delete(m.key);
+      if (members.length === 1 && !mine.self) {
+        this.cache.set(key, result);
+        return result;
       }
-      return cyclic ? [null] : result;
+      for (const m of members) this.cycleNull.add(m.key);
+      const finals = members.map(m => {
+        const saved = this.current;
+        this.current = null;
+        try {
+          return uniq([...m.compute(), null]);
+        } finally {
+          this.current = saved;
+        }
+      });
+      members.forEach((m, i) => {
+        this.cycleNull.delete(m.key);
+        this.cache.set(m.key, finals[i]);
+      });
+      return this.cache.get(key);
     }
     if (parent) parent.low = Math.min(parent.low, mine.low);
     return result;
@@ -322,23 +463,33 @@ export class BundleResolver {
   }
 
   // Which modules import which exported name from which module, read from the
-  // import statements' text so no module has to be parsed to find out.
+  // import statements' text so no module has to be parsed to find out:
+  // `import{a as b}from"m"`, `import D,{a}from'm'`, `import*as N from"m"`
+  // (recorded under "*", meaning every export escapes) and `import("m")`.
   importersOf(moduleName, exported) {
     if (!this.importers) {
       this.importers = new Map();
+      const note = (src, name, importer) => {
+        const key = `${src}\0${name}`;
+        const list = this.importers.get(key) || [];
+        if (!list.includes(importer)) list.push(importer);
+        this.importers.set(key, list);
+      };
+      const IMPORT =
+        /import\s*(?:([\w$]+)\s*,?\s*)?(?:\{([^}]*)\}|\*\s*as\s+[\w$]+)?\s*from\s*["']([^"']+)["']/g;
+      const STAR =
+        /import\s*(?:[\w$]+\s*,\s*)?\*\s*as\s+[\w$]+\s*from\s*["']([^"']+)["']/g;
+      const DYNAMIC = /import\s*\(\s*["']([^"']+)["']\s*\)/g;
       for (const seg of this.segments) {
-        for (const m of seg.source.matchAll(
-          /import\s*\{([^}]*)\}\s*from\s*"([^"]+)"/g
-        )) {
-          for (const spec of m[1].split(',')) {
+        for (const m of seg.source.matchAll(IMPORT)) {
+          if (m[1]) note(m[3], 'default', seg.name);
+          for (const spec of (m[2] || '').split(',')) {
             const [imp] = spec.trim().split(/\s+as\s+/);
-            if (!imp) continue;
-            const key = `${m[2]}\0${imp}`;
-            const list = this.importers.get(key) || [];
-            if (!list.includes(seg.name)) list.push(seg.name);
-            this.importers.set(key, list);
+            if (imp) note(m[3], imp, seg.name);
           }
         }
+        for (const m of seg.source.matchAll(STAR)) note(m[1], '*', seg.name);
+        for (const m of seg.source.matchAll(DYNAMIC)) note(m[1], '*', seg.name);
       }
     }
     return this.importers.get(`${moduleName}\0${exported}`) || [];
@@ -356,17 +507,100 @@ export class BundleResolver {
   }
 
   importTarget(mod, def, depth) {
-    if (def.node.type !== 'ImportSpecifier') return null;
-    const imported = def.node.imported.name ?? def.node.imported.value;
+    const imported =
+      def.node.type === 'ImportSpecifier'
+        ? (def.node.imported.name ?? def.node.imported.value)
+        : def.node.type === 'ImportDefaultSpecifier'
+          ? 'default'
+          : null;
+    if (!imported) return null;
     return this.exportedVariable(def.parent.source.value, imported, depth + 1);
   }
 
-  identValue(mod, ident, depth) {
+  identValue(mod, ident, depth, env) {
     if (!ident || this.tooDeep(depth)) return [null];
     const ref = mod.refs.get(ident);
     if (!ref || !ref.resolved)
       return ident.name === 'undefined' ? ['undefined'] : [null];
+    if (env && env.has(ref.resolved)) return env.get(ref.resolved);
     return this.variableValue(mod, ref.resolved, depth + 1);
+  }
+
+  // Is the declared-but-uninitialised `v` definitely assigned before every
+  // read? Only the simple, common shape is proved: the declaration's block
+  // holds, after it, a statement that assigns `v` on every path, and every
+  // read of `v` comes after that statement.
+  definitelyAssigned(mod, v) {
+    const decl = v.defs[0]?.parent;
+    const block = decl && mod.parent.get(decl);
+    if (!block || !Array.isArray(block.body)) return false;
+    const writes = new Set(
+      v.references.filter(r => r.isWrite()).map(r => r.identifier)
+    );
+    const assigns = node => {
+      if (!node) return false;
+      switch (node.type) {
+        case 'ExpressionStatement':
+          return assigns(node.expression);
+        case 'AssignmentExpression':
+          return node.operator === '=' && writes.has(node.left);
+        case 'SequenceExpression':
+          return node.expressions.some(assigns);
+        case 'BlockStatement':
+          return node.body.some(assigns);
+        case 'IfStatement':
+          return (
+            !!node.alternate &&
+            assigns(node.consequent) &&
+            assigns(node.alternate)
+          );
+        case 'TryStatement':
+          return (
+            assigns(node.block) && (!node.handler || assigns(node.handler.body))
+          );
+        default:
+          return false;
+      }
+    };
+    const after = block.body.slice(block.body.indexOf(decl) + 1);
+    const done = after.find(assigns);
+    if (!done) return false;
+    return v.references
+      .filter(r => r.isRead())
+      .every(r => r.identifier.start >= done.end);
+  }
+
+  isLoopBinding(mod, v) {
+    return v.defs.some(d => {
+      const loop = d.parent && mod.parent.get(d.parent);
+      return (
+        !!loop &&
+        /^For(Of|In)Statement$/.test(loop.type) &&
+        loop.left === d.parent
+      );
+    });
+  }
+
+  // Does every read of `v` see a value? Either an initialised declarator
+  // sits in a block that holds every read, after it (a later declarator of
+  // the same `let a=…,b=a` counts; a `var`
+  // initialised inside an `if` and read after it does not), or the binding
+  // is definitely assigned (see definitelyAssigned).
+  readsSeeAValue(mod, v) {
+    const reads = v.references.filter(r => r.isRead());
+    for (const d of v.defs) {
+      if (!d.node.init) continue;
+      const block = mod.parent.get(d.parent);
+      if (
+        block &&
+        Array.isArray(block.body) &&
+        reads.every(
+          r => r.identifier.start >= d.node.end && r.identifier.end <= block.end
+        )
+      )
+        return true;
+    }
+    return this.definitelyAssigned(mod, v);
   }
 
   variableValue(mod, v, depth) {
@@ -378,7 +612,14 @@ export class BundleResolver {
         const t = this.importTarget(mod, def, depth);
         return t ? this.variableValue(t.mod, t.v, depth + 1) : [null];
       }
-      if (def.type === 'Parameter') return this.paramValue(mod, def, depth);
+      if (def.type === 'Parameter') {
+        const out = this.paramValue(mod, def, depth);
+        // A parameter reassigned in the body (`x ??= …`, `if (c) x = o.p`)
+        // is not just its arguments.
+        return v.references.some(r => r.isWrite() && !r.init)
+          ? [...out, null]
+          : out;
+      }
       if (def.type !== 'Variable') return [null];
       if (v.defs.some(d => d.node.id.type !== 'Identifier')) return [null];
       const writes = v.references.filter(r => r.isWrite());
@@ -399,74 +640,131 @@ export class BundleResolver {
           out.push(null);
         else out.push(...this.branches(mod, r.writeExpr, depth + 1));
       }
+      if (!this.isLoopBinding(mod, v) && !this.readsSeeAValue(mod, v))
+        out.push('undefined');
       return out;
     });
   }
 
-  // The function nodes a callee identifier can be, with their modules.
-  calleeFunctions(mod, ident, depth) {
-    if (this.tooDeep(depth)) return null;
+  // The functions a callee identifier can be, with their modules, and
+  // whether it may also be something unseen (a reassigned declaration, a
+  // non-function write).
+  calleeFunctions(mod, ident, depth, env) {
+    if (this.tooDeep(depth)) return { fns: [], unknown: true };
     const ref = mod.refs.get(ident);
-    if (!ref || !ref.resolved) return null;
+    if (!ref || !ref.resolved || (env && env.has(ref.resolved)))
+      return { fns: [], unknown: true };
     return this.variableFunctions(mod, ref.resolved, depth + 1);
   }
 
   variableFunctions(mod, v, depth) {
-    if (this.tooDeep(depth)) return null;
+    if (this.tooDeep(depth)) return { fns: [], unknown: true };
     const def = v.defs[0];
-    if (!def) return null;
-    if (def.type === 'FunctionName') return [{ mod, fn: def.node }];
+    if (!def) return { fns: [], unknown: true };
+    if (def.type === 'FunctionName')
+      return {
+        fns: [{ mod, fn: def.node }],
+        unknown: v.references.some(r => r.isWrite() && !r.init),
+      };
     if (def.type === 'ImportBinding') {
       const t = this.importTarget(mod, def, depth);
-      return t ? this.variableFunctions(t.mod, t.v, depth + 1) : null;
+      return t
+        ? this.variableFunctions(t.mod, t.v, depth + 1)
+        : { fns: [], unknown: true };
     }
-    if (def.type !== 'Variable') return null;
-    const out = [];
+    if (def.type !== 'Variable') return { fns: [], unknown: true };
+    const fns = [];
+    let unknown = false;
     for (const r of v.references.filter(x => x.isWrite())) {
       if (!r.writeExpr || !isFunction(r.writeExpr) || r.isReadWrite())
-        return null;
-      out.push({ mod, fn: r.writeExpr });
+        unknown = true;
+      else fns.push({ mod, fn: r.writeExpr });
     }
-    return out.length ? out : null;
+    return { fns, unknown: unknown || !fns.length };
   }
 
-  callValue(mod, ident, depth) {
-    const fns = this.calleeFunctions(mod, ident, depth);
-    if (!fns) return [null];
-    return uniq(fns.flatMap(f => this.returns(f.mod, f.fn, depth + 1)));
+  // The value of `callee(...args)`. A function whose returns depend on its
+  // parameters is evaluated with THIS call's arguments substituted, so two
+  // calls of one helper never pool their arguments; a recursive call falls
+  // back to the function's memoised return set (every call site's union).
+  callValue(mod, call, depth, env) {
+    const { fns, unknown } = this.calleeFunctions(mod, call.callee, depth, env);
+    const out = unknown ? [null] : [];
+    for (const { mod: fm, fn } of fns) {
+      if (fn.async || fn.generator) {
+        out.push(null);
+        continue;
+      }
+      if (this.substituting.has(fn) || !fn.params.length) {
+        out.push(...this.returns(fm, fn, depth + 1));
+        continue;
+      }
+      const sub = this.paramEnv(fm, fn, call, mod, depth, env);
+      if (!sub) {
+        out.push(...this.returns(fm, fn, depth + 1));
+        continue;
+      }
+      this.substituting.add(fn);
+      try {
+        out.push(...this.returnSet(fm, fn, depth + 1, sub));
+      } finally {
+        this.substituting.delete(fn);
+      }
+    }
+    return uniq(out);
+  }
+
+  // Parameter variable -> branches for one call. Only plain and defaulted
+  // identifier parameters are substituted; anything else falls back.
+  paramEnv(fm, fn, call, cm, depth, env) {
+    const vars = fm.scopeManager.getDeclaredVariables(fn);
+    const sub = new Map();
+    for (let i = 0; i < fn.params.length; i++) {
+      const p = fn.params[i];
+      const id = p.type === 'AssignmentPattern' ? p.left : p;
+      if (id.type !== 'Identifier') return null;
+      const v = vars.find(x => x.defs.some(d => d.name === id));
+      if (!v) return null;
+      if (v.references.some(r => r.isWrite() && !r.init)) return null;
+      sub.set(v, this.argumentAt(cm, call, i, p, fm, depth, env));
+    }
+    return sub;
   }
 
   returns(mod, fn, depth) {
-    return this.memo(`${mod.name}\0f\0${fn.start}`, () => {
-      if (fn.type === 'ArrowFunctionExpression' && fn.expression)
-        return this.branches(mod, fn.body, depth + 1);
-      const out = [];
-      const stack = [...fn.body.body];
-      while (stack.length) {
-        const node = stack.pop();
-        if (isFunction(node)) continue;
-        if (node.type === 'ReturnStatement') {
-          out.push(
-            ...(node.argument
-              ? this.branches(mod, node.argument, depth + 1)
-              : ['undefined'])
-          );
-          continue;
-        }
-        for (const key of Object.keys(node)) {
-          if (key === 'range' || key === 'loc') continue;
-          const c = node[key];
-          if (Array.isArray(c)) {
-            for (const x of c)
-              if (x && typeof x.type === 'string') stack.push(x);
-          } else if (c && typeof c.type === 'string') stack.push(c);
-        }
+    return this.memo(`${mod.name}\0f\0${fn.start}`, () =>
+      fn.async || fn.generator
+        ? [null]
+        : this.returnSet(mod, fn, depth + 1, null)
+    );
+  }
+
+  returnSet(mod, fn, depth, env) {
+    if (fn.type === 'ArrowFunctionExpression' && fn.expression)
+      return this.branches(mod, fn.body, depth + 1, env);
+    const out = [];
+    const stack = [...fn.body.body];
+    while (stack.length) {
+      const node = stack.pop();
+      if (isFunction(node)) continue;
+      if (node.type === 'ReturnStatement') {
+        out.push(
+          ...(node.argument
+            ? this.branches(mod, node.argument, depth + 1, env)
+            : ['undefined'])
+        );
+        continue;
       }
-      const last = fn.body.body[fn.body.body.length - 1];
-      if (!last || !/^(Return|Throw)Statement$/.test(last.type))
-        out.push('undefined');
-      return out;
-    });
+      for (const key of Object.keys(node)) {
+        if (key === 'range' || key === 'loc') continue;
+        const c = node[key];
+        if (Array.isArray(c)) {
+          for (const x of c) if (x && typeof x.type === 'string') stack.push(x);
+        } else if (c && typeof c.type === 'string') stack.push(c);
+      }
+    }
+    if (canComplete(fn.body)) out.push('undefined');
+    return out;
   }
 
   // The function's own variable, if it has one we can follow every use of.
@@ -489,15 +787,32 @@ export class BundleResolver {
     return null;
   }
 
-  argumentAt(mod, call, index, param, depth) {
+  // What parameter `index` (node `param`, of a function in module `fm`)
+  // receives from `call` (in module `cm`). A missing argument or an explicit
+  // `undefined` / `void 0` takes the default; an argument that may or may
+  // not be undefined at runtime, with a default present, is unknown too.
+  argumentAt(cm, call, index, param, fm, depth, env) {
     const args = call.arguments;
     if (args.slice(0, index + 1).some(a => a.type === 'SpreadElement'))
       return [null];
+    const hasDefault = param.type === 'AssignmentPattern';
+    const fallback = () =>
+      hasDefault
+        ? this.branches(fm, param.right, depth + 1, null)
+        : ['undefined'];
     const arg = args[index];
-    if (arg) return this.branches(mod, arg, depth + 1);
-    return param.type === 'AssignmentPattern'
-      ? this.branches(mod, param.right, depth + 1)
-      : ['undefined'];
+    const isUndefined =
+      arg &&
+      ((arg.type === 'Identifier' &&
+        arg.name === 'undefined' &&
+        !cm.refs.get(arg)?.resolved) ||
+        (arg.type === 'UnaryExpression' && arg.operator === 'void'));
+    if (!arg || isUndefined) return fallback();
+    const got = this.branches(cm, arg, depth + 1, env);
+    if (!hasDefault) return got;
+    if (got.includes('undefined'))
+      return uniq([...got.filter(b => b !== 'undefined'), ...fallback(), null]);
+    return got;
   }
 
   paramValue(mod, def, depth) {
@@ -513,7 +828,7 @@ export class BundleResolver {
     const p = mod.parent.get(fn);
     // An IIFE: the one call is right there.
     if (p && p.type === 'CallExpression' && p.callee === fn)
-      return this.argumentAt(mod, p, index, param, depth);
+      return this.argumentAt(mod, p, index, param, mod, depth, null);
     const fnVar = this.functionVariable(mod, fn);
     if (!fnVar) return [null];
     const out = [];
@@ -530,13 +845,16 @@ export class BundleResolver {
           call.type === 'CallExpression' &&
           call.callee === r.identifier
         )
-          out.push(...this.argumentAt(m, call, index, param, depth));
+          out.push(...this.argumentAt(m, call, index, param, mod, depth, null));
         else out.push(null);
       }
     };
     takeRefs(mod, fnVar);
     // An exported function escapes (its use in `export{…}` is already a
-    // non-call reference above); add the calls its importers make too.
+    // non-call reference above); a namespace or dynamic import of its module
+    // lets anything call it. Add the calls its named importers make too.
+    if (this.importersOf(mod.name, '*').length || mod.reExportsAll)
+      out.push(null);
     for (const [exported, e] of mod.exports) {
       if (e.local !== fnVar.name || mod.moduleScope.set.get(e.local) !== fnVar)
         continue;
@@ -546,12 +864,13 @@ export class BundleResolver {
         if (!im) continue;
         for (const v of im.moduleScope.variables) {
           const d = v.defs[0];
-          if (
-            d?.type === 'ImportBinding' &&
-            d.parent.source.value === mod.name &&
-            (d.node.imported?.name ?? d.node.imported?.value) === exported
-          )
-            takeRefs(im, v);
+          if (d?.type !== 'ImportBinding' || d.parent.source.value !== mod.name)
+            continue;
+          const name =
+            d.node.type === 'ImportDefaultSpecifier'
+              ? 'default'
+              : (d.node.imported?.name ?? d.node.imported?.value);
+          if (name === exported) takeRefs(im, v);
         }
       }
     }
@@ -559,7 +878,19 @@ export class BundleResolver {
     return out;
   }
 
-  branches(mod, expr, depth) {
+  // The falsy renderings `left && right` can produce from its left side.
+  falsyBranches(mod, left, depth, env) {
+    if (
+      (left.type === 'UnaryExpression' && left.operator === '!') ||
+      (left.type === 'BinaryExpression' && BOOLEAN_OPERATORS.has(left.operator))
+    )
+      return ['false'];
+    return this.branches(mod, left, depth + 1, env).filter(
+      b => b === null || FALSY_RENDERINGS.has(b)
+    );
+  }
+
+  branches(mod, expr, depth, env = null) {
     if (!expr || this.tooDeep(depth)) return [null];
     switch (expr.type) {
       case 'Literal':
@@ -571,20 +902,20 @@ export class BundleResolver {
         ];
       case 'ConditionalExpression':
         return uniq([
-          ...this.branches(mod, expr.consequent, depth + 1),
-          ...this.branches(mod, expr.alternate, depth + 1),
+          ...this.branches(mod, expr.consequent, depth + 1, env),
+          ...this.branches(mod, expr.alternate, depth + 1, env),
         ]);
       case 'LogicalExpression':
         return uniq([
           ...(expr.operator === '&&'
-            ? ['']
-            : this.branches(mod, expr.left, depth + 1)),
-          ...this.branches(mod, expr.right, depth + 1),
+            ? this.falsyBranches(mod, expr.left, depth, env)
+            : this.branches(mod, expr.left, depth + 1, env)),
+          ...this.branches(mod, expr.right, depth + 1, env),
         ]);
       case 'BinaryExpression': {
         if (expr.operator !== '+') return [null];
-        const l = this.branches(mod, expr.left, depth + 1);
-        const r = this.branches(mod, expr.right, depth + 1);
+        const l = this.branches(mod, expr.left, depth + 1, env);
+        const r = this.branches(mod, expr.right, depth + 1, env);
         if (l.length * r.length > MAX_BRANCHES) return [null];
         const out = [];
         for (const a of l)
@@ -595,21 +926,17 @@ export class BundleResolver {
         return this.branches(
           mod,
           expr.expressions[expr.expressions.length - 1],
-          depth + 1
+          depth + 1,
+          env
         );
       case 'Identifier':
-        return this.identValue(mod, expr, depth + 1);
+        return this.identValue(mod, expr, depth + 1, env);
       case 'CallExpression':
         if (expr.callee.type === 'Identifier')
-          return this.callValue(mod, expr.callee, depth + 1);
-        if (
-          expr.callee.type === 'MemberExpression' &&
-          expr.callee.object.type === 'Identifier' &&
-          !expr.callee.computed &&
-          STRING_METHODS.has(expr.callee.property.name)
-        )
-          return this.identValue(mod, expr.callee.object, depth + 1).map(v =>
-            applyMethod(expr, v)
+          return this.callValue(mod, expr, depth + 1, env);
+        if (isStringMethodCall(expr))
+          return this.identValue(mod, expr.callee.object, depth + 1, env).map(
+            v => applyMethod(expr, v)
           );
         return [null];
       default:
@@ -711,8 +1038,13 @@ export function resolveSlotValues(source, catalogue, options = {}) {
     const ident = mod && mod.identAt.get(job.start);
     let b;
     if (!ident) b = [null];
-    else if (job.role === 'call') b = resolver.callValue(mod, ident, 0);
-    else if (job.role === 'value') b = resolver.identValue(mod, ident, 0);
+    else if (job.role === 'call') {
+      const call = mod.parent.get(ident);
+      b =
+        call && call.type === 'CallExpression' && call.callee === ident
+          ? resolver.callValue(mod, call, 0, null)
+          : [null];
+    } else if (job.role === 'value') b = resolver.identValue(mod, ident, 0);
     else
       b = resolver
         .identValue(mod, ident, 0)

@@ -37,9 +37,9 @@
 //
 // The value rule only ADDS to the word-neighbour rule below; it never replaces
 // it where the value is not fully known. The word rule also runs for a label
-// with no resolved value, with any runtime (unknown) branch, or whose every
-// known branch is `other`, and the findings union. A label that only renders
-// "" is skipped by both.
+// with no resolved value, with any runtime (unknown) branch, or with any
+// known branch that is `other`, and the findings union. A label that only
+// renders "" or whitespace is skipped by both.
 //
 // Context tokens (shared by both rules):
 //   - A context token is the nearest WORD on that side (letters, digits, `_`,
@@ -63,17 +63,17 @@
 // survives.
 //
 // Measured 2026-10-07 on the CC 2.1.292 LCC set (769 trims, 929 slot
-// occurrences; 524 judged by value alone, 142 by value and words, 256 by
+// occurrences; 499 judged by value alone, 174 by value and words, 249 by
 // words only, 7 always empty):
 //   words-only rule (first version) ................... 60 findings, 1 real
 //   value rule, word rule as replacement fallback ..... 2 findings, 0 real
-//   value rule + word rule union (this rule) .......... 11 findings, 0 real
+//   value rule + word rule union, fail-safe resolver .. 11 findings, 0 real
 // The 11 are all word-rule findings on runtime or `other` values, reviewed
 // in the allowlist. The two known defects reconstructed against the real
 // 2.1.292 values (TaskCreate, artifact-database str_replace) both flag as
 // fragments. Planted-defect recall on the real values (a sentence break
 // inserted before every mid-sentence fragment- or name-valued slot in the
-// catalogue, and after it for names): 779/792 fragments, 1556/1575 names.
+// catalogue, and after it for names): 793/805 fragments, 1668/1689 names.
 //
 // Not automatically wrong: an author may restructure on purpose. Each finding
 // needs a reason, recorded per label in data/slot-context-allowlist.json keyed
@@ -375,16 +375,22 @@ const scanRun = (s, i, inTemplate, runs) => {
 // slot: its last real token when it sits to the left, its first when to the
 // right. A value ending (or starting) in an opaque `${}` presents a neutral
 // slot token. null when the value has no tokens at all.
-const edgeToken = (raw, dir) => {
-  if (
-    dir < 0
-      ? new RegExp(`${OPAQUE}\\s*$`).test(raw)
-      : new RegExp(`^\\s*${OPAQUE}`).test(raw)
-  )
-    return '${?}';
-  const { items } = scanRun(raw, 0, false, []);
-  if (items.length <= 2) return null;
-  return ctxToken(dir < 0 ? items[items.length - 2] : items[1]);
+const BEYOND = Symbol('beyond');
+const edgeTokens = (raw, dir) => {
+  const out = [];
+  let rest = raw;
+  const opaqueEdge =
+    dir < 0 ? new RegExp(`${OPAQUE}[ \\t]*$`) : new RegExp(`^[ \\t]*${OPAQUE}`);
+  // An opaque `${}` at the facing edge can render anything, including
+  // nothing: it is a neutral slot token AND whatever lies behind it.
+  while (opaqueEdge.test(rest)) {
+    out.push('${?}');
+    rest = rest.replace(opaqueEdge, '');
+  }
+  const { items } = scanRun(rest, 0, false, []);
+  if (items.length <= 2) out.push(BEYOND);
+  else out.push(ctxToken(dir < 0 ? items[items.length - 2] : items[1]));
+  return out;
 };
 
 // Every context token the slot at items[k] can actually see on side `dir`.
@@ -408,11 +414,12 @@ const sideTokens = (items, k, dir, valueOf, depth = 0) => {
         out.add(t);
       continue;
     }
-    const edge = edgeToken(b, dir);
-    if (edge === null)
-      for (const t of sideTokens(items, k + dir, dir, valueOf, depth + 1))
-        out.add(t);
-    else out.add(edge);
+    for (const edge of edgeTokens(b, dir)) {
+      if (edge !== BEYOND) out.add(edge);
+      else
+        for (const t of sideTokens(items, k + dir, dir, valueOf, depth + 1))
+          out.add(t);
+    }
   }
   return [...out];
 };
@@ -556,10 +563,10 @@ const renderBranch = raw => raw.replace(new RegExp(OPAQUE, 'g'), '${…}');
 //
 // The value rule may only ADD to the word rule, never replace it where the
 // value is not fully known: the word rule runs for a label with no resolved
-// value, with ANY unknown branch, or whose every known non-empty branch is
-// `other`; the value rule runs on every known non-empty branch; findings
-// union. A label that only ever renders "" is skipped by both — it cannot
-// read wrong anywhere.
+// value, with ANY unknown branch, or with ANY known branch that is `other`;
+// the value rule runs on every known non-empty branch; findings union. A
+// label that only ever renders "" or whitespace is skipped by both — it
+// cannot read wrong anywhere.
 export const contextFindings = (entries, body, values = new Map()) => {
   const labels = labelsOf(entries);
   const valueOf = label => values.get(label)?.branches;
@@ -583,14 +590,15 @@ export const contextFindings = (entries, body, values = new Map()) => {
     const w = want.get(o.label);
     if (!w) continue;
     const all = valueOf(o.label);
-    if (all && all.length && all.every(b => b === '')) continue;
+    if (all && all.length && all.every(b => b !== null && b.trim() === ''))
+      continue;
     const known = (all || []).filter(b => b !== null && b.trim() !== '');
     const kinds = known.map(classifyValue);
     const useWord =
       !all ||
       !all.length ||
       all.includes(null) ||
-      kinds.every(k => k === 'other');
+      kinds.some(k => k === 'other');
     const base = {
       label: o.label,
       left: o.left,
@@ -841,6 +849,21 @@ const main = () => {
   printAuditedSets(resolved);
   if (!fs.existsSync(jsonPath)) die(`no prompts JSON at ${jsonPath}`);
   if (idsFile && !fs.existsSync(idsFile)) die(`no ids file at ${idsFile}`);
+  const idsFromFile = idsFile
+    ? [
+        ...new Set(
+          fs
+            .readFileSync(idsFile, 'utf8')
+            .split('\n')
+            .map(s => s.trim())
+            .filter(Boolean)
+        ),
+      ]
+    : null;
+  // Checked before the bundle is loaded: an empty ids file is a wrong input,
+  // and there is no point resolving 40 MB of slot values to say so.
+  if (idsFromFile && !idsFromFile.length)
+    die(`${idsFile} names no ids — nothing was checked`);
 
   const catalogue = readJson(jsonPath, 'prompts JSON');
   if (!Array.isArray(catalogue?.prompts) || !catalogue.prompts.length)
@@ -925,19 +948,9 @@ const main = () => {
   // --all also walks every allowlist row, so a row whose override was deleted
   // or renamed, or whose id left the catalogue, is reported stale instead of
   // sitting unjudged forever. In --ids mode a row outside the run is not judged.
-  const ids = idsFile
-    ? [
-        ...new Set(
-          fs
-            .readFileSync(idsFile, 'utf8')
-            .split('\n')
-            .map(s => s.trim())
-            .filter(Boolean)
-        ),
-      ]
-    : [...new Set([...bodiesById.keys(), ...Object.keys(allow)])];
-  if (idsFile && !ids.length)
-    die(`${idsFile} names no ids — nothing was checked`);
+  const ids = idsFromFile || [
+    ...new Set([...bodiesById.keys(), ...Object.keys(allow)]),
+  ];
   const scopedAllow = Object.fromEntries(
     Object.entries(allow).filter(([id]) => ids.includes(id))
   );
@@ -964,11 +977,12 @@ const main = () => {
       for (const o of slotOccurrences(body, labels)) {
         const all = values.get(o.label)?.branches;
         const known = (all || []).filter(b => b !== null && b.trim() !== '');
-        if (all && all.length && all.every(b => b === '')) judged.skipped++;
+        if (all && all.length && all.every(b => b !== null && b.trim() === ''))
+          judged.skipped++;
         else if (!known.length) judged.word++;
         else if (
           all.includes(null) ||
-          known.every(b => classifyValue(b) === 'other')
+          known.some(b => classifyValue(b) === 'other')
         )
           judged.both++;
         else judged.value++;

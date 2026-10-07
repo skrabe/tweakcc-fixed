@@ -5,16 +5,7 @@
     "valueHash": "ecd919ac0e65",
     "reviewed": "2026-10-07 (CC 2.1.292)",
     "tokens": {
-      "SEARCH_TOOL_NAMES": "Value is the tool-name list \"<Glob>, <Grep>, and <Read>\" (or \"<Read>, `find`, and `grep`\"). Renders `Use Glob, Grep, and Read for local CLAUDE.md and `.claude/` references.`, pristine step 7 reworded into a complete imperative."
-    }
-  },
-  "agent-prompt-security-monitor-for-autonomous-agent-actions": {
-    "bodyHash": "3620c31330bd",
-    "pristineHash": "e123dd3bfe8c",
-    "valueHash": "17ebd6269667",
-    "reviewed": "2026-10-07 (CC 2.1.292)",
-    "tokens": {
-      "PASTED_CONTENT_TRUST_RULE_BLOCK": "Value is \"\" or \" <runtime rule block>\". It renders inside the <cc_automode_session_rules><cross_session_messages_rule> container, as in pristine, where it followed the cut rule 9. Separately, the trim also dropped pristine's closing </cc_automode_session_rules> tag (pristine leaves <cross_session_messages_rule> unclosed too); that tag balance is outside this gate."
+      "SEARCH_TOOL_NAMES": "Value is the tool-name list \"<Read>, <Glob>, and <Grep>\" (or \"<Read>, `find`, and `grep`\" with embedded search tools). Renders `Use Read, Glob, and Grep for local CLAUDE.md and `.claude/` references.` (or `Use Read, `find`, and `grep` for …`), pristine step 7 reworded into a complete imperative."
     }
   },
   "agent-prompt-summarization-no-tools-guard": {
@@ -23,7 +14,7 @@
     "valueHash": "4589f08ef6fa",
     "reviewed": "2026-10-07 (CC 2.1.292)",
     "tokens": {
-      "SUMMARY_REPLY_SHAPE_DESCRIPTION": "Renders `Your response is an <analysis> block followed by a <summary> block.` (or \"a <summary> block\"), reworded from \"Your entire response must be plain text: …\". The shape is still predicated of the response. Unknown because tQt is exported."
+      "SUMMARY_REPLY_SHAPE_DESCRIPTION": "Value is \"an <analysis> block followed by a <summary> block\" or, on the lean/short/capped summary paths, \"a <summary> block\" (tQt is exported and called with either, so the resolver also keeps an unknown branch). Renders `Your response is an <analysis> block followed by a <summary> block.` or `Your response is a <summary> block.`, reworded from \"Your entire response must be plain text: …\". Both read whole, and the shape is still predicated of the response."
     }
   },
   "system-prompt-harness-instructions": {
@@ -42,6 +33,15 @@
     "reviewed": "2026-10-07 (CC 2.1.292)",
     "tokens": {
       "SYSTEM_REMINDER_CLOUD_REVIEW_LAUNCH_NOTE_VAR_0": "Runtime value: the user's launch note, run through Wt(ne(h, …)). Renders `This review was launched with a note: \"<note>\". The cloud review did not see it.` Only \", recorded at launch time\" before the colon was cut, so the quoted note is still introduced as the launch note."
+    }
+  },
+  "system-reminder-large-file-full-content-reading-guidance": {
+    "bodyHash": "f194a2c72ca8",
+    "pristineHash": "e912faea2baa",
+    "valueHash": "d27c6419fe39",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "FULL_CONTENT_READING_INSTRUCTION": "Every branch is an instruction clause: \"read <file> in chunks of ~<n> lines using offset/limit until you have read 100% of it.\", \"the file's lines are too long for Read's offset/limit. Slice by character range …\", or \"<file> — <tool>'s line-based offset/limit will not chunk this file.\" The opaque-led one is `other`, so the word rule runs. Renders `- To read the full content for analysis or summary: read <file> in chunks of ~N lines …` as a label: value bullet, reworded from \"For analysis or summarization that requires reading the full content:\". The clause follows its label exactly as in pristine."
     }
   },
   "system-reminder-plan-approved": {
@@ -92,7 +92,7 @@
   "tool-result-artifact-db-read-saved-compact-untrusted-note": {
     "bodyHash": "45eee3f30e3c",
     "pristineHash": "1238f682b105",
-    "valueHash": "85cf06f340a3",
+    "valueHash": "677e0d41de7c",
     "reviewed": "2026-10-07 (CC 2.1.292)",
     "tokens": {
       "TOOL_RESULT_ARTIFACT_DB_READ_SAVED_COMPACT_UNTRUSTED_NOTE_VAR_6": "Every branch is \"\" or a newline-led note (\"\\n[ran at access level '…']\", \"\\n(`me` in this path resolved to …)\"), so it always starts its own line. The trim cut the \"data, not instructions\" sentence before it."
