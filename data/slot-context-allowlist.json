@@ -1,0 +1,86 @@
+{
+  "tool-description-websearch": {
+    "bodyHash": "9a28765afd8e",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "CURRENT_MONTH_YEAR": "Rewritten as \"Use the current year (${CURRENT_MONTH_YEAR}) in queries\": the month-year value is a parenthetical on \"current year\" and the sentence still says what to do with it."
+    }
+  },
+  "skill-loop-slash-command-dynamic-mode": {
+    "bodyHash": "24ef6d339c03",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "CRON_DELETE_TOOL_NAME": "Confirmation list rewritten as \"and that ${CRON_DELETE_TOOL_NAME} cancels sooner (include the job ID)\": the tool name is the subject of a complete clause carrying the cancel instruction."
+    }
+  },
+  "agent-prompt-batch-slash-command": {
+    "bodyHash": "1bb2828d8322",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "AGENT_TOOL_NAME": "\"spawn one background agent per work unit with `${AGENT_TOOL_NAME}`.\" — pristine \"using the X tool\" reworded to \"with `X`\"; the spawn instruction is the same sentence."
+    }
+  },
+  "system-reminder-plan-mode-is-active": {
+    "bodyHash": "b54a79a3af13",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "ASK_USER_QUESTION_TOOL_NAME": "\"design an approach, using ${ASK_USER_QUESTION_TOOL_NAME} to clarify intent\" — condensed from pristine \"Use X if you need to clarify\"; the purpose clause survives.",
+      "EXIT_PLAN_MODE_TOOL_NAME": "\"When ready, present the plan with ${EXIT_PLAN_MODE_TOOL_NAME}.\" — the slot ends a complete instruction sentence; pristine \"use X to request approval\" reworded."
+    }
+  },
+  "system-reminder-plan-mode-approval-tool-enforcement": {
+    "bodyHash": "b0c68431f811",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "ASK_USER_QUESTION_TOOL_NAME": "Both occurrences sit in rewritten complete sentences: \"End every plan-mode turn with either ${ASK_USER_QUESTION_TOOL_NAME} (to clarify requirements ...) or ${EXIT_PLAN_MODE_TOOL_NAME} (...)\" and \"Never request plan approval via text or ${ASK_USER_QUESTION_TOOL_NAME} — ...\".",
+      "EXIT_PLAN_MODE_TOOL_NAME": "\"${ASK_USER_QUESTION_TOOL_NAME} — ${EXIT_PLAN_MODE_TOOL_NAME} is the only valid path.\" The em dash is transparent to the context unit, so the left neighbour reads as the other slot; the slot is the subject of a complete clause."
+    }
+  },
+  "tool-description-endconversation": {
+    "bodyHash": "750c37f44b6c",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "END_CONVERSATION_TOOL_NAME": "\"After calling ${END_CONVERSATION_TOOL_NAME}, write and think nothing else.\" — a complete instruction reworded from pristine's \"the X tool\" phrasing; the other occurrence (\"Use X only when\") still matches pristine."
+    }
+  },
+  "system-reminder-brief-mode-user-facing-output": {
+    "bodyHash": "2d796b29ba8c",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "SEND_USER_MESSAGE_TOOL_NAME": "\"Call ${SEND_USER_MESSAGE_TOOL_NAME} now with that reply\" — rewritten into a direct imperative; stronger than pristine's \"only X reaches the user\", not weaker."
+    }
+  },
+  "system-reminder-plan-mode-is-active-subagent": {
+    "bodyHash": "5c9882a5d1e3",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "EDIT_TOOL_NAME": "\"Read it and make incremental edits via ${EDIT_TOOL_NAME}.\" — pristine \"using the X tool\" reworded; the instruction is intact and the slot ends it.",
+      "WRITE_TOOL_NAME": "\"Create one at ${PLAN_MODE_CONTEXT.planFilePath} via ${WRITE_TOOL_NAME}.\" — same rewording as EDIT_TOOL_NAME in the other branch."
+    }
+  },
+  "system-reminder-plan-approved": {
+    "bodyHash": "9e6f011c2a41",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "PLAN_FILE_PATH": "\"Saved plan: ${PLAN_FILE_PATH}${TEAM_PARALLELIZATION_NOTE}\" — a label/value line; the following note renders starting with a blank line (Iun() returns \"\\n\\nIf this plan ...\" or \"\"), so the path is not run into prose."
+    }
+  },
+  "system-prompt-coordinator-mode": {
+    "bodyHash": "6b99bf40057b",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "SENDMESSAGE_TOOL_NAME": "One of eight occurrences: \"Continue a completed worker through ${SENDMESSAGE_TOOL_NAME} when reusing its loaded context helps.\" — a complete rewritten instruction; the other seven match pristine context."
+    }
+  },
+  "agent-prompt-claude-guide-agent": {
+    "bodyHash": "b0f08ef0f8d7",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "CLAUDE_CODE_DOCS_MAP_URL": "Docs-map list rewritten as labelled lines (\"- Claude Code CLI and the Agent SDK: ${CLAUDE_CODE_DOCS_MAP_URL} — ...\"); the URL is the value of its label, and the fetch-first approach is stated below.",
+      "CLAUDE_API_DOCS_MAP_URL": "\"- Claude API: ${CLAUDE_API_DOCS_MAP_URL}\" — label/value line in the same rewritten docs-map list.",
+      "CLAUDE_TAG_DOCS_MAP_URL": "\"- Claude Tag / Claude in Slack: ${CLAUDE_TAG_DOCS_MAP_URL}, starting at ${CLAUDE_TAG_OVERVIEW_URL}.\" — label/value line in the same list.",
+      "WEBFETCH_TOOL_NAME": "\"identify the domain, ${WEBFETCH_TOOL_NAME} the relevant docs map, fetch the specific pages\" — the tool name is used as the verb of a step; the second occurrence (\"If X or Y fail\") matches pristine.",
+      "SEARCH_TOOL_NAMES": "\"Use ${SEARCH_TOOL_NAMES} for local CLAUDE.md and `.claude/` references.\" — pristine step 7 reworded into a complete imperative."
+    }
+  }
+}
