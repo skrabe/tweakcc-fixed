@@ -872,6 +872,8 @@ describe('markdown packet', () => {
           encoding: 'utf8',
         }
       );
+    fs.writeFileSync(path.join(tmp, 'req-001.json'), '{not json');
+    fs.writeFileSync(path.join(tmp, 'req-002.json'), JSON.stringify({ tools: [], messages: [] }));
     const refused = run([]);
     expect(refused.status).toBe(2);
     expect(refused.stderr).toMatch(/TWEAKCC_CAPTURES/);

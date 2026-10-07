@@ -1,79 +1,16 @@
 {
-  "tool-description-websearch": {
-    "bodyHash": "9a28765afd8e",
-    "reviewed": "2026-10-07 (CC 2.1.292)",
-    "tokens": {
-      "CURRENT_MONTH_YEAR": "Rewritten as \"Use the current year (${CURRENT_MONTH_YEAR}) in queries\": the month-year value is a parenthetical on \"current year\" and the sentence still says what to do with it."
-    }
-  },
-  "skill-loop-slash-command-dynamic-mode": {
-    "bodyHash": "24ef6d339c03",
-    "reviewed": "2026-10-07 (CC 2.1.292)",
-    "tokens": {
-      "CRON_DELETE_TOOL_NAME": "Confirmation list rewritten as \"and that ${CRON_DELETE_TOOL_NAME} cancels sooner (include the job ID)\": the tool name is the subject of a complete clause carrying the cancel instruction."
-    }
-  },
   "agent-prompt-batch-slash-command": {
     "bodyHash": "1bb2828d8322",
+    "pristineHash": "5a68bc752318",
     "reviewed": "2026-10-07 (CC 2.1.292)",
     "tokens": {
-      "AGENT_TOOL_NAME": "\"spawn one background agent per work unit with `${AGENT_TOOL_NAME}`.\" — pristine \"using the X tool\" reworded to \"with `X`\"; the spawn instruction is the same sentence."
-    }
-  },
-  "system-reminder-plan-mode-is-active": {
-    "bodyHash": "b54a79a3af13",
-    "reviewed": "2026-10-07 (CC 2.1.292)",
-    "tokens": {
-      "ASK_USER_QUESTION_TOOL_NAME": "\"design an approach, using ${ASK_USER_QUESTION_TOOL_NAME} to clarify intent\" — condensed from pristine \"Use X if you need to clarify\"; the purpose clause survives.",
-      "EXIT_PLAN_MODE_TOOL_NAME": "\"When ready, present the plan with ${EXIT_PLAN_MODE_TOOL_NAME}.\" — the slot ends a complete instruction sentence; pristine \"use X to request approval\" reworded."
-    }
-  },
-  "system-reminder-plan-mode-approval-tool-enforcement": {
-    "bodyHash": "b0c68431f811",
-    "reviewed": "2026-10-07 (CC 2.1.292)",
-    "tokens": {
-      "ASK_USER_QUESTION_TOOL_NAME": "Both occurrences sit in rewritten complete sentences: \"End every plan-mode turn with either ${ASK_USER_QUESTION_TOOL_NAME} (to clarify requirements ...) or ${EXIT_PLAN_MODE_TOOL_NAME} (...)\" and \"Never request plan approval via text or ${ASK_USER_QUESTION_TOOL_NAME} — ...\".",
-      "EXIT_PLAN_MODE_TOOL_NAME": "\"${ASK_USER_QUESTION_TOOL_NAME} — ${EXIT_PLAN_MODE_TOOL_NAME} is the only valid path.\" The em dash is transparent to the context unit, so the left neighbour reads as the other slot; the slot is the subject of a complete clause."
-    }
-  },
-  "tool-description-endconversation": {
-    "bodyHash": "750c37f44b6c",
-    "reviewed": "2026-10-07 (CC 2.1.292)",
-    "tokens": {
-      "END_CONVERSATION_TOOL_NAME": "\"After calling ${END_CONVERSATION_TOOL_NAME}, write and think nothing else.\" — a complete instruction reworded from pristine's \"the X tool\" phrasing; the other occurrence (\"Use X only when\") still matches pristine."
-    }
-  },
-  "system-reminder-brief-mode-user-facing-output": {
-    "bodyHash": "2d796b29ba8c",
-    "reviewed": "2026-10-07 (CC 2.1.292)",
-    "tokens": {
-      "SEND_USER_MESSAGE_TOOL_NAME": "\"Call ${SEND_USER_MESSAGE_TOOL_NAME} now with that reply\" — rewritten into a direct imperative; stronger than pristine's \"only X reaches the user\", not weaker."
-    }
-  },
-  "system-reminder-plan-mode-is-active-subagent": {
-    "bodyHash": "5c9882a5d1e3",
-    "reviewed": "2026-10-07 (CC 2.1.292)",
-    "tokens": {
-      "EDIT_TOOL_NAME": "\"Read it and make incremental edits via ${EDIT_TOOL_NAME}.\" — pristine \"using the X tool\" reworded; the instruction is intact and the slot ends it.",
-      "WRITE_TOOL_NAME": "\"Create one at ${PLAN_MODE_CONTEXT.planFilePath} via ${WRITE_TOOL_NAME}.\" — same rewording as EDIT_TOOL_NAME in the other branch."
-    }
-  },
-  "system-reminder-plan-approved": {
-    "bodyHash": "9e6f011c2a41",
-    "reviewed": "2026-10-07 (CC 2.1.292)",
-    "tokens": {
-      "PLAN_FILE_PATH": "\"Saved plan: ${PLAN_FILE_PATH}${TEAM_PARALLELIZATION_NOTE}\" — a label/value line; the following note renders starting with a blank line (Iun() returns \"\\n\\nIf this plan ...\" or \"\"), so the path is not run into prose."
-    }
-  },
-  "system-prompt-coordinator-mode": {
-    "bodyHash": "6b99bf40057b",
-    "reviewed": "2026-10-07 (CC 2.1.292)",
-    "tokens": {
-      "SENDMESSAGE_TOOL_NAME": "One of eight occurrences: \"Continue a completed worker through ${SENDMESSAGE_TOOL_NAME} when reusing its loaded context helps.\" — a complete rewritten instruction; the other seven match pristine context."
+      "AGENT_TOOL_NAME": "\"spawn one background agent per work unit with `${AGENT_TOOL_NAME}`.\" — pristine \"using the X tool\" reworded to \"with `X`\"; the spawn instruction is the same sentence.",
+      "MAX_30_UNITS": "\"few files → near ${MIN_5_UNITS}; hundreds → near ${MAX_30_UNITS}.\" reworded from \"closer to\"; the scaling rule is intact (the other occurrence matches pristine)."
     }
   },
   "agent-prompt-claude-guide-agent": {
     "bodyHash": "b0f08ef0f8d7",
+    "pristineHash": "44da1bb645a0",
     "reviewed": "2026-10-07 (CC 2.1.292)",
     "tokens": {
       "CLAUDE_CODE_DOCS_MAP_URL": "Docs-map list rewritten as labelled lines (\"- Claude Code CLI and the Agent SDK: ${CLAUDE_CODE_DOCS_MAP_URL} — ...\"); the URL is the value of its label, and the fetch-first approach is stated below.",
@@ -81,6 +18,324 @@
       "CLAUDE_TAG_DOCS_MAP_URL": "\"- Claude Tag / Claude in Slack: ${CLAUDE_TAG_DOCS_MAP_URL}, starting at ${CLAUDE_TAG_OVERVIEW_URL}.\" — label/value line in the same list.",
       "WEBFETCH_TOOL_NAME": "\"identify the domain, ${WEBFETCH_TOOL_NAME} the relevant docs map, fetch the specific pages\" — the tool name is used as the verb of a step; the second occurrence (\"If X or Y fail\") matches pristine.",
       "SEARCH_TOOL_NAMES": "\"Use ${SEARCH_TOOL_NAMES} for local CLAUDE.md and `.claude/` references.\" — pristine step 7 reworded into a complete imperative."
+    }
+  },
+  "agent-prompt-quick-pr-creation": {
+    "bodyHash": "e0f3fdf60084",
+    "pristineHash": "49e45efb0992",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "PR_TEST_PLAN_TEMPLATE_FN": "The call renders the test-plan template body directly under the kept \"## Test plan\" heading, which is where pristine puts it too. The trim replaced the extra-sections/attribution slots after it with an explicit field list."
+    }
+  },
+  "agent-prompt-summarization-no-tools-guard": {
+    "bodyHash": "bdc466481a52",
+    "pristineHash": "00a56291676b",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "SUMMARY_REPLY_SHAPE_DESCRIPTION": "\"Your response is ${SUMMARY_REPLY_SHAPE_DESCRIPTION}.\" reworded from \"Your entire response must be plain text: ${...}.\". The shape description is still predicated of the response."
+    }
+  },
+  "data-task-notification-queued-remote-notifications-nudge": {
+    "bodyHash": "826ff0f40001",
+    "pristineHash": "4d92e0b83caa",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "DATA_TASK_NOTIFICATION_QUEUED_REMOTE_NOTIFICATIONS_NUDGE_VAR_0": "Since 2.1.292 the slot renders the whole \"Call <tool> now, before other work, and keep calling it until it reports 0 remaining.\" sentence, so it stands alone after \"read them).\". The trim cut the following external-data sentence, not the slot's phrase. (Under 2.1.291 this same body was the dangling-tool-name defect; the pristineHash re-opens this row if the slot shape changes again.)"
+    }
+  },
+  "skill-dynamic-pacing-loop-execution": {
+    "bodyHash": "2190aca3886d",
+    "pristineHash": "b0cd7aa5c2be",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "LOOP_OUTCOME_REPORT_FN": "The call renders its own outcome-report sentence; the trim cut the separate \"Stopping is the loop's normal ending\" sentence that followed.",
+      "ADDITIONAL_INFO_FN": "Trailing additional-info text that pristine also appends after a full stop. Its left neighbour is now LOOP_OUTCOME_REPORT_FN because the sentence between them was cut."
+    }
+  },
+  "skill-loop-self-pacing-mode": {
+    "bodyHash": "a13bfb85fa21",
+    "pristineHash": "ca759ac76628",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "LOOP_OUTCOME_REPORT_FN": "Same as skill-dynamic-pacing-loop-execution: the call renders its own sentence and the trim cut the following \"Stopping is...\" sentence.",
+      "ADDITIONAL_INFO_FN": "Same as the dynamic-pacing sibling: trailing text that pristine also places after a full stop."
+    }
+  },
+  "skill-loop-slash-command-dynamic-mode": {
+    "bodyHash": "24ef6d339c03",
+    "pristineHash": "45abe9f44291",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "CRON_DELETE_TOOL_NAME": "Confirmation list rewritten as \"and that ${CRON_DELETE_TOOL_NAME} cancels sooner (include the job ID)\": the tool name is the subject of a complete clause carrying the cancel instruction."
+    }
+  },
+  "slash-command-code-review-effort-notice-inline": {
+    "bodyHash": "81d6ef5e30e8",
+    "pristineHash": "1d31c89876ca",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "SLASH_COMMAND_CODE_REVIEW_EFFORT_NOTICE_INLINE_VAR_0": "The value is its own sentence opening the parenthetical; the next sentence was reworded from \"Tell the user this\" to \"Say this\". The \"this\" still refers to it."
+    }
+  },
+  "system-prompt-background-session-worktree-persistence-guidance": {
+    "bodyHash": "8f2fb6d0b5ab",
+    "pristineHash": "319ca2803495",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "GIT_PUSH_SAFETY_NOTE": "The note is its own sentence in pristine (\"...reserve git for them. ${GIT_PUSH_SAFETY_NOTE} Open a draft PR...\"); the trim cut the neighbouring sentences, not the note's phrase. It now follows \"committed and pushed work survives.\" as a self-contained sentence."
+    }
+  },
+  "system-prompt-coordinator-mode": {
+    "bodyHash": "6b99bf40057b",
+    "pristineHash": "70d132656448",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "SENDMESSAGE_TOOL_NAME": "One of eight occurrences: \"Continue a completed worker through ${SENDMESSAGE_TOOL_NAME} when reusing its loaded context helps.\" — a complete rewritten instruction; the other seven match pristine context.",
+      "AGENT_TOOL_NAME": "\"Pass the `task_id` returned by ${AGENT_TOOL_NAME}.\" is a complete reworded sentence; the other six occurrences match pristine context."
+    }
+  },
+  "system-prompt-harness-instructions": {
+    "bodyHash": "bd52c78247b5",
+    "pristineHash": "dba035c633f2",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "SYSTEM_REMINDER_TAG_GUIDANCE_FN": "The call renders a complete bullet sentence of its own; the trim cut the separate \"Hooks may intercept tool calls\" sentence that followed it.",
+      "TOOL_CONTEXT": "Argument to SYSTEM_REMINDER_TAG_GUIDANCE_FN; it shares that call's context, which renders its own sentence.",
+      "PASTED_CONTENT_GUIDANCE_BULLET": "A newline-led bullet appended after the previous bullet; its neighbour is now the guidance call's output instead of the cut Hooks sentence. It still renders as its own bullet."
+    }
+  },
+  "system-prompt-memory-check-each-reply-and-save": {
+    "bodyHash": "41413a9c936b",
+    "pristineHash": "9726b305b6bf",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "SYSTEM_PROMPT_MEMORY_CHECK_EACH_REPLY_AND_SAVE_VAR_0": "The value is the standalone deferred-tool sentence (\"If the memory tools are deferred, load them with <ToolSearch>(\\\"select:...\\\") before first use. \") or \"\". It reads whole without the cut check-each-reply instruction."
+    }
+  },
+  "system-prompt-memory-read-only-session-2": {
+    "bodyHash": "f1f64fc16755",
+    "pristineHash": "d806e2571de2",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "SYSTEM_PROMPT_MEMORY_READ_ONLY_SESSION_2_VAR_2": "Renders \" <note>\" or \"\" (de = h?` ${dr}`:\"\" in the bundle), a self-contained note that pristine also appends after a whole block. The trim cut the VAR_1 block before it, not a phrase around this slot."
+    }
+  },
+  "system-prompt-memory-read-shared-persist-personal": {
+    "bodyHash": "de7ce112ed26",
+    "pristineHash": "b331cabc4986",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "SYSTEM_PROMPT_MEMORY_READ_SHARED_PERSIST_PERSONAL_VAR_0": "Same standalone deferred-tool sentence as the check-each-reply sibling; it reads whole without the cut read-shared/persist-personal instruction."
+    }
+  },
+  "system-reminder-brief-mode-user-facing-output": {
+    "bodyHash": "2d796b29ba8c",
+    "pristineHash": "efabf4b57b90",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "SEND_USER_MESSAGE_TOOL_NAME": "\"Call ${SEND_USER_MESSAGE_TOOL_NAME} now with that reply\" — rewritten into a direct imperative; stronger than pristine's \"only X reaches the user\", not weaker."
+    }
+  },
+  "system-reminder-cloud-review-launch-note": {
+    "bodyHash": "39e7bf684884",
+    "pristineHash": "4986b369b135",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "SYSTEM_REMINDER_CLOUD_REVIEW_LAUNCH_NOTE_VAR_0": "The note value is quoted after \"This review was launched with a note:\"; the trim only dropped \", recorded at launch time\" before the colon. The quoted value is still introduced as the launch note.",
+      "SYSTEM_REMINDER_CLOUD_REVIEW_LAUNCH_NOTE_VAR_1": "The note value is quoted after \"This review was launched with a note:\"; the trim only dropped \", recorded at launch time\" before the colon. The quoted value is still introduced as the launch note.",
+      "SYSTEM_REMINDER_CLOUD_REVIEW_LAUNCH_NOTE_VAR_2": "The note value is quoted after \"This review was launched with a note:\"; the trim only dropped \", recorded at launch time\" before the colon. The quoted value is still introduced as the launch note.",
+      "SYSTEM_REMINDER_CLOUD_REVIEW_LAUNCH_NOTE_VAR_3": "The note value is quoted after \"This review was launched with a note:\"; the trim only dropped \", recorded at launch time\" before the colon. The quoted value is still introduced as the launch note."
+    }
+  },
+  "system-reminder-large-file-full-content-reading-guidance": {
+    "bodyHash": "f194a2c72ca8",
+    "pristineHash": "e912faea2baa",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "FULL_CONTENT_READING_INSTRUCTION": "A label: value bullet (\"- To read the full content for analysis or summary: ${...}\"), reworded from \"For analysis or summarization that requires reading the full content:\". The instruction value still follows its label."
+    }
+  },
+  "system-reminder-plan-approved": {
+    "bodyHash": "9e6f011c2a41",
+    "pristineHash": "16c4cf8a64c9",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "PLAN_FILE_PATH": "\"Saved plan: ${PLAN_FILE_PATH}${TEAM_PARALLELIZATION_NOTE}\" — a label/value line; the following note renders starting with a blank line (Iun() returns \"\\n\\nIf this plan ...\" or \"\"), so the path is not run into prose.",
+      "TEAM_PARALLELIZATION_NOTE": "Renders \"\\n\\nIf this plan can be broken down...\" or \"\" (Iun() in the bundle), so it starts its own paragraph after the path."
+    }
+  },
+  "system-reminder-plan-mode-approval-tool-enforcement": {
+    "bodyHash": "b0c68431f811",
+    "pristineHash": "9026e7c81d69",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "ASK_USER_QUESTION_TOOL_NAME": "Both occurrences sit in rewritten complete sentences: \"End every plan-mode turn with either ${ASK_USER_QUESTION_TOOL_NAME} (to clarify requirements ...) or ${EXIT_PLAN_MODE_TOOL_NAME} (...)\" and \"Never request plan approval via text or ${ASK_USER_QUESTION_TOOL_NAME} — ...\".",
+      "EXIT_PLAN_MODE_TOOL_NAME": "\"${ASK_USER_QUESTION_TOOL_NAME} — ${EXIT_PLAN_MODE_TOOL_NAME} is the only valid path.\" The em dash is transparent to the context unit, so the left neighbour reads as the other slot; the slot is the subject of a complete clause.",
+      "WORKSHOP_END_TURN_OPTION": "Renders \", or by publishing the workshop document and ending your turn...\" or \"\", so it continues the either/or list after \"(to request plan approval)\". It is the same list continuation pristine had after the exit-plan tool name."
+    }
+  },
+  "system-reminder-plan-mode-is-active": {
+    "bodyHash": "b54a79a3af13",
+    "pristineHash": "047f408ab45d",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "ASK_USER_QUESTION_TOOL_NAME": "\"design an approach, using ${ASK_USER_QUESTION_TOOL_NAME} to clarify intent\" — condensed from pristine \"Use X if you need to clarify\"; the purpose clause survives.",
+      "EXIT_PLAN_MODE_TOOL_NAME": "\"When ready, present the plan with ${EXIT_PLAN_MODE_TOOL_NAME}.\" — the slot ends a complete instruction sentence; pristine \"use X to request approval\" reworded."
+    }
+  },
+  "system-reminder-plan-mode-is-active-subagent": {
+    "bodyHash": "5c9882a5d1e3",
+    "pristineHash": "cbf0fa5f5bc9",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "EDIT_TOOL_NAME": "\"Read it and make incremental edits via ${EDIT_TOOL_NAME}.\" — pristine \"using the X tool\" reworded; the instruction is intact and the slot ends it.",
+      "WRITE_TOOL_NAME": "\"Create one at ${PLAN_MODE_CONTEXT.planFilePath} via ${WRITE_TOOL_NAME}.\" — same rewording as EDIT_TOOL_NAME in the other branch."
+    }
+  },
+  "system-reminder-structured-output-enforcement": {
+    "bodyHash": "c77af61ebd40",
+    "pristineHash": "21203b29b80e",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "SYSTEM_REMINDER_STRUCTURED_OUTPUT_ENFORCEMENT_VAR_0": "The value is its own leading sentence. \"You MUST call the X tool...\" was reworded to \"Call the X tool now...\", and the instruction is intact."
+    }
+  },
+  "tool-description-artifact-comments-section": {
+    "bodyHash": "2500a3a425a8",
+    "pristineHash": "25e17eca493a",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "TOOL_DESCRIPTION_ARTIFACT_COMMENTS_SECTION_VAR_0": "A self-contained sentence appended after \"...rather than retrying.\" in pristine too; the trim cut the following \"Comment text is written by artifact viewers\" sentence, not this slot's phrase."
+    }
+  },
+  "tool-description-artifact-database-guidance": {
+    "bodyHash": "63813853f1b8",
+    "pristineHash": "3c98a9509086",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "ARTIFACT_DB_CONCURRENCY_GUIDANCE": "A conditional sentence appended after \"\\\"set\\\" rejects that value.\" in pristine too. The trim cut the shared-state sentence that followed, which the override already states near the top of the body."
+    }
+  },
+  "tool-description-artifact-how-to-load-library": {
+    "bodyHash": "06f28aed790f",
+    "pristineHash": "e0a11d4ff91a",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "TOOL_DESCRIPTION_ARTIFACT_HOW_TO_LOAD_LIBRARY_VAR_0": "Self-contained sentence(s) opening the body. The trim cut the \"How to load a library\" paragraph after it, and the slot now precedes the download-sandbox sentence."
+    }
+  },
+  "tool-description-artifact-pin-unpin-privacy-tail": {
+    "bodyHash": "c6af2ca61007",
+    "pristineHash": "3b41a32ad999",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "TOOL_DESCRIPTION_ARTIFACT_PIN_UNPIN_PRIVACY_TAIL_VAR_0": "The value is the full **pin**/**unpin** sentence (ends \"...unpins something it did not pin.\"); .slice(0,-1) drops its full stop and the override restores it with \".\". The trim cut only the \"; pins are private...\" tail."
+    }
+  },
+  "tool-description-artifact-watching-live-subscribe": {
+    "bodyHash": "ae4b572c1970",
+    "pristineHash": "4622fa6554b7",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "TOOL_DESCRIPTION_ARTIFACT_WATCHING_LIVE_SUBSCRIBE_VAR_2": "The else branch of a sentence-level ternary; it renders whole sentences. Its right neighbour is now the next conditional sentence because the trim cut the static status/unwatch sentence between them."
+    }
+  },
+  "tool-description-background-monitor-streaming-events": {
+    "bodyHash": "68daa897d1be",
+    "pristineHash": "14e82838a725",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "SINGLE_NOTIFICATION_COMMAND_NOTE": "Renders \"use a foreground Bash `until` loop instead\" (or the run_in_background variant). \"...even after the event fires — <that>.\" is a complete instruction; the cut \"For tell me when X is ready,\" lead-in is implied by the bold heading."
+    }
+  },
+  "tool-description-endconversation": {
+    "bodyHash": "750c37f44b6c",
+    "pristineHash": "0bfa32e7d0d0",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "END_CONVERSATION_TOOL_NAME": "\"After calling ${END_CONVERSATION_TOOL_NAME}, write and think nothing else.\" — a complete instruction reworded from pristine's \"the X tool\" phrasing; the other occurrence (\"Use X only when\") still matches pristine."
+    }
+  },
+  "tool-description-enterplanmode": {
+    "bodyHash": "b18c00bf5e72",
+    "pristineHash": "71e3c70949d1",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "CONDITIONAL_USE_AGENT_TOOL_INSTEAD_NOTE": "A suffix on the \"Pure research/exploration\" bullet; the trim only dropped the word \"tasks\" before it.",
+      "WHAT_HAPPENS_IN_PLAN_MODE_FN": "A whole section; the trim cut the Examples section that followed it."
+    }
+  },
+  "tool-description-readfile": {
+    "bodyHash": "a7e67710a3ec",
+    "pristineHash": "2fd329fa35dd",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "ADDITIONAL_READ_NOTE": "Renders a newline-led bullet (\"\\n- Do NOT re-read a file you just edited...\"), so it starts its own line after the empty-file bullet."
+    }
+  },
+  "tool-description-sendmessagetool": {
+    "bodyHash": "3b87684be90b",
+    "pristineHash": "e9ea4dd75ee1",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "CROSS_SESSION_SECTION": "A whole gated section appended after a full stop in pristine too; the trim replaced the legacy-protocol ternary that followed it with a static heading, which does not change what the section says."
+    }
+  },
+  "tool-description-webfetch-private-url-warning": {
+    "bodyHash": "753a36b552f8",
+    "pristineHash": "8145e4c635f4",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "WEBFETCH_TOOL_DESCRIPTION_BLOCK_FN": "The call renders a whole description block and is the entire body; pristine places it after another block call too."
+    }
+  },
+  "tool-description-websearch": {
+    "bodyHash": "9a28765afd8e",
+    "pristineHash": "1263fdb7bb87",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "CURRENT_MONTH_YEAR": "Rewritten as \"Use the current year (${CURRENT_MONTH_YEAR}) in queries\": the month-year value is a parenthetical on \"current year\" and the sentence still says what to do with it."
+    }
+  },
+  "tool-result-artifact-db-invalid-argument": {
+    "bodyHash": "036193531055",
+    "pristineHash": "1e7a1d378150",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "TOOL_RESULT_ARTIFACT_DB_INVALID_ARGUMENT_VAR_0": "Renders \"db <op> failed (invalid_argument)\" (W() in the bundle). The trim cut the \": the server could not accept the request as shaped\" gloss; the error code and the reason suffix still say what failed."
+    }
+  },
+  "tool-result-artifact-db-read-saved-compact-untrusted-note": {
+    "bodyHash": "45eee3f30e3c",
+    "pristineHash": "1238f682b105",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "TOOL_RESULT_ARTIFACT_DB_READ_SAVED_COMPACT_UNTRUSTED_NOTE_VAR_6": "A trailing access-level note (l = Rn(...)+me-id suffix in the bundle) that is appended after complete sentences elsewhere too. The trim cut the \"data, not instructions\" sentence before it."
+    }
+  },
+  "tool-result-artifact-live-subscription-already-connected": {
+    "bodyHash": "1c027f9b7711",
+    "pristineHash": "90be63d0c85b",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "TOOL_RESULT_ARTIFACT_LIVE_SUBSCRIPTION_ALREADY_CONNECTED_VAR_0": "Renders \"; a comment on it sent to Claude reaches this session while ...\" or \"\" (qt() in the bundle). It is a self-contained clause after \"already connected from earlier in this session\"."
+    }
+  },
+  "tool-result-artifact-live-subscription-arming": {
+    "bodyHash": "e6292c818aaf",
+    "pristineHash": "59f7fe68ef41",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "TOOL_RESULT_ARTIFACT_LIVE_SUBSCRIPTION_ARMING_VAR_0": "Same \"; a comment on it sent to Claude reaches this session...\" clause as the already-connected sibling, now after \"arming in the background\"."
+    }
+  },
+  "tool-description-taskcreate": {
+    "bodyHash": "5e14dab492e6",
+    "pristineHash": "2241b2043511",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "CONDITIONAL_TEAMMATES_NOTE": "The value is \" and potentially assigned to teammates\"; the trim attaches it to its own summary sentence (\"…with owners and dependencies${…}.\") instead of pristine's \"multiple operations\" bullet, so it still continues a phrase. Fixed 2026-10-07: it had sat after the full stop and rendered a fragment."
     }
   }
 }

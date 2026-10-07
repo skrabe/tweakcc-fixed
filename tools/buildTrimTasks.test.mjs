@@ -63,8 +63,15 @@ beforeAll(() => {
   fs.writeFileSync(path.join(remDir, 'fixture-rem.md'), fm('9.9.9') + 'Two reminder.\n');
 });
 
-const build = (result = { verdicts }, catalogue = CATALOGUE, packets = auditPackets) =>
-  buildTrimTasks({ catalogue, result, auditPackets: packets, setDir, remindersDir: remDir });
+const final = (vs, extra = {}) => ({
+  version: '9.9.9',
+  complete: true,
+  cutHunt: { complete: true },
+  verdicts: vs,
+  ...extra,
+});
+const build = (result = final(verdicts), catalogue = CATALOGUE, packets = auditPackets, manifestVersion = '9.9.9') =>
+  buildTrimTasks({ catalogue, result, auditPackets: packets, setDir, remindersDir: remDir, manifestVersion });
 
 describe('buildTrimTasks', () => {
   it('builds one packet per trim and wipe-merge verdict and no other', () => {
@@ -101,7 +108,7 @@ describe('buildTrimTasks', () => {
 
   it('notes a missing override file instead of inventing a body', () => {
     fs.rmSync(path.join(setDir, 'tool-result-fixture-gone.md'), { force: true });
-    const r = build({ verdicts: [{ ...verdicts[1], id: 'tool-result-fixture-gone' }] }, {
+    const r = build(final([{ ...verdicts[1], id: 'tool-result-fixture-gone' }]), {
       version: '9.9.9',
       prompts: [...CATALOGUE.prompts, entry('tool-result-fixture-gone', 'Gone.')],
     }, [{ prompts: [{ id: 'tool-result-fixture-gone' }] }]);
@@ -111,11 +118,53 @@ describe('buildTrimTasks', () => {
   });
 
   it('reports ids missing from the catalogue, the audit packets or a carrier lookup', () => {
-    const noAudit = build({ verdicts }, CATALOGUE, [{ prompts: [] }]);
+    const noAudit = build(final(verdicts), CATALOGUE, [{ prompts: [] }]);
     expect(noAudit.problems.join('\n')).toMatch(/tool-result-fixture-trimmed: not in the audit packets/);
-    const noCatalogue = build({ verdicts }, { version: '9.9.9', prompts: [CATALOGUE.prompts[0]] });
+    const noCatalogue = build(final(verdicts), { version: '9.9.9', prompts: [CATALOGUE.prompts[0]] });
     expect(noCatalogue.problems.join('\n')).toMatch(/tool-result-fixture-wiped: not in the catalogue/);
     expect(noCatalogue.problems.join('\n')).toMatch(/carrier tool-result-fixture-carrier is not in the catalogue/);
+  });
+});
+
+describe('buildTrimTasks carriers and gates', () => {
+  const citing = coveredBy => final([{ ...verdicts[0], coveredBy }]);
+
+  it('accepts inline-* and MODEL_DEFAULT carriers', () => {
+    fs.writeFileSync(path.join(setDir, 'inline-fixture.md'), fm('9.9.9') + 'Inline text.\n');
+    const r = build(citing([
+      { carrierId: 'inline-fixture', quote: 'Inline' },
+      { carrierId: 'MODEL_DEFAULT', quote: 'x' },
+    ]));
+    expect(r.problems).toEqual([]);
+    const [inline, def] = r.trims[0].carriers;
+    expect(inline.catalogueEntries).toEqual([]);
+    expect(inline.deployed.body).toBe('Inline text.\n');
+    expect(inline.note).toMatch(/inline/);
+    expect(def.deployed).toBeNull();
+    expect(def.note).toMatch(/system-card digests/);
+  });
+
+  it('rejects a missing inline or reminder file and an unknown carrier', () => {
+    const r = build(citing([
+      { carrierId: 'inline-fixture-missing', quote: 'x' },
+      { carrierId: 'system-reminders/fixture-missing', quote: 'x' },
+      { carrierId: 'tool-result-fixture-unknown', quote: 'x' },
+    ]));
+    expect(r.problems).toHaveLength(3);
+    expect(r.problems.join('\n')).toMatch(/inline-fixture-missing has no file/);
+    expect(r.problems.join('\n')).toMatch(/fixture-missing has no file/);
+    expect(r.problems.join('\n')).toMatch(/tool-result-fixture-unknown is not in the catalogue/);
+  });
+
+  it('refuses an incomplete, pre-hunt or partial stage-1 result', () => {
+    expect(build(final(verdicts, { complete: false })).problems.join('\n')).toMatch(/not complete/);
+    expect(build(final(verdicts, { cutHunt: undefined })).problems.join('\n')).toMatch(/post-cut-hunt/);
+    expect(build(final(verdicts, { cutHunt: { complete: false } })).problems.join('\n')).toMatch(/post-cut-hunt/);
+  });
+
+  it('refuses disagreeing versions', () => {
+    expect(build(final(verdicts, { version: '9.9.8' })).problems.join('\n')).toMatch(/versions disagree/);
+    expect(build(final(verdicts), CATALOGUE, auditPackets, '9.9.7').problems.join('\n')).toMatch(/versions disagree/);
   });
 });
 
@@ -129,6 +178,7 @@ describe('buildTrimTasks CLI', () => {
     const pdir = path.join(dir, 'audit');
     fs.mkdirSync(pdir, { recursive: true });
     write('audit/audit-packet-00.json', auditPackets[0]);
+    write('audit/audit-manifest.json', { version: '9.9.9' });
     return spawnSync(
       'node',
       [
@@ -146,7 +196,7 @@ describe('buildTrimTasks CLI', () => {
   };
 
   it('writes both tasks files in the shapes the driver validates and prints the hints', () => {
-    const r = run({ verdicts }, 'out');
+    const r = run(final(verdicts), 'out');
     expect(r.status).toBe(0);
     expect(r.stdout).toMatch(/1 trim-verify task\(s\)/);
     expect(r.stdout).toMatch(/tasks-args trim-verify .*trim\/tasks\.json/);
@@ -170,7 +220,7 @@ describe('buildTrimTasks CLI', () => {
   });
 
   it('exits non-zero and writes nothing when an id is missing', () => {
-    const r = run({ verdicts: [{ ...verdicts[1], id: 'tool-result-fixture-absent' }] }, 'bad');
+    const r = run(final([{ ...verdicts[1], id: 'tool-result-fixture-absent' }]), 'bad');
     expect(r.status).toBe(2);
     expect(r.stderr).toMatch(/tool-result-fixture-absent: not in the catalogue/);
     expect(fs.existsSync(path.join(dir, 'bad'))).toBe(false);

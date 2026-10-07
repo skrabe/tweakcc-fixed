@@ -19,9 +19,13 @@
 // body}, or a note when no file exists) and carriers (one per coveredBy
 // quote: carrierId, quote, catalogueEntries, catalogueVersion, deployed,
 // looked up in the active set, or in the reminders dir for a
-// `system-reminders/<name>` carrier, which has no catalogue entry). An id
-// missing from the catalogue or the audit packets, or a carrier other than a
-// reminder missing from the catalogue, exits 2.
+// `system-reminders/<name>` carrier). The carriers checkAuditVerdicts accepts
+// beyond catalogue ids have no catalogue entry: `inline-*` (deployed file in
+// the active set), `system-reminders/<name>` (file required) and
+// MODEL_DEFAULT (no file). Exits 2 on an id missing from the catalogue or the
+// audit packets, a carrier that resolves to nothing, a missing reminder file,
+// a stage-1 result that is not complete and post-cut-hunt, or catalogue,
+// result and audit-manifest versions that disagree.
 //
 // The result is checked with `driver tasks-check`; the printed hints are the
 // `driver tasks-args` calls that launch the fan-outs.
@@ -30,6 +34,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const REMINDER_PREFIX = 'system-reminders/';
+const INLINE_PREFIX = 'inline-';
+const MODEL_DEFAULT = 'MODEL_DEFAULT';
 const FRONTMATTER = /^<!--[\s\S]*?-->\n?/;
 
 const readIfExists = p => (fs.existsSync(p) ? fs.readFileSync(p, 'utf8') : null);
@@ -50,8 +56,18 @@ const deployedFrom = (file, text) => {
   };
 };
 
-export function buildTrimTasks({ catalogue, result, auditPackets, setDir, remindersDir }) {
+export function buildTrimTasks({ catalogue, result, auditPackets, setDir, remindersDir, manifestVersion }) {
   const problems = [];
+  if (result.complete !== true) {
+    problems.push('the stage-1 result is not complete (missing verdicts or checker errors): finish stage 1 first');
+  }
+  if (!result.cutHunt || result.cutHunt.complete !== true) {
+    problems.push('the stage-1 result is not the post-cut-hunt result (no cutHunt.complete): run harvestCutHunt.mjs first, not --allow-partial');
+  }
+  const versions = { catalogue: catalogue.version, 'stage-1 result': result.version, 'audit manifest': manifestVersion };
+  if (new Set(Object.values(versions)).size !== 1) {
+    problems.push(`versions disagree: ${Object.entries(versions).map(([k, v]) => `${k} ${v}`).join(', ')}`);
+  }
   const byId = new Map();
   for (const p of catalogue.prompts || []) {
     if (!p.id) continue;
@@ -76,19 +92,40 @@ export function buildTrimTasks({ catalogue, result, auditPackets, setDir, remind
     const overrideFile = overrideFor(id);
     const carriers = [];
     for (const c of verdict.coveredBy || []) {
-      const isReminder = c.carrierId.startsWith(REMINDER_PREFIX);
-      const cEntries = byId.get(c.carrierId) || (isReminder ? [] : null);
-      if (!cEntries) {
-        problems.push(`${id}: carrier ${c.carrierId} is not in the catalogue`);
+      const cid = c.carrierId;
+      if (cid === MODEL_DEFAULT) {
+        carriers.push({
+          carrierId: cid,
+          quote: c.quote,
+          catalogueEntries: [],
+          catalogueVersion: null,
+          deployed: null,
+          note: 'model default: verify against both system-card digests',
+        });
         continue;
       }
-      const file = overrideFor(c.carrierId);
+      const isReminder = cid.startsWith(REMINDER_PREFIX);
+      const isInline = cid.startsWith(INLINE_PREFIX);
+      const cEntries = byId.get(cid) || (isReminder || isInline ? [] : null);
+      if (!cEntries) {
+        problems.push(`${id}: carrier ${cid} is not in the catalogue`);
+        continue;
+      }
+      const file = overrideFor(cid);
+      const text = readIfExists(file);
+      if ((isReminder || isInline) && text === null) {
+        problems.push(`${id}: carrier ${cid} has no file at ${file}`);
+        continue;
+      }
       carriers.push({
-        carrierId: c.carrierId,
+        carrierId: cid,
         quote: c.quote,
         catalogueEntries: cEntries,
         catalogueVersion: cEntries.length ? cEntries[0].version || null : null,
-        deployed: deployedFrom(file, readIfExists(file)),
+        deployed: deployedFrom(file, text),
+        ...(isInline
+          ? { note: 'inline override: no catalogue entry, deployed file only' }
+          : {}),
       });
     }
     return {
@@ -144,9 +181,13 @@ function main() {
     process.exit(2);
   }
   const catalogue = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+  const manifestFile = path.join(packetDir, 'audit-manifest.json');
+  const manifestVersion = fs.existsSync(manifestFile)
+    ? JSON.parse(fs.readFileSync(manifestFile, 'utf8')).version
+    : undefined;
   const result = JSON.parse(fs.readFileSync(resultPath, 'utf8'));
   const auditPackets = auditFiles.map(f => JSON.parse(fs.readFileSync(path.join(packetDir, f), 'utf8')));
-  const { problems, trims, wipes } = buildTrimTasks({ catalogue, result, auditPackets, setDir, remindersDir });
+  const { problems, trims, wipes } = buildTrimTasks({ catalogue, result, auditPackets, setDir, remindersDir, manifestVersion });
   if (problems.length) {
     console.error(`buildTrimTasks: ${problems.length} problem(s), nothing written:\n${problems.map(p => `  ${p}`).join('\n')}`);
     process.exit(2);

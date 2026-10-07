@@ -159,9 +159,10 @@ const catalogueJson = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
 const prompts = catalogueJson.prompts;
 // Checked before the corpus index is built: a missing capture is a setup error,
 // not something to find out after the packets are written.
-if (!noCapture && !resolveCaptureDir(catalogueJson.version)) {
+const guardDir = noCapture ? null : resolveCaptureDir(catalogueJson.version);
+if (!noCapture && !(guardDir && capturedTools(guardDir))) {
   console.error(
-    `buildAuditPacket: no turnProbe capture for CC ${catalogueJson.version} — every tool carrier would reach stage 1 unmarked (always-on vs DEFERRED). Run \`driver check\` first (it records the capture), or point TWEAKCC_CAPTURES at a capture dir holding req-*.json. Pass --no-capture (or TWEAKCC_NO_CAPTURE=1) only for a deliberate run without one.`
+    `buildAuditPacket: no usable turnProbe capture for CC ${catalogueJson.version} (none found, or no request with a non-empty tools[]) — every tool carrier would reach stage 1 unmarked (always-on vs DEFERRED). Run \`driver check\` first (it records the capture), or point TWEAKCC_CAPTURES at a capture dir holding req-*.json. Pass --no-capture (or TWEAKCC_NO_CAPTURE=1) only for a deliberate run without one.`
   );
   process.exit(2);
 }
