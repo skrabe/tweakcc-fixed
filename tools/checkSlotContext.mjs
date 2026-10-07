@@ -10,59 +10,78 @@
 // sentence that used to tell the model to call it. Slot present, label bound,
 // apply clean, smoke green: every gate passed.
 //
-// The rule compares each slot occurrence in a trimmed body against every
-// pristine occurrence of the same label, on its two nearest context tokens:
+// The defects share one shape: the slot's RENDERED VALUE reads wrong where the
+// trim left it. 2.1.291's nudge value was the bare tool name; TaskCreate's
+// " and potentially assigned to teammates" landed after "…owners and
+// dependencies."; the artifact-database str_replace list item, ending in a
+// comma, landed after "…paths are shaped.". The false positives of a
+// words-only rule were the opposite shape: a value that is a whole sentence or
+// section, whose neighbouring sentence the trim cut — 59 of its 60 findings.
 //
+// So each slot's value is resolved from the pristine bundle
+// (lib/slotValues.mjs: literals, every write to the binding, every
+// ternary/||/?? branch, function returns, parameters at their call sites,
+// imports — with eslint-scope bindings) and every non-empty branch is
+// classified (classifyValue: fragment / name / sentence / other). An override
+// occurrence is a finding when, for some branch and some placement, the value
+// reads wrong in its new place and did not read that way in pristine:
+//   fragment  now starts a sentence, where some pristine occurrence had a word
+//             before it;
+//   name      now stands alone, boundaries on both sides, which no pristine
+//             occurrence did;
+//   sentence  now follows a word mid-line, where pristine always had it at a
+//             boundary.
+// A placement identical to a pristine occurrence's (left, right) never fires.
+// A neighbouring slot is not a word: its value's facing edge is the context,
+// and when it can render nothing (or is unknown) the token behind it is too.
+//
+// The value rule only ADDS to the word-neighbour rule below; it never replaces
+// it where the value is not fully known. The word rule also runs for a label
+// with no resolved value, with any runtime (unknown) branch, or with any
+// known branch that is `other`, and the findings union. A label that only
+// renders "" or whitespace is skipped by both.
+//
+// Context tokens (shared by both rules):
 //   - A context token is the nearest WORD on that side (letters, digits, `_`,
 //     `'`, `-`, compared case-insensitively), the nearest neighbouring SLOT
 //     (named by its leading identifier), or a BOUNDARY. Quotes, brackets,
 //     commas, colons, dashes, escaped backticks, markdown emphasis and the
-//     articles a/an/the are transparent: they decorate the slot's phrase, they
-//     do not say what the slot is for (`use the ${X} tool` == `use ${X}`).
+//     articles a/an/the are transparent.
 //   - A boundary is a sentence end (`.` `!` `?` not followed by a word char),
 //     a newline, the start or end of the body, or the edge of a template
-//     branch inside a conditional. A word across a sentence break belongs to
-//     a different idea, so it says nothing about this slot.
+//     branch inside a conditional.
 //   - Every label an interpolation RENDERS shares that interpolation's context
-//     (`${f(B.y)}`, the branches of `${C?B:""}`); a ternary condition renders
-//     nothing of its own and is skipped, at any bracket depth. A label
-//     concatenated with string literals (`"Call " + T + " now"`) takes the
-//     literals' adjacent words. Labels inside a nested template branch take
-//     the context of the prose in that branch. String, template and regex
-//     literals are skipped when matching the interpolation's closing brace.
+//     (the branches of `${C?B:""}`, `${B.slice(0,-1)}`); a ternary condition
+//     and a call's arguments render nothing of their own and are skipped. A
+//     label concatenated with string literals (`"Call " + T + " now"`) takes
+//     the literals' adjacent words. String, template and regex literals are
+//     skipped when matching the interpolation's closing brace.
 //
-// A side SURVIVES when it is a word or slot token that some pristine
-// occurrence of the label also has on that side. A boundary is not evidence
-// by itself: about half of all (id, label) pairs have some pristine
-// occurrence at a sentence or line edge, so letting `⟂` match `⟂` passed a
-// fully dangling `${T}` whenever any one occurrence started a sentence. A
-// boundary only counts as part of the exact (left, right) pair of one
-// pristine occurrence: a slot that stood alone may stand alone. A finding is
-// an occurrence where neither side survives and no pair matches.
+// Word rule: a side survives when it is a word or slot token some pristine
+// occurrence also has on that side; a boundary only counts as part of an exact
+// pristine (left, right) pair. A finding is a placement where neither side
+// survives.
 //
-// Measured 2026-10-07 on the CC 2.1.292 LCC set (769 trims, ~1000 slot
-// occurrences in ~314 of them), with the 2.1.291 failure as the negative
-// control (override ⟂ _ ⟂ vs pristine `call` _ `now`; flagged by every
-// variant):
-//   nearest word, articles significant, ⟂ matches ⟂ .. 32 findings / 19 files
-//   + articles transparent ............................ 24 / 15
-//   + ternary conditions skipped ...................... 20 / 12
-//   + boundary is not a surviving side (this rule) .... 60 / 40
-//   two-token window instead of one ................... 34 / 20 (noisier)
-// The stricter boundary rule's extra findings are mostly whole-sentence
-// values (notes, *_FN() sections) whose neighbouring sentence was cut. Every
-// one was read: 2 were real defects (artifact-database-guidance's
-// comma-terminated str_replace list fragment after a full stop, fixed since;
-// taskcreate's " and potentially assigned to teammates" after a full stop)
-// and the rest are ruled on in data/slot-context-allowlist.json.
+// Measured 2026-10-07 on the CC 2.1.292 LCC set (769 trims, 929 slot
+// occurrences; 499 judged by value alone, 174 by value and words, 249 by
+// words only, 7 always empty):
+//   words-only rule (first version) ................... 60 findings, 1 real
+//   value rule, word rule as replacement fallback ..... 2 findings, 0 real
+//   value rule + word rule union, fail-safe resolver .. 11 findings, 0 real
+// The 11 are all word-rule findings on runtime or `other` values, reviewed
+// in the allowlist. The two known defects reconstructed against the real
+// 2.1.292 values (TaskCreate, artifact-database str_replace) both flag as
+// fragments. Planted-defect recall on the real values (a sentence break
+// inserted before every mid-sentence fragment- or name-valued slot in the
+// catalogue, and after it for names): 793/805 fragments, 1668/1689 names.
 //
-// Not automatically wrong: an author may rewrite a slot's sentence on purpose.
-// Each finding needs a reason, recorded per label in
-// data/slot-context-allowlist.json keyed `<id>` -> `{ bodyHash, pristineHash,
-// tokens: { <label>: <reason> } }`. The row holds only while both the deployed
-// body and the pristine pieces are unchanged, so an edit on either side
-// re-opens it. A row whose label no longer fires, whose override is gone or
-// whose id left the catalogue is reported as stale (under --all, every row).
+// Not automatically wrong: an author may restructure on purpose. Each finding
+// needs a reason, recorded per label in data/slot-context-allowlist.json keyed
+// `<id>` -> `{ bodyHash, pristineHash, valueHash, tokens: { <label>: <reason>
+// } }`. The row holds only while the deployed body, the pristine pieces and
+// the resolved slot values are all unchanged, so an edit on any side re-opens
+// it. A row whose label no longer fires, whose override is gone or whose id
+// left the catalogue is reported as stale (under --all, every row).
 //
 // Usage:
 //   node tools/checkSlotContext.mjs <prompts.json> --set=<abs dir> --ids=<file>
@@ -71,22 +90,29 @@
 //     --ids <file> | --ids=<file>  newline-separated ids this run changed.
 //     --all  every trimmed override in the set(s), and every allowlist row.
 //     --json <path> | --json=<path>  write the findings for a verifier packet.
+//     --allowlist <path>  reviewed rows (default data/slot-context-allowlist.json).
+//     --cli <path>  the PRISTINE bundle of the catalogue's version (default:
+//                   $TWEAKCC_PRISTINE_CLI, else ~/.tweakcc/native-claudejs-orig.js);
+//                   a bundle of another version is refused.
 //
 // Exit 0 = no unreviewed findings, 1 = findings or stale rows, 2 = could not
 // run or checked nothing (unreadable/empty catalogue or allowlist, a set with
-// no .md files, an --ids file naming no trimmed override).
+// no .md files, an --ids file naming no trimmed override, no pristine bundle
+// or one of another version).
 
 import crypto from 'node:crypto';
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
 import path from 'node:path';
 import url from 'node:url';
+import { OPAQUE, resolveSlotValues } from './lib/slotValues.mjs';
 
 const require = createRequire(import.meta.url);
 const {
   parseOverrideArgs,
   resolveOverrideSets,
   printAuditedSets,
+  pristineCliPath,
 } = require('./lib/overrideSets.cjs');
 
 export const BOUNDARY = '⟂';
@@ -165,6 +191,9 @@ const parseExpr = (s, i, runs) => {
   const frames = [{ rendered: [], pending: [], seq: [], afterId: false }];
   let first = null;
   let prevSig = null;
+  // Anything beyond one label (a ternary, a literal, concatenation, `||`)
+  // means the interpolation may render text no single label accounts for.
+  let complex = false;
   const top = () => frames[frames.length - 1];
   const seqTail = n => top().seq.slice(-n);
   const pushStr = items => {
@@ -189,13 +218,17 @@ const parseExpr = (s, i, runs) => {
   const closeFrame = () => {
     const f = frames.pop();
     const p = top();
-    p.pending.push(...f.rendered, ...f.pending);
-    if (!f.afterId) p.seq.push({ k: 'op' });
+    // A call's arguments are not what the interpolation renders — its return
+    // value is, and that belongs to the callee label.
+    if (!f.afterId) {
+      p.pending.push(...f.rendered, ...f.pending);
+      p.seq.push({ k: 'op' });
+    }
   };
   const finish = end => {
     while (frames.length > 1) closeFrame();
     const f = frames[0];
-    return { end, occ: [...f.rendered, ...f.pending], first };
+    return { end, occ: [...f.rendered, ...f.pending], first, complex };
   };
   while (i < s.length) {
     const c = s[i];
@@ -222,9 +255,11 @@ const parseExpr = (s, i, runs) => {
         i += 2;
         continue;
       }
+      complex = true;
       top().pending = [];
       top().seq.push({ k: 'op' });
     } else if (c === ':') {
+      complex = true;
       top().rendered.push(...top().pending);
       top().pending = [];
       top().seq.push({ k: 'op' });
@@ -233,12 +268,14 @@ const parseExpr = (s, i, runs) => {
       while (j < s.length && !(s[j] === c && !escaped(s, j))) j++;
       const scratch = [];
       const { items } = scanRun(s.slice(i + 1, j), 0, false, scratch);
+      complex = true;
       pushStr(items);
       prevSig = c;
       i = j + 1;
       continue;
     } else if (c === '`') {
       const run = scanRun(s, i + 1, true, runs);
+      complex = true;
       pushStr(run.items);
       prevSig = c;
       i = run.end + 1;
@@ -283,8 +320,10 @@ const parseExpr = (s, i, runs) => {
       i = j;
       continue;
     } else if (c === '+') {
+      complex = true;
       top().seq.push({ k: '+' });
     } else {
+      if (c === '|' || c === '&' || c === ',') complex = true;
       top().seq.push({ k: 'op' });
     }
     prevSig = sig;
@@ -301,8 +340,8 @@ const scanRun = (s, i, inTemplate, runs) => {
     const c = s[i];
     if (inTemplate && c === '`' && !escaped(s, i)) break;
     if (c === '$' && s[i + 1] === '{' && !escaped(s, i)) {
-      const { end, occ, first } = parseExpr(s, i + 2, runs);
-      items.push({ t: 's', occ, lead: first });
+      const { end, occ, first, complex } = parseExpr(s, i + 2, runs);
+      items.push({ t: 's', occ, lead: first, complex });
       i = end;
       continue;
     }
@@ -332,9 +371,65 @@ const scanRun = (s, i, inTemplate, runs) => {
   return { end: i, items };
 };
 
-// Every slot occurrence in `text`, as { label, left, right }. Only labels in
-// `labels` are reported; a label repeated inside one interpolation counts once.
-export const slotOccurrences = (text, labels) => {
+// The context token a neighbouring value presents on the side facing the
+// slot: its last real token when it sits to the left, its first when to the
+// right. A value ending (or starting) in an opaque `${}` presents a neutral
+// slot token. null when the value has no tokens at all.
+const BEYOND = Symbol('beyond');
+const edgeTokens = (raw, dir) => {
+  const out = [];
+  let rest = raw;
+  const opaqueEdge =
+    dir < 0 ? new RegExp(`${OPAQUE}[ \\t]*$`) : new RegExp(`^[ \\t]*${OPAQUE}`);
+  // An opaque `${}` at the facing edge can render anything, including
+  // nothing: it is a neutral slot token AND whatever lies behind it.
+  while (opaqueEdge.test(rest)) {
+    out.push('${?}');
+    rest = rest.replace(opaqueEdge, '');
+  }
+  const { items } = scanRun(rest, 0, false, []);
+  if (items.length <= 2) out.push(BEYOND);
+  else out.push(ctxToken(dir < 0 ? items[items.length - 2] : items[1]));
+  return out;
+};
+
+// Every context token the slot at items[k] can actually see on side `dir`.
+// A neighbouring slot is not a word: when its value is known, the facing edge
+// of each of its branches is the context; when it can render nothing (or is
+// unknown), the token beyond it is the context too. Without `valueOf` the
+// neighbour stands as a neutral slot token, as it always did.
+const sideTokens = (items, k, dir, valueOf, depth = 0) => {
+  const it = items[k + dir];
+  if (!it) return [BOUNDARY];
+  if (it.t !== 's' || !valueOf || depth > 4) return [ctxToken(it)];
+  const named = it.occ.map(o => valueOf(o.name));
+  let branches;
+  if (!it.complex && named.length === 1 && named[0]) branches = named[0];
+  else branches = [null, '', ...named.flatMap(b => b || [])];
+  const out = new Set();
+  for (const b of branches) {
+    if (b === null) {
+      out.add(ctxToken(it));
+      for (const t of sideTokens(items, k + dir, dir, valueOf, depth + 1))
+        out.add(t);
+      continue;
+    }
+    for (const edge of edgeTokens(b, dir)) {
+      if (edge !== BEYOND) out.add(edge);
+      else
+        for (const t of sideTokens(items, k + dir, dir, valueOf, depth + 1))
+          out.add(t);
+    }
+  }
+  return [...out];
+};
+
+// Every slot occurrence in `text`, as { label, left, right, lefts, rights }.
+// `left`/`right` are the literal neighbouring tokens; `lefts`/`rights` are
+// every token the slot can see once neighbouring slots' values are taken into
+// account (see sideTokens). Only labels in `labels` are reported; a label
+// repeated inside one interpolation counts once.
+export const slotOccurrences = (text, labels, valueOf = null) => {
   const runs = [];
   scanRun(text || '', 0, false, runs);
   const out = [];
@@ -352,7 +447,12 @@ export const slotOccurrences = (text, labels) => {
         const key = `${o.name}\0${left}\0${right}`;
         if (seen.has(key)) continue;
         seen.add(key);
-        out.push({ label: o.name, left, right });
+        const occ = { label: o.name, left, right };
+        if (valueOf) {
+          occ.lefts = o.left ? [o.left] : sideTokens(items, k, -1, valueOf);
+          occ.rights = o.right ? [o.right] : sideTokens(items, k, 1, valueOf);
+        }
+        out.push(occ);
       }
     }
   }
@@ -366,21 +466,113 @@ export const labelsOf = entries => {
   return set;
 };
 
+// What a slot's rendered value looks like, from the value alone. `raw` is one
+// branch as resolved by lib/slotValues.mjs (OPAQUE marks a nested `${}`).
+// Order matters: the fragment tests run first, so " and assigned to
+// teammates", "which follows" and a lone " and " are fragments, not names.
+//   empty     renders nothing
+//   fragment  a piece of a sentence: starts with a comma, a closing bracket or
+//             a connective (and, or, but, which, that, in, with, to, for, …),
+//             ends with a comma or a dangling connective, or is several words
+//             starting lowercase
+//   name      one token not ending a sentence (a tool name, URL, path, number)
+//             or a short label with no sentence punctuation
+//             ("ReadNotifications", "https://…/llms.txt", "October 2026")
+//   sentence  starts a line, a list item, a heading or a capitalised word, and
+//             ends with terminal punctuation or a newline ("Stop.")
+//   other     anything else (an opaque start, an unterminated clause)
+const CONNECTIVE =
+  'and|or|but|nor|so|yet|which|that|who|whom|whose|where|when|while|whereas|unless|until|because|since|although|though|if|then|than|as|in|on|at|of|with|without|to|for|from|by|into|onto|plus';
+export const classifyValue = raw => {
+  const s = raw.trim();
+  if (!s) return 'empty';
+  const startsLine =
+    /^[ \t]*\n/.test(raw) || /^(?:[-*+>]|#{1,6}|\d+[.)])\s/.test(s);
+  const ends = /[.!?][)"'`*\]]*$/.test(s) || /\n[ \t]*$/.test(raw);
+  if (/^[,;)\]]/.test(s)) return 'fragment';
+  if (!startsLine && new RegExp(`^(?:${CONNECTIVE})(?![\\w$-])`).test(s))
+    return 'fragment';
+  if (new RegExp(`(?:,|(?:^|\\s)(?:${CONNECTIVE}|the|a|an))$`, 'i').test(s))
+    return 'fragment';
+  if (
+    !s.includes(OPAQUE) &&
+    ((!/\s/.test(s) && !/[.!?]$/.test(s)) ||
+      (!/[.!?;:,\n]/.test(s) &&
+        s.split(/\s+/).length <= 4 &&
+        !/^\p{Ll}/u.test(s)))
+  )
+    return 'name';
+  if (!startsLine && /^\p{Ll}/u.test(s)) return 'fragment';
+  if ((startsLine || /^[\p{Lu}"'`*([]/u.test(s)) && ends) return 'sentence';
+  return 'other';
+};
+
+const sideKind = tok =>
+  tok === BOUNDARY ? 'boundary' : tok.startsWith('${') ? 'slot' : 'word';
+
+// The word-neighbour rule. A side survives only when it is a WORD or SLOT
+// token that some pristine occurrence of the label also has on that side. A
+// boundary is not evidence on its own: half of all (id, label) pairs have some
+// pristine occurrence at a sentence or line edge, so letting `⟂` match `⟂`
+// passed a fully dangling `${T}` whenever any one pristine occurrence started
+// a sentence. A boundary only counts as part of the exact (left, right) pair
+// of one pristine occurrence — a slot that stood alone may stand alone now.
+const wordRuleFires = (left, right, w) => {
+  if (left !== BOUNDARY && w.lefts.has(left)) return false;
+  if (right !== BOUNDARY && w.rights.has(right)) return false;
+  return !w.pairs.has(`${left}\0${right}`);
+};
+
+// The value rule, for one placement (left, right) of one branch:
+//   fragment  it now starts a sentence (left is a boundary) and some pristine
+//             occurrence had a word before it;
+//   name      it now stands alone (boundary on both sides) and no pristine
+//             occurrence stood alone;
+//   sentence  it now follows a word on the same line without opening its own
+//             line, and no pristine occurrence had a word before it.
+// A neighbouring slot token is neither a word nor a boundary, so it fires
+// nothing, and a placement identical to some pristine (left, right) is not a
+// change, so it fires nothing either.
+const valueRuleFires = (kind, raw, left, right, w) => {
+  if (w.pairs.has(`${left}\0${right}`)) return false;
+  const lk = sideKind(left);
+  if (kind === 'fragment')
+    return lk === 'boundary' && [...w.lefts].some(l => sideKind(l) === 'word');
+  if (kind === 'name')
+    return (
+      lk === 'boundary' &&
+      right === BOUNDARY &&
+      !w.pairs.has(`${BOUNDARY}\0${BOUNDARY}`)
+    );
+  if (kind === 'sentence')
+    return (
+      lk === 'word' &&
+      !/^[ \t]*\n/.test(raw) &&
+      w.lefts.has(BOUNDARY) &&
+      ![...w.lefts].some(l => sideKind(l) === 'word')
+    );
+  return false;
+};
+
+const renderBranch = raw => raw.replace(new RegExp(OPAQUE, 'g'), '${…}');
+
 // The core rule. `entries` are the catalogue entries for one id (a multi-site
-// id has several); `body` is the deployed override body.
+// id has several); `body` is the deployed override body; `values` maps each
+// label to its resolved `{ branches }` (lib/slotValues.mjs), null entries
+// being runtime data.
 //
-// A side survives only when it is a WORD or SLOT token that some pristine
-// occurrence of the label also has on that side. A boundary is not evidence
-// on its own: half of all (id, label) pairs have some pristine occurrence at a
-// sentence or line edge, so letting `⟂` match `⟂` passed a fully dangling
-// `${T}` whenever any one pristine occurrence started a sentence. A boundary
-// only counts as part of the exact (left, right) pair of one pristine
-// occurrence — a slot that stood alone in pristine may stand alone now.
-export const contextFindings = (entries, body) => {
+// The value rule may only ADD to the word rule, never replace it where the
+// value is not fully known: the word rule runs for a label with no resolved
+// value, with ANY unknown branch, or with ANY known branch that is `other`;
+// the value rule runs on every known non-empty branch; findings union. A
+// label that only ever renders "" or whitespace is skipped by both — it
+// cannot read wrong anywhere.
+export const contextFindings = (entries, body, values = new Map()) => {
   const labels = labelsOf(entries);
+  const valueOf = label => values.get(label)?.branches;
   const want = new Map();
   for (const p of entries)
-    for (const o of slotOccurrences(reconstruct(p), labels)) {
+    for (const o of slotOccurrences(reconstruct(p), labels, valueOf)) {
       if (!want.has(o.label))
         want.set(o.label, {
           lefts: new Set(),
@@ -388,25 +580,81 @@ export const contextFindings = (entries, body) => {
           pairs: new Set(),
         });
       const w = want.get(o.label);
-      w.lefts.add(o.left);
-      w.rights.add(o.right);
-      w.pairs.add(`${o.left}\0${o.right}`);
+      for (const l of o.lefts) w.lefts.add(l);
+      for (const r of o.rights) w.rights.add(r);
+      for (const l of o.lefts)
+        for (const r of o.rights) w.pairs.add(`${l}\0${r}`);
     }
   const out = [];
-  for (const o of slotOccurrences(body, labels)) {
+  for (const o of slotOccurrences(body, labels, valueOf)) {
     const w = want.get(o.label);
     if (!w) continue;
-    if (o.left !== BOUNDARY && w.lefts.has(o.left)) continue;
-    if (o.right !== BOUNDARY && w.rights.has(o.right)) continue;
-    if (w.pairs.has(`${o.left}\0${o.right}`)) continue;
-    out.push({
-      ...o,
+    const all = valueOf(o.label);
+    if (all && all.length && all.every(b => b !== null && b.trim() === ''))
+      continue;
+    const known = (all || []).filter(b => b !== null && b.trim() !== '');
+    const kinds = known.map(classifyValue);
+    const useWord =
+      !all ||
+      !all.length ||
+      all.includes(null) ||
+      kinds.some(k => k === 'other');
+    const base = {
+      label: o.label,
+      left: o.left,
+      right: o.right,
       pristineLeft: [...w.lefts],
       pristineRight: [...w.rights],
-    });
+    };
+    let hit = null;
+    for (let i = 0; i < known.length && !hit; i++)
+      for (const left of o.lefts) {
+        for (const right of o.rights)
+          if (valueRuleFires(kinds[i], known[i], left, right, w)) {
+            hit = {
+              kind: kinds[i],
+              value: renderBranch(known[i]),
+              left,
+              right,
+            };
+            break;
+          }
+        if (hit) break;
+      }
+    if (!hit && useWord)
+      for (const left of o.lefts) {
+        for (const right of o.rights)
+          if (wordRuleFires(left, right, w)) {
+            hit = { kind: 'unknown', left, right };
+            break;
+          }
+        if (hit) break;
+      }
+    if (hit) out.push({ ...base, ...hit });
   }
   return out;
 };
+
+// Fingerprint of what an id's slots render, so a change to a VALUE (Anthropic
+// turning a whole sentence into a fragment) re-opens a reviewed row. Typed:
+// an unknown branch (null) and the literal text "null" hash differently.
+export const valueHash = values =>
+  crypto
+    .createHash('sha1')
+    .update(
+      JSON.stringify(
+        [...(values || new Map())]
+          .map(([l, v]) => [
+            l,
+            [...v.branches].sort((a, b) =>
+              a === null ? -1 : b === null ? 1 : a < b ? -1 : a > b ? 1 : 0
+            ),
+          ])
+          .sort((a, b) => (a[0] < b[0] ? -1 : 1))
+      )
+    )
+    .digest('hex')
+    .slice(0, 12);
 
 export const isTrim = (entries, body) => {
   const b = body.trim();
@@ -420,7 +668,13 @@ export const isTrim = (entries, body) => {
 // still match: an unchanged override over a changed pristine is a new question.
 // Every row for an id in `ids` that never applied — override gone, id gone
 // from the catalogue, no longer a trim, body or pristine changed — is stale.
-export const evaluate = ({ entriesById, bodiesById, ids, allow = {} }) => {
+export const evaluate = ({
+  entriesById,
+  bodiesById,
+  ids,
+  allow = {},
+  valuesById = new Map(),
+}) => {
   const findings = [];
   const justified = [];
   const stale = [];
@@ -437,6 +691,8 @@ export const evaluate = ({ entriesById, bodiesById, ids, allow = {} }) => {
       continue;
     }
     const pHash = pristineHash(entries);
+    const values = valuesById.get(id) || new Map();
+    const vHash = valueHash(values);
     let ruleUsed = false;
     let trims = 0;
     const firedLabels = new Set();
@@ -445,9 +701,12 @@ export const evaluate = ({ entriesById, bodiesById, ids, allow = {} }) => {
       if (!isTrim(entries, body)) continue;
       trims++;
       checked++;
-      const raw = contextFindings(entries, body);
+      const raw = contextFindings(entries, body, values);
       const applies =
-        rule && rule.bodyHash === bodyHash(body) && rule.pristineHash === pHash;
+        rule &&
+        rule.bodyHash === bodyHash(body) &&
+        rule.pristineHash === pHash &&
+        rule.valueHash === vHash;
       if (applies) ruleUsed = true;
       const live = applies ? rule.tokens || {} : {};
       for (const f of raw) {
@@ -469,9 +728,11 @@ export const evaluate = ({ entriesById, bodiesById, ids, allow = {} }) => {
         why: 'the override is no longer a trim; delete the row',
       });
     else if (!ruleUsed) {
-      const why = bodies.some(b => rule.bodyHash === bodyHash(b.body))
-        ? `pristine changed (now ${pHash}); re-review and re-key the row`
-        : `no audited body matches bodyHash ${rule.bodyHash}; re-review and re-key the row`;
+      const why = !bodies.some(b => rule.bodyHash === bodyHash(b.body))
+        ? `no audited body matches bodyHash ${rule.bodyHash}; re-review and re-key the row`
+        : rule.pristineHash !== pHash
+          ? `pristine changed (now ${pHash}); re-review and re-key the row`
+          : `a slot value changed (now ${vHash}); re-review and re-key the row`;
       stale.push({ id, why });
     } else
       for (const label of Object.keys(rule.tokens || {}))
@@ -512,7 +773,14 @@ const shadowedIds = setDir => {
 // Flags are order-independent: `--json path` and `--json=path` both work, and
 // the catalogue is the first bare argument that is not a flag's value.
 export const parseCliArgs = argv => {
-  const out = { jsonPath: null, idsFile: null, all: false, outPath: null };
+  const out = {
+    jsonPath: null,
+    idsFile: null,
+    all: false,
+    outPath: null,
+    cliPath: null,
+    allowPath: null,
+  };
   const errors = [];
   const valueOf = (a, i, name) => {
     if (a.startsWith(`${name}=`)) return [a.slice(name.length + 1), i];
@@ -530,6 +798,10 @@ export const parseCliArgs = argv => {
       [out.outPath, i] = valueOf(a, i, '--json');
     else if (a === '--ids' || a.startsWith('--ids='))
       [out.idsFile, i] = valueOf(a, i, '--ids');
+    else if (a === '--cli' || a.startsWith('--cli='))
+      [out.cliPath, i] = valueOf(a, i, '--cli');
+    else if (a === '--allowlist' || a.startsWith('--allowlist='))
+      [out.allowPath, i] = valueOf(a, i, '--allowlist');
     else if (a.startsWith('--')) errors.push(`unknown flag ${a}`);
     else if (out.jsonPath === null) out.jsonPath = a;
     else errors.push(`unexpected argument ${a}`);
@@ -551,22 +823,88 @@ const main = () => {
   };
 
   const parsed = parseOverrideArgs(process.argv.slice(2));
-  const { jsonPath, idsFile, all, outPath, errors } = parseCliArgs(parsed.rest);
+  const {
+    jsonPath,
+    idsFile,
+    all,
+    outPath,
+    cliPath,
+    allowPath: allowArg,
+    errors,
+  } = parseCliArgs(parsed.rest);
   const usage =
-    'usage: <prompts.json> (--set=<dir> | --sets=<a>,<b>) (--ids <file> | --all) [--json <path>]';
+    'usage: <prompts.json> (--set=<dir> | --sets=<a>,<b>) (--ids <file> | --all) [--cli <pristine cli.js>] [--allowlist <path>] [--json <path>]';
   if (errors.length) die(`${errors.join('; ')}\n${usage}`);
   if (!jsonPath || !parsed.specified) die(usage);
   if (!idsFile && !all) die('pass --ids <file> to gate a bump, or --all');
   if (idsFile && all) die('pass --ids or --all, not both');
-  const resolved = resolveOverrideSets(parsed, { fallback: 'none' });
-  if (!resolved.length) die('no override set resolved');
+  // resolveOverrideSets exits on its own when nothing resolves (exit 0 for an
+  // empty `--sets=`); a gate that audits no set has not passed, so route
+  // every such exit through die().
+  const resolved = resolveOverrideSets(parsed, {
+    fallback: 'none',
+    exit: () => die('no override set resolved — nothing was checked'),
+  });
+  if (!resolved.length) die('no override set resolved — nothing was checked');
   printAuditedSets(resolved);
   if (!fs.existsSync(jsonPath)) die(`no prompts JSON at ${jsonPath}`);
   if (idsFile && !fs.existsSync(idsFile)) die(`no ids file at ${idsFile}`);
+  const idsFromFile = idsFile
+    ? [
+        ...new Set(
+          fs
+            .readFileSync(idsFile, 'utf8')
+            .split('\n')
+            .map(s => s.trim())
+            .filter(Boolean)
+        ),
+      ]
+    : null;
+  // Checked before the bundle is loaded: an empty ids file is a wrong input,
+  // and there is no point resolving 40 MB of slot values to say so.
+  if (idsFromFile && !idsFromFile.length)
+    die(`${idsFile} names no ids — nothing was checked`);
 
   const catalogue = readJson(jsonPath, 'prompts JSON');
   if (!Array.isArray(catalogue?.prompts) || !catalogue.prompts.length)
     die(`${jsonPath} has no "prompts" entries — wrong file?`);
+  // Slot values come from the PRISTINE bundle of the catalogue's version: the
+  // --cli path, else TWEAKCC_PRISTINE_CLI, else the copy --apply saves. A
+  // bundle of another version would resolve the wrong values, so it is refused.
+  const bundlePath =
+    cliPath || process.env.TWEAKCC_PRISTINE_CLI || pristineCliPath();
+  if (!fs.existsSync(bundlePath))
+    die(`no pristine bundle at ${bundlePath} — pass --cli <cli.js>`);
+  const source = fs.readFileSync(bundlePath, 'utf8');
+  const versions = new Map();
+  for (const m of source.matchAll(/VERSION:"(\d+\.\d+\.\d+)"/g))
+    versions.set(m[1], (versions.get(m[1]) || 0) + 1);
+  const bundleVersion = [...versions].sort((a, b) => b[1] - a[1])[0]?.[0];
+  const catVersion =
+    catalogue.version ||
+    (path.basename(jsonPath).match(/(\d+\.\d+\.\d+)/) || [])[1];
+  if (!bundleVersion || bundleVersion !== catVersion)
+    die(
+      `${bundlePath} is CC ${bundleVersion ?? 'unknown'}, the catalogue is ${catVersion ?? 'unknown'} — pass --cli for the matching pristine bundle`
+    );
+  const { values: valuesById, stats: resolveStats } = resolveSlotValues(
+    source,
+    catalogue
+  );
+  console.log(
+    `slot values: ${resolveStats.promptsMatched} of ${resolveStats.slotBearing} slot-bearing catalogued prompt(s) located in ${path.basename(bundlePath)} (CC ${bundleVersion}); ${resolveStats.resolved} rendered slot position(s) fully resolved, ${resolveStats.unknown} with runtime data`
+  );
+  // A same-VERSION bundle that has been patched (an override applied) or is
+  // otherwise not the pristine build still parses, but most templates no
+  // longer match the catalogue and every slot silently falls back to the word
+  // rule. Measured on the pristine 2.1.292 bundle: 5032 of 5032 slot-bearing
+  // ids located. 90% leaves room for the few build-stamped or multi-site
+  // templates a new version can miss while catching any patched bundle.
+  if (resolveStats.promptsMatched < 0.9 * resolveStats.slotBearing)
+    die(
+      `only ${resolveStats.promptsMatched} of ${resolveStats.slotBearing} slot-bearing prompts were found in ${bundlePath} — is it the PRISTINE bundle? (floor 90%)`
+    );
+
   const entriesById = new Map();
   for (const p of catalogue.prompts) {
     if (!p.id) continue;
@@ -594,12 +932,15 @@ const main = () => {
     }
   }
 
-  const allowPath = path.join(
-    path.dirname(url.fileURLToPath(import.meta.url)),
-    '..',
-    'data',
-    'slot-context-allowlist.json'
-  );
+  const allowPath =
+    allowArg ||
+    path.join(
+      path.dirname(url.fileURLToPath(import.meta.url)),
+      '..',
+      'data',
+      'slot-context-allowlist.json'
+    );
+  if (allowArg && !fs.existsSync(allowArg)) die(`no allowlist at ${allowArg}`);
   const allow = fs.existsSync(allowPath)
     ? readJson(allowPath, 'allowlist')
     : {};
@@ -607,17 +948,9 @@ const main = () => {
   // --all also walks every allowlist row, so a row whose override was deleted
   // or renamed, or whose id left the catalogue, is reported stale instead of
   // sitting unjudged forever. In --ids mode a row outside the run is not judged.
-  const ids = idsFile
-    ? [
-        ...new Set(
-          fs
-            .readFileSync(idsFile, 'utf8')
-            .split('\n')
-            .map(s => s.trim())
-            .filter(Boolean)
-        ),
-      ]
-    : [...new Set([...bodiesById.keys(), ...Object.keys(allow)])];
+  const ids = idsFromFile || [
+    ...new Set([...bodiesById.keys(), ...Object.keys(allow)]),
+  ];
   const scopedAllow = Object.fromEntries(
     Object.entries(allow).filter(([id]) => ids.includes(id))
   );
@@ -626,7 +959,39 @@ const main = () => {
     bodiesById,
     ids,
     allow: scopedAllow,
+    valuesById,
   });
+
+  // How each override slot occurrence was judged: by value alone (every
+  // branch known and classified), by both rules (some branch unknown or only
+  // `other`), by the word rule alone (no resolved value), or skipped (renders
+  // only "").
+  const judged = { value: 0, both: 0, word: 0, skipped: 0 };
+  for (const id of ids) {
+    const entries = entriesById.get(id);
+    if (!entries) continue;
+    const labels = labelsOf(entries);
+    const values = valuesById.get(id) || new Map();
+    for (const { body } of bodiesById.get(id) || []) {
+      if (!isTrim(entries, body)) continue;
+      for (const o of slotOccurrences(body, labels)) {
+        const all = values.get(o.label)?.branches;
+        const known = (all || []).filter(b => b !== null && b.trim() !== '');
+        if (all && all.length && all.every(b => b !== null && b.trim() === ''))
+          judged.skipped++;
+        else if (!known.length) judged.word++;
+        else if (
+          all.includes(null) ||
+          known.some(b => classifyValue(b) === 'other')
+        )
+          judged.both++;
+        else judged.value++;
+      }
+    }
+  }
+  console.log(
+    `slot occurrences in trims: ${judged.value} by value, ${judged.both} by value and words (a branch is runtime data or unclassifiable), ${judged.word} by words only, ${judged.skipped} always empty`
+  );
 
   for (const j of justified)
     console.log(`  ✓ ${j.set}/${j.id}: ${j.label} — justified: ${j.reason}`);
@@ -651,7 +1016,7 @@ const main = () => {
 
   if (!findings.length) {
     console.log(
-      `checkSlotContext: 0 — every kept slot still sits in a pristine phrase across ${checked} trimmed override(s) (${justified.length} reviewed${stale.length ? `, ${stale.length} stale row(s)` : ''})`
+      `checkSlotContext: 0 — every kept slot still renders in place across ${checked} trimmed override(s) (${justified.length} reviewed${stale.length ? `, ${stale.length} stale row(s)` : ''})`
     );
     process.exit(stale.length ? 1 : 0);
   }
@@ -662,20 +1027,32 @@ const main = () => {
     if (!byId.has(k)) byId.set(k, []);
     byId.get(k).push(f);
   }
+  const byKind = {};
+  for (const f of findings) byKind[f.kind] = (byKind[f.kind] || 0) + 1;
   console.log(
-    `checkSlotContext: ${findings.length} slot occurrence(s) in ${byId.size} of ${checked} trimmed override(s) lost the words on both sides (${justified.length} reviewed${stale.length ? `, ${stale.length} stale row(s)` : ''})`
+    `checkSlotContext: ${findings.length} slot occurrence(s) in ${byId.size} of ${checked} trimmed override(s) render out of place (${Object.entries(
+      byKind
+    )
+      .map(([k, n]) => `${n} ${k}`)
+      .join(
+        ', '
+      )}; ${justified.length} reviewed${stale.length ? `, ${stale.length} stale row(s)` : ''})`
   );
   for (const [k, list] of byId) {
     console.log(`  ${k}`);
     for (const f of list)
       console.log(
-        `      ${f.label}: override [${f.left}] _ [${f.right}]  pristine [${f.pristineLeft.join(' | ')}] _ [${f.pristineRight.join(' | ')}]`
+        `      ${f.label} [${f.kind}]: override [${f.left}] _ [${f.right}]  pristine [${f.pristineLeft.join(' | ')}] _ [${f.pristineRight.join(' | ')}]` +
+          (f.value
+            ? `\n        value ${JSON.stringify(f.value.slice(0, 160))}`
+            : '')
       );
   }
   console.log(
-    '\nA kept slot whose surrounding words were cut on both sides usually renders a\n' +
-      'bare value with no instruction around it. Restore the phrase, or record why\n' +
-      'the rewrite is sound in data/slot-context-allowlist.json.'
+    '\nA fragment now starting a sentence, a bare name now standing alone, a sentence\n' +
+      'now run into a phrase — or, for a runtime value, a slot whose words were cut on\n' +
+      'both sides. Restore the phrase, or record why the placement is sound in\n' +
+      'data/slot-context-allowlist.json (bodyHash, pristineHash, valueHash).'
   );
   process.exit(1);
 };
