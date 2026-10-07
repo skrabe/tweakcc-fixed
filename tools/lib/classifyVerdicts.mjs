@@ -89,7 +89,7 @@ export function digestProblems(m, { checkFiles = true } = {}) {
   return out;
 }
 
-function fieldProblems(v, cand, where) {
+export function fieldProblems(v, cand, where) {
   const out = [];
   const h = v.hash;
   if (!FACINGS.has(v.facing)) out.push(`${where} ${h}: facing must be model|ui|internal, got ${JSON.stringify(v.facing)}`);
@@ -99,7 +99,10 @@ function fieldProblems(v, cand, where) {
       if (typeof v[f] !== 'string' || NULLISH.has(v[f].trim().toLowerCase())) out.push(`${where} ${h}: facing:model needs a non-empty ${f} (a reused id needs name and desc too)`);
     }
     if (typeof v.id === 'string') {
-      if (!ID_RE.test(v.id)) out.push(`${where} ${h}: id ${JSON.stringify(v.id)} is not kebab-case [a-z0-9-]`);
+      // Older catalogue ids keep underscores from tool/parameter names; reusing
+      // one verbatim is required, so only a newly minted id must be kebab-case.
+      const reused = ((cand && cand.allowedIds) || []).includes(v.id);
+      if (!reused && !ID_RE.test(v.id)) out.push(`${where} ${h}: id ${JSON.stringify(v.id)} is not kebab-case [a-z0-9-]`);
       const pre = RESERVED_PREFIXES.find(p => v.id.startsWith(p));
       if (pre) out.push(`${where} ${h}: id ${v.id} uses the reserved ${pre} prefix — mint a catalogue id instead`);
     }
@@ -108,7 +111,6 @@ function fieldProblems(v, cand, where) {
       if (v[f] !== null) out.push(`${where} ${h}: facing:${v.facing} must set ${f} to JSON null (not ${JSON.stringify(v[f])})`);
     }
   }
-  void cand;
   return out;
 }
 

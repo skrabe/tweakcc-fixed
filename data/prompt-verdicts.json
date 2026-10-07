@@ -57241,5 +57241,965 @@
     "verdict": "trim",
     "version": "2.1.291",
     "why": "Carries the existing restart-notice trim from system-prompt-resume-continue-prompt-3: CC 2.1.291 inserted an output-limit continuation at -2, shifting the collision suffixes by one, so the same pristine body now sits at -4."
+  },
+  "agent-prompt-background-agent-state-classifier-ask-opens-message-rule": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique classifier rule for a new surface: an ask at the start of the message gates the state. Its output JSON shapes and thresholds are frozen mechanics."
+  },
+  "agent-prompt-background-observer-digest-nonce-guidance": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Prompt-injection defence contract for observer digests, so it is security mechanics."
+  },
+  "agent-prompt-project-thread-status-card-classifier-ask-opens-message-rule": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique addendum with needs_reply/needs_approval enum mapping and output schema example."
+  },
+  "data-artifact-preview-emulator-auto-classifier-input": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "The security classifier input needs the full network and side-effect description (port 443, download on first use, private copy)."
+  },
+  "data-background-observer-digest-nonce-line": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Runtime nonce sentinel: security mechanics."
+  },
+  "data-background-observer-digest-omitted-entries": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique runtime truncation marker that carries counts and the delivery cap."
+  },
+  "data-task-notification-container-restarted-work-lost-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Tells the model that no result will arrive and that it should re-create the work. This is an operand of the work-lost sentence, so it cannot be cut on its own."
+  },
+  "data-task-notification-container-restarted-work-resumable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Splices the resumable-agents note into the restart notification. It is a sentence fragment, so cutting it would break the sentence."
+  },
+  "data-task-notification-queued-remote-notifications-call-now": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Ordering contract for draining queued notifications."
+  },
+  "slash-command-plugin-validate-hooks-module-dollar-callee-shadows-import": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique runtime error explaining the shadowing refusal and its fix."
+  },
+  "slash-command-plugin-validate-hooks-module-parameter-read-shadowed-by-body": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique runtime error."
+  },
+  "slash-command-plugin-validate-hooks-module-scan-lost-track-of-const-read": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique runtime error that attributes the fault to the scanner, not the module."
+  },
+  "slash-command-ultrareview-preflight-check-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique error message stating that the review stopped before upload, with a PR fallback."
+  },
+  "system-reminder-at-mention-reference-not-attached": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "The only signal that @-mentioned files were not attached. Opens with a slot, and no wipe is proposed."
+  },
+  "system-reminder-at-mention-reference-too-large": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Warns that a Read call with no limit will fail and gives the offset/limit fallback. Frozen mechanics."
+  },
+  "system-reminder-browser-extension-not-connected-alternatives-fallback": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "The only fallback guidance when the browser extension is not connected. It costs nothing when the extension is connected."
+  },
+  "system-reminder-container-restarted-resumable-agents": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique contract: resume by agent id (names no longer resolve), how a failed resume falls back, and that other tasks are lost."
+  },
+  "system-reminder-left-running-programs-not-running": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique notice that background programs did not survive a worker move."
+  },
+  "system-reminder-pdf-reference-still-arriving": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique download-wait contract and missing-file interpretation."
+  },
+  "system-reminder-queued-notifications-read-time-clock-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique clock-skew interpretation contract."
+  },
+  "system-reminder-workflow-resume-unedited-script": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Exact resume call for hidden-script runs."
+  },
+  "tool-description-artifact-preview-emulator": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Minimal action description."
+  },
+  "tool-description-artifact-preview-paragraph": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique when-to-preview precedence rule and the 'picture is not proof' caveat. The remaining overlap sits inside frozen sentences that cannot be partially cut."
+  },
+  "tool-description-artifact-read-version": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Minimal description."
+  },
+  "tool-description-computer-use-unlinked-chat-guidance": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique behaviour contract with tool-name prefixes (enable__, mcp__ server names), so it is frozen."
+  },
+  "tool-description-publishplugin": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Minimal tool description that includes the approval gate."
+  },
+  "tool-description-publishplugin-file-listing-and-consent-flow": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique consent/security contract and manifest defaults; frozen (numbers, paths, never-before-yes ordering)."
+  },
+  "tool-description-publishplugin-only-channel": {
+    "verdict": "trim",
+    "version": "2.1.292",
+    "why": "One sentence fully duplicated by the same tool's destination parameter; the rest is unique mechanics."
+  },
+  "tool-description-publishplugin-upload-and-replace": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique ordering/consent contract (ask, then only on yes call with replace: true); frozen text."
+  },
+  "tool-description-publishplugin-when-to-use": {
+    "verdict": "trim",
+    "version": "2.1.292",
+    "why": "The folder-selection sentence is fully covered by the same tool's path parameter; trigger and session mods-folder location remain unique."
+  },
+  "tool-parameter-agent-effort": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique parameter contract for the Agent tool effort field; frozen."
+  },
+  "tool-parameter-agent-effort-fork-ignored": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique mechanic (effort ignored for fork); short and frozen (enum value fork)."
+  },
+  "tool-parameter-artifact-action-preview-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Contains unique claims in each frozen sentence; no proven full coverage."
+  },
+  "tool-parameter-artifact-action-versions-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique description of list/read version actions and restore path."
+  },
+  "tool-parameter-artifact-file-path-preview-viewer": {
+    "verdict": "wipe-merge",
+    "version": "2.1.292",
+    "why": "Wipe-merge holds: H1t says file_path for preview is 'the page's .html file' and preview is 'in the real artifact viewer'; same tool object, same g&&ae condition (proven from at() @17334007 and site @17336434). Sentence is frozen but deleted whole; it is a standalone '+'-appended sentence with a leading space, no crossing neighbour; no externalRefs."
+  },
+  "tool-parameter-artifact-preview-file-path-emulator": {
+    "verdict": "wipe-merge",
+    "version": "2.1.292",
+    "why": "Wipe-merge holds: whenever this text renders (previewOn && t), H1t renders in the same tool's action description, and H1t states file_path is the page's .html file previewed in the real artifact viewer. Whole-sentence delete of a frozen sentence; standalone describe string, no concat neighbour; no externalRefs."
+  },
+  "tool-parameter-artifact-version-from-list": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique parameter contract for version."
+  },
+  "tool-parameter-publish-plugin-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Minimal schema description, unique."
+  },
+  "tool-parameter-publish-plugin-destination": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Schema description of an enum parameter; kept as the coverage carrier."
+  },
+  "tool-parameter-publish-plugin-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Path/manifest contract; carrier for when-to-use trim."
+  },
+  "tool-parameter-publish-plugin-question": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique instruction not to fill a tool-filled field."
+  },
+  "tool-parameter-publish-plugin-question-digest": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique schema field description."
+  },
+  "tool-parameter-publish-plugin-question-file-runs": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique schema field description."
+  },
+  "tool-parameter-publish-plugin-question-files": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique schema field description (ordering)."
+  },
+  "tool-parameter-publish-plugin-question-list": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique list-file contract (sha256, path, last line)."
+  },
+  "tool-parameter-publish-plugin-question-mode": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique enum field description."
+  },
+  "tool-parameter-publish-plugin-question-sends": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique schema field description."
+  },
+  "tool-parameter-publish-plugin-question-staying-count": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique schema field description."
+  },
+  "tool-parameter-publish-plugin-question-stays": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique schema field description."
+  },
+  "tool-parameter-publish-plugin-question-steps": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique schema field description."
+  },
+  "tool-parameter-publish-plugin-question-unnamed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique over-bound contract."
+  },
+  "tool-parameter-publish-plugin-question-warnings": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique schema field description."
+  },
+  "tool-parameter-publish-plugin-question-writes": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique schema field description."
+  },
+  "tool-parameter-publish-plugin-replace": {
+    "verdict": "wipe-merge",
+    "version": "2.1.292",
+    "why": "Wipe-merge holds: carrier says when a plugin of this name is already in their uploads, ask, and only on their yes call with `replace: true`, and the uploads are 'the person's own shelf on claude.ai' — the whole flag contract. Frozen sentence deleted whole; no concat neighbour; no externalRefs; parameter name `replace` stays in schema and in carrier."
+  },
+  "tool-parameter-publish-plugin-shown": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique leave-out instruction for shown."
+  },
+  "tool-parameter-readnotifications-arrived-at": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique field semantics."
+  },
+  "tool-parameter-readnotifications-read-at": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique output-field contract (format, clock, may be absent on old results); frozen (RFC3339, field semantics)."
+  },
+  "tool-permission-artifact-list-versions-ask": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Permission ask text shown at decision time; unique, conditional, minimal."
+  },
+  "tool-permission-artifact-preview-emulator-consent-ask": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "User consent text with security contract (allowed hosts, HTTPS, org network settings); frozen enumerations; keep."
+  },
+  "tool-permission-artifact-version-not-own-account": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique deny reason (own-account requirement for earlier versions)."
+  },
+  "tool-permission-artifact-version-ownership-unconfirmed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique error with ordering contract (retry once, then tell the user)."
+  },
+  "tool-result-agent-resume-forked-skill-org-skills-off": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique error naming its cause; tool-result emitted only in this failure."
+  },
+  "tool-result-agent-resume-plugin-agent-type-load-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique error for resume path."
+  },
+  "tool-result-artifact-list-ask-for-link": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique directive in the non-empty truncated listing path."
+  },
+  "tool-result-artifact-list-count-lower-bound": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique result note explaining an incomplete count."
+  },
+  "tool-result-artifact-list-external-order-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique ordering fact spliced into the ordering description; also a fragment of a sentence (removing it is harmless syntactically but loses unique info)."
+  },
+  "tool-result-artifact-list-more-may-exist": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique truncation note with a numeric cap (frozen)."
+  },
+  "tool-result-artifact-list-more-not-shown": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique pagination contract (limit up to cap, no next page, split scopes)."
+  },
+  "tool-result-artifact-list-none-truncated": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Only copy of this guidance in the empty-truncated path."
+  },
+  "tool-result-artifact-list-order-all-scope": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique ordering fact for scope all."
+  },
+  "tool-result-artifact-list-others-beyond-limit": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique in the non-empty listing path; uses the `limit` parameter name (frozen)."
+  },
+  "tool-result-artifact-list-versions-not-owner": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique error cause (owner-only listing)."
+  },
+  "tool-result-artifact-policy-unverifiable-403-instructions": {
+    "verdict": "trim",
+    "version": "2.1.292",
+    "why": "Sentence 2 fully covered by the co-rendering summary; remainder unique (policy host, no-retry, relay directive)."
+  },
+  "tool-result-artifact-policy-unverifiable-403-summary": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "User-facing summary and coverage carrier for the trimmed instructions."
+  },
+  "tool-result-artifact-preview-could-not-look": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique generic-outcome error."
+  },
+  "tool-result-artifact-preview-emulator-extra-params": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Validation-gate message with parameter name (frozen); unique."
+  },
+  "tool-result-artifact-preview-look-interrupted": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique outcome message."
+  },
+  "tool-result-artifact-preview-page-never-started": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique runtime diagnosis emitted only when the ready mark is missing or kernel-missing/fallback-reveal is set. Without it the model would misread the picture as the artifact."
+  },
+  "tool-result-artifact-preview-picture-label": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Output-shape label that ties each attached picture to its index; the result is unreadable without it."
+  },
+  "tool-result-artifact-preview-pictures-not-attached": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique: tells the model that k pictures are missing and why (too large or a stored record). Opens with a slot; kept verbatim."
+  },
+  "tool-result-artifact-preview-record-unreadable-look": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "The only text emitted when the safeParse of a stored record fails; it holds the exact recovery parameter action: \"preview\" (frozen)."
+  },
+  "tool-result-artifact-preview-tell-person-could-not-check": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Co-render of the description is not provable, and the description does not cover the non-stopped failure outcomes, so the guard stays at the point of failure. It is short and the sentence is frozen (ordering 'carry on', 'do not')."
+  },
+  "tool-result-artifact-preview-viewer-could-not-run": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique result text for outcome==='stopped': it points to the quoted reason below and carries the ch instruction slot."
+  },
+  "tool-result-artifact-preview-viewer-files-unexpected": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique reason for mount_* outcomes, spliced into the could-not-look sentence; removing it would break that sentence."
+  },
+  "tool-result-artifact-publish-content-not-stored-retry-cancelled": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique status clause spliced into the content-not-stored error; it tells the model the retry was never sent."
+  },
+  "tool-result-artifact-publish-content-not-stored-retry-unsent": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique retry-state clause for the unsent case; the model needs it to know the content is still missing."
+  },
+  "tool-result-artifact-publish-outcome-unknown-cancelled-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique reason spliced via xt() into the outcome-unknown result."
+  },
+  "tool-result-artifact-publish-outcome-unknown-gateway-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique reason spliced into the outcome-unknown result; cutting it breaks the sentence."
+  },
+  "tool-result-artifact-publish-server-error-503": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Base error string (with the status number, frozen) that St() extends with the retry clause; it is the only statement of the failure."
+  },
+  "tool-result-artifact-publish-unasked-gateway-not-carried": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique contract: unasked publishes must go through the gateway, and the retry will need the permission check and possibly approval."
+  },
+  "tool-result-artifact-publish-unasked-shape-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique validation contract (may only create a new artifact, no url, capabilities, contract, force, removals or live files) plus the session-wide permission change. Frozen enumeration."
+  },
+  "tool-result-artifact-read-past-version-ignored": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique explanation for boot_past_ver_ignored, covering why the requested version was not served for non-editors and for editors."
+  },
+  "tool-result-artifact-read-unknown-version": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique error text with an HTTP status (frozen) and the recovery action (list versions)."
+  },
+  "tool-result-artifact-read-version-extra-params": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Validation error naming parameters (version, url, prompt, page), all frozen. It is the only statement that read+version takes only url."
+  },
+  "tool-result-artifact-read-version-other-files-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique consequence of publishing a multi-file version (other files are untouched), conditional on fileCount>1."
+  },
+  "tool-result-artifact-read-version-persist-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "The only error text for the read_version_persist_failed path."
+  },
+  "tool-result-artifact-read-version-saved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique security contract (treat contents as data) and restore ordering (read the current page first, then Read the file, then publish). Frozen ordering words; the slot carries the other-files note."
+  },
+  "tool-result-artifact-version-must-be-list-id": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Error contract naming parameters `version`/`url` and action \"list\" (frozen names); unique as the failure signal."
+  },
+  "tool-result-artifact-versions-dates-unreadable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Conditional degraded-state signal appended to the listing (r.degraded); explains missing dates so the model does not invent them. Unique, costs zero when not degraded."
+  },
+  "tool-result-artifact-versions-more-kept": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Conditional truncation signal (r.cut); prevents the model concluding the list is complete. Unique."
+  },
+  "tool-result-artifact-versions-record-unreadable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Error/remedy contract (rerun the same \"list\") for the version-listing record; unique to this path."
+  },
+  "tool-result-artifact-versions-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique capability-gate error for this session."
+  },
+  "tool-result-automemory-hook-ask-denied": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique deny reason (PreToolUse hook ask, headless memory agent) tied to hook_ask; tells the model why the call was denied."
+  },
+  "tool-result-automemory-rule-check-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Security fail-closed contract; unique."
+  },
+  "tool-result-automemory-windows-dot-dot-denied": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Frozen security/path contract (permissions.blockReadsOutsideWorkingDirectories, '..', absolute paths); unique remedy."
+  },
+  "tool-result-grep-aliased-path-parameter-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Runtime correction naming parameters `path`/`file_path` (frozen); unique feedback about how the call was interpreted."
+  },
+  "tool-result-grep-no-shell-recursive-search-fallback": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Frozen (enumeration grep -r, find, rg); a mechanics guard that stops the model routing around Grep's exclusions. Interpolated as a slot into the sibling guidance strings, so blanking it would break their sentences."
+  },
+  "tool-result-grep-ripgrep-target-unreadable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique error contract: it tells the model that the empty result is a failure and not zero matches."
+  },
+  "tool-result-grep-ripgrep-target-unreadable-permission-guidance": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique remedy for the permission-denied arm."
+  },
+  "tool-result-grep-ripgrep-target-unreadable-retry-guidance": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Frozen ordering (once more, if it fails again) and a unique reason clause attached to WB."
+  },
+  "tool-result-headless-agent-run-in-background-denied": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Deny contract naming run_in_background (frozen); unique to background agents."
+  },
+  "tool-result-headless-agent-unsandboxed-execution-denied": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Security contract (dangerouslyDisableSandbox, do not retry); unique."
+  },
+  "tool-result-hook-result-unreadable-by-site": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique error fragment carried into the failing tool call."
+  },
+  "tool-result-hooks-catch-reentry-refused-op": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique hooks-runtime refusal contract; opens with a slot (environment name), so it stays verbatim."
+  },
+  "tool-result-mcp-server-needs-reauth-connector-settings": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique error for claude.ai-connector sessions."
+  },
+  "tool-result-mcp-server-needs-reauth-connector-settings-reconnect-hint": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Slot value (G) spliced into the needs-reauth error; blanking it would leave empty parentheses. Unique remedy."
+  },
+  "tool-result-mcp-task-not-backgrounded-limit": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique limit/cancel/ordering contract (until the user writes, after their next message, which are frozen)."
+  },
+  "tool-result-message-attachment-path-not-approved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique security error for a path that resolves to something not approved."
+  },
+  "tool-result-message-attachment-upload-error-limit-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Frozen threshold and remedy (a copy under the size is sure to fit); unique; opens with a slot."
+  },
+  "tool-result-permission-request-unanswered-deadline": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique behavioural contract after a permission timeout, and it prevents an early stop."
+  },
+  "tool-result-plugin-publish-changed-file-added": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique detail-line prefix concatenated with i.path; kept whole so the line stays intact."
+  },
+  "tool-result-plugin-publish-changed-file-removed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique detail-line prefix concatenated with i; kept whole."
+  },
+  "tool-result-plugin-publish-gitignore-line-unreadable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique error naming .gitignore (frozen)."
+  },
+  "tool-result-plugin-publish-gitignore-unreadable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique error naming .gitignore (frozen)."
+  },
+  "tool-result-plugin-publish-invalid-folder-name-finding": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique remedy (the name derives from the folder); opens with a slot."
+  },
+  "tool-result-plugin-publish-outcome-in-review": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Outcome-state contract in the Ol map; unique."
+  },
+  "tool-result-plugin-publish-outcome-on-shelf": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique outcome and its remedy (submit from claude.ai once the scan has passed)."
+  },
+  "tool-result-plugin-publish-outcome-publishing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique outcome state."
+  },
+  "tool-result-plugin-publish-plan-entries-stay": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Frozen enumeration (secrets, links, ignored files); unique plan line."
+  },
+  "tool-result-plugin-publish-plan-full-list": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Points the model to the full listing file; unique, and a fragment completed by a path."
+  },
+  "tool-result-plugin-publish-plan-full-list-withheld": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique pointer with the 'that is named' qualifier."
+  },
+  "tool-result-plugin-publish-plan-sends-secrets-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique security contract: it tells the user that keys and tokens in a named file get sent. It is conditional (publish plan only) and the only copy."
+  },
+  "tool-result-plugin-publish-plan-step-replaces": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A replace-mode consequence line in the consent plan. It is short and conditional, and it is the only statement of the effect."
+  },
+  "tool-result-plugin-publish-plan-step-submit-review": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A plan step describing the review-vs-immediate-publish branch. It is conditional and terse, and coverage is unprovable, so it stays."
+  },
+  "tool-result-plugin-publish-plan-step-upload-shelf": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "The first step of the consent plan. It is conditional, and the neighbour submit-review is also kept, so the array stays intact."
+  },
+  "tool-result-plugin-publish-plan-withheld-entries": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique disclosure that some entries were withheld because of permission rules. It is bound to const ol, which is conditional on withheld."
+  },
+  "tool-result-plugin-publish-plan-writes-manifest": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A frozen ordering word ('first') plus a path slot, and the header for the concatenated manifest lines that follow (the neighbour is a split expression). It must stay intact."
+  },
+  "tool-result-plugin-publish-refused-bare": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A refusal reason with a flag name (--bare), which is frozen. It is the only copy."
+  },
+  "tool-result-plugin-publish-refused-busy": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique transient-error result with a retry instruction."
+  },
+  "tool-result-plugin-publish-refused-cloud-session": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique refusal reason plus a remedy listing two alternatives (an enumeration, so frozen)."
+  },
+  "tool-result-plugin-publish-refused-creation-off": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique cause and remedy for an org setting."
+  },
+  "tool-result-plugin-publish-refused-exists": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "The description keys its ask-then-replace:true flow on this result wording, so the result is load-bearing and must stay."
+  },
+  "tool-result-plugin-publish-refused-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique generic error result. It is conditional and minimal."
+  },
+  "tool-result-plugin-publish-refused-findings": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "The header for the local validation findings that follow it, with an ordering remedy ('then'), so it is frozen."
+  },
+  "tool-result-plugin-publish-refused-flag-off": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique refusal reason for this tool result."
+  },
+  "tool-result-plugin-publish-refused-folder-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique race-condition cause with a retry instruction."
+  },
+  "tool-result-plugin-publish-refused-in-progress": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique cause, plus an ordering remedy ('once it is in the library')."
+  },
+  "tool-result-plugin-publish-refused-invalid": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique server-side validation failure result."
+  },
+  "tool-result-plugin-publish-refused-legal-attestation": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique attestation requirement and remedy. 'each' makes it frozen."
+  },
+  "tool-result-plugin-publish-refused-library-full": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique cause and remedy."
+  },
+  "tool-result-plugin-publish-refused-manifest-unwritten": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Contains the path .claude-plugin/plugin.json, so it is frozen, and it is a unique write-failure result."
+  },
+  "tool-result-plugin-publish-refused-name-conflict": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique org-library name collision and its remedy."
+  },
+  "tool-result-plugin-publish-refused-needs-admin": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique result: an administrator is required."
+  },
+  "tool-result-plugin-publish-refused-needs-org-settings": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique result: an org settings change is needed. 'first' makes it frozen."
+  },
+  "tool-result-plugin-publish-refused-network-path": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique refusal for network paths."
+  },
+  "tool-result-plugin-publish-refused-no-folder": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique missing-folder result."
+  },
+  "tool-result-plugin-publish-refused-no-organization": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique cause, plus a remedy naming /login and claude.ai, so it is frozen."
+  },
+  "tool-result-plugin-publish-refused-nobody-to-ask": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique cause for non-interactive sessions, with a remedy."
+  },
+  "tool-result-plugin-publish-refused-not-a-plugin": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Its enumeration of plugin components is frozen, and the result is unique."
+  },
+  "tool-result-plugin-publish-refused-not-served": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique refusal reason."
+  },
+  "tool-result-plugin-publish-refused-nothing-new": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique result: the version is already in the library."
+  },
+  "tool-result-plugin-publish-refused-other-question": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique consent-mismatch safety result."
+  },
+  "tool-result-plugin-publish-refused-policy": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "A unique policy refusal and its remedy."
+  },
+  "tool-result-plugin-publish-refused-publishing-off": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique: it tells the user where the upload remains and that they can remove it, plus the admin policy remedy."
+  },
+  "tool-result-plugin-publish-refused-read-denied": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique error reason (session permissions block reading the folder/file) plus the no-side-effect contract; conditional tool result costs nothing until emitted."
+  },
+  "tool-result-plugin-publish-refused-scan-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique outcome: failed security scan, not submitted, remains on the private shelf."
+  },
+  "tool-result-plugin-publish-refused-scan-pending": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique state (scan still running) and retry timing instruction."
+  },
+  "tool-result-plugin-publish-refused-shelf-full": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique error reason and ordered remedy (remove one, then publish again)."
+  },
+  "tool-result-plugin-publish-refused-signed-out": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique reason plus the /login command and ordering (sign in, then publish)."
+  },
+  "tool-result-plugin-publish-refused-third-party": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique refusal reason (non-first-party provider) with no-side-effect contract."
+  },
+  "tool-result-plugin-publish-refused-too-large": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Carries the runtime size limit slot (frozen threshold) and outcome; unique."
+  },
+  "tool-result-plugin-publish-refused-too-many-files": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique file-count limit slot and the .gitignore exclusion remedy (frozen filename)."
+  },
+  "tool-result-plugin-publish-refused-traffic-off": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique reason naming the env var that blocks publishing (frozen env var)."
+  },
+  "tool-result-plugin-publish-refused-unreadable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique error reason with no-side-effect outcome."
+  },
+  "tool-result-plugin-publish-refused-write-denied": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique reason (permission to write the manifest) and outcome (nothing written or sent)."
+  },
+  "tool-result-plugin-publish-stopped-shelved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique stop-state report telling the model where the partial upload landed and that it was not submitted."
+  },
+  "tool-result-plugin-publish-stopped-submitting": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique stop-state: submission may have reached the organization."
+  },
+  "tool-result-plugin-publish-stopped-uploading": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique stop-state with where-to-look guidance and nothing-submitted contract."
+  },
+  "tool-result-project-write-localpath-hard-link": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique validation gate (nlink>1) and remedy; frozen tool/parameter names."
+  },
+  "tool-result-project-write-localpath-needs-permission": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique permission-gate refusal; frozen (enumeration, parameter name)."
+  },
+  "tool-result-project-write-localpath-protected-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique security contract on what local_path may name."
+  },
+  "tool-result-project-write-over-max-size": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique size-limit error with load-bearing data-loss safety guidance; frozen sentences (Any, do not, unless) kept verbatim."
+  },
+  "tool-result-proposeskills-skill-md-no-instructions": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique validation-error remedy (frontmatter between --- lines) and the no-deletion-proposal rule with user-side alternative; frozen sentences."
+  },
+  "tool-result-read-notifications-entry-whole-wait": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Runtime-computed header fragment spliced into the notification header; removing it deletes data, not prose."
+  },
+  "tool-result-read-refusing-fd-path-unverifiable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique Read refusal with /proc/self/fd path and error slot; frozen."
+  },
+  "tool-result-read-symlink-changed-reason-after-open": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Reason fragment spliced into the symlink-changed refusal; unique."
+  },
+  "tool-result-read-symlink-changed-reason-opened-elsewhere": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Reason fragment spliced into the refusal sentence; unique."
+  },
+  "tool-result-skill-fork-agent-plugin-load-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique forked-skill error naming the agent type and skill."
+  },
+  "tool-result-webfetch-permission-earlier-request-unanswered": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique cause; remedy must stay since the sibling carrying it is an alternative arm."
+  },
+  "tool-result-workflow-agent-spawn-denied-by-plugin": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Error carrying the plugin's deny reason; unique to workflow spawns."
+  },
+  "tool-result-workflow-hidden-script-edited": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique resume constraint (original unedited script) and frozen parameter name."
+  },
+  "tool-result-workflow-hidden-script-not-loaded": {
+    "verdict": "pristine-keep",
+    "version": "2.1.292",
+    "why": "Unique state and ordering guidance (wait vs start new run); frozen parameter name."
   }
 }

@@ -313,5 +313,65 @@
     "verdict": "not-model-facing",
     "version": "2.1.288",
     "why": "types .describe() on the plugin manifest (plugin.json) zod schema: validates plugin files; the manifest schema is not part of the settings schema sent by /update-config and never enters a model request."
+  },
+  "data-sdk-result-safety-stops-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.292",
+    "why": "@internal .describe() in the SDK control-protocol schema: documentation for SDK hosts, never sent to the model."
+  },
+  "data-sdk-api-error-params-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.292",
+    "why": "@internal .describe() in the SDK control-protocol schema: documentation for SDK hosts, never sent to the model."
+  },
+  "data-sdk-safeguard-results-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.292",
+    "why": "@internal .describe() in the SDK control-protocol schema: documentation for SDK hosts, never sent to the model."
+  },
+  "data-sdk-message-stop-abandoned-blocks-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.292",
+    "why": "@internal .describe() in the SDK control-protocol schema: documentation for SDK hosts, never sent to the model."
+  },
+  "data-interrupt-worker-epoch-parameter": {
+    "verdict": "not-model-facing",
+    "version": "2.1.292",
+    "why": "@internal .describe() in the SDK control-protocol schema: documentation for SDK hosts, never sent to the model."
+  },
+  "data-sdk-safeguard-tool-use-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.292",
+    "why": "@internal .describe() in the SDK control-protocol schema: documentation for SDK hosts, never sent to the model."
+  },
+  "data-sdk-read-file-anchor-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.292",
+    "why": "@internal .describe() in the SDK control-protocol schema: documentation for SDK hosts, never sent to the model."
+  },
+  "data-sdk-permission-check-status-event-schema": {
+    "verdict": "not-model-facing",
+    "version": "2.1.292",
+    "why": "@internal .describe() in the SDK control-protocol schema: documentation for SDK hosts, never sent to the model."
+  },
+  "data-sdk-task-notification-handback-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.292",
+    "why": "@internal .describe() in the SDK control-protocol schema: documentation for SDK hosts, never sent to the model."
+  },
+  "data-sdk-ui-prompt-autocomplete-request-schema": {
+    "verdict": "not-model-facing",
+    "version": "2.1.292",
+    "why": "@internal .describe() in the SDK control-protocol schema: documentation for SDK hosts, never sent to the model."
+  },
+  "data-sdk-mcp-server-disableautobackground-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.292",
+    "why": "@internal .describe() in the SDK control-protocol schema: documentation for SDK hosts, never sent to the model."
+  },
+  "data-network-path-settings-file-unread-recovery-guidance": {
+    "verdict": "not-model-facing",
+    "version": "2.1.292",
+    "why": "Settings-file network-path recovery text: classify path proof rules it ui (shown in the settings-load warning to the user; no model-bound caller)."
   }
 }

@@ -644,7 +644,10 @@ export const writeToolFetchingUseMemo = (
   // `renderingTools:this.addDisplayOnlyTools(TOOLS)` inside derive().
   // Anchor on that unique call and find derive()'s getState by search,
   // not by a distance window.
-  const renderPat = /renderingTools:this\.addDisplayOnlyTools\(([$\w]+)\)/;
+  // CC >= 2.1.292 passes a second argument, so match only the first one and
+  // leave the remainder of the call untouched.
+  const renderPat =
+    /renderingTools:this\.addDisplayOnlyTools\(([$\w]+)(?=[,)])/;
   const renderMatch = oldFile.match(renderPat);
   if (renderMatch && renderMatch.index !== undefined) {
     const derivePat = /derive\(\)\{let ([$\w]+)=this\.store\.getState\(\)/g;
@@ -673,7 +676,7 @@ export const writeToolFetchingUseMemo = (
       `globalThis.__tweakcc_toolset={name:n,tools:__ts[n]};` +
       `if(__ts.hasOwnProperty(n)){const a=__ts[n];if(a==="*")return t;` +
       `return t.filter(d=>a.includes(d.name))}return t};`;
-    const renderRepl = `renderingTools:this.addDisplayOnlyTools(__tf(${toolsVar},${stateVar}))`;
+    const renderRepl = `renderingTools:this.addDisplayOnlyTools(__tf(${toolsVar},${stateVar})`;
     let newFile =
       oldFile.slice(0, renderMatch.index) +
       renderRepl +

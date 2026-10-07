@@ -407,5 +407,21 @@
       "CLASSIFIER_WORDING_VARIANT.insertedEvaluationRules": "The standing LCC trim deletes the whole Evaluation Rules section and the User Intent 'Bound' bullet; CC 2.1.284 moved those sections' wording into this A/B wording object. Realigned ccVersion-only rather than regrowing the deleted section; the new candidate rules therefore do not render under this override. Flagged to skrabe as a decision.",
       "CLASSIFIER_WORDING_VARIANT.persistentConfiguration": "The standing LCC trim deletes the whole Evaluation Rules section and the User Intent 'Bound' bullet; CC 2.1.284 moved those sections' wording into this A/B wording object. Realigned ccVersion-only rather than regrowing the deleted section; the new candidate rules therefore do not render under this override. Flagged to skrabe as a decision."
     }
+  },
+  "tool-description-agent-explicit-spawn-restriction": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "IS_WEB_FETCH_AGENT_AVAILABLE_FN": "Deliberately suppressed spawn restriction; 2.1.292 added a web-fetch-agent carve-out to the restriction itself, which has nothing to qualify while the restriction is off. agent-prompt-web-fetch-agent-usage-guidance (pristine) still tells the model that calling the web-fetch agent is ordinary tool use.",
+      "WEBFETCH_TOOL_NAME": "Same carve-out sentence as IS_WEB_FETCH_AGENT_AVAILABLE_FN; the tool name is still rendered by agent-prompt-web-fetch-agent-usage-guidance and the WebFetch tool itself."
+    }
+  },
+  "tool-description-bash-run-in-background-deadline-suffix": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "tokens": {
+      "TOOL_DESCRIPTION_BASH_RUN_IN_BACKGROUND_DEADLINE_SUFFIX_VAR_0": "Standing wipe-merge: the background-timeout default/max are carried by tool-description-bash-run-in-background-detached's timeout clause; 2.1.292 only reshaped the number formatting inside the suppressed sentence.",
+      "TOOL_DESCRIPTION_BASH_RUN_IN_BACKGROUND_DEADLINE_SUFFIX_VAR_2": "New 2.1.292 slot (minutes/hours rounding) inside the same suppressed sentence; the detached bullet carries default and max."
+    }
   }
 }
