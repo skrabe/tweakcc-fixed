@@ -13,7 +13,7 @@ import { RouteProgram } from './lib/emissionRoute.mjs';
 import { BundleIndex, renderAnswer } from './lib/bundleQuery.mjs';
 import { renderCandidateMd, renderFamilyMd, snippetBook, catalogueNeighbourIndex, rewriteRoles } from './lib/classifyPacketMd.mjs';
 import { attachContinuity } from './lib/continuity.mjs';
-import { identityProblems } from './lib/classifyVerdicts.mjs';
+import { identityProblems, fieldProblems } from './lib/classifyVerdicts.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const H = c => c.repeat(40);
@@ -211,6 +211,14 @@ describe('identity rules', () => {
     expect(identityProblems([m(H('a'), 'new-id')], { cands, label: 'classify' })[0]).toMatch(/aaaaaaaaaa carries reusedFrom old-id/);
     expect(identityProblems([m(H('a'), 'new-id', { roleChange: 'split: this is the tail half of the old prompt' })], { cands, label: 'classify' })).toEqual([]);
     expect(identityProblems([{ hash: H('a'), facing: 'ui', id: null, evidence: 'console line at 4 only' }], { cands, label: 'classify' })[0]).toMatch(/is ui/);
+  });
+
+  it('accepts a non-kebab catalogue id only when it is reused verbatim', () => {
+    const legacy = 'tool-parameter-bash-run_in_background-timeout-limit';
+    const v = m(H('e'), legacy);
+    expect(fieldProblems(v, { hash: H('e'), allowedIds: [legacy] }, 'classify')).toEqual([]);
+    expect(fieldProblems(v, { hash: H('e'), allowedIds: [] }, 'classify')[0]).toMatch(/not kebab-case/);
+    expect(fieldProblems(v, undefined, 'classify')[0]).toMatch(/not kebab-case/);
   });
 
   it('refuses a fragment id or a fragment continuity id on a join, but lets a join take its own id', () => {
