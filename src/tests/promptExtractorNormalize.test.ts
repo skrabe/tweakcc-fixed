@@ -63,6 +63,36 @@ describe('normalizeIdGroups', () => {
     ]);
   });
 
+  it('keeps the version of a body when a different body shares its id', () => {
+    const id = 'tool-result-fixture-shared-id';
+    const unchanged = entry({
+      id,
+      pieces: ['Watching ${', '} for changes.'],
+      identifiers: [0],
+      version: '2.1.178',
+    });
+    const twin = entry({
+      id,
+      pieces: ['Watching ${', '} for changes.'],
+      identifiers: [0],
+      version: '2.1.178',
+      start: 700,
+      end: 1300,
+    });
+    const newcomer = entry({
+      id,
+      pieces: ['Watching ${', '} for changes, briefly.'],
+      identifiers: [0],
+      version: '2.1.294',
+      start: 1400,
+      end: 2000,
+    });
+    normalizeIdGroups([unchanged, newcomer, twin]);
+    expect(unchanged.version).toBe('2.1.178');
+    expect(twin.version).toBe('2.1.178');
+    expect(newcomer.version).toBe('2.1.294');
+  });
+
   it('compares versions numerically per segment, not lexicographically', () => {
     const a = entry({ start: 0, end: 600, version: '2.1.99' });
     const b = entry({ start: 700, end: 1300, version: '2.1.100' });

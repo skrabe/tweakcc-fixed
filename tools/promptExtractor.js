@@ -5053,9 +5053,9 @@ function extractStrings(filepath, minLength = 500, opts = {}) {
 //    entry's own old version, so a site Anthropic restructured gets the new
 //    version while its untouched twins keep the old one) make the .md sync
 //    restamp ccVersion to whichever entry writes last — seen as the
-//    cross-session reminder override flip-flopping 2.1.167↔2.1.169. The
-//    id-level "content last changed at" is the group's max; stamp every entry
-//    with it.
+//    cross-session reminder override flip-flopping 2.1.167↔2.1.169. Sites of
+//    one body take the newest stamp among them; a different body on the id is
+//    split off by disambiguateIdCollisions and keeps its own.
 // Fill names for still-anonymous prompts from the classification cache. Runs
 // AFTER mergeWithExisting's fuzzy carryover, so an established id (carried from
 // the previous JSON) always wins over a cache name — the cache only NAMES
@@ -5392,19 +5392,31 @@ function normalizeIdGroups(prompts) {
         );
       }
     }
-    const kept = group.filter(p => !dropped.has(p));
-    const maxVersion = kept.reduce(
-      (v, p) =>
-        p.version && (!v || semverNewer(p.version, v)) ? p.version : v,
-      ''
-    );
-    if (!maxVersion) continue;
-    for (const p of kept) {
-      if (p.version !== maxVersion) {
-        console.log(
-          `Normalized "${id}" entry version ${p.version} → ${maxVersion} (id-group max)`
-        );
-        p.version = maxVersion;
+    // Only sites of one body share a version. A different body on the same id
+    // is split off by disambiguateIdCollisions next, and lifting the unchanged
+    // body to the newcomer's version would flag every override of it as
+    // drifted although its text did not change.
+    const byBody = new Map();
+    for (const p of group) {
+      if (dropped.has(p)) continue;
+      const k = JSON.stringify([p.pieces || [], p.identifiers || []]);
+      if (!byBody.has(k)) byBody.set(k, []);
+      byBody.get(k).push(p);
+    }
+    for (const sites of byBody.values()) {
+      const maxVersion = sites.reduce(
+        (v, p) =>
+          p.version && (!v || semverNewer(p.version, v)) ? p.version : v,
+        ''
+      );
+      if (!maxVersion) continue;
+      for (const p of sites) {
+        if (p.version !== maxVersion) {
+          console.log(
+            `Normalized "${id}" entry version ${p.version} → ${maxVersion} (same-body max)`
+          );
+          p.version = maxVersion;
+        }
       }
     }
   }
