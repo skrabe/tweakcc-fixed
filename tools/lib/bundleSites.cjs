@@ -211,28 +211,105 @@ function templateIdentifierNodes(node) {
       }
     }
   };
-  for (const expr of node.expressions) traverseExpr(expr, true, node);
+  for (const expr of node.expressions) {
+    const before = out.length;
+    traverseExpr(expr, true, node);
+    promoteLeadingReferences(expr, node, out, before);
+  }
   out.sort((a, b) => a.node.start - b.node.start);
   return out;
+}
+
+// The traversal above captures the LEADING identifiers of a slot expression,
+// and the apply side generalizes every identifier after the first capture
+// (src/systemPromptExpressionIdentifiers.ts). It never reaches the index of a
+// computed member access or a bare object value, so in
+// `${{here:"…",none:"…"}[e]}` nothing is captured: the whole slot lands in a
+// piece, the minified `e` is pinned in the search regex, and an override
+// writes it back verbatim. Every value-position identifier ahead of the
+// expression's first capture becomes a slot of its own, marked `promoted` so
+// the merge can line the shape up with a catalogue extracted without them.
+// Shorthand properties stay literal: `{x}` splits into `{` + `}`, and an
+// override renaming the slot would rename the key with it.
+function promoteLeadingReferences(expr, parent, out, from) {
+  const captured = new Set();
+  let first = Infinity;
+  for (let i = from; i < out.length; i++) {
+    captured.add(out[i].node);
+    first = Math.min(first, out[i].node.start);
+  }
+  const refs = [];
+  collectReferences(expr, parent, refs);
+  for (const ref of refs) {
+    if (ref.node.start < first && !captured.has(ref.node)) {
+      out.push({ ...ref, promoted: true });
+    }
+  }
+}
+
+const SKIPPED_KEYS = new Set([
+  'loc',
+  'start',
+  'end',
+  'extra',
+  'leadingComments',
+  'trailingComments',
+  'innerComments',
+]);
+
+// Identifiers in value position: not a non-computed property name or object
+// key, not a label, not a shorthand property.
+function collectReferences(node, parent, out) {
+  if (!node || typeof node !== 'object') return;
+  if (Array.isArray(node)) {
+    for (const n of node) collectReferences(n, parent, out);
+    return;
+  }
+  if (typeof node.type !== 'string') return;
+  switch (node.type) {
+    case 'Identifier':
+      out.push({ node, parent });
+      return;
+    case 'MemberExpression':
+    case 'OptionalMemberExpression':
+      collectReferences(node.object, node, out);
+      if (node.computed) collectReferences(node.property, node, out);
+      return;
+    case 'ObjectProperty':
+    case 'ClassProperty':
+      if (node.computed) collectReferences(node.key, node, out);
+      if (!node.shorthand) collectReferences(node.value, node, out);
+      return;
+    case 'ObjectMethod':
+    case 'ClassMethod':
+      if (node.computed) collectReferences(node.key, node, out);
+      collectReferences(node.params, node, out);
+      collectReferences(node.body, node, out);
+      return;
+    case 'LabeledStatement':
+      collectReferences(node.body, node, out);
+      return;
+    case 'BreakStatement':
+    case 'ContinueStatement':
+    case 'MetaProperty':
+    case 'PrivateName':
+      return;
+  }
+  for (const key of Object.keys(node)) {
+    if (SKIPPED_KEYS.has(key)) continue;
+    const value = node[key];
+    if (value && typeof value === 'object') collectReferences(value, node, out);
+  }
 }
 
 // A template literal's pieces, split around each top-level identifier inside
 // its interpolations, and the label-encoded identifier order (0,1,1,2 = first
 // var, second var, second var again, third).
-function templateShape(node, code) {
-  const contentStart = node.start + 1;
-  const fullContent = code.substring(contentStart, node.end - 1);
-
-  const allIdentifiers = templateIdentifierNodes(node).map(({ node: n }) => ({
-    name: n.name,
-    start: n.start - contentStart,
-    end: n.end - contentStart,
-  }));
-
+function splitAroundIdentifiers(fullContent, ids) {
   const pieces = [];
   const identifierList = [];
   let lastPos = 0;
-  for (const id of allIdentifiers) {
+  for (const id of ids) {
     pieces.push(fullContent.substring(lastPos, id.start));
     identifierList.push(id.name);
     lastPos = id.end;
@@ -260,12 +337,48 @@ function templateShape(node, code) {
   };
 }
 
+// `legacy`, present only when a slot was promoted, is the shape without the
+// promoted slots — what a catalogue extracted before promotion holds — and
+// `occurrences[i]` is the index into `identifiers` of its i-th slot.
+function templateShape(node, code) {
+  const contentStart = node.start + 1;
+  const fullContent = code.substring(contentStart, node.end - 1);
+
+  const allIdentifiers = templateIdentifierNodes(node).map(
+    ({ node: n, promoted }) => ({
+      name: n.name,
+      start: n.start - contentStart,
+      end: n.end - contentStart,
+      promoted: Boolean(promoted),
+    })
+  );
+
+  const shape = splitAroundIdentifiers(fullContent, allIdentifiers);
+  if (!allIdentifiers.some(id => id.promoted)) return shape;
+  const occurrences = [];
+  allIdentifiers.forEach((id, i) => {
+    if (!id.promoted) occurrences.push(i);
+  });
+  const legacy = splitAroundIdentifiers(
+    fullContent,
+    allIdentifiers.filter(id => !id.promoted)
+  );
+  return {
+    ...shape,
+    legacy: {
+      pieces: legacy.pieces,
+      identifiers: legacy.identifiers,
+      occurrences,
+    },
+  };
+}
+
 // One site record per literal-bearing node, in the order the extractor's
 // traversal reaches them:
 //   { kind: 'composite', start, end, text, fragments: [{ start, end, value }] }
 //   { kind: 'string', start, end, value }
 //   { kind: 'template', start, end, pieces, identifiers, labels, quasis,
-//     expressions: [start, end, start, end, …] }
+//     expressions: [start, end, start, end, …], legacy? }
 // `quasis` holds each quasi's cooked value (raw when cooking failed), which is
 // what the slot-literal lookup hashes; `expressions` holds each interpolation's
 // source range, which the identical-site backfill compares across sites.
@@ -310,6 +423,7 @@ function collectNodeSites(ast, code, sites) {
         labels: shape.labels,
         quasis: (node.quasis || []).map(q => q.value.cooked ?? q.value.raw),
         expressions,
+        ...(shape.legacy && { legacy: shape.legacy }),
       });
     }
 

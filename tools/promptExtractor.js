@@ -3839,14 +3839,21 @@ function* cacheLookupForms(body) {
   }
 }
 
-function classifyByCache(body) {
+// `legacyBody` is the body a template had before slot promotion
+// (tools/lib/bundleSites.cjs); verdicts recorded against that form still bind.
+function classifyByCache(body, legacyBody) {
   const cache = loadClassificationCache();
-  for (const form of cacheLookupForms(body)) {
-    const hit = cache[sha1Hex(form)];
-    if (hit) return hit;
+  for (const b of legacyBody ? [body, legacyBody] : [body]) {
+    for (const form of cacheLookupForms(b)) {
+      const hit = cache[sha1Hex(form)];
+      if (hit) return hit;
+    }
   }
   return null;
 }
+
+const legacyBodyOf = p =>
+  p.legacy ? p.legacy.pieces.filter(x => typeof x === 'string').join('') : '';
 
 // Serialize the cache in the repo's canonical one-entry-per-line format (the
 // showtime driver's classify-merge writes the same bytes).
@@ -4167,7 +4174,7 @@ function shouldCapture(text, cacheBody, lead, minLength, opts = {}) {
   // whole schema via /update-config and settings validation errors), which
   // survives a reword that would orphan any per-string cache row.
   if (opts.settingsDescription) return !isHardExcluded(text);
-  const cls = classifyByCache(cacheBody);
+  const cls = classifyByCache(cacheBody, opts.legacyCacheBody);
   if (cls) {
     if (isHardExcluded(text)) return false;
     if (cls.facing === 'model') return true;
@@ -4690,6 +4697,7 @@ function backfillIdenticalSites(stringData, sites, code) {
       identifierMap: { ...(template.identifierMap || {}) },
       start: site.start,
       end: site.end,
+      ...(template.legacy && { legacy: template.legacy }),
     });
   };
 
@@ -4885,6 +4893,7 @@ function extractStrings(filepath, minLength = 500, opts = {}) {
       shouldCapture(fullContent, tbody, lead, minLength, {
         slotLiteral,
         settingsDescription: Boolean(settings),
+        legacyCacheBody: site.legacy && site.legacy.pieces.join(''),
       })
     ) {
       const identifierMap = {};
@@ -4901,6 +4910,7 @@ function extractStrings(filepath, minLength = 500, opts = {}) {
         end: site.end,
         slotLiteral,
         ...(settings && { settings }),
+        ...(site.legacy && { legacy: site.legacy }),
       });
     }
   };
@@ -5009,7 +5019,7 @@ function applyCacheNames(prompts) {
     (p.pieces || []).filter(x => typeof x === 'string').join('');
   for (const p of prompts) {
     if (p.id) continue; // established/fuzzy-carried name wins
-    const cls = classifyByCache(body(p));
+    const cls = classifyByCache(body(p), legacyBodyOf(p));
     if (cls && cls.facing === 'model' && cls.id) {
       p.id = cls.id;
       p.name = cls.name || '';
@@ -5033,8 +5043,10 @@ function applySlotLiteralNames(prompts) {
     const pieces = (p.pieces || []).filter(x => typeof x === 'string');
     // Whole body first (a StringLiteral capture IS the literal), then each
     // piece, longest first, so a template naming from its most specific quasi.
+    const legacyPieces = p.legacy ? p.legacy.pieces : [];
     const probes = [pieces.join('')].concat(
-      pieces.slice().sort((a, b) => b.length - a.length)
+      pieces.slice().sort((a, b) => b.length - a.length),
+      legacyPieces.slice().sort((a, b) => b.length - a.length)
     );
     let hit = null;
     for (const probe of probes) {
@@ -5273,6 +5285,90 @@ function normalizeIdGroups(prompts) {
   return prompts.filter(p => !dropped.has(p));
 }
 
+// The old item's identifierMap, relabelled for the new item's slots. When the
+// old item is in the new item's pre-promotion shape its labels index the legacy
+// slots, so each name moves to the label its slot holds now; carrying it by
+// label would bind it to whichever slot was promoted ahead of it. Promoted
+// slots are left unnamed for the synthetic fill.
+function carriedIdentifierMap(oldItem, newItem) {
+  const legacy = newItem.legacy;
+  const same = (a, b) => JSON.stringify(a || []) === JSON.stringify(b || []);
+  if (
+    !legacy ||
+    same(oldItem.identifiers, newItem.identifiers) ||
+    !same(oldItem.identifiers, legacy.identifiers)
+  ) {
+    return oldItem.identifierMap;
+  }
+  const map = {};
+  legacy.occurrences.forEach((slot, i) => {
+    const name = (oldItem.identifierMap || {})[legacy.identifiers[i]];
+    if (name) map[newItem.identifiers[slot]] = name;
+  });
+  return map;
+}
+
+// Fills every blank identifierMap name of one prompt with a stable synthetic
+// name and drops names of slots that left. See the call site in the CLI.
+function fillSlotNames(p) {
+  if (!p.identifierMap) return;
+  // Two sites of one collision-disambiguated id inherit the SAME carried map
+  // object by reference, so the slot-pruning below runs twice over one object:
+  // the site with fewer slots deletes names its sibling still uses, and that
+  // sibling's override then binds nothing and is skipped whole. Seen 2.1.273
+  // on tool-description-artifact-watching-unavailable, whose `-2` site
+  // (identifiers [0,1,2]) deleted VAR_3 from the 4-slot base site.
+  p.identifierMap = { ...p.identifierMap };
+  const slug =
+    String(p.id || 'prompt')
+      .replace(/[^A-Za-z0-9]+/g, '_')
+      .replace(/^_+|_+$/g, '')
+      .toUpperCase() || 'PROMPT';
+  // A content change can add interpolation slots: the fresh `identifiers`
+  // array picks them up but a carried-over `identifierMap` won't, leaving
+  // those labels with no entry -> applyIdentifierMapping's UNKNOWN_<slot>
+  // fallback. Seed every label used in `identifiers` so the fill below names
+  // it (seen 2.1.196: code-review-routing slots 10/11, review-pr slot 3).
+  for (const lbl of p.identifiers || []) {
+    if (!(lbl in p.identifierMap)) p.identifierMap[lbl] = '';
+  }
+  // The reverse case: a slot that LEFT the prompt keeps its carried name
+  // otherwise, and the sync then writes a phantom `variables:` entry that an
+  // override can reference with nothing behind it (git-guidance-block on
+  // 2.1.257 carried a VAR_3 for a fourth slot that no longer existed).
+  const live = new Set((p.identifiers || []).map(String));
+  for (const k of Object.keys(p.identifierMap)) {
+    if (!live.has(String(k))) delete p.identifierMap[k];
+  }
+  // A promoted slot must not renumber the others: each unpromoted slot is
+  // named from its pre-promotion label, so an override written before
+  // promotion keeps binding, and promoted slots take the next unused index.
+  const legacyLabel = new Map();
+  if (p.legacy) {
+    p.legacy.occurrences.forEach((slot, i) => {
+      legacyLabel.set(String(p.identifiers[slot]), p.legacy.identifiers[i]);
+    });
+  }
+  const used = new Set(Object.values(p.identifierMap).filter(Boolean));
+  let spare = p.legacy
+    ? new Set(p.legacy.identifiers).size
+    : Object.keys(p.identifierMap).length;
+  for (const k of Object.keys(p.identifierMap)) {
+    if (p.identifierMap[k] || !legacyLabel.has(k)) continue;
+    const name = `${slug}_VAR_${legacyLabel.get(k)}`;
+    if (used.has(name)) continue;
+    used.add(name);
+    p.identifierMap[k] = name;
+  }
+  for (const k of Object.keys(p.identifierMap)) {
+    if (p.identifierMap[k]) continue;
+    let name = `${slug}_VAR_${p.legacy ? spare++ : k}`;
+    while (used.has(name)) name = `${slug}_VAR_${spare++}`;
+    used.add(name);
+    p.identifierMap[k] = name;
+  }
+}
+
 function mergeWithExisting(newData, oldData, currentVersion) {
   if (!oldData || !oldData.prompts) {
     // No old data, add current version to all new prompts
@@ -5348,9 +5444,48 @@ function mergeWithExisting(newData, oldData, currentVersion) {
 
   const newPrompts = newData.prompts.map((newItem, idx) => {
     const newContent = reconstructContent(newItem);
+    const legacy = newItem.legacy;
 
-    // Try to find a matching old item by content and label-encoded identifiers
-    const matchingOld = exactOld.get(exactKey(newContent, newItem.identifiers));
+    // Try to find a matching old item by content and label-encoded identifiers.
+    // A prompt that gained promoted slots is matched in its pre-promotion shape
+    // as well, since the old catalogue may predate promotion.
+    const currentOld = exactOld.get(exactKey(newContent, newItem.identifiers));
+    const legacyOld =
+      !currentOld && legacy
+        ? exactOld.get(exactKey(legacy.pieces.join(''), legacy.identifiers))
+        : undefined;
+
+    if (legacyOld) {
+      // The prompt text is unchanged, but its pristine body now names a slot
+      // the override still spells as a literal minified name. Restamp it so
+      // the override is flagged for realignment rather than passing as current.
+      const assignedFromMap = lookupNewPromptAssignment(newContent);
+      const overlaidIdentifierMap = overlayAssignmentMap(
+        carriedIdentifierMap(legacyOld, newItem),
+        assignedFromMap && assignedFromMap.identifierMap,
+        newItem.identifiers,
+        (assignedFromMap && assignedFromMap.id) || legacyOld.id
+      );
+      console.log(
+        `Promoted slot(s) in "${legacyOld.id || legacyOld.name}": identifiers ${JSON.stringify(legacyOld.identifiers)} → ${JSON.stringify(newItem.identifiers)}`
+      );
+      return {
+        ...newItem,
+        name: (assignedFromMap && assignedFromMap.name) || legacyOld.name,
+        id:
+          (assignedFromMap && assignedFromMap.id) ||
+          legacyOld.id ||
+          slugify(legacyOld.name),
+        description:
+          (assignedFromMap && assignedFromMap.description) ||
+          legacyOld.description,
+        identifierMap: overlaidIdentifierMap,
+        ...(legacyOld.platforms ? { platforms: legacyOld.platforms } : {}),
+        version: currentVersion,
+      };
+    }
+
+    const matchingOld = currentOld;
 
     // If we found a match, copy over the metadata
     if (matchingOld) {
@@ -5390,8 +5525,12 @@ function mergeWithExisting(newData, oldData, currentVersion) {
     // Fuzzy match: same prompt across versions, content shifted by a few
     // chars. Carry over the identity (name/id/description/identifierMap)
     // and bump version since pieces changed.
-    const fp = fpNormalize(newContent).slice(0, FUZZY_PREFIX);
-    const fuzzyOld = fp.length >= FUZZY_MIN ? fpToOld.get(fp) : undefined;
+    const fuzzyFor = content => {
+      const fp = fpNormalize(content).slice(0, FUZZY_PREFIX);
+      return fp.length >= FUZZY_MIN ? fpToOld.get(fp) : undefined;
+    };
+    const fuzzyOld =
+      fuzzyFor(newContent) || (legacy && fuzzyFor(legacy.pieces.join('')));
     if (fuzzyOld) {
       const oldLen = reconstructContent(fuzzyOld).length;
       console.log(
@@ -5399,7 +5538,7 @@ function mergeWithExisting(newData, oldData, currentVersion) {
       );
       const assignedFromMap = lookupNewPromptAssignment(newContent);
       const overlaidIdentifierMap = overlayAssignmentMap(
-        fuzzyOld.identifierMap,
+        carriedIdentifierMap(fuzzyOld, newItem),
         assignedFromMap && assignedFromMap.identifierMap,
         newItem.identifiers,
         (assignedFromMap && assignedFromMap.id) || fuzzyOld.id
@@ -5565,20 +5704,29 @@ if (require.main === module) {
     );
   };
 
+  const replaceVersionInPieces = (pieces, versionStr) =>
+    pieces.map(piece => {
+      let result = piece;
+      // Replace BUILD_TIME first (always)
+      result = replaceBuildTimeInString(result);
+      // Then replace version if provided
+      if (versionStr) {
+        result = replaceVersionInString(result, versionStr);
+      }
+      return result;
+    });
+
   const replaceVersionInPrompts = (data, versionStr) => {
     return {
       ...data,
       prompts: data.prompts.map(prompt => ({
         ...prompt,
-        pieces: prompt.pieces.map(piece => {
-          let result = piece;
-          // Replace BUILD_TIME first (always)
-          result = replaceBuildTimeInString(result);
-          // Then replace version if provided
-          if (versionStr) {
-            result = replaceVersionInString(result, versionStr);
-          }
-          return result;
+        pieces: replaceVersionInPieces(prompt.pieces, versionStr),
+        ...(prompt.legacy && {
+          legacy: {
+            ...prompt.legacy,
+            pieces: replaceVersionInPieces(prompt.legacy.pieces, versionStr),
+          },
         }),
       })),
     };
@@ -5706,42 +5854,7 @@ if (require.main === module) {
   // name. Synthetic name = <ID_SLUG>_VAR_<slot>: unique per prompt+slot and
   // stable across re-extraction, so overrides referencing it keep binding.
   // Curated/real names always win (this only fills blanks).
-  for (const p of mergedResult.prompts) {
-    if (!p.identifierMap) continue;
-    // Two sites of one collision-disambiguated id inherit the SAME carried map
-    // object by reference, so the slot-pruning below runs twice over one object:
-    // the site with fewer slots deletes names its sibling still uses, and that
-    // sibling's override then binds nothing and is skipped whole. Seen 2.1.273
-    // on tool-description-artifact-watching-unavailable, whose `-2` site
-    // (identifiers [0,1,2]) deleted VAR_3 from the 4-slot base site.
-    p.identifierMap = { ...p.identifierMap };
-    const slug =
-      String(p.id || 'prompt')
-        .replace(/[^A-Za-z0-9]+/g, '_')
-        .replace(/^_+|_+$/g, '')
-        .toUpperCase() || 'PROMPT';
-    // A content change can add interpolation slots: the fresh `identifiers`
-    // array picks them up but a carried-over `identifierMap` won't, leaving
-    // those labels with no entry -> applyIdentifierMapping's UNKNOWN_<slot>
-    // fallback. Seed every label used in `identifiers` so the fill below names
-    // it (seen 2.1.196: code-review-routing slots 10/11, review-pr slot 3).
-    for (const lbl of p.identifiers || []) {
-      if (!(lbl in p.identifierMap)) p.identifierMap[lbl] = '';
-    }
-    // The reverse case: a slot that LEFT the prompt keeps its carried name
-    // otherwise, and the sync then writes a phantom `variables:` entry that an
-    // override can reference with nothing behind it (git-guidance-block on
-    // 2.1.257 carried a VAR_3 for a fourth slot that no longer existed).
-    const live = new Set((p.identifiers || []).map(String));
-    for (const k of Object.keys(p.identifierMap)) {
-      if (!live.has(String(k))) delete p.identifierMap[k];
-    }
-    for (const k of Object.keys(p.identifierMap)) {
-      if (!p.identifierMap[k]) {
-        p.identifierMap[k] = `${slug}_VAR_${k}`;
-      }
-    }
-  }
+  for (const p of mergedResult.prompts) fillSlotNames(p);
 
   // A name that labels two distinct slots of one prompt is unaddressable from an
   // override and has already shipped a ReferenceError once (2.1.257). Refuse to
@@ -5770,7 +5883,7 @@ if (require.main === module) {
 
   // Remove extraction bookkeeping before writing
   mergedResult.prompts = mergedResult.prompts.map(
-    ({ start, end, settings, ...rest }) => rest
+    ({ start, end, settings, legacy, ...rest }) => rest
   );
 
   // Add version as top-level field
@@ -5853,6 +5966,7 @@ module.exports._setClassificationCacheForTests =
 // Test seam: fuzzy-carryover collision policy (same-id multi-site vs
 // genuinely-ambiguous cross-id) is behavior worth locking down.
 module.exports.mergeWithExisting = mergeWithExisting;
+module.exports.fillSlotNames = fillSlotNames;
 module.exports.classifyByCache = classifyByCache;
 module.exports.rawCacheForms = rawCacheForms;
 module.exports.cacheLookupForms = cacheLookupForms;
