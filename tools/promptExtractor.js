@@ -600,7 +600,38 @@ const CURATED_IDENTIFIER_MAPS = {
   // ${h6()?`…`:Aa()?`…`:""}${j}${he}\n\n${M?_e:Me}` in `w8r`, where B is the
   // "give EACH `isolation: \"worktree\"`" sentence. Fuzzy carryover kept every
   // later label on its old slot number, so each one named its left neighbour.
+  // 2.1.294 put the continue note behind a flag: `${g?`To continue … use
+  // ${SendMessage} … A new ${Agent} call`:`… cannot be continued from here.
+  // Every ${Agent} call`}`, so a new slot 6 lands ahead of the tool names and
+  // every later label moves up one.
   'tool-description-agent-usage-notes': [
+    {
+      identifiers: [
+        0, 1, 2, 3, 2, 4, 2, 5, 3, 6, 7, 8, 8, 5, 9, 10, 8, 11, 11, 12, 13, 14,
+        15, 16, 5, 17, 18,
+      ],
+      identifierMap: {
+        0: 'TOOL_BASE_DESCRIPTION',
+        1: 'WHEN_NOT_TO_USE_NOTE',
+        2: 'CAN_RUN_BACKGROUND_AGENTS',
+        3: 'IS_BACKGROUND_AGENTS_OPT_IN',
+        4: 'IS_FORK_SUBAGENT_FEATURE_ENABLED',
+        5: 'CAN_FORK_CONTEXT',
+        6: 'IS_AGENT_CONTINUE_AVAILABLE',
+        7: 'SEND_MESSAGE_TOOL_NAME',
+        8: 'AGENT_TOOL_NAME',
+        9: 'PROCESS_ENV',
+        10: 'IS_DEFAULT_SUBAGENT_STEERING_MODE',
+        11: 'PARALLEL_WORKTREE_ISOLATION_NOTE',
+        12: 'IS_REMOTE_ISOLATION_AVAILABLE_FN',
+        13: 'IS_IN_PROCESS_TEAMMATE_CONTEXT_FN',
+        14: 'IS_TEAMMATE_CONTEXT_FN',
+        15: 'FORK_USAGE_GUIDELINES',
+        16: 'WRITING_SUBAGENT_PROMPTS_GUIDANCE',
+        17: 'FORK_CAPABLE_SUBAGENT_DELEGATION_EXAMPLES',
+        18: 'NON_FORK_SUBAGENT_DELEGATION_EXAMPLES',
+      },
+    },
     {
       identifiers: [
         0, 1, 2, 2, 3, 2, 4, 5, 6, 4, 7, 8, 6, 9, 9, 10, 11, 12, 13, 14, 4, 15,
