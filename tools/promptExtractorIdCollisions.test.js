@@ -167,6 +167,80 @@ describe('disambiguateIdCollisions', () => {
     expect(new Set(Object.values(a).flat()).size).toBe(3);
   });
 
+  // The 2.1.292 `<local-command-stdout>` family: the bare id named the
+  // background-running wrapper and -3 the plain one.
+  describe('a family with one body left on the id', () => {
+    const FAM = 'tool-result-fixture-stdout-framing';
+    const WRAP = {
+      background: [
+        [
+          '<fx-stdout>Running in the background as @${',
+          '(',
+          '(',
+          '.name))}</fx-stdout>\n',
+        ],
+        [0, 1, 2],
+      ],
+      call: [
+        ['<fx-stdout>${', '(', ')}</fx-stdout>'],
+        [0, 1],
+      ],
+      plain: [['<fx-stdout>${', '}</fx-stdout>'], [0]],
+      nested: [
+        ['<fx-stdout>${', '(', '(', '))}</fx-stdout>'],
+        [0, 1, 2],
+      ],
+      display: [
+        ['<fx-stdout>${', '(', '.displayText)}</fx-stdout>'],
+        [0, 1],
+      ],
+      value: [
+        ['<fx-stdout>${', '(', '.value)}</fx-stdout>'],
+        [0, 1],
+      ],
+      fresh: [['<fx-stdout>${', '.text}</fx-stdout>'], [0]],
+    };
+    const at = (body, id = FAM) => ({
+      id,
+      pieces: [...WRAP[body][0]],
+      identifiers: [...WRAP[body][1]],
+      body,
+    });
+    const PREV292 = {
+      prompts: [
+        at('background', FAM),
+        at('call', `${FAM}-2`),
+        at('plain', `${FAM}-3`),
+        at('plain', `${FAM}-3`),
+        at('nested', `${FAM}-4`),
+        at('display', `${FAM}-5`),
+        at('value', `${FAM}-6`),
+      ],
+    };
+
+    it('gives a surviving body back its previous suffix', () => {
+      const out = disambiguateIdCollisions([at('plain'), at('plain')], PREV292);
+      expect(idsByBody(out)).toEqual({ plain: [`${FAM}-3`] });
+    });
+
+    it('does not move a removed body its id to a new body', () => {
+      const out = disambiguateIdCollisions([at('fresh')], PREV292);
+      expect(idsByBody(out)).toEqual({ fresh: [`${FAM}-7`] });
+    });
+
+    it('leaves the body that owned the bare id on it', () => {
+      const out = disambiguateIdCollisions([at('background')], PREV292);
+      expect(idsByBody(out)).toEqual({ background: [FAM] });
+    });
+
+    it('leaves an edited prompt with no suffixed siblings on its id', () => {
+      const out = disambiguateIdCollisions([at('fresh')], {
+        prompts: [at('plain')],
+      });
+      expect(idsByBody(out)).toEqual({ fresh: [FAM] });
+    });
+  });
+
   it('keeps bodies apart that differ only by a backslash', () => {
     const id = 'tool-result-fixture-unc-path';
     const one = {

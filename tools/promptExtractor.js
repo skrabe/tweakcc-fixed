@@ -5267,10 +5267,14 @@ function disambiguateIdCollisions(prompts, existingData) {
       if (!clusters.has(k)) clusters.set(k, []);
       clusters.get(k).push(p);
     }
-    if (clusters.size < 2) continue; // single content (multi-site) is fine
     const inFamily = familyRe(id);
     const family = previous.filter(p => inFamily.test(p.id));
     const familyIds = new Set(family.map(p => p.id));
+    // One body on an id is a multi-site splice and needs nothing, unless the id
+    // headed a family last release: then that body may be a sibling that now
+    // lands on the bare id (it keeps its suffix), or a new body that must not
+    // inherit the bare id of a removed one.
+    if (clusters.size < 2 && ![...familyIds].some(f => f !== id)) continue;
     const prevIdOf = new Map(); // shape -> previous id
     for (const p of family) {
       const k = shape(p);
