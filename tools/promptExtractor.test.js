@@ -205,6 +205,49 @@ describe('promptExtractor below-floor capture', () => {
         }
       });
 
+      // CC 2.1.294: two arms of one ternary share their first 89 chars. The
+      // relaunch arm was catalogued, and the sidecar filter dropped the
+      // resume-only arm because a captured prompt contained its 80-char opening.
+      it('keeps a candidate whose opening a captured sibling shares', () => {
+        const open =
+          'These background agents fetched web content during the previous session and therefore have ';
+        const caught = `${open}nothing to check, so launch them again if their reports are still needed.`;
+        const pending = `${open}no worktree or output to check, so resume them with the messaging tool only.`;
+        _setClassificationCacheForTests({
+          [sha1Hex(caught)]: { facing: 'model' },
+        });
+        const { bodies, candidates } = extract(
+          `function f(w){if(w)throw new Error(${JSON.stringify(pending)});return ${JSON.stringify(caught)}}`
+        );
+        expect(bodies).toContain(caught);
+        expect(candidates).toContain(pending);
+      });
+
+      it('drops a candidate whose only site sits inside a captured prompt', () => {
+        const inner =
+          'Do not assume the tasks landed; launch them again if their results are still needed.';
+        const code = `function f(c,e){return \`Background agents were lost when the previous session ended. \${c?(()=>{throw new Error(${JSON.stringify(inner)})})():e}\`}`;
+        const f = path.join(
+          os.tmpdir(),
+          `pe-test-${process.pid}-${Math.random().toString(36).slice(2)}.js`
+        );
+        fs.writeFileSync(f, code);
+        let outer;
+        try {
+          outer = extractStrings
+            .collectLiteralSites(f)
+            .find(s => s.kind === 'template').cacheBody;
+        } finally {
+          fs.unlinkSync(f);
+        }
+        _setClassificationCacheForTests({ _: {} });
+        expect(extract(code).candidates).toContain(inner);
+        _setClassificationCacheForTests({ [sha1Hex(outer)]: { facing: 'model' } });
+        const { bodies, candidates } = extract(code);
+        expect(bodies).toContain(outer);
+        expect(candidates).not.toContain(inner);
+      });
+
       it('drops a thrown string whose cached verdict is ui or internal', () => {
         for (const facing of ['ui', 'internal']) {
           verdict(facing);

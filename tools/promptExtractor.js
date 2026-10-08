@@ -4136,11 +4136,47 @@ function looksLikeErrorPhrase(text) {
 // verdict and the NEXT extraction acts on it (capture + name for 'model',
 // permanent drop for 'ui'/'internal'). Collected during extractStrings,
 // filtered against the final catalogue, and written as a sidecar by the CLI.
-const _gateCandidates = new Map(); // body -> flattened lead
-function recordGateCandidate(body, lead) {
-  if (!_gateCandidates.has(body)) {
-    _gateCandidates.set(body, lead.slice(-120).replace(/\n/g, ' '));
+//
+// Each candidate keeps the ranges it was rejected at, because whether it still
+// needs a verdict is a question about SITES, not text: it needs none only when
+// every one of its sites lies inside a captured prompt. The 80-char prefix test
+// this replaced dropped any candidate whose OPENING a captured prompt shared;
+// on CC 2.1.294 it discarded all 321 candidates, 107 of them at sites no
+// captured prompt covers, among them the resume-only tail of the
+// orphaned-agents notification, whose first 89 chars are its relaunch
+// sibling's. Full-body containment is no better: 56 of the 107 are text some
+// captured prompt also contains, emitted from a site of their own.
+const _gateCandidates = new Map(); // body -> { lead, ranges }
+function recordGateCandidate(body, lead, range) {
+  let rec = _gateCandidates.get(body);
+  if (!rec) {
+    rec = { lead: lead.slice(-120).replace(/\n/g, ' '), ranges: [] };
+    _gateCandidates.set(body, rec);
   }
+  if (range && typeof range.start === 'number') rec.ranges.push(range);
+}
+
+// A candidate whose every site sits inside (or is) a captured prompt is that
+// prompt's text and needs no verdict of its own. A candidate recorded without a
+// range (a direct shouldCapture call) is kept.
+function uncoveredGateCandidates(captured) {
+  const exact = new Set(captured.map(item => `${item.start}:${item.end}`));
+  const isNested = nestedRangeIndex(
+    captured.map(item => [item.start, item.end])
+  );
+  const covered = r =>
+    exact.has(`${r.start}:${r.end}`) || isNested(r.start, r.end);
+  const out = [];
+  for (const [body, rec] of _gateCandidates) {
+    if (rec.ranges.length && rec.ranges.every(covered)) continue;
+    out.push({
+      hash: crypto.createHash('sha1').update(body).digest('hex'),
+      len: body.length,
+      lead: rec.lead,
+      body,
+    });
+  }
+  return out;
 }
 
 // The capture decision for one emission site. Order:
@@ -4199,7 +4235,7 @@ function shouldCapture(text, cacheBody, lead, minLength, opts = {}) {
       validateInput(text, 1, { bypassQuality: true }) &&
       (looksLikeEnglishProse(cacheBody) || looksLikeErrorPhrase(cacheBody))
     ) {
-      recordGateCandidate(cacheBody, lead);
+      recordGateCandidate(cacheBody, lead, opts.range);
     }
     return false;
   }
@@ -4212,7 +4248,7 @@ function shouldCapture(text, cacheBody, lead, minLength, opts = {}) {
     validateInput(text, eff, { bypassQuality: true }) &&
     looksLikeEnglishProse(cacheBody)
   ) {
-    recordGateCandidate(cacheBody, lead);
+    recordGateCandidate(cacheBody, lead, opts.range);
   }
   return false;
 }
@@ -4778,6 +4814,7 @@ function extractStrings(filepath, minLength = 500, opts = {}) {
       const v = frag.value;
       return shouldCapture(v, v, leadOf(frag.start), minLength, {
         settingsDescription: Boolean(settingsAt(frag)),
+        range: frag,
       });
     });
     const lead = leadOf(site.start);
@@ -4786,7 +4823,7 @@ function extractStrings(filepath, minLength = 500, opts = {}) {
     const modelFacing =
       fragCaptured.some(Boolean) ||
       classifyByCache(site.text)?.facing === 'model' ||
-      shouldCapture(site.text, site.text, lead, minLength);
+      shouldCapture(site.text, site.text, lead, minLength, { range: site });
     if (!modelFacing) return;
 
     site.fragments.forEach((frag, i) => {
@@ -4852,6 +4889,7 @@ function extractStrings(filepath, minLength = 500, opts = {}) {
       shouldCapture(site.value, site.value, lead, minLength, {
         slotLiteral,
         settingsDescription: Boolean(settings),
+        range: site,
       })
     ) {
       stringData.push({
@@ -4894,6 +4932,7 @@ function extractStrings(filepath, minLength = 500, opts = {}) {
         slotLiteral,
         settingsDescription: Boolean(settings),
         legacyCacheBody: site.legacy && site.legacy.pieces.join(''),
+        range: site,
       })
     ) {
       const identifierMap = {};
@@ -4979,14 +5018,10 @@ function extractStrings(filepath, minLength = 500, opts = {}) {
     }
   }
 
-  const gateCandidates = [..._gateCandidates.entries()].map(([body, lead]) => ({
-    hash: crypto.createHash('sha1').update(body).digest('hex'),
-    len: body.length,
-    lead,
-    body,
-  }));
-
-  return { prompts: filteredData, gateCandidates };
+  return {
+    prompts: filteredData,
+    gateCandidates: uncoveredGateCandidates(filteredData),
+  };
 }
 
 // Post-merge per-id normalization. One JSON entry per code-site is correct —
@@ -5972,17 +6007,11 @@ if (require.main === module) {
   console.log(`Written to ${outputFile}`);
 
   // Sidecar: prose-gate-rejected English-prose strings that still need a
-  // classification verdict. Filtered against the FINAL catalogue (a candidate
-  // whose text already lives inside a captured prompt needs no verdict).
-  // `driver.mjs classify-candidates` merges these into the chunk files the
-  // classification workflow consumes; classify-merge writes the verdicts and
-  // the next extraction acts on them.
-  const catalogueBlob = mergedResult.prompts
-    .map(p => p.pieces.join(''))
-    .join('\x00');
-  const gateCandidates = (result.gateCandidates || []).filter(
-    c => !catalogueBlob.includes(c.body.slice(0, 80))
-  );
+  // classification verdict. extractStrings already dropped the ones whose every
+  // site lies inside a captured prompt. `driver.mjs classify-candidates` merges
+  // these into the chunk files the classification workflow consumes;
+  // classify-merge writes the verdicts and the next extraction acts on them.
+  const gateCandidates = result.gateCandidates || [];
   const sidecarPath = '/tmp/tweakcc-gate-candidates.json';
   fs.writeFileSync(
     sidecarPath,
