@@ -167,6 +167,42 @@ describe('disambiguateIdCollisions', () => {
     expect(new Set(Object.values(a).flat()).size).toBe(3);
   });
 
+  it('keeps bodies apart that differ only by a backslash', () => {
+    const id = 'tool-result-fixture-unc-path';
+    const one = {
+      id,
+      pieces: ['Mount \\server\\share at ${', '} first.'],
+      identifiers: [0],
+      body: 'one',
+    };
+    const two = {
+      id,
+      pieces: ['Mount \\\\server\\share at ${', '} first.'],
+      identifiers: [0],
+      body: 'two',
+    };
+    const prev = {
+      prompts: [
+        { ...one, id },
+        { ...two, id: `${id}-2` },
+      ],
+    };
+    for (const order of [
+      [one, two],
+      [two, one],
+    ]) {
+      const out = disambiguateIdCollisions(
+        order.map(p => ({ ...p })),
+        prev
+      );
+      expect(idsByBody(out)).toEqual({ one: [id], two: [`${id}-2`] });
+    }
+    const fresh = disambiguateIdCollisions([{ ...one }, { ...two }], {
+      prompts: [],
+    });
+    expect(fresh[0].id).not.toBe(fresh[1].id);
+  });
+
   it('leaves a same-body multi-site id alone', () => {
     const out = disambiguateIdCollisions(
       [site('plain'), site('plain'), site('plain')],

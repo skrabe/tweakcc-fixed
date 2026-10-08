@@ -5228,13 +5228,15 @@ function loadUpstreamPrompts() {
 // an edited body keeps the id of the unclaimed member it uniquely fingerprints
 // to; anything else takes a suffix no current or previous body of the family
 // has used, so a removed body's id is never handed to a different body.
+//
+// Bodies compare byte for byte. Pieces are already cooked string values, so a
+// backslash in them is real text: `\server` and `\\server` are two prompts.
 function disambiguateIdCollisions(prompts, existingData) {
-  const norm = s => s.replace(/\\(['"`\\])/g, '$1');
   const text = p =>
-    norm((p.pieces || []).filter(x => typeof x === 'string').join(''));
+    (p.pieces || []).filter(x => typeof x === 'string').join('');
   const shape = p =>
     JSON.stringify([
-      (p.pieces || []).map(x => (typeof x === 'string' ? norm(x) : null)),
+      (p.pieces || []).map(x => (typeof x === 'string' ? x : null)),
       p.identifiers || [],
     ]);
   const fingerprint = p => {
