@@ -4,6 +4,8 @@
 // platform's build.
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { createRequire } from 'node:module';
+import fs from 'node:fs';
+import path from 'node:path';
 
 const require = createRequire(import.meta.url);
 const sites = require('./lib/bundleSites.cjs');
@@ -157,5 +159,33 @@ describe('carryover across slot promotion', () => {
     );
     expect(prompts[0].identifierMap).toEqual(current.identifierMap);
     expect(prompts[0].version).toBe(oldItem.version);
+  });
+});
+
+// 2.8.40 shipped tool-description-projects with one slot, the memory flag, as
+// VAR_0. Promoting the upload-mode index ahead of it must not take that name.
+describe('the shipped tool-description-projects names', () => {
+  it('keeps VAR_0 on the memory flag and gives the index VAR_1', () => {
+    const file = path.join(
+      import.meta.dirname,
+      '..',
+      'data',
+      'prompts',
+      'prompts-2.1.294.json'
+    );
+    const p = JSON.parse(fs.readFileSync(file, 'utf8')).prompts.find(
+      x => x.id === 'tool-description-projects'
+    );
+    const nameAfter = tail => {
+      const i = p.pieces.findIndex(s => s.endsWith(tail));
+      expect(i).toBeGreaterThanOrEqual(0);
+      return p.identifierMap[p.identifiers[i]];
+    };
+    expect(nameAfter('even for a file you have."}[')).toBe(
+      'TOOL_DESCRIPTION_PROJECTS_VAR_1'
+    );
+    expect(nameAfter('remove them from the project in claude.ai.\n${')).toBe(
+      'TOOL_DESCRIPTION_PROJECTS_VAR_0'
+    );
   });
 });

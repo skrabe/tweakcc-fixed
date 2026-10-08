@@ -4147,12 +4147,12 @@
       "identifierMap": {
         "0": "TOOL_RESULT_SEND_FILE_PINNED_REMOTE_IDENTITY_CONFLICT_VAR_0"
       },
-      "version": "2.1.294"
+      "version": "2.1.228"
     },
     {
-      "name": "Tool Result: SendFile pinned remote identity conflict",
-      "id": "tool-result-send-file-pinned-remote-identity-conflict-2",
-      "description": "Warns Claude in a refused SendFile result when a locally claimed session identity conflicts with one previously confirmed as remote.",
+      "name": "Send File Pinned Identity Hidden By Local Claim",
+      "id": "tool-result-send-file-not-found-pinned-identity-local-claim",
+      "description": "Warns that a pinned remote session is hidden by a conflicting local identity claim.",
       "pieces": [
         "\nNote: '${",
         ".pinnedIdentityClaimedLocally}' was confirmed earlier as a session that is NOT on this machine; a session record on this machine now claims that identity, which hides it here — nothing was sent.${",
@@ -4165,9 +4165,9 @@
         2
       ],
       "identifierMap": {
-        "0": "TOOL_RESULT_SEND_FILE_PINNED_REMOTE_IDENTITY_CONFLICT_VAR_0",
-        "1": "TOOL_RESULT_SEND_FILE_PINNED_REMOTE_IDENTITY_CONFLICT_2_VAR_1",
-        "2": "TOOL_RESULT_SEND_FILE_PINNED_REMOTE_IDENTITY_CONFLICT_2_VAR_2"
+        "0": "TOOL_RESULT_SEND_FILE_NOT_FOUND_PINNED_IDENTITY_LOCAL_CLAIM_VAR_0",
+        "1": "TOOL_RESULT_SEND_FILE_NOT_FOUND_PINNED_IDENTITY_LOCAL_CLAIM_VAR_1",
+        "2": "TOOL_RESULT_SEND_FILE_NOT_FOUND_PINNED_IDENTITY_LOCAL_CLAIM_VAR_2"
       },
       "version": "2.1.294"
     },
@@ -4191,9 +4191,9 @@
       "version": "2.1.233"
     },
     {
-      "name": "Send Message: Pinned Identity Hidden, Nothing Sent",
-      "id": "tool-result-send-message-pinned-identity-hidden-nothing-sent-2",
-      "description": "Appended to a SendMessage result when the named recipient was earlier confirmed to live on another machine and a local session record now claims that identity, hiding it; tells the model nothing was sent and the local claim is suspicious.",
+      "name": "Send Message Ambiguous Pinned Identity Local Claim",
+      "id": "tool-result-send-message-ambiguous-pinned-identity-local-claim",
+      "description": "Warns that a local identity claim conflicts with a recipient previously confirmed remote.",
       "pieces": [
         "\nNote: earlier in this conversation '${",
         ".pinnedIdentityClaimedLocally}' was confirmed as a session that is NOT on this machine; a session record on this machine now claims that identity, so nothing was assumed and nothing was sent. ${",
@@ -4206,9 +4206,9 @@
         2
       ],
       "identifierMap": {
-        "0": "TOOL_RESULT_SEND_MESSAGE_PINNED_IDENTITY_HIDDEN_NOTHING_SENT_VAR_0",
-        "1": "TOOL_RESULT_SEND_MESSAGE_PINNED_IDENTITY_HIDDEN_NOTHING_SENT_VAR_1",
-        "2": "TOOL_RESULT_SEND_MESSAGE_PINNED_IDENTITY_HIDDEN_NOTHING_SENT_VAR_2"
+        "0": "TOOL_RESULT_SEND_MESSAGE_AMBIGUOUS_PINNED_IDENTITY_LOCAL_CLAIM_VAR_0",
+        "1": "TOOL_RESULT_SEND_MESSAGE_AMBIGUOUS_PINNED_IDENTITY_LOCAL_CLAIM_VAR_1",
+        "2": "TOOL_RESULT_SEND_MESSAGE_AMBIGUOUS_PINNED_IDENTITY_LOCAL_CLAIM_VAR_2"
       },
       "version": "2.1.294"
     },
@@ -4232,7 +4232,7 @@
         "1": "TOOL_RESULT_SEND_MESSAGE_PINNED_IDENTITY_HIDDEN_NOTHING_SENT_VAR_1",
         "2": "TOOL_RESULT_SEND_MESSAGE_PINNED_IDENTITY_HIDDEN_NOTHING_SENT_VAR_2"
       },
-      "version": "2.1.294"
+      "version": "2.1.226"
     },
     {
       "name": "Slash Command: /advisor — main model does not support the advisor",
@@ -67111,9 +67111,9 @@
       "version": "2.1.265"
     },
     {
-      "name": "Tool Result: Artifact Already Created From Type",
-      "id": "tool-result-artifact-type-url-already-created-2",
-      "description": "validateInput rejection when this session already created an Artifact from the same type_url for this file_path.",
+      "name": "Artifact Type Already Created For File",
+      "id": "tool-result-artifact-type-already-created-for-file",
+      "description": "Tells the model to update the artifact already created from a type for this file.",
       "pieces": [
         "an Artifact was already created from this type for ${",
         "(",
@@ -67128,10 +67128,10 @@
         3
       ],
       "identifierMap": {
-        "0": "TOOL_RESULT_ARTIFACT_TYPE_URL_ALREADY_CREATED_VAR_0",
-        "1": "TOOL_RESULT_ARTIFACT_TYPE_URL_ALREADY_CREATED_VAR_1",
-        "2": "TOOL_RESULT_ARTIFACT_TYPE_URL_ALREADY_CREATED_VAR_2",
-        "3": "TOOL_RESULT_ARTIFACT_TYPE_URL_ALREADY_CREATED_VAR_3"
+        "0": "TOOL_RESULT_ARTIFACT_TYPE_ALREADY_CREATED_FOR_FILE_VAR_0",
+        "1": "TOOL_RESULT_ARTIFACT_TYPE_ALREADY_CREATED_FOR_FILE_VAR_1",
+        "2": "TOOL_RESULT_ARTIFACT_TYPE_ALREADY_CREATED_FOR_FILE_VAR_2",
+        "3": "TOOL_RESULT_ARTIFACT_TYPE_ALREADY_CREATED_FOR_FILE_VAR_3"
       },
       "version": "2.1.294"
     },
@@ -67158,7 +67158,7 @@
         "2": "TOOL_RESULT_ARTIFACT_TYPE_URL_ALREADY_CREATED_VAR_2",
         "3": "TOOL_RESULT_ARTIFACT_TYPE_URL_ALREADY_CREATED_VAR_3"
       },
-      "version": "2.1.294"
+      "version": "2.1.237"
     },
     {
       "name": "Tool Result: Artifact versions unavailable",
@@ -74085,9 +74085,9 @@
       "version": "2.1.285"
     },
     {
-      "name": "Slash Command: Plugin marketplace add name declared with different source",
-      "id": "slash-command-plugin-marketplace-add-name-declared-with-different-source-2",
-      "description": "Refusal when adding a marketplace from a source while the user's settings list the same name under extraKnownMarketplaces with another source, saying to add it from that source or fix the entry.",
+      "name": "Marketplace declared source name collision",
+      "id": "slash-command-plugin-marketplace-add-colliding-declared-source",
+      "description": "Refuses adding a marketplace whose name clashes with a differently sourced declaration.",
       "pieces": [
         "Cannot add marketplace ${",
         "(",
@@ -74106,11 +74106,11 @@
         4
       ],
       "identifierMap": {
-        "0": "SLASH_COMMAND_PLUGIN_MARKETPLACE_ADD_NAME_DECLARED_WITH_DIFFERENT_SOURCE_VAR_0",
-        "1": "SLASH_COMMAND_PLUGIN_MARKETPLACE_ADD_NAME_DECLARED_WITH_DIFFERENT_SOURCE_VAR_1",
-        "2": "SLASH_COMMAND_PLUGIN_MARKETPLACE_ADD_NAME_DECLARED_WITH_DIFFERENT_SOURCE_VAR_2",
-        "3": "SLASH_COMMAND_PLUGIN_MARKETPLACE_ADD_NAME_DECLARED_WITH_DIFFERENT_SOURCE_VAR_3",
-        "4": "SLASH_COMMAND_PLUGIN_MARKETPLACE_ADD_NAME_DECLARED_WITH_DIFFERENT_SOURCE_VAR_4"
+        "0": "SLASH_COMMAND_PLUGIN_MARKETPLACE_ADD_COLLIDING_DECLARED_SOURCE_VAR_0",
+        "1": "SLASH_COMMAND_PLUGIN_MARKETPLACE_ADD_COLLIDING_DECLARED_SOURCE_VAR_1",
+        "2": "SLASH_COMMAND_PLUGIN_MARKETPLACE_ADD_COLLIDING_DECLARED_SOURCE_VAR_2",
+        "3": "SLASH_COMMAND_PLUGIN_MARKETPLACE_ADD_COLLIDING_DECLARED_SOURCE_VAR_3",
+        "4": "SLASH_COMMAND_PLUGIN_MARKETPLACE_ADD_COLLIDING_DECLARED_SOURCE_VAR_4"
       },
       "version": "2.1.294"
     },
@@ -74142,7 +74142,7 @@
         "3": "SLASH_COMMAND_PLUGIN_MARKETPLACE_ADD_NAME_DECLARED_WITH_DIFFERENT_SOURCE_VAR_3",
         "4": "SLASH_COMMAND_PLUGIN_MARKETPLACE_ADD_NAME_DECLARED_WITH_DIFFERENT_SOURCE_VAR_4"
       },
-      "version": "2.1.294"
+      "version": "2.1.288"
     },
     {
       "name": "/plugin marketplace add: reserved claude.ai prefix",
@@ -75273,9 +75273,9 @@
       "version": "2.1.211"
     },
     {
-      "name": "Tool Result: file_upload Path Not Shared With Session",
-      "id": "tool-result-file-upload-path-not-shared-2",
-      "description": "Rejection message built by Med(path) when a file_upload target resolves outside the session's allowed read roots or fails its attachment digest check; returned to the model as a <tool_use_error> tool_result instructing it to ask the user to share the file or run /add-dir.",
+      "name": "Chrome file upload requires read access",
+      "id": "tool-result-chrome-file-upload-read-permission",
+      "description": "Refuses uploads of files the session may not read.",
       "pieces": [
         "Cannot upload \"${",
         "}\": only files this session is allowed to read can be uploaded. Ask the user to share the file or its folder with this session."
@@ -75284,7 +75284,7 @@
         0
       ],
       "identifierMap": {
-        "0": "TOOL_RESULT_FILE_UPLOAD_PATH_NOT_SHARED_VAR_0"
+        "0": "TOOL_RESULT_CHROME_FILE_UPLOAD_READ_PERMISSION_VAR_0"
       },
       "version": "2.1.294"
     },
@@ -75302,7 +75302,7 @@
       "identifierMap": {
         "0": "TOOL_RESULT_FILE_UPLOAD_PATH_NOT_SHARED_VAR_0"
       },
-      "version": "2.1.294"
+      "version": "2.1.211"
     },
     {
       "name": "Tool Result: file_upload Blocked By Multiple Hard Links",
@@ -88536,9 +88536,9 @@
       "version": "2.1.291"
     },
     {
-      "name": "Tool Result: Artifact Durable Wake Registered Note",
-      "id": "tool-result-artifact-durable-wake-registered-note-2",
-      "description": "Returned to the model when a remote-session durable wake subscription is successfully registered.",
+      "name": "Artifact Durable Publish And Comment Wake Registered",
+      "id": "tool-result-artifact-durable-wake-publish-comment-registered",
+      "description": "Reports durable wake registration for artifact publishes and comments.",
       "pieces": [
         "Durable wake subscription registered — this session will be woken by a new turn when the artifact is next published, and when a comment is sent to Claude on it. No updates are streamed; on wake, re-read the artifact (and its comments, on a comment wake)."
       ],
@@ -88555,7 +88555,7 @@
       ],
       "identifiers": [],
       "identifierMap": {},
-      "version": "2.1.294"
+      "version": "2.1.227"
     },
     {
       "name": "Tool Result: Durable Wake Already Registered This Session",
@@ -94026,9 +94026,9 @@
       "version": "2.1.247"
     },
     {
-      "name": "Tool Result: Artifact asset upload volume has no file identity",
-      "id": "tool-result-artifact-asset-upload-no-file-identity-2",
-      "description": "Preflight error (J3a) for volumes that report no usable file identity, so the approved file cannot be distinguished from a replacement.",
+      "name": "Artifact database file lacks identity",
+      "id": "tool-result-artifact-db-file-no-identity",
+      "description": "Refuses a database JSON upload when the file cannot be identified safely.",
       "pieces": [
         "file_path is on a volume that reports no usable file identity (some network, FUSE, and virtual-disk mounts), so the approved file cannot be told apart from a replacement — copy it to an ordinary local directory and pass the copy"
       ],
@@ -94045,12 +94045,12 @@
       ],
       "identifiers": [],
       "identifierMap": {},
-      "version": "2.1.294"
+      "version": "2.1.234"
     },
     {
-      "name": "Asset upload refused — hard-linked file",
-      "id": "tool-result-artifact-asset-upload-hard-link-2",
-      "description": "Artifact asset-upload refusal telling Claude the file_path is one of several hard links and to copy the file to a fresh path and upload the copy.",
+      "name": "Artifact Database Write Source Hard Link Unexamined",
+      "id": "tool-result-artifact-db-write-source-hard-link-unexamined",
+      "description": "Refuses a database write from a hard-linked source not examined during approval.",
       "pieces": [
         "file_path is one of several hard links to its file, and this approval did not examine that — copy the file to a fresh path under the working directory and pass the copy"
       ],
@@ -94067,7 +94067,7 @@
       ],
       "identifiers": [],
       "identifierMap": {},
-      "version": "2.1.294"
+      "version": "2.1.234"
     },
     {
       "name": "Tool result: Artifact upload_asset file_path required (call)",
@@ -94138,12 +94138,12 @@
       ],
       "identifiers": [],
       "identifierMap": {},
-      "version": "2.1.294"
+      "version": "2.1.234"
     },
     {
-      "name": "Tool Result: Artifact asset upload file changed since approval",
-      "id": "tool-result-artifact-asset-upload-file-changed-since-approval-2",
-      "description": "Preflight error (RZe) telling the model the approved file_path no longer names the same file and the upload must be retried so it is re-checked.",
+      "name": "Artifact Database Write Source Changed",
+      "id": "tool-result-artifact-db-write-source-file-changed",
+      "description": "Refuses a database write when its approved local file changed.",
       "pieces": [
         "file_path no longer names the file that was approved (it moved, was replaced, or was rewritten) — retry the write so it is checked again"
       ],
@@ -94163,9 +94163,9 @@
       "version": "2.1.247"
     },
     {
-      "name": "Tool Result: Artifact asset upload via unapproved symlink",
-      "id": "tool-result-artifact-asset-upload-symlink-outside-read-scope-2",
-      "description": "Preflight error (Myf) telling the model file_path resolves through a symlink into a path this session may not read, and to upload the resolved path or copy the file first.",
+      "name": "Artifact Database Write Source Symlink Restricted",
+      "id": "tool-result-artifact-db-write-source-symlink-restricted",
+      "description": "Refuses a database write whose source symlink resolves outside permitted reads.",
       "pieces": [
         "file_path reaches its file through a symbolic link that resolves somewhere this session may not read without asking — pass the resolved path, or copy the file under the working directory first"
       ],
@@ -94182,7 +94182,7 @@
       ],
       "identifiers": [],
       "identifierMap": {},
-      "version": "2.1.294"
+      "version": "2.1.234"
     },
     {
       "name": "Tool Result: Artifact publish file_path required",
@@ -104322,9 +104322,9 @@
       "version": "2.1.224"
     },
     {
-      "name": "Tool Result: Git Bundle Env Config Hard Link",
-      "id": "tool-result-git-bundle-env-config-hard-link-2",
-      "description": "pC clause when GIT_CONFIG_PARAMETERS includes a file that has a second hard-link name.",
+      "name": "Git bundle environment includes writable configuration",
+      "id": "tool-result-git-bundle-env-config-include-writable",
+      "description": "Explains refusal of a git environment include in a session-writable location.",
       "pieces": [
         "its launch environment’s git configuration (GIT_CONFIG_PARAMETERS / GIT_CONFIG_COUNT) includes a file inside this working tree, its repository or a directory your settings open to Claude Code sessions — configuration this upload could not have git list here, where a file a session may write could say what that capture runs; ${",
         "}drop that include from the environment, or start from an ordinary clone"
@@ -104333,7 +104333,7 @@
         0
       ],
       "identifierMap": {
-        "0": "TOOL_RESULT_GIT_BUNDLE_ENV_CONFIG_HARD_LINK_VAR_0"
+        "0": "TOOL_RESULT_GIT_BUNDLE_ENV_CONFIG_INCLUDE_WRITABLE_VAR_0"
       },
       "version": "2.1.294"
     },
@@ -104351,12 +104351,12 @@
       "identifierMap": {
         "0": "TOOL_RESULT_GIT_BUNDLE_ENV_CONFIG_HARD_LINK_VAR_0"
       },
-      "version": "2.1.294"
+      "version": "2.1.280"
     },
     {
-      "name": "Tool Result: Git Bundle Env Config Hard Link",
-      "id": "tool-result-git-bundle-env-config-hard-link-3",
-      "description": "pC clause when GIT_CONFIG_PARAMETERS includes a file that has a second hard-link name.",
+      "name": "Git bundle environment include in checkout",
+      "id": "tool-result-git-bundle-env-config-include-checkout",
+      "description": "Explains refusal of a git environment include that a checkout session can modify.",
       "pieces": [
         "its launch environment’s git configuration (GIT_CONFIG_PARAMETERS / GIT_CONFIG_COUNT) includes a file that lies inside — or links into — a git checkout (${",
         "(",
@@ -104369,9 +104369,9 @@
         2
       ],
       "identifierMap": {
-        "0": "TOOL_RESULT_GIT_BUNDLE_ENV_CONFIG_HARD_LINK_VAR_0",
-        "1": "TOOL_RESULT_GIT_BUNDLE_ENV_CONFIG_HARD_LINK_3_VAR_1",
-        "2": "TOOL_RESULT_GIT_BUNDLE_ENV_CONFIG_HARD_LINK_3_VAR_2"
+        "0": "TOOL_RESULT_GIT_BUNDLE_ENV_CONFIG_INCLUDE_CHECKOUT_VAR_0",
+        "1": "TOOL_RESULT_GIT_BUNDLE_ENV_CONFIG_INCLUDE_CHECKOUT_VAR_1",
+        "2": "TOOL_RESULT_GIT_BUNDLE_ENV_CONFIG_INCLUDE_CHECKOUT_VAR_2"
       },
       "version": "2.1.294"
     },
@@ -118204,12 +118204,12 @@
       ],
       "identifiers": [],
       "identifierMap": {},
-      "version": "2.1.294"
+      "version": "2.1.280"
     },
     {
-      "name": "System Reminder: Parallel Write Agent Same Checkout",
-      "id": "system-reminder-parallel-write-agent-same-checkout-2",
-      "description": "Agent-prompt note injected when another write-capable agent is already running in this checkout, telling this agent not to clobber its edits.",
+      "name": "Agent shared checkout isolation note",
+      "id": "tool-result-agent-shared-checkout-worktree-note",
+      "description": "Warns that parallel writable agents should use worktree isolation.",
       "pieces": [
         "Note: another write-capable agent is already running in this same working directory, and parallel agents sharing a checkout can overwrite each other's work. For parallel code-writing agents, dispatch each with isolation: \"worktree\"."
       ],
@@ -129695,8 +129695,8 @@
         1
       ],
       "identifierMap": {
-        "0": "TOOL_DESCRIPTION_PROJECTS_VAR_0",
-        "1": "TOOL_DESCRIPTION_PROJECTS_VAR_1"
+        "0": "TOOL_DESCRIPTION_PROJECTS_VAR_1",
+        "1": "TOOL_DESCRIPTION_PROJECTS_VAR_0"
       },
       "version": "2.1.294"
     },
@@ -140711,9 +140711,9 @@
       "version": "2.1.291"
     },
     {
-      "name": "Data: Import Warning Skill Copied As-Is",
-      "id": "data-import-warning-skill-copied-as-is-2",
-      "description": "Warning attached to an importable Codex skill item, surfaced in the /import preview/apply output; reworded version of the 2.1.221 id (now mentions bundled scripts and body instructions rather than allowed-tools frontmatter).",
+      "name": "Imported Skill Session Context Warning",
+      "id": "data-import-warning-skill-session-context",
+      "description": "Warns that imported skill files become active and remain in session context.",
       "pieces": [
         "Skill directories are copied as-is — bundled scripts and body instructions become active in Claude Code, and once Claude loads the skill it stays in context for the session. Unchecked by default; review SKILL.md and its directory before importing."
       ],
@@ -140730,7 +140730,7 @@
       ],
       "identifiers": [],
       "identifierMap": {},
-      "version": "2.1.294"
+      "version": "2.1.224"
     },
     {
       "name": "Slash Command: /skill-doctor — Unavailable On This Connection",
@@ -152135,7 +152135,7 @@
         "0": "TOOL_RESULT_SEND_MESSAGE_MEMBER_LEFT_TEAM_VAR_0",
         "1": "TOOL_RESULT_SEND_MESSAGE_MEMBER_LEFT_TEAM_VAR_1"
       },
-      "version": "2.1.294"
+      "version": "2.1.199"
     },
     {
       "name": "Tool Result: Send message recipient left team",
@@ -152154,12 +152154,12 @@
         "0": "TOOL_RESULT_SEND_MESSAGE_MEMBER_LEFT_TEAM_VAR_0",
         "1": "TOOL_RESULT_SEND_MESSAGE_MEMBER_LEFT_TEAM_VAR_1"
       },
-      "version": "2.1.294"
+      "version": "2.1.199"
     },
     {
-      "name": "Tool Result: Send message recipient left team",
-      "id": "tool-result-send-message-member-left-team-2",
-      "description": "Model-facing tool_result returned by the team SendMessage (team-context) path when the resolved recipient has left the team, prompting an explicit re-pick.",
+      "name": "Send Message Roster Member Left",
+      "id": "tool-result-send-message-roster-member-left",
+      "description": "Refuses sending after a roster-resolved team member disappears.",
       "pieces": [
         "The member this message was resolved to has left team '${",
         "}' — nothing was sent. Another member may share the same display name '${",
@@ -152170,8 +152170,8 @@
         1
       ],
       "identifierMap": {
-        "0": "TOOL_RESULT_SEND_MESSAGE_MEMBER_LEFT_TEAM_VAR_0",
-        "1": "TOOL_RESULT_SEND_MESSAGE_MEMBER_LEFT_TEAM_VAR_1"
+        "0": "TOOL_RESULT_SEND_MESSAGE_ROSTER_MEMBER_LEFT_VAR_0",
+        "1": "TOOL_RESULT_SEND_MESSAGE_ROSTER_MEMBER_LEFT_VAR_1"
       },
       "version": "2.1.294"
     },
@@ -153745,12 +153745,12 @@
         "4": "TOOL_RESULT_ARTIFACT_LIST_TYPE_ASK_RULE_NEEDS_EXACT_TYPE_NAME_VAR_4",
         "5": "TOOL_RESULT_ARTIFACT_LIST_TYPE_ASK_RULE_NEEDS_EXACT_TYPE_NAME_VAR_5"
       },
-      "version": "2.1.294"
+      "version": "2.1.285"
     },
     {
-      "name": "Tool Result: Artifact list ask rule needs exact type name",
-      "id": "tool-result-artifact-list-type-ask-rule-needs-exact-type-name-2",
-      "description": "Error from the artifact tool's list-by-type action when a permission ask rule covers the type but only asks when `type` matches the rule exactly, so nothing was listed and the model should list again with the exact type name.",
+      "name": "Artifact List Type Ask Retry By Link",
+      "id": "tool-result-artifact-list-type-ask-retry-by-link",
+      "description": "Tells the model to retry listing an ask-protected artifact type by its type URL.",
       "pieces": [
         "The permission rule ${",
         "(",
@@ -153765,10 +153765,10 @@
         3
       ],
       "identifierMap": {
-        "0": "TOOL_RESULT_ARTIFACT_LIST_TYPE_ASK_RULE_NEEDS_EXACT_TYPE_NAME_VAR_0",
-        "1": "TOOL_RESULT_ARTIFACT_LIST_TYPE_ASK_RULE_NEEDS_EXACT_TYPE_NAME_VAR_1",
-        "2": "TOOL_RESULT_ARTIFACT_LIST_TYPE_ASK_RULE_NEEDS_EXACT_TYPE_NAME_VAR_2",
-        "3": "TOOL_RESULT_ARTIFACT_LIST_TYPE_ASK_RULE_NEEDS_EXACT_TYPE_NAME_VAR_3"
+        "0": "TOOL_RESULT_ARTIFACT_LIST_TYPE_ASK_RETRY_BY_LINK_VAR_0",
+        "1": "TOOL_RESULT_ARTIFACT_LIST_TYPE_ASK_RETRY_BY_LINK_VAR_1",
+        "2": "TOOL_RESULT_ARTIFACT_LIST_TYPE_ASK_RETRY_BY_LINK_VAR_2",
+        "3": "TOOL_RESULT_ARTIFACT_LIST_TYPE_ASK_RETRY_BY_LINK_VAR_3"
       },
       "version": "2.1.294"
     },
@@ -160659,9 +160659,9 @@
       "version": "2.1.276"
     },
     {
-      "name": "Artifact shared-version pinned note",
-      "id": "tool-result-artifact-shared-version-pinned-2",
-      "description": "Artifact publish tool_result warning the model that viewers are pinned to an older shared version.",
+      "name": "Artifact Shared Version Pinned For Agent Scoped Update",
+      "id": "tool-result-artifact-shared-version-pinned-agent-scoped",
+      "description": "Warns that an agent's artifact update is not yet visible to pinned shared viewers.",
       "pieces": [
         "This artifact is shared, and viewers are pinned to an older version — they will not see this update until the shared version is moved forward."
       ],
@@ -160678,7 +160678,7 @@
       ],
       "identifiers": [],
       "identifierMap": {},
-      "version": "2.1.294"
+      "version": "2.1.206"
     },
     {
       "name": "System Prompt: Artifact Content Authored By Others Outside Org",
@@ -166046,9 +166046,9 @@
       "version": "2.1.294"
     },
     {
-      "name": "Tool Result: Remote Host Approval Upload Unconfirmed",
-      "id": "tool-result-remote-host-approval-upload-unconfirmed-2",
-      "description": "Tool-result error when the session could not confirm that the user's approval upload reached the remote host before the connection backup timed out.",
+      "name": "Remote Host Approval Upload Not Received",
+      "id": "tool-result-remote-host-approval-upload-not-received",
+      "description": "Explains that an approval upload could not be confirmed and the host reported not receiving it.",
       "pieces": [
         "This session's upload of your approval could not be confirmed in time (its connection to the service was backed up), and ${",
         "} had not received it when asked"
@@ -166057,7 +166057,7 @@
         0
       ],
       "identifierMap": {
-        "0": "TOOL_RESULT_REMOTE_HOST_APPROVAL_UPLOAD_UNCONFIRMED_VAR_0"
+        "0": "TOOL_RESULT_REMOTE_HOST_APPROVAL_UPLOAD_NOT_RECEIVED_VAR_0"
       },
       "version": "2.1.294"
     },
@@ -166077,7 +166077,7 @@
       "identifierMap": {
         "0": "TOOL_RESULT_REMOTE_HOST_APPROVAL_UPLOAD_UNCONFIRMED_VAR_0"
       },
-      "version": "2.1.294"
+      "version": "2.1.261"
     },
     {
       "name": "Artifact share: not confirmed",
@@ -171523,9 +171523,9 @@
       "version": "2.1.246"
     },
     {
-      "name": "Tool Description: Bash Monitor Streaming Bullet",
-      "id": "tool-description-bash-monitor-streaming-bullet-2",
-      "description": "Bash tool guidance bullet telling the model to use the Monitor tool to stream background-process events, vs Bash run_in_background for one-shot waits.",
+      "name": "Bash monitor streaming short note",
+      "id": "tool-description-bash-monitor-streaming-short",
+      "description": "Recommends Monitor for streaming background process events.",
       "pieces": [
         "Use the Monitor tool to stream events from a background process (each stdout line is a notification)."
       ],
@@ -171542,7 +171542,7 @@
       ],
       "identifiers": [],
       "identifierMap": {},
-      "version": "2.1.294"
+      "version": "2.1.178"
     },
     {
       "name": "Tool Description: Design system categorization",
@@ -176484,9 +176484,9 @@
       "version": "2.1.257"
     },
     {
-      "name": "Tool Description: Artifact type staged first-publish sequence",
-      "id": "tool-description-artifact-type-staged-first-publish-sequence-2",
-      "description": "Explains the staged multi-call publish sequence for an Artifact type whose first publish needs an index file plus an initial content file published immediately, followed by the remaining files in later calls",
+      "name": "Artifact file type first publish single call",
+      "id": "tool-description-artifact-type-files-first-publish-single-call",
+      "description": "Instructs first publication of file-backed artifacts in one call.",
       "pieces": [
         "Write the files at those relative paths under one folder in your scratchpad directory (or the working directory) and publish them in ONE call: ${",
         "} every other file by its \\`project/…\\` path."
@@ -176495,7 +176495,7 @@
         0
       ],
       "identifierMap": {
-        "0": "ARTIFACT_TYPE_FILE_STORAGE_CONFIG"
+        "0": "TOOL_DESCRIPTION_ARTIFACT_TYPE_FILES_FIRST_PUBLISH_SINGLE_CALL_VAR_0"
       },
       "version": "2.1.294"
     },
@@ -176529,7 +176529,7 @@
         "1": "ARTIFACT_TYPE_FIRST_PUBLISH_CONFIG",
         "2": "ARTIFACT_FIRST_PUBLISH_CALL_PREFIX"
       },
-      "version": "2.1.294"
+      "version": "2.1.288"
     },
     {
       "name": "You-should-know: language rule lead",
