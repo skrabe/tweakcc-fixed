@@ -104,6 +104,7 @@ import { writeComplexityRouterModels } from './complexityRouterModels';
 import { writeFablePlan } from './fablePlan';
 import { writeVoiceMode } from './voiceMode';
 import { writeChannelsMode } from './channelsMode';
+import { writeAttachedBackgroundInteractive } from './attachedBackgroundInteractive';
 import { writeClearScreen } from './clearScreen';
 import { writeSessionColor } from './sessionColor';
 import { writeReadDefaultLines } from './readDefaultLines';
@@ -638,6 +639,14 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.FEATURES,
     description:
       'Enable MCP channel notifications (--channels without allowlist or dev flag)',
+  },
+  {
+    id: 'attached-background-interactive',
+    name: 'Attached background sessions are interactive',
+    group: PatchGroup.FEATURES,
+    description:
+      'While a client is attached, a background session offers ProposeGoal, usage-limit auto-resume and the auto mode and workflow prompts',
+    modelFacing: true,
   },
   {
     id: 'suppress-deferred-tools',
@@ -1439,6 +1448,10 @@ export const applyCustomization = async (
     'channels-mode': {
       fn: c => writeChannelsMode(c),
       condition: !!config.settings.misc?.enableChannelsMode,
+    },
+    'attached-background-interactive': {
+      fn: c => writeAttachedBackgroundInteractive(c),
+      condition: !!config.settings.misc?.attachedBackgroundInteractive,
     },
     'suppress-deferred-tools': {
       fn: c => writeSuppressDeferredTools(c),
