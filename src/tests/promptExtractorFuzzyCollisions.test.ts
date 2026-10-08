@@ -1,7 +1,14 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const { mergeWithExisting } = require('../../tools/promptExtractor.js');
+const extractor = require('../../tools/promptExtractor.js');
+const {
+  mergeWithExisting,
+  applyCacheNames,
+  _setClassificationCacheForTests,
+  cacheLookupForms,
+  sha1Hex,
+} = extractor;
 
 // Fuzzy carryover keys on a prompt's normalized first 100 chars. When a
 // fingerprint is shared, the index must distinguish two very different cases:
@@ -41,7 +48,10 @@ const mk = (
 const OPEN =
   'Example usage: <example> user: "What is left on this branch before we can ship?" assistant: thinking about it now';
 
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => {
+  _setClassificationCacheForTests(null);
+  vi.restoreAllMocks();
+});
 
 describe('fuzzy-carryover collision policy', () => {
   it('carries the name when one id occupies several sites (same-id multi-site)', () => {
@@ -131,5 +141,72 @@ describe('fuzzy-carryover collision policy', () => {
     expect(merged.prompts[0].id).toBe('exact-prompt');
     // exact match keeps the OLD version (content did not change)
     expect(merged.prompts[0].version).toBe('2.1.200');
+  });
+
+  describe('a new body sharing an established opening', () => {
+    const LEAD =
+      'Refused: the fixture upload source is a hard link whose other names this session has not examined';
+    const OLD_BODY = LEAD + ', so nothing was uploaded.';
+    const NEW_BODY = LEAD + ', so the database write was not made.';
+    const anon = (content: string) => ({
+      ...mk('', content),
+      id: undefined,
+      name: '',
+    });
+    const verdict = (body: string, id: string) => {
+      const cache: Record<string, object> = {};
+      for (const form of cacheLookupForms(body)) {
+        cache[sha1Hex(form)] = { facing: 'model', id, name: id, desc: id };
+      }
+      return cache;
+    };
+
+    it('leaves the id with its previous body when that body is still present', () => {
+      vi.spyOn(console, 'log').mockImplementation(() => {});
+      _setClassificationCacheForTests({});
+      const old = {
+        prompts: [mk('tool-result-fixture-upload-hard-link', OLD_BODY)],
+      };
+      const merged = mergeWithExisting(
+        { prompts: [anon(NEW_BODY), anon(OLD_BODY)] },
+        old,
+        '2.1.294'
+      );
+      expect(merged.prompts[1].id).toBe('tool-result-fixture-upload-hard-link');
+      expect(merged.prompts[1].version).toBe('2.1.210');
+      expect(merged.prompts[0].id).toBeFalsy();
+    });
+
+    it('gives a body its classifier id instead of a sibling id', () => {
+      vi.spyOn(console, 'log').mockImplementation(() => {});
+      _setClassificationCacheForTests(
+        verdict(NEW_BODY, 'tool-result-fixture-db-write-hard-link')
+      );
+      const old = {
+        prompts: [mk('tool-result-fixture-upload-hard-link', OLD_BODY)],
+      };
+      const merged = mergeWithExisting(
+        { prompts: [anon(NEW_BODY)] },
+        old,
+        '2.1.294'
+      );
+      const named = applyCacheNames(merged.prompts);
+      expect(named[0].id).toBe('tool-result-fixture-db-write-hard-link');
+    });
+
+    it('still carries the id onto an edited body the cache does not name', () => {
+      vi.spyOn(console, 'log').mockImplementation(() => {});
+      _setClassificationCacheForTests({});
+      const old = {
+        prompts: [mk('tool-result-fixture-upload-hard-link', OLD_BODY)],
+      };
+      const merged = mergeWithExisting(
+        { prompts: [anon(NEW_BODY)] },
+        old,
+        '2.1.294'
+      );
+      expect(merged.prompts[0].id).toBe('tool-result-fixture-upload-hard-link');
+      expect(merged.prompts[0].version).toBe('2.1.294');
+    });
   });
 });

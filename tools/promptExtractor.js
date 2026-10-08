@@ -5057,9 +5057,10 @@ function extractStrings(filepath, minLength = 500, opts = {}) {
 //    one body take the newest stamp among them; a different body on the id is
 //    split off by disambiguateIdCollisions and keeps its own.
 // Fill names for still-anonymous prompts from the classification cache. Runs
-// AFTER mergeWithExisting's fuzzy carryover, so an established id (carried from
-// the previous JSON) always wins over a cache name — the cache only NAMES
-// genuinely-new model-facing captures. (Facing/keep-drop already happened in
+// AFTER mergeWithExisting, so an id the previous JSON gave this exact body
+// always wins over a cache name — the cache only NAMES genuinely-new
+// model-facing captures. A fuzzy carry yields to a cached id (the merge skips
+// it), since a body the classifier named is not an edit of its sibling. (Facing/keep-drop already happened in
 // extractStrings.) See [[reference_below_floor_classification_cache]].
 function applyCacheNames(prompts) {
   const body = p =>
@@ -5576,10 +5577,28 @@ function mergeWithExisting(newData, oldData, currentVersion) {
   const exactKey = (content, identifiers) =>
     `${content}\0${JSON.stringify(identifiers)}`;
   const exactOld = new Map();
+  const oldKeysById = new Map();
   for (const oldItem of oldData.prompts) {
     const key = exactKey(reconstructContent(oldItem), oldItem.identifiers);
     if (!exactOld.has(key)) exactOld.set(key, oldItem);
+    if (!oldItem.id) continue;
+    if (!oldKeysById.has(oldItem.id)) oldKeysById.set(oldItem.id, new Set());
+    oldKeysById.get(oldItem.id).add(key);
   }
+  // A fuzzy carry renames an edited body. When the id's previous body is still
+  // in this extraction it was not edited: the fuzzy match is a new sibling
+  // sharing its opening, and the previous owner keeps the id.
+  const currentKeys = new Set();
+  for (const item of newData.prompts) {
+    currentKeys.add(exactKey(reconstructContent(item), item.identifiers));
+    if (item.legacy) {
+      currentKeys.add(
+        exactKey(item.legacy.pieces.join(''), item.legacy.identifiers)
+      );
+    }
+  }
+  const ownerStillPresent = id =>
+    [...(oldKeysById.get(id) || [])].some(k => currentKeys.has(k));
 
   const newPrompts = newData.prompts.map((newItem, idx) => {
     const newContent = reconstructContent(newItem);
@@ -5668,8 +5687,28 @@ function mergeWithExisting(newData, oldData, currentVersion) {
       const fp = fpNormalize(content).slice(0, FUZZY_PREFIX);
       return fp.length >= FUZZY_MIN ? fpToOld.get(fp) : undefined;
     };
-    const fuzzyOld =
+    const fuzzyCandidate =
       fuzzyFor(newContent) || (legacy && fuzzyFor(legacy.pieces.join('')));
+    // A body the classifier already named is a prompt of its own; applyCacheNames
+    // gives it that name. Carrying a sibling's id onto it would leave its
+    // verdict unused and hand it a positional suffix of the sibling.
+    const cached =
+      fuzzyCandidate &&
+      classifyByCache(newContent, legacy ? legacy.pieces.join('') : '');
+    const cachedId =
+      cached && cached.facing === 'model' && cached.id ? cached.id : null;
+    let fuzzyOld = fuzzyCandidate;
+    if (fuzzyOld && cachedId && cachedId !== fuzzyOld.id) {
+      console.log(
+        `Fuzzy carry of "${fuzzyOld.id}" onto item ${idx} skipped: the classification cache names it "${cachedId}"`
+      );
+      fuzzyOld = undefined;
+    } else if (fuzzyOld && ownerStillPresent(fuzzyOld.id)) {
+      console.log(
+        `Fuzzy carry of "${fuzzyOld.id}" onto item ${idx} skipped: its previous body is still present`
+      );
+      fuzzyOld = undefined;
+    }
     if (fuzzyOld) {
       const oldLen = reconstructContent(fuzzyOld).length;
       console.log(
@@ -6118,5 +6157,6 @@ module.exports._setSlotLiteralsForTests = _setSlotLiteralsForTests;
 module.exports.slotLiteralCandidates = slotLiteralCandidates;
 module.exports.slotLiteralVerdict = slotLiteralVerdict;
 module.exports.applySlotLiteralNames = applySlotLiteralNames;
+module.exports.applyCacheNames = applyCacheNames;
 module.exports.applySettingsDescriptionNames = applySettingsDescriptionNames;
 module.exports.nestedRangeIndex = nestedRangeIndex;
