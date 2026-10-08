@@ -103122,5 +103122,983 @@
     "id": "tool-result-artifact-publish-outcome-unknown-gateway-reason",
     "name": "Tool Result: Artifact publish outcome unknown — later request blocked by gateway",
     "desc": "Reason clause spliced into the artifact publish outcome-unknown result when a later request after deploy could not go through the cloud session's gateway"
+  },
+  "d7680a08bad483cd9c4796f41770cf3fe791a9a7": { "facing": "internal" },
+  "e8f7f9a0bedf15bd08ebdf3f8e9a34115513051a": { "facing": "internal" },
+  "b1331c4da36f4726ccf5c0ea180a09f6e8b22839": { "facing": "internal" },
+  "d4a9d0b08184b50d10b8fd79c740503416e7f1f8": { "facing": "internal" },
+  "b942989ffcb8ccd594ab3657171bba925fa1af9c": { "facing": "internal" },
+  "03d48f22604fd1ffcdb5e7d3fd3d5fc84426b3a2": { "facing": "ui" },
+  "7fff116e00d2a2e85004bb46fa7ee16140e4f3bf": { "facing": "ui" },
+  "91fa8bc24d5df5be11d75ae29077d6ae9e4d3a1f": { "facing": "ui" },
+  "e770fe0e3e1d343e85b3b1c09cd3924e2cde2a56": { "facing": "ui" },
+  "33728e3754d652393f6a03e1c7ff8cecb38fa988": { "facing": "ui" },
+  "21ab78dc5a397ac556b2cec2d203ee1b29818abe": {
+    "facing": "model",
+    "id": "tool-parameter-agent-name-addressable",
+    "name": "Addressable agent name parameter",
+    "desc": "Explains that naming a spawned agent makes it addressable by SendMessage while running."
+  },
+  "984e27bde57662d672b7a903a61ee2d9a056003e": {
+    "facing": "model",
+    "id": "tool-result-subagent-handback-ended-without-report",
+    "name": "Subagent ended without a report",
+    "desc": "Reports that a subagent ended without delivering its report through the handback tool."
+  },
+  "570f06e9d4ed2a5756cfdd88d96fc4fbb195c80d": {
+    "facing": "model",
+    "id": "tool-result-subagent-handback-request-report",
+    "name": "Ask subagent to deliver its report",
+    "desc": "Advises messaging a continuing subagent to request its missing handback report."
+  },
+  "4fabf340e601e1bad2be31407720d87d296ff7a2": {
+    "facing": "model",
+    "id": "tool-result-runtime-cellsegmenter-unavailable",
+    "name": "CellSegmenter runtime unavailable",
+    "desc": "Reports the missing Bun CellSegmenter runtime capability when a model-facing operation fails."
+  },
+  "340f2891d115a2eec38b8ea0131160d58d6efcaf": { "facing": "internal" },
+  "d10140cb8b9215a8cf5e74c4f648a72ae7ae4562": { "facing": "ui" },
+  "104e0de3d6f023be25b3b5ef7828286607867b18": { "facing": "internal" },
+  "4157991594862ddafce5a7c2d62ad7348b87b6ab": {
+    "facing": "model",
+    "id": "tool-result-permission-denied-cloud-hook",
+    "name": "Cloud PermissionRequest hook denied",
+    "desc": "Denies a permission request whose configured hook cannot run in the cloud session."
+  },
+  "5961b05e5ecd92ed2348547b501a2223a1fd6ac5": { "facing": "internal" },
+  "f3720189ee308b3c8419b6ad2d48ae49c5b2fc56": {
+    "facing": "model",
+    "id": "tool-result-chrome-file-upload-credential",
+    "name": "Chrome upload credential refusal",
+    "desc": "Refuses uploading credential-named files without explicit user sharing and asks Claude to tell the user."
+  },
+  "efc9e669bc2e9fc76744bdf3a0d0fba5fd682f32": { "facing": "internal" },
+  "d2a76dcf9d1d4d2528897ec37ccd1c42e2aa5d8b": { "facing": "internal" },
+  "f68de757568d97cbf574c65f97e79dbe02b16d6f": { "facing": "internal" },
+  "db519b19de685f4b01f4762943797cffd2dd80df": { "facing": "internal" },
+  "09f3adf6b095e9ad3734c0984890673617fd61b4": { "facing": "internal" },
+  "9673cd4a592af6ff8d22904e516f7a342a2960b0": {
+    "facing": "model",
+    "id": "data-memory-sync-file-not-saved-stays-local",
+    "name": "Shared memory file remains local",
+    "desc": "Warns that a rejected memory file is not persisted while other memory files continue syncing."
+  },
+  "1cef35de5a436dc2bc95cd9be039a790b4b0c8fb": { "facing": "ui" },
+  "581038829a6a48dd57635426705ccf727c822a9a": { "facing": "ui" },
+  "04ab81ae156f95cb662a72282c0a54d2fc52d80f": { "facing": "ui" },
+  "d4bb4c4a7367713e4510e2e6a770b1c296f0aa47": {
+    "facing": "model",
+    "id": "tool-result-mcp-answer-stream-ended-outcome-unknown",
+    "name": "MCP call outcome unknown",
+    "desc": "Warns that an unanswered MCP call may have run and should be checked before retrying."
+  },
+  "7e94b4bc88e2456c982ebd78876b35e202e8c8f6": { "facing": "internal" },
+  "02a458d4892753ce9a2728d13705dba936b015db": { "facing": "internal" },
+  "988f3d4acbc558fbc89128533bc2a0b416bc5876": {
+    "facing": "model",
+    "id": "tool-result-plugin-hook-cross-environment-input-blocked",
+    "name": "Cross-environment hook input blocked",
+    "desc": "Denies a tool call when a hook from another environment tries to change its input."
+  },
+  "3c4b0a8cfe72a542ebfa38be21deba30429c9283": {
+    "facing": "model",
+    "id": "tool-result-plugin-hook-cross-environment-result-kept",
+    "name": "Cross-environment hook result kept",
+    "desc": "Explains that a foreign hook's tool-result replacement was ignored and the original result retained."
+  },
+  "7bd0d23f7c428599e08f1dd09d1eff3b703b5496": { "facing": "internal" },
+  "a7ab49db03670d22d7386aca437da57bc64dc0a8": { "facing": "ui" },
+  "0b65e4cc67c92062bcdc13d2218d1f44b39cc966": {
+    "facing": "model",
+    "id": "tool-result-served-bash-settings-changed",
+    "name": "Served Bash changed settings",
+    "desc": "Warns the model that host settings changed during a served command and were not restored."
+  },
+  "0d44a68ab1f7d0a0bf90f3d52a22ef4764577ee3": { "facing": "internal" },
+  "f65fff1f594e0aa38c480638cafe9b35f3514e0e": { "facing": "internal" },
+  "1151364e5afd3d83d1b030bdaa907992fb350194": { "facing": "internal" },
+  "9043e28900463325c8169b248387328e1ae8a77c": { "facing": "internal" },
+  "a8cb596460bd6d41ebf569ab1c70fd3634b4b209": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-keyed-folder-unresolved",
+    "name": "Worktree trust folder unresolved",
+    "desc": "Refuses uploading a worktree whose trust and settings folder cannot currently be resolved."
+  },
+  "5e9436db3656fb610a0f4622266ae18679d2a749": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-linked-worktree-keyed-elsewhere",
+    "name": "Linked worktree trust repository mismatch",
+    "desc": "Explains why a linked worktree whose Git pointer disagrees with its trust repository is not uploaded."
+  },
+  "140042876e3943573006cc61794a80204a1e7b6c": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-split-index",
+    "name": "Split-index upload recovery",
+    "desc": "Advises inspecting split-index links and using a fresh clone without deleting index files by hand."
+  },
+  "fed298dfe1452b817f0693f43a49fceecf926a36": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-split-index-over-limit-recovery",
+    "name": "Oversized split-index recovery",
+    "desc": "Explains safe recovery when an individual split-index file exceeds the upload limit."
+  },
+  "5d228f0cbae8aea4b25d3a94beee2619ea94a8d0": {
+    "facing": "model",
+    "id": "data-cloud-session-bundle-notice-read-rules-unreadable",
+    "name": "Unreadable rules omit uncommitted files",
+    "desc": "Warns that unreadable Read or sandbox rules leave uncommitted contents out of a cloud upload."
+  },
+  "f08316040a70ebbd92765a256d63e1b399978e11": { "facing": "internal" },
+  "fd2370f671e9061a9b885fb19c089aec88ed1e85": { "facing": "internal" },
+  "a9704a0bff1d6494cb5d6d5647602388155db8ce": {
+    "facing": "model",
+    "id": "system-prompt-haiku-early-stopping-guidance",
+    "name": "Haiku task completion guidance",
+    "desc": "Guides task completion, autonomy, clarification, and continuing through partial blockers independently of reasoning effort."
+  },
+  "ed674dbde74b33bc6218b34d2a812b27a877b056": {
+    "facing": "model",
+    "id": "tool-result-agent-continue-unavailable-context",
+    "name": "Agent Continuation Unavailable in This Context",
+    "desc": "Explains unavailable agent continuation and host messaging alternatives."
+  },
+  "dc98fe2c9430f0c52563e5fafcaff41a109dc8fb": {
+    "facing": "model",
+    "id": "tool-result-tool-unavailable-not-in-session",
+    "name": "Tool Not Available in This Session",
+    "desc": "Tells the model to continue using its available tools."
+  },
+  "80085f757d09555a01b139ba9ce63b8602724caa": {
+    "facing": "model",
+    "id": "tool-result-agent-follow-up-new-call",
+    "name": "Fresh Agent Call for Follow-Up Work",
+    "desc": "Suggests starting a new agent with a complete prompt when continuation is unavailable."
+  },
+  "dd165b226dea006a5aa1c942df3adb0a3789f827": {
+    "facing": "model",
+    "id": "tool-result-tool-unavailable-still-listed-switched-off",
+    "name": "Previously Listed Tool Switched Off",
+    "desc": "Explains that a tool retained in the conversation is disabled in this session."
+  },
+  "517d088a0f78bae7e0847ef78524f2d9864e76e0": {
+    "facing": "model",
+    "id": "tool-result-tool-unavailable-still-listed-disconnected",
+    "name": "Previously Listed Tool Source Unavailable",
+    "desc": "Explains that a previously listed tool has no current provider."
+  },
+  "c15c3bb3762f55d4b0df0c42c983081f68f2a2f2": {
+    "facing": "model",
+    "id": "tool-result-tool-unavailable-sendmessage-not-in-session",
+    "name": "SendMessage Not Available in This Session",
+    "desc": "Reports unavailable agent messaging with context-specific continuation guidance."
+  },
+  "b95e37cd602b7ce6b702d89be9896fab9f1160c3": {
+    "facing": "model",
+    "id": "system-reminder-compaction-retained-messages",
+    "name": "Compaction Retained Messages Caveat",
+    "desc": "Explains that retained recent messages were not visible to the compaction summary writer."
+  },
+  "301223a71c394c634b2741101cc7ebfa88dfee44": {
+    "facing": "model",
+    "id": "agent-prompt-hook-ok-decision-rules",
+    "name": "Hook OK Decision Rules",
+    "desc": "Defines hook allow/block semantics and excludes instructions in inspected event data."
+  },
+  "fea41b12fcf3f0d0dd37bfa86007b25441fa539d": {
+    "facing": "model",
+    "id": "agent-prompt-hook-condition-evaluator",
+    "name": "Hook Condition Evaluator",
+    "desc": "Asks the hook evaluator to decide whether an action may proceed and return a JSON reason."
+  },
+  "ab2b1ff9f0702ba9f9c77aa1c2e3ae3561f9a694": {
+    "facing": "model",
+    "id": "tool-result-device-hook-remote-machine-unavailable",
+    "name": "Remote Hook Machine Unavailable",
+    "desc": "Reports that a hook assigned to another machine could not execute."
+  },
+  "09220d8b4a992ab266c2f718b7ea37ea7963c515": {
+    "facing": "model",
+    "id": "tool-result-pretooluse-http-hook-cloud-session-refused",
+    "name": "Cloud PreToolUse HTTP Hook Refusal",
+    "desc": "Explains that an HTTP hook cannot run in the cloud session and blocks the tool call."
+  },
+  "c28950f2795bd2d92cb06b39c572364bbf6d99be": { "facing": "internal" },
+  "d8fd7d5242683b34d0ea0feeb84639cc21dd1f0b": {
+    "facing": "model",
+    "id": "tool-description-agent-simple-usage-notes",
+    "name": "Agent Simple Usage Notes",
+    "desc": "Provides concise agent usage, continuation, definition, and worktree guidance."
+  },
+  "dfeb3fe7e2e1d5dbf5572bb57f679d4acb4a9938": {
+    "facing": "model",
+    "id": "tool-description-agent-continue-available",
+    "name": "Agent Continuation Available",
+    "desc": "Explains how to continue an existing agent while fresh agent calls start anew."
+  },
+  "620b9cc7f0f602e7d3a055460ed3526750afb796": {
+    "facing": "model",
+    "id": "tool-description-agent-continue-unavailable",
+    "name": "Agent Continuation Unavailable",
+    "desc": "Explains that existing agents cannot be continued and each agent call starts fresh."
+  },
+  "3ccb286191c88ae9ab88f5069477633e72b5d568": { "facing": "ui" },
+  "f0ec1748eae351942916ebe3f808cda23d7edef1": { "facing": "internal" },
+  "d57e681f44231b05b5edc32dbf8269c8f1c09941": {
+    "facing": "model",
+    "id": "system-reminder-wait-events-arrived",
+    "name": "Wait Events Arrival Header",
+    "desc": "Introduces queued events as the result of a wait call."
+  },
+  "16d5dd2440175975e229cc05a181f2a05663bc53": {
+    "facing": "model",
+    "id": "tool-result-async-agent-running-read-partial",
+    "name": "Running Agent Duplicate Warning",
+    "desc": "Warns against duplicating a running agent and offers a progress request when supported."
+  },
+  "ad56a7303c680c6a62a804417ee8f1bf8728effe": { "facing": "ui" },
+  "e2a68136241861e180dd4766169bdc45574a1ac6": { "facing": "ui" },
+  "9bb06ef40267d17169c8b1754e0b57ddc9eebf87": { "facing": "internal" },
+  "97c29f8eb0da38e1434dc199827e9b59f171e612": { "facing": "internal" },
+  "d69afe5ea0c5483f066331ff6cc1ee64a88bd7b8": {
+    "facing": "model",
+    "id": "tool-result-subagent-spawn-hook-teammate-rewrite-ruled",
+    "name": "Teammate Spawn Rewrite Permission Refusal",
+    "desc": "Reports a plugin rewrite of a teammate spawn that a permission rule asks or denies."
+  },
+  "265361b897eed5542ca6a9481fa5f3d0c52d611d": {
+    "facing": "model",
+    "id": "tool-result-agent-completed-continuation-hint",
+    "name": "Completed Agent Continuation Hint",
+    "desc": "Adds the SendMessage target and summary format for continuing a completed agent."
+  },
+  "28334c8b13d33c5e2abe53389c558672cd881453": { "facing": "ui" },
+  "bfd23e96073f0c6423badbc6702c3e7413810948": { "facing": "internal" },
+  "b219da47dc5aac768100059822cb13088bd89464": { "facing": "internal" },
+  "196ed3da7989fe20d09f0c98ff817e7b08ddc128": { "facing": "ui" },
+  "32f86db38ac40583dbcbd38d6695bb6b1d7900e2": { "facing": "internal" },
+  "3e0ed9341a93e1b1f69562d8bd015652bad72b23": { "facing": "internal" },
+  "b4b7aebe0c98b352929da07bbbdab34eea4300f1": {
+    "facing": "model",
+    "id": "system-reminder-browser-extension-organization-switch-warning",
+    "name": "Browser Extension Organization Switch Warning",
+    "desc": "Explains organization matching and the loss of extension shortcuts and schedules on logout."
+  },
+  "0ebdb4f44461b79a2bb00d4f937d3fb6db65acf8": { "facing": "ui" },
+  "ffeb379aec241fbd77ecbfef8ec07a9ce9086217": { "facing": "ui" },
+  "c0ad74b8db1428d84c00ea6ef744b1bb18f0a9ed": { "facing": "ui" },
+  "469da0fb8327db7eddd4de2fb3edfec1ef8f2946": { "facing": "internal" },
+  "6daedaf54217c94e4aa579ff5851c062507bb2b2": { "facing": "ui" },
+  "44c69c95c3c48b1921c8b4b3ca847163c2016edf": { "facing": "ui" },
+  "520b2516c247f8a37c9e43a022c128f6ec9618ea": { "facing": "ui" },
+  "04b58105951fdf91ed6fab14eade4655840398ca": { "facing": "ui" },
+  "e6eadaacf7be50d2598e2b458d91803addb23c51": {
+    "facing": "model",
+    "id": "system-reminder-orphaned-agent-redispatched",
+    "name": "Redispatched Orphaned Agent Reminder",
+    "desc": "Explains a missing completion record after follow-up dispatch and how to recover its report."
+  },
+  "9dcdcfa8785b4ff2184694508e0adc9f071a9967": {
+    "facing": "model",
+    "id": "data-task-notification-background-agent-redispatched-fetch-follow-up",
+    "name": "Redispatched Fetch Agent Follow-Up",
+    "desc": "Requests another message to a resumable fetch agent before assuming its fetch completed."
+  },
+  "175ea82438a4b57701e76c22ed7eee2129ab9819": {
+    "facing": "model",
+    "id": "data-task-notification-background-agent-check-worktree-only",
+    "name": "Background Agent Worktree Check",
+    "desc": "Directs the model to inspect partial work in an agent's worktree or output."
+  },
+  "e59f9eea6e6d1dd5ee49dc7de37e6d1de588aafb": {
+    "facing": "model",
+    "id": "data-task-notification-background-agent-redispatched-status-follow-up",
+    "name": "Redispatched Agent Status Follow-Up",
+    "desc": "Requests another message to a resumable agent for a status report after follow-up dispatch."
+  },
+  "0ec42fafcbda4c1b6e50f3effbf039b849c3733c": {
+    "facing": "model",
+    "id": "data-task-notification-background-agent-transcript-saved-tail",
+    "name": "Saved Agent Transcript Assurance",
+    "desc": "Explains that a resumable orphaned agent's transcript and progress remain saved."
+  },
+  "40c5b8c8bd28e6f3347c3332bbb800528da41832": {
+    "facing": "model",
+    "id": "data-task-notification-background-agent-resume-fetch-report",
+    "name": "Resume Fetch Agent for Its Report",
+    "desc": "Directs the model to resume a fetch agent to retrieve its report."
+  },
+  "74571927d3139727f6f420fe6e94e4310f97012e": {
+    "facing": "model",
+    "id": "data-task-notification-background-agent-orphaned-resume-or-check-worktree",
+    "name": "Resume Agent or Check Its Worktree",
+    "desc": "Offers resumption or inspection of partial work for an orphaned background agent."
+  },
+  "2a38b25fd4f48742317ce55afdc5a6fef589b185": {
+    "facing": "model",
+    "id": "data-task-notification-background-agent-orphaned-resume-ask-status-report",
+    "name": "Resume Agent for a Status Report",
+    "desc": "Directs the model to resume an agent and verify its status before assuming completion."
+  },
+  "e9f87a4f9fd7a4e03bb9b215cbd0daa5b1abf24e": {
+    "facing": "model",
+    "id": "system-reminder-orphaned-agent-lost",
+    "name": "Lost Orphaned Agent State",
+    "desc": "Explains that an interrupted agent lost its in-process state and gives recovery guidance."
+  },
+  "6dc41684b3594a33f9b5a93d71057d3dcf1d2e41": {
+    "facing": "model",
+    "id": "data-task-notification-background-agent-completed-fetch-report-unavailable",
+    "name": "Completed Fetch Agent Report Unavailable",
+    "desc": "Explains safe relaunch choices when a completed fetch agent's report cannot be retrieved."
+  },
+  "c4b9517ffb724992cc0a228465fa3a45dc42ed4f": {
+    "facing": "model",
+    "id": "data-task-notification-background-agent-completed-report-unavailable",
+    "name": "Completed Agent Report Unavailable",
+    "desc": "Warns that a completed agent may already have done its work and should only be rerun safely."
+  },
+  "f2bf2f3359f58043b2639df1fb9f99d34f5ea3dd": {
+    "facing": "model",
+    "id": "data-task-notification-background-agent-completed-sendmessage-report",
+    "name": "Message Completed Agent for Its Report",
+    "desc": "Directs the model to message a completed agent to recover its report."
+  },
+  "ac73afd16a473bcb94f7c6e3674b89c17c5d928c": {
+    "facing": "model",
+    "id": "system-reminder-orphaned-agent-completed",
+    "name": "Previously Completed Orphaned Agent",
+    "desc": "Explains that only a completed agent's notification was lost and how to obtain its report."
+  },
+  "aa45da2e82fdd72eabe5bbd0a09b112d4bc6c380": {
+    "facing": "model",
+    "id": "system-reminder-orphaned-agent-restart-failed",
+    "name": "Orphaned agent restart failed",
+    "desc": "Explains how to recover an orphaned agent after automatic restart fails."
+  },
+  "68c1a33b497e234e4ce420d2c3105a160945cae3": {
+    "facing": "model",
+    "id": "system-reminder-orphaned-agent-restart-failed-check-output",
+    "name": "Orphaned agent restart failed with output",
+    "desc": "Reports restart failure and instructs checking an orphaned agent's output."
+  },
+  "af8dcc4685fa539d163e555a91281c91609e1831": {
+    "facing": "model",
+    "id": "system-reminder-orphaned-agent-restart-failed-no-recovery",
+    "name": "Orphaned agent restart failed without recovery",
+    "desc": "Reports that automatic restart failed when no recovery method is available."
+  },
+  "9d1cf06ea824c32fb9560e83a79efcf596b92811": {
+    "facing": "model",
+    "id": "data-task-notification-background-agents-relaunch-results",
+    "name": "Background agents relaunch results",
+    "desc": "Warns not to assume orphaned tasks completed and to relaunch them if needed."
+  },
+  "6114ab12ce70489ca18d104ba1d9d6730c7388ee": {
+    "facing": "model",
+    "id": "data-task-notification-background-agents-check-partial-work",
+    "name": "Background agents check partial work",
+    "desc": "Instructs checking orphaned agents' worktrees and output before assuming completion."
+  },
+  "afd11a98477cee13224b50a01ec7ad21d9018c95": {
+    "facing": "model",
+    "id": "system-reminder-orphaned-agents-aggregate-stopped-count",
+    "name": "Orphaned agents aggregate stopped",
+    "desc": "Explains missing completion records and recovery options for multiple orphaned agents."
+  },
+  "6ce520824738baf0c3668c7d7947ab15299ed305": {
+    "facing": "model",
+    "id": "system-reminder-orphaned-agents-transcripts-saved-tail",
+    "name": "Orphaned agents transcripts saved tail",
+    "desc": "States that stopped orphaned agents retain their transcripts and progress."
+  },
+  "aec9163e5f5ca1a09cb63f0a9ce42f4f3003fd7a": {
+    "facing": "model",
+    "id": "data-task-notification-background-agents-resume-fetch-report",
+    "name": "Background agents resume fetch reports",
+    "desc": "Instructs resuming orphaned web-fetch agents with SendMessage to obtain reports."
+  },
+  "0f0b3583ea88429e4e2ede99e592538622254755": {
+    "facing": "model",
+    "id": "data-task-notification-background-agent-resume-ask-status-report",
+    "name": "Background agents resume and ask status",
+    "desc": "Instructs resuming orphaned agents and asking for status before assuming completion."
+  },
+  "38d218be85e566901e5618e6c400c9a9a0e1809c": {
+    "facing": "model",
+    "id": "data-task-notification-background-agent-resume-or-check-worktree",
+    "name": "Background agents resume or check worktree",
+    "desc": "Instructs resuming orphaned agents or inspecting partial work before assuming completion."
+  },
+  "f86d7f489edb47e89f5417963c2ca196e0996577": {
+    "facing": "model",
+    "id": "data-task-notification-background-agents-aggregate-lost",
+    "name": "Background agents aggregate lost",
+    "desc": "Explains lost in-process state for orphaned background agents and recovery actions."
+  },
+  "d4a998c1254e7ab82b37c5419a1e8d1d5133fc3e": {
+    "facing": "model",
+    "id": "system-reminder-orphaned-agents-overflow-marked-failed",
+    "name": "Orphaned tasks overflow marked failed",
+    "desc": "Explains that excess orphaned background tasks lost state and were marked failed."
+  },
+  "f3ba2a50f89378ce6e1fdf1af13ba15258b7bced": {
+    "facing": "model",
+    "id": "data-task-notification-background-agent-relaunch-fetch-report",
+    "name": "Background agent relaunch fetch report",
+    "desc": "Instructs relaunching an orphaned web-fetch agent if its report is needed."
+  },
+  "e23100c3ca85f704ce839d21bd062800f253cea0": {
+    "facing": "model",
+    "id": "data-task-notification-background-agent-relaunch-results",
+    "name": "Background agent relaunch results",
+    "desc": "Warns not to assume an orphaned agent finished and to relaunch it if needed."
+  },
+  "bfa2fb2539508895d2349d0de7989feeb90714c9": { "facing": "internal" },
+  "9f6a1b0cde6f1bb600f040f25c622d27430e43d1": { "facing": "internal" },
+  "9a319a0d9fabf808f5cde1c50050aa31dbe7e5dc": { "facing": "internal" },
+  "99c455d0a0309e803a896d1fdc9f5e25d4efe267": { "facing": "ui" },
+  "2c857c8598a6f523832d40f22b949cbdde83f33c": { "facing": "ui" },
+  "47009135e136bd049bc88e0fb3ff1edf597fa656": { "facing": "ui" },
+  "2a4a5dde4fadddf8da91254ac1f85aa7004fb8f6": { "facing": "ui" },
+  "efd3c9885c7d661da86ec5708fa4c531c47ccefd": { "facing": "internal" },
+  "cefb335127f45666e2f4593d9fd9378223b2342b": { "facing": "ui" },
+  "cfb32f022691752c43c9028e7687848226c1e574": { "facing": "ui" },
+  "76db37480de22d294f0ce1911104da1e54c603b0": { "facing": "ui" },
+  "4f7745f89b0325860b4b12efca6a3e15612fd50f": { "facing": "ui" },
+  "584987033fb92c747b4bdaf4abe739c5399cfbea": { "facing": "ui" },
+  "14d3fa0002fab60033343863d4ced8f05d7a430a": { "facing": "ui" },
+  "ff59ae3d1b2692951824ae85174da198c8ba91cb": { "facing": "ui" },
+  "b51054aa176237fb3dc8dfb363ff9c4ceb374cdf": { "facing": "internal" },
+  "7923a5b4b416c53ec1721a072f65ea762db61fea": { "facing": "internal" },
+  "a7315c6e8f6c502eb1091e7f896b3b64aa6339ab": { "facing": "ui" },
+  "7c81bccb743e74be0ad4a5222468d0e45905f95f": { "facing": "ui" },
+  "0cef5afef2f5566af197c4dbf90de7055a521cc3": { "facing": "ui" },
+  "c5190f5df28fc13ce351bd8c009d3df8fa3a0e61": { "facing": "ui" },
+  "cbb172aff2fed79d5fd29f0dfa23c87b8a48bb52": { "facing": "ui" },
+  "19707eba02f03e0a745d3a52c46ae9705cfbfd09": { "facing": "internal" },
+  "5b473b35e76d40961d30fa70839b8c633595616b": { "facing": "ui" },
+  "c46e538b71aebe26536d856228d2c815a2b1f901": { "facing": "ui" },
+  "0a6e6661b586a872ae997483d010054d283cf908": { "facing": "ui" },
+  "371b5b5b89a10ec6b53713ed49d577931264bcd0": { "facing": "ui" },
+  "d8dc7e4f21d9770147874364aca706a0fc192f75": { "facing": "ui" },
+  "21def4bf513d45fe17c75a892259a2356ced26e0": { "facing": "ui" },
+  "ee026d6a3ea87da674e80ce135cd7009cd7062e9": { "facing": "ui" },
+  "6592939dddca671a92aa7398a124c2a9139111ca": { "facing": "ui" },
+  "25c26c4136ccdf0399fc6c5b73fe3bc043a216a6": { "facing": "ui" },
+  "a23728ad422f46ef59584a1466f5c476285ff54f": { "facing": "ui" },
+  "733832316c25caac58c9b016442b8b53699c9bbd": { "facing": "ui" },
+  "a4bed502bbaacee938b2cca0cdb05be5edacd9e9": { "facing": "ui" },
+  "f8e8c2ffa07294d041e558c8078a71df966db6ce": { "facing": "ui" },
+  "85a88168a60ad6dfa515e6c3700dbecbe76ba11d": { "facing": "ui" },
+  "930847a0c34bb17717bd17bd479e2f5477479677": { "facing": "ui" },
+  "eb228ac513ac4b2ea0f1f871408c0d277ba0e3e0": { "facing": "ui" },
+  "659294c98a89336b58ba850e18b25e2ecf1f9cfc": { "facing": "ui" },
+  "d6b0fb2d591496c5dcadebe21ee2159daa43b060": { "facing": "ui" },
+  "77d07861dcf4bc7ec9276f33f463a0294164a487": { "facing": "ui" },
+  "2abf8d8737b2c82f5d7f833c634dca69c4f21a00": { "facing": "ui" },
+  "58df8e2f2488c396220135860eabb3130fc848a6": { "facing": "ui" },
+  "d2e0a00004f0bfb70c0a638651ec8c16ecd08b89": { "facing": "ui" },
+  "9011aba7fc01f0238a48699f9e3f479f1f85e092": { "facing": "ui" },
+  "f403945d0bcc7dc0823573842578b30e9970c62b": { "facing": "ui" },
+  "ee05c1e8146e2fa528fb1c5f3fed1242d3e4c3d4": { "facing": "ui" },
+  "b9daac998c87a0cb69aa5a2a4a000b250d1835d7": { "facing": "ui" },
+  "255fb63b00d407e3ba0640c9d18cd4b88ba23560": { "facing": "ui" },
+  "741079d6893ac6ffb87aa835bc41e2993b025ee4": { "facing": "ui" },
+  "ab4b4e031d8abe42f3e8b50a807a7048c1cc6c31": { "facing": "ui" },
+  "cd72326b2e6991fc74a9bb26de7b02779d65329c": { "facing": "ui" },
+  "b9b3b8001a9ff4da71560742fbabd56d3bb894e6": { "facing": "internal" },
+  "1ccc3a29c590fba7808cff4df8d1c18ef1ead548": { "facing": "ui" },
+  "937420fd4ee27f85e5b060eabfe6574f8a1efce3": { "facing": "ui" },
+  "545754af34bd76d4b2bad4994f07aeffeaaf4839": { "facing": "internal" },
+  "6dace16f7c4efee4f20c26969eac44d4489d1362": { "facing": "internal" },
+  "077ab264aa9444a4b6a869f5efccea3351dea2c2": { "facing": "internal" },
+  "19e9a4d0b7bf667226c9f742a4c93bf6679d6083": { "facing": "ui" },
+  "abbe0d6ca51951741a98d3cc74956a9ba49fbca1": { "facing": "internal" },
+  "e9bd7bc00ca83b499e6ffba464096382be0756fe": { "facing": "internal" },
+  "2be84b60f249e102581858db662f3ebbc9c6e2ba": { "facing": "ui" },
+  "60c7b73e73f70d41295ac367ae99c588098f9ec9": { "facing": "ui" },
+  "0499565d664461013e456383299ca3248fd4646c": { "facing": "ui" },
+  "2efe6da66d3cc13f723d9b9a8dc68f8e2b1e2955": { "facing": "ui" },
+  "9911b379f19a04c8b2b222d6edc2eb809d146d9f": { "facing": "ui" },
+  "851c816caaecc82d31f1c8f064a4b0fbd74757f1": { "facing": "ui" },
+  "8b21e97cb9a051e83ad1c2bd8c6f5116a8cf5edc": { "facing": "ui" },
+  "38e68bdc8ef220278a8e8a3071e62bab877dd341": { "facing": "ui" },
+  "3d5976998ab435717b8b2b91cc9dc26d6b9c1b2e": { "facing": "ui" },
+  "1fb7a1ee0d3dfc9248fee13bbf0e682dd4024f7c": { "facing": "ui" },
+  "472b29e0a84a5851ed7e37bb6baec0074132372d": { "facing": "ui" },
+  "ff47d4724e08b14bd93eea817e61b9b0eca349f5": { "facing": "ui" },
+  "1c4d585bf95cb27edbc8256973d3931e2bb72e52": { "facing": "ui" },
+  "5aed299d627c14381531109861d8ca8b4cb2057c": { "facing": "ui" },
+  "663da6367a61f053ec68338cebf0665e7f6aedc2": { "facing": "ui" },
+  "0edc8da541edc12d4be71853a647441213ba4c22": { "facing": "ui" },
+  "634d76c52edc530abf2f9b05707ed051afebb5fa": { "facing": "ui" },
+  "097b047b64aab7e661a5cc2ef78bfaf6a3b07314": { "facing": "ui" },
+  "4e7aeb43c7357bb11921b467be9e9449239399aa": { "facing": "ui" },
+  "786d63e3c8bab4e9b0b4062d327c9315811721ff": { "facing": "ui" },
+  "d00cdb2fd2c6822db964090283878313aff0361a": { "facing": "ui" },
+  "e67ea98ccd0c27f21d29ded34c99482911d5b7c3": { "facing": "ui" },
+  "3d3179e93c846b630ae2edb8479224fce6b51b76": { "facing": "ui" },
+  "b5cee7cd7744a6f25456360545917a6208077c77": { "facing": "ui" },
+  "98baa6026dd74a3366900a5e5dfb5747e05e3a0b": { "facing": "ui" },
+  "6777fe45b1cf2c3c8f7cb82876cceff851ddf5e3": { "facing": "ui" },
+  "eee07c62c99c93e988d3941c5b65856385dd9592": { "facing": "ui" },
+  "805baef3b7d136db14833ef43c00bcf4bf0117d4": { "facing": "ui" },
+  "7dadf040e66442faaf44f7fb3795afe134fd5c8c": { "facing": "ui" },
+  "2bac4fce11e080dace28bf2fe8000715933e717d": { "facing": "ui" },
+  "a08cce7a9ff5a66037f6d5ba74f1aea8c49fffee": { "facing": "ui" },
+  "b44e009327e00949439843fb78b9cf2d9d402bfa": { "facing": "ui" },
+  "030a16de0b84224aaa1fe153a469683992643b84": { "facing": "ui" },
+  "179170a5c5913142461e531e4baac84f370f32d2": { "facing": "ui" },
+  "4232c9757cec8b9b593a6e266053d4328e167c48": { "facing": "ui" },
+  "d59ec9018b45a8ce410a28383e10e34264872880": { "facing": "ui" },
+  "a63566210ab006331caf389b766ac7474b5d71b8": { "facing": "ui" },
+  "b030f5e2ceaf4e60148299f5ec67e7cd3c640ca8": { "facing": "ui" },
+  "5e47a6e1ff3d3f0a2cab7212f77c4a6b5a4cbc86": { "facing": "ui" },
+  "adf63c58ff6e48067630dc5e6252ee9e71d3d528": { "facing": "ui" },
+  "f5d399156b42bd11db224f46e97dca6b7b06c75a": { "facing": "ui" },
+  "e7f0c673d81d8422229f5be9be784aae21fbaec8": { "facing": "ui" },
+  "7322d5e38b4ca473f4d2c3c295ee18ea82d36237": { "facing": "ui" },
+  "9d99ba392d3c24c82f5354d329f81c1d06413ee0": { "facing": "ui" },
+  "4d207c27d96d49665a3c1955e2353cf971c275f4": { "facing": "ui" },
+  "f9fd88fc4c583d904ec219bdf72630a12d99dde0": { "facing": "ui" },
+  "8580f6cb09b2069dbbe43208491297ef38e20fe4": { "facing": "ui" },
+  "9a9f890639503c1bb367ec572500621d115ae7f9": { "facing": "ui" },
+  "464b70b6e9bf5d89b117c70ed8ccc333bd4fd6a4": { "facing": "ui" },
+  "8e4ba49dd21dd76accad6d84263fbeeb7b081da8": { "facing": "ui" },
+  "6febe1cf91f9d388405aa0cefed44f4d2d72da60": { "facing": "ui" },
+  "d7c9f8cf3d40cb26ba4970c8df8429b4726a65a5": { "facing": "internal" },
+  "4eae834c3fe2f970d6dd9c01f27a303f0de4b593": { "facing": "internal" },
+  "9388e723a874a8441ef6ac8a31b0c023ceb541c5": { "facing": "internal" },
+  "459c554fb51a0a5e0a484db3a124cf51c57e6c1b": { "facing": "ui" },
+  "09a92b894172a4a0a5df8eb02946644987c93473": { "facing": "internal" },
+  "7f40dc434404d5ae33ec93c6e62f626b7d4e3cef": { "facing": "ui" },
+  "701d99c0076d01cbdf128192954be27070360319": { "facing": "ui" },
+  "510039d1776546efae157dec9dab0f0404cd0048": { "facing": "ui" },
+  "e2e08ddc99d6b0c58f623216007da82a6f548faf": { "facing": "ui" },
+  "cb60660a438cf572c379d65356d9e43a0e099b39": { "facing": "ui" },
+  "ca3f6d29783b919d16785c0d6d349744d241c5de": { "facing": "ui" },
+  "54e7457bade42762f5fe0face700b42f7f8f47d4": { "facing": "ui" },
+  "1bcce524c224cef317da0bc3cbf4d2ba1f6cdf8f": { "facing": "ui" },
+  "25bac1b743a75cdeaaff969549de82d563acffae": { "facing": "ui" },
+  "3768e5bc974fd5ad4782b71477e70ae134d1e8e5": { "facing": "ui" },
+  "0c93f957394023847551e9c47e8508fcd442554e": { "facing": "ui" },
+  "7b75c8cf1a06542d32371b09d9f1c7256fe6cafe": { "facing": "ui" },
+  "934b7ac17f6e7e6d40eb7097f732c731d2f93f67": { "facing": "ui" },
+  "16e2645d81c204a69ba9efe67d54b8eaaa7187df": { "facing": "ui" },
+  "624d9adf4783625f465bc338981865fdda8a1060": { "facing": "ui" },
+  "fc4cf7f9028b79be0aeef70ab8ca243ba1bb5ab5": { "facing": "ui" },
+  "7e8ba93a96bef0e9a88a85e8b76016e737e9177b": { "facing": "ui" },
+  "5bfe15afbcde3fc7bfe61d2129561671f67c88d4": { "facing": "ui" },
+  "d318eda872332a48b7cdfc00bd638b52f441e625": { "facing": "ui" },
+  "e346be3ad583f741b606c0f36cb1c714d7ce0b4e": { "facing": "ui" },
+  "88d2ecd5096c8974e37da14d837486f4c5cf670d": { "facing": "internal" },
+  "f1b1c24932ecbe92356e30fd60573f8264cd4efc": { "facing": "internal" },
+  "1e4a3fd250e0b1f1e5927618808c216ad3fcf3fd": { "facing": "internal" },
+  "e3c455fc1ae0cf0f523697d19b973d8a1dae692d": { "facing": "internal" },
+  "07a29f6812dea382c1df816d5787031e83bf2ba8": { "facing": "ui" },
+  "c2b68895f1732585004bf5c12a8199a65d244a40": { "facing": "ui" },
+  "e135c4e19fe48f646cee98b7b6f51bd808e62dad": { "facing": "internal" },
+  "012eb39c6bf17398da17078a11a33d964dec67a0": { "facing": "internal" },
+  "551c174c736c23568a585ef0116daeb780dc765d": { "facing": "internal" },
+  "170e889f2417382b0dd72ef938f883c6f21534df": { "facing": "internal" },
+  "9ba6887a746cb48fbe384f87b8cef9c3cba2ccd8": { "facing": "internal" },
+  "aaa695bac69c38cb4ce86149f9fba3282f670636": { "facing": "internal" },
+  "b5c08bb3997dcf5f023e5086341ed82f8a9aaca7": { "facing": "internal" },
+  "3bd191936097df8d310bfba002f75dbc816213bb": { "facing": "internal" },
+  "686cb34cf07d99273020d87772b0b165aa86b7c5": { "facing": "internal" },
+  "4126d3cbe9070bf29fe4f8165db5e2dc9acfb691": { "facing": "internal" },
+  "8afafbde2ce145a6ea34a6cde5cad1fc2b7077de": { "facing": "ui" },
+  "09c4bd846571471be1e8cd8c5bcfd120f9395e7a": { "facing": "internal" },
+  "886106723c469b07435bbbb8289d49ecbf2c181f": { "facing": "internal" },
+  "9b4ff48cc91136273d11af79a6a307b958e2e7ff": { "facing": "internal" },
+  "13f063a7b5ba2623a9068671623129ae2102a542": { "facing": "internal" },
+  "4963fbf0b2d715bb0dd0c14b0dc605c28b10c545": { "facing": "internal" },
+  "4ebb572181e24b6df3c87a8688904dc257664ac3": { "facing": "internal" },
+  "9a92b368a57004ac79edc3bd3030c883df2d8641": { "facing": "internal" },
+  "e48c4f7ef4dab06171b060d988daa49d35e24f6c": { "facing": "ui" },
+  "cf80dbd6c57feff5becfc4fd36b7b918320b3140": { "facing": "ui" },
+  "8f2b68bb737a8f58884f95e71bf7d5913aec3b1c": { "facing": "ui" },
+  "7a75efafd8068bd2607014c82d82a6e5f242ad30": { "facing": "ui" },
+  "2e16c3cfe11c97605e6bc1352383e362b0173e65": { "facing": "ui" },
+  "ad5de8b810d0d8bd5ea5ada8828bccc285aed3d1": { "facing": "ui" },
+  "f93fa962bcd08e21c24eaad0089dd245d02163ef": { "facing": "ui" },
+  "35a04f480a2b200d8396b469f393511855d197de": { "facing": "internal" },
+  "e13edbb83337f28357638f39dd4d39f5ed888934": { "facing": "ui" },
+  "406a388ef9030cebdcd0e824fb5a7eb51396073b": {
+    "facing": "model",
+    "id": "tool-result-artifact-quickstart-motion-type",
+    "name": "Artifact quickstart motion type",
+    "desc": "Guidance for publishing a short animation or video from the motion Artifact type."
+  },
+  "33881cee1b6be99c0f2a2f6eaa5c45dba690e94c": {
+    "facing": "model",
+    "id": "tool-result-artifact-quickstart-type-to-start-from",
+    "name": "Artifact quickstart type to start from",
+    "desc": "Introduces the published Artifact type selected by quickstart."
+  },
+  "ee4e1437cc70946c3e527189d096b08f1849548c": {
+    "facing": "model",
+    "id": "tool-result-start-task-files-user-attachment-guidance",
+    "name": "Start task user attachment guidance",
+    "desc": "Asks the user to attach a credential-sensitive file themselves."
+  },
+  "04b95bdf1b0f5ab5d9c621f48543518e3f845eec": {
+    "facing": "model",
+    "id": "tool-result-start-task-files-credential-name-refusal",
+    "name": "Start task credential file refusal",
+    "desc": "Explains why a credential-named file cannot be attached without user action."
+  },
+  "fd6f156f39203354a608d63737e461997836bbbb": {
+    "facing": "model",
+    "id": "tool-result-start-task-files-remote-upload-path-guidance",
+    "name": "Start task remote attachment path guidance",
+    "desc": "Explains where user-uploaded chat files can be found for task attachments."
+  },
+  "8877bd6773654dcd65d4b5c2013e5715f82d3e9a": {
+    "facing": "model",
+    "id": "tool-result-start-task-files-path-read-refusal",
+    "name": "Start task unreadable attachment refusal",
+    "desc": "Explains that task attachments must be files the current session may read."
+  },
+  "b4841094637fb06577abd2324dff9b20aabbc956": {
+    "facing": "model",
+    "id": "tool-result-start-task-files-hard-links-refusal",
+    "name": "Start task hard-link attachment refusal",
+    "desc": "Rejects a task attachment whose file has multiple hard links."
+  },
+  "d98e18e4062c6f5d4c99236f2b0b0f8b6ffd4cb7": {
+    "facing": "model",
+    "id": "tool-result-start-task-files-not-regular-refusal",
+    "name": "Start task nonregular attachment refusal",
+    "desc": "Rejects a task attachment that is not a regular file."
+  },
+  "9dc20b3f1ff0c3fdf5726483322f72f13c6c3d59": {
+    "facing": "model",
+    "id": "tool-description-projects-write-session-local-path",
+    "name": "Projects session local path parameter",
+    "desc": "Describes project_write local_path uploads from a file fully read or written in the session."
+  },
+  "fab948d03dd5d94b661621e084f2a5195998879d": { "facing": "internal" },
+  "6fc6f0342294a954cd34b23f2da14e0a41cfefc2": {
+    "facing": "model",
+    "id": "tool-result-project-write-retry-existing-document",
+    "name": "Project write retry existing document",
+    "desc": "Advises retrying a transient save failure while retaining the existing document."
+  },
+  "53629335556494e60aba24b9ac29de4f5b38a506": {
+    "facing": "model",
+    "id": "tool-result-project-write-new-document-save-uncertain-retry",
+    "name": "Project write new document retry advice",
+    "desc": "Advises reading back a possibly saved new document before limited retries."
+  },
+  "115367fa3176d9bf0006b52eb86d0eac5afcbcfc": {
+    "facing": "model",
+    "id": "tool-result-project-write-retry-after-unconfirmed-save",
+    "name": "Project write unconfirmed save readback",
+    "desc": "Requires readback and one retry after an unconfirmed replacement save."
+  },
+  "1d40b13c70dce5a2c4fe34e934f5354a78785404": {
+    "facing": "model",
+    "id": "tool-result-project-write-content-not-saved-guidance",
+    "name": "Project write content not saved",
+    "desc": "Tells the model to report that the document was not saved and offer another delivery method."
+  },
+  "820f462a1a5c0dd3682f3be68aeb9b4fede32706": {
+    "facing": "model",
+    "id": "tool-result-project-write-new-content-save-uncertain-guidance",
+    "name": "Project write new content uncertain",
+    "desc": "Tells the model to report uncertainty about saving new content."
+  },
+  "15fc2fc77a22e38e168785475f6dcab3370d9936": {
+    "facing": "model",
+    "id": "tool-result-project-write-new-document-save-uncertain-guidance",
+    "name": "Project write new document uncertain",
+    "desc": "Reports uncertainty after a nonretryable new-document save failure."
+  },
+  "0c117b1e6e4434797ec81caed7bf8876f9e0c89a": {
+    "facing": "model",
+    "id": "tool-result-project-write-do-not-delete-to-retry",
+    "name": "Project write preserve document on retry",
+    "desc": "Warns against deleting an existing document to retry a failed save."
+  },
+  "5ef3328ed2eecb1238360e5ab272e5376aaa5d67": {
+    "facing": "model",
+    "id": "tool-result-project-write-existing-document-save-refused",
+    "name": "Project write existing save refused",
+    "desc": "Explains that a refused write kept the existing document unchanged."
+  },
+  "394e9c452f4b54fd16b5e6317d0cacb6987f48db": {
+    "facing": "model",
+    "id": "tool-result-project-write-old-document-retained-duplicate-possible",
+    "name": "Project write possible duplicate retained",
+    "desc": "Explains that an earlier document remains and a late save may have created another copy."
+  },
+  "0e4161469521739663d9d107201a8bb1dff6f6cd": {
+    "facing": "model",
+    "id": "tool-result-project-write-retry-duplicate-save-unconfirmed",
+    "name": "Project write uncertain duplicate retry advice",
+    "desc": "Adds readback and limited retry advice when a replacement save may have created a duplicate."
+  },
+  "a89668e9206531be0c4721673a2bce04ea77ad09": {
+    "facing": "model",
+    "id": "tool-result-project-write-existing-document-save-uncertain",
+    "name": "Project write existing document uncertain",
+    "desc": "Explains that the existing path still contains old content or a late completed save."
+  },
+  "a8da445d91d178984694bcfb254be959881b614c": {
+    "facing": "model",
+    "id": "tool-result-project-write-localpath-session-invalid-path",
+    "name": "Project write invalid session file path",
+    "desc": "Rejects a nonabsolute or excessively long local_path in the session."
+  },
+  "eec17781c7949d208b39819a2fb02344a1e2cfbc": {
+    "facing": "model",
+    "id": "tool-result-project-write-localpath-session-read-first",
+    "name": "Project write session file read required",
+    "desc": "Requires reading or writing the whole session file before uploading it by local_path."
+  },
+  "225ecd17a9e350b29b478420675221058ef6edeb": {
+    "facing": "model",
+    "id": "tool-result-project-write-localpath-session-not-as-read",
+    "name": "Project write session file changed",
+    "desc": "Rejects session file contents that differ from the complete read or write record."
+  },
+  "d759ad23a7ee10c31d1706085c93a7d00e62eff3": {
+    "facing": "model",
+    "id": "tool-result-project-write-localpath-session-over-cap",
+    "name": "Project write session file upload limit",
+    "desc": "Rejects a session file exceeding the one-MiB path-upload limit."
+  },
+  "e061f9be0e3c3be45ba593e8d13e548bde6d4ce0": {
+    "facing": "model",
+    "id": "tool-result-project-write-localpath-session-cloud-unreachable",
+    "name": "Project write session cloud read unavailable",
+    "desc": "Reports that the session environment could not be reached and no project write occurred."
+  },
+  "db9eecea7e7cc5d462ef01b64d6fbc09f64f3fcb": {
+    "facing": "model",
+    "id": "tool-result-project-write-localpath-session-not-uploadable",
+    "name": "Project write session file cannot upload",
+    "desc": "Rejects other session-host file-read failures and asks for explicit text content."
+  },
+  "f856b67f8bde9fd4483ad02f397778681dbcdaa3": {
+    "facing": "model",
+    "id": "tool-result-project-write-localpath-outside-cwd-read-first",
+    "name": "Project write outside-directory read required",
+    "desc": "Requires a full unchanged read record for a file outside the working directory."
+  },
+  "38c93d8e7d368e65f4c3e5a4e03e709fc1181ba8": {
+    "facing": "model",
+    "id": "tool-result-project-write-localpath-outside-cwd-notebook",
+    "name": "Project write outside-directory notebook refusal",
+    "desc": "Rejects uploading a notebook outside the working directory by local_path."
+  },
+  "7a09854530bb9a4900a80f57e01210cc78e7ea24": {
+    "facing": "model",
+    "id": "tool-result-project-write-save-unconfirmed",
+    "name": "Project write save unconfirmed",
+    "desc": "Warns that a replacement document save could not be verified and nothing was removed."
+  },
+  "9daa9e9ed0ff9ae0bf4c5b0e94d7ad588791c710": {
+    "facing": "model",
+    "id": "tool-result-project-delete-no-undo-reminder",
+    "name": "Project delete cannot undo",
+    "desc": "Reminds the model that project deletion is irreversible and project_write replaces documents in place."
+  },
+  "6f0de3ae6a7b8ccb48dd6d15d1f00b5f6f46e38d": {
+    "facing": "model",
+    "id": "system-reminder-remote-machine-command-literals",
+    "name": "Remote machine command literals",
+    "desc": "Explains which shell command forms the user's machine can inspect before execution."
+  },
+  "302339d33fa42f6f7ac5018306bbd2a38217e48e": {
+    "facing": "model",
+    "id": "skill-claude-test-still-getting-ready",
+    "name": "Claude Test still getting ready",
+    "desc": "Tells the model to report that Claude Test is still loading and stop."
+  },
+  "ecdc138351f3debdf27645a9e2deaf5517f5560e": {
+    "facing": "model",
+    "id": "skill-claude-test-type-in-prompt-box",
+    "name": "Claude Test start from prompt box",
+    "desc": "Tells the model how the person should start Claude Test from the running terminal."
+  },
+  "94d3ad422cd697ea9626b1b054365efaf49f3685": { "facing": "internal" },
+  "ba6a9022e86f721621281dfcc0005ad13c1ff281": { "facing": "internal" },
+  "e28485ae8deb2bd7cc16899b1b0a46a6e5def26e": {
+    "facing": "model",
+    "id": "tool-result-listagents-no-other-session-without-send-tool",
+    "name": "ListAgents no other session without messaging tool",
+    "desc": "Reports an empty agent listing when this caller cannot send messages."
+  },
+  "dfd2790092bd7a894e8240d4a1ffc4d076978e8a": {
+    "facing": "model",
+    "id": "tool-result-listagents-messaging-tool-unavailable",
+    "name": "ListAgents messaging tool unavailable",
+    "desc": "Warns that listed agents cannot be messaged because the required tool is unavailable."
+  },
+  "0b021bdd2099d4d75b997ce834566af19313125e": {
+    "facing": "model",
+    "id": "tool-result-mcp-http-tool-container-content-encoding-refused",
+    "name": "MCP tool container content encoding refused",
+    "desc": "Explains that a compressed HTTP response from a tool container was not read."
+  },
+  "b988f94ed0de635d0cdc12b5a94f63fc8c19184d": { "facing": "internal" },
+  "e132fae3a2be99331b9b324e1c95dce6a6fbfd4a": { "facing": "internal" },
+  "b51933a4f0cd5cff9fc9ef40631d2792aa878df7": { "facing": "ui" },
+  "306854fddbe86f3dcec5f6eced386b07265dc062": { "facing": "ui" },
+  "2ab83fedc4b7975927f3dc77771e77c385b4ec07": { "facing": "ui" },
+  "af848ae0c468d4e657c08e2bc7b02cf2dc921769": { "facing": "ui" },
+  "ca71faaf9961dd056d5a9aeaf08a5cb89c87c60f": { "facing": "ui" },
+  "110c771a7a69643ef5f6591d5156e2aa9a0b5643": { "facing": "ui" },
+  "0818845f6cc81fc2d714265adc36236fa814dd75": { "facing": "internal" },
+  "350355e84bf252450269cd74ef964147555f386d": { "facing": "internal" },
+  "3857f435572e58e996410d462ff8444a5c09ab3f": {
+    "facing": "model",
+    "id": "tool-result-start-task-input-enum-invalid",
+    "name": "Start task invalid enum argument",
+    "desc": "Lists allowed enum values when start_task input validation fails."
+  },
+  "2715c518e893bb5af20d410f0777b391c09e9187": {
+    "facing": "model",
+    "id": "tool-result-start-task-file-ids-refused",
+    "name": "Start task supplied file ids refused",
+    "desc": "Requires local paths instead of file ids and explains why old approvals cannot be reused."
+  },
+  "81675c2eb9e2104d303c7ccb387ab59e54758a68": {
+    "facing": "model",
+    "id": "tool-result-start-task-too-many-files",
+    "name": "Start task too many files",
+    "desc": "Reports that the requested file list exceeds start_task's file-count limit."
+  },
+  "99603ff04aaa461901477d1eb4b85b7a5566307e": {
+    "facing": "model",
+    "id": "tool-result-start-task-file-path-not-absolute",
+    "name": "Start task file path not absolute",
+    "desc": "Requires file paths to be absolute as seen by the session."
+  },
+  "2ad8a0d7b5cc6f0434c171cd44c953d47851f9cb": {
+    "facing": "model",
+    "id": "tool-result-start-task-file-entries-invalid",
+    "name": "Start task invalid file entries",
+    "desc": "Describes the required list of file objects and maximum path length."
+  },
+  "8e64f03009928bbeaa84cab1b0e5b0ad7dc4ea7f": {
+    "facing": "model",
+    "id": "tool-result-start-task-file-attachment-failed",
+    "name": "Start task file attachment failed",
+    "desc": "Reports an unexpected failure while preparing task attachments."
+  },
+  "8bcfe2afaaa0476c2d4c40354d8df4c1e60c3307": {
+    "facing": "model",
+    "id": "tool-result-start-task-file-uploads-expired",
+    "name": "Start task file uploads expired",
+    "desc": "Requires fresh uploads when a task approval uses attachments that are expiring."
+  },
+  "d2642ffa5d866f7cdf40f0361639a04f26145055": {
+    "facing": "model",
+    "id": "tool-description-start-task-attached-file-paths",
+    "name": "Start task attached file paths",
+    "desc": "Explains how to pass chat attachments to start_task using full paths."
+  },
+  "b563cbbc1bc4bdb7e8e5f099bd7312cfde84418d": { "facing": "internal" },
+  "924bd4efde94242de2944afc643393c64aec4e22": { "facing": "internal" },
+  "f23cefecb862f5804c06f8dc8601bbcf66e3be62": {
+    "facing": "model",
+    "id": "tool-result-start-task-file-name-direction-control",
+    "name": "Start task file name direction control",
+    "desc": "Refuses filenames containing a text-direction control character."
+  },
+  "a68e56b22e089786c2ce19aa4e8986b5a40be9f4": { "facing": "internal" },
+  "3c038f7de9ccfd10fb5afdcf28d654e56d7fe9c2": { "facing": "internal" },
+  "37b21d9d6d1973321de76afd68b73ecacf59e604": {
+    "facing": "model",
+    "id": "tool-result-start-task-files-total-size-exceeded",
+    "name": "Start task total file size exceeded",
+    "desc": "Refuses an attachment set whose combined size exceeds the per-call upload limit."
+  },
+  "a8f31c4f450e7f4e347f8c0cea06dce2e5b83d10": { "facing": "internal" },
+  "dbebd36c446a720bf2b17d2b28f5b4c73e53a19b": { "facing": "internal" },
+  "d857eb7372731e0fd3b8849752c4c3accdf173b5": { "facing": "internal" },
+  "c7dc33cd50d0acfcb8f83b81ff10cffd598f2b44": { "facing": "internal" },
+  "1a9938c5ee051787e780c98938a502366f4bfb28": {
+    "facing": "model",
+    "id": "tool-result-start-task-file-uploads-too-slow",
+    "name": "Start task file uploads too slow",
+    "desc": "Refuses slow attachment uploads that would expire before the task copies them."
+  },
+  "703461dede0b0793caaff5d90572e6e87e95a36a": {
+    "facing": "model",
+    "id": "tool-result-start-task-file-uploads-nonessential-traffic-disabled",
+    "name": "Start task file uploads traffic disabled",
+    "desc": "Explains that uploads are disabled by CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC."
+  },
+  "5d11174cffcde1fce9306baaf395a43daf1d8d78": {
+    "facing": "model",
+    "id": "tool-result-start-task-file-uploads-policy-pending",
+    "name": "Start task file upload policy pending",
+    "desc": "Asks for retry or a task without files while the organization's upload policy is unavailable."
+  },
+  "4861793aa7dd790e45663eca1f61b99e804dcb04": {
+    "facing": "model",
+    "id": "tool-result-start-task-file-uploads-egress-blocked",
+    "name": "Start task file upload egress blocked",
+    "desc": "Reports that this configuration does not permit uploading attachments to Anthropic."
+  },
+  "412d1d683abdffdee0e330aa1ce96dbff748ea3a": {
+    "facing": "model",
+    "id": "tool-result-start-task-file-upload-auth-rejected",
+    "name": "Start task file upload sign-in rejected",
+    "desc": "Reports authentication rejection during file upload and suggests signing in again."
+  },
+  "bcd354557751c8359e4a952a2ae2afed93d361bd": {
+    "facing": "model",
+    "id": "tool-result-start-task-file-upload-forbidden",
+    "name": "Start task file upload forbidden",
+    "desc": "Reports that the session's sign-in may not upload the requested file."
+  },
+  "b227b85e47a4bcc4f3341bc76dd273cbd680d530": {
+    "facing": "model",
+    "id": "tool-result-start-task-file-upload-too-large",
+    "name": "Start task file upload too large",
+    "desc": "Reports that the Files API rejected an attachment as too large."
+  },
+  "882bfe7438582f35151d4cda6859b5957bd8a97e": {
+    "facing": "model",
+    "id": "tool-result-start-task-file-upload-server-rejected",
+    "name": "Start task file upload server rejection",
+    "desc": "Suggests starting without a file after the Files API rejects its upload."
+  },
+  "4debaba448d44aaa0882f10a528b09b5c01a18db": {
+    "facing": "model",
+    "id": "tool-result-start-task-file-upload-incomplete",
+    "name": "Start task file upload incomplete",
+    "desc": "Suggests retry or proceeding without a file after a read or network upload failure."
+  },
+  "31ec6c3d489702f0afa405bc45152b3ae60d61d0": { "facing": "ui" },
+  "e02bf0acb887d700d07b99ace2762d8dc17427d6": { "facing": "ui" },
+  "4b1a02c191da2cc26047f065159c3e72a13b3f9e": { "facing": "ui" },
+  "c9b97dba7bc1445831720b945cc84bd602a2bfae": { "facing": "internal" },
+  "eb38ff9ba143d462fb22cb067c93ae492c0dd9c5": { "facing": "internal" },
+  "028854170baf98c86c53c7b4f1edb3512d53168a": { "facing": "ui" },
+  "672be8885efb9c83f00f24b401cf76e4388fd34e": {
+    "facing": "model",
+    "id": "data-task-notification-agent-turn-limit-partial",
+    "name": "Data: task notification agent turn limit partial",
+    "desc": "Task-notification status when a background agent stops at its turn limit with a partial result, optionally followed by the continue hint."
+  },
+  "f1d9d3ac02bd13552a53c69ada3d17226b485ac2": { "facing": "internal" },
+  "4febc1712ff4074d652528201df47a82cc0520c7": {
+    "facing": "model",
+    "id": "data-task-notification-agent-turn-limit-continue-hint",
+    "name": "Data: task notification agent turn limit continue hint",
+    "desc": "Tail appended to a turn-limited agent's partial-result notification telling the model to message the task id to continue it."
+  },
+  "e7f5c97a121cf16cb332dbb421972e5f8a84b639": {
+    "facing": "model",
+    "id": "data-task-notification-background-agents-webfetch-resume-only-tail",
+    "name": "Data: task notification background agents webfetch resume-only tail",
+    "desc": "Tail of the orphaned background-agents notification telling the model that web-fetch agents have no worktree or output to check and can only be resumed with the messaging tool."
   }
 }
