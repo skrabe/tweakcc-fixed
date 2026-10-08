@@ -2274,5 +2274,35 @@
     "reason": "tells the model where the user reconnects the server; the model relays it",
     "verdict": "catalogue",
     "text": "the user can reconnect it in their claude.ai connector settings"
+  },
+  "c19099ad8c1a05ea": {
+    "promptId": "tool-result-start-task-files-credential-name-refusal",
+    "label": "TOOL_RESULT_START_TASK_FILES_CREDENTIAL_NAME_REFUSAL_VAR_1",
+    "desc": "Arm of the StartTask cannot-attach refusal used when the file cannot be re-attached by the user, telling the model to report that it was not attached.",
+    "id": "tool-result-start-task-file-not-attached-tell-user",
+    "name": "Tool Result: StartTask file not attached — tell the user",
+    "reason": "tells the model what to tell the user after an attachment refusal",
+    "verdict": "catalogue",
+    "text": "Tell the user it was not attached."
+  },
+  "58854492d2a4668a": {
+    "promptId": "tool-result-start-task-file-upload-incomplete",
+    "label": "TOOL_RESULT_START_TASK_FILE_UPLOAD_INCOMPLETE_VAR_1",
+    "desc": "Shared outcome sentence appended to StartTask file-attachment failures, stating that no task was started.",
+    "id": "tool-result-start-task-no-task-started",
+    "name": "Tool Result: StartTask — no task was started",
+    "reason": "states the outcome the model must report and act on (the task did not start)",
+    "verdict": "catalogue",
+    "text": "No task was started."
+  },
+  "fd115d56a24a3133": {
+    "promptId": "tool-result-start-task-file-upload-forbidden",
+    "label": "TOOL_RESULT_START_TASK_FILE_UPLOAD_FORBIDDEN_VAR_2",
+    "desc": "Shared recovery instruction in StartTask file-upload failures telling the model it can start the task without files.",
+    "id": "tool-result-start-task-start-without-files",
+    "name": "Tool Result: StartTask — start the task without files",
+    "reason": "instructs the model on the recovery path",
+    "verdict": "catalogue",
+    "text": "Start the task without files."
   }
 }

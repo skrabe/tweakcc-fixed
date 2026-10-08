@@ -4,11 +4,6 @@
     "version": "2.1.276",
     "why": "module 119 chunk-n55wtmpy.js, e_ type autocompact_state event .describe(): SDK/thin-client event so a host UI can show '% until auto-compact'. Schema description for stdout JSON; not sent as a prompt or tool schema."
   },
-  "data-background-tasks-changed-event-schema": {
-    "verdict": "not-model-facing",
-    "version": "2.1.276",
-    "why": "module 119 chunk-n55wtmpy.js, Lae system/background_tasks_changed .describe(): SDK stdout system-event schema description for host task-list replace semantics. Emitted as JSON values on the control/message stream, not as schema text to the model."
-  },
   "data-chrome-browser-hints-control-request": {
     "verdict": "not-model-facing",
     "version": "2.1.276",
@@ -313,11 +308,6 @@
     "verdict": "not-model-facing",
     "version": "2.1.288",
     "why": "types .describe() on the plugin manifest (plugin.json) zod schema: validates plugin files; the manifest schema is not part of the settings schema sent by /update-config and never enters a model request."
-  },
-  "data-sdk-result-safety-stops-field": {
-    "verdict": "not-model-facing",
-    "version": "2.1.292",
-    "why": "@internal .describe() in the SDK control-protocol schema: documentation for SDK hosts, never sent to the model."
   },
   "data-sdk-api-error-params-field": {
     "verdict": "not-model-facing",
