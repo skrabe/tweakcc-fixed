@@ -5170,60 +5170,134 @@ function loadUpstreamPrompts() {
   }
 }
 
-// Disambiguate DIFFERENT-content strings that landed on the SAME id (a below-floor
-// capture named by the classification cache can collide with an established
-// prompt's id, or two new captures can collide). Same-content same-id entries are
-// intentional multi-site splices and are left alone. The bare id stays with any
-// content present in the PREVIOUS JSON (so existing override targets — and
-// pre-existing verbose/concise variant pairs — are preserved); genuinely-new
-// colliding content gets a -N suffix so every prompt stays independently
-// overridable. Battleproof: handles collisions from any naming source.
+// Disambiguate DIFFERENT-content strings that landed on the SAME id (a curated
+// matcher or the classification cache can give several distinct sites one id).
+// Same-content same-id entries are intentional multi-site splices and are left
+// alone. Distinct bodies of one family (the id and its `-N` suffixes) get
+// their ids from the PREVIOUS catalogue, never from bundle order: Bun's module
+// layout reorders sites between releases, and a positional suffix then moves
+// to a different body under the same id (CC 2.1.292 and 2.1.294 swapped the
+// `<local-command-stdout>` wrappers' -2 and -3). A body keeps the id it had;
+// an edited body keeps the id of the unclaimed member it uniquely fingerprints
+// to; anything else takes a suffix no current or previous body of the family
+// has used, so a removed body's id is never handed to a different body.
 function disambiguateIdCollisions(prompts, existingData) {
-  const body = p =>
-    (p.pieces || []).filter(x => typeof x === 'string').join('');
-  const established = new Map(); // id -> Set(content) from the seed/previous JSON
-  for (const p of (existingData && existingData.prompts) || []) {
-    if (!p.id) continue;
-    if (!established.has(p.id)) established.set(p.id, new Set());
-    established.get(p.id).add(body(p));
-  }
-  const allIds = new Set(prompts.filter(p => p.id).map(p => p.id));
-  const uniqueSuffix = base => {
-    let n = 2;
-    while (allIds.has(`${base}-${n}`)) n++;
-    const id = `${base}-${n}`;
-    allIds.add(id);
-    return id;
+  const norm = s => s.replace(/\\(['"`\\])/g, '$1');
+  const text = p =>
+    norm((p.pieces || []).filter(x => typeof x === 'string').join(''));
+  const shape = p =>
+    JSON.stringify([
+      (p.pieces || []).map(x => (typeof x === 'string' ? norm(x) : null)),
+      p.identifiers || [],
+    ]);
+  const fingerprint = p => {
+    const fp = text(p).slice(0, 100);
+    return fp.length >= 60 ? fp : null;
   };
+  const previous = ((existingData && existingData.prompts) || []).filter(
+    p => p.id
+  );
+  const idShapes = new Map();
+  for (const p of prompts) {
+    if (!p.id) continue;
+    if (!idShapes.has(p.id)) idShapes.set(p.id, new Set());
+    idShapes.get(p.id).add(shape(p));
+  }
   const byId = new Map();
   for (const p of prompts) {
     if (!p.id) continue;
     if (!byId.has(p.id)) byId.set(p.id, []);
     byId.get(p.id).push(p);
   }
+  const familyRe = id =>
+    new RegExp(`^${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:-\\d+)?$`);
   for (const [id, group] of byId) {
-    const clusters = new Map(); // content -> [prompts]
+    const clusters = new Map(); // shape -> [prompts]
     for (const p of group) {
-      const c = body(p);
-      if (!clusters.has(c)) clusters.set(c, []);
-      clusters.get(c).push(p);
+      const k = shape(p);
+      if (!clusters.has(k)) clusters.set(k, []);
+      clusters.get(k).push(p);
     }
     if (clusters.size < 2) continue; // single content (multi-site) is fine
-    const est = established.get(id);
-    const keepBare = new Set(
-      [...clusters.keys()].filter(c => est && est.has(c))
-    );
-    if (keepBare.size === 0) {
-      // all-new collision: longest content keeps the bare id.
-      keepBare.add([...clusters.keys()].sort((a, b) => b.length - a.length)[0]);
+    const inFamily = familyRe(id);
+    const family = previous.filter(p => inFamily.test(p.id));
+    const familyIds = new Set(family.map(p => p.id));
+    const prevIdOf = new Map(); // shape -> previous id
+    for (const p of family) {
+      const k = shape(p);
+      if (!prevIdOf.has(k)) prevIdOf.set(k, p.id);
     }
-    for (const [c, members] of clusters) {
-      if (keepBare.has(c)) continue;
-      const newId = uniqueSuffix(id);
-      for (const p of members) p.id = newId;
-      console.log(
-        `Disambiguated id collision: "${id}" -> "${newId}" (distinct content not established)`
+    // An id can be granted to a body only if no other body holds it now.
+    const groupShapes = new Set(clusters.keys());
+    const heldByOther = (cand, k) =>
+      [...(idShapes.get(cand) || [])].some(
+        s => s !== k && !(cand === id && groupShapes.has(s))
       );
+    const assigned = new Map(); // shape -> id
+    const claimed = new Set();
+    const grant = (k, cand) => {
+      if (claimed.has(cand) || heldByOther(cand, k)) return false;
+      assigned.set(k, cand);
+      claimed.add(cand);
+      return true;
+    };
+    for (const k of clusters.keys()) {
+      if (prevIdOf.has(k)) grant(k, prevIdOf.get(k));
+    }
+    const unclaimedByFp = new Map(); // fingerprint -> Set(previous id)
+    for (const p of family) {
+      const fp = fingerprint(p);
+      if (!fp || claimed.has(p.id)) continue;
+      if (!unclaimedByFp.has(fp)) unclaimedByFp.set(fp, new Set());
+      unclaimedByFp.get(fp).add(p.id);
+    }
+    const pending = [...clusters.keys()].filter(k => !assigned.has(k));
+    const pendingFps = pending.map(k => fingerprint(clusters.get(k)[0]));
+    pending.forEach((k, i) => {
+      const fp = pendingFps[i];
+      const ids = fp && unclaimedByFp.get(fp);
+      if (!ids || ids.size !== 1) return;
+      if (pendingFps.filter(f => f === fp).length !== 1) return;
+      grant(k, [...ids][0]);
+    });
+    const rest = [...clusters.keys()]
+      .filter(k => !assigned.has(k))
+      .sort((a, b) => {
+        const la = text(clusters.get(a)[0]).length;
+        const lb = text(clusters.get(b)[0]).length;
+        return lb - la || (a < b ? -1 : a > b ? 1 : 0);
+      });
+    if (rest.length && !familyIds.has(id) && !claimed.has(id)) {
+      // all-new family: longest content keeps the bare id.
+      grant(rest.shift(), id);
+    }
+    for (const k of rest) {
+      let n = 2;
+      while (
+        idShapes.has(`${id}-${n}`) ||
+        familyIds.has(`${id}-${n}`) ||
+        claimed.has(`${id}-${n}`)
+      )
+        n++;
+      assigned.set(k, `${id}-${n}`);
+      claimed.add(`${id}-${n}`);
+      console.log(
+        `Disambiguated id collision: "${id}" -> "${id}-${n}" (distinct content not established)`
+      );
+    }
+    idShapes.set(
+      id,
+      new Set([...idShapes.get(id)].filter(k => assigned.get(k) === id))
+    );
+    for (const [k, newId] of assigned) {
+      for (const p of clusters.get(k)) p.id = newId;
+      if (!idShapes.has(newId)) idShapes.set(newId, new Set());
+      idShapes.get(newId).add(k);
+      if (newId !== id && prevIdOf.get(k) === newId) {
+        console.log(
+          `Kept id collision member: "${id}" -> "${newId}" (body matches the previous catalogue)`
+        );
+      }
     }
   }
   return prompts;
@@ -5945,6 +6019,7 @@ function collectLiteralSites(filepath, { composites = false } = {}) {
 module.exports = extractStrings;
 module.exports.collectLiteralSites = collectLiteralSites;
 module.exports.normalizeIdGroups = normalizeIdGroups;
+module.exports.disambiguateIdCollisions = disambiguateIdCollisions;
 // Exported for the test suite (below-floor capture rules — battleproof guarantee).
 module.exports.leadShowsModelFacingContext = leadShowsModelFacingContext;
 module.exports.leadShowsDropContext = leadShowsDropContext;
