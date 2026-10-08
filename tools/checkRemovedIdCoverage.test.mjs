@@ -39,6 +39,7 @@ const run = (cli, prev, cur, allowlist, cache) => {
     env: {
       ...process.env,
       TWEAKCC_CLASSIFY_DIR: path.join(dir, 'empty'),
+      TWEAKCC_RENAME_MAP: path.join(dir, 'renames.json'),
       ...(allowlist && { TWEAKCC_REMOVED_ID_ALLOWLIST: allowlist }),
       ...(cache && { TWEAKCC_CLASSIFICATION_CACHE: cache }),
     },
@@ -233,5 +234,147 @@ describe('checkRemovedIdCoverage: ids ruled non-model by a catalogue correction'
     );
     expect(out).toMatch(/CACHE DISAGREES[\s\S]*slash-command-fixture-ruled-ui/);
     expect(out).toMatch(/removed-id coverage: FAIL/);
+  });
+});
+
+// CC 2.1.294: one ternary emits two tails that share their opening clause. The
+// resume-only arm lost its id, its first 25-char window matched the relaunch
+// arm, and the gate called it renamed to the sibling and passed.
+describe('checkRemovedIdCoverage: a rename needs most of the old body', () => {
+  const tpl = (verb, tail) => ({
+    pieces: [
+      ' ${',
+      '.length===1?"Agent":"Agents"} ${',
+      `.join(", ")} fetched web content and \${`,
+      `.length===1?"has":"have"} ${verb} \${`,
+      `.length===1?"it":"them"} ${tail}`,
+    ],
+    identifiers: [0, 0, 0, 0],
+    identifierMap: { 0: 'AGENTS' },
+    version: '2.1.292',
+  });
+  const resumeOnly = {
+    id: 'tool-result-fixture-webfetch-resume-only-tail',
+    ...tpl(
+      'no worktree or output to check — resume',
+      'with SendMessage only.'
+    ),
+  };
+  const relaunch = {
+    id: 'tool-result-fixture-webfetch-relaunch-tail',
+    ...tpl('nothing to check — launch', 'again if still needed.'),
+  };
+  const bundle =
+    'k=w?` ${g.length===1?"Agent":"Agents"} ${g.join(", ")} fetched web content and ' +
+    '${g.length===1?"has":"have"} no worktree or output to check \\u2014 resume ' +
+    '${g.length===1?"it":"them"} with ${nr} only.`:` ${g.length===1?"Agent":"Agents"} ' +
+    '${g.join(", ")} fetched web content and ${g.length===1?"has":"have"} nothing to ' +
+    'check \\u2014 launch ${g.length===1?"it":"them"} again if still needed.`';
+
+  it('does not call an id renamed to a sibling that shares only its opening', () => {
+    const out = run(
+      write('cli-sib.js', bundle),
+      write('prev-sib.json', { prompts: [resumeOnly, relaunch] }),
+      write('cur-sib.json', { prompts: [relaunch] })
+    );
+    expect(out).toMatch(
+      /STILL IN BUNDLE[\s\S]*tool-result-fixture-webfetch-resume-only-tail/
+    );
+    expect(out).toMatch(/0 renamed\/reshuffled/);
+    expect(out).toMatch(/removed-id coverage: FAIL/);
+  });
+
+  it('follows a rename whose literal became a slot', () => {
+    const old = {
+      id: 'tool-result-fixture-resume-for-report',
+      version: '2.1.292',
+      pieces: [
+        'Resume it by sending it a message with SendMessage to get its report.',
+      ],
+      identifiers: [],
+      identifierMap: {},
+    };
+    const successor = {
+      id: 'tool-result-fixture-resume-for-report-slotted',
+      version: '2.1.294',
+      pieces: ['Resume it by sending it a message with ${', '} to get its report.'],
+      identifiers: [0],
+      identifierMap: { 0: 'SEND_TOOL' },
+    };
+    const out = run(
+      write(
+        'cli-slot.js',
+        'x=`Resume it by sending it a message with ${nr} to get its report.`'
+      ),
+      write('prev-slot.json', { prompts: [old] }),
+      write('cur-slot.json', { prompts: [successor] })
+    );
+    expect(out).toMatch(/1 renamed\/reshuffled/);
+    expect(out).toMatch(/removed-id coverage: PASS/);
+    const map = JSON.parse(fs.readFileSync(path.join(dir, 'renames.json'), 'utf8'));
+    expect(map['tool-result-fixture-resume-for-report']).toBe(
+      'tool-result-fixture-resume-for-report-slotted'
+    );
+  });
+
+  it('reports text the successor carries but the bundle also holds at an uncovered site', () => {
+    const text =
+      'The background shell was stopped before it finished, so read its output file before relying on it.';
+    const old = {
+      id: 'tool-result-fixture-shell-stopped-read-output',
+      version: '2.1.292',
+      pieces: [text],
+      identifiers: [],
+      identifierMap: {},
+    };
+    const successor = {
+      id: 'tool-result-fixture-shell-stopped-read-output-renamed',
+      version: '2.1.294',
+      pieces: [text],
+      identifiers: [],
+      identifierMap: {},
+    };
+    const out = run(
+      write('cli-stray.js', `a="${text}";b=\`${text}\``),
+      write('prev-stray.json', { prompts: [old] }),
+      write('cur-stray.json', { prompts: [successor] })
+    );
+    expect(out).toMatch(
+      /STILL IN BUNDLE[\s\S]*tool-result-fixture-shell-stopped-read-output {2}\(text also at a site tool-result-fixture-shell-stopped-read-output-renamed does not cover/
+    );
+    expect(out).toMatch(/removed-id coverage: FAIL/);
+  });
+
+  it('calls a reworded removal removed even when a live id shares a few phrases', () => {
+    const old = {
+      id: 'tool-result-fixture-timers-reschedule',
+      version: '2.1.292',
+      pieces: [
+        'Schedule each one again if it is still needed, with the prompt of your earlier call; do the work of an overdue one now.',
+      ],
+      identifiers: [],
+      identifierMap: {},
+    };
+    const live = {
+      id: 'tool-result-fixture-container-timers-lost',
+      version: '2.1.294',
+      pieces: [
+        'The container was restarted, so these timers will not fire. Schedule each again if still needed (do the work of an overdue one now).',
+      ],
+      identifiers: [],
+      identifierMap: {},
+    };
+    const out = run(
+      write(
+        'cli-reword.js',
+        'x="The container was restarted, so these timers will not fire. Schedule each again if still needed (do the work of an overdue one now)."'
+      ),
+      write('prev-reword.json', { prompts: [old, live] }),
+      write('cur-reword.json', { prompts: [live] })
+    );
+    expect(out).toMatch(/0 renamed\/reshuffled/);
+    expect(out).toMatch(
+      /truly removed, no recorded verdict:\s+tool-result-fixture-timers-reschedule {2}\(closest current id: tool-result-fixture-container-timers-lost/
+    );
   });
 });

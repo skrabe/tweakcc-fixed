@@ -44,6 +44,15 @@
  * rather than eyeballed, and reviewed removals are recorded in the allowlist so
  * a stable removal stops being re-reported every bump.
  *
+ * `in-catalogue` is a claim about the WHOLE body, not one window. CC 2.1.294
+ * lost the resume-only arm of the orphaned-agents tail; its relaunch sibling
+ * shares the opening clause, so the first 25-char window matched the sibling,
+ * the id was called renamed to it, and the gate passed. A removed id counts as
+ * renamed only when the catalogue carries most of its distinctive prose (slot
+ * syntax stripped, so the shared `${x.length===1?…}` scaffolding is not
+ * evidence), and even then a distinctive run the bundle holds more often than
+ * the catalogue does is a site no successor covers: IN-BUNDLE.
+ *
  * Two things the 25-char window has to get right, both of them §12 rows that
  * have cost a bump before:
  *
@@ -154,6 +163,13 @@ const shortRuns = p =>
         !MINIFIED_BRACKET_KEY.test(s)
     );
 
+// The share of an old body's distinctive units the catalogue must carry for the
+// id to count as renamed or reshuffled. On 2.1.294 the resume-only tail scored
+// 0.33 against its sibling and a reworded removal 0.23 against the prompt that
+// absorbed it; the four genuine renames scored 0.73-1.00.
+const RENAME_SHARE = 0.6;
+const UNIT_MIN = 12;
+
 const allPresent = (runs, haystack) =>
   runs.length > 0 && runs.every(s => haystack.includes(s));
 
@@ -214,6 +230,62 @@ const midBodyProbes = p => {
   return mid.slice(0, BUNDLE_PROBE_COUNT);
 };
 
+// A body's prose: each piece with its slot syntax stripped, one entry per line.
+// The slot expressions are not evidence of identity — sibling arms of one
+// ternary share `${x.length===1?"Agent":"Agents"}` and differ only in prose.
+const proseLines = p => {
+  const pieces = p.pieces || [];
+  const lines = [];
+  for (let i = 0; i < pieces.length; i++) {
+    if (typeof pieces[i] !== 'string') continue;
+    for (const raw of proseOfPiece(pieces[i], i, pieces.length).split('\n')) {
+      const line = raw.trim();
+      if (/[A-Za-z]{3,}/.test(line)) lines.push(line);
+    }
+  }
+  return lines;
+};
+
+// What "most of the old body" is measured in: word trigrams of its prose. A
+// literal Anthropic turned into a slot (`with SendMessage` -> `with ${…}`)
+// costs only the trigrams that touch it, where a 25-char window loses every
+// window spanning it; on 2.1.294 that alone took a real rename from 0.73 to
+// 0.36. A line too short for a trigram counts whole.
+const shareUnits = p => {
+  const units = new Set();
+  for (const line of proseLines(p)) {
+    const words = line.split(/\s+/);
+    if (words.length < 3) {
+      if (line.length >= UNIT_MIN) units.add(line);
+      continue;
+    }
+    for (let i = 0; i + 3 <= words.length; i++) {
+      units.add(words.slice(i, i + 3).join(' '));
+    }
+  }
+  return [...units];
+};
+
+// What is counted in the bundle: 25-char windows of the prose, long enough that
+// a surplus is a site and not a common phrase.
+const strayProbes = p => {
+  const units = new Set();
+  for (const line of proseLines(p)) {
+    if (line.length < WINDOW) continue;
+    for (let off = 0; off + WINDOW <= line.length; off += STRIDE) {
+      units.add(line.slice(off, off + WINDOW));
+    }
+    units.add(line.slice(line.length - WINDOW));
+  }
+  return [...units];
+};
+
+const countOf = (haystack, needle) => {
+  let n = 0;
+  for (let i = haystack.indexOf(needle); i >= 0; i = haystack.indexOf(needle, i + 1)) n++;
+  return n;
+};
+
 const cli = fs.readFileSync(cliPath, 'utf8');
 const prev = readPrompts(prevPath);
 const cur = readPrompts(curPath);
@@ -227,8 +299,25 @@ const curBlob = cur.map(reconstruct).join('\n');
 const curBodies = cur
   .filter(p => p.id)
   .map(p => ({ id: p.id, body: reconstruct(p) }));
-const successorOf = window => {
-  for (const { id, body } of curBodies) if (body.includes(window)) return id;
+// The current id carrying the largest share of `units`, and that share.
+const bestSuccessor = units => {
+  let best = null;
+  let bestShare = 0;
+  for (const { id, body } of curBodies) {
+    let hit = 0;
+    for (const u of units) if (body.includes(u)) hit++;
+    const share = hit / units.length;
+    if (share > bestShare) {
+      bestShare = share;
+      best = id;
+    }
+  }
+  return { id: best, share: bestShare };
+};
+const successorOfAll = runs => {
+  for (const { id, body } of curBodies) {
+    if (runs.every(r => body.includes(r))) return id;
+  }
   return null;
 };
 
@@ -273,28 +362,61 @@ const allowlist = fs.existsSync(ALLOWLIST)
   ? JSON.parse(fs.readFileSync(ALLOWLIST, 'utf8'))
   : {};
 
+// Distinctive units the bundle holds more often than the catalogue and the
+// classify sidecar together. Each catalogue entry is one bundle site, so a
+// surplus is a site carrying the old text that nothing catalogues. Only
+// single-line ASCII units are countable in the bundle (see the header).
+const strayUnits = probes =>
+  probes.filter(
+    u =>
+      isAscii(u) &&
+      countOf(cli, u) > countOf(curBlob, u) + countOf(sidecarBlob, u)
+  );
+
+const share = (units, haystack) =>
+  units.filter(u => haystack.includes(u)).length / units.length;
+
 const classify = id => {
   const entries = prevById.get(id) || [];
-  for (const p of entries) {
-    for (const run of literalRuns(p)) {
-      for (let off = 0; off + WINDOW <= run.length; off += STRIDE) {
-        const w = run.slice(off, off + WINDOW);
-        if (!isAscii(w)) continue;
-        if (curBlob.includes(w)) return { bucket: 'in-catalogue', to: successorOf(w) };
-        if (sidecarBlob.includes(w)) return { bucket: 'in-sidecar' };
-      }
+  const units = [...new Set(entries.flatMap(shareUnits))];
+  // The closest current id, reported as an advisory when the old id does not
+  // clear the bar, so a reword is reviewed against it rather than archived blind.
+  const best = units.length ? bestSuccessor(units) : { id: null, share: 0 };
+  const near = best.share > 0 ? best : null;
+  const windows = [...new Set(entries.flatMap(strayProbes))];
+  if (units.length) {
+    const to = best.share >= RENAME_SHARE ? best.id : null;
+    // A prompt Anthropic split keeps its long runs intact in each half, so the
+    // union test uses 25-char windows: union coverage by trigrams is satisfied
+    // by any short body of common phrasing ("which is not", "is not what").
+    const split =
+      !to && windows.length > 0 && share(windows, curBlob) >= RENAME_SHARE;
+    const pending =
+      !to &&
+      !split &&
+      (share(units, sidecarBlob) >= RENAME_SHARE ||
+        (windows.length > 0 &&
+          share(windows, `${curBlob}\n${sidecarBlob}`) >= RENAME_SHARE));
+    if (to || split || pending) {
+      const stray = strayUnits(windows);
+      if (stray.length) return { bucket: 'IN-BUNDLE', to, stray, near };
+      if (pending) return { bucket: 'in-sidecar' };
+      return { bucket: 'in-catalogue', to, share: best.share, split };
     }
   }
   const probes = entries.flatMap(midBodyProbes);
   if (probes.length) {
-    return { bucket: probes.some(pr => cli.includes(pr)) ? 'IN-BUNDLE' : 'gone' };
+    return {
+      bucket: probes.some(pr => cli.includes(pr)) ? 'IN-BUNDLE' : 'gone',
+      near,
+    };
   }
   for (const p of entries) {
     for (const run of literalRuns(p)) {
       for (let off = 0; off + WINDOW <= run.length; off += STRIDE) {
         const w = run.slice(off, off + WINDOW);
         if (!isAscii(w)) continue;
-        if (cli.includes(w)) return { bucket: 'IN-BUNDLE' };
+        if (cli.includes(w)) return { bucket: 'IN-BUNDLE', near };
       }
     }
   }
@@ -303,7 +425,7 @@ const classify = id => {
   // recommending an archive the gate never actually tested.
   const shorts = entries.flatMap(shortRuns);
   if (allPresent(shorts, curBlob)) {
-    return { bucket: 'in-catalogue', to: successorOf(shorts[0]) };
+    return { bucket: 'in-catalogue', to: successorOfAll(shorts) };
   }
   if (allPresent(shorts, sidecarBlob)) return { bucket: 'in-sidecar' };
   if (allPresent(shorts, cli)) return { bucket: 'IN-BUNDLE' };
@@ -319,11 +441,25 @@ const buckets = {
   gone: [],
 };
 const renamedTo = {};
+const split = [];
+const strayOf = {};
+const shareOf = {};
+const nearOf = {};
 for (const id of [...prevById.keys()].filter(i => !curIds.has(i)).sort()) {
-  const { bucket, to } = classify(id);
-  buckets[bucket].push(id);
-  if (to) renamedTo[id] = to;
+  const r = classify(id);
+  buckets[r.bucket].push(id);
+  if (r.bucket === 'in-catalogue' && r.to) {
+    renamedTo[id] = r.to;
+    shareOf[id] = r.share ?? 1;
+  }
+  if (r.bucket === 'in-catalogue' && r.split) split.push(id);
+  if (r.stray) strayOf[id] = r;
+  if (r.near && (r.bucket === 'IN-BUNDLE' || r.bucket === 'gone')) nearOf[id] = r.near;
 }
+const nearNote = id =>
+  nearOf[id]
+    ? `  (closest current id: ${nearOf[id].id}, ${nearOf[id].share.toFixed(2)} of its prose — review before archiving)`
+    : '';
 // A catalogue correction that rules a shipped id NOT model-facing leaves its
 // text in the bundle, so it reads as IN-BUNDLE forever. The resolution is the
 // classify verdict itself: an `archived` row naming the `facing` it was ruled
@@ -376,6 +512,18 @@ buckets['no-probe-surface'] = buckets['no-probe-surface'].filter(
 // The rename map is what an operator has to act on — an override keyed by the
 // old id has to be re-mapped by CONTENT to the successor, and every set that
 // has the file has to move with it.
+if (Object.keys(renamedTo).length) {
+  console.log('\nrenamed (share of the old prose the successor carries):');
+  for (const [id, to] of Object.entries(renamedTo)) {
+    console.log(`  ${id} -> ${to} (${shareOf[id].toFixed(2)})`);
+  }
+}
+if (split.length) {
+  console.log(
+    `\nsplit across several current ids (no single successor carries ${RENAME_SHARE * 100}% of the text):`
+  );
+  for (const id of split) console.log(`  ${id}`);
+}
 if (buckets['in-catalogue'].length) {
   fs.writeFileSync(
     RENAME_MAP,
@@ -445,7 +593,16 @@ if (reclassifiedMismatch.length) {
 }
 if (buckets['IN-BUNDLE'].length) {
   console.log('\nSTILL IN BUNDLE — model-facing text that lost its id:');
-  for (const id of buckets['IN-BUNDLE']) console.log(`  ${id}`);
+  for (const id of buckets['IN-BUNDLE']) {
+    const r = strayOf[id];
+    if (!r) {
+      console.log(`  ${id}${nearNote(id)}`);
+      continue;
+    }
+    console.log(
+      `  ${id}  (text also at a site ${r.to ? `${r.to} does not cover` : 'no current id covers'}: "${r.stray[0]}")`
+    );
+  }
   console.log(
     '\nRead the emission site. If the prompt survived a refactor, record a\n' +
       'classification-cache "model" verdict REUSING this id (probe the exact key\n' +
@@ -454,7 +611,7 @@ if (buckets['IN-BUNDLE'].length) {
 }
 if (unreviewedGone.length) {
   console.log('\ntruly removed, no recorded verdict:');
-  for (const id of unreviewedGone) console.log(`  ${id}`);
+  for (const id of unreviewedGone) console.log(`  ${id}${nearNote(id)}`);
   console.log(
     '\nArchive each override to ~/.tweakcc/orphans-removed-for-<ver>/ and record\n' +
       '{"verdict":"archived"} in data/removed-id-allowlist.json.'
