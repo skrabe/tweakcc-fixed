@@ -30,6 +30,7 @@ import { DEFAULT_SETTINGS } from '../defaultSettings';
 import { writeVerboseProperty } from './verboseProperty';
 import { writeReadDefaultLines } from './readDefaultLines';
 import { writeContextLimit } from './contextLimit';
+import { writeModelContextTokens } from './modelContextTokens';
 import { writeOpusplan1m } from './opusplan1m';
 import { writeThinkingBlockStyling } from './thinkingBlockStyling';
 import { writeFixLspSupport } from './fixLspSupport';
@@ -321,6 +322,7 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
   'show-more-items-in-select-menus': c =>
     writeShowMoreItemsInSelectMenus(c, 25),
   'context-limit': c => writeContextLimit(c),
+  'model-context-tokens': c => writeModelContextTokens(c),
   'patches-applied-indication': c =>
     writePatchesAppliedIndication(
       c,
