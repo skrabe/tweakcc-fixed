@@ -104100,5 +104100,548 @@
     "id": "data-task-notification-background-agents-webfetch-resume-only-tail",
     "name": "Data: task notification background agents webfetch resume-only tail",
     "desc": "Tail of the orphaned background-agents notification telling the model that web-fetch agents have no worktree or output to check and can only be resumed with the messaging tool."
+  },
+  "86ac68469d0b5ede06ad25f01f9c515cdb752e37": { "facing": "internal" },
+  "8770f57e7bf070c39b52c5f41b873afd898e6743": { "facing": "internal" },
+  "afa70403af473981a7f15ff371d90b9352dd0181": { "facing": "internal" },
+  "d3130c642a9bfb8b8a60da27b4a91d8b484835d5": {
+    "facing": "model",
+    "id": "tool-result-bash-output-not-regular-file",
+    "name": "Bash output is not a regular file",
+    "desc": "Error when a shell output file is not a regular file."
+  },
+  "23e09c7cd3123eedba4ed07744a765138c67440f": {
+    "facing": "model",
+    "id": "system-reminder-cross-session-peer-message-respond-note-no-sendmessage",
+    "name": "Peer response note without SendMessage",
+    "desc": "Asks the model to decide whether to respond when SendMessage is absent."
+  },
+  "273870c11bd6f1868100f28f12148defe1ce08ef": {
+    "facing": "model",
+    "id": "system-reminder-cross-session-peer-message-host-reply-note",
+    "name": "Host peer messaging reply note",
+    "desc": "Explains how to reply to a peer message injected by a host application."
+  },
+  "07cc27d83bc2aabb287966a599a4cfce54719e73": {
+    "facing": "model",
+    "id": "tool-description-webfetch-artifact-links-lean",
+    "name": "WebFetch lean artifact tool routing",
+    "desc": "Routes published Claude artifact links to Artifact in the lean WebFetch description."
+  },
+  "d27c731401f2557fdd3b4681d9c2de7b35b82d4e": {
+    "facing": "model",
+    "id": "tool-description-webfetch-artifact-login-lean",
+    "name": "WebFetch lean artifact login exception",
+    "desc": "Explains authenticated WebFetch access to Claude artifact links."
+  },
+  "3ecb1050f1f0fdc29fdc613601b01baf235d34a5": {
+    "facing": "model",
+    "id": "system-prompt-memory-personal-directory-already-exists",
+    "name": "Personal memory directory already exists",
+    "desc": "Tells the model to write personal memories directly without checking or creating the directory."
+  },
+  "983e4275c074e1ed7aed4727c578979e9ca42aeb": {
+    "facing": "model",
+    "id": "system-prompt-memory-save-file-target",
+    "name": "Memory save file target",
+    "desc": "Names the private or team destination for a memory file."
+  },
+  "4aa6235f3ba02f941b2ae2a38c536809097c26c3": {
+    "facing": "model",
+    "id": "system-prompt-memory-team-index-empty-skip-index",
+    "name": "Empty team memory index with index skipping",
+    "desc": "Reports an empty writable team memory index without save guidance."
+  },
+  "c590244fbd4805259eb70d6c66464502adde806c": {
+    "facing": "model",
+    "id": "tool-result-memory-unknown-store-kind",
+    "name": "Memory store kind mismatch",
+    "desc": "Refuses a memory store whose personal identifier and kind disagree."
+  },
+  "c996c357fb1268192bf792ed6cb7a292bd559488": {
+    "facing": "model",
+    "id": "tool-result-memory-empty-content-rejected",
+    "name": "Empty memory content rejected",
+    "desc": "Refuses empty or whitespace-only memory writes."
+  },
+  "29476ae58cd8332ea4ec329ef7323c204688d55f": {
+    "facing": "model",
+    "id": "tool-description-memory-write-secrets-refused",
+    "name": "Memory write secrets restriction",
+    "desc": "Forbids storing secrets or credentials in any memory store."
+  },
+  "d36440038e7f292d727416f5bc265e378246e864": {
+    "facing": "model",
+    "id": "tool-result-chrome-file-upload-read-permission",
+    "name": "Chrome file upload requires read access",
+    "desc": "Refuses uploads of files the session may not read."
+  },
+  "2ec47c695f543255b43b65cb8ddd8d3cbefaaba5": {
+    "facing": "model",
+    "id": "system-reminder-memory-delete-intended-file",
+    "name": "Intended memory deletion follow-up",
+    "desc": "Tells the model to delete its local file when a shared deletion was intended."
+  },
+  "7b5d996070276f86809df72848002b32e812a804": {
+    "facing": "model",
+    "id": "data-coordinator-relay-provenance-note-project-members",
+    "name": "Project member coordinator relay provenance",
+    "desc": "Explains authorship of relayed messages in a shared project."
+  },
+  "5e05f233b455e4eb586d2d8748e7eb62c18092e4": {
+    "facing": "model",
+    "id": "data-coordinator-timeline-location-timeline",
+    "name": "Coordinator message on project timeline",
+    "desc": "Marks a timeline message as unrelated to the current thread."
+  },
+  "40db0f3140b31f8a99c41e94cc02019a948ee062": { "facing": "internal" },
+  "f0dce5be7708322207cec09a52724bc47577ee0c": { "facing": "internal" },
+  "1beb32d9d390b459611ee7e43ad238e4341f1feb": {
+    "facing": "model",
+    "id": "tool-result-powershell-parser-unavailable",
+    "name": "PowerShell parser unavailable",
+    "desc": "Reports that PowerShell is unavailable for parsing a command."
+  },
+  "305842a74601e52f338d058b42214c9d5419b5f2": {
+    "facing": "model",
+    "id": "tool-result-served-project-hook-changed-approval",
+    "name": "Changed served project hook approval",
+    "desc": "Asks for approval when an updated project command check was not accepted."
+  },
+  "862dc09a7278ad75caa03f711d682e0b0eac2f80": { "facing": "internal" },
+  "4611f726a05a2eb3f3a6b53b08fdc77394745cbc": {
+    "facing": "model",
+    "id": "tool-description-bash-monitor-streaming-short",
+    "name": "Bash monitor streaming short note",
+    "desc": "Recommends Monitor for streaming background process events."
+  },
+  "5b6b2db53a9239451900985b446ef22f9562b50e": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-left-out-read-rule-clause",
+    "name": "Git bundle excluded read-rule clause",
+    "desc": "Explains excluded files covered by read rules or sandbox read denial."
+  },
+  "a8e9048b3149807012508857d50908235596b7a9": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-env-config-include-writable",
+    "name": "Git bundle environment includes writable configuration",
+    "desc": "Explains refusal of a git environment include in a session-writable location."
+  },
+  "a2e25635ec8c5a30d9ff8e249e23848afe45d645": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-env-config-include-checkout",
+    "name": "Git bundle environment include in checkout",
+    "desc": "Explains refusal of a git environment include that a checkout session can modify."
+  },
+  "4ef5e8e58d119d5b658483fca5627729d4b85f33": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-settings-unparseable",
+    "name": "Git bundle settings cannot be parsed",
+    "desc": "Refuses uploading when cloud-reachable settings cannot be checked."
+  },
+  "27bded0f076a99e33f50a85c978f7eba272b2787": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-cloud-reachable-settings-label",
+    "name": "Cloud reachable settings file label",
+    "desc": "Names settings files that cloud sessions could reach."
+  },
+  "41e0745d4c11b2c3d701dcdc1368ea9172a3c6c4": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-private-git-directory-failed",
+    "name": "Private git directory preparation failed",
+    "desc": "Explains failure to prepare verified private git data for upload."
+  },
+  "1d659172fd6eb9e9c66ecd6eca70b74746cf6601": {
+    "facing": "model",
+    "id": "system-prompt-code-surrounding-style",
+    "name": "Match surrounding code style",
+    "desc": "Instructs the model to match surrounding comment density, names, and idiom."
+  },
+  "d8f2f090f0264b1448adcdfa608a7ad4bf5f2f34": {
+    "facing": "model",
+    "id": "system-prompt-guide-agent-settings-keys-in-session-config",
+    "name": "Guide agent settings key summary",
+    "desc": "Lists configured setting keys and directs the user to in-session config."
+  },
+  "473f4f40b665b1ae5b7c199e2b1148d6b1b67ee8": {
+    "facing": "model",
+    "id": "tool-result-bash-dangerous-op-unset-var-derived-decision-reason",
+    "name": "Derived variable path permission reason",
+    "desc": "Explains the possibly empty path derived from another command."
+  },
+  "ded4980a2fda5e1756b5ad7a45ac88efcd10e583": {
+    "facing": "model",
+    "id": "tool-result-bash-dangerous-op-unset-var-explicit-approval",
+    "name": "Possibly empty variable path requires approval",
+    "desc": "Requires explicit approval for dangerous variable-expanded paths."
+  },
+  "f713eb1bf5f723b0e00994fd5329b94325783b2d": {
+    "facing": "model",
+    "id": "tool-result-notebook-read-cell-id-not-found",
+    "name": "Notebook read cell ID missing",
+    "desc": "Reports a requested notebook cell ID that does not exist."
+  },
+  "4d1cc71b355581d27aef21a2080a0ca1297f1390": {
+    "facing": "model",
+    "id": "tool-result-agent-shared-checkout-worktree-note",
+    "name": "Agent shared checkout isolation note",
+    "desc": "Warns that parallel writable agents should use worktree isolation."
+  },
+  "201202451409244429ca7fc0e53412d8feed1d1b": {
+    "facing": "model",
+    "id": "slash-command-plugin-marketplace-add-colliding-declared-source",
+    "name": "Marketplace declared source name collision",
+    "desc": "Refuses adding a marketplace whose name clashes with a differently sourced declaration."
+  },
+  "4c1399cf9233bcf87c338a0bfaa553039367e37d": { "facing": "ui" },
+  "fa9525c9de48296a2f112e7d05a4349bc3c962fa": { "facing": "internal" },
+  "d52237ac00b86b05d89875798b4499e18b98db75": {
+    "facing": "model",
+    "id": "system-reminder-auto-mode-consent-ask-format",
+    "name": "Auto mode consent ask format",
+    "desc": "Specifies concise action-and-target formatting for consent questions."
+  },
+  "67fc02d9f5eeb1d363a910112cc6f4bf6f2d67b6": { "facing": "internal" },
+  "c1e34bdb6449475734ef0b3bf6d27898ad0087c9": { "facing": "internal" },
+  "8e775d0e7bdabc8e48572c869e0c86697e5c7b19": {
+    "facing": "model",
+    "id": "system-reminder-plugin-message-mid-turn-address",
+    "name": "Plugin mid-turn message instruction",
+    "desc": "Asks the model to address a plugin message while continuing its turn."
+  },
+  "ed57e9c40095cd204b282d44ce3262ad49e0e74d": { "facing": "ui" },
+  "611397d1afa9f6c21c415222b63fc955e6addd82": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-with-tool-instruction",
+    "name": "Read artifact with tool instruction",
+    "desc": "Directs the model to read an artifact URL with the available Artifact tool."
+  },
+  "c53125987406b0960f13a81cd9705d926cecfbab": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-gateway-failure-clause",
+    "name": "Artifact gateway fallback failure",
+    "desc": "Adds the session gateway failure reason to an artifact read error."
+  },
+  "4c49416edf9663c3ef4716aba4c70b8e43eb27ad": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-auto-edited-reply-withheld-already-answered",
+    "name": "Artifact edited but reply already answered",
+    "desc": "Reports an edit whose summary reply was withheld because the thread was already answered."
+  },
+  "ee6437118dc869b7884ee8edaa0e7568291a0ba5": {
+    "facing": "model",
+    "id": "tool-description-askuserquestion-questions-basic",
+    "name": "AskUserQuestion basic question schema",
+    "desc": "Describes the one-to-four-question input array."
+  },
+  "2f172eebd1404dca3aa820c919e7b503881e812f": {
+    "facing": "model",
+    "id": "tool-result-enterworktree-already-in-session",
+    "name": "Already in worktree session",
+    "desc": "Refuses creating another implicit worktree from a worktree session."
+  },
+  "1262c7b36fec0a5f4d35c79dccda2658bb857877": {
+    "facing": "model",
+    "id": "tool-description-artifact-type-files-first-publish-single-call",
+    "name": "Artifact file type first publish single call",
+    "desc": "Instructs first publication of file-backed artifacts in one call."
+  },
+  "0bc98e4e3f2fe22c0375f38fb4630c7a3c32b25c": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-file-no-identity",
+    "name": "Artifact database file lacks identity",
+    "desc": "Refuses a database JSON upload when the file cannot be identified safely."
+  },
+  "bdb1ee4a76738e2273b60a30060d79dd58fd97d5": { "facing": "internal" },
+  "00673c733a7596387ab25b3149cb99a36d2961ba": {
+    "facing": "model",
+    "id": "skill-code-review-second-tier-footguns",
+    "name": "Code review second tier footguns",
+    "desc": "Lists subtle defect classes for deeper code review passes."
+  },
+  "2d485215175bfdae2004e04986ae7babcfcedc4d": { "facing": "internal" },
+  "a98c985a969ea1991ebaa769891b75d1f367a250": { "facing": "internal" },
+  "77b605821c09a8530a5eb57643ef7b6664dc1a42": { "facing": "ui" },
+  "91af004065e4a71f723741d2d8787aacecea8a6f": { "facing": "internal" },
+  "a344ee5f491da2d7ed802e72b10bc0bd798eb6ba": {
+    "facing": "model",
+    "id": "tool-result-computer-use-click-tier-target-lead",
+    "name": "Computer Use Click Tier Target Lead",
+    "desc": "Introduces the target application in a refusal of a click that requires full access."
+  },
+  "78c06bfe038de6932515c7b8e699ae2b1c482a49": { "facing": "internal" },
+  "01a31edaf10ae30b97031af543cd3fcbde1d998b": {
+    "facing": "model",
+    "id": "system-reminder-design-system-styling-data-fonts-on-disk",
+    "name": "Design System Styling Data With Local Fonts",
+    "desc": "Tells the model to treat design system files as styling data and use fonts already saved locally."
+  },
+  "92c9b85d61e710f85656696ff6db9002197e2726": {
+    "facing": "model",
+    "id": "system-reminder-design-system-styling-data-fonts-through-artifact",
+    "name": "Design System Styling Data With Artifact Fonts",
+    "desc": "Tells the model to get design system font files through the Artifact tool."
+  },
+  "c9b4ff72e5cf3ac4e909ae055c9e9d963b510a9d": {
+    "facing": "model",
+    "id": "data-import-warning-skill-session-context",
+    "name": "Imported Skill Session Context Warning",
+    "desc": "Warns that imported skill files become active and remain in session context."
+  },
+  "6ea61525ed478db1a4ed432f230e963d6a441ac1": {
+    "facing": "model",
+    "id": "tool-result-artifact-identical-resubmission-merge-guidance",
+    "name": "Artifact Identical Resubmission Merge Guidance",
+    "desc": "Explains how to merge a previously published version before resubmitting an artifact."
+  },
+  "459ba7342300a95a1e0f8226075911eca768e495": {
+    "facing": "model",
+    "id": "agent-prompt-auto-mode-local-settings-skipped",
+    "name": "Auto Mode Local Settings Skipped",
+    "desc": "Instructs the auto mode proposal model to report and leave skipped local settings untouched."
+  },
+  "48903d06372c4f007b87e15da7544cb75d61909b": {
+    "facing": "model",
+    "id": "tool-description-artifact-rendered-page-size-limit",
+    "name": "Artifact Rendered Page Size Limit",
+    "desc": "States the maximum rendered artifact page size including embedded data URIs."
+  },
+  "295a5cdbaac211b74849bfd7b620189f86f665f6": { "facing": "internal" },
+  "233f1d30f7bc187511b3006998344cbfc2207e9c": {
+    "facing": "model",
+    "id": "system-reminder-orphaned-agent-no-completion-record",
+    "name": "Orphaned Agent Without Completion Record",
+    "desc": "Explains a restored background agent's uncertain completion and available resume steps."
+  },
+  "ab5c35d81a359ccf2756846b6539cc9f3a64c962": {
+    "facing": "model",
+    "id": "system-reminder-orphaned-shell-no-completion-record",
+    "name": "Orphaned Shell Without Completion Record",
+    "desc": "Explains a restored background shell's uncertain completion and advises checking its output."
+  },
+  "00299368afc02c5663afd646e504ebee25655c6c": { "facing": "ui" },
+  "c7d8fc9ce350c862ffe97065f674f122f22ea920": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-write-source-file-changed",
+    "name": "Artifact Database Write Source Changed",
+    "desc": "Refuses a database write when its approved local file changed."
+  },
+  "91a4df81ef0ba2b19e4e1220ef6cf8eae1a5d6f9": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-write-source-symlink-restricted",
+    "name": "Artifact Database Write Source Symlink Restricted",
+    "desc": "Refuses a database write whose source symlink resolves outside permitted reads."
+  },
+  "1d0ad37ffdb2710f98ca4ba9bf6e65a9e5757394": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-write-source-hard-link-unexamined",
+    "name": "Artifact Database Write Source Hard Link Unexamined",
+    "desc": "Refuses a database write from a hard-linked source not examined during approval."
+  },
+  "b6fb0999ee1266bacb4033023d53a207d66a1e85": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-db-out-dir-local-only",
+    "name": "Artifact Database Read Output Must Be Local",
+    "desc": "Rejects database read output paths that resolve to a network location."
+  },
+  "f4c33de0252adb58a88b00d2b148fda57f0ba24c": {
+    "facing": "model",
+    "id": "tool-result-artifact-action-url-required",
+    "name": "Artifact Action URL Required",
+    "desc": "Requests an artifact URL for an action that requires one."
+  },
+  "9f8a3b6643168a06321cc09ff0ede9cc8a81225f": {
+    "facing": "model",
+    "id": "tool-result-artifact-design-system-project-file-cards-guidance",
+    "name": "Design System Project File Cards Guidance",
+    "desc": "Explains how to read additional design system cards under the project directory."
+  },
+  "feb3b10a01d7ecb04d8c860bb64dbfd2ec868a35": {
+    "facing": "model",
+    "id": "tool-result-artifact-design-system-file-cards-guidance",
+    "name": "Design System File Cards Guidance",
+    "desc": "Explains how to read additional design system cards by their published file paths."
+  },
+  "7a5f797b1b57ed7923cbe7f6e1d75ef82677aad0": {
+    "facing": "model",
+    "id": "tool-result-artifact-copy-from-account-disabled",
+    "name": "Artifact Copy From Disabled For Account",
+    "desc": "Refuses copying artifact assets when the account does not enable the action."
+  },
+  "c49de526698ef3ad13ea4161cdc98616595b573f": {
+    "facing": "model",
+    "id": "tool-result-artifact-opening-design-system-already-named",
+    "name": "Artifact Opening Design System Already Named",
+    "desc": "Reminds the model to use the design system named in the session's opening context."
+  },
+  "ecb84e66df2e01b7db1eff89f18bfe54c245c746": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-type-ask-retry-by-link",
+    "name": "Artifact List Type Ask Retry By Link",
+    "desc": "Tells the model to retry listing an ask-protected artifact type by its type URL."
+  },
+  "03eb633f917cab569ef69dd20b1b730d6a9294eb": {
+    "facing": "model",
+    "id": "tool-result-artifact-share-user-share-menu-guidance",
+    "name": "Artifact Share Menu Guidance",
+    "desc": "Explains that the user can share an artifact from its page's Share menu."
+  },
+  "7e76b1876e8aec03d6b5581180f05c3b07849840": {
+    "facing": "model",
+    "id": "tool-result-artifact-durable-wake-publish-comment-registered",
+    "name": "Artifact Durable Publish And Comment Wake Registered",
+    "desc": "Reports durable wake registration for artifact publishes and comments."
+  },
+  "6ca09f91b368eab3aa04d6e0a829ef48a97df95a": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-decisions-state-no-options",
+    "name": "Artifact Review Decision State Has No Options",
+    "desc": "Rejects decision state entries that do not name a concern with choices."
+  },
+  "ee8ca87b6c244da36af4b7185fa744b91af584c7": {
+    "facing": "model",
+    "id": "tool-result-artifact-files-invalid-copy-capable-map-value",
+    "name": "Artifact Invalid Copy Capable Files Map Value",
+    "desc": "Lists accepted values for a files map when copying artifact files is enabled."
+  },
+  "cb7ef5e8864d25754e35819d5db73583aae51f1c": {
+    "facing": "model",
+    "id": "tool-result-artifact-created-from-type-previous-attempt",
+    "name": "Artifact Already Created By Previous Attempt",
+    "desc": "Reports that a retried call reuses the artifact created by its earlier attempt."
+  },
+  "735e34b816e5c49f542e2b5b21881549099abecd": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-file-out-dir-local-only",
+    "name": "Artifact File Read Output Must Be Local",
+    "desc": "Rejects artifact file downloads whose destination is a network path."
+  },
+  "b2943ea3fd3e86915ff9d57857776e82c83c3bc5": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-asset-out-dir-local-only",
+    "name": "Artifact Asset Read Output Must Be Local",
+    "desc": "Rejects artifact asset downloads whose destination is a network path."
+  },
+  "6d578a50b50628bcf58e48c1e9a1b3894f49645c": {
+    "facing": "model",
+    "id": "tool-result-artifact-type-already-created-for-file",
+    "name": "Artifact Type Already Created For File",
+    "desc": "Tells the model to update the artifact already created from a type for this file."
+  },
+  "77f186b1a4fa388bda4dae0601083556fa6edae2": {
+    "facing": "model",
+    "id": "tool-result-artifact-republish-provenance-proxy-read-denied",
+    "name": "Artifact Republish Provenance Proxy Read Denied",
+    "desc": "Refuses republishing when a policy denial blocks reading the published decision provenance."
+  },
+  "3f7d3c0ce5d9254d9184a93847fd71094f20df29": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-review-check-transient-read-denied",
+    "name": "Artifact Publish Review Check Transient Read Denied",
+    "desc": "Refuses publishing when a transient content scan prevents checking whether the target is a review page."
+  },
+  "6e2e3edf80152707a7390251803150fc576bc7b7": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-review-check-proxy-read-denied",
+    "name": "Artifact Publish Review Check Proxy Read Denied",
+    "desc": "Refuses publishing when a proxy denial blocks checking the target's review state."
+  },
+  "e39de719f8e6d499fabba09ca9966799e37ac0f2": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-review-check-403-retry-once",
+    "name": "Artifact Publish Review Check HTTP 403 Retry Once",
+    "desc": "Limits retries when an HTTP 403 prevents checking the target's review state."
+  },
+  "2c5ba444a6168fad93aeda9d0400c204ab6ccb1b": {
+    "facing": "model",
+    "id": "tool-result-artifact-shared-version-pinned-agent-scoped",
+    "name": "Artifact Shared Version Pinned For Agent Scoped Update",
+    "desc": "Warns that an agent's artifact update is not yet visible to pinned shared viewers."
+  },
+  "ea7dd70dbf04922ba7bf75ae9f7ab9dd11aa41bf": {
+    "facing": "model",
+    "id": "tool-result-send-message-ambiguous-account-sessions-unavailable",
+    "name": "Send Message Ambiguous Account Sessions Unavailable",
+    "desc": "Warns that an ambiguous recipient list may omit account sessions whose discovery failed."
+  },
+  "24b9b2b82baff34073b3d4110fb24f6fb8d9cc6c": {
+    "facing": "model",
+    "id": "tool-result-send-message-ambiguous-pinned-identity-local-claim",
+    "name": "Send Message Ambiguous Pinned Identity Local Claim",
+    "desc": "Warns that a local identity claim conflicts with a recipient previously confirmed remote."
+  },
+  "f6e358379e4e775d3f127483769069376de7edd2": {
+    "facing": "model",
+    "id": "tool-result-send-message-roster-member-left",
+    "name": "Send Message Roster Member Left",
+    "desc": "Refuses sending after a roster-resolved team member disappears."
+  },
+  "6c304ab1b5286d6ca06279470717fe83d30097a1": {
+    "facing": "model",
+    "id": "tool-result-send-file-ambiguous-account-sessions-unavailable",
+    "name": "Send File Ambiguous Account Sessions Unavailable",
+    "desc": "Warns that SendFile's ambiguous peer list may omit account sessions."
+  },
+  "6c5fcfa1fe30557c6cff329f0d7d3b047bca586d": {
+    "facing": "model",
+    "id": "tool-result-send-file-not-found-pinned-identity-local-claim",
+    "name": "Send File Pinned Identity Hidden By Local Claim",
+    "desc": "Warns that a pinned remote session is hidden by a conflicting local identity claim."
+  },
+  "11cf7d9db68619fbef7d0d92528470cd3554ac7b": {
+    "facing": "model",
+    "id": "tool-result-start-task-files-share-or-add-dir-guidance",
+    "name": "Task Attachment Share Or Add Directory Guidance",
+    "desc": "Explains how the user can make an unreadable task attachment available to the session."
+  },
+  "dec191fe97abf5da687d5ba5a3a4b135d68846ce": {
+    "facing": "model",
+    "id": "tool-description-projects-memory-tools-location-hint",
+    "name": "Projects Memory Tools Location Hint",
+    "desc": "Points the model to project memory files when the session provides memory tools."
+  },
+  "fe0b603acd835b858b6f58f86e7ed59a43a7f379": {
+    "facing": "model",
+    "id": "tool-result-remote-host-approval-upload-not-received",
+    "name": "Remote Host Approval Upload Not Received",
+    "desc": "Explains that an approval upload could not be confirmed and the host reported not receiving it."
+  },
+  "30223775a68caf36791e42a947b2bb60c3c2875d": {
+    "facing": "model",
+    "id": "slash-command-loop-schedule-autonomous-summary-directive",
+    "name": "Loop Autonomous Schedule Summary Directive",
+    "desc": "Tells the model what to report after scheduling the autonomous loop default."
+  },
+  "a02599dd1eda9e93231d521c44c231354e9be9ff": { "facing": "internal" },
+  "26e1e68600b2bf8046f67b6d884abcdacab230e1": {
+    "facing": "model",
+    "id": "tool-result-listagents-no-reachable-agents-without-send-tool",
+    "name": "List Agents No Reachable Peers Without Send Tool",
+    "desc": "Reports an empty peer listing when this session lacks the SendMessage tool."
+  },
+  "6d37b471260e61741f4ae8c782eadc2526ccf590": { "facing": "internal" },
+  "06c8ec16d783d342c828d47a18b8bdd40b83b950": {
+    "facing": "model",
+    "id": "tool-result-send-message-rewrite-structured-message-refusal",
+    "name": "Send Message Structured Rewrite Refusal",
+    "desc": "Refuses a rewritten send whose permission handler produced a structured message."
+  },
+  "9029fc6552edfafddb8748d50a267718044205d5": {
+    "facing": "model",
+    "id": "tool-result-send-message-rewrite-structured-message-refusal-lead",
+    "name": "Send Message Structured Rewrite Refusal Lead",
+    "desc": "Introduces the refusal of a permission handler rewrite into a non-text message."
+  },
+  "007c6c83532ceea36337f3aaeacb830ee8cb1c40": {
+    "facing": "model",
+    "id": "tool-result-send-message-permission-handler-structured-message-non-text-fragment",
+    "name": "SendMessage Structured Rewrite Non-Text Fragment",
+    "desc": "Middle fragment of the tool-result refusal when a permission handler changes an approved SendMessage into structured content."
+  },
+  "f7393f13f606a6e3ea08ccf13e3b0a50c1d7d06e": {
+    "facing": "model",
+    "id": "tool-result-send-message-permission-handler-structured-message-prefix",
+    "name": "SendMessage Structured Rewrite Refusal Prefix",
+    "desc": "Opening fragment of the tool-result refusal when a permission handler rewrites an approved SendMessage as structured content."
   }
 }

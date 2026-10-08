@@ -658,6 +658,18 @@ const CURATED_IDENTIFIER_MAPS = {
       },
     },
   ],
+  // 2.1.294 selects the project_write sentence by indexing a here/elsewhere/
+  // none object with the upload mode. That index keeps slot 0, the name the
+  // upload-mode ternary had through 2.1.292, and the memory flag stays slot 1.
+  'tool-description-projects': [
+    {
+      identifiers: [0, 1],
+      identifierMap: {
+        0: 'TOOL_DESCRIPTION_PROJECTS_VAR_0',
+        1: 'TOOL_DESCRIPTION_PROJECTS_VAR_1',
+      },
+    },
+  ],
   'tool-description-sendmessagetool': [
     {
       identifiers: [0, 1, 2],
