@@ -38,13 +38,18 @@
 //
 // A drift can be deliberate — a curated correction of a map that was wrong
 // in the previous catalogue (coordinator-mode, 2.1.257). Acknowledge those
-// by id with --allow so the run's intent is on record.
+// by id with --allow so the run's intent is on record, or durably in
+// data/map-drift-allowlist.json under "<prevVersion>-><nextVersion>", with
+// the reason as the value. The versions come from each catalogue's top-level
+// `version` (else its prompts-X.Y.Z.json file name), so an entry only ever
+// acknowledges the one bump it was written for.
 //
 // Usage:
-//   node tools/checkMapDrift.mjs <prev prompts.json> <next prompts.json> [--allow=<id>,<id>…]
+//   node tools/checkMapDrift.mjs <prev prompts.json> <next prompts.json> [--allow=<id>,<id>…] [--allowlist=<file>]
 //
 // Exit 0 = no unacknowledged drift, 1 = drift, 2 = could not run.
 import fs from 'node:fs';
+import path from 'node:path';
 
 const args = process.argv.slice(2);
 const files = args.filter(a => !a.startsWith('--'));
@@ -54,23 +59,46 @@ const allow = new Set(
     .flatMap(a => a.slice('--allow='.length).split(','))
     .filter(Boolean)
 );
+const allowlistArg = args.find(a => a.startsWith('--allowlist='));
+const allowlistFile = allowlistArg
+  ? allowlistArg.slice('--allowlist='.length)
+  : path.join(import.meta.dirname, '..', 'data', 'map-drift-allowlist.json');
 if (files.length !== 2) {
   console.error(
-    'usage: checkMapDrift.mjs <prev.json> <next.json> [--allow=id,…]'
+    'usage: checkMapDrift.mjs <prev.json> <next.json> [--allow=id,…] [--allowlist=file]'
   );
   process.exit(2);
 }
 const load = f => {
   try {
-    return JSON.parse(fs.readFileSync(f, 'utf8')).prompts;
+    return JSON.parse(fs.readFileSync(f, 'utf8'));
   } catch (e) {
     console.error(`could not read ${f}: ${e.message}`);
     process.exit(2);
   }
 };
+const versionOf = (data, f) => {
+  if (typeof data.version === 'string' && data.version) return data.version;
+  const m = path.basename(f).match(/^prompts-(\d+\.\d+\.\d+)\.json$/);
+  return m ? m[1] : null;
+};
+const prevData = load(files[0]);
+const nextData = load(files[1]);
+const bump = `${versionOf(prevData, files[0])}->${versionOf(nextData, files[1])}`;
+let allowlist = {};
+if (fs.existsSync(allowlistFile)) {
+  try {
+    allowlist = JSON.parse(fs.readFileSync(allowlistFile, 'utf8'));
+  } catch (e) {
+    console.error(`could not read ${allowlistFile}: ${e.message}`);
+    process.exit(2);
+  }
+}
+const recorded = allowlist[bump] ?? {};
+for (const id of Object.keys(recorded)) allow.add(id);
 const byId = list => new Map(list.map(p => [p.id, p]));
-const prev = byId(load(files[0]));
-const next = byId(load(files[1]));
+const prev = byId(prevData.prompts);
+const next = byId(nextData.prompts);
 
 const same = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
 // How each slot is USED: the character after it says whether pristine calls it
@@ -264,12 +292,23 @@ for (const d of reshaped) {
 }
 
 for (const d of acknowledged) {
+  const why = recorded[d.id] ? ` (${bump}: ${recorded[d.id]})` : '';
   if (d.kind === 'moved') {
     console.log(
-      `  ✓ ${d.id}: acknowledged moved binding — ${d.changes.join(', ')}`
+      `  ✓ ${d.id}: acknowledged moved binding — ${d.changes.join(', ')}${why}`
     );
   } else {
-    console.log(`  ✓ ${d.id}: acknowledged rename — ${d.changes.join('; ')}`);
+    console.log(
+      `  ✓ ${d.id}: acknowledged rename — ${d.changes.join('; ')}${why}`
+    );
+  }
+}
+const ackedIds = new Set(acknowledged.map(d => d.id));
+for (const id of Object.keys(recorded)) {
+  if (!ackedIds.has(id)) {
+    console.log(
+      `  · ${id}: recorded in the allowlist for ${bump} but did not drift`
+    );
   }
 }
 for (const d of drifted) {

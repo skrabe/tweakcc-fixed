@@ -183,4 +183,81 @@ describe('checkMapDrift', () => {
     expect(r.out).toContain('acknowledged moved binding');
     expect(r.out).toContain('0 moved');
   });
+
+  describe('the committed allowlist', () => {
+    const renamed = [
+      [prompt(['${', '!==null?', '():"x"}'], { 0: 'CFG', 1: 'INTRO_FN' })],
+      [prompt(['${', '!==null?', '():"x"}'], { 0: 'CFG', 1: 'OTHER_FN' })],
+    ];
+    const runBump = ({ prevName, nextName, prevVer, nextVer, list }) => {
+      const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'mapdrift-'));
+      const a = path.join(dir, prevName);
+      const b = path.join(dir, nextName);
+      const wrap = (prompts, version) =>
+        JSON.stringify(version ? { version, prompts } : { prompts });
+      fs.writeFileSync(a, wrap(renamed[0], prevVer));
+      fs.writeFileSync(b, wrap(renamed[1], nextVer));
+      const allowlist = path.join(dir, 'allowlist.json');
+      fs.writeFileSync(allowlist, JSON.stringify(list));
+      const r = spawnSync('node', [TOOL, a, b, `--allowlist=${allowlist}`], {
+        encoding: 'utf8',
+      });
+      return { code: r.status, out: r.stdout };
+    };
+    const LIST = {
+      '9.9.1->9.9.2': { 'fixture-intro': 'slot renamed on purpose' },
+    };
+
+    it('acknowledges a drift recorded for this bump', () => {
+      const r = runBump({
+        prevName: 'prev.json',
+        nextName: 'next.json',
+        prevVer: '9.9.1',
+        nextVer: '9.9.2',
+        list: LIST,
+      });
+      expect(r.code).toBe(0);
+      expect(r.out).toContain('acknowledged rename');
+      expect(r.out).toContain('slot renamed on purpose');
+    });
+
+    it('takes the versions from the file names when the catalogue has none', () => {
+      const r = runBump({
+        prevName: 'prompts-9.9.1.json',
+        nextName: 'prompts-9.9.2.json',
+        list: LIST,
+      });
+      expect(r.code).toBe(0);
+      expect(r.out).toContain('1 acknowledged');
+    });
+
+    it('does not acknowledge a drift recorded for another bump', () => {
+      const r = runBump({
+        prevName: 'prev.json',
+        nextName: 'next.json',
+        prevVer: '9.9.2',
+        nextVer: '9.9.3',
+        list: LIST,
+      });
+      expect(r.code).toBe(1);
+      expect(r.out).toContain('1 unacknowledged');
+    });
+
+    it('keeps every recorded entry keyed by a version pair with a reason', () => {
+      const file = path.join(
+        import.meta.dirname,
+        '..',
+        'data',
+        'map-drift-allowlist.json'
+      );
+      const list = JSON.parse(fs.readFileSync(file, 'utf8'));
+      for (const [bump, ids] of Object.entries(list)) {
+        expect(bump).toMatch(/^\d+\.\d+\.\d+->\d+\.\d+\.\d+$/);
+        for (const why of Object.values(ids)) {
+          expect(typeof why).toBe('string');
+          expect(why.length).toBeGreaterThan(20);
+        }
+      }
+    });
+  });
 });
