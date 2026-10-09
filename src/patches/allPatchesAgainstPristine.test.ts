@@ -91,6 +91,8 @@ import { writeInputPatternHighlighters } from './inputPatternHighlighters';
 import { writeConversationTitle } from './conversationTitle';
 import { writeVoiceMode } from './voiceMode';
 import { writeChannelsMode } from './channelsMode';
+import { writeAttachedBackgroundInteractive } from './attachedBackgroundInteractive';
+import { writeProposeGoal } from './proposeGoal';
 import {
   writeSuppressDeferredTools,
   writeStripEmptySystemReminders,
@@ -423,6 +425,8 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
   'conversation-title': c => writeConversationTitle(c),
   'voice-mode': c => writeVoiceMode(c, true),
   'channels-mode': c => writeChannelsMode(c),
+  'attached-background-interactive': c => writeAttachedBackgroundInteractive(c),
+  'enable-propose-goal': c => writeProposeGoal(c),
   'suppress-deferred-tools': c => writeSuppressDeferredTools(c),
   'claudemd-context-once-per-conversation': c =>
     writeClaudemdContextOncePerConversation(c),

@@ -93,6 +93,8 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     enableVoiceMode: false,
     enableVoiceConciseOutput: true,
     enableChannelsMode: false,
+    attachedBackgroundInteractive: false,
+    enableProposeGoal: false,
     maxEffortDefault: false,
     autonomousOperationAllModels: false,
     refusalFallbackModel: false,
@@ -542,6 +544,34 @@ export function MiscView({ onSubmit }: MiscViewProps) {
             ensureMisc();
             settings.misc!.enableChannelsMode =
               !settings.misc!.enableChannelsMode;
+          });
+        },
+      },
+      {
+        id: 'attachedBackgroundInteractive',
+        title: 'Treat attached background sessions as interactive',
+        description:
+          'While a client is attached, a background session offers ProposeGoal, usage-limit auto-resume and the auto mode and workflow prompts. Unattended background sessions are unchanged.',
+        getValue: () => settings.misc?.attachedBackgroundInteractive ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.attachedBackgroundInteractive =
+              !settings.misc!.attachedBackgroundInteractive;
+          });
+        },
+      },
+      {
+        id: 'enableProposeGoal',
+        title: 'Enable ProposeGoal',
+        description:
+          'Force the tengu_propose_goal flag on, so the model can propose session goals. Its "Claude-proposed goals" entry in /config sets whether each proposal asks first.',
+        getValue: () => settings.misc?.enableProposeGoal ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.enableProposeGoal =
+              !settings.misc!.enableProposeGoal;
           });
         },
       },

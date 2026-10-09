@@ -98,6 +98,8 @@ Each patch is tagged with how it behaves on `--apply`: **`[default on]`** applie
 - `fix-summarize-from-here` **`[default on]`** — "summarize from here" starts at the rewind point, not the top
 - `strip-empty-system-reminders` **`[always]`** — drop the empty `<system-reminder>` blocks left after empty tool output
 - `read-default-lines` **`[always]`** — an env-gated cap on the default `Read` line count
+- `attached-background-interactive` **`[opt-in]`** — a background session with a client attached offers what an interactive one does: ProposeGoal, usage-limit auto-resume, and the auto mode and workflow prompts; one nobody is attached to is unchanged; ProposeGoal also needs its flag, served by Anthropic or forced by `enable-propose-goal` (`settings.misc.attachedBackgroundInteractive`)
+- `enable-propose-goal` **`[opt-in]`** — force the ProposeGoal tool's rollout flag on, in every session kind its own checks allow; "Claude-proposed goals" in `/config` sets whether it asks first (`settings.misc.enableProposeGoal`)
 - `suppress-deferred-tools` **`[opt-in]`** — drop the deferred-tools announcement
 - `multi-skill-invocation` **`[opt-in]`** — invoke every `/skill` you type in one message ("`/a /b do X`") directly, not just the leading one (real user invocations, no model round-trip)
 

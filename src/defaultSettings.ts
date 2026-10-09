@@ -750,6 +750,8 @@ export const DEFAULT_SETTINGS: Settings = {
     enableVoiceMode: false,
     enableVoiceConciseOutput: true,
     enableChannelsMode: false,
+    attachedBackgroundInteractive: false,
+    enableProposeGoal: false,
     maxEffortDefault: false,
     autonomousOperationAllModels: false,
     refusalFallbackModel: false,
