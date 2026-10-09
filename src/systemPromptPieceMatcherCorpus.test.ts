@@ -3,28 +3,33 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { buildSearchRegexFromPieces } from './systemPromptSync';
-import { findAllMatchesWithStackFallback } from './safeRegexMatch';
 import {
-  findAllPromptPieceMatches,
-  PromptMatchSpec,
-} from './systemPromptPieceMatcher';
+  defaultWorkerCount,
+  runMatcherDifferential,
+  type DifferentialTargetSummary,
+} from '../tools/lib/matcherDifferential.mjs';
 
-// Reference-regex differential over the whole catalogue: compiling ~2,600 giant
-// search regexes (some >100KB) costs ~50s synthetic / ~130s against the real
-// 20MB bundle, so it does not belong in the every-save `pnpm test` run. It is a
-// version-bump guard — gate it on TWEAKCC_MATCHER_CORPUS=1, which the showtime
-// driver sets (driver.mjs `check`). The fast hand-picked equivalence cases in
-// systemPromptPieceMatcher.test.ts still run every time.
+// Reference-regex differential over the whole catalogue. It compiles one giant
+// search regex per prompt (some >100KB) and, for the real bundle, runs it over
+// a 45MB cli.js — ~25 minutes single-threaded on 2.1.295's 11,937 prompts — so
+// it does not belong in the every-save `pnpm test` run. It is a version-bump
+// guard, gated on TWEAKCC_MATCHER_CORPUS=1, which the showtime driver sets. The
+// fast hand-picked equivalence cases in systemPromptPieceMatcher.test.ts still
+// run every time.
+//
+// Both cases go through tools/lib/matcherDifferential.mjs, the runner behind
+// tools/runMatcherDifferential.mjs: the per-prompt check is
+// src/matcherDifferential.ts, sharded across worker threads and cached by
+// content, so the gate and the CLI are one implementation.
+// TWEAKCC_MATCHER_WORKERS overrides the worker count, TWEAKCC_MATCHER_NO_CACHE=1
+// bypasses the cache, TWEAKCC_MATCHER_CACHE moves it.
 const CORPUS = Boolean(process.env.TWEAKCC_MATCHER_CORPUS);
 const MINUTES = 5 * 60 * 1000;
-// The real-bundle differential grows with the bundle: 130s on a 20MB cli.js,
-// 330s on 2.1.226's 23MB one. At MINUTES it timed out and reported as a FAILED
-// equivalence, i.e. a gate that says "the apply would splice a wrong site" when
-// the truth is that it never finished. A per-test timeout passed to `it` also
-// overrides --testTimeout, so raising the CLI flag does nothing. Budget for a
-// bundle several versions larger; a run that legitimately needs 20 minutes is a
-// signal worth seeing, not a failure.
+// A per-test timeout passed to `it` overrides --testTimeout, so it has to be
+// generous here: a run that times out reports as a FAILED equivalence, i.e. a
+// gate that says "the apply would splice a wrong site" when the truth is that
+// it never finished. A run that legitimately needs 20 minutes is a signal worth
+// seeing, not a failure.
 const REAL_BUNDLE_TIMEOUT = 20 * MINUTES;
 
 // The differential guard.
@@ -58,22 +63,26 @@ const newestPromptsJson = (): { file: string; version: string } => {
   return { file: path.join(dir, `prompts-${version}.json`), version };
 };
 
-const signature = (m: RegExpExecArray): Array<string | number | null> => [
-  m.index,
-  ...Array.from(m, v => v ?? null),
-];
+const runnerOptions = () => ({
+  workers: Number(process.env.TWEAKCC_MATCHER_WORKERS) || defaultWorkerCount(),
+  cache: !process.env.TWEAKCC_MATCHER_NO_CACHE,
+});
 
-// A haystack a prompt's own regex should match once: its literal pieces joined
-// by a token that satisfies the identifier-capture class ([$\w]+) and, for the
-// "match anything" interpolation/backslash sentinels, is equally acceptable.
-// Distinct per gap so capture-group equivalence is actually exercised.
-const synthHaystack = (pieces: string[]): string => {
-  let out = '\n// leading filler so index 0 is never the match\n';
-  pieces.forEach((piece, i) => {
-    out += piece;
-    if (i < pieces.length - 1) out += `Z${i}x9$q`;
-  });
-  return out + '\n// trailing filler\n';
+const expectAgreement = (s: DifferentialTargetSummary) => {
+  // If this drops, prompts stopped reaching the comparison (the regex builder
+  // or the RegExp engine rejects them) and the gate is silently vacuous.
+  expect(s.checked).toBeGreaterThan(2000);
+  expect(
+    s.errors.map(e => e.id),
+    s.errors.map(e => `${e.id}: ${e.message}`).join('\n\n')
+  ).toEqual([]);
+  expect(
+    s.mismatches.map(m => m.id),
+    s.mismatches
+      .slice(0, 10)
+      .map(m => m.detail)
+      .join('\n\n')
+  ).toEqual([]);
 };
 
 describe.runIf(CORPUS)(
@@ -82,64 +91,24 @@ describe.runIf(CORPUS)(
     it(
       'matches the RegExp engine on every bundled prompt shape',
       async () => {
-        const { file, version } = newestPromptsJson();
-        const prompts: Array<{ pieces?: string[] }> = JSON.parse(
-          fs.readFileSync(file, 'utf8')
-        ).prompts;
-
-        let checked = 0;
-        let exercised = 0;
-        const mismatches: string[] = [];
-
-        for (const p of prompts) {
-          const pieces = p.pieces;
-          if (!Array.isArray(pieces) || pieces.length === 0) continue;
-          let regex: string;
-          try {
-            regex = buildSearchRegexFromPieces(pieces, version);
-          } catch {
-            continue;
-          }
-          const spec: PromptMatchSpec = { regex, pieces, version };
-          const content = synthHaystack(pieces);
-
-          let expected: RegExpExecArray[];
-          try {
-            expected = await findAllMatchesWithStackFallback(
-              regex,
-              'sg',
-              content
-            );
-          } catch {
-            // A pattern the RegExp engine itself rejects is not a fair comparison.
-            continue;
-          }
-          const actual = await findAllPromptPieceMatches(spec, content);
-          checked++;
-          if (expected.length > 0) exercised++;
-
-          const e = JSON.stringify(expected.map(signature));
-          const a = JSON.stringify(actual.map(signature));
-          if (e !== a && mismatches.length < 10) {
-            mismatches.push(
-              `shape ${JSON.stringify(pieces).slice(0, 90)}\n  regex: ${e}\n  piece: ${a}`
-            );
-          } else if (e !== a) {
-            mismatches.push('…');
-          }
-        }
-
-        expect(checked).toBeGreaterThan(2000);
+        const { file } = newestPromptsJson();
+        const {
+          targets: [s],
+        } = await runMatcherDifferential({
+          promptsFile: file,
+          synthetic: true,
+          ...runnerOptions(),
+        });
+        expectAgreement(s);
         // If this drops, the synthetic haystack stopped exercising real matches
         // (e.g. the regex format changed) and the test is silently vacuous.
-        expect(exercised / checked).toBeGreaterThan(0.9);
-        expect(mismatches, mismatches.join('\n\n')).toEqual([]);
+        expect(s.exercised / s.checked).toBeGreaterThan(0.9);
       },
       MINUTES
     );
 
     // The strongest check: the matcher and the regex must agree on the REAL
-    // 20MB bundle, not just synthetic haystacks. Gated on the pristine cli.js the
+    // bundle, not just synthetic haystacks. Gated on the pristine cli.js the
     // apply writes to ~/.tweakcc every run, so it runs on a maintainer's machine
     // (and in showtime) but skips in a bare CI checkout rather than passing
     // vacuously.
@@ -159,73 +128,18 @@ describe.runIf(CORPUS)(
           );
           return;
         }
-        const content = fs.readFileSync(orig, 'utf8');
-        const version =
-          (content.match(/"(\d+\.\d+\.\d+)"/) || [])[1] ||
-          newestPromptsJson().version;
         const { file } = newestPromptsJson();
-        const prompts: Array<{ pieces?: string[] }> = JSON.parse(
-          fs.readFileSync(file, 'utf8')
-        ).prompts;
-
-        // This case runs for ~11 minutes on a 35MB bundle and vitest prints
-        // nothing until a test settles, so a working run and a hung one look
-        // identical from outside. On CC 2.1.273 that cost four relaunches and a
-        // wrong "the gate is broken" call in the run dispatch — the gate was
-        // passing the whole time. Emit progress so a long run is observably
-        // alive, and so a genuine hang shows WHERE it stopped.
-        const started = Date.now();
-        const elapsed = () => `${((Date.now() - started) / 1000).toFixed(0)}s`;
-        const total = prompts.filter(
-          p => Array.isArray(p.pieces) && p.pieces.length > 0
-        ).length;
-        console.log(
-          `real-bundle differential: ${total} prompt(s) vs ${(content.length / 1e6).toFixed(1)}MB of ${version} — expect ~11min`
-        );
-
-        const mismatches: string[] = [];
-        let checked = 0;
-        for (const p of prompts) {
-          const pieces = p.pieces;
-          if (!Array.isArray(pieces) || pieces.length === 0) continue;
-          let regex: string;
-          try {
-            regex = buildSearchRegexFromPieces(pieces, version);
-          } catch {
-            continue;
-          }
-          let expected: RegExpExecArray[];
-          try {
-            expected = await findAllMatchesWithStackFallback(
-              regex,
-              'sg',
-              content
-            );
-          } catch {
-            continue;
-          }
-          const actual = await findAllPromptPieceMatches(
-            { regex, pieces, version },
-            content
-          );
-          checked++;
-          const e = JSON.stringify(expected.map(signature));
-          const a = JSON.stringify(actual.map(signature));
-          if (e !== a && mismatches.length < 10) {
-            mismatches.push(
-              `${JSON.stringify(pieces).slice(0, 90)}\n  ${e}\n  ${a}`
-            );
-          }
-          if (checked % 500 === 0)
-            console.log(
-              `  ${checked}/${total} checked, ${mismatches.length} mismatch(es), ${elapsed()}`
-            );
-        }
-        console.log(
-          `real-bundle differential: ${checked}/${total} checked, ${mismatches.length} mismatch(es), ${elapsed()}`
-        );
-        expect(checked).toBeGreaterThan(2000);
-        expect(mismatches, mismatches.join('\n\n')).toEqual([]);
+        // The runner streams progress, so a long run is observably alive and a
+        // genuine hang shows where it stopped (vitest itself prints nothing
+        // until a test settles; on CC 2.1.273 that silence cost four relaunches).
+        const {
+          targets: [s],
+        } = await runMatcherDifferential({
+          promptsFile: file,
+          bundles: [orig],
+          ...runnerOptions(),
+        });
+        expectAgreement(s);
       },
       REAL_BUNDLE_TIMEOUT
     );
