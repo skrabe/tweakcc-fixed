@@ -106,13 +106,39 @@ const jobs = Math.min(
 );
 // A harness whose apply did not run to completion lists only the prompts it
 // reached, and reading that as "the rest were found" drops tags silently.
-// Trust an output only with the completed-apply marker and a full listing.
-const incompleteReason = out => {
+// Trust an output only with the completed-apply marker and a whole "Could not
+// find" block: the count, that many listed lines, and the count again as the
+// end marker (couldNotFindBlock in applySafetyHarness.mjs). Names come from
+// that block alone.
+const readHarness = out => {
+  const lines = out.split('\n');
   const ran = (out.match(/^apply ran:\s+(\S+)/m) || [])[1];
-  const listed = (out.match(/^\s+.*Could not find/gm) || []).length;
-  const reported = Number((out.match(/^Could not find:\s+(\d+)/m) || [])[1]);
-  if (ran === 'true' && listed === reported) return null;
-  return `apply ran: ${ran ?? 'missing'}, ${listed} listed vs ${Number.isNaN(reported) ? 'no' : reported} reported "Could not find"`;
+  const head = lines.findIndex(l => /^Could not find:\s+\d+$/.test(l));
+  const tail = lines.findIndex(l => /^Could not find \(listed\):\s+\d+$/.test(l));
+  const count = i => Number(lines[i].match(/(\d+)$/)[1]);
+  const listed = head >= 0 && tail > head ? lines.slice(head + 1, tail) : null;
+  const complete =
+    ran === 'true' &&
+    listed !== null &&
+    count(head) === listed.length &&
+    count(tail) === listed.length &&
+    listed.every(l => l.startsWith('  '));
+  if (!complete)
+    return {
+      reason:
+        `apply ran: ${ran ?? 'missing'}, ` +
+        (head < 0
+          ? 'no "Could not find" count'
+          : listed === null
+            ? 'no end marker after the "Could not find" listing'
+            : `${listed.length} listed vs ${count(head)} counted, ${count(tail)} at the end marker`),
+    };
+  const names = new Set();
+  for (const l of listed) {
+    const m = /Could not find system prompt "([^"]+)" in cli\.js/.exec(l);
+    if (m) names.add(m[1]);
+  }
+  return { names };
 };
 
 const outputs = new Array(bundles.length);
@@ -128,12 +154,14 @@ await Promise.all(
 
 // An incomplete run gets one retry on its own, after the concurrent pass, so
 // a transient failure under memory pressure costs a rerun rather than a tag.
+const reads = outputs.map(readHarness);
 for (const [i, b] of bundles.entries()) {
-  const reason = incompleteReason(outputs[i]);
+  const { reason } = reads[i];
   if (!reason) continue;
   console.error(`tagPlatforms: harness on ${b.file} incomplete (${reason}); retrying alone`);
   outputs[i] = await runHarness(b);
-  const again = incompleteReason(outputs[i]);
+  reads[i] = readHarness(outputs[i]);
+  const again = reads[i].reason;
   if (again) {
     console.error(
       `tagPlatforms: harness on ${b.file} incomplete again (${again}); not writing tags.\n` +
@@ -146,9 +174,7 @@ for (const [i, b] of bundles.entries()) {
 // name -> set of platforms that could not find it
 const missing = new Map();
 for (const [i, b] of bundles.entries()) {
-  const out = outputs[i];
-  const names = new Set();
-  for (const m of out.matchAll(/Could not find system prompt "([^"]+)" in cli\.js/g)) names.add(m[1]);
+  const { names } = reads[i];
   console.log(`${b.platform} (${path.basename(b.file)}): ${names.size} prompt name(s) not found`);
   for (const n of names) {
     if (!missing.has(n)) missing.set(n, new Set());

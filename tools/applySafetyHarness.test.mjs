@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   applyFailureTail,
+  couldNotFindBlock,
   harnessVerdict,
   introducedHumanNames,
   introducedRawNonAscii,
@@ -23,7 +24,10 @@ describe('applySafetyHarness: harnessVerdict', () => {
 
   it('fails on an unresolved placeholder name the patch introduced', () => {
     expect(
-      harnessVerdict({ ...clean, humanNames: ['OUTPUT_STYLE_AGENT_INTRO_FN(+1)'] })
+      harnessVerdict({
+        ...clean,
+        humanNames: ['OUTPUT_STYLE_AGENT_INTRO_FN(+1)'],
+      })
     ).toBe(false);
   });
 
@@ -128,7 +132,8 @@ describe('applySafetyHarness: introducedUnresolvedSlots', () => {
 
   it('does not flag a slot bound by a destructured arrow param (2.1.218 ${q})', () => {
     const orig = 'x=1;';
-    const patched = 'Object.entries(t).map(([q,K])=>`# ${q}\n${K}`).join(`\n`);';
+    const patched =
+      'Object.entries(t).map(([q,K])=>`# ${q}\n${K}`).join(`\n`);';
     expect(flags(orig, patched)).toEqual([]);
   });
 
@@ -198,13 +203,18 @@ describe('applySafetyHarness: introducedUnresolvedSlots byte-shift immunity', ()
 });
 
 describe('applySafetyHarness: introducedHumanNames', () => {
-  const known = new Set(['OUTPUT_STYLE_AGENT_INTRO_FN', 'LISTING_VAR_2', 'VERSION']);
+  const known = new Set([
+    'OUTPUT_STYLE_AGENT_INTRO_FN',
+    'LISTING_VAR_2',
+    'VERSION',
+  ]);
 
   it('flags a catalogue name anywhere inside a ${…} expression', () => {
     // CC 2.1.257: neither `${e…` (bound, not a slot) nor the ALLCAPS filter in
     // dangerousSlots could see the leak inside the ternary.
     const orig = 'f(e){return`\n${e!==null?m3n():"x"}`}';
-    const patched = 'f(e){return`\n${e!==null?OUTPUT_STYLE_AGENT_INTRO_FN():"x"}`}';
+    const patched =
+      'f(e){return`\n${e!==null?OUTPUT_STYLE_AGENT_INTRO_FN():"x"}`}';
     expect(introducedHumanNames(orig, patched, known)).toEqual([
       'OUTPUT_STYLE_AGENT_INTRO_FN(+1)',
     ]);
@@ -212,7 +222,11 @@ describe('applySafetyHarness: introducedHumanNames', () => {
 
   it('flags an unresolved call argument', () => {
     expect(
-      introducedHumanNames('`${t}\n\n${ain()}`', '`${t}\n\n${ain(LISTING_VAR_2)}`', known)
+      introducedHumanNames(
+        '`${t}\n\n${ain()}`',
+        '`${t}\n\n${ain(LISTING_VAR_2)}`',
+        known
+      )
     ).toEqual(['LISTING_VAR_2(+1)']);
   });
 
@@ -229,7 +243,11 @@ describe('applySafetyHarness: introducedHumanNames', () => {
 
   it('ignores a backslash-escaped literal opener', () => {
     expect(
-      introducedHumanNames('x', '`docs \\${OUTPUT_STYLE_AGENT_INTRO_FN}`', known)
+      introducedHumanNames(
+        'x',
+        '`docs \\${OUTPUT_STYLE_AGENT_INTRO_FN}`',
+        known
+      )
     ).toEqual([]);
   });
 });
@@ -253,5 +271,25 @@ describe('applySafetyHarness: applyFailureTail', () => {
   it('returns nothing for an empty or missing log', () => {
     expect(applyFailureTail('')).toEqual([]);
     expect(applyFailureTail(undefined)).toEqual([]);
+  });
+});
+
+describe('couldNotFindBlock', () => {
+  it('counts lines, not occurrences, and closes with the count', () => {
+    const log =
+      'patched ok\n' +
+      'Could not find system prompt "A" in cli.js (regex "Could not find x")\n' +
+      '\n' +
+      '  Could not find system prompt "B" in cli.js\n';
+    expect(couldNotFindBlock(log)).toEqual([
+      'Could not find:    2',
+      '  Could not find system prompt "A" in cli.js (regex "Could not find x")',
+      '  Could not find system prompt "B" in cli.js',
+      'Could not find (listed): 2',
+    ]);
+    expect(couldNotFindBlock('')).toEqual([
+      'Could not find:    0',
+      'Could not find (listed): 0',
+    ]);
   });
 });
