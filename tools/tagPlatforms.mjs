@@ -20,9 +20,14 @@
 // Node `process.platform` values are the keys (darwin, linux, win32). Two
 // bundles of the same platform (linux-x64 and linux-arm64) both map to `linux`;
 // a prompt missing from either is treated as missing from the platform.
-import { execFileSync } from 'node:child_process';
+//
+// The per-bundle harness runs are independent (each applies into its own temp
+// HOME), so they run concurrently: `--jobs=N` (or TWEAKCC_TAG_JOBS), default
+// one per bundle up to what memory allows at ~3.5 GB peak each.
+import { execFile } from 'node:child_process';
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -30,10 +35,21 @@ const require = createRequire(import.meta.url);
 const { parseOverrideArgs, appliedPromptsDir } = require('./lib/overrideSets.cjs');
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const parsed = parseOverrideArgs(process.argv.slice(2));
+const HARNESS_PEAK_BYTES = 3.5 * 1024 ** 3;
+let jobsArg = process.env.TWEAKCC_TAG_JOBS;
+const argv = process.argv.slice(2).filter(a => {
+  if (!a.startsWith('--jobs=')) return true;
+  jobsArg = a.slice('--jobs='.length);
+  return false;
+});
+const parsed = parseOverrideArgs(argv);
 const [jsonPath, ...specs] = parsed.rest;
 if (!jsonPath || specs.length === 0) {
-  console.error('usage: tagPlatforms.mjs <prompts.json> <platform>=<cli.js> …');
+  console.error('usage: tagPlatforms.mjs <prompts.json> <platform>=<cli.js> … [--jobs=N]');
+  process.exit(2);
+}
+if (jobsArg !== undefined && !(Number.isInteger(Number(jobsArg)) && Number(jobsArg) >= 1)) {
+  console.error(`bad --jobs ${jobsArg}: want a positive integer`);
   process.exit(2);
 }
 const bundles = specs.map(s => {
@@ -61,24 +77,104 @@ try {
   appliedSet = null;
 }
 
+// Resolves to the harness stdout on success; on a non-zero exit (a bundle
+// that misses prompts FAILs the harness) to stdout + stderr, as before.
+const runHarness = b =>
+  new Promise(resolve => {
+    const harnessArgs = [path.join(REPO, 'tools', 'applySafetyHarness.mjs')];
+    if (appliedSet) harnessArgs.push(`--set=${appliedSet}`);
+    harnessArgs.push(b.file);
+    execFile(
+      'node',
+      harnessArgs,
+      { cwd: REPO, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 },
+      (err, stdout, stderr) => {
+        if (err) resolve(String(stdout ?? '') + String(stderr ?? ''));
+        else {
+          if (stderr) process.stderr.write(stderr);
+          resolve(stdout);
+        }
+      }
+    );
+  });
+
+const jobs = Math.min(
+  bundles.length,
+  jobsArg !== undefined
+    ? Number(jobsArg)
+    : Math.max(1, Math.floor(os.totalmem() / HARNESS_PEAK_BYTES) - 1)
+);
+// A harness whose apply did not run to completion lists only the prompts it
+// reached, and reading that as "the rest were found" drops tags silently.
+// Trust an output only with the completed-apply marker and a whole "Could not
+// find" block: the count, that many listed lines, and the count again as the
+// end marker (couldNotFindBlock in applySafetyHarness.mjs). Names come from
+// that block alone.
+const readHarness = out => {
+  const lines = out.split('\n');
+  const ran = (out.match(/^apply ran:\s+(\S+)/m) || [])[1];
+  const head = lines.findIndex(l => /^Could not find:\s+\d+$/.test(l));
+  const tail = lines.findIndex(l => /^Could not find \(listed\):\s+\d+$/.test(l));
+  const count = i => Number(lines[i].match(/(\d+)$/)[1]);
+  const listed = head >= 0 && tail > head ? lines.slice(head + 1, tail) : null;
+  const complete =
+    ran === 'true' &&
+    listed !== null &&
+    count(head) === listed.length &&
+    count(tail) === listed.length &&
+    listed.every(l => l.startsWith('  '));
+  if (!complete)
+    return {
+      reason:
+        `apply ran: ${ran ?? 'missing'}, ` +
+        (head < 0
+          ? 'no "Could not find" count'
+          : listed === null
+            ? 'no end marker after the "Could not find" listing'
+            : `${listed.length} listed vs ${count(head)} counted, ${count(tail)} at the end marker`),
+    };
+  const names = new Set();
+  for (const l of listed) {
+    const m = /Could not find system prompt "([^"]+)" in cli\.js/.exec(l);
+    if (m) names.add(m[1]);
+  }
+  return { names };
+};
+
+const outputs = new Array(bundles.length);
+let nextBundle = 0;
+await Promise.all(
+  Array.from({ length: jobs }, async () => {
+    while (nextBundle < bundles.length) {
+      const i = nextBundle++;
+      outputs[i] = await runHarness(bundles[i]);
+    }
+  })
+);
+
+// An incomplete run gets one retry on its own, after the concurrent pass, so
+// a transient failure under memory pressure costs a rerun rather than a tag.
+const reads = outputs.map(readHarness);
+for (const [i, b] of bundles.entries()) {
+  const { reason } = reads[i];
+  if (!reason) continue;
+  console.error(`tagPlatforms: harness on ${b.file} incomplete (${reason}); retrying alone`);
+  outputs[i] = await runHarness(b);
+  reads[i] = readHarness(outputs[i]);
+  const again = reads[i].reason;
+  if (again) {
+    console.error(
+      `tagPlatforms: harness on ${b.file} incomplete again (${again}); not writing tags.\n` +
+        outputs[i].split('\n').slice(-40).join('\n')
+    );
+    process.exit(2);
+  }
+}
+
 // name -> set of platforms that could not find it
 const missing = new Map();
-for (const b of bundles) {
-  let out = '';
-  const harnessArgs = [path.join(REPO, 'tools', 'applySafetyHarness.mjs')];
-  if (appliedSet) harnessArgs.push(`--set=${appliedSet}`);
-  harnessArgs.push(b.file);
-  try {
-    out = execFileSync('node', harnessArgs, {
-      cwd: REPO,
-      encoding: 'utf8',
-      maxBuffer: 256 * 1024 * 1024,
-    });
-  } catch (e) {
-    out = String(e.stdout ?? '') + String(e.stderr ?? '');
-  }
-  const names = new Set();
-  for (const m of out.matchAll(/Could not find system prompt "([^"]+)" in cli\.js/g)) names.add(m[1]);
+for (const [i, b] of bundles.entries()) {
+  const { names } = reads[i];
   console.log(`${b.platform} (${path.basename(b.file)}): ${names.size} prompt name(s) not found`);
   for (const n of names) {
     if (!missing.has(n)) missing.set(n, new Set());
