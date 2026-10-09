@@ -23,6 +23,7 @@ const MODEL_FACING_IDS = [
   'claudemd-context-once-per-conversation',
   'unlock-responsive-mode',
   'attached-background-interactive',
+  'enable-propose-goal',
 ];
 
 describe('model-facing patch metadata', () => {

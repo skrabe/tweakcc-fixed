@@ -17,10 +17,9 @@
 // every background session, though each turns off only because nobody may be
 // there to answer. This patch moves those to `Vu`:
 //
-//   1. ProposeGoal: its isEnabled and its call guard (`ve()||$n()||Lt()`), and
-//      its `tengu_propose_goal` flag, forced on the way channels-mode forces
-//      `tengu_harbor`. The tool offers a goal for the user to approve with one
-//      keypress, or sets it directly.
+//   1. ProposeGoal: its isEnabled and its call guard (`ve()||$n()||Lt()`).
+//      The tool still needs its `tengu_propose_goal` flag, which is served by
+//      GrowthBook or forced on by the separate propose-goal patch.
 //   2. The usage-limit auto-resume offer (`autoContinueAtUsageLimit`,
 //      `tengu_marble_heron`): `function SBt(){return fp()&&!Lt()&&!Dt()}`.
 //   3. Its auto-continuation prompt after the limit resets:
@@ -183,29 +182,6 @@ const patchSite = (file: string, site: Site, p: Predicates): string | null => {
   return newFile;
 };
 
-/**
- * ProposeGoal's own flag, `function Hfn(){return T("tengu_propose_goal",!1)}`,
- * forced on as channels-mode forces `tengu_harbor`.
- */
-const patchProposeGoalFlag = (file: string): string | null => {
-  const match = file.match(
-    /function [$\w]+\(\)\{(return !0;)?return [$\w]+\("tengu_propose_goal",!1\)/
-  );
-  if (!match || match.index === undefined) {
-    console.error(
-      'patch: attachedBackgroundInteractive: failed to find the tengu_propose_goal gate'
-    );
-    return null;
-  }
-  if (match[1]) return file;
-  const insertIndex = match.index + match[0].indexOf('{') + 1;
-  const insertion = 'return !0;';
-  const newFile =
-    file.slice(0, insertIndex) + insertion + file.slice(insertIndex);
-  showDiff(file, newFile, insertion, insertIndex, insertIndex);
-  return newFile;
-};
-
 const KEY_FIELD = 'unattendedBg';
 
 /**
@@ -267,9 +243,7 @@ export const writeAttachedBackgroundInteractive = (
     if (next === null) return null;
     file = next;
   }
-  const flagged = patchProposeGoalFlag(file);
-  if (flagged === null) return null;
-  const keyed = patchToolPoolKey(flagged);
+  const keyed = patchToolPoolKey(file);
   if (keyed === null) return null;
   const located = findPredicates(keyed);
   if (!located) return null;

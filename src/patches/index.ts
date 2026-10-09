@@ -105,6 +105,7 @@ import { writeFablePlan } from './fablePlan';
 import { writeVoiceMode } from './voiceMode';
 import { writeChannelsMode } from './channelsMode';
 import { writeAttachedBackgroundInteractive } from './attachedBackgroundInteractive';
+import { writeProposeGoal } from './proposeGoal';
 import { writeClearScreen } from './clearScreen';
 import { writeSessionColor } from './sessionColor';
 import { writeReadDefaultLines } from './readDefaultLines';
@@ -646,6 +647,14 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.FEATURES,
     description:
       'While a client is attached, a background session offers ProposeGoal, usage-limit auto-resume and the auto mode and workflow prompts',
+    modelFacing: true,
+  },
+  {
+    id: 'enable-propose-goal',
+    name: 'ProposeGoal',
+    group: PatchGroup.FEATURES,
+    description:
+      'Force the tengu_propose_goal flag on, so the model can propose session goals and /config shows "Claude-proposed goals"',
     modelFacing: true,
   },
   {
@@ -1452,6 +1461,10 @@ export const applyCustomization = async (
     'attached-background-interactive': {
       fn: c => writeAttachedBackgroundInteractive(c),
       condition: !!config.settings.misc?.attachedBackgroundInteractive,
+    },
+    'enable-propose-goal': {
+      fn: c => writeProposeGoal(c),
+      condition: !!config.settings.misc?.enableProposeGoal,
     },
     'suppress-deferred-tools': {
       fn: c => writeSuppressDeferredTools(c),

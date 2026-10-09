@@ -133,13 +133,6 @@ describe('writeAttachedBackgroundInteractive', () => {
     expect(out).toContain(`if(${BRIDGE}())return!1;if(v0e())return!1;if(ZT(`);
   });
 
-  it('forces the tengu_propose_goal flag on', () => {
-    const out = writeAttachedBackgroundInteractive(FIXTURE);
-    expect(out).toContain(
-      'function Hfn(){return !0;return T("tengu_propose_goal",!1)}'
-    );
-  });
-
   it('publishes the unattended predicate beside its definition, once', () => {
     const out = writeAttachedBackgroundInteractive(FIXTURE)!;
     expect(out).toContain(
@@ -164,6 +157,7 @@ describe('writeAttachedBackgroundInteractive', () => {
       'function J(){if(Lt())return;return a.CLAUDE_JOB_DIR}'
     );
     expect(out).toContain('function f(Vu){return Vu.type==="thinking"}');
+    expect(out).toContain('function Hfn(){return T("tengu_propose_goal",!1)}');
   });
 
   it('is a no-op on its own output', () => {

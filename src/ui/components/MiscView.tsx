@@ -94,6 +94,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     enableVoiceConciseOutput: true,
     enableChannelsMode: false,
     attachedBackgroundInteractive: false,
+    enableProposeGoal: false,
     maxEffortDefault: false,
     autonomousOperationAllModels: false,
     refusalFallbackModel: false,
@@ -557,6 +558,20 @@ export function MiscView({ onSubmit }: MiscViewProps) {
             ensureMisc();
             settings.misc!.attachedBackgroundInteractive =
               !settings.misc!.attachedBackgroundInteractive;
+          });
+        },
+      },
+      {
+        id: 'enableProposeGoal',
+        title: 'Enable ProposeGoal',
+        description:
+          'Force the tengu_propose_goal flag on, so the model can propose session goals. Its "Claude-proposed goals" entry in /config sets whether each proposal asks first.',
+        getValue: () => settings.misc?.enableProposeGoal ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.enableProposeGoal =
+              !settings.misc!.enableProposeGoal;
           });
         },
       },

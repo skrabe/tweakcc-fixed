@@ -164,6 +164,7 @@ export interface MiscConfig {
   enableVoiceConciseOutput: boolean;
   enableChannelsMode: boolean;
   attachedBackgroundInteractive: boolean;
+  enableProposeGoal: boolean;
   maxEffortDefault: boolean;
   autonomousOperationAllModels: boolean;
   refusalFallbackModel: boolean;
