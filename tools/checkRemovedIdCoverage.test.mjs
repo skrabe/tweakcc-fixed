@@ -450,4 +450,40 @@ describe('checkRemovedIdCoverage: a window that coincides with unrelated text', 
     );
     expect(out).toMatch(/STILL IN BUNDLE[\s\S]*tool-result-fixture-short-line /);
   });
+
+  // The bundle stores an em dash as `\u2014`, a middle dot as `\xB7` and a quote
+  // inside a quoted string as `\"`; the run must read through those encodings
+  // or a survivor holding one reads as a coincidence.
+  it('follows the old line through JS escapes in the bundle', () => {
+    const line =
+      'Note \u2014 a few quick questions to finish it up \u00b7 "said" twice';
+    const draftOld = {
+      id: 'agent-prompt-fixture-draft-old',
+      version: '2.1.294',
+      pieces: [line],
+      identifiers: [],
+      identifierMap: {},
+    };
+    const draftNew = {
+      id: 'agent-prompt-fixture-draft-new',
+      version: '2.1.295',
+      pieces: [`Intro text. ${line} Then go on.`],
+      identifiers: [],
+      identifierMap: {},
+    };
+    const src =
+      'Note \\u2014 a few quick questions to finish it up \\xB7 \\"said\\" twice';
+    const out = run(
+      write(
+        'cli-esc.js',
+        `a="Intro text. ${src} Then go on.";b="${src}"`
+      ),
+      write('prev-esc.json', { prompts: [draftOld] }),
+      write('cur-esc.json', { prompts: [draftNew] })
+    );
+    expect(out).toMatch(
+      /STILL IN BUNDLE[\s\S]*agent-prompt-fixture-draft-old/
+    );
+    expect(out).toMatch(/removed-id coverage: FAIL/);
+  });
 });

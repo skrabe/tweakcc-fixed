@@ -373,25 +373,85 @@ const allowlist = fs.existsSync(ALLOWLIST)
 // or the whole old line, whichever is shorter. A genuine survivor keeps its line.
 const siteRunMin = line => Math.min(line.length, 2 * WINDOW);
 
-const runAround = (hay, at, line, off) => {
-  let lo = 0;
-  while (
-    off - lo > 0 &&
-    at - lo > 0 &&
-    hay[at - lo - 1] === line[off - lo - 1]
-  ) {
-    lo++;
-  }
-  let hi = WINDOW;
-  while (
-    off + hi < line.length &&
-    at + hi < hay.length &&
-    hay[at + hi] === line[off + hi]
-  ) {
-    hi++;
-  }
-  return lo + hi;
+// The bundle stores the old line's characters in JS-literal source form: an em
+// dash is `\u2014`, a middle dot `\xB7`, a quote inside a quoted string `\"`.
+// Comparing raw source against the decoded line stops the run at the first such
+// character, so a genuine survivor with an em dash in it read as a coincidence.
+// Every encoding the bundle may use for `ch`: its escapes first, so a source
+// backslash is read as the start of an escape, then the character itself.
+const SIMPLE_ESCAPES = {
+  '\n': ['\\n'],
+  '\r': ['\\r'],
+  '\t': ['\\t'],
+  '"': ['\\"'],
+  "'": ["\\'"],
+  '`': ['\\`'],
+  '\\': ['\\\\'],
+  $: ['\\$'],
 };
+const encodingsCache = new Map();
+const encodingsOf = ch => {
+  let out = encodingsCache.get(ch);
+  if (out) return out;
+  const code = ch.charCodeAt(0);
+  const hex4 = code.toString(16).padStart(4, '0');
+  const hex2 = code.toString(16).padStart(2, '0');
+  out = [...(SIMPLE_ESCAPES[ch] || [])];
+  for (const h of new Set([hex4.toUpperCase(), hex4.toLowerCase()])) {
+    out.push(`\\u${h}`);
+  }
+  out.push(`\\u{${code.toString(16)}}`, `\\u{${code.toString(16).toUpperCase()}}`);
+  if (code < 0x100) {
+    for (const h of new Set([hex2.toUpperCase(), hex2.toLowerCase()])) {
+      out.push(`\\x${h}`);
+    }
+  }
+  out = [...new Set(out), ch];
+  encodingsCache.set(ch, out);
+  return out;
+};
+
+// How many old-line characters, starting at `off`, the haystack continues from
+// `at` (forward) or ends with before `at` (backward), escape-aware.
+const extendForward = (hay, at, line, off) => {
+  let n = 0;
+  let j = at;
+  while (off + n < line.length && j < hay.length) {
+    const enc = encodingsOf(line[off + n]).find(e => hay.startsWith(e, j));
+    if (enc === undefined) break;
+    j += enc.length;
+    n++;
+  }
+  return n;
+};
+// Walking backward, an escape ending at `j` is real only when the backslash
+// that opens it is not itself escaped (an even run of backslashes before it).
+const escapeOpensAt = (hay, i) => {
+  let k = i;
+  while (k > 0 && hay[k - 1] === '\\') k--;
+  return (i - k) % 2 === 0;
+};
+const extendBackward = (hay, at, line, off) => {
+  let n = 0;
+  let j = at;
+  while (off - n > 0 && j > 0) {
+    const enc = encodingsOf(line[off - n - 1]).find(
+      e =>
+        e.length <= j &&
+        hay.startsWith(e, j - e.length) &&
+        (e.length === 1 || escapeOpensAt(hay, j - e.length))
+    );
+    if (enc === undefined) break;
+    j -= enc.length;
+    n++;
+  }
+  return n;
+};
+
+const runAround = (hay, at, line, off) =>
+  extendBackward(hay, at, line, off) +
+  WINDOW +
+  extendForward(hay, at + WINDOW, line, off + WINDOW);
 
 // Occurrences of `u` in `hay` that continue some old line that holds it.
 const countSites = (hay, u, lines) => {
