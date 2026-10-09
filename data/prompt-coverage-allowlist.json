@@ -363,5 +363,20 @@
     "verdict": "not-model-facing",
     "version": "2.1.292",
     "why": "Settings-file network-path recovery text: classify path proof rules it ui (shown in the settings-load warning to the user; no model-bound caller)."
+  },
+  "data-tool-result-display-metadata-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.295",
+    "why": "@internal .describe() on the SDK message schema's tool_result_meta field: display metadata for SDK hosts, never replayed to the model."
+  },
+  "data-sdk-result-safety-stops-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.295",
+    "why": "@internal .describe() on the SDK result message's safety_stops counter: SDK consumer documentation, not sent to the model."
+  },
+  "data-background-tasks-changed-event-schema": {
+    "verdict": "not-model-facing",
+    "version": "2.1.295",
+    "why": ".describe() on the SDK background_tasks_changed system event: SDK control-protocol schema for host consumers, not sent to the model."
   }
 }
