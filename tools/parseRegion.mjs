@@ -12,10 +12,18 @@
 // A region cut out of its module can fail for want of context alone: a private
 // name declared by the enclosing class, `super()` outside its subclass. So each
 // failure widens the region to the next enclosing function or class, ending at
-// the whole module, which carries all its own context. The first region both
-// parsers accept is the verdict; when even the whole module fails, the error is
-// real. A tokenizer failure or unbalanced brackets in the module skip straight
-// to the whole module, so a bad splice can never be judged by a mis-cut region.
+// the whole module, which carries all its own context. The reverse holds too:
+// cut out, a region sheds constraints its context puts on it (a second
+// `constructor` in one class, a binding clashing with one beside it), so a
+// region both parsers accept counts only once the next enclosing region parses
+// as well; when even the whole module fails, the error is real. A tokenizer
+// failure or unbalanced brackets in the module skip straight to the whole
+// module, so a bad splice can never be judged by a mis-cut region.
+//
+// A region keeps its module's strictness: it is checked as ESM when its module
+// is one (Bun's `// @bun` pragma without `@bun-cjs`, or ESM syntax), and as a
+// script under a restated "use strict" when a script's prologue, an enclosing
+// class, or an enclosing function's directive made it strict code.
 //
 // Usage:
 //   node tools/parseRegion.mjs <bundle.js> <offset> [--end <offset>]
@@ -29,7 +37,10 @@
 //              checks only the smallest region and reports its own result.
 //
 // Prints `region <start>-<end> parse OK`, or `region <start>-<end> parse FAILED`
-// followed by each parser's error. Exit 0 = OK, 1 = parse failure, 2 = usage.
+// followed by each parser's error. Exit 0 = OK, 1 = parse failure, 2 = usage
+// (including a span that leaves its module or the bundle), 3 = unverified: no
+// Node that parses current syntax was found, and Bun alone enforces no
+// strict-mode or early errors.
 
 import { createRequire } from 'node:module';
 import { execFileSync, spawnSync } from 'node:child_process';
@@ -276,8 +287,90 @@ export const enclosingRegions = (source, offset, end = offset) => {
 
   return [...(snapshot || []), ...straddling]
     .filter(o => o.region && o.end >= end)
-    .map(o => ({ ...o.region, end: o.end }))
+    .map(o => ({
+      ...o.region,
+      end: o.end,
+      useStrict:
+        o.region.kind !== 'class' && hasUseStrictDirective(source, o.start + 1),
+    }))
     .sort((a, b) => a.end - a.start - (b.end - b.start));
+};
+
+const SKIP_TRIVIA = /(?:\s+|\/\/[^\n]*|\/\*[\s\S]*?\*\/)*/y;
+const STRING_LITERAL =
+  /"((?:[^"\\\n\r]|\\[\s\S])*)"|'((?:[^'\\\n\r]|\\[\s\S])*)'/y;
+
+/**
+ * Whether the directive prologue starting at `at` (a function body just past
+ * its `{`, or a source's start) holds an exact `"use strict"` directive.
+ */
+export const hasUseStrictDirective = (source, at = 0) => {
+  let i = at;
+  if (i === 0 && source.startsWith('#!'))
+    i = source.indexOf('\n') + 1 || source.length;
+  for (;;) {
+    SKIP_TRIVIA.lastIndex = i;
+    SKIP_TRIVIA.exec(source);
+    STRING_LITERAL.lastIndex = SKIP_TRIVIA.lastIndex;
+    const m = STRING_LITERAL.exec(source);
+    if (!m) return false;
+    SKIP_TRIVIA.lastIndex = STRING_LITERAL.lastIndex;
+    const gap = SKIP_TRIVIA.exec(source)[0];
+    const j = SKIP_TRIVIA.lastIndex;
+    const next = source[j];
+    // A string followed by anything but `;`, `}`, the end, or a new statement
+    // on the next line is an expression, which ends the prologue.
+    const ends =
+      next === undefined ||
+      next === ';' ||
+      next === '}' ||
+      (gap.includes('\n') && /[\w$"'{]/.test(next));
+    if (!ends) return false;
+    if ((m[1] ?? m[2]) === 'use strict') return true;
+    if (next !== ';') return false;
+    i = j + 1;
+  }
+};
+
+/**
+ * How Bun loads `source`: 'module' (ESM, strict throughout) or 'script'.
+ * Bun's compiled output carries a `// @bun` pragma on every module, with
+ * `@bun-cjs` on a CommonJS one; without a pragma, ESM syntax decides.
+ */
+export const sourceKind = source => {
+  const head = source.slice(0, 4096).replace(/^#![^\n]*\n/, '');
+  const pragma = head.match(/^\s*\/\/ *@bun\b([^\n]*)/);
+  if (pragma) return /@bun-cjs\b/.test(pragma[1]) ? 'script' : 'module';
+  // A depth-0 `export`, or a depth-0 `import` that is not `import(`, is a
+  // declaration; `import.meta` is module-only anywhere.
+  const recent = [];
+  let depth = 0;
+  try {
+    for (const tok of acorn.tokenizer(source, {
+      ...TOKENIZER_OPTIONS,
+      sourceType: 'script',
+    })) {
+      const b1 = recent.at(-1);
+      const b2 = recent.at(-2);
+      const member = b2 && (b2.type === tt.dot || b2.type === tt.questionDot);
+      if (b1 && b1.type === tt._import && !member) {
+        if (tok.type === tt.dot) return 'module';
+        if (b1.depth === 0 && tok.type !== tt.parenL) return 'module';
+      }
+      if (b1 && b1.type === tt._export && b1.depth === 0 && !member)
+        return 'module';
+      if (OPENERS.has(tok.type)) depth++;
+      else if (CLOSERS.has(tok.type)) depth--;
+      recent.push({ type: tok.type, depth });
+      if (recent.length > 2) recent.shift();
+    }
+  } catch {
+    return /^\s*(?:import\s*[\w${*"']|export\s*[\w${*])/m.test(source) ||
+      /\bimport\.meta\b/.test(source)
+      ? 'module'
+      : 'script';
+  }
+  return 'script';
 };
 
 const WRAPS = {
@@ -398,8 +491,15 @@ const nodeCheck = (bin, file, text) => {
 };
 
 /**
- * Parse-check each candidate `{ text, prefixLen, base }` with Bun and Node.
- * Returns per-candidate `{ ok, bun, node }`; `index` fields are bundle offsets.
+ * Parse-check candidates `{ text, prefixLen, base, length, kind }`, innermost
+ * first, with Bun and Node; `kind` 'module' checks as ESM, 'script' as
+ * CommonJS. Returns per-candidate `{ ok, bun, node }` for those tried;
+ * `index` fields are bundle offsets.
+ *
+ * A region cut out of its context drops the constraints that context puts on
+ * it: a second `constructor` in the class, a binding that clashes with one
+ * beside it. So an OK counts only once the next enclosing candidate parses
+ * too (or it is the last one); checking stops there.
  */
 export const checkCandidates = (
   candidates,
@@ -407,19 +507,19 @@ export const checkCandidates = (
 ) => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'parseRegion-'));
   try {
-    const files = [];
-    candidates.forEach((c, i) => {
-      const mjs = path.join(dir, `r${i}.mjs`);
-      const cjs = path.join(dir, `r${i}.cjs`);
-      fs.writeFileSync(mjs, c.text);
-      fs.writeFileSync(cjs, c.text);
-      files.push({ mjs, cjs });
+    const files = candidates.map((c, i) => {
+      const file = path.join(
+        dir,
+        `r${i}.${c.kind === 'module' ? 'mjs' : 'cjs'}`
+      );
+      fs.writeFileSync(file, c.text);
+      return file;
     });
     let bunResults = null;
     if (bun) {
       const list = path.join(dir, 'list.json');
       const script = path.join(dir, 'check.cjs');
-      fs.writeFileSync(list, JSON.stringify(files.map(f => f.mjs)));
+      fs.writeFileSync(list, JSON.stringify(files));
       fs.writeFileSync(script, BUN_CHECKER);
       bunResults = JSON.parse(
         execFileSync(bun, [script, list], {
@@ -444,15 +544,13 @@ export const checkCandidates = (
       }
       let n = { ok: true, skipped: true };
       if (node) {
-        n = nodeCheck(node.bin, files[i].mjs, c.text);
-        if (!n.ok) {
-          const script = nodeCheck(node.bin, files[i].cjs, c.text);
-          if (script.ok) n = script;
-        }
+        n = nodeCheck(node.bin, files[i], c.text);
         if (!n.ok) n = { ...n, index: toBundle(c, n.index) };
       }
-      results.push({ ok: b.ok && n.ok, bun: b, node: n });
-      if (b.ok && n.ok) break;
+      const ok = b.ok && n.ok;
+      results.push({ ok, bun: b, node: n });
+      if (ok && (i === candidates.length - 1 || (i > 0 && results[i - 1].ok)))
+        break;
     }
     return results;
   } finally {
@@ -461,17 +559,39 @@ export const checkCandidates = (
 };
 
 /**
- * Check the code around `offset` (string index) of `code`. Returns
- * `{ ok, region, segment, tried, results, note }`, `region` holding bundle
- * offsets of the verdict region.
+ * Check the code around `offset` (string index) of `code`; `opts.end` is the
+ * splice's end, which must lie in the same module. Returns `{ ok, verdict,
+ * region, smallest, segment, tried, results, note }`: `verdict` is 'ok',
+ * 'failed', or 'unverified' (Bun alone accepted it; Bun's transpiler enforces
+ * no strict-mode or early errors, so only Node's agreement makes it an OK).
+ * `region` holds bundle offsets of the widest region checked on an OK, the
+ * smallest failing one on a failure. Throws a RangeError for a span outside
+ * the bundle or crossing a module boundary.
  */
 export const parseRegion = (code, offset, opts = {}) => {
   const end = opts.end ?? offset;
+  const show = opts.formatOffset || (i => String(i));
+  if (!(offset >= 0 && offset <= code.length))
+    throw new RangeError(
+      `offset ${show(offset)} is outside the bundle (it ends at ${show(code.length)})`
+    );
+  if (!(end >= offset && end <= code.length))
+    throw new RangeError(
+      `end ${show(end)} must lie between the offset ${show(offset)} and the bundle's end ${show(code.length)}`
+    );
   const wrapMode = opts.wrap || 'auto';
   const seg = segmentAt(code, offset);
-  if (!seg) throw new Error(`offset ${offset} is outside the bundle`);
+  if (!seg)
+    throw new RangeError(
+      `offset ${show(offset)} is not inside a module (it is in a module sentinel or the bundle header)`
+    );
+  const segEnd = seg.start + seg.source.length;
+  if (end > segEnd)
+    throw new RangeError(
+      `span ${show(offset)}-${show(end)} crosses the end of module ${seg.name} at ${show(segEnd)}; check each module's part of the splice on its own`
+    );
   const local = offset - seg.start;
-  const localEnd = Math.min(end - seg.start, seg.source.length);
+  const localEnd = end - seg.start;
 
   let regions = [];
   let note = null;
@@ -479,10 +599,13 @@ export const parseRegion = (code, offset, opts = {}) => {
     regions = enclosingRegions(seg.source, local, localEnd);
   } catch (e) {
     note = `module does not tokenize cleanly (${e.message.replace(/\d+/g, d =>
-      String(Number(d) + seg.start)
+      show(Number(d) + seg.start)
     )}); checking the whole module`;
   }
 
+  const kind = sourceKind(seg.source);
+  const strictPrologue =
+    kind === 'script' && hasUseStrictDirective(seg.source, 0);
   const whole = {
     kind: 'module',
     start: 0,
@@ -492,35 +615,49 @@ export const parseRegion = (code, offset, opts = {}) => {
   let chain = [...regions, whole];
   if (wrapMode === 'none') chain = chain.slice(0, 1);
 
-  const candidates = chain.map(r => {
+  const candidates = chain.map((r, i) => {
     const [pre, post] = WRAPS[wrapMode === 'none' ? 'none' : r.wrap];
+    // Cut out of a module, a class, or a function or script under "use
+    // strict", a script region is strict code only if it says so again.
+    const strict =
+      kind === 'script' &&
+      r !== whole &&
+      (strictPrologue ||
+        chain.slice(i + 1).some(o => o.kind === 'class' || o.useStrict));
+    const lead = (strict ? '"use strict";' : '') + pre;
     const body = seg.source.slice(r.start, r.end);
     return {
-      text: pre + body + post,
-      prefixLen: pre.length,
+      text: lead + body + post,
+      prefixLen: lead.length,
       base: seg.start + r.start,
       length: body.length,
+      kind,
     };
   });
   const bun = opts.bun === undefined ? findBun() : opts.bun;
   const node = opts.node === undefined ? findNode() : opts.node;
   if (!bun && !node) throw new Error('neither bun nor a capable node found');
   const results = checkCandidates(candidates, { bun, node });
-  const okAt = results.findIndex(r => r.ok);
-  const at = okAt >= 0 ? okAt : 0;
-  const r = chain[at];
+  const passed = results[results.length - 1].ok;
+  const at = passed ? results.length - 1 : results.findIndex(r => !r.ok);
+  const verdict = !passed ? 'failed' : node ? 'ok' : 'unverified';
+  const toBundleRegion = r => ({
+    kind: r.kind,
+    wrap: wrapMode === 'none' ? 'none' : r.wrap,
+    start: seg.start + r.start,
+    end: seg.start + r.end,
+  });
   return {
-    ok: okAt >= 0,
-    region: {
-      kind: r.kind,
-      wrap: wrapMode === 'none' ? 'none' : r.wrap,
-      start: seg.start + r.start,
-      end: seg.start + r.end,
-    },
+    ok: verdict === 'ok',
+    verdict,
+    region: toBundleRegion(chain[at]),
+    smallest: toBundleRegion(chain[0]),
+    regionIndex: at,
+    sourceKind: kind,
     segment: {
       name: seg.name,
       start: seg.start,
-      end: seg.start + seg.source.length,
+      end: segEnd,
     },
     tried: results.length,
     results,
@@ -566,45 +703,77 @@ const main = () => {
   const code = buf.toString('utf8');
   const toIndex = n => (bytes ? buf.subarray(0, n).toString('utf8').length : n);
   const toOut = i => (bytes ? Buffer.byteLength(code.slice(0, i), 'utf8') : i);
+  const limit = bytes ? buf.length : code.length;
+  const unit = bytes ? 'bytes' : 'chars';
+  for (const [label, v] of [
+    ['offset', offsetArg],
+    ['--end', endArg],
+  ]) {
+    if (v !== null && Number(v) > limit) {
+      console.error(
+        `parseRegion: ${label} ${v} is past the end of the bundle (${limit} ${unit})`
+      );
+      process.exit(2);
+    }
+  }
 
   const offset = toIndex(Number(offsetArg));
   const end = endArg === null ? offset : toIndex(Number(endArg));
-  if (offset > code.length || end < offset) {
-    console.error(
-      `parseRegion: offset out of range (bundle is ${code.length} chars)`
-    );
+  if (end < offset) {
+    console.error(`parseRegion: --end ${endArg} is before the offset`);
     process.exit(2);
   }
 
-  const res = parseRegion(code, offset, { end, wrap });
+  let res;
+  try {
+    res = parseRegion(code, offset, {
+      end,
+      wrap,
+      formatOffset: i => String(toOut(i)),
+    });
+  } catch (e) {
+    console.error(`parseRegion: ${e.message}`);
+    process.exit(2);
+  }
   const span = r => `${toOut(r.start)}-${toOut(r.end)}`;
-  const parsers = res.parsers;
+  const where = `in ${res.sourceKind} ${res.segment.name}, ${res.parsers}`;
   if (res.note) console.log(`note: ${res.note}`);
-  if (res.ok) {
-    console.log(`region ${span(res.region)} parse OK`);
+  if (res.verdict !== 'failed') {
+    const contextOnly = res.results.filter(r => !r.ok).length;
     console.log(
-      `  ${res.region.kind} (wrap ${res.region.wrap}) in module ${res.segment.name}, ${parsers}` +
+      `region ${span(res.region)} parse ${res.ok ? 'OK' : 'UNVERIFIED'}`
+    );
+    console.log(
+      `  ${res.region.kind} (wrap ${res.region.wrap}) ${where}` +
         (res.tried > 1
-          ? `; ${res.tried - 1} smaller region(s) failed only for want of context`
+          ? `; smallest region ${res.smallest.kind} ${span(res.smallest)}` +
+            (contextOnly
+              ? `, ${contextOnly} region(s) failed only for want of context`
+              : '')
           : '')
     );
-    process.exit(0);
+    if (res.ok) process.exit(0);
+    console.log(
+      '  only Bun checked it, and Bun does not enforce strict-mode or early errors; ' +
+        'install a Node that parses `await using` (24+) or set PARSE_REGION_NODE'
+    );
+    process.exit(3);
   }
   console.log(`region ${span(res.region)} parse FAILED`);
   const describe = (who, r, regionLabel) => {
     if (r.ok) return;
-    const where = r.index === undefined ? '' : ` at ${toOut(r.index)}`;
-    console.log(`  ${who} (${regionLabel}): ${r.message}${where}`);
+    const at = r.index === undefined ? '' : ` at ${toOut(r.index)}`;
+    console.log(`  ${who} (${regionLabel}): ${r.message}${at}`);
   };
-  const first = res.results[0];
+  const first = res.results[res.regionIndex];
   const last = res.results[res.results.length - 1];
   describe('bun', first.bun, res.region.kind);
   describe('node', first.node, res.region.kind);
-  if (res.results.length > 1) {
+  if (last !== first) {
     describe('bun', last.bun, `whole ${res.lastRegion.kind}`);
     describe('node', last.node, `whole ${res.lastRegion.kind}`);
   }
-  console.log(`  module ${res.segment.name} ${span(res.segment)}, ${parsers}`);
+  console.log(`  ${where.slice(3)} ${span(res.segment)}`);
   process.exit(1);
 };
 
