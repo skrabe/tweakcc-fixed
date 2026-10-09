@@ -66,6 +66,15 @@ describe('router completed-turn status', () => {
     expect(() => new vm.Script(patched)).not.toThrow();
   });
 
+  it('leaves calls that do not fit the factory alone', () => {
+    const lookalike = 'function f(a,b){return xduration(a,V(b,TE))}';
+    const patched = writeComplexityRouterTurnStatus(fixture295 + lookalike)!;
+    expect(patched).toContain(lookalike);
+    const noBudget = 'class U{c(D){duration(D,V(D.transcript,TE))}}';
+    const patched288 = writeComplexityRouterTurnStatus(fixture288 + noBudget)!;
+    expect(patched288).toContain(noBudget);
+  });
+
   it('patches the 2.1.288 shape: rest-destructured options + carriedEffort request', () => {
     const patched = writeComplexityRouterTurnStatus(fixture288)!;
     expect(patched).not.toBeNull();
