@@ -9910,6 +9910,27 @@
       "version": "2.1.273"
     },
     {
+      "name": "Tool Description: Artifact multifile supporting files count",
+      "id": "tool-description-artifact-multifile-supporting-files-count",
+      "description": "Count clause naming the supporting files in the Artifact multi-file sources description",
+      "pieces": [
+        " and ${",
+        "} supporting ${",
+        "(",
+        ",\"file\")}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_DESCRIPTION_ARTIFACT_MULTIFILE_SUPPORTING_FILES_COUNT_VAR_0",
+        "1": "TOOL_DESCRIPTION_ARTIFACT_MULTIFILE_SUPPORTING_FILES_COUNT_VAR_1"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Result: Memory reserved path segments clause",
       "id": "tool-result-memory-reserved-path-segments",
       "description": "Clause spliced into the invalid-memory-path refusal when reserved-name checking is on, telling the model that skills/commands/agents/hooks directories are read-only.",
@@ -12932,6 +12953,17 @@
       "version": "2.1.276"
     },
     {
+      "name": "Tool Result: Artifact publish conflict (published by another session)",
+      "id": "tool-result-artifact-publish-conflict-published-by-another-session",
+      "description": "Arm of the publish-conflict live-entry clause when another session or agent published the live version",
+      "pieces": [
+        " published by another session or agent"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Artifact conflict live version published elsewhere",
       "id": "tool-result-artifact-publish-conflict-live-entry-published-elsewhere",
       "description": "Fallback qualifier in the publish-conflict tool result saying the live version was published elsewhere, by another session or by someone saving from the page itself.",
@@ -14682,6 +14714,17 @@
       "version": "2.1.257"
     },
     {
+      "name": "System Prompt: gh environment (session GitHub proxy)",
+      "id": "system-prompt-gh-env-through-session-github-proxy",
+      "description": "Clause of the built-in gh environment section naming the session GitHub proxy",
+      "pieces": [
+        " through this session's GitHub proxy,"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Worktree tmux still running",
       "id": "tool-result-worktree-tmux-running",
       "description": "Fragment of the worktree-kept result telling the model the tmux session is still reattachable.",
@@ -14853,6 +14896,17 @@
         "0": "TOOL_RESULT_ACCOUNT_SKILLS_USE_SAVE_TOOL_VAR_0"
       },
       "version": "2.1.276"
+    },
+    {
+      "name": "Data: Memory sync paused notice (shared memory tail)",
+      "id": "data-memory-sync-paused-notice-shared-memory-tail",
+      "description": "Else-arm tail of the memory-sync paused notice naming shared/server memory",
+      "pieces": [
+        " to shared/server memory."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Marketplace source changed — simple undo hint",
@@ -15095,6 +15149,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.274"
+    },
+    {
+      "name": "System Prompt: gh environment (proxy supplies credential)",
+      "id": "system-prompt-gh-env-proxy-supplies-credential",
+      "description": "Tail of the built-in gh environment section: the proxy supplies the credential for reachable repositories",
+      "pieces": [
+        " which supplies the credential for the repositories this session can reach"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Tool Description: Artifact Read Path Fetches",
@@ -19148,6 +19213,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.261"
+    },
+    {
+      "name": "System Prompt: gh environment (through that proxy)",
+      "id": "system-prompt-gh-env-through-that-proxy",
+      "description": "Clause of the built-in gh environment section naming the configured proxy",
+      "pieces": [
+        ", through that proxy,"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Tool Result: SendUserFile Chat Copy Plain File Suffix",
@@ -71172,6 +71248,17 @@
       "version": "2.1.237"
     },
     {
+      "name": "Tool Result: Memory write not saved (concurrent conflict)",
+      "id": "tool-result-memory-write-not-saved-concurrent-conflict",
+      "description": "Reason arm of the memory write-not-saved result when another session updated the file first",
+      "pieces": [
+        "another session updated the file first (concurrent-write conflict). "
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Agent Prompt: Claude Code docs agent description",
       "id": "agent-prompt-claude-code-docs-description",
       "description": "Description of the claude-code-docs agent (answers questions about Claude Code commands/flags/settings, verifying against the running build)",
@@ -107336,6 +107423,20 @@
       "version": "2.1.251"
     },
     {
+      "name": "Tool Result: Computer use window AX opaque (wait and retry)",
+      "id": "tool-result-computer-use-window-ax-opaque-wait-and-retry",
+      "description": "Last piece of the opaque-accessibility-window app-action result: wait for it to finish loading and retry",
+      "pieces": [
+        "it to finish loading and retry"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295",
+      "platforms": [
+        "darwin"
+      ]
+    },
+    {
       "name": "Tool Description: MCP Wait Omit All Pending",
       "id": "tool-description-mcp-wait-omit-all-pending",
       "description": "WaitForMcpServers description fragment: omitting servers waits for all pending servers.",
@@ -108493,6 +108594,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.246"
+    },
+    {
+      "name": "Tool Result: Artifact quickstart start kit (sharing unchecked)",
+      "id": "tool-result-artifact-quickstart-start-kit-sharing-unchecked",
+      "description": "Start-kit reason arm when the artifact sharing could not be checked",
+      "pieces": [
+        "its sharing could not be checked"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Tool Result: Artifact quickstart start kit probe timeout",
@@ -124986,6 +125098,20 @@
       "version": "2.1.273"
     },
     {
+      "name": "Tool Result: Computer use off-space (open application then display tools)",
+      "id": "tool-result-computer-use-off-space-open-application-display-tools",
+      "description": "Tail of the off-space app-action result naming open_application then the display-scope tools",
+      "pieces": [
+        "open_application then the display-scope tools"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295",
+      "platforms": [
+        "darwin"
+      ]
+    },
+    {
       "name": "Computer-use opened-app note",
       "id": "tool-result-computer-use-opened-app-note",
       "description": "Tool-result note after opening an app that may be on another monitor.",
@@ -125760,6 +125886,20 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.276"
+    },
+    {
+      "name": "Tool Result: Computer use off-space unverifiable (retry once)",
+      "id": "tool-result-computer-use-off-space-unverifiable-retry-once",
+      "description": "Tail of the unverifiable off-space app-action result allowing one retry for a transient overlap",
+      "pieces": [
+        "or retry once if this may have been a transient overlap"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295",
+      "platforms": [
+        "darwin"
+      ]
     },
     {
       "name": "Memory Sync Mount Conflict Remedy Tail",
@@ -135105,6 +135245,17 @@
       "version": "2.1.246"
     },
     {
+      "name": "Tool Result: Artifact quickstart start kit (reading would ask)",
+      "id": "tool-result-artifact-quickstart-start-kit-read-would-ask",
+      "description": "Fallback start-kit reason arm when reading the artifact would ask first",
+      "pieces": [
+        "reading it would ask first"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Artifact Read File Unavailable Use Asset Id",
       "id": "tool-result-artifact-read-file-unavailable-use-asset-id",
       "description": "core-verb-unavailable message when reading a published file by path is off and path instead takes an asset id.",
@@ -143390,6 +143541,22 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.231"
+    },
+    {
+      "name": "Tool Result: Artifact publish MCP entry missing server",
+      "id": "tool-result-artifact-publish-mcp-entry-missing-server",
+      "description": "Validation error when an MCP servers entry has no server string, showing the expected entry shape",
+      "pieces": [
+        "servers[${",
+        ".index}] has no \"server\" string — each entry is ${'{\"server\": \"<connector name>\", \"tools\": [\"<tool name>\", ...]}'}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_PUBLISH_MCP_ENTRY_MISSING_SERVER_VAR_0"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Slash Command: /resume — session not found",
@@ -164551,6 +164718,20 @@
       "version": "2.1.238"
     },
     {
+      "name": "Tool Result: Computer use user typing (unblocks)",
+      "id": "tool-result-computer-use-user-typing-unblocks",
+      "description": "Last piece of the user-actively-typing app-action result: their typing unblocks it",
+      "pieces": [
+        "their typing unblocks it"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295",
+      "platforms": [
+        "darwin"
+      ]
+    },
+    {
       "name": "ScheduleWakeup tool result: continue-instruction lead",
       "id": "tool-result-schedulewakeup-continue-instruction-lead",
       "description": "Lead sentence of the ScheduleWakeup tool result telling the model what to do (via Fln's per-mode phrasing) and to end the turn.",
@@ -176900,6 +177081,20 @@
         "0": "TOOL_RESULT_BASH_WORKTREE_GIT_ONE_INVOCATION_PER_COMMAND_VAR_0"
       },
       "version": "2.1.238"
+    },
+    {
+      "name": "Tool Result: Computer use off-space unverifiable (use open_application)",
+      "id": "tool-result-computer-use-off-space-unverifiable-use-open-application",
+      "description": "Else-arm of the unverifiable off-space app-action result telling Claude to use open_application then the display-scope tools",
+      "pieces": [
+        "Use open_application then the display-scope tools, "
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295",
+      "platforms": [
+        "darwin"
+      ]
     },
     {
       "name": "Tool Result: MCP task output — read the truncated remainder",

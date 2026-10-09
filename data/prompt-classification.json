@@ -107164,5 +107164,95 @@
     "id": "tool-description-ask-user-tool-fallback-reference",
     "name": "Tool Description: Ask-user tool fallback reference",
     "desc": "Fallback phrase naming the ask-user tool when no tool name is known, used inside the Chrome browser selection instruction"
+  },
+  "db364912847db74b843a7d116a2f0406cc7df802": {
+    "facing": "model",
+    "id": "data-memory-sync-paused-notice-shared-memory-tail",
+    "name": "Data: Memory sync paused notice (shared memory tail)",
+    "desc": "Else-arm tail of the memory-sync paused notice naming shared/server memory"
+  },
+  "82553326a7e50e93387a2425771b51da9e3c7637": {
+    "facing": "model",
+    "id": "tool-result-memory-write-not-saved-concurrent-conflict",
+    "name": "Tool Result: Memory write not saved (concurrent conflict)",
+    "desc": "Reason arm of the memory write-not-saved result when another session updated the file first"
+  },
+  "fc1a1934ef8f0a2764719bb91d298b07268c5bd9": {
+    "facing": "model",
+    "id": "system-prompt-gh-env-through-that-proxy",
+    "name": "System Prompt: gh environment (through that proxy)",
+    "desc": "Clause of the built-in gh environment section naming the configured proxy"
+  },
+  "816847ee13505ff3507e83a7d4437dcf8f2a7011": {
+    "facing": "model",
+    "id": "system-prompt-gh-env-through-session-github-proxy",
+    "name": "System Prompt: gh environment (session GitHub proxy)",
+    "desc": "Clause of the built-in gh environment section naming the session GitHub proxy"
+  },
+  "62f4a9410bc5281aca6b360c427fa8e9d0b34866": {
+    "facing": "model",
+    "id": "system-prompt-gh-env-proxy-supplies-credential",
+    "name": "System Prompt: gh environment (proxy supplies credential)",
+    "desc": "Tail of the built-in gh environment section: the proxy supplies the credential for reachable repositories"
+  },
+  "a016db98b40e8dcd15333188c7816f14a8ccb390": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-mcp-entry-missing-server",
+    "name": "Tool Result: Artifact publish MCP entry missing server",
+    "desc": "Validation error when an MCP servers entry has no server string, showing the expected entry shape"
+  },
+  "cdace8029cf15b6878fa2f16eb2b1f2939f99baa": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-conflict-published-by-another-session",
+    "name": "Tool Result: Artifact publish conflict (published by another session)",
+    "desc": "Arm of the publish-conflict live-entry clause when another session or agent published the live version"
+  },
+  "9e58b15d6d14d53a9ea28ac616c383dc7ed76ae9": {
+    "facing": "model",
+    "id": "tool-result-computer-use-off-space-open-application-display-tools",
+    "name": "Tool Result: Computer use off-space (open application then display tools)",
+    "desc": "Tail of the off-space app-action result naming open_application then the display-scope tools"
+  },
+  "e53e65a49ad2aebfb477b38c812ee25abd3f1e5a": {
+    "facing": "model",
+    "id": "tool-result-computer-use-off-space-unverifiable-use-open-application",
+    "name": "Tool Result: Computer use off-space unverifiable (use open_application)",
+    "desc": "Else-arm of the unverifiable off-space app-action result telling Claude to use open_application then the display-scope tools"
+  },
+  "71847b8bc363b84b006866f4ce432db347b5b47d": {
+    "facing": "model",
+    "id": "tool-result-computer-use-off-space-unverifiable-retry-once",
+    "name": "Tool Result: Computer use off-space unverifiable (retry once)",
+    "desc": "Tail of the unverifiable off-space app-action result allowing one retry for a transient overlap"
+  },
+  "eb102693e9040c00892ae1cb27430dab4f1c8695": {
+    "facing": "model",
+    "id": "tool-result-computer-use-window-ax-opaque-wait-and-retry",
+    "name": "Tool Result: Computer use window AX opaque (wait and retry)",
+    "desc": "Last piece of the opaque-accessibility-window app-action result: wait for it to finish loading and retry"
+  },
+  "92199a2e7af6dbeeb2b49fb3e9f51fd257847237": {
+    "facing": "model",
+    "id": "tool-result-computer-use-user-typing-unblocks",
+    "name": "Tool Result: Computer use user typing (unblocks)",
+    "desc": "Last piece of the user-actively-typing app-action result: their typing unblocks it"
+  },
+  "9d3fcdf566761a7b47ec3d1602cc98cd53e09e6d": {
+    "facing": "model",
+    "id": "tool-description-artifact-multifile-supporting-files-count",
+    "name": "Tool Description: Artifact multifile supporting files count",
+    "desc": "Count clause naming the supporting files in the Artifact multi-file sources description"
+  },
+  "8f994ecb559937c0e201d0f0e3398fa745ad8155": {
+    "facing": "model",
+    "id": "tool-result-artifact-quickstart-start-kit-sharing-unchecked",
+    "name": "Tool Result: Artifact quickstart start kit (sharing unchecked)",
+    "desc": "Start-kit reason arm when the artifact sharing could not be checked"
+  },
+  "329ff6cbaf45b02f31c3707a27a6f25268764678": {
+    "facing": "model",
+    "id": "tool-result-artifact-quickstart-start-kit-read-would-ask",
+    "name": "Tool Result: Artifact quickstart start kit (reading would ask)",
+    "desc": "Fallback start-kit reason arm when reading the artifact would ask first"
   }
 }
