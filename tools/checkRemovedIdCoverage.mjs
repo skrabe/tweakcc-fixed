@@ -362,15 +362,69 @@ const allowlist = fs.existsSync(ALLOWLIST)
   ? JSON.parse(fs.readFileSync(ALLOWLIST, 'utf8'))
   : {};
 
+// A window is 25 chars of the old prose, and 25 chars is short enough to land
+// inside unrelated text: ` Claude Code configuratio` ends a removed clause and
+// also sits in a desktop admin-policy description, so the bundle held one more
+// copy than the catalogue and the id read IN-BUNDLE on CC 2.1.295. A surplus of
+// one window is weak evidence on its own; what a coincidence cannot do is keep
+// matching the old prose past the window. So each occurrence is extended in both
+// directions along the old line it came from, and it counts as a site only when
+// the run reaches two windows (a phrase that common is not one clause of ours)
+// or the whole old line, whichever is shorter. A genuine survivor keeps its line.
+const siteRunMin = line => Math.min(line.length, 2 * WINDOW);
+
+const runAround = (hay, at, line, off) => {
+  let lo = 0;
+  while (
+    off - lo > 0 &&
+    at - lo > 0 &&
+    hay[at - lo - 1] === line[off - lo - 1]
+  ) {
+    lo++;
+  }
+  let hi = WINDOW;
+  while (
+    off + hi < line.length &&
+    at + hi < hay.length &&
+    hay[at + hi] === line[off + hi]
+  ) {
+    hi++;
+  }
+  return lo + hi;
+};
+
+// Occurrences of `u` in `hay` that continue some old line that holds it.
+const countSites = (hay, u, lines) => {
+  const contexts = [];
+  for (const line of lines) {
+    for (let o = line.indexOf(u); o >= 0; o = line.indexOf(u, o + 1)) {
+      contexts.push({ line, off: o });
+    }
+  }
+  let n = 0;
+  for (let i = hay.indexOf(u); i >= 0; i = hay.indexOf(u, i + 1)) {
+    if (
+      contexts.some(
+        ({ line, off }) => runAround(hay, i, line, off) >= siteRunMin(line)
+      )
+    ) {
+      n++;
+    }
+  }
+  return n;
+};
+
 // Distinctive units the bundle holds more often than the catalogue and the
 // classify sidecar together. Each catalogue entry is one bundle site, so a
 // surplus is a site carrying the old text that nothing catalogues. Only
 // single-line ASCII units are countable in the bundle (see the header).
-const strayUnits = probes =>
+const strayUnits = (probes, lines) =>
   probes.filter(
     u =>
       isAscii(u) &&
-      countOf(cli, u) > countOf(curBlob, u) + countOf(sidecarBlob, u)
+      countOf(cli, u) > countOf(curBlob, u) + countOf(sidecarBlob, u) &&
+      countSites(cli, u, lines) >
+        countSites(curBlob, u, lines) + countSites(sidecarBlob, u, lines)
   );
 
 const share = (units, haystack) =>
@@ -398,7 +452,10 @@ const classify = id => {
         (windows.length > 0 &&
           share(windows, `${curBlob}\n${sidecarBlob}`) >= RENAME_SHARE));
     if (to || split || pending) {
-      const stray = strayUnits(windows);
+      const stray = strayUnits(
+        windows,
+        entries.flatMap(proseLines)
+      );
       if (stray.length) return { bucket: 'IN-BUNDLE', to, stray, near };
       if (pending) return { bucket: 'in-sidecar' };
       return { bucket: 'in-catalogue', to, share: best.share, split };

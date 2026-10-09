@@ -378,3 +378,76 @@ describe('checkRemovedIdCoverage: a rename needs most of the old body', () => {
     );
   });
 });
+
+// CC 2.1.295: the tail window of a removed clause (` Claude Code configuratio`)
+// also sits in an unrelated admin-policy description. One surplus window is
+// weak evidence; only a bundle site that keeps matching the old prose past the
+// window is a site nothing catalogues.
+describe('checkRemovedIdCoverage: a window that coincides with unrelated text', () => {
+  const clause =
+    'The fixture upload left out files that a read rule of yours covers, as set in your Claude Code configuration';
+  const old = {
+    id: 'tool-result-fixture-upload-left-out-read-rule-clause',
+    version: '2.1.294',
+    pieces: [clause],
+    identifiers: [],
+    identifierMap: {},
+  };
+  const successor = {
+    id: 'tool-result-fixture-upload-excluded-error',
+    version: '2.1.295',
+    pieces: [`Upload stopped. ${clause}, so retry after removing them.`],
+    identifiers: [],
+    identifierMap: {},
+  };
+  const catalogued = `x=\`Upload stopped. ${clause}, so retry after removing them.\``;
+  const unrelated =
+    'y="Servers are loaded from the Claude Code configuration-file section."';
+
+  it('does not flag a surplus window that continues into unrelated text', () => {
+    const out = run(
+      write('cli-coin.js', `${catalogued};${unrelated}`),
+      write('prev-coin.json', { prompts: [old] }),
+      write('cur-coin.json', { prompts: [successor] })
+    );
+    expect(out).toMatch(/1 renamed\/reshuffled/);
+    expect(out).toMatch(/0 STILL IN BUNDLE/);
+    expect(out).toMatch(/removed-id coverage: PASS/);
+  });
+
+  it('still flags the same clause surviving verbatim at an uncatalogued site', () => {
+    const out = run(
+      write('cli-coin2.js', `${catalogued};${unrelated};z="${clause}"`),
+      write('prev-coin2.json', { prompts: [old] }),
+      write('cur-coin2.json', { prompts: [successor] })
+    );
+    expect(out).toMatch(
+      /STILL IN BUNDLE[\s\S]*tool-result-fixture-upload-left-out-read-rule-clause/
+    );
+    expect(out).toMatch(/removed-id coverage: FAIL/);
+  });
+
+  it('flags a short old line that survives whole at an uncatalogued site', () => {
+    const line = 'Retry the fixture upload after trimming.';
+    const shortOld = {
+      id: 'tool-result-fixture-short-line',
+      version: '2.1.294',
+      pieces: [line],
+      identifiers: [],
+      identifierMap: {},
+    };
+    const shortCur = {
+      id: 'tool-result-fixture-short-line-renamed',
+      version: '2.1.295',
+      pieces: [line],
+      identifiers: [],
+      identifierMap: {},
+    };
+    const out = run(
+      write('cli-short.js', `a="${line}";b=\`${line}\``),
+      write('prev-short.json', { prompts: [shortOld] }),
+      write('cur-short.json', { prompts: [shortCur] })
+    );
+    expect(out).toMatch(/STILL IN BUNDLE[\s\S]*tool-result-fixture-short-line /);
+  });
+});
