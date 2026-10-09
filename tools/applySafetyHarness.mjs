@@ -277,6 +277,15 @@ export const harnessVerdict = ({
   parses &&
   wfScriptErrors.length === 0;
 
+// A failed apply has to show why. The one-line summary below only catches lines
+// containing "Error" or "unbalanced", so a crash that prints anything else left
+// the run with `apply ran: false (exit 1)` and nothing to go on.
+export const applyFailureTail = (log, lines = 40) => {
+  const all = String(log ?? '').replace(/\s+$/, '').split('\n');
+  if (all.length === 1 && all[0] === '') return [];
+  return all.slice(-lines);
+};
+
 const runHarness = () => {
 const parsed = parseOverrideArgs(process.argv.slice(2));
 // Verify a specific per-model override set WITHOUT moving the live
@@ -384,6 +393,7 @@ try {
     });
   } catch (e) {
     log = (e.stdout || '') + (e.stderr || '');
+    if (!log && e.message) log = e.message;
     applyExit = e.status ?? 1;
   }
   // Positive marker + exit code: absence of error lines is not evidence the
@@ -528,6 +538,16 @@ try {
   console.log('=== apply-safety harness ===');
   console.log(`pristine:          ${PRISTINE}`);
   console.log(`apply ran:         ${applyOk}${applyOk ? '' : `  (exit ${applyExit}${/unbalanced|Error/.test(log) ? ', ' + (log.match(/^.*(?:Error|unbalanced).*$/m) || [''])[0].slice(0, 120) : ''})`}`);
+  if (!applyOk) {
+    const tail = applyFailureTail(log);
+    console.log(
+      tail.length
+        ? `--- apply output (last ${tail.length} lines) ---`
+        : '--- apply produced no output ---'
+    );
+    for (const line of tail) console.log(`  ${line}`);
+    if (tail.length) console.log('--- end apply output ---');
+  }
   console.log(`Could not find:    ${cnf}`);
   // Naming them is the whole point when this runs as the cross-platform gate:
   // a bare count tells you a one-platform prompt exists but not which one, and
