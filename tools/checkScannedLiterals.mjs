@@ -99,43 +99,120 @@ const assignedOnce = (src, name) => {
   return count === 1;
 };
 
-// Evidence that the binary treats this literal as a needle: either passed
-// inline to a matcher, or bound to a single-assignment const that is.
-export const matchEvidence = (src, lit) => {
-  const found = [];
-  for (const q of ['"', "'"]) {
-    const needle = quoted(lit, q);
-    if (!src.includes(needle)) continue;
+// Every quoted needle starts with a quote character, so one pass over the
+// bundle's quote positions finds every occurrence of every needle at once.
+// Needles of PREFIX or more chars are bucketed by their first PREFIX chars and
+// confirmed with startsWith; shorter ones are matched whole, per length.
+const PREFIX = 8;
 
-    for (const fn of MATCHERS) {
-      if (src.includes(`.${fn}(${needle})`)) found.push(`inline .${fn}()`);
+const occurrences = (src, needles) => {
+  const long = new Map();
+  const short = new Map();
+  for (const needle of needles) {
+    if (needle.length >= PREFIX) {
+      const key = needle.slice(0, PREFIX);
+      const bucket = long.get(key);
+      if (bucket) bucket.push(needle);
+      else long.set(key, [needle]);
+    } else {
+      let byLen = short.get(needle.length);
+      if (!byLen) short.set(needle.length, (byLen = new Set()));
+      byLen.add(needle);
     }
+  }
+  const shortLens = [...short.keys()];
+  const at = new Map();
+  const hit = (needle, p) => {
+    const list = at.get(needle);
+    if (list) list.push(p);
+    else at.set(needle, [p]);
+  };
+  const n = src.length;
+  for (let p = 0; p < n; p++) {
+    const c = src.charCodeAt(p);
+    if (c !== 34 && c !== 39) continue;
+    const bucket = long.get(src.substr(p, PREFIX));
+    if (bucket) {
+      for (const needle of bucket)
+        if (src.startsWith(needle, p)) hit(needle, p);
+    }
+    for (const len of shortLens) {
+      if (src.charCodeAt(p + len - 1) !== c) continue;
+      const key = src.substr(p, len);
+      if (short.get(len).has(key)) hit(key, p);
+    }
+  }
+  return at;
+};
 
-    const names = new Set();
-    let i = src.indexOf(needle);
-    for (let n = 0; i !== -1 && n < 20; n++, i = src.indexOf(needle, i + 1)) {
-      const pre = src.slice(Math.max(0, i - 40), i).trimEnd();
-      if (!pre.endsWith('=')) continue;
-      const m = pre
-        .slice(0, -1)
-        .trimEnd()
-        .match(/[$\w]+$/);
-      if (m && m[0].length <= 12) names.add(m[0]);
-    }
-    for (const name of names) {
-      if (!assignedOnce(src, name)) continue;
+// Identifiers passed bare to a matcher, as `.fn(name)` or `.fn(name,`.
+const identifierMatcherCalls = src => {
+  const calls = new Set();
+  const re = new RegExp(`\\.(${MATCHERS.join('|')})\\(([$\\w]+)[),]`, 'g');
+  let m;
+  while ((m = re.exec(src)) !== null) {
+    calls.add(`${m[1]}\0${m[2]}`);
+  }
+  return calls;
+};
+
+// Evidence that the binary treats a literal as a needle: either passed inline
+// to a matcher, or bound to a single-assignment const that is. Built once per
+// bundle; the returned function answers each literal from the index.
+export const createEvidenceMatcher = (src, literals) => {
+  const at = occurrences(
+    src,
+    new Set(literals.flatMap(lit => ['"', "'"].map(q => quoted(lit, q))))
+  );
+  let calls = null;
+  const once = new Map();
+  const isAssignedOnce = name => {
+    if (!once.has(name)) once.set(name, assignedOnce(src, name));
+    return once.get(name);
+  };
+
+  return lit => {
+    const found = [];
+    for (const q of ['"', "'"]) {
+      const needle = quoted(lit, q);
+      const positions = at.get(needle);
+      if (!positions) continue;
+
       for (const fn of MATCHERS) {
-        if (
-          src.includes(`.${fn}(${name})`) ||
-          src.includes(`.${fn}(${name},`)
-        ) {
-          found.push(`${name} -> .${fn}()`);
+        const open = `.${fn}(`;
+        const inline = positions.some(
+          i =>
+            i >= open.length &&
+            src.startsWith(open, i - open.length) &&
+            src.charCodeAt(i + needle.length) === 41
+        );
+        if (inline) found.push(`inline .${fn}()`);
+      }
+
+      const names = new Set();
+      for (const i of positions.slice(0, 20)) {
+        const pre = src.slice(Math.max(0, i - 40), i).trimEnd();
+        if (!pre.endsWith('=')) continue;
+        const m = pre
+          .slice(0, -1)
+          .trimEnd()
+          .match(/[$\w]+$/);
+        if (m && m[0].length <= 12) names.add(m[0]);
+      }
+      for (const name of names) {
+        if (!isAssignedOnce(name)) continue;
+        calls ??= identifierMatcherCalls(src);
+        for (const fn of MATCHERS) {
+          if (calls.has(`${fn}\0${name}`)) found.push(`${name} -> .${fn}()`);
         }
       }
     }
-  }
-  return [...new Set(found)];
+    return [...new Set(found)];
+  };
 };
+
+export const matchEvidence = (src, lit) =>
+  createEvidenceMatcher(src, [lit])(lit);
 
 // A SECOND needle shape, new in CC 2.1.265: a rewrite table. CC passes a
 // description through `FN(text, [[needle, replacement], ...])` to restate it for
@@ -276,6 +353,10 @@ const main = () => {
   const seen = new Set();
   const blanked = [];
   const edited = [];
+  const evidenceOf = createEvidenceMatcher(
+    src,
+    prompts.map(literalOf).filter(lit => lit && lit.length <= 4000)
+  );
 
   for (const p of prompts) {
     if (seen.has(p.id)) continue;
@@ -285,7 +366,7 @@ const main = () => {
     if (!lit || lit.length > 4000) continue;
     seen.add(p.id);
 
-    const evidence = matchEvidence(src, lit);
+    const evidence = evidenceOf(lit);
     if (!evidence.length) continue;
 
     for (const set of sets) {

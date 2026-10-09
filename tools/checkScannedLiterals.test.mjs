@@ -7,6 +7,7 @@ import { describe, it, expect } from 'vitest';
 import {
   literalOf,
   bodyOf,
+  createEvidenceMatcher,
   matchEvidence,
   sentenceSurvives,
 } from './checkScannedLiterals.mjs';
@@ -58,6 +59,182 @@ describe('checkScannedLiterals: needle detection', () => {
     expect(
       matchEvidence(src, "The user doesn't want to take this action right now.")
     ).toEqual(['Cz -> .startsWith()']);
+  });
+});
+
+// The pre-index implementation, verbatim: up to ~20 full-bundle scans per
+// literal. The indexed matcher must agree with it on every input.
+const MATCHERS = [
+  'includes',
+  'startsWith',
+  'endsWith',
+  'indexOf',
+  'lastIndexOf',
+  'split',
+  'search',
+];
+const quoted = (lit, q) =>
+  q +
+  lit
+    .replace(/\\/g, '\\\\')
+    .replace(new RegExp(q, 'g'), '\\' + q)
+    .replace(/\n/g, '\\n') +
+  q;
+const assignedOnce = (src, name) => {
+  let count = 0;
+  for (
+    let i = src.indexOf(name + '=');
+    i !== -1;
+    i = src.indexOf(name + '=', i + 1)
+  ) {
+    const before = src[i - 1];
+    const after = src[i + name.length + 1];
+    if (before && /[\w$]/.test(before)) continue;
+    if (after === '=') continue;
+    if (++count > 1) return false;
+  }
+  return count === 1;
+};
+const naiveMatchEvidence = (src, lit) => {
+  const found = [];
+  for (const q of ['"', "'"]) {
+    const needle = quoted(lit, q);
+    if (!src.includes(needle)) continue;
+    for (const fn of MATCHERS) {
+      if (src.includes(`.${fn}(${needle})`)) found.push(`inline .${fn}()`);
+    }
+    const names = new Set();
+    let i = src.indexOf(needle);
+    for (let n = 0; i !== -1 && n < 20; n++, i = src.indexOf(needle, i + 1)) {
+      const pre = src.slice(Math.max(0, i - 40), i).trimEnd();
+      if (!pre.endsWith('=')) continue;
+      const m = pre
+        .slice(0, -1)
+        .trimEnd()
+        .match(/[$\w]+$/);
+      if (m && m[0].length <= 12) names.add(m[0]);
+    }
+    for (const name of names) {
+      if (!assignedOnce(src, name)) continue;
+      for (const fn of MATCHERS) {
+        if (
+          src.includes(`.${fn}(${name})`) ||
+          src.includes(`.${fn}(${name},`)
+        ) {
+          found.push(`${name} -> .${fn}()`);
+        }
+      }
+    }
+  }
+  return [...new Set(found)];
+};
+
+describe('checkScannedLiterals: indexed matcher agrees with the scan', () => {
+  // Shapes that stress the index: needles shorter and longer than its prefix
+  // bucket, buckets shared by several needles, overlapping occurrences, a
+  // needle at offset 0, escaped quotes, backslashes and newlines, more than 20
+  // occurrences, `==` comparisons, consts assigned once and twice, and the
+  // `.fn(name,` second-argument form.
+  const LITERALS = [
+    'a',
+    'ab',
+    'abcde',
+    'abcdef',
+    '<bash-input>',
+    '<bash-input> and more',
+    '<bash-output>',
+    "don't",
+    'say "hi"',
+    'C:\\path\\x',
+    'line one\nline two',
+    'x',
+    'shared prefix one',
+    'shared prefix two',
+    'never present',
+    'twenty',
+  ];
+  const SRC = [
+    '"a".includes(q);',
+    'if(s.startsWith("a")){}',
+    'var Ab=\'ab\',Cd="abcde";u.endsWith(Ab);w.indexOf(Cd,1);',
+    'Cd=2;',
+    'let Ef="abcdef";t.split(Ef);',
+    'z.includes("<bash-input>");z.includes("<bash-input> and more");',
+    'var Bo="<bash-output>";l.lastIndexOf(Bo);',
+    "var Dn='don\\'t';m.search(Dn);",
+    'var Sh="say \\"hi\\"";if(Sh==="x"){}g.includes(Sh);',
+    'var P="C:\\\\path\\\\x";h.includes(P);',
+    'var L="line one\\nline two";k.startsWith(L);',
+    '"x"x"x".endsWith("x")',
+    'var S1="shared prefix one",S2="shared prefix two";a.includes(S2);',
+    Array.from({ length: 25 }, (_, i) => `v${i}="twenty";`).join(''),
+    'var Tw="twenty";n.includes(Tw);',
+  ].join('\n');
+
+  it('returns the same evidence for every literal', () => {
+    const indexed = createEvidenceMatcher(SRC, LITERALS);
+    for (const lit of LITERALS) {
+      expect([lit, indexed(lit)]).toEqual([lit, naiveMatchEvidence(SRC, lit)]);
+    }
+  });
+
+  it('finds evidence the scan finds, so the comparison is not vacuous', () => {
+    const indexed = createEvidenceMatcher(SRC, LITERALS);
+    const hits = LITERALS.filter(lit => indexed(lit).length > 0);
+    expect(hits.length).toBeGreaterThanOrEqual(8);
+    expect(indexed('never present')).toEqual([]);
+  });
+
+  it('agrees on randomized bundles', () => {
+    let seed = 7;
+    const rand = n => {
+      seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+      return seed % n;
+    };
+    const ATOMS = [
+      '"',
+      "'",
+      '\\',
+      'ab',
+      'a',
+      '=',
+      '==',
+      ';',
+      ',',
+      ')',
+      '(',
+      '.includes(',
+      '.startsWith(',
+      '.split(',
+      'Q',
+      'Qz',
+      ' ',
+      '\\n',
+      'xyzxyzxy',
+    ];
+    const lits = [
+      'a',
+      'ab',
+      'Q',
+      'xyzxyzxy',
+      'xyzxyzxyab',
+      "a'b",
+      'a"b',
+      'a\\b',
+    ];
+    for (let round = 0; round < 300; round++) {
+      let src = '';
+      const len = 20 + rand(120);
+      for (let k = 0; k < len; k++) src += ATOMS[rand(ATOMS.length)];
+      const indexed = createEvidenceMatcher(src, lits);
+      for (const lit of lits) {
+        expect([src, lit, indexed(lit)]).toEqual([
+          src,
+          lit,
+          naiveMatchEvidence(src, lit),
+        ]);
+      }
+    }
   });
 });
 
