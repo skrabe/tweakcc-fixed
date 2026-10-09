@@ -54463,7 +54463,12 @@
   "ce0c89fc2267a5f36c437ffa860067a2cfb8a56e": { "facing": "ui" },
   "a0adfbbacf12c192b9356804981bf6257192ed73": { "facing": "ui" },
   "3507a98ace788da1ee48fd4f9c46b7fbc4ffbb1a": { "facing": "ui" },
-  "98d0051a7726be0130b176b3987114dae132b0af": { "facing": "ui" },
+  "98d0051a7726be0130b176b3987114dae132b0af": {
+    "facing": "model",
+    "id": "data-cloud-session-bundle-notice-deleted-tracked-files",
+    "name": "Cloud Session Bundle Notice: Missing Tracked Files",
+    "desc": "Notice that tracked files missing on disk were uploaded as deleted in the cloud-session bundle; part of the /ultrareview branch launch text the model reads."
+  },
   "6ad0ce2a07735f138f36b650ccf2f7151580bc1a": { "facing": "ui" },
   "f367208e7dbbb262b71d2e398abc1867a592923f": { "facing": "internal" },
   "017a3ada9843d47d8be1b51377be71a2a1cdb54c": { "facing": "ui" },
@@ -61064,7 +61069,12 @@
     "name": "Subagent Spawn Hook Unknown Agent Type",
     "desc": "Agent-tool error when a plugin agent.spawn hook names a subagentType this call cannot dispatch."
   },
-  "8e0f9e91dfbd1a98d8c7cd46f5911b12fae46e52": { "facing": "ui" },
+  "8e0f9e91dfbd1a98d8c7cd46f5911b12fae46e52": {
+    "facing": "model",
+    "id": "data-dir-sync-unreadable-settings-errors-clause",
+    "name": "Dir Sync Unreadable Settings Errors Clause",
+    "desc": "Parenthetical list of settings files with parse errors, interpolated into directory-sync refusals the model reads."
+  },
   "85f617701d067b357191aec3ea903a83163794f1": { "facing": "ui" },
   "5974c9b4b293a098cdb307190ef4315c85caba36": {
     "facing": "model",
@@ -61078,7 +61088,12 @@
     "name": "Git Bundle Credential Read Rules Clause",
     "desc": "Optional clause in the credential-named git-bundle refusal naming Read-rule or sandbox read-deny coverage."
   },
-  "b56108ab3b02ac44c6afcb0f2dccd3550708383f": { "facing": "ui" },
+  "b56108ab3b02ac44c6afcb0f2dccd3550708383f": {
+    "facing": "model",
+    "id": "data-cloud-session-bundle-notice-settings-file-errors",
+    "name": "Cloud Session Bundle Notice: Settings File Errors",
+    "desc": "Lead clause naming that a settings file has errors so Read rules could not all be read; fills the slot of data-cloud-session-bundle-notice-read-rules-unreadable."
+  },
   "99ce1ef5d51fd3aff397cb97bcedf476a1db6129": { "facing": "ui" },
   "34cf98084f630748d37a13e63c325655df44dd87": {
     "facing": "model",
@@ -66323,30 +66338,10 @@
   "08fc74b7ff2bf85bdedecc5b6a98b7149dcecdfb": { "facing": "internal" },
   "2620df6770b966b9758bf4d0b00c103972c48809": { "facing": "internal" },
   "5ff189b92a1a813bd5b3cc525ebe0927c1a319e0": { "facing": "internal" },
-  "67d0ab86c0ec2fa1d0623580e2e799843421a378": {
-    "facing": "model",
-    "id": "data-cloud-session-notice-ahead-of-remote",
-    "name": "Data: Cloud Session Notice Ahead Of Remote",
-    "desc": "Clause in the teleport git-source notice naming the newest pushed commit the cloud session starts from when the local branch is ahead."
-  },
-  "778502cc6fa3b32b2cd31048a41139a84a9eee36": {
-    "facing": "model",
-    "id": "data-cloud-session-notice-start-from-host-tip",
-    "name": "Data: Cloud Session Notice Start From Host Tip",
-    "desc": "Teleport git-source notice that the cloud session starts from a named tip on a non-github.com host instead of fetching a commit by id."
-  },
-  "a34384ae66d03ca3c977d557e591c223928d99b0": {
-    "facing": "model",
-    "id": "data-cloud-session-notice-uncommitted-stay-local",
-    "name": "Data: Cloud Session Notice Uncommitted Stay Local",
-    "desc": "Teleport git-source notice that uncommitted changes and unpushed commits stay on this machine unless the branch is pushed."
-  },
-  "6c6369e2efbb6d9c2d3d1ea0ffc2cff25d71edde": {
-    "facing": "model",
-    "id": "data-cloud-session-notice-unrelated-history",
-    "name": "Data: Cloud Session Notice Unrelated History",
-    "desc": "Notice that a detached HEAD or local branch shares no history with the last-fetched remote, so the cloud session starts from the remote default instead."
-  },
+  "67d0ab86c0ec2fa1d0623580e2e799843421a378": { "facing": "ui" },
+  "778502cc6fa3b32b2cd31048a41139a84a9eee36": { "facing": "ui" },
+  "a34384ae66d03ca3c977d557e591c223928d99b0": { "facing": "ui" },
+  "6c6369e2efbb6d9c2d3d1ea0ffc2cff25d71edde": { "facing": "ui" },
   "b94833bb6fdbf3d93e5ae583af71613c442e4a57": {
     "facing": "model",
     "id": "tool-result-cloud-session-explicit-ref-cannot-be-honored",
@@ -77852,7 +77847,12 @@
   },
   "0bff50f01541b63f7ce896a1cf98c85ee1af4ddc": { "facing": "ui" },
   "87848bee0db486754187c1c5e4b5bbc17abc6b80": { "facing": "ui" },
-  "d38d657d4aa7b0295de63b470c65320161534274": { "facing": "ui" },
+  "d38d657d4aa7b0295de63b470c65320161534274": {
+    "facing": "model",
+    "id": "data-cloud-session-bundle-notice-credentials-left-out",
+    "name": "Cloud Session Bundle Notice: Credential Files Left Out",
+    "desc": "Notice that uncommitted files named like credentials stayed on this machine when the working tree was bundled for a cloud session; part of the /ultrareview branch launch text the model reads."
+  },
   "17d8ef67272a9f22d90bde5f4704a3b644cb3e11": {
     "facing": "model",
     "id": "tool-result-git-bundle-credential-named-files",
@@ -85941,12 +85941,7 @@
     "name": "System Reminder: Subagent handback report via tool",
     "desc": "Instructs a subagent that only a SubagentHandback tool call delivers its final report to the caller, and that the call ends its run"
   },
-  "650a406a29b791ce2025e56b0e2145bdc42f6ea3": {
-    "facing": "model",
-    "id": "data-cloud-session-unverified-remote-branch-push-notice",
-    "name": "Data: Cloud session unverified remote branch push notice",
-    "desc": "Notice shown when no remote of the checkout could be read, so it could not be checked whether the current branch or detached HEAD commit exists on the remote host, telling the user to push their work to a branch and start a new cloud session from it"
-  },
+  "650a406a29b791ce2025e56b0e2145bdc42f6ea3": { "facing": "ui" },
   "81c59b099a56ea926725482220fbb0266e345bc9": {
     "facing": "model",
     "id": "tool-result-exit-plan-mode-fork-cannot-exit",
@@ -93369,30 +93364,10 @@
     "name": "Tool Result: Cloud session starts empty notice",
     "desc": "Notice that the cloud session starts empty because the folder is not a git repository, its trust is unconfirmed or no GitHub repository was found"
   },
-  "a0c0fb45acec834f4701c04a9aee44c6717128ba": {
-    "facing": "model",
-    "id": "tool-result-cloud-session-starts-empty-notice",
-    "name": "Tool Result: Cloud session starts empty notice",
-    "desc": "Notice that the cloud session starts empty because the folder is not a git repository, its trust is unconfirmed or no GitHub repository was found"
-  },
-  "7b5b73f67bd06bfb7e2e5f47d0d721ab9791f2d7": {
-    "facing": "model",
-    "id": "tool-result-cloud-session-starts-empty-trust-unconfirmed-reason",
-    "name": "Tool Result: Cloud session starts empty trust unconfirmed reason",
-    "desc": "Reason clause of the empty cloud session notice when the folder's trust has not been confirmed so its git remote was not read"
-  },
-  "5530753b74dd542c78e50f50fbc3ebcc3779eabc": {
-    "facing": "model",
-    "id": "tool-result-cloud-session-starts-empty-no-github-repo-reason",
-    "name": "Tool Result: Cloud session starts empty no GitHub repo reason",
-    "desc": "Reason clause of the empty cloud session notice when no GitHub repository was found for the folder"
-  },
-  "46d20152e7dc348d87be96bf4464253d592634b6": {
-    "facing": "model",
-    "id": "tool-result-cloud-session-branch-ahead-of-remote-notice",
-    "name": "Tool Result: Cloud session branch ahead of remote notice",
-    "desc": "Notice that the branch is ahead of its remote so the cloud session starts without those commits or uncommitted changes, advising to push and start a new session"
-  },
+  "a0c0fb45acec834f4701c04a9aee44c6717128ba": { "facing": "ui" },
+  "7b5b73f67bd06bfb7e2e5f47d0d721ab9791f2d7": { "facing": "ui" },
+  "5530753b74dd542c78e50f50fbc3ebcc3779eabc": { "facing": "ui" },
+  "46d20152e7dc348d87be96bf4464253d592634b6": { "facing": "ui" },
   "5053af76f8b967786c9ce65df50d83bca7ea51a0": {
     "facing": "model",
     "id": "tool-result-git-bundle-unlisted-objects-detail",
@@ -106309,5 +106284,885 @@
     "id": "system-reminder-unreachable-attached-machines-call-only",
     "name": "System Reminder: Unreachable attached machines (call only)",
     "desc": "Explains that a call to an unreachable machine takes up to 10 seconds to fail and is the only way to learn it is back, so it should be made only when the user says so"
+  },
+  "bf519e722c80e28f2c1275d2504647d820b27e54": {
+    "facing": "model",
+    "id": "data-settings-denied-models-version-only-suggestion",
+    "name": "Settings: deniedModels version-only suggestion",
+    "desc": "deniedModels warning suggesting the claude-<family>-<major>-0 spelling to block only one version instead of the whole major line."
+  },
+  "45fc27e5725474078a72cb99d5c723e9f01ba01c": {
+    "facing": "model",
+    "id": "slash-command-fast-mode-unavailable-not-first-party",
+    "name": "/fast: unavailable reason (not first-party API)",
+    "desc": "Fast-mode unavailability reason when not using the Anthropic API directly."
+  },
+  "f5fabfa63dba87171ab9de557018a12f6c17cf53": {
+    "facing": "model",
+    "id": "slash-command-fast-mode-unavailable-model-not-allowed",
+    "name": "/fast: unavailable reason (model not allowed by org)",
+    "desc": "Fast-mode unavailability reason when the fast-mode model is not in the organization's allowed models."
+  },
+  "e5d128f923bf45b35f2a48b795f8fdd0049860dc": {
+    "facing": "model",
+    "id": "slash-command-fast-mode-unavailable-sdk-opt-in-required",
+    "name": "/fast: unavailable reason (Agent SDK)",
+    "desc": "Fast-mode unavailability reason in the Agent SDK without opt-in."
+  },
+  "1a8484ebf6144aaaf3bd95fc9ee19ffca5e937d3": {
+    "facing": "model",
+    "id": "slash-command-fast-mode-availability-pending",
+    "name": "/fast: availability check pending",
+    "desc": "Fast-mode status text while availability is still being checked."
+  },
+  "1bac8d94c2b10a464e2c8669e55083f54c454861": {
+    "facing": "model",
+    "id": "data-cloud-environment-failed-to-start-plain",
+    "name": "Cloud environment failed to start (no error kind)",
+    "desc": "Startup-failure reason for a cloud session when no error type/kind is known."
+  },
+  "6c772adf01ab33390869f345088434b17ea6731d": {
+    "facing": "model",
+    "id": "tool-result-artifact-login-blocked-remedy-unset-env-var",
+    "name": "Artifact login blocked: unset env var remedy",
+    "desc": "Remedy telling the user to unset the credential environment variable that takes precedence over claude.ai login."
+  },
+  "6d4e718d949290f82b1cb8af9a6c66f1d9da6db2": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-ui-render-surfaces-every",
+    "name": "/plugin validate: render surfaces (every)",
+    "desc": "Surface description used when a UI render slot appears on every surface."
+  },
+  "509be911b83721eda33aebeb41f8a1d8f0f7f935": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-ui-render-surfaces-single",
+    "name": "/plugin validate: render surfaces (single)",
+    "desc": "Surface description used when a UI render slot is limited to one surface."
+  },
+  "a85269e290bda27e765a6fcaa4753cea63a0d994": {
+    "facing": "model",
+    "id": "system-prompt-memory-save-skip-index-frontmatter-intro",
+    "name": "Memory save instructions (no index): frontmatter intro",
+    "desc": "Memory-save instructions line used when the index step is skipped, introducing the frontmatter format."
+  },
+  "296bf39fb2644b0e331ff0e66244ee5ff8bc6ac0": {
+    "facing": "model",
+    "id": "system-prompt-memory-save-two-step-intro",
+    "name": "Memory save instructions: two-step intro",
+    "desc": "Opening line of the two-step memory save instructions (write file, then add index pointer)."
+  },
+  "5b1020039be69ae82cf2621928e35c96225571c8": {
+    "facing": "model",
+    "id": "tool-result-memory-no-claude-ai-sign-in-reason",
+    "name": "Memory tools: no claude.ai sign-in reason",
+    "desc": "Memory tool failure reason when no claude.ai sign-in is available."
+  },
+  "2635d2ecbb57f0f87e007c6b817e45b563aaa9fd": {
+    "facing": "model",
+    "id": "tool-result-memory-access-withdrawn-reason",
+    "name": "Memory tools: access withdrawn reason",
+    "desc": "Memory tool failure reason when access was withdrawn for the session."
+  },
+  "cfd1dec5273651c3beb5ff9d4e4ce18d7216ffc7": {
+    "facing": "model",
+    "id": "tool-result-memory-org-memory-off-reason",
+    "name": "Memory tools: org memory off reason",
+    "desc": "Memory tool failure reason when org memory is off for the session."
+  },
+  "db4e3e1358d9736da1c35934129bb80479aa8c25": {
+    "facing": "model",
+    "id": "tool-result-memory-path-reserved-reason",
+    "name": "Memory tools: reserved/unusable path reason",
+    "desc": "Memory tool failure reason for a reserved or unusable path in the store."
+  },
+  "2e9441ac5473d1c3297044b3d4b83c18f5f20d00": {
+    "facing": "model",
+    "id": "tool-result-memory-store-read-only-reason",
+    "name": "Memory tools: store read-only reason",
+    "desc": "Memory tool failure reason when the store is read-only in this session."
+  },
+  "8b8948815a9ae1c4c8506c3f13416cb6890359ba": {
+    "facing": "model",
+    "id": "tool-result-memory-request-refused-reason",
+    "name": "Memory tools: request refused reason",
+    "desc": "Memory tool fallback failure reason naming the refusal code."
+  },
+  "b9c5cd89f249ded1c07f3dd619a3b726962ee338": {
+    "facing": "model",
+    "id": "tool-result-git-config-unreadable",
+    "name": "Git config unreadable reason",
+    "desc": "Reason given when the repository's git configuration could not be read in full."
+  },
+  "9b41a2f120b078214286a2fb815691b502cd5e97": {
+    "facing": "model",
+    "id": "tool-result-loop-outcome-visible-response-text",
+    "name": "Loop outcome: write as visible response",
+    "desc": "Instruction (non-brief mode) to write the loop's outcome as ordinary visible response text."
+  },
+  "9b180779445729cb89f2a06afc9a315b7292f21f": {
+    "facing": "model",
+    "id": "tool-result-artifact-not-authenticated-run-login",
+    "name": "Artifacts: not authenticated, run /login",
+    "desc": "Artifact tool error when the session is not authenticated, telling the user to run /login."
+  },
+  "92ca5b00e365ad594457ae8f76a0bf728477b627": {
+    "facing": "model",
+    "id": "tool-permission-artifact-ownership-unconfirmed-suffix",
+    "name": "Artifact permission: ownership unconfirmed suffix",
+    "desc": "Suffix appended to artifact permission prompts when ownership could not be confirmed."
+  },
+  "fbc2763318a3e8bfe042f75b8605d1dee41bd713": {
+    "facing": "model",
+    "id": "tool-description-cronlist-durable",
+    "name": "Tool description: CronList (durable)",
+    "desc": "CronList tool prompt when durable cron jobs are enabled."
+  },
+  "bc4a41336b5c73e4f48be66263ce7f71264e6f98": {
+    "facing": "model",
+    "id": "tool-result-worktree-submodule-unconfigured-gitlink",
+    "name": "Worktree submodule: unconfigured gitlink",
+    "desc": "Reason a worktree's submodule work cannot be checked: nested repo recorded in the index but not configured."
+  },
+  "bfea8c7bf0fee0ed3b5f0abd9a2b3a8c0cfbb860": {
+    "facing": "model",
+    "id": "tool-result-worktree-submodule-state-unreadable",
+    "name": "Worktree submodule: state unreadable",
+    "desc": "Reason when the worktree's submodules' state could not be read."
+  },
+  "4a9e2e0d46c8fea20be310c2c86c6db04f12109f": {
+    "facing": "model",
+    "id": "tool-result-worktree-submodule-named-state-unreadable",
+    "name": "Worktree submodule: named submodule state unreadable",
+    "desc": "Reason when a specific submodule's state could not be read."
+  },
+  "4deb50c2e1da741e6d6732fd98f57ce8e11328c8": {
+    "facing": "model",
+    "id": "tool-result-worktree-submodule-inspect-timeout",
+    "name": "Worktree submodule: inspection timeout",
+    "desc": "Reason when inspecting the worktree's submodules took too long."
+  },
+  "336245337fa2539d875f51f914db34d80e034125": {
+    "facing": "model",
+    "id": "system-reminder-current-date",
+    "name": "Current date reminder",
+    "desc": "Meta message stating today's date."
+  },
+  "2e7af63d216f853ff1ca421322e2a79969d44045": {
+    "facing": "model",
+    "id": "tool-result-skill-download-failed-reason-download",
+    "name": "Skill download failed reason: download",
+    "desc": "Skill download failure reason when the download itself failed."
+  },
+  "bb77a8c72c77d4ca08133ffbadcb905a2aa2fe5c": {
+    "facing": "model",
+    "id": "tool-result-skill-download-failed-reason-archive-unusable",
+    "name": "Skill download failed reason: archive unusable",
+    "desc": "Skill download failure reason when the archive could not be extracted."
+  },
+  "c072e868682269961d017278917a06b7b71312ad": {
+    "facing": "model",
+    "id": "tool-result-skill-download-failed-reason-local-fs-error",
+    "name": "Skill download failed reason: local filesystem error",
+    "desc": "Skill download failure reason when a local filesystem error prevented placing it on disk."
+  },
+  "944285e275c45f84109bb36ed5ee0ccbbf12aae3": {
+    "facing": "model",
+    "id": "slash-command-plugin-install-version-conflicting",
+    "name": "Plugin install: conflicting version requirements",
+    "desc": "Plugin install failure when no version satisfies all of a dependency's ranges."
+  },
+  "4781ccc9acd8f489e1f3f21f1e2165e17f13e2ee": {
+    "facing": "model",
+    "id": "slash-command-plugin-install-version-invalid-requirement",
+    "name": "Plugin install: invalid version requirement",
+    "desc": "Plugin install failure when one of the version requirements is invalid."
+  },
+  "15151d8c118f296b54e6404814d0e52117bae768": {
+    "facing": "model",
+    "id": "tool-result-required-hook-failure",
+    "name": "Required hook failure blocking reason",
+    "desc": "Blocking reason when a required hook fails."
+  },
+  "0dda798d0965bda789c8627e9f55822389d525fb": {
+    "facing": "model",
+    "id": "system-prompt-pr-summary-bullets-placeholder",
+    "name": "PR summary placeholder (bullets)",
+    "desc": "PR body summary placeholder in the legacy bullet style."
+  },
+  "ccf76faaa4b3b411ac5d429b2aee2787b705f99f": {
+    "facing": "model",
+    "id": "system-prompt-pr-test-plan-checklist-placeholder",
+    "name": "PR test plan placeholder (checklist)",
+    "desc": "PR body test-plan placeholder in the legacy checklist style."
+  },
+  "43ff1c787f0db2736858db75db26e33fd93fcdd4": {
+    "facing": "model",
+    "id": "system-reminder-cloud-review-failure-session-error",
+    "name": "Cloud review failure reason: session error",
+    "desc": "Cloud review failure reason when the cloud session returned an error."
+  },
+  "0e139db9c772d5086fa5bc2f38a3c3c223d628f4": {
+    "facing": "model",
+    "id": "system-reminder-cloud-review-failure-poll-timeout",
+    "name": "Cloud review failure reason: poll timeout",
+    "desc": "Cloud review failure reason when the session exceeded its wait."
+  },
+  "e3727b49542ab1bebe8d4b4e505264648949046a": {
+    "facing": "model",
+    "id": "system-reminder-cloud-review-failure-poll-timeout-api-error",
+    "name": "Cloud review failure reason: poll timeout with API errors",
+    "desc": "Cloud review failure reason when the session exceeded its wait while API polls were failing."
+  },
+  "c7dfec8d27dbfc3c50fe1d27a853097b96d477a9": {
+    "facing": "model",
+    "id": "system-reminder-cloud-review-failure-no-review-output",
+    "name": "Cloud review failure reason: no review output",
+    "desc": "Cloud review failure reason when the orchestrator produced no output."
+  },
+  "c8b54c28c8cd18645e352706e3c91973608b7d46": {
+    "facing": "model",
+    "id": "system-reminder-cloud-review-failure-orchestrator-error",
+    "name": "Cloud review failure reason: orchestrator error",
+    "desc": "Cloud review failure reason when the orchestrator reported an error."
+  },
+  "329e122b652d0c293daee2a40bed385860b4d9ca": {
+    "facing": "model",
+    "id": "system-reminder-cloud-review-failure-session-start-failed",
+    "name": "Cloud review failure reason: session start failed",
+    "desc": "Cloud review failure reason when the cloud session could not start."
+  },
+  "ce295c0da6e89a49e3030014ccd8235c576b969c": {
+    "facing": "model",
+    "id": "system-reminder-cloud-review-failure-session-archived",
+    "name": "Cloud review failure reason: session archived",
+    "desc": "Cloud review failure reason when the session was archived before producing output."
+  },
+  "25c93d104b7488c920b0aee6efe1ea9bc9983096": {
+    "facing": "model",
+    "id": "system-reminder-cloud-review-failure-stopped-remotely",
+    "name": "Cloud review failure reason: stopped remotely",
+    "desc": "Cloud review failure reason when the review was stopped before finishing."
+  },
+  "606e0521188f9715667df745108c082fba5fbdf8": {
+    "facing": "model",
+    "id": "tool-result-tool-unavailable-call-replacement",
+    "name": "Tool unavailable: call replacement tool",
+    "desc": "Suffix on the no-such-tool error pointing to the replacement tool when it is already loaded."
+  },
+  "05437a32e5b61c29ea784484d2cbf1bd4d1904a7": {
+    "facing": "model",
+    "id": "tool-result-tool-unavailable-mcp-switched-off",
+    "name": "Tool unavailable: MCP server switched off",
+    "desc": "Suffix on the no-such-tool error when the tool's MCP server has been switched off."
+  },
+  "4d49033a84fd817256ad6d728245ed119e44961f": {
+    "facing": "model",
+    "id": "tool-result-bash-dangerous-op-unset-var-guard-rewrite-reason-suggestion",
+    "name": "Bash dangerous op: unset var guard rewrite (reason)",
+    "desc": "Short reason-form suggestion to rewrite with a guard or use a literal path."
+  },
+  "ecdb3b4a78fb74ffeb16dd5dfa3e3d3348adc77a": {
+    "facing": "model",
+    "id": "tool-result-bash-dangerous-op-unset-var-bind-positional-reason-suggestion",
+    "name": "Bash dangerous op: bind positional (reason)",
+    "desc": "Short reason-form suggestion to bind the positional or use a literal path."
+  },
+  "96433a98178610e2b4563b0020bed154e9e8ee8d": {
+    "facing": "model",
+    "id": "tool-result-ipynb-too-large-powershell-hint",
+    "name": "Notebook too large: PowerShell hint",
+    "desc": "PowerShell commands to read portions of an oversized notebook."
+  },
+  "a9787d5ccdf508a7d43a0d4e150055d6647af0f2": {
+    "facing": "model",
+    "id": "tool-result-skill-permission-rule-boundary-add-rule",
+    "name": "Skill permission rule: boundary add rule",
+    "desc": "Skill permission ask suffix suggesting adding Skill(<name>) to allow without asking."
+  },
+  "dee54c84d5c44ab30a44149c811d537c26c5031e": {
+    "facing": "model",
+    "id": "tool-description-the-named-tool-reference",
+    "name": "Shared phrase: the <tool> tool",
+    "desc": "Shared 'the ${tool} tool' phrase used at three sites: the Agent/Task tool's when-not-to-use guidance (else-arm naming the search tool), the Artifact tool-name helper SGt @15664714, and the Chrome browser-selection ask-user instruction @19858736."
+  },
+  "8eab47a8e34b26295b964b12f5de59b30f095c41": {
+    "facing": "model",
+    "id": "slash-command-plugin-marketplace-update-failed-see-errors-short",
+    "name": "/plugin marketplace update: failed plugins, see Errors",
+    "desc": "Suffix listing plugins that failed to update during a marketplace update, pointing at the Errors view (no debug-log overflow)."
+  },
+  "ed97400c18cfd75bb5b6805bb1f932c935e5571b": { "facing": "ui" },
+  "3043dfec13cad1546416fb713cac0e0665ea9ef5": {
+    "facing": "model",
+    "id": "slash-command-plugin-install-plugin-directory-unavailable",
+    "name": "/plugin install: plugin directory unavailable",
+    "desc": "Install refusal when the plugin itself comes from the plugin directory and that directory is unavailable."
+  },
+  "234cabd8d1fc269b467d8053e54539d65376829b": {
+    "facing": "model",
+    "id": "data-artifact-publish-scratchpad-directory",
+    "name": "Artifact publish: scratchpad directory label",
+    "desc": "Location label for the session scratchpad directory in artifact publish path messages."
+  },
+  "9b5a9be868cab81b421026a5d9bbc2e31bb203fb": {
+    "facing": "model",
+    "id": "data-artifact-publish-working-directory",
+    "name": "Artifact publish: working directory label",
+    "desc": "Location label for the session working directory in artifact publish path messages."
+  },
+  "86cb4b7d2415f10fed5816f39c7c53caae4eb767": {
+    "facing": "model",
+    "id": "data-artifact-attested-first-party-type-classifier-label",
+    "name": "Artifact attested label: first-party type",
+    "desc": "Classifier/permission label describing a published first-party Artifact type."
+  },
+  "9174c3a4973eab91851d25e26fc2e99c61c44a1a": {
+    "facing": "model",
+    "id": "data-artifact-attested-pipeline-instance-classifier-label",
+    "name": "Artifact attested label: pipeline-owned template",
+    "desc": "Classifier/permission label describing a template owned by the organization's publishing pipeline."
+  },
+  "01369a42d325434fec91cf8c0fb5dfe428a71b9b": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-comments-waiting-plural",
+    "name": "Artifact comment notification: several comments waiting",
+    "desc": "Opening line telling an agent several human comments sent to Claude wait on an artifact thread."
+  },
+  "f0bb6edc4d854e91dcdb1e8b54072d3130fc5fce": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-comment-waiting",
+    "name": "Artifact comment notification: one comment waiting",
+    "desc": "Opening line telling an agent a human comment sent to Claude waits on an artifact thread."
+  },
+  "204680645c51f05524690946d8d32d24f685ac59": {
+    "facing": "model",
+    "id": "data-artifact-durable-wake-http-from-service-via-gateway",
+    "name": "Artifact durable wake: HTTP from service via gateway",
+    "desc": "Failure detail for a durable wake arm whose HTTP status came from the artifact service relayed by the session gateway."
+  },
+  "19a2b75372228886205395fc99781956af322795": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-not-editor",
+    "name": "Artifact live subscription: not editor",
+    "desc": "Reason a restored publish decision does not apply because the account cannot publish to the artifact."
+  },
+  "895eb15fd41e64320d2af5128795f6c4bd3e087c": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-sync-unavailable",
+    "name": "Artifact live subscription: sync unavailable",
+    "desc": "Reason the live channel is not available to this session right now."
+  },
+  "6657b5c7ae20c415780405dabe589bb6b3ae6e00": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-skipped-reason",
+    "name": "Artifact live subscription: skipped with reason",
+    "desc": "Live subscription status line naming the reason it was skipped."
+  },
+  "154243a3b5fae247f27700a987d5110b08a8a665": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-subscription-skipped-raw",
+    "name": "Artifact live subscription: skipped with raw code",
+    "desc": "Live subscription status line when the skip reason has no description, quoting the raw code."
+  },
+  "a1672a3941bdf1516df55274b193e2d98b01a548": {
+    "facing": "model",
+    "id": "tool-result-read-notifications-github-webhook-label",
+    "name": "Read notifications: GitHub webhook label",
+    "desc": "Trigger label for notifications caused by GitHub activity on a subscribed PR."
+  },
+  "1875a0eda9f1bc7cba5f6e66c26ef100ae7f80ca": {
+    "facing": "model",
+    "id": "tool-result-read-notifications-mcp-send-message-label",
+    "name": "Read notifications: session message label",
+    "desc": "Trigger label for notifications that are messages from another Claude session."
+  },
+  "99caee8a3a2b397e7e84f9b4730647640f2d6a04": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-docs-per-collection",
+    "name": "Artifact DB: collection document limit",
+    "desc": "Quota error when a collection reached its document limit."
+  },
+  "8d21a5a79f475348aa36ae0491f58b7e467d53e6": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-docs-per-database",
+    "name": "Artifact DB: database document limit",
+    "desc": "Quota error when the artifact's database reached its document limit."
+  },
+  "55ea4b9863377e0c8e59ccd8c25a4f204da936f9": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-active-leases",
+    "name": "Artifact DB: too many active leases",
+    "desc": "Quota error when the database has too many active leases."
+  },
+  "03a7c14a32b6942c3f778ac5cada947633fd4896": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-rate-limited",
+    "name": "Artifact DB: rate limited",
+    "desc": "Quota error telling the model the database is rate-limited and to retry shortly."
+  },
+  "332151274347b0a9e28c6d9ffc6de19d83059f5a": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-write-capacity",
+    "name": "Artifact DB: write capacity",
+    "desc": "Quota error for too many concurrent writes to the database."
+  },
+  "2cde804302eefffa290632da8740897b675d1dc1": {
+    "facing": "model",
+    "id": "tool-result-artifact-type-instructions-write-via-write-db-action",
+    "name": "Artifact type instructions: write via write_db action",
+    "desc": "Tells the model to write with action write_db passing the artifact url."
+  },
+  "7abea31223a530a308511fc90dee193baa04889b": {
+    "facing": "model",
+    "id": "tool-result-artifact-asset-rate-limited",
+    "name": "Artifact asset: rate limited",
+    "desc": "Asset operation error telling the model it is calling too often and must not loop."
+  },
+  "f7cee11aabc3f0b167b283a82446b8a3ed443f7e": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-file-action-name",
+    "name": "Artifact: read_file action reference",
+    "desc": "Names the read_file action of the Artifact tool in tool results and validation messages."
+  },
+  "e5403319f45a1d820aebe7b770427aa213baa0a0": {
+    "facing": "model",
+    "id": "tool-result-app-action-menu-bar-frontmost",
+    "name": "App action: menu bar needs frontmost",
+    "desc": "Unsupported-action reason: the menu bar is only reachable when the app is frontmost."
+  },
+  "8dbd228ea71a626bc969699d7b52f1494a7dba90": {
+    "facing": "model",
+    "id": "tool-result-app-action-hover-unsupported",
+    "name": "App action: hover unsupported",
+    "desc": "Unsupported-action reason: hover states cannot be triggered in the background."
+  },
+  "2478e8aa6f45ef5d424e280d70fbb7786139d6b4": {
+    "facing": "model",
+    "id": "tool-result-app-action-non-text-drag-unsupported",
+    "name": "App action: non-text drag unsupported",
+    "desc": "Unsupported-action reason: only text-selection drags work in the background."
+  },
+  "c35dd0712ff801ea352652ba5c8bb32a93ff2bd3": {
+    "facing": "model",
+    "id": "tool-result-app-action-key-not-mapped",
+    "name": "App action: key combo not mapped",
+    "desc": "Unsupported-action reason: the key combo has no background equivalent."
+  },
+  "6a16ef769e725989c7e8b4fab84c39404d4f81c5": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-someone-else-permission-ask",
+    "name": "Artifact read permission ask: made by someone else",
+    "desc": "Permission ask asking the user whether Claude may read an artifact made by someone else."
+  },
+  "627fc99d2ad72f3aa648cf57df601a1578756e0f": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-unknown-author-permission-ask",
+    "name": "Artifact read permission ask: author unknown",
+    "desc": "Permission ask when Claude could not check who made the artifact."
+  },
+  "2005d10844942e399363401c34f613205daa8697": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-cowritten-permission-ask",
+    "name": "Artifact read permission ask: cowritten",
+    "desc": "Permission ask when other people can edit the artifact."
+  },
+  "21785e23a05be0d93e707f39efdf5daa9bc2832e": {
+    "facing": "model",
+    "id": "system-reminder-artifact-opening-not-saved-count",
+    "name": "Artifact opening: not-saved file count",
+    "desc": "Reminder line counting files not saved for one reason when no names are listed."
+  },
+  "7ae2c3e881955f21b0817726a28ab3add3670d9e": { "facing": "ui" },
+  "568ad9dc26754099fdfc05ee62f13f65d0366aba": {
+    "facing": "model",
+    "id": "slash-command-fast-mode-workspace-timeout",
+    "name": "/fast: workspace did not respond",
+    "desc": "Fast mode result when the workspace did not answer and the toggle may still have applied there."
+  },
+  "687d1e10faf8a1c274927458c25e3a8a4cad9a1a": {
+    "facing": "model",
+    "id": "slash-command-pause-memory-run-again-to-resume",
+    "name": "/pause-memory: run again to resume",
+    "desc": "Hint appended to the pause-memory result telling the user how to resume memory."
+  },
+  "1894a46d0990706b37b4a0ad0b81380cbcbb40b5": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-write-it-with",
+    "name": "Artifact read: write it with",
+    "desc": "Store-fill guidance telling the model which call writes the artifact's store."
+  },
+  "20122ed96fb47b9499f75e741bf21523822c199a": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-provenance-own-artifact",
+    "name": "Artifact read provenance: user's own artifact",
+    "desc": "Provenance lead for content of the user's own artifact naming who else may have written it."
+  },
+  "5eb2a36e7465a2be8d3dc702ab031de9ed13b4cf": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-provenance-other-org-shared",
+    "name": "Artifact read provenance: shared from another organization",
+    "desc": "Provenance lead for content of an artifact shared by someone in another organization."
+  },
+  "71c76f83b4e1715b309ceda1e43979c942c215ef": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-provenance-shared-by-person",
+    "name": "Artifact read provenance: shared by another person",
+    "desc": "Provenance lead for content of an artifact another person shared with the user."
+  },
+  "0cf5f8d5100407970fa3b144511a484c7eb58f35": {
+    "facing": "model",
+    "id": "slash-command-autocompact-set-auto-confirmation",
+    "name": "/autocompact: set to auto",
+    "desc": "Confirmation that the autocompact window setting was set to auto."
+  },
+  "2b7571ccbcb5d05b9501c3056b519d3787b7a487": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-call-status-ended-ran-nothing",
+    "name": "Tool Result: Remote tool call status — ended, ran nothing",
+    "desc": "Status clause for a remote tool call that timed out or was cancelled before anything ran."
+  },
+  "aad5e423466b6ae868f318ad7cc7694879a8616f": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-call-status-permission-handed-to-newer",
+    "name": "Tool Result: Remote tool call status — permission handed to newer request",
+    "desc": "Status clause saying the call's permission question was handed to a newer request for the same command."
+  },
+  "e51db8540731996a431c3107e0b1866ccf32c4b5": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-call-status-ended-with-code",
+    "name": "Tool Result: Remote tool call status — ended with code",
+    "desc": "Default status clause naming the code a failed remote tool call ended with and when."
+  },
+  "f1c5b3a1f6f75c3499dd46ec0e6c159ca78acb2c": {
+    "facing": "model",
+    "id": "tool-result-device-tool-serve-refused-no-session",
+    "name": "Tool Result: Device tool serve refused — no session",
+    "desc": "Refusal for a device tool call when there is no server-asserted session."
+  },
+  "62dda05a1baec6de2c9f294841d1d31e4d96a4ff": {
+    "facing": "model",
+    "id": "system-reminder-attached-machine-away-in-this-turn",
+    "name": "Attached machine away — in this turn",
+    "desc": "Duration phrase 'in this turn' for how long not to call an unreachable machine again."
+  },
+  "1fd451a1bb80a67af2cc0d8c127bec093b817c02": {
+    "facing": "model",
+    "id": "tool-result-artifact-ask-rule-covers-artifact-reads-suffix",
+    "name": "Tool Result: Artifact ask rule covers artifact reads suffix",
+    "desc": "Suffix noting that the user's artifact-tool ask rule covers artifact reads."
+  },
+  "63e6014332c42c0b1b9ddebca2f49d3d4674fcd6": {
+    "facing": "model",
+    "id": "tool-result-artifact-quickstart-types-ambiguous",
+    "name": "Tool Result: Artifact quickstart — types ambiguous",
+    "desc": "Quickstart result when the type listing is ambiguous, listing the types."
+  },
+  "8fe553e989d13eca2b2fbb60d3a79ce8f81c2e61": {
+    "facing": "model",
+    "id": "tool-result-artifact-quickstart-types-partial",
+    "name": "Tool Result: Artifact quickstart — types partial",
+    "desc": "Quickstart result when the type listing was only partially read."
+  },
+  "ab77b8030304f9195fc5e5a5c31d8f9286766436": {
+    "facing": "model",
+    "id": "tool-result-artifact-watch-status-no-live-connection",
+    "name": "Tool Result: Artifact watch status — no live connection",
+    "desc": "Watch-list row for an artifact with no live connection, naming its state."
+  },
+  "5744c0830559ef7ea65354726e234a9c9d5b311f": {
+    "facing": "model",
+    "id": "tool-result-artifact-durable-wake-no-subscription-row",
+    "name": "Tool Result: Artifact durable wake — no subscription row",
+    "desc": "Watch-list row for an artifact with no durable wake subscription, naming its state."
+  },
+  "7b5351fc3a7d603fde276bdf47a5be53cd4e97bc": {
+    "facing": "model",
+    "id": "data-artifact-watch-auto-classifier-input",
+    "name": "Data: Artifact watch auto-classifier input",
+    "desc": "Auto-mode classifier input summarising an artifact watch call."
+  },
+  "22818e9bf1f83c518b8868df1a6c14be175c3e05": {
+    "facing": "model",
+    "id": "tool-description-artifact-watch-dynamic",
+    "name": "Tool Description: Artifact watch (dynamic)",
+    "desc": "Dynamic per-call description for watching a published artifact."
+  },
+  "17d16badad73da2293ad0fefa3300a33c746d01b": {
+    "facing": "model",
+    "id": "tool-result-artifact-pr-review-mcp-manifest-exact-live-read-tool",
+    "name": "Tool Result: PR review MCP manifest — exactly the live read tool",
+    "desc": "Publish refusal when the review page MCP manifest must declare exactly the live read tool."
+  },
+  "0bed27a5d78ab59f97aebccb5ad777957786c3b8": {
+    "facing": "model",
+    "id": "tool-result-artifact-couldnt-read-before-publish-try-again",
+    "name": "Tool Result: Couldn't read artifact before publish — try again",
+    "desc": "Suffix telling the model to try again after a transient pre-publish read failure."
+  },
+  "6d3457d4850187487b13e0ba733ef7d823769098": {
+    "facing": "model",
+    "id": "tool-description-artifact-list-assets",
+    "name": "Tool Description: Artifact list assets",
+    "desc": "Per-call description for listing an artifact's uploaded files."
+  },
+  "4e56a4eed55ff11338c928b16693de5eed946d97": {
+    "facing": "model",
+    "id": "tool-description-artifact-list-files",
+    "name": "Tool Description: Artifact list files",
+    "desc": "Per-call description for listing an artifact's published files."
+  },
+  "3de0cb250c94bfd16f65c5c01fde84d2ac45ee46": {
+    "facing": "model",
+    "id": "tool-description-artifact-read-page-data-single-dynamic",
+    "name": "Tool Description: Artifact read page data (single)",
+    "desc": "Per-call description for reading one artifact's structured page data when an ask rule applies."
+  },
+  "24240029cfe77a85d116a2c2066a257bf6346a75": {
+    "facing": "model",
+    "id": "tool-result-artifact-copy-source-yours-label",
+    "name": "Tool Result: Artifact copy source — yours label",
+    "desc": "Label for a copy source that is one of the user's own artifacts."
+  },
+  "359e692e2db17fed033123f9742e33babfa58325": {
+    "facing": "model",
+    "id": "tool-result-artifact-copy-source-someone-elses-label",
+    "name": "Tool Result: Artifact copy source — someone else's label",
+    "desc": "Label for a copy source that is someone else's artifact."
+  },
+  "051129d6707f229c3a386366be73007f36b0eb98": {
+    "facing": "model",
+    "id": "tool-result-artifact-copy-source-owner-unconfirmed-label",
+    "name": "Tool Result: Artifact copy source — owner unconfirmed label",
+    "desc": "Label for a copy source whose owner couldn't be confirmed."
+  },
+  "f75b12d0844aaeba99057ae7db365dd6f4f590cc": {
+    "facing": "model",
+    "id": "tool-result-artifact-someone-elses-label",
+    "name": "Tool Result: Artifact someone else's label",
+    "desc": "Parenthetical ownership label for someone else's artifact."
+  },
+  "e9f63e7fb623cbbdceb3b11a0472e7d40bf71440": {
+    "facing": "model",
+    "id": "data-appifact-repl-no-artifact-bound-short",
+    "name": "Data: Appifact REPL no artifact bound (short)",
+    "desc": "Auto-classifier/tool-use label when no artifact is bound and no code is given."
+  },
+  "04ac90ce267c1478291af0ab4f9e32f1c62e61dc": {
+    "facing": "model",
+    "id": "tool-result-send-message-cloud-session-label",
+    "name": "Tool Result: Send message — cloud session label",
+    "desc": "Label describing a recipient as a Claude session running in the cloud."
+  },
+  "e526e6b667fa16b47d815cddf191c8d5c44126bf": {
+    "facing": "model",
+    "id": "tool-result-claudedesign-no-credential-run-login",
+    "name": "Tool Result: Claude Design — no credential, run /design login",
+    "desc": "Error when no design-capable credential exists, telling to run /design login."
+  },
+  "33148047dd7fe2bd7e5e12ec94e52c1dba351b1b": {
+    "facing": "model",
+    "id": "tool-result-claudedesign-token-refresh-failed",
+    "name": "Tool Result: Claude Design — token refresh failed",
+    "desc": "Error when the design token refresh failed, suggesting retry or /design login."
+  },
+  "576c3f0845abc10fefef61eae8ef2992a36c28b1": {
+    "facing": "model",
+    "id": "tool-result-remote-host-wait-for-reconnect-after-restart-clause",
+    "name": "Tool Result: Remote host — wait for reconnect after restart",
+    "desc": "Clause asking to wait for a host to reconnect after the session's cloud environment restarted."
+  },
+  "d726601da477c948c133fb9cfbc081e296b1a9bb": {
+    "facing": "model",
+    "id": "tool-result-remote-host-call-already-in-progress",
+    "name": "Tool Result: Remote host — call already in progress",
+    "desc": "Clause saying the host reported the call already under way from an earlier attempt."
+  },
+  "58f9f329073796d36a18c59c182fe9ba91a0d6ba": {
+    "facing": "model",
+    "id": "tool-result-remote-host-connection-dropped",
+    "name": "Tool Result: Remote host — connection dropped",
+    "desc": "Clause saying the connection to the host dropped during the call."
+  },
+  "ed4aee19b5c61e7ad3f980a70a943e8674511a95": {
+    "facing": "model",
+    "id": "tool-result-remote-host-call-timed-out",
+    "name": "Tool Result: Remote host — call timed out",
+    "desc": "Clause saying the host did not answer within the session's time limit."
+  },
+  "2decdd203f12ad44b88f5a55cd1e30b9c1ce6662": {
+    "facing": "model",
+    "id": "tool-result-remote-host-unverified-refusal",
+    "name": "Tool Result: Remote host — unverified refusal",
+    "desc": "Clause saying an unverified sender reported the call refused."
+  },
+  "194113e9dbb8ef30dbf494967f07257a46566338": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-correction-failed-code",
+    "name": "System Reminder: Tool hosts correction — failed with code",
+    "desc": "Correction note that the machine now reports the call failed, with the code's meaning."
+  },
+  "5575e8b6a61b74aa177cd7caae60e402f3f1b0f6": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-default-builds-belong-here",
+    "name": "System Reminder: Tool hosts — default host, builds belong here",
+    "desc": "Attached-machines line for the default host when its copy state is here/refreshed/unknown."
+  },
+  "94d36b280e996929c304e5794597ddb10f6830fc": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-session-went-to-sleep",
+    "name": "System Reminder: Tool hosts — session went to sleep",
+    "desc": "Attached-machines line for an offline session host that went to sleep."
+  },
+  "3b5ca2ab7184493fa68972d93ca2402e0d718c89": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-working-directory",
+    "name": "System Reminder: Tool hosts — working directory",
+    "desc": "Attached-machine description fragment naming its working directory when sync mode is unknown."
+  },
+  "71ead9f887c6c03108af877d0471f671029a4018": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-refused-not-run",
+    "name": "Tool Result: Remote tool — refused, not run",
+    "desc": "Bracketed outcome for a remote call refused on the host."
+  },
+  "958447fd2ad029b765724eb28a494e261bb226b8": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-rejected-not-run",
+    "name": "Tool Result: Remote tool — rejected, not run",
+    "desc": "Bracketed outcome for a remote call rejected by validation on the host."
+  },
+  "bf56768c61903640063026804685421910c75f8b": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-not-rerun-duplicate",
+    "name": "Tool Result: Remote tool — not re-run",
+    "desc": "Bracketed outcome for a duplicate remote call that was not re-run."
+  },
+  "2db9f3a06e68389e6ca37af1600de9ac9e2f0d2d": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-waiting-permission-not-run",
+    "name": "Tool Result: Remote tool — waiting on permission",
+    "desc": "Bracketed outcome for a remote call still waiting on a permission decision."
+  },
+  "2f974e75fa4d0dfda685672a94848a7a0ae2731c": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-permission-ask-expired-not-run",
+    "name": "Tool Result: Remote tool — permission ask expired",
+    "desc": "Bracketed outcome for a remote call whose permission ask ended unanswered."
+  },
+  "29d1dbc41d4a986ff603c918f1bf0bb1c70a6bb2": {
+    "facing": "model",
+    "id": "slash-command-list-agents-no-other-sessions-short",
+    "name": "Slash Command: /list-agents — no other sessions (short)",
+    "desc": "Short /list-agents output when there are no subagents, teammates or other sessions."
+  },
+  "7e93514b0fc8b82b9a49aee0e1da46e0a293bf1c": {
+    "facing": "model",
+    "id": "tool-result-mcp-server-needs-claudeai-connection-short",
+    "name": "Tool Result: MCP server needs claude.ai connection (short)",
+    "desc": "Error that an MCP server needs to be connected in claude.ai, without the /mcp hint."
+  },
+  "a155ae0d0efd95cb8fd72b69baa48ec21d4d7d3e": {
+    "facing": "model",
+    "id": "slash-command-web-setup-server-unreachable-ssl-hint",
+    "name": "Slash Command: /web-setup — server unreachable with SSL hint",
+    "desc": "/web-setup network error with an SSL hint."
+  },
+  "f1128cbd87fb8dd1e0abba7b233d643f7044bb06": {
+    "facing": "model",
+    "id": "system-reminder-project-memory-index-empty",
+    "name": "System Reminder: Project memory index empty",
+    "desc": "Note that a connected project memory store's index is currently empty."
+  },
+  "02f0449e2fdd49479b22c842019422e3750e4463": {
+    "facing": "model",
+    "id": "slash-command-cloud-plugins-left-as-it-was",
+    "name": "Slash Command: /cloud-plugins — left as it was",
+    "desc": "/cloud-plugins result when the user chose not now and a prior answer stays."
+  },
+  "59692181d901565d4e2c6b634f35775476e1e972": {
+    "facing": "model",
+    "id": "tool-result-start-task-input-has-no-field",
+    "name": "Tool Result: Start task input — has no field",
+    "desc": "Input validation error for an unknown field."
+  },
+  "9d6375840278ff3c68a1919f44a7af2b61a46147": {
+    "facing": "model",
+    "id": "tool-result-start-task-input-argument-required",
+    "name": "Tool Result: Start task input — argument required",
+    "desc": "Input validation error for a missing top-level argument."
+  },
+  "77d22b72271f5f743cd2aea74759075033742ec8": {
+    "facing": "model",
+    "id": "tool-result-start-task-input-needs-field",
+    "name": "Tool Result: Start task input — needs field",
+    "desc": "Input validation error for a missing nested field."
+  },
+  "444add005546d64c9a06b57403161a779e1b6220": {
+    "facing": "model",
+    "id": "tool-result-start-task-input-wrong-type",
+    "name": "Tool Result: Start task input — wrong type",
+    "desc": "Input validation error for a value of the wrong type."
+  },
+  "a15a6ad36efd8da46611ded57e81f7174646cef8": {
+    "facing": "model",
+    "id": "tool-result-start-task-input-must-not-be-empty",
+    "name": "Tool Result: Start task input — must not be empty",
+    "desc": "Input validation error for an empty string."
+  },
+  "cb38d8767ed27661f4e48e76bb0ce157f7689cfd": {
+    "facing": "model",
+    "id": "tool-result-start-task-input-min-length",
+    "name": "Tool Result: Start task input — min length",
+    "desc": "Input validation error for a string shorter than the minimum."
+  },
+  "e9c05dfd89be112486dc822c821241baf15db021": {
+    "facing": "model",
+    "id": "tool-result-start-task-input-max-length",
+    "name": "Tool Result: Start task input — max length",
+    "desc": "Input validation error for a string longer than the maximum."
+  },
+  "3c130cf431dfb2e3b9a5cbfbf169a7ead37dc9c7": {
+    "facing": "model",
+    "id": "tool-result-start-task-input-max-items",
+    "name": "Tool Result: Start task input — max items",
+    "desc": "Input validation error for too many array entries."
+  },
+  "6e62a77b63281c005c2e3244158565d3cfe2c61e": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-url-fallback-instruction",
+    "name": "Tool Result: Artifact read URL fallback instruction",
+    "desc": "Fallback instruction to read the artifact url with another tool when the artifact tool is unavailable."
+  },
+  "683fd4dbc92f4c0f1e5bf99a640b4a75976a5754": {
+    "facing": "model",
+    "id": "tool-result-artifact-delete-permission-ask",
+    "name": "Artifact Delete Permission Ask",
+    "desc": "Approval question for permanently deleting an Artifact; asked of the user and, when no one can answer, returned to the model inside the deny that lists the unanswered questions."
+  },
+  "9a1868f389b3a7f2e842d7ea9f8578f1d8c2e343": {
+    "facing": "model",
+    "id": "tool-result-artifact-public-change-unattended-permission-ask",
+    "name": "Artifact Public-Change Unattended Permission Ask",
+    "desc": "Approval question for changing an Artifact on an unattended turn; reaches the model through the artifact approval deny and the classifier reason like its public_change siblings."
+  },
+  "dd8497c36fb6ce9172ba3ca175ee15e289c85d0d": {
+    "facing": "model",
+    "id": "data-cloud-session-bundle-notice-read-rules-partial",
+    "name": "Cloud Session Bundle Notice: Read Rules Partly Unreadable",
+    "desc": "Lead clause naming the settings files whose errors kept Read rules from loading; fills the slot of data-cloud-session-bundle-notice-read-rules-unreadable."
+  },
+  "bf35f966a0a32d3d411e87ae4a8c82e6bbe206b2": {
+    "facing": "model",
+    "id": "data-cloud-session-bundle-notice-settings-errors-clause",
+    "name": "Cloud Session Bundle Notice: Settings Errors Clause",
+    "desc": "Parenthetical naming the settings files with errors, interpolated into the cloud-session bundle notice about unreadable Read rules."
+  },
+  "3e82dde236f5c49cdc5f38b07f6ce8f8892ac397": { "facing": "ui" },
+  "2e723d7a2eeee52cfcd865f17bdb95789019af24": { "facing": "ui" },
+  "aca9b4248eed9dccf3782a560eea340ce1c98844": {
+    "facing": "model",
+    "id": "tool-description-ask-user-tool-fallback-reference",
+    "name": "Tool Description: Ask-user tool fallback reference",
+    "desc": "Fallback phrase naming the ask-user tool when no tool name is known, used inside the Chrome browser selection instruction"
   }
 }

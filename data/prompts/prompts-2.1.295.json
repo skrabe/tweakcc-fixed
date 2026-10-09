@@ -7538,6 +7538,22 @@
       "version": "2.1.238"
     },
     {
+      "name": "/plugin marketplace update: failed plugins, see Errors",
+      "id": "slash-command-plugin-marketplace-update-failed-see-errors-short",
+      "description": "Suffix listing plugins that failed to update during a marketplace update, pointing at the Errors view (no debug-log overflow).",
+      "pieces": [
+        " (${",
+        "} — see Errors)"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_PLUGIN_MARKETPLACE_UPDATE_FAILED_SEE_ERRORS_SHORT_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Slash Command: /mcp enable|disable all — bulk result",
       "id": "slash-command-mcp-toggle-bulk-result",
       "description": "Conditional tail concatenated onto the same emitted string, reporting the count that could not be changed and pointing at /mcp to check.",
@@ -7884,6 +7900,22 @@
       "version": "2.1.239"
     },
     {
+      "name": "Cloud Session Bundle Notice: Settings Errors Clause",
+      "id": "data-cloud-session-bundle-notice-settings-errors-clause",
+      "description": "Parenthetical naming the settings files with errors, interpolated into the cloud-session bundle notice about unreadable Read rules.",
+      "pieces": [
+        " (errors in ${",
+        "})"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "DATA_CLOUD_SESSION_BUNDLE_NOTICE_SETTINGS_ERRORS_CLAUSE_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "File-state-current tool_result suffix",
       "id": "tool-result-file-state-current",
       "description": "Model-facing suffix appended to an Edit/Write tool_result block (mapToolResultToToolResultBlockParam) telling the model the file state is current so it need not re-read the file.",
@@ -8027,6 +8059,28 @@
       "version": "2.1.233"
     },
     {
+      "name": "Artifact permission: ownership unconfirmed suffix",
+      "id": "tool-permission-artifact-ownership-unconfirmed-suffix",
+      "description": "Suffix appended to artifact permission prompts when ownership could not be confirmed.",
+      "pieces": [
+        " (ownership unconfirmed)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
+      "name": "Artifact permission: ownership unconfirmed suffix",
+      "id": "tool-permission-artifact-ownership-unconfirmed-suffix",
+      "description": "Suffix appended to artifact permission prompts when ownership could not be confirmed.",
+      "pieces": [
+        " (ownership unconfirmed)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Result: Memory version token hint",
       "id": "tool-result-memory-version-token-hint",
       "description": "Suffix appended to the memory_read and memory_write success tool_results reminding the model to pass the printed version token as if_version.",
@@ -8136,6 +8190,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.276"
+    },
+    {
+      "name": "Tool Result: Artifact someone else's label",
+      "id": "tool-result-artifact-someone-elses-label",
+      "description": "Parenthetical ownership label for someone else's artifact.",
+      "pieces": [
+        " (someone else's)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Tool Result: Artifact files read — outside-writer untrusted trailer",
@@ -8571,6 +8636,22 @@
       "version": "2.1.277"
     },
     {
+      "name": "Tool Result: Artifact ask rule covers artifact reads suffix",
+      "id": "tool-result-artifact-ask-rule-covers-artifact-reads-suffix",
+      "description": "Suffix noting that the user's artifact-tool ask rule covers artifact reads.",
+      "pieces": [
+        " (your ${",
+        "} ask rule covers artifact reads)"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_ASK_RULE_COVERS_ARTIFACT_READS_SUFFIX_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Git bundle: home-is-checkout parenthetical",
       "id": "tool-result-git-bundle-home-is-checkout-parenthetical",
       "description": "Parenthetical naming the home directory as itself a git checkout",
@@ -8941,26 +9022,6 @@
         "1": "TOOL_RESULT_LOOP_PREARM_SEND_BEFORE_TOOL_CALL_VAR_1"
       },
       "version": "2.1.284"
-    },
-    {
-      "name": "Data: Cloud Session Notice Uncommitted Stay Local",
-      "id": "data-cloud-session-notice-uncommitted-stay-local",
-      "description": "Teleport git-source notice that uncommitted changes and unpushed commits stay on this machine unless the branch is pushed.",
-      "pieces": [
-        " ${",
-        ".aheadCount===0?\"Uncommitted changes\":",
-        ".aheadCount===1?\"That commit and any uncommitted changes\":`Those ${",
-        ".aheadCount} commits and any uncommitted changes`} stay on this machine; push the branch to start from it."
-      ],
-      "identifiers": [
-        0,
-        0,
-        0
-      ],
-      "identifierMap": {
-        "0": "DATA_CLOUD_SESSION_NOTICE_UNCOMMITTED_STAY_LOCAL_VAR_0"
-      },
-      "version": "2.1.268"
     },
     {
       "name": "Artifact share: existing editors note",
@@ -16051,6 +16112,25 @@
       "version": "2.1.277"
     },
     {
+      "name": "System Reminder: Tool hosts — default host, builds belong here",
+      "id": "system-reminder-tool-hosts-default-builds-belong-here",
+      "description": "Attached-machines line for the default host when its copy state is here/refreshed/unknown.",
+      "pieces": [
+        "- ${",
+        "()} (default): ${",
+        "}. Builds, installs, scratch work and anything long-running belong here."
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_REMINDER_TOOL_HOSTS_DEFAULT_BUILDS_BELONG_HERE_VAR_0",
+        "1": "SYSTEM_REMINDER_TOOL_HOSTS_DEFAULT_BUILDS_BELONG_HERE_VAR_1"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Hosts Notice: Local Side Is A Snapshot",
       "id": "system-reminder-tool-hosts-local-is-snapshot",
       "description": "Local-side bullet for off-sync: this session has at most a start-of-session snapshot; scratch work that needs no current files belongs here.",
@@ -16068,6 +16148,50 @@
         "1": "SYSTEM_REMINDER_TOOL_HOSTS_LOCAL_IS_SNAPSHOT_VAR_1"
       },
       "version": "2.1.246"
+    },
+    {
+      "name": "Tool Result: Artifact watch status — no live connection",
+      "id": "tool-result-artifact-watch-status-no-live-connection",
+      "description": "Watch-list row for an artifact with no live connection, naming its state.",
+      "pieces": [
+        "- ${",
+        "} — no live connection (state: ${",
+        "(",
+        ".state)})."
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_WATCH_STATUS_NO_LIVE_CONNECTION_VAR_0",
+        "1": "TOOL_RESULT_ARTIFACT_WATCH_STATUS_NO_LIVE_CONNECTION_VAR_1",
+        "2": "TOOL_RESULT_ARTIFACT_WATCH_STATUS_NO_LIVE_CONNECTION_VAR_2"
+      },
+      "version": "2.1.295"
+    },
+    {
+      "name": "Tool Result: Artifact durable wake — no subscription row",
+      "id": "tool-result-artifact-durable-wake-no-subscription-row",
+      "description": "Watch-list row for an artifact with no durable wake subscription, naming its state.",
+      "pieces": [
+        "- ${",
+        "} — no wake subscription (state: ${",
+        "(",
+        ".state)})."
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_DURABLE_WAKE_NO_SUBSCRIPTION_ROW_VAR_0",
+        "1": "TOOL_RESULT_ARTIFACT_DURABLE_WAKE_NO_SUBSCRIPTION_ROW_VAR_1",
+        "2": "TOOL_RESULT_ARTIFACT_DURABLE_WAKE_NO_SUBSCRIPTION_ROW_VAR_2"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Tool Result: Artifact Durable Wake Arming List Item",
@@ -16436,6 +16560,22 @@
         "2": "SYSTEM_PROMPT_UNTRUSTED_REPO_FILE_LAYOUT_GUARD_VAR_2"
       },
       "version": "2.1.205"
+    },
+    {
+      "name": "System Reminder: Tool hosts — session went to sleep",
+      "id": "system-reminder-tool-hosts-session-went-to-sleep",
+      "description": "Attached-machines line for an offline session host that went to sleep.",
+      "pieces": [
+        "- ${",
+        "}: went to sleep."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_REMINDER_TOOL_HOSTS_SESSION_WENT_TO_SLEEP_VAR_0"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "System Reminder: Attached machine return with unknown duration",
@@ -17276,6 +17416,27 @@
         "5": "SYSTEM_REMINDER_ARTIFACT_OPENING_NOT_SAVED_IN_ALL_VAR_5"
       },
       "version": "2.1.273"
+    },
+    {
+      "name": "Artifact opening: not-saved file count",
+      "id": "system-reminder-artifact-opening-not-saved-count",
+      "description": "Reminder line counting files not saved for one reason when no names are listed.",
+      "pieces": [
+        "- not saved (${",
+        "}): ${",
+        ".length} ${",
+        ".length===1?\"file\":\"files\"}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        1
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_REMINDER_ARTIFACT_OPENING_NOT_SAVED_COUNT_VAR_0",
+        "1": "SYSTEM_REMINDER_ARTIFACT_OPENING_NOT_SAVED_COUNT_VAR_1"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Tool Result: MCP Output Saved — JSON Is a Single Line",
@@ -18721,6 +18882,17 @@
       "version": "2.1.284"
     },
     {
+      "name": "Tool Result: Artifact copy source — yours label",
+      "id": "tool-result-artifact-copy-source-yours-label",
+      "description": "Label for a copy source that is one of the user's own artifacts.",
+      "pieces": [
+        ", one of your artifacts"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool result: artifact copy source yours co-written label",
       "id": "tool-result-artifact-copy-source-yours-cowritten-label",
       "description": "Ownership label for a copy-source artifact that is the user's but also published to by someone else, used in the artifact publish consent ask.",
@@ -18945,6 +19117,17 @@
       "version": "2.1.206"
     },
     {
+      "name": "Tool Result: Artifact copy source — someone else's label",
+      "id": "tool-result-artifact-copy-source-someone-elses-label",
+      "description": "Label for a copy source that is someone else's artifact.",
+      "pieces": [
+        ", someone else's artifact"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "WebFetch overflow summary appended",
       "id": "tool-result-webfetch-overflow-summary-appended",
       "description": "Size-line suffix saying a model-extracted summary of the rest follows.",
@@ -18976,6 +19159,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.285"
+    },
+    {
+      "name": "Tool Result: Artifact copy source — owner unconfirmed label",
+      "id": "tool-result-artifact-copy-source-owner-unconfirmed-label",
+      "description": "Label for a copy source whose owner couldn't be confirmed.",
+      "pieces": [
+        ", whose owner couldn't be confirmed"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Artifact watch row — unread comment counts",
@@ -20219,6 +20413,22 @@
       "version": "2.1.284"
     },
     {
+      "name": "Tool unavailable: call replacement tool",
+      "id": "tool-result-tool-unavailable-call-replacement",
+      "description": "Suffix on the no-such-tool error pointing to the replacement tool when it is already loaded.",
+      "pieces": [
+        ". Call ${",
+        ".name} instead."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_TOOL_UNAVAILABLE_CALL_REPLACEMENT_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Computer-use Launched Background List Windows",
       "id": "tool-result-computer-use-launched-background-list-windows",
       "description": "Background launch success suffix when firstWindowId is not yet available.",
@@ -20298,6 +20508,22 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.267"
+    },
+    {
+      "name": "Tool unavailable: MCP server switched off",
+      "id": "tool-result-tool-unavailable-mcp-switched-off",
+      "description": "Suffix on the no-such-tool error when the tool's MCP server has been switched off.",
+      "pieces": [
+        ". Its MCP server '${",
+        ".serverName}' has been switched off. Continue without this tool."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_TOOL_UNAVAILABLE_MCP_SWITCHED_OFF_VAR_0"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Tool Description: MCP server disconnected",
@@ -23643,6 +23869,22 @@
       "version": "2.1.206"
     },
     {
+      "name": "System Reminder: Project memory index empty",
+      "id": "system-reminder-project-memory-index-empty",
+      "description": "Note that a connected project memory store's index is currently empty.",
+      "pieces": [
+        "(${",
+        "} is currently empty.)"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_REMINDER_PROJECT_MEMORY_INDEX_EMPTY_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Result: Routine Run Log Non-Transcript Events Skipped",
       "id": "tool-result-routine-run-log-nontranscript-events-skipped",
       "description": "Returned to the model in a routine run log summary when non-transcript events on the page are omitted.",
@@ -24210,6 +24452,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.273"
+    },
+    {
+      "name": "Data: Appifact REPL no artifact bound (short)",
+      "id": "data-appifact-repl-no-artifact-bound-short",
+      "description": "Auto-classifier/tool-use label when no artifact is bound and no code is given.",
+      "pieces": [
+        "(no artifact bound)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Tool Result: Empty output placeholder",
@@ -25748,6 +26001,17 @@
       "version": "2.1.246"
     },
     {
+      "name": "PR test plan placeholder (checklist)",
+      "id": "system-prompt-pr-test-plan-checklist-placeholder",
+      "description": "PR body test-plan placeholder in the legacy checklist style.",
+      "pieces": [
+        "[Bulleted markdown checklist of TODOs for testing the pull request...]"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool result: Claude Design result truncated",
       "id": "tool-result-claude-design-truncated",
       "description": "Model-facing tool_result text block appended by kBm when ClaudeDesign result blocks exceed the aggregate char cap and are omitted.",
@@ -26328,6 +26592,22 @@
       "version": "2.1.280"
     },
     {
+      "name": "Tool Result: Remote tool — not re-run",
+      "id": "tool-result-remote-tool-not-rerun-duplicate",
+      "description": "Bracketed outcome for a duplicate remote call that was not re-run.",
+      "pieces": [
+        "[not re-run on ${",
+        "}]"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_REMOTE_TOOL_NOT_RERUN_DUPLICATE_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Memory Server Truncated Reread Note",
       "id": "tool-result-memory-server-truncated-reread",
       "description": "Note appended to a truncated memory-server tool result telling the model the file content is incomplete and to call memory_read before rewriting it.",
@@ -26382,6 +26662,70 @@
       ],
       "identifiers": [],
       "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
+      "name": "Tool Result: Remote tool — permission ask expired",
+      "id": "tool-result-remote-tool-permission-ask-expired-not-run",
+      "description": "Bracketed outcome for a remote call whose permission ask ended unanswered.",
+      "pieces": [
+        "[permission ask for ${",
+        "} ended unanswered — not run]"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_REMOTE_TOOL_PERMISSION_ASK_EXPIRED_NOT_RUN_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
+      "name": "Tool Result: Remote tool — refused, not run",
+      "id": "tool-result-remote-tool-refused-not-run",
+      "description": "Bracketed outcome for a remote call refused on the host.",
+      "pieces": [
+        "[refused on ${",
+        "} — not run]"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_REMOTE_TOOL_REFUSED_NOT_RUN_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
+      "name": "Tool Result: Remote tool — refused, not run",
+      "id": "tool-result-remote-tool-refused-not-run",
+      "description": "Bracketed outcome for a remote call refused on the host.",
+      "pieces": [
+        "[refused on ${",
+        "} — not run]"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_REMOTE_TOOL_REFUSED_NOT_RUN_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
+      "name": "Tool Result: Remote tool — rejected, not run",
+      "id": "tool-result-remote-tool-rejected-not-run",
+      "description": "Bracketed outcome for a remote call rejected by validation on the host.",
+      "pieces": [
+        "[rejected on ${",
+        "} — not run]"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_REMOTE_TOOL_REJECTED_NOT_RUN_VAR_0"
+      },
       "version": "2.1.295"
     },
     {
@@ -27151,6 +27495,22 @@
         "0": "TOOL_RESULT_ARTIFACT_VERSION_PUBLISHED_AFTER_HELD_VAR_0"
       },
       "version": "2.1.274"
+    },
+    {
+      "name": "Tool Result: Remote tool — waiting on permission",
+      "id": "tool-result-remote-tool-waiting-permission-not-run",
+      "description": "Bracketed outcome for a remote call still waiting on a permission decision.",
+      "pieces": [
+        "[waiting on a permission decision for ${",
+        "} — not run]"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_REMOTE_TOOL_WAITING_PERMISSION_NOT_RUN_VAR_0"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Agent Prompt: Workflow Harness Assistant Context Lead",
@@ -36099,6 +36459,17 @@
       "version": "2.1.206"
     },
     {
+      "name": "PR summary placeholder (bullets)",
+      "id": "system-prompt-pr-summary-bullets-placeholder",
+      "description": "PR body summary placeholder in the legacy bullet style.",
+      "pieces": [
+        "<1-3 bullet points>"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Data: Bash output unavailable",
       "id": "data-bash-output-unavailable",
       "description": "Bash tool_result stdout substitute when the output file could not be read.",
@@ -37837,6 +38208,22 @@
       "version": "2.1.292"
     },
     {
+      "name": "Worktree submodule: unconfigured gitlink",
+      "id": "tool-result-worktree-submodule-unconfigured-gitlink",
+      "description": "Reason a worktree's submodule work cannot be checked: nested repo recorded in the index but not configured.",
+      "pieces": [
+        "${",
+        "??\"a directory\"} is a nested repository recorded in the index but not a configured submodule"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_WORKTREE_SUBMODULE_UNCONFIGURED_GITLINK_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Result: Worktree Submodule Nested Repository",
       "id": "tool-result-worktree-submodule-nested-repository",
       "description": "ExitWorktree refusal clause when a nested git repository inside the worktree, not a submodule checkout, makes submodule work unverifiable.",
@@ -37851,6 +38238,80 @@
         "0": "TOOL_RESULT_WORKTREE_SUBMODULE_NESTED_REPOSITORY_VAR_0"
       },
       "version": "2.1.274"
+    },
+    {
+      "name": "Tool Result: Start task input — wrong type",
+      "id": "tool-result-start-task-input-wrong-type",
+      "description": "Input validation error for a value of the wrong type.",
+      "pieces": [
+        "${",
+        "??\"the arguments\"} must be ${",
+        ".map((",
+        ")=>",
+        "[String(O)]??",
+        "(",
+        ")).join(\" or \")}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_START_TASK_INPUT_WRONG_TYPE_VAR_0",
+        "1": "TOOL_RESULT_START_TASK_INPUT_WRONG_TYPE_VAR_1",
+        "2": "TOOL_RESULT_START_TASK_INPUT_WRONG_TYPE_VAR_2",
+        "3": "TOOL_RESULT_START_TASK_INPUT_WRONG_TYPE_VAR_3",
+        "4": "TOOL_RESULT_START_TASK_INPUT_WRONG_TYPE_VAR_4"
+      },
+      "version": "2.1.295"
+    },
+    {
+      "name": "Tool Result: Start task input — min length",
+      "id": "tool-result-start-task-input-min-length",
+      "description": "Input validation error for a string shorter than the minimum.",
+      "pieces": [
+        "${",
+        "??\"the arguments\"} must be at least ${",
+        "(",
+        ".limit)} characters"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_START_TASK_INPUT_MIN_LENGTH_VAR_0",
+        "1": "TOOL_RESULT_START_TASK_INPUT_MIN_LENGTH_VAR_1",
+        "2": "TOOL_RESULT_START_TASK_INPUT_MIN_LENGTH_VAR_2"
+      },
+      "version": "2.1.295"
+    },
+    {
+      "name": "Tool Result: Start task input — max length",
+      "id": "tool-result-start-task-input-max-length",
+      "description": "Input validation error for a string longer than the maximum.",
+      "pieces": [
+        "${",
+        "??\"the arguments\"} must be at most ${",
+        "(",
+        ".limit)} characters"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_START_TASK_INPUT_MAX_LENGTH_VAR_0",
+        "1": "TOOL_RESULT_START_TASK_INPUT_MAX_LENGTH_VAR_1",
+        "2": "TOOL_RESULT_START_TASK_INPUT_MAX_LENGTH_VAR_2"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Start task invalid enum argument",
@@ -37878,6 +38339,44 @@
         "3": "TOOL_RESULT_START_TASK_INPUT_ENUM_INVALID_VAR_3"
       },
       "version": "2.1.294"
+    },
+    {
+      "name": "Tool Result: Start task input — max items",
+      "id": "tool-result-start-task-input-max-items",
+      "description": "Input validation error for too many array entries.",
+      "pieces": [
+        "${",
+        "??\"the arguments\"} must have at most ${",
+        "(",
+        ".limit)} entries"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_START_TASK_INPUT_MAX_ITEMS_VAR_0",
+        "1": "TOOL_RESULT_START_TASK_INPUT_MAX_ITEMS_VAR_1",
+        "2": "TOOL_RESULT_START_TASK_INPUT_MAX_ITEMS_VAR_2"
+      },
+      "version": "2.1.295"
+    },
+    {
+      "name": "Tool Result: Start task input — must not be empty",
+      "id": "tool-result-start-task-input-must-not-be-empty",
+      "description": "Input validation error for an empty string.",
+      "pieces": [
+        "${",
+        "??\"the arguments\"} must not be empty"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_START_TASK_INPUT_MUST_NOT_BE_EMPTY_VAR_0"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "System Reminder: Session context",
@@ -39947,6 +40446,44 @@
         "3": "TOOL_RESULT_ARTIFACT_LIST_TYPE_NAME_AMBIGUOUS_VAR_3"
       },
       "version": "2.1.257"
+    },
+    {
+      "name": "Cloud Session Bundle Notice: Missing Tracked Files",
+      "id": "data-cloud-session-bundle-notice-deleted-tracked-files",
+      "description": "Notice that tracked files missing on disk were uploaded as deleted in the cloud-session bundle; part of the /ultrareview branch launch text the model reads.",
+      "pieces": [
+        "${",
+        ".length} tracked ${",
+        "(",
+        ".length,\"file\")} ${",
+        "(",
+        ".length,\"was\",\"were\")} missing when read and ${",
+        "(",
+        ".length,\"is\",\"are\")} uploaded as deleted (${",
+        "(",
+        ",3)}) — if a build was rewriting ${",
+        "(",
+        ".length,\"it\",\"them\")} just then, start the session again once it settles."
+      ],
+      "identifiers": [
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        2,
+        0,
+        1,
+        0
+      ],
+      "identifierMap": {
+        "0": "DATA_CLOUD_SESSION_BUNDLE_NOTICE_DELETED_TRACKED_FILES_VAR_0",
+        "1": "DATA_CLOUD_SESSION_BUNDLE_NOTICE_DELETED_TRACKED_FILES_VAR_1",
+        "2": "DATA_CLOUD_SESSION_BUNDLE_NOTICE_DELETED_TRACKED_FILES_VAR_2"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Artifact Preview Report Summary Line",
@@ -44082,6 +44619,22 @@
       "version": "2.1.224"
     },
     {
+      "name": "/fast: unavailable reason (model not allowed by org)",
+      "id": "slash-command-fast-mode-unavailable-model-not-allowed",
+      "description": "Fast-mode unavailability reason when the fast-mode model is not in the organization's allowed models.",
+      "pieces": [
+        "${",
+        "()} is not in your organization's allowed models"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_FAST_MODE_UNAVAILABLE_MODEL_NOT_ALLOWED_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Result: Built-in gh host not served",
       "id": "tool-result-bash-builtin-gh-host-not-served",
       "description": "Refusal saying the named host is not served: the built-in gh reaches only the listed hosts through the session's GitHub proxy, fixed at session start.",
@@ -44865,22 +45418,6 @@
         "0": "DATA_SETTINGS_VALIDATION_FAIL_CLOSED_FALLBACK_SOURCE_NOTE_VAR_0"
       },
       "version": "2.1.295"
-    },
-    {
-      "name": "Tool Result: Cloud session starts empty notice",
-      "id": "tool-result-cloud-session-starts-empty-notice",
-      "description": "Notice that the cloud session starts empty because the folder is not a git repository, its trust is unconfirmed or no GitHub repository was found",
-      "pieces": [
-        "${{no_git:\"This folder is not a git repository, so\",trust_unconfirmed:\"This folder's trust has not been confirmed, so its git remote was not read and\",no_github_repository:\"No GitHub repository was found for this folder, so\"}[",
-        "]} the cloud session starts empty: nothing from this folder is copied into it."
-      ],
-      "identifiers": [
-        0
-      ],
-      "identifierMap": {
-        "0": "TOOL_RESULT_CLOUD_SESSION_STARTS_EMPTY_NOTICE_VAR_0"
-      },
-      "version": "2.1.294"
     },
     {
       "name": "Artifact capability roster unfetched",
@@ -47743,6 +48280,50 @@
       "version": "2.1.246"
     },
     {
+      "name": "Plugin install: invalid version requirement",
+      "id": "slash-command-plugin-install-version-invalid-requirement",
+      "description": "Plugin install failure when one of the version requirements is invalid.",
+      "pieces": [
+        "${",
+        "} ${",
+        "} has an invalid version requirement among: ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_PLUGIN_INSTALL_VERSION_INVALID_REQUIREMENT_VAR_0",
+        "1": "SLASH_COMMAND_PLUGIN_INSTALL_VERSION_INVALID_REQUIREMENT_VAR_1",
+        "2": "SLASH_COMMAND_PLUGIN_INSTALL_VERSION_INVALID_REQUIREMENT_VAR_2"
+      },
+      "version": "2.1.295"
+    },
+    {
+      "name": "Plugin install: conflicting version requirements",
+      "id": "slash-command-plugin-install-version-conflicting",
+      "description": "Plugin install failure when no version satisfies all of a dependency's ranges.",
+      "pieces": [
+        "${",
+        "} ${",
+        "} has conflicting version requirements (no version satisfies all of: ${",
+        "})"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_PLUGIN_INSTALL_VERSION_CONFLICTING_VAR_0",
+        "1": "SLASH_COMMAND_PLUGIN_INSTALL_VERSION_CONFLICTING_VAR_1",
+        "2": "SLASH_COMMAND_PLUGIN_INSTALL_VERSION_CONFLICTING_VAR_2"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Plugin install: version ranges too complex",
       "id": "slash-command-plugin-install-version-too-complex",
       "description": "eZt() 'too-complex' branch, consumed by the plugin range-conflict {success:!1,error:eZt(...)} result.",
@@ -47909,6 +48490,27 @@
         "2": "TOOL_RESULT_ARTIFACT_FILE_NOT_FOUND_MARKDOWN_SIBLING_VAR_2"
       },
       "version": "2.1.291"
+    },
+    {
+      "name": "Skill permission rule: boundary add rule",
+      "id": "tool-result-skill-permission-rule-boundary-add-rule",
+      "description": "Skill permission ask suffix suggesting adding Skill(<name>) to allow without asking.",
+      "pieces": [
+        "${",
+        "} Add Skill(${",
+        "}) to allow ${",
+        "} without asking."
+      ],
+      "identifiers": [
+        0,
+        1,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_SKILL_PERMISSION_RULE_BOUNDARY_ADD_RULE_VAR_0",
+        "1": "TOOL_RESULT_SKILL_PERMISSION_RULE_BOUNDARY_ADD_RULE_VAR_1"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Tool Result: Artifact DB Batch Duplicate Document",
@@ -48185,6 +48787,22 @@
         "0": "TOOL_RESULT_REMOTE_HOST_UNREADABLE_RESULT_FORMAT_VAR_0"
       },
       "version": "2.1.246"
+    },
+    {
+      "name": "Tool Result: Remote host — call already in progress",
+      "id": "tool-result-remote-host-call-already-in-progress",
+      "description": "Clause saying the host reported the call already under way from an earlier attempt.",
+      "pieces": [
+        "${",
+        "} answered that this call was already under way there from an earlier attempt"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_REMOTE_HOST_CALL_ALREADY_IN_PROGRESS_VAR_0"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Remote answer not returned (generic)",
@@ -49179,6 +49797,22 @@
         "2": "TOOL_RESULT_JSON_SCHEMA_ENUM_TYPE_MISMATCH_VAR_2"
       },
       "version": "2.1.261"
+    },
+    {
+      "name": "Tool Result: Remote host — call timed out",
+      "id": "tool-result-remote-host-call-timed-out",
+      "description": "Clause saying the host did not answer within the session's time limit.",
+      "pieces": [
+        "${",
+        "} did not answer this call within this session's time limit"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_REMOTE_HOST_CALL_TIMED_OUT_VAR_0"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Tool Result: Remote Tool Timed Out Withdrawn",
@@ -50176,6 +50810,31 @@
         "2": "SLASH_COMMAND_ULTRAREVIEW_EMPTY_DIFF_NO_COMMITS_BEYOND_BASE_VAR_2"
       },
       "version": "2.1.277"
+    },
+    {
+      "name": "Tool Result: Start task input — has no field",
+      "id": "tool-result-start-task-input-has-no-field",
+      "description": "Input validation error for an unknown field.",
+      "pieces": [
+        "${",
+        "} has no field ${",
+        "(",
+        "(",
+        ".additionalProperty))}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_START_TASK_INPUT_HAS_NO_FIELD_VAR_0",
+        "1": "TOOL_RESULT_START_TASK_INPUT_HAS_NO_FIELD_VAR_1",
+        "2": "TOOL_RESULT_START_TASK_INPUT_HAS_NO_FIELD_VAR_2",
+        "3": "TOOL_RESULT_START_TASK_INPUT_HAS_NO_FIELD_VAR_3"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "System Reminder: File modified by user or linter",
@@ -52314,6 +52973,28 @@
       "version": "2.1.281"
     },
     {
+      "name": "Tool Result: Start task input — needs field",
+      "id": "tool-result-start-task-input-needs-field",
+      "description": "Input validation error for a missing nested field.",
+      "pieces": [
+        "${",
+        "} needs the field ${",
+        "(",
+        ")}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_START_TASK_INPUT_NEEDS_FIELD_VAR_0",
+        "1": "TOOL_RESULT_START_TASK_INPUT_NEEDS_FIELD_VAR_1",
+        "2": "TOOL_RESULT_START_TASK_INPUT_NEEDS_FIELD_VAR_2"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Permission request record evicted",
       "id": "tool-result-remote-tool-approval-record-evicted",
       "description": "Tells the model the target no longer holds a record of this permission request, so nothing ran under it.",
@@ -52397,6 +53078,22 @@
       "version": "2.1.265"
     },
     {
+      "name": "Artifact read provenance: shared by another person",
+      "id": "tool-result-artifact-read-provenance-shared-by-person",
+      "description": "Provenance lead for content of an artifact another person shared with the user.",
+      "pieces": [
+        "${",
+        "} of an artifact another person shared with the user"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_READ_PROVENANCE_SHARED_BY_PERSON_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Artifact Read Provenance Agent Scoped Edited",
       "id": "tool-result-artifact-read-provenance-agent-scoped-edited",
       "description": "Provenance arm for an agent-scoped artifact that others with access to that agent may have edited.",
@@ -52411,6 +53108,22 @@
         "0": "TOOL_RESULT_ARTIFACT_READ_PROVENANCE_AGENT_SCOPED_EDITED_VAR_0"
       },
       "version": "2.1.265"
+    },
+    {
+      "name": "Artifact read provenance: shared from another organization",
+      "id": "tool-result-artifact-read-provenance-other-org-shared",
+      "description": "Provenance lead for content of an artifact shared by someone in another organization.",
+      "pieces": [
+        "${",
+        "} of an artifact that someone in another organization shared with the user — its author is outside the user's organization"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_READ_PROVENANCE_OTHER_ORG_SHARED_VAR_0"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Artifact Type File Withheld",
@@ -52499,6 +53212,32 @@
         "2": "TOOL_RESULT_ARTIFACT_TYPE_FILE_UNAVAILABLE_VAR_2"
       },
       "version": "2.1.276"
+    },
+    {
+      "name": "Artifact read provenance: user's own artifact",
+      "id": "tool-result-artifact-read-provenance-own-artifact",
+      "description": "Provenance lead for content of the user's own artifact naming who else may have written it.",
+      "pieces": [
+        "${",
+        "} of the user's own artifact that ${",
+        ".typeLocked?`its Artifact type's publisher${",
+        "?\" or a writer outside the user's organization\":",
+        ".cowritten?\" or another writer\":\"\"}`:",
+        "?\"a writer outside the user's organization\":\"another writer of the artifact\"} may have written"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_READ_PROVENANCE_OWN_ARTIFACT_VAR_0",
+        "1": "TOOL_RESULT_ARTIFACT_READ_PROVENANCE_OWN_ARTIFACT_VAR_1",
+        "2": "TOOL_RESULT_ARTIFACT_READ_PROVENANCE_OWN_ARTIFACT_VAR_2"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Plugin Validate: Non-Streaming Hook Is An Async Generator",
@@ -52676,6 +53415,22 @@
       "version": "2.1.268"
     },
     {
+      "name": "Bash dangerous op: bind positional (reason)",
+      "id": "tool-result-bash-dangerous-op-unset-var-bind-positional-reason-suggestion",
+      "description": "Short reason-form suggestion to bind the positional or use a literal path.",
+      "pieces": [
+        "${",
+        "} or use a literal path"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_BASH_DANGEROUS_OP_UNSET_VAR_BIND_POSITIONAL_REASON_SUGGESTION_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Description: Claude In Chrome File Upload Session Readable",
       "id": "tool-description-claude-in-chrome-file-upload-session-readable",
       "description": "file_upload tool description for the client-populated files schema, allowing any path this session can read.",
@@ -52813,6 +53568,38 @@
         "1": "TOOL_RESULT_REMOTE_TOOL_TARGET_NOT_ACCEPTING_CLOUD_SESSION_CALLS_VAR_1"
       },
       "version": "2.1.284"
+    },
+    {
+      "name": "Tool Result: Device tool serve refused — no session",
+      "id": "tool-result-device-tool-serve-refused-no-session",
+      "description": "Refusal for a device tool call when there is no server-asserted session.",
+      "pieces": [
+        "${",
+        "} refused: no server-asserted session."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_DEVICE_TOOL_SERVE_REFUSED_NO_SESSION_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
+      "name": "Tool Result: Device tool serve refused — no session",
+      "id": "tool-result-device-tool-serve-refused-no-session",
+      "description": "Refusal for a device tool call when there is no server-asserted session.",
+      "pieces": [
+        "${",
+        "} refused: no server-asserted session."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_DEVICE_TOOL_SERVE_REFUSED_NO_SESSION_VAR_0"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Tool Result: device tools refused, sandbox unsupported on this platform",
@@ -53738,6 +54525,22 @@
       "version": "2.1.288"
     },
     {
+      "name": "/autocompact: set to auto",
+      "id": "slash-command-autocompact-set-auto-confirmation",
+      "description": "Confirmation that the autocompact window setting was set to auto.",
+      "pieces": [
+        "${",
+        "} set to auto"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_AUTOCOMPACT_SET_AUTO_CONFIRMATION_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Slash Command: /autocompact — auto set but overridden",
       "id": "slash-command-autocompact-auto-overridden-by-higher-priority",
       "description": "Reports that the auto-compact window was set to auto in settings but a higher-priority override is still in effect, with its token size.",
@@ -54119,6 +54922,28 @@
       "version": "2.1.280"
     },
     {
+      "name": "System Reminder: Tool hosts correction — failed with code",
+      "id": "system-reminder-tool-hosts-correction-failed-code",
+      "description": "Correction note that the machine now reports the call failed, with the code's meaning.",
+      "pieces": [
+        "${",
+        "} That machine now reports ${",
+        "[r.code]} — ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_REMINDER_TOOL_HOSTS_CORRECTION_FAILED_CODE_VAR_0",
+        "1": "SYSTEM_REMINDER_TOOL_HOSTS_CORRECTION_FAILED_CODE_VAR_1",
+        "2": "SYSTEM_REMINDER_TOOL_HOSTS_CORRECTION_FAILED_CODE_VAR_2"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Hosts Correction: Did Not Run",
       "id": "system-reminder-tool-hosts-correction-did-not-run",
       "description": "Late correction that the machine reports the call did not run, quoting the disposition or refusal reason.",
@@ -54432,6 +55257,22 @@
       "version": "2.1.274"
     },
     {
+      "name": "Tool Result: Artifact read URL fallback instruction",
+      "id": "tool-result-artifact-read-url-fallback-instruction",
+      "description": "Fallback instruction to read the artifact url with another tool when the artifact tool is unavailable.",
+      "pieces": [
+        "${",
+        "} the url"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_READ_URL_FALLBACK_INSTRUCTION_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Description: SearchPlugins Upfront Prompt",
       "id": "tool-description-searchplugins-upfront",
       "description": "Upfront SearchPlugins tool prompt telling the model to search the org plugin catalog when a task depends on team process or data that nothing already loaded covers.",
@@ -54719,6 +55560,41 @@
       "version": "2.1.284"
     },
     {
+      "name": "Settings: deniedModels version-only suggestion",
+      "id": "data-settings-denied-models-version-only-suggestion",
+      "description": "deniedModels warning suggesting the claude-<family>-<major>-0 spelling to block only one version instead of the whole major line.",
+      "pieces": [
+        "${",
+        "} To block only version ${",
+        "}, write \"claude-${",
+        "}-${",
+        "}-0\"; \"claude-${",
+        "}-${",
+        "}\" blocks every ${",
+        "(",
+        ")} ${",
+        "}.x model."
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        1,
+        2,
+        1,
+        3,
+        2,
+        1
+      ],
+      "identifierMap": {
+        "0": "DATA_SETTINGS_DENIED_MODELS_VERSION_ONLY_SUGGESTION_VAR_0",
+        "1": "DATA_SETTINGS_DENIED_MODELS_VERSION_ONLY_SUGGESTION_VAR_1",
+        "2": "DATA_SETTINGS_DENIED_MODELS_VERSION_ONLY_SUGGESTION_VAR_2",
+        "3": "DATA_SETTINGS_DENIED_MODELS_VERSION_ONLY_SUGGESTION_VAR_3"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Slash Command: Plugin Install Folder Held Uninstall First",
       "id": "slash-command-plugin-install-folder-held-uninstall-first",
       "description": "Tail of the plugin-folder-held refusal telling the user to first uninstall each holding plugin before installing.",
@@ -54941,6 +55817,25 @@
         "5": "TOOL_RESULT_REMOTE_HOST_PATH_SPELLING_UNMATCHABLE_VAR_5"
       },
       "version": "2.1.281"
+    },
+    {
+      "name": "Artifact read permission ask: made by someone else",
+      "id": "tool-result-artifact-read-someone-else-permission-ask",
+      "description": "Permission ask asking the user whether Claude may read an artifact made by someone else.",
+      "pieces": [
+        "${",
+        "} was made by someone else. ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_READ_SOMEONE_ELSE_PERMISSION_ASK_VAR_0",
+        "1": "TOOL_RESULT_ARTIFACT_READ_SOMEONE_ELSE_PERMISSION_ASK_VAR_1"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Artifact Public-Change Someone-Else Permission Ask",
@@ -57620,6 +58515,27 @@
       "version": "2.1.234"
     },
     {
+      "name": "Artifact asset: rate limited",
+      "id": "tool-result-artifact-asset-rate-limited",
+      "description": "Asset operation error telling the model it is calling too often and must not loop.",
+      "pieces": [
+        "${",
+        "}: calling too often — wait${",
+        "?` ${",
+        "}`:\"\"} before retrying, and never loop"
+      ],
+      "identifiers": [
+        0,
+        1,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_ASSET_RATE_LIMITED_VAR_0",
+        "1": "TOOL_RESULT_ARTIFACT_ASSET_RATE_LIMITED_VAR_1"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Artifact Org Policy Unreadable Reply",
       "id": "tool-result-artifact-org-policy-unreadable-reply",
       "description": "Artifact tool error telling the model the org-policy reply could not be parsed, usually because a proxy or filter answered instead.",
@@ -58751,6 +59667,39 @@
       "version": "2.1.285"
     },
     {
+      "name": "Artifact read: write it with",
+      "id": "tool-result-artifact-read-write-it-with",
+      "description": "Store-fill guidance telling the model which call writes the artifact's store.",
+      "pieces": [
+        "${",
+        "}: write it ${",
+        "===\"write_db\"?",
+        ":",
+        "(",
+        ",",
+        ")} — ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3,
+        1,
+        4,
+        5
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_READ_WRITE_IT_WITH_VAR_0",
+        "1": "TOOL_RESULT_ARTIFACT_READ_WRITE_IT_WITH_VAR_1",
+        "2": "TOOL_RESULT_ARTIFACT_READ_WRITE_IT_WITH_VAR_2",
+        "3": "TOOL_RESULT_ARTIFACT_READ_WRITE_IT_WITH_VAR_3",
+        "4": "TOOL_RESULT_ARTIFACT_READ_WRITE_IT_WITH_VAR_4",
+        "5": "TOOL_RESULT_ARTIFACT_READ_WRITE_IT_WITH_VAR_5"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Result: Artifact Db Batch Write Missing If-Version",
       "id": "tool-result-artifact-db-batch-write-missing-if-version",
       "description": "Atomic batch write_db error when an unpinned entry targets an existing document, so the whole batch wrote nothing and those entries must be re-read and pinned.",
@@ -59524,6 +60473,22 @@
         "0": "AGENT_PROMPT_CONVERSATION_SUMMARY_ANALYSIS_SUMMARY_BLOCKS_VAR_0"
       },
       "version": "2.1.291"
+    },
+    {
+      "name": "Tool Result: Couldn't read artifact before publish — try again",
+      "id": "tool-result-artifact-couldnt-read-before-publish-try-again",
+      "description": "Suffix telling the model to try again after a transient pre-publish read failure.",
+      "pieces": [
+        "${",
+        "}. Try again."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_COULDNT_READ_BEFORE_PUBLISH_TRY_AGAIN_VAR_0"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Design arg not scalar",
@@ -61809,64 +62774,6 @@
       "version": "2.1.288"
     },
     {
-      "name": "Data: Cloud Session Notice Unrelated History",
-      "id": "data-cloud-session-notice-unrelated-history",
-      "description": "Notice that a detached HEAD or local branch shares no history with the last-fetched remote, so the cloud session starts from the remote default instead.",
-      "pieces": [
-        "${",
-        "===\"HEAD\"?\"This detached HEAD\":`Branch ${",
-        "(",
-        ")}`} shares no history with ${",
-        "?.",
-        "??\"the remote\"} as last fetched here, so the cloud session starts from ${",
-        "} instead; commits and changes that exist only on this machine are not in it."
-      ],
-      "identifiers": [
-        0,
-        1,
-        0,
-        2,
-        3,
-        4
-      ],
-      "identifierMap": {
-        "0": "DATA_CLOUD_SESSION_NOTICE_UNRELATED_HISTORY_VAR_0",
-        "1": "DATA_CLOUD_SESSION_NOTICE_UNRELATED_HISTORY_VAR_1",
-        "2": "DATA_CLOUD_SESSION_NOTICE_UNRELATED_HISTORY_VAR_2",
-        "3": "DATA_CLOUD_SESSION_NOTICE_UNRELATED_HISTORY_VAR_3",
-        "4": "DATA_CLOUD_SESSION_NOTICE_UNRELATED_HISTORY_VAR_4"
-      },
-      "version": "2.1.268"
-    },
-    {
-      "name": "Data: Cloud session unverified remote branch push notice",
-      "id": "data-cloud-session-unverified-remote-branch-push-notice",
-      "description": "Notice shown when no remote of the checkout could be read, so it could not be checked whether the current branch or detached HEAD commit exists on the remote host, telling the user to push their work to a branch and start a new cloud session from it",
-      "pieces": [
-        "${",
-        "===\"HEAD\"?`This checkout is on a detached HEAD, and no remote of it could be read, so its commit could not be looked for on ${",
-        "}. The cloud session was asked to start from HEAD as ${",
-        "} has it, its default branch. To start from your work, push it`:`Whether branch ${",
-        "(",
-        ")} is on ${",
-        "} could not be checked, because no remote of this checkout could be read. The cloud session was asked to start from it by name. If it is not there, push your work`} to a branch and start a new session from that branch."
-      ],
-      "identifiers": [
-        0,
-        1,
-        1,
-        2,
-        0,
-        1
-      ],
-      "identifierMap": {
-        "0": "CURRENT_BRANCH_NAME",
-        "1": "REMOTE_HOST_NAME",
-        "2": "SANITIZE_BRANCH_NAME_FN"
-      },
-      "version": "2.1.285"
-    },
-    {
       "name": "Tool Result: Memory Write Outside Memory Dir Reason",
       "id": "tool-result-memory-write-outside-memory-dir-reason",
       "description": "checkPermissions safetyCheck reason for a personal memory save outside the unattended memory directory.",
@@ -62926,6 +63833,17 @@
       "version": "2.1.232"
     },
     {
+      "name": "Tool Result: Send message — cloud session label",
+      "id": "tool-result-send-message-cloud-session-label",
+      "description": "Label describing a recipient as a Claude session running in the cloud.",
+      "pieces": [
+        "a Claude session running in the cloud"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Schedule Note: Connectors Still Connecting",
       "id": "slash-command-schedule-note-connectors-still-connecting",
       "description": "Setup-note that a claude.ai connector exists but is not connected in this session and remains available to routines.",
@@ -63920,6 +64838,44 @@
       "version": "2.1.224"
     },
     {
+      "name": "Artifact comment notification: one comment waiting",
+      "id": "data-task-notification-artifact-comment-waiting",
+      "description": "Opening line telling an agent a human comment sent to Claude waits on an artifact thread.",
+      "pieces": [
+        "A human comment sent to Claude is waiting on thread ${",
+        "} of artifact ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "DATA_TASK_NOTIFICATION_ARTIFACT_COMMENT_WAITING_VAR_0",
+        "1": "DATA_TASK_NOTIFICATION_ARTIFACT_COMMENT_WAITING_VAR_1"
+      },
+      "version": "2.1.295"
+    },
+    {
+      "name": "Artifact comment notification: one comment waiting",
+      "id": "data-task-notification-artifact-comment-waiting",
+      "description": "Opening line telling an agent a human comment sent to Claude waits on an artifact thread.",
+      "pieces": [
+        "A human comment sent to Claude is waiting on thread ${",
+        "} of artifact ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "DATA_TASK_NOTIFICATION_ARTIFACT_COMMENT_WAITING_VAR_0",
+        "1": "DATA_TASK_NOTIFICATION_ARTIFACT_COMMENT_WAITING_VAR_1"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "System Prompt: Artifact comment thread activation trigger",
       "id": "system-prompt-artifact-comment-thread-activation-trigger",
       "description": "Opening line of the artifact comment auto-reply prompt used when the trigger is a fresh human activation on a thread that already carries feedback.",
@@ -64127,6 +65083,17 @@
         "2": "TOOL_RESULT_REMOTE_HOST_LIVENESS_PROBE_STALLED_VAR_2"
       },
       "version": "2.1.247"
+    },
+    {
+      "name": "Skill download failed reason: local filesystem error",
+      "id": "tool-result-skill-download-failed-reason-local-fs-error",
+      "description": "Skill download failure reason when a local filesystem error prevented placing it on disk.",
+      "pieces": [
+        "a local filesystem error kept it from being placed on disk"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Tool result: worktree location inside repository",
@@ -64992,6 +65959,17 @@
       "version": "2.1.291"
     },
     {
+      "name": "Artifact attested label: first-party type",
+      "id": "data-artifact-attested-first-party-type-classifier-label",
+      "description": "Classifier/permission label describing a published first-party Artifact type.",
+      "pieces": [
+        "a published first-party Artifact type"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Result: Plugin Eval Expect Quantifier Placement",
       "id": "tool-result-plugin-eval-expect-quantifier-placement",
       "description": "Mock expect-guard error that a quantifier must follow a single character, escape, or class.",
@@ -65220,6 +66198,17 @@
       "version": "2.1.246"
     },
     {
+      "name": "Artifact live subscription: not editor",
+      "id": "tool-result-artifact-live-subscription-not-editor",
+      "description": "Reason a restored publish decision does not apply because the account cannot publish to the artifact.",
+      "pieces": [
+        "a restored publish decision does not carry for an artifact this account cannot publish to"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Result: Hook result unreadable by site",
       "id": "tool-result-hook-result-unreadable-by-site",
       "description": "Problem text when a hooks-module hook's result cannot be read by its site, carried into the failing tool call",
@@ -65341,6 +66330,22 @@
         "2": "SYSTEM_REMINDER_PREFIX_LEDGER_INSTRUCTIONS_UPDATED_VAR_2"
       },
       "version": "2.1.257"
+    },
+    {
+      "name": "Tool Result: Remote host — unverified refusal",
+      "id": "tool-result-remote-host-unverified-refusal",
+      "description": "Clause saying an unverified sender reported the call refused.",
+      "pieces": [
+        "A sender this session could not verify reported the call to ${",
+        "} refused"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_REMOTE_HOST_UNVERIFIED_REFUSAL_VAR_0"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Tool Result: Remote Host Unverified Refusal Unknown Run",
@@ -65496,6 +66501,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.294"
+    },
+    {
+      "name": "Cloud Session Bundle Notice: Settings File Errors",
+      "id": "data-cloud-session-bundle-notice-settings-file-errors",
+      "description": "Lead clause naming that a settings file has errors so Read rules could not all be read; fills the slot of data-cloud-session-bundle-notice-read-rules-unreadable.",
+      "pieces": [
+        "A settings file has errors, so your Read rules and sandbox settings could not all be read (see /status)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "System Prompt: Shared Memory Skill Intro",
@@ -65694,6 +66710,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.291"
+    },
+    {
+      "name": "Artifact attested label: pipeline-owned template",
+      "id": "data-artifact-attested-pipeline-instance-classifier-label",
+      "description": "Classifier/permission label describing a template owned by the organization's publishing pipeline.",
+      "pieces": [
+        "a template the organization's publishing pipeline owns"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "/plugin validate: third-party plugin name restrictions",
@@ -65983,6 +67010,17 @@
         "0": "TOOL_RESULT_WEBFETCH_EGRESS_BLOCKED_VAR_0"
       },
       "version": "2.1.206"
+    },
+    {
+      "name": "Memory tools: access withdrawn reason",
+      "id": "tool-result-memory-access-withdrawn-reason",
+      "description": "Memory tool failure reason when access was withdrawn for the session.",
+      "pieces": [
+        "access was withdrawn for this session"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Computer-use permissions required",
@@ -66439,6 +67477,28 @@
         "2": "TOOL_RESULT_ARTIFACT_LIST_BY_TYPE_EXTRA_PARAMS_ERROR_VAR_2"
       },
       "version": "2.1.257"
+    },
+    {
+      "name": "Artifact: read_file action reference",
+      "id": "tool-result-artifact-read-file-action-name",
+      "description": "Names the read_file action of the Artifact tool in tool results and validation messages.",
+      "pieces": [
+        "action \"read_file\""
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
+      "name": "Artifact: read_file action reference",
+      "id": "tool-result-artifact-read-file-action-name",
+      "description": "Names the read_file action of the Artifact tool in tool results and validation messages.",
+      "pieces": [
+        "action \"read_file\""
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "read_page_data Requires Schema",
@@ -68505,6 +69565,22 @@
         "0": "SYSTEM_REMINDER_WORKING_DIRECTORY_CHANGED_CONT_2_VAR_0"
       },
       "version": "2.1.281"
+    },
+    {
+      "name": "Artifact Public-Change Unattended Permission Ask",
+      "id": "tool-result-artifact-public-change-unattended-permission-ask",
+      "description": "Approval question for changing an Artifact on an unattended turn; reaches the model through the artifact approval deny and the classifier reason like its public_change siblings.",
+      "pieces": [
+        "Allow Claude to change ${",
+        "}?"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_PUBLIC_CHANGE_UNATTENDED_PERMISSION_ASK_VAR_0"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Artifact Access-Change Permission Ask",
@@ -70663,6 +71739,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.191"
+    },
+    {
+      "name": "Skill download failed reason: archive unusable",
+      "id": "tool-result-skill-download-failed-reason-archive-unusable",
+      "description": "Skill download failure reason when the archive could not be extracted.",
+      "pieces": [
+        "archive unusable"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Data: parentSettingsBehavior setting description (part 3 of 3)",
@@ -74627,6 +75714,17 @@
       "version": "2.1.295"
     },
     {
+      "name": "Required hook failure blocking reason",
+      "id": "tool-result-required-hook-failure",
+      "description": "Blocking reason when a required hook fails.",
+      "pieces": [
+        "blocking because this hook is required."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Memory both-directories-exist note",
       "id": "system-prompt-memory-both-directories-exist",
       "description": "# Memory system-prompt fragment for when both memory directories already exist, instructing the model to Write directly.",
@@ -74653,37 +75751,6 @@
       "identifierMap": {
         "0": "TOOL_RESULT_WORKTREE_CREATE_BRANCH_CHECKED_OUT_ELSEWHERE_VAR_0",
         "1": "TOOL_RESULT_WORKTREE_CREATE_BRANCH_CHECKED_OUT_ELSEWHERE_VAR_1"
-      },
-      "version": "2.1.291"
-    },
-    {
-      "name": "Tool Result: Cloud session branch ahead of remote notice",
-      "id": "tool-result-cloud-session-branch-ahead-of-remote-notice",
-      "description": "Notice that the branch is ahead of its remote so the cloud session starts without those commits or uncommitted changes, advising to push and start a new session",
-      "pieces": [
-        "Branch ${",
-        "} is ${",
-        "?\"1 commit\":`${",
-        ".toLocaleString(\"en-US\")} commits`} ahead of ${",
-        "}/${",
-        "} (as last fetched), so the cloud session starts without ${",
-        "?\"it\":\"them\"} and without any uncommitted changes. Push the branch and start a new session to have ${",
-        "?\"that commit\":\"those commits\"}."
-      ],
-      "identifiers": [
-        0,
-        1,
-        2,
-        3,
-        0,
-        1,
-        1
-      ],
-      "identifierMap": {
-        "0": "TOOL_RESULT_CLOUD_SESSION_BRANCH_AHEAD_OF_REMOTE_NOTICE_VAR_0",
-        "1": "TOOL_RESULT_CLOUD_SESSION_BRANCH_AHEAD_OF_REMOTE_NOTICE_VAR_1",
-        "2": "TOOL_RESULT_CLOUD_SESSION_BRANCH_AHEAD_OF_REMOTE_NOTICE_VAR_2",
-        "3": "TOOL_RESULT_CLOUD_SESSION_BRANCH_AHEAD_OF_REMOTE_NOTICE_VAR_3"
       },
       "version": "2.1.291"
     },
@@ -77002,6 +78069,31 @@
       "version": "2.1.288"
     },
     {
+      "name": "/plugin install: plugin directory unavailable",
+      "id": "slash-command-plugin-install-plugin-directory-unavailable",
+      "description": "Install refusal when the plugin itself comes from the plugin directory and that directory is unavailable.",
+      "pieces": [
+        "Cannot install \"${",
+        "(",
+        ")}\": the ${",
+        "} ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_PLUGIN_INSTALL_PLUGIN_DIRECTORY_UNAVAILABLE_VAR_0",
+        "1": "SLASH_COMMAND_PLUGIN_INSTALL_PLUGIN_DIRECTORY_UNAVAILABLE_VAR_1",
+        "2": "SLASH_COMMAND_PLUGIN_INSTALL_PLUGIN_DIRECTORY_UNAVAILABLE_VAR_2",
+        "3": "SLASH_COMMAND_PLUGIN_INSTALL_PLUGIN_DIRECTORY_UNAVAILABLE_VAR_3"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Slash Command: /plugin Install Refused Through Symlinked Cache",
       "id": "slash-command-plugin-install-symlinked-cache",
       "description": "Tells the model /plugin install cannot write the plugin cache through a symbolic link, so the install was refused.",
@@ -78162,6 +79254,17 @@
       "version": "2.1.288"
     },
     {
+      "name": "/fast: availability check pending",
+      "id": "slash-command-fast-mode-availability-pending",
+      "description": "Fast-mode status text while availability is still being checked.",
+      "pieces": [
+        "Checking fast mode availability"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "System Reminder: Usage limit grace window (tail)",
       "id": "system-reminder-usage-limit-grace-window-tail",
       "description": "Trailing fragment of the usage-limit grace-window reminder: forbids starting subagents or long work.",
@@ -78665,6 +79768,25 @@
         "0": "TOOL_RESULT_ARTIFACT_PUBLIC_CHANGE_UNKNOWN_VISIBILITY_PERMISSION_ASK_VAR_0"
       },
       "version": "2.1.265"
+    },
+    {
+      "name": "Artifact read permission ask: author unknown",
+      "id": "tool-result-artifact-read-unknown-author-permission-ask",
+      "description": "Permission ask when Claude could not check who made the artifact.",
+      "pieces": [
+        "Claude couldn't check who made ${",
+        "}. ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_READ_UNKNOWN_AUTHOR_PERMISSION_ASK_VAR_0",
+        "1": "TOOL_RESULT_ARTIFACT_READ_UNKNOWN_AUTHOR_PERMISSION_ASK_VAR_1"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Artifact Public-Change Unknown-Owner Permission Ask",
@@ -81211,6 +82333,17 @@
       "version": "2.1.295"
     },
     {
+      "name": "Cloud review failure reason: stopped remotely",
+      "id": "system-reminder-cloud-review-failure-stopped-remotely",
+      "description": "Cloud review failure reason when the review was stopped before finishing.",
+      "pieces": [
+        "cloud review was stopped before it finished"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Data: remote setting description",
       "id": "data-settings-remote-description",
       "description": "Description of the `remote` setting in Claude Code's settings JSON schema. The model reads it through /update-config and settings validation errors; it is also shown to users in the settings help.",
@@ -81220,6 +82353,82 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.276"
+    },
+    {
+      "name": "Cloud review failure reason: session start failed",
+      "id": "system-reminder-cloud-review-failure-session-start-failed",
+      "description": "Cloud review failure reason when the cloud session could not start.",
+      "pieces": [
+        "cloud session could not start"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
+      "name": "Cloud review failure reason: poll timeout",
+      "id": "system-reminder-cloud-review-failure-poll-timeout",
+      "description": "Cloud review failure reason when the session exceeded its wait.",
+      "pieces": [
+        "cloud session exceeded ${",
+        "}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_REMINDER_CLOUD_REVIEW_FAILURE_POLL_TIMEOUT_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
+      "name": "Cloud review failure reason: poll timeout with API errors",
+      "id": "system-reminder-cloud-review-failure-poll-timeout-api-error",
+      "description": "Cloud review failure reason when the session exceeded its wait while API polls were failing.",
+      "pieces": [
+        "cloud session exceeded ${",
+        "} (API polls were failing)"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_REMINDER_CLOUD_REVIEW_FAILURE_POLL_TIMEOUT_API_ERROR_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
+      "name": "Cloud review failure reason: session error",
+      "id": "system-reminder-cloud-review-failure-session-error",
+      "description": "Cloud review failure reason when the cloud session returned an error.",
+      "pieces": [
+        "cloud session returned an error"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
+      "name": "Cloud review failure reason: session archived",
+      "id": "system-reminder-cloud-review-failure-session-archived",
+      "description": "Cloud review failure reason when the session was archived before producing output.",
+      "pieces": [
+        "cloud session was archived before producing output"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
+      "name": "Cloud review failure reason: session archived",
+      "id": "system-reminder-cloud-review-failure-session-archived",
+      "description": "Cloud review failure reason when the session was archived before producing output.",
+      "pieces": [
+        "cloud session was archived before producing output"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Cloud Review Session Not Found",
@@ -86034,6 +87243,22 @@
       "version": "2.1.231"
     },
     {
+      "name": "Slash Command: /web-setup — server unreachable with SSL hint",
+      "id": "slash-command-web-setup-server-unreachable-ssl-hint",
+      "description": "/web-setup network error with an SSL hint.",
+      "pieces": [
+        "Couldn't reach the server. ${",
+        ".sslHint}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_WEB_SETUP_SERVER_UNREACHABLE_SSL_HINT_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Slash Command: Web-setup server unreachable",
       "id": "slash-command-web-setup-server-unreachable",
       "description": "Reports that /web-setup could not reach the server and suggests checking the connection and configured proxy.",
@@ -86486,17 +87711,6 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.220"
-    },
-    {
-      "name": "Git bundle excluded read-rule clause",
-      "id": "tool-result-git-bundle-left-out-read-rule-clause",
-      "description": "Explains excluded files covered by read rules or sandbox read denial.",
-      "pieces": [
-        "covered by a Read rule or a sandbox read-deny setting of yours, linked from your Claude Code configuration, "
-      ],
-      "identifiers": [],
-      "identifierMap": {},
-      "version": "2.1.294"
     },
     {
       "name": "Skill: claude-code-guide — `claude plugin tag [path]` description",
@@ -89242,6 +90456,28 @@
       "version": "2.1.178"
     },
     {
+      "name": "Tool Result: Claude Design — token refresh failed",
+      "id": "tool-result-claudedesign-token-refresh-failed",
+      "description": "Error when the design token refresh failed, suggesting retry or /design login.",
+      "pieces": [
+        "Design token refresh failed${",
+        "}. Retry shortly${",
+        "?.",
+        "?\"\":\", or run /design login\"}."
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_CLAUDEDESIGN_TOKEN_REFRESH_FAILED_VAR_0",
+        "1": "TOOL_RESULT_CLAUDEDESIGN_TOKEN_REFRESH_FAILED_VAR_1",
+        "2": "TOOL_RESULT_CLAUDEDESIGN_TOKEN_REFRESH_FAILED_VAR_2"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Result: DesignSync Wrong Provider",
       "id": "tool-result-designsync-wrong-provider",
       "description": "DesignSync precondition error returned as a tool_result when auth is via Bedrock/Vertex/third-party rather than claude.ai.",
@@ -90501,6 +91737,17 @@
         "darwin"
       ],
       "version": "2.1.246"
+    },
+    {
+      "name": "Skill download failed reason: download",
+      "id": "tool-result-skill-download-failed-reason-download",
+      "description": "Skill download failure reason when the download itself failed.",
+      "pieces": [
+        "download failed"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "System Reminder: Environment untrusted downloads note",
@@ -92835,6 +94082,17 @@
       "version": "2.1.199"
     },
     {
+      "name": "/plugin validate: render surfaces (every)",
+      "id": "slash-command-plugin-validate-ui-render-surfaces-every",
+      "description": "Surface description used when a UI render slot appears on every surface.",
+      "pieces": [
+        "every surface"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Artifact Share Refused: Only Owner Or Editors",
       "id": "tool-result-artifact-share-refused-only-owner-or-editors",
       "description": "Artifact share tool error when everyone confirmed on the approval card already owns or edits the artifact; tells Claude to tell the person they already have access.",
@@ -95010,6 +96268,28 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.233"
+    },
+    {
+      "name": "/fast: unavailable reason (Agent SDK)",
+      "id": "slash-command-fast-mode-unavailable-sdk-opt-in-required",
+      "description": "Fast-mode unavailability reason in the Agent SDK without opt-in.",
+      "pieces": [
+        "Fast mode is not available in the Agent SDK"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
+      "name": "/fast: unavailable reason (not first-party API)",
+      "id": "slash-command-fast-mode-unavailable-not-first-party",
+      "description": "Fast-mode unavailability reason when not using the Anthropic API directly.",
+      "pieces": [
+        "Fast mode is only available when using the Anthropic API directly"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Slash Command: /fast — fast mode turned off",
@@ -97918,6 +99198,25 @@
       "version": "2.1.281"
     },
     {
+      "name": "Tool Result: Remote host — wait for reconnect after restart",
+      "id": "tool-result-remote-host-wait-for-reconnect-after-restart-clause",
+      "description": "Clause asking to wait for a host to reconnect after the session's cloud environment restarted.",
+      "pieces": [
+        "for \"${",
+        "(",
+        ")}\" to reconnect after this session's cloud environment restarted"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_REMOTE_HOST_WAIT_FOR_RECONNECT_AFTER_RESTART_CLAUSE_VAR_0",
+        "1": "TOOL_RESULT_REMOTE_HOST_WAIT_FOR_RECONNECT_AFTER_RESTART_CLAUSE_VAR_1"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Parameter: Claude in Chrome Screenshot Zoom Scale",
       "id": "tool-parameter-claude-in-chrome-screenshot-zoom-scale",
       "description": "Documents the scale factor for screenshot and zoom actions on the Claude in Chrome computer tool, including the full-resolution coordinate frame and extension-version requirement.",
@@ -99241,6 +100540,17 @@
       "version": "2.1.277"
     },
     {
+      "name": "Git config unreadable reason",
+      "id": "tool-result-git-config-unreadable",
+      "description": "Reason given when the repository's git configuration could not be read in full.",
+      "pieces": [
+        "git's configuration for the repository could not be read in full"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Result: Git bundle git stderr withheld",
       "id": "tool-result-git-bundle-git-stderr-withheld",
       "description": "Placeholder substituted for git's stderr in working-tree upload errors, explaining that git's own message is withheld because it can quote private files",
@@ -99298,6 +100608,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.233"
+    },
+    {
+      "name": "Read notifications: GitHub webhook label",
+      "id": "tool-result-read-notifications-github-webhook-label",
+      "description": "Trigger label for notifications caused by GitHub activity on a subscribed PR.",
+      "pieces": [
+        "GitHub activity on a subscribed PR"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Slash Command: /install-github-app — install failed without an error",
@@ -100695,6 +102016,17 @@
       "version": "2.1.268"
     },
     {
+      "name": "App action: hover unsupported",
+      "id": "tool-result-app-action-hover-unsupported",
+      "description": "Unsupported-action reason: hover states cannot be triggered in the background.",
+      "pieces": [
+        "hover states cannot be triggered in the background"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Data: availableModelsMatch setting",
       "id": "data-available-models-match-setting",
       "description": "Schema description for the managed availableModelsMatch setting, contrasting prefix and exact matching of availableModels entries, family and release-dependent alias handling, Default-model restriction with startup failure, and which background and helper requests stay unrestricted",
@@ -100904,6 +102236,22 @@
       "version": "2.1.246"
     },
     {
+      "name": "Artifact durable wake: HTTP from service via gateway",
+      "id": "data-artifact-durable-wake-http-from-service-via-gateway",
+      "description": "Failure detail for a durable wake arm whose HTTP status came from the artifact service relayed by the session gateway.",
+      "pieces": [
+        "HTTP ${",
+        ".status} from the artifact service via the session gateway"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "DATA_ARTIFACT_DURABLE_WAKE_HTTP_FROM_SERVICE_VIA_GATEWAY_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Data: Artifact Durable Wake HTTP Via Gateway",
       "id": "data-artifact-durable-wake-http-via-gateway",
       "description": "HTTP-status attribution used in durable-wake failure details when the status came via the session gateway, not the artifact service.",
@@ -100973,6 +102321,44 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.285"
+    },
+    {
+      "name": "Artifact comment notification: several comments waiting",
+      "id": "data-task-notification-artifact-comments-waiting-plural",
+      "description": "Opening line telling an agent several human comments sent to Claude wait on an artifact thread.",
+      "pieces": [
+        "Human comments sent to Claude are waiting on thread ${",
+        "} of artifact ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "DATA_TASK_NOTIFICATION_ARTIFACT_COMMENTS_WAITING_PLURAL_VAR_0",
+        "1": "DATA_TASK_NOTIFICATION_ARTIFACT_COMMENTS_WAITING_PLURAL_VAR_1"
+      },
+      "version": "2.1.295"
+    },
+    {
+      "name": "Artifact comment notification: several comments waiting",
+      "id": "data-task-notification-artifact-comments-waiting-plural",
+      "description": "Opening line telling an agent several human comments sent to Claude wait on an artifact thread.",
+      "pieces": [
+        "Human comments sent to Claude are waiting on thread ${",
+        "} of artifact ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "DATA_TASK_NOTIFICATION_ARTIFACT_COMMENTS_WAITING_PLURAL_VAR_0",
+        "1": "DATA_TASK_NOTIFICATION_ARTIFACT_COMMENTS_WAITING_PLURAL_VAR_1"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Set Cwd Rejected Message",
@@ -103066,6 +104452,17 @@
       "version": "2.1.294"
     },
     {
+      "name": "Attached machine away — in this turn",
+      "id": "system-reminder-attached-machine-away-in-this-turn",
+      "description": "Duration phrase 'in this turn' for how long not to call an unreachable machine again.",
+      "pieces": [
+        "in this turn"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Cloud Agent Launched — Notify User (Quiet Variant)",
       "id": "tool-result-cloud-agent-launched-notify-user",
       "description": "tool_result text instructing the model to briefly tell the user what agent it launched without echoing the result.",
@@ -103418,6 +104815,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.286"
+    },
+    {
+      "name": "Worktree submodule: inspection timeout",
+      "id": "tool-result-worktree-submodule-inspect-timeout",
+      "description": "Reason when inspecting the worktree's submodules took too long.",
+      "pieces": [
+        "inspecting its submodules took too long"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Skill: claude-code-guide — `claude plugin install <plugin>` description",
@@ -105249,6 +106657,44 @@
       "version": "2.1.280"
     },
     {
+      "name": "Tool Result: Remote tool call status — ended with code",
+      "id": "tool-result-remote-tool-call-status-ended-with-code",
+      "description": "Default status clause naming the code a failed remote tool call ended with and when.",
+      "pieces": [
+        "it ended as ${",
+        ".code??\"failed\"} at ${",
+        "} UTC"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_REMOTE_TOOL_CALL_STATUS_ENDED_WITH_CODE_VAR_0",
+        "1": "TOOL_RESULT_REMOTE_TOOL_CALL_STATUS_ENDED_WITH_CODE_VAR_1"
+      },
+      "version": "2.1.295"
+    },
+    {
+      "name": "Tool Result: Remote tool call status — ended, ran nothing",
+      "id": "tool-result-remote-tool-call-status-ended-ran-nothing",
+      "description": "Status clause for a remote tool call that timed out or was cancelled before anything ran.",
+      "pieces": [
+        "it ended as ${",
+        ".code} at ${",
+        "} UTC"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_REMOTE_TOOL_CALL_STATUS_ENDED_RAN_NOTHING_VAR_0",
+        "1": "TOOL_RESULT_REMOTE_TOOL_CALL_STATUS_ENDED_RAN_NOTHING_VAR_1"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Call status: timed out or cancelled",
       "id": "tool-result-remote-tool-call-status-timed-out-or-cancelled",
       "description": "Fragment describing that a call ended timed-out or cancelled at a given time, so it may have partially run if it had started.",
@@ -106883,6 +108329,22 @@
       "version": "2.1.265"
     },
     {
+      "name": "Tool Result: Remote tool call status — permission handed to newer request",
+      "id": "tool-result-remote-tool-call-status-permission-handed-to-newer",
+      "description": "Status clause saying the call's permission question was handed to a newer request for the same command.",
+      "pieces": [
+        "its permission question was handed to a newer request for the same command at ${",
+        "} UTC"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_REMOTE_TOOL_CALL_STATUS_PERMISSION_HANDED_TO_NEWER_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Data: Image Pixels Could Not Be Decoded",
       "id": "data-image-pixels-could-not-be-decoded",
       "description": "Default te() reason interpolated into ImageResizeError and then into the [Image could not be processed] content block sent to the model.",
@@ -107196,6 +108658,28 @@
         "0": "TOOL_RESULT_ARTIFACT_DESIGN_SYSTEM_STORE_README_EMPTY_VAR_0"
       },
       "version": "2.1.273"
+    },
+    {
+      "name": "Worktree submodule: state unreadable",
+      "id": "tool-result-worktree-submodule-state-unreadable",
+      "description": "Reason when the worktree's submodules' state could not be read.",
+      "pieces": [
+        "its submodules' state could not be read"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
+      "name": "Worktree submodule: state unreadable",
+      "id": "tool-result-worktree-submodule-state-unreadable",
+      "description": "Reason when the worktree's submodules' state could not be read.",
+      "pieces": [
+        "its submodules' state could not be read"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Subagent zero-tools fix hint",
@@ -108208,6 +109692,67 @@
       "version": "2.1.292"
     },
     {
+      "name": "Slash Command: /cloud-plugins — left as it was",
+      "id": "slash-command-cloud-plugins-left-as-it-was",
+      "description": "/cloud-plugins result when the user chose not now and a prior answer stays.",
+      "pieces": [
+        "Left as it was: ${",
+        "}."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_CLOUD_PLUGINS_LEFT_AS_IT_WAS_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
+      "name": "Cloud Session Bundle Notice: Credential Files Left Out",
+      "id": "data-cloud-session-bundle-notice-credentials-left-out",
+      "description": "Notice that uncommitted files named like credentials stayed on this machine when the working tree was bundled for a cloud session; part of the /ultrareview branch launch text the model reads.",
+      "pieces": [
+        "Left on this machine: ${",
+        ".length} uncommitted ${",
+        "(",
+        ".length,\"file\")} named like credentials or keys, ${",
+        "?\"covered by a Read rule or a sandbox read-deny setting of yours, linked from your Claude Code configuration, \":\"\"}hard-linked to another file, kept by a git filter such as LFS, or still being written by another program while ${",
+        "(",
+        ".length,\"it was\",\"they were\")} read (${",
+        "(",
+        ")}), ${",
+        "(",
+        ".length,\"was\",\"were\")} not uploaded — the cloud session starts with the version git already holds for ${",
+        "(",
+        ".length,\"it\",\"them\")} (committed or staged), or without ${",
+        "(",
+        ".length,\"it\",\"them\")}."
+      ],
+      "identifiers": [
+        0,
+        1,
+        0,
+        2,
+        1,
+        0,
+        3,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0
+      ],
+      "identifierMap": {
+        "0": "DATA_CLOUD_SESSION_BUNDLE_NOTICE_CREDENTIALS_LEFT_OUT_VAR_0",
+        "1": "DATA_CLOUD_SESSION_BUNDLE_NOTICE_CREDENTIALS_LEFT_OUT_VAR_1",
+        "2": "DATA_CLOUD_SESSION_BUNDLE_NOTICE_CREDENTIALS_LEFT_OUT_VAR_2",
+        "3": "DATA_CLOUD_SESSION_BUNDLE_NOTICE_CREDENTIALS_LEFT_OUT_VAR_3"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Data: Artifact Room Left Summary",
       "id": "data-task-notification-artifact-room-left-summary",
       "description": "Task-notification summary emitted when the session leaves live artifact rooms because the user stopped background activity.",
@@ -108693,6 +110238,22 @@
         "0": "TOOL_DESCRIPTION_CRONLIST_VAR_0"
       },
       "version": "2.1.206"
+    },
+    {
+      "name": "Tool description: CronList (durable)",
+      "id": "tool-description-cronlist-durable",
+      "description": "CronList tool prompt when durable cron jobs are enabled.",
+      "pieces": [
+        "List all cron jobs scheduled via ${",
+        "}, both durable (.claude/scheduled_tasks.json) and session-only."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_DESCRIPTION_CRONLIST_DURABLE_VAR_0"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Artifact list_assets classifier input",
@@ -109564,6 +111125,28 @@
       "version": "2.1.239"
     },
     {
+      "name": "Tool Description: Artifact list files",
+      "id": "tool-description-artifact-list-files",
+      "description": "Per-call description for listing an artifact's published files.",
+      "pieces": [
+        "Lists an artifact's published files."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
+      "name": "Tool Description: Artifact list assets",
+      "id": "tool-description-artifact-list-assets",
+      "description": "Per-call description for listing an artifact's uploaded files.",
+      "pieces": [
+        "Lists an artifact's uploaded files."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Description: ListPeers (no messaging capability)",
       "id": "tool-description-listpeers-no-messaging-capability",
       "description": "Description used for the read-only agents/session listing when this session has no ListAgents/SendMessage tool, telling Claude it can see other sessions but cannot message them itself and must rely on the host's own messaging tool or tell the user",
@@ -109686,6 +111269,41 @@
         "0": "TOOL_RESULT_ARTIFACT_LIVE_SUBSCRIPTION_REMOTE_UNSUPPORTED_VAR_0"
       },
       "version": "2.1.234"
+    },
+    {
+      "name": "Artifact live subscription: skipped with reason",
+      "id": "tool-result-artifact-live-subscription-skipped-reason",
+      "description": "Live subscription status line naming the reason it was skipped.",
+      "pieces": [
+        "Live subscription: skipped — ${",
+        "}."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_LIVE_SUBSCRIPTION_SKIPPED_REASON_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
+      "name": "Artifact live subscription: skipped with raw code",
+      "id": "tool-result-artifact-live-subscription-skipped-raw",
+      "description": "Live subscription status line when the skip reason has no description, quoting the raw code.",
+      "pieces": [
+        "Live subscription: skipped (${",
+        "(",
+        ",64)})."
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_LIVE_SUBSCRIPTION_SKIPPED_RAW_VAR_0",
+        "1": "TOOL_RESULT_ARTIFACT_LIVE_SUBSCRIPTION_SKIPPED_RAW_VAR_1"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Tool Result: Artifact Live Subscription Publish Adopted",
@@ -111895,6 +113513,22 @@
       "version": "2.1.284"
     },
     {
+      "name": "Tool Result: MCP server needs claude.ai connection (short)",
+      "id": "tool-result-mcp-server-needs-claudeai-connection-short",
+      "description": "Error that an MCP server needs to be connected in claude.ai, without the /mcp hint.",
+      "pieces": [
+        "MCP server \"${",
+        "}\" needs to be connected in claude.ai"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_MCP_SERVER_NEEDS_CLAUDEAI_CONNECTION_SHORT_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Result: MCP Server Needs claude.ai Connection",
       "id": "tool-result-mcp-server-needs-claudeai-connection",
       "description": "McpAuthError message surfaced to the model as the MCP tool call's error result when the server is not connected in claude.ai.",
@@ -113215,6 +114849,17 @@
         "2": "TOOL_RESULT_SEND_MESSAGE_ATTACHMENTS_DESKTOP_ONLY_VAR_2"
       },
       "version": "2.1.234"
+    },
+    {
+      "name": "Read notifications: session message label",
+      "id": "tool-result-read-notifications-mcp-send-message-label",
+      "description": "Trigger label for notifications that are messages from another Claude session.",
+      "pieces": [
+        "message from another Claude session"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "ListAgents Teammate - Exact Name Only",
@@ -115780,6 +117425,17 @@
       "version": "2.1.227"
     },
     {
+      "name": "Memory tools: no claude.ai sign-in reason",
+      "id": "tool-result-memory-no-claude-ai-sign-in-reason",
+      "description": "Memory tool failure reason when no claude.ai sign-in is available.",
+      "pieces": [
+        "no claude.ai sign-in is available"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Artifact Comments None Yet",
       "id": "tool-result-artifact-comments-none-yet",
       "description": "tool_result content returned when action=comments finds the artifact has no comment threads at all.",
@@ -116103,6 +117759,22 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.206"
+    },
+    {
+      "name": "Tool Result: Claude Design — no credential, run /design login",
+      "id": "tool-result-claudedesign-no-credential-run-login",
+      "description": "Error when no design-capable credential exists, telling to run /design login.",
+      "pieces": [
+        "No design-capable credential${",
+        "}. Run /design login to authorize Claude Design."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_CLAUDEDESIGN_NO_CREDENTIAL_RUN_LOGIN_VAR_0"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Data: Import Unmappable — No Claude Code Equivalent",
@@ -117460,6 +119132,22 @@
       "version": "2.1.199"
     },
     {
+      "name": "/fast: workspace did not respond",
+      "id": "slash-command-fast-mode-workspace-timeout",
+      "description": "Fast mode result when the workspace did not answer and the toggle may still have applied there.",
+      "pieces": [
+        "No response from the workspace — fast mode may still have been ${",
+        "} there"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_FAST_MODE_WORKSPACE_TIMEOUT_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Result: Full-screen Approval Timed Out",
       "id": "tool-result-computer-use-fullscreen-approval-timeout",
       "description": "Error returned when the user does not answer the full-screen approval prompt in time.",
@@ -117504,6 +119192,17 @@
       "description": "Warns that a cancelled MCP task will not return a result even though server-side work may continue.",
       "pieces": [
         "No result will follow. The MCP server may already have done some of the work, or may still finish it."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
+      "name": "Cloud review failure reason: no review output",
+      "id": "system-reminder-cloud-review-failure-no-review-output",
+      "description": "Cloud review failure reason when the orchestrator produced no output.",
+      "pieces": [
+        "no review output — orchestrator may have exited early"
       ],
       "identifiers": [],
       "identifierMap": {},
@@ -117714,6 +119413,17 @@
         "0": "TOOL_RESULT_ARTIFACT_READ_NO_STORE_WRITE_BUT_ENDPOINTS_VAR_0"
       },
       "version": "2.1.273"
+    },
+    {
+      "name": "Slash Command: /list-agents — no other sessions (short)",
+      "id": "slash-command-list-agents-no-other-sessions-short",
+      "description": "Short /list-agents output when there are no subagents, teammates or other sessions.",
+      "pieces": [
+        "No subagents, teammates or other Claude sessions."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Tool Result: Artifact Live Subscription Skipped (Artifact Not Found)",
@@ -118394,6 +120104,22 @@
         "0": "TOOL_RESULT_SETTINGS_CHANGE_NOT_APPLIED_SYMLINK_VAR_0"
       },
       "version": "2.1.281"
+    },
+    {
+      "name": "Artifacts: not authenticated, run /login",
+      "id": "tool-result-artifact-not-authenticated-run-login",
+      "description": "Artifact tool error when the session is not authenticated, telling the user to run /login.",
+      "pieces": [
+        "Not authenticated — run /login (${",
+        "})"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_NOT_AUTHENTICATED_RUN_LOGIN_VAR_0"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Tool Parameter: ListAgents unavailable parameter",
@@ -122907,6 +124633,17 @@
       "version": "2.1.219"
     },
     {
+      "name": "App action: non-text drag unsupported",
+      "id": "tool-result-app-action-non-text-drag-unsupported",
+      "description": "Unsupported-action reason: only text-selection drags work in the background.",
+      "pieces": [
+        "only text-selection drags work in the background"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Artifact delete refused by the server (403 not owner)",
       "id": "tool-result-artifact-delete-not-owner-403",
       "description": "Artifact delete tool-error surfaced from the server's 403 'not owner' response, telling the model only the owner can delete it.",
@@ -124066,6 +125803,17 @@
       "version": "2.1.285"
     },
     {
+      "name": "Cloud review failure reason: orchestrator error",
+      "id": "system-reminder-cloud-review-failure-orchestrator-error",
+      "description": "Cloud review failure reason when the orchestrator reported an error.",
+      "pieces": [
+        "orchestrator reported an error"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Parameter: Teach Batch Steps",
       "id": "tool-parameter-teach-batch-steps",
       "description": "teach-mode batch tool steps param: ordered steps validated upfront so a typo errors before any tooltip shows.",
@@ -124078,6 +125826,17 @@
         "darwin"
       ],
       "version": "2.1.178"
+    },
+    {
+      "name": "Memory tools: org memory off reason",
+      "id": "tool-result-memory-org-memory-off-reason",
+      "description": "Memory tool failure reason when org memory is off for the session.",
+      "pieces": [
+        "org memory is off for this session"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Data: forceLoginOrgUUID setting description",
@@ -124271,6 +126030,25 @@
         "darwin"
       ],
       "version": "2.1.206"
+    },
+    {
+      "name": "Artifact read permission ask: cowritten",
+      "id": "tool-result-artifact-read-cowritten-permission-ask",
+      "description": "Permission ask when other people can edit the artifact.",
+      "pieces": [
+        "Other people can edit ${",
+        "}. ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_READ_COWRITTEN_PERMISSION_ASK_VAR_0",
+        "1": "TOOL_RESULT_ARTIFACT_READ_COWRITTEN_PERMISSION_ASK_VAR_1"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Tool Result: Artifact list others beyond limit",
@@ -126161,6 +127939,30 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.286"
+    },
+    {
+      "name": "Artifact Delete Permission Ask",
+      "id": "tool-result-artifact-delete-permission-ask",
+      "description": "Approval question for permanently deleting an Artifact; asked of the user and, when no one can answer, returned to the model inside the deny that lists the unanswered questions.",
+      "pieces": [
+        "Permanently delete ${",
+        "||",
+        "===void 0?",
+        ":",
+        "}?"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_DELETE_PERMISSION_ASK_VAR_0",
+        "1": "TOOL_RESULT_ARTIFACT_DELETE_PERMISSION_ASK_VAR_1",
+        "2": "TOOL_RESULT_ARTIFACT_DELETE_PERMISSION_ASK_VAR_2"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Artifact delete classifier input",
@@ -131410,6 +133212,64 @@
       "version": "2.1.294"
     },
     {
+      "name": "Tool Result: Artifact quickstart — types partial",
+      "id": "tool-result-artifact-quickstart-types-partial",
+      "description": "Quickstart result when the type listing was only partially read.",
+      "pieces": [
+        "Quickstart for ${",
+        "}. ${",
+        "}${",
+        "===\"document\"?` ${",
+        "}`:\"\"}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_QUICKSTART_TYPES_PARTIAL_VAR_0",
+        "1": "TOOL_RESULT_ARTIFACT_QUICKSTART_TYPES_PARTIAL_VAR_1",
+        "2": "TOOL_RESULT_ARTIFACT_QUICKSTART_TYPES_PARTIAL_VAR_2",
+        "3": "TOOL_RESULT_ARTIFACT_QUICKSTART_TYPES_PARTIAL_VAR_3"
+      },
+      "version": "2.1.295"
+    },
+    {
+      "name": "Tool Result: Artifact quickstart — types ambiguous",
+      "id": "tool-result-artifact-quickstart-types-ambiguous",
+      "description": "Quickstart result when the type listing is ambiguous, listing the types.",
+      "pieces": [
+        "Quickstart for ${",
+        "}. ${",
+        "===\"document\"?`${",
+        "} `:\"\"}${",
+        "(",
+        ".types)}${",
+        "===\"document\"?`\n${",
+        "}`:\"\"}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        1,
+        5
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_QUICKSTART_TYPES_AMBIGUOUS_VAR_0",
+        "1": "TOOL_RESULT_ARTIFACT_QUICKSTART_TYPES_AMBIGUOUS_VAR_1",
+        "2": "TOOL_RESULT_ARTIFACT_QUICKSTART_TYPES_AMBIGUOUS_VAR_2",
+        "3": "TOOL_RESULT_ARTIFACT_QUICKSTART_TYPES_AMBIGUOUS_VAR_3",
+        "4": "TOOL_RESULT_ARTIFACT_QUICKSTART_TYPES_AMBIGUOUS_VAR_4",
+        "5": "TOOL_RESULT_ARTIFACT_QUICKSTART_TYPES_AMBIGUOUS_VAR_5"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Parameter: Artifact Quickstart Intent",
       "id": "tool-parameter-artifact-quickstart-intent",
       "description": "Artifact quickstart intent enum describing whether the work is a document, slides, design, or other.",
@@ -131466,6 +133326,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.221"
+    },
+    {
+      "name": "Artifact DB: rate limited",
+      "id": "tool-result-artifact-db-rate-limited",
+      "description": "Quota error telling the model the database is rate-limited and to retry shortly.",
+      "pieces": [
+        "rate-limited — retry shortly"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Artifact Read Summary Html Saved",
@@ -132068,6 +133939,25 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.282"
+    },
+    {
+      "name": "Tool Description: Artifact read page data (single)",
+      "id": "tool-description-artifact-read-page-data-single-dynamic",
+      "description": "Per-call description for reading one artifact's structured page data when an ask rule applies.",
+      "pieces": [
+        "Read an artifact's structured page data${",
+        "} ${",
+        "} (read-only)."
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_DESCRIPTION_ARTIFACT_READ_PAGE_DATA_SINGLE_DYNAMIC_VAR_0",
+        "1": "TOOL_DESCRIPTION_ARTIFACT_READ_PAGE_DATA_SINGLE_DYNAMIC_VAR_1"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Tool Description: ArtifactComments Addon",
@@ -135991,6 +137881,22 @@
       "version": "2.1.84"
     },
     {
+      "name": "Memory tools: request refused reason",
+      "id": "tool-result-memory-request-refused-reason",
+      "description": "Memory tool fallback failure reason naming the refusal code.",
+      "pieces": [
+        "request refused (${",
+        "})"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_MEMORY_REQUEST_REFUSED_REASON_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Slash Command: Usage-Credits Admin Request Sent",
       "id": "slash-command-usage-credits-admin-request-sent",
       "description": "Confirmation emitted after a usage-credit limit-increase request is sent to the org admin; surfaced via the local-jsx command's onDone and injected as <local-command-stdout>.",
@@ -137082,6 +138988,22 @@
       "version": "2.1.277"
     },
     {
+      "name": "Bash dangerous op: unset var guard rewrite (reason)",
+      "id": "tool-result-bash-dangerous-op-unset-var-guard-rewrite-reason-suggestion",
+      "description": "Short reason-form suggestion to rewrite with a guard or use a literal path.",
+      "pieces": [
+        "rewrite it as ${",
+        "} or use a literal path"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_BASH_DANGEROUS_OP_UNSET_VAR_GUARD_REWRITE_REASON_SUGGESTION_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Result: Bash dangerous operation — unset variable removes a top-level dir, guard rewrite (short reason form)",
       "id": "tool-result-bash-dangerous-op-unset-var-root-child-guard-rewrite-reason-suggestion",
       "description": "Short decision-reason remedy used when an empty variable would remove a top-level directory. It suggests the guarded rewrite or a literal path.",
@@ -137917,6 +139839,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.238"
+    },
+    {
+      "name": "/pause-memory: run again to resume",
+      "id": "slash-command-pause-memory-run-again-to-resume",
+      "description": "Hint appended to the pause-memory result telling the user how to resume memory.",
+      "pieces": [
+        "Run /pause-memory again to resume."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Ultrareview: Confirm Hint (Interactive)",
@@ -139275,6 +141208,50 @@
         "0": "TOOL_RESULT_ARTIFACT_READ_DB_OUT_DIR_CONSEQUENCE_VAR_0"
       },
       "version": "2.1.237"
+    },
+    {
+      "name": "Memory save instructions: two-step intro",
+      "id": "system-prompt-memory-save-two-step-intro",
+      "description": "Opening line of the two-step memory save instructions (write file, then add index pointer).",
+      "pieces": [
+        "Saving a memory is a two-step process:"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
+      "name": "Memory save instructions: two-step intro",
+      "id": "system-prompt-memory-save-two-step-intro",
+      "description": "Opening line of the two-step memory save instructions (write file, then add index pointer).",
+      "pieces": [
+        "Saving a memory is a two-step process:"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
+      "name": "Memory save instructions: two-step intro",
+      "id": "system-prompt-memory-save-two-step-intro",
+      "description": "Opening line of the two-step memory save instructions (write file, then add index pointer).",
+      "pieces": [
+        "Saving a memory is a two-step process:"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
+      "name": "Memory save instructions: two-step intro",
+      "id": "system-prompt-memory-save-two-step-intro",
+      "description": "Opening line of the two-step memory save instructions (write file, then add index pointer).",
+      "pieces": [
+        "Saving a memory is a two-step process:"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Tool Result: Artifact read_db Outside Working Paths Requires User Approval",
@@ -147590,6 +149567,17 @@
       "version": "2.1.210"
     },
     {
+      "name": "Memory tools: reserved/unusable path reason",
+      "id": "tool-result-memory-path-reserved-reason",
+      "description": "Memory tool failure reason for a reserved or unusable path in the store.",
+      "pieces": [
+        "that path is reserved or unusable in this store — use a different path"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Result: Plugin publish refused — network path",
       "id": "tool-result-plugin-publish-refused-network-path",
       "description": "Refusal: the path names a network location publishing does not open.",
@@ -148253,6 +150241,22 @@
       "version": "2.1.277"
     },
     {
+      "name": "/plugin validate: render surfaces (single)",
+      "id": "slash-command-plugin-validate-ui-render-surfaces-single",
+      "description": "Surface description used when a UI render slot is limited to one surface.",
+      "pieces": [
+        "the ${",
+        "[0]} surface only"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_PLUGIN_VALIDATE_UI_RENDER_SURFACES_SINGLE_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Agent Prompt: Auto-memory shared memory tools unavailable",
       "id": "agent-prompt-automemory-shared-memory-tools-unavailable",
       "description": "Line appended to the auto-memory extraction subagent prompt when the shared memory-store tools are unavailable, restricting it to personal-directory saves.",
@@ -148594,6 +150598,54 @@
         "2": "TOOL_RESULT_REMOTE_TOOL_TIMEOUT_HELD_TO_ALLOWED_MAX_VAR_2"
       },
       "version": "2.1.284"
+    },
+    {
+      "name": "Shared phrase: the <tool> tool",
+      "id": "tool-description-the-named-tool-reference",
+      "description": "Shared 'the ${tool} tool' phrase used at three sites: the Agent/Task tool's when-not-to-use guidance (else-arm naming the search tool), the Artifact tool-name helper SGt @15664714, and the Chrome browser-selection ask-user instruction @19858736.",
+      "pieces": [
+        "the ${",
+        "} tool"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_DESCRIPTION_THE_NAMED_TOOL_REFERENCE_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
+      "name": "Shared phrase: the <tool> tool",
+      "id": "tool-description-the-named-tool-reference",
+      "description": "Shared 'the ${tool} tool' phrase used at three sites: the Agent/Task tool's when-not-to-use guidance (else-arm naming the search tool), the Artifact tool-name helper SGt @15664714, and the Chrome browser-selection ask-user instruction @19858736.",
+      "pieces": [
+        "the ${",
+        "} tool"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_DESCRIPTION_THE_NAMED_TOOL_REFERENCE_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
+      "name": "Shared phrase: the <tool> tool",
+      "id": "tool-description-the-named-tool-reference",
+      "description": "Shared 'the ${tool} tool' phrase used at three sites: the Agent/Task tool's when-not-to-use guidance (else-arm naming the search tool), the Artifact tool-name helper SGt @15664714, and the Chrome browser-selection ask-user instruction @19858736.",
+      "pieces": [
+        "the ${",
+        "} tool"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_DESCRIPTION_THE_NAMED_TOOL_REFERENCE_VAR_0"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Artifact Comments Tool Load Hint",
@@ -149370,6 +151422,25 @@
       ],
       "identifiers": [],
       "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
+      "name": "Tool Result: Start task input — argument required",
+      "id": "tool-result-start-task-input-argument-required",
+      "description": "Input validation error for a missing top-level argument.",
+      "pieces": [
+        "the argument ${",
+        "(",
+        ")} is required"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_START_TASK_INPUT_ARGUMENT_REQUIRED_VAR_0",
+        "1": "TOOL_RESULT_START_TASK_INPUT_ARGUMENT_REQUIRED_VAR_1"
+      },
       "version": "2.1.295"
     },
     {
@@ -151206,6 +153277,28 @@
       "version": "2.1.261"
     },
     {
+      "name": "Cloud environment failed to start (no error kind)",
+      "id": "data-cloud-environment-failed-to-start-plain",
+      "description": "Startup-failure reason for a cloud session when no error type/kind is known.",
+      "pieces": [
+        "the cloud environment failed to start"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
+      "name": "Cloud environment failed to start (no error kind)",
+      "id": "data-cloud-environment-failed-to-start-plain",
+      "description": "Startup-failure reason for a cloud session when no error type/kind is known.",
+      "pieces": [
+        "the cloud environment failed to start"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Data: Cloud Environment Failed To Start",
       "id": "data-cloud-environment-failed-to-start",
       "description": "Cloud-session startup-failure fragment interpolated into the ultrareview task-notification (and thrown from the session poll) when the environment did not start.",
@@ -151337,25 +153430,6 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.284"
-    },
-    {
-      "name": "Data: Cloud Session Notice Start From Host Tip",
-      "id": "data-cloud-session-notice-start-from-host-tip",
-      "description": "Teleport git-source notice that the cloud session starts from a named tip on a non-github.com host instead of fetching a commit by id.",
-      "pieces": [
-        "the cloud session starts from the tip of ${",
-        "} on ${",
-        "} instead (a host other than github.com is not asked for a commit by id)"
-      ],
-      "identifiers": [
-        0,
-        1
-      ],
-      "identifierMap": {
-        "0": "DATA_CLOUD_SESSION_NOTICE_START_FROM_HOST_TIP_VAR_0",
-        "1": "DATA_CLOUD_SESSION_NOTICE_START_FROM_HOST_TIP_VAR_1"
-      },
-      "version": "2.1.268"
     },
     {
       "name": "Tool Result: Cloud Session Empty Tools List Unsupported",
@@ -151843,6 +153917,22 @@
         "1": "TOOL_RESULT_REMOTE_HOST_TRANSPORT_ERROR_UNKNOWN_RUN_VAR_1"
       },
       "version": "2.1.246"
+    },
+    {
+      "name": "Tool Result: Remote host — connection dropped",
+      "id": "tool-result-remote-host-connection-dropped",
+      "description": "Clause saying the connection to the host dropped during the call.",
+      "pieces": [
+        "The connection to ${",
+        "} dropped during the call"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_REMOTE_HOST_CONNECTION_DROPPED_VAR_0"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Tool Result: MCP connection closed on unreadable message",
@@ -154555,6 +156645,17 @@
       "version": "2.1.292"
     },
     {
+      "name": "Artifact live subscription: sync unavailable",
+      "id": "tool-result-artifact-live-subscription-sync-unavailable",
+      "description": "Reason the live channel is not available to this session right now.",
+      "pieces": [
+        "the live channel is not available to this session right now"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Result: Artifact Live Subscription WS Open Error",
       "id": "tool-result-artifact-live-subscription-ws-open-error",
       "description": "Reason clause: the live connection could not be opened from this environment.",
@@ -155215,6 +157316,17 @@
       "version": "2.1.224"
     },
     {
+      "name": "App action: menu bar needs frontmost",
+      "id": "tool-result-app-action-menu-bar-frontmost",
+      "description": "Unsupported-action reason: the menu bar is only reachable when the app is frontmost.",
+      "pieces": [
+        "the menu bar is only reachable when the app is frontmost"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Computer-use app_menu foreign pid",
       "id": "tool-result-computer-use-app-menu-foreign-pid",
       "description": "Tool-result refusing app_menu when the menu bar resolved to a foreign process outside this grant.",
@@ -155449,27 +157561,6 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.191"
-    },
-    {
-      "name": "Data: Cloud Session Notice Ahead Of Remote",
-      "id": "data-cloud-session-notice-ahead-of-remote",
-      "description": "Clause in the teleport git-source notice naming the newest pushed commit the cloud session starts from when the local branch is ahead.",
-      "pieces": [
-        "the newest pushed commit beneath it, ${",
-        "}, ${",
-        ".aheadCount===1?\"1 commit\":`${",
-        ".aheadCount} commits`} back"
-      ],
-      "identifiers": [
-        0,
-        1,
-        1
-      ],
-      "identifierMap": {
-        "0": "DATA_CLOUD_SESSION_NOTICE_AHEAD_OF_REMOTE_VAR_0",
-        "1": "DATA_CLOUD_SESSION_NOTICE_AHEAD_OF_REMOTE_VAR_1"
-      },
-      "version": "2.1.268"
     },
     {
       "name": "Computer Use Next Display-Scope Will Prompt",
@@ -158471,6 +160562,17 @@
       "version": "2.1.221"
     },
     {
+      "name": "Tool Result: PR review MCP manifest — exactly the live read tool",
+      "id": "tool-result-artifact-pr-review-mcp-manifest-exact-live-read-tool",
+      "description": "Publish refusal when the review page MCP manifest must declare exactly the live read tool.",
+      "pieces": [
+        "the review page mcp manifest must declare exactly the live read tool — any other grant outlives these bytes and is driveable by a page stored outside this publish path"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "PR Review MCP Manifest Must Declare Exact Tool Set",
       "id": "tool-result-artifact-pr-review-mcp-manifest-exact-tool-set",
       "description": "k9o() manifest-validation failure telling Claude the review page's mcp manifest must declare exactly the live read tool and the approve tool, once each.",
@@ -159876,6 +161978,33 @@
         "0": "SLASH_COMMAND_PLUGIN_VALIDATE_HOOKS_MODULE_STATE_LIBRARY_SOURCE_UNREADABLE_VAR_0"
       },
       "version": "2.1.281"
+    },
+    {
+      "name": "Worktree submodule: named submodule state unreadable",
+      "id": "tool-result-worktree-submodule-named-state-unreadable",
+      "description": "Reason when a specific submodule's state could not be read.",
+      "pieces": [
+        "the state of submodule ${",
+        "} could not be read"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_WORKTREE_SUBMODULE_NAMED_STATE_UNREADABLE_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
+      "name": "Memory tools: store read-only reason",
+      "id": "tool-result-memory-store-read-only-reason",
+      "description": "Memory tool failure reason when the store is read-only in this session.",
+      "pieces": [
+        "the store is read-only in this session"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Subagent ended without a report",
@@ -162294,6 +164423,25 @@
       "version": "2.1.219"
     },
     {
+      "name": "Artifact publish: working directory label",
+      "id": "data-artifact-publish-working-directory",
+      "description": "Location label for the session working directory in artifact publish path messages.",
+      "pieces": [
+        "the working directory (${",
+        "(",
+        ".lex)})"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "DATA_ARTIFACT_PUBLISH_WORKING_DIRECTORY_VAR_0",
+        "1": "DATA_ARTIFACT_PUBLISH_WORKING_DIRECTORY_VAR_1"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Description: Bash (working directory)",
       "id": "tool-description-bash-working-directory",
       "description": "Bash tool note about working directory persistence and shell state",
@@ -163761,6 +165909,22 @@
       "version": "2.1.286"
     },
     {
+      "name": "Artifact DB: database document limit",
+      "id": "tool-result-artifact-db-docs-per-database",
+      "description": "Quota error when the artifact's database reached its document limit.",
+      "pieces": [
+        "this artifact's database has reached its ${",
+        "} — delete documents before adding more; retrying won't help"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_DB_DOCS_PER_DATABASE_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Result: Artifact DB Bytes Per Database Limit Reached",
       "id": "tool-result-artifact-db-bytes-per-database-limit-reached",
       "description": "Artifact database refusal reason for bytes_per_database: the total document size limit is reached; delete documents or shrink them, and a larger rewrite of an existing document can also be refused.",
@@ -164459,6 +166623,22 @@
       "version": "2.1.257"
     },
     {
+      "name": "Artifact DB: collection document limit",
+      "id": "tool-result-artifact-db-docs-per-collection",
+      "description": "Quota error when a collection reached its document limit.",
+      "pieces": [
+        "this collection has reached its ${",
+        "} — delete documents; retrying won't help"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_DB_DOCS_PER_COLLECTION_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Command writes Claude settings",
       "id": "tool-result-served-bash-writes-settings-permission",
       "description": "Flags a command writing Claude Code settings files for permission review.",
@@ -164901,6 +167081,17 @@
         "6": "SYSTEM_PROMPT_FORKED_FROM_LIVE_WORKTREE_ISOLATION_VAR_6"
       },
       "version": "2.1.221"
+    },
+    {
+      "name": "Artifact DB: too many active leases",
+      "id": "tool-result-artifact-db-active-leases",
+      "description": "Quota error when the database has too many active leases.",
+      "pieces": [
+        "this database has too many active leases — retry after some expire or are released"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Artifact Delete Unconfirmed",
@@ -165895,6 +168086,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.257"
+    },
+    {
+      "name": "App action: key combo not mapped",
+      "id": "tool-result-app-action-key-not-mapped",
+      "description": "Unsupported-action reason: the key combo has no background equivalent.",
+      "pieces": [
+        "this key combo has no background equivalent"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Tool result: Artifact list type link has no name",
@@ -170907,6 +173109,22 @@
       "version": "2.1.286"
     },
     {
+      "name": "Current date reminder",
+      "id": "system-reminder-current-date",
+      "description": "Meta message stating today's date.",
+      "pieces": [
+        "Today's date is ${",
+        ".date}."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_REMINDER_CURRENT_DATE_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Eval Authoring: Canned Tool-Result Placeholder",
       "id": "agent-prompt-eval-authoring-canned-tool-result-placeholder",
       "description": "Placeholder line instructing the model to replace it with the canned result the mocked tool should return.",
@@ -170991,6 +173209,17 @@
         "2": "TOOL_RESULT_ARTIFACT_PAGE_TOO_LARGE_VAR_2"
       },
       "version": "2.1.237"
+    },
+    {
+      "name": "Artifact DB: write capacity",
+      "id": "tool-result-artifact-db-write-capacity",
+      "description": "Quota error for too many concurrent writes to the database.",
+      "pieces": [
+        "too many concurrent writes to this database — retry shortly"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Tool Result: Cross-Session Inbox Rate Limit",
@@ -173073,6 +175302,22 @@
       "version": "2.1.276"
     },
     {
+      "name": "Artifact login blocked: unset env var remedy",
+      "id": "tool-result-artifact-login-blocked-remedy-unset-env-var",
+      "description": "Remedy telling the user to unset the credential environment variable that takes precedence over claude.ai login.",
+      "pieces": [
+        "Unset the ${",
+        "} environment variable."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_LOGIN_BLOCKED_REMEDY_UNSET_ENV_VAR_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Result: Artifact Login Blocked Remedy — ANTHROPIC_API_KEY Environment Variable",
       "id": "tool-result-artifact-login-blocked-remedy-anthropic-api-key-env",
       "description": "Remedy naming the exact steps to clear ANTHROPIC_API_KEY before a claude.ai login.",
@@ -174302,6 +176547,22 @@
         "0": "SYSTEM_PROMPT_TODO_USAGE_VAR_0"
       },
       "version": "2.1.206"
+    },
+    {
+      "name": "Notebook too large: PowerShell hint",
+      "id": "tool-result-ipynb-too-large-powershell-hint",
+      "description": "PowerShell commands to read portions of an oversized notebook.",
+      "pieces": [
+        "Use ${",
+        "} to read specific portions:\n  Get-Content <notebook_path> | ConvertFrom-Json | Select-Object -ExpandProperty cells | Select-Object -First 20\n  Get-Content <notebook_path> | ConvertFrom-Json | Select-Object -ExpandProperty cells | Select-Object -Skip 100 -First 20 # Cells 100-120\n  (Get-Content <notebook_path> | ConvertFrom-Json).cells.Count # Count total cells\n  Get-Content <notebook_path> | ConvertFrom-Json | Select-Object -ExpandProperty cells | Where-Object cell_type -eq code | Select-Object -ExpandProperty source"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_IPYNB_TOO_LARGE_POWERSHELL_HINT_VAR_0"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Tool Result: Use Peer Listing To Find Recipients",
@@ -175967,6 +178228,31 @@
       "version": "2.1.178"
     },
     {
+      "name": "Tool Description: Artifact watch (dynamic)",
+      "id": "tool-description-artifact-watch-dynamic",
+      "description": "Dynamic per-call description for watching a published artifact.",
+      "pieces": [
+        "Watch a published artifact — ${",
+        "(",
+        "(),",
+        "(),",
+        "()===\"live\")}."
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "TOOL_DESCRIPTION_ARTIFACT_WATCH_DYNAMIC_VAR_0",
+        "1": "TOOL_DESCRIPTION_ARTIFACT_WATCH_DYNAMIC_VAR_1",
+        "2": "TOOL_DESCRIPTION_ARTIFACT_WATCH_DYNAMIC_VAR_2",
+        "3": "TOOL_DESCRIPTION_ARTIFACT_WATCH_DYNAMIC_VAR_3"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Artifact Watch Stop-Latched Dynamic Description",
       "id": "tool-description-artifact-watch-stop-latched-dynamic",
       "description": "Dynamic description for action watch when this session already stop-latched that artifact.",
@@ -175990,6 +178276,31 @@
         "3": "TOOL_DESCRIPTION_ARTIFACT_WATCH_STOP_LATCHED_DYNAMIC_VAR_3"
       },
       "version": "2.1.274"
+    },
+    {
+      "name": "Data: Artifact watch auto-classifier input",
+      "id": "data-artifact-watch-auto-classifier-input",
+      "description": "Auto-mode classifier input summarising an artifact watch call.",
+      "pieces": [
+        "watch artifact for ${",
+        "} → ${",
+        "}${",
+        "}${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "DATA_ARTIFACT_WATCH_AUTO_CLASSIFIER_INPUT_VAR_0",
+        "1": "DATA_ARTIFACT_WATCH_AUTO_CLASSIFIER_INPUT_VAR_1",
+        "2": "DATA_ARTIFACT_WATCH_AUTO_CLASSIFIER_INPUT_VAR_2",
+        "3": "DATA_ARTIFACT_WATCH_AUTO_CLASSIFIER_INPUT_VAR_3"
+      },
+      "version": "2.1.295"
     },
     {
       "name": "Artifact Watch On",
@@ -178017,6 +180328,25 @@
       "version": "2.1.259"
     },
     {
+      "name": "Artifact type instructions: write via write_db action",
+      "id": "tool-result-artifact-type-instructions-write-via-write-db-action",
+      "description": "Tells the model to write with action write_db passing the artifact url.",
+      "pieces": [
+        "with \\`action: \"write_db\"\\`, passing \\`url\\`: ${",
+        "(",
+        ")}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_TYPE_INSTRUCTIONS_WRITE_VIA_WRITE_DB_ACTION_VAR_0",
+        "1": "TOOL_RESULT_ARTIFACT_TYPE_INSTRUCTIONS_WRITE_VIA_WRITE_DB_ACTION_VAR_1"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Data: sandbox.credentials.files.onExtractNoMatch setting description (part 2 of 4)",
       "id": "data-settings-sandbox-credentials-files-on-extract-no-match-description-part-2",
       "description": "Description of the `sandbox.credentials.files.onExtractNoMatch` setting in Claude Code's settings JSON schema. The model reads it through /update-config and settings validation errors; it is also shown to users in the settings help.",
@@ -179321,6 +181651,22 @@
       "version": "2.1.178"
     },
     {
+      "name": "System Reminder: Tool hosts — working directory",
+      "id": "system-reminder-tool-hosts-working-directory",
+      "description": "Attached-machine description fragment naming its working directory when sync mode is unknown.",
+      "pieces": [
+        "working directory ${",
+        "}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_REMINDER_TOOL_HOSTS_WORKING_DIRECTORY_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Workshop Verifier Refusal Lead",
       "id": "tool-result-artifact-workshop-verifier-refused-lead",
       "description": "Lead line of the Artifact publish error when the workshop structural verifier refuses the page; the violation list follows.",
@@ -179670,6 +182016,22 @@
       "version": "2.1.294"
     },
     {
+      "name": "Memory save instructions (no index): frontmatter intro",
+      "id": "system-prompt-memory-save-skip-index-frontmatter-intro",
+      "description": "Memory-save instructions line used when the index step is skipped, introducing the frontmatter format.",
+      "pieces": [
+        "Write each ${",
+        "} using this frontmatter format:"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SYSTEM_PROMPT_MEMORY_SAVE_SKIP_INDEX_FRONTMATTER_INTRO_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Tool Description: Bash (alternative — write files)",
       "id": "tool-description-bash-alt-write-files",
       "description": "Bash tool alternative: use Write for file writing instead of echo/cat",
@@ -179812,6 +182174,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.291"
+    },
+    {
+      "name": "Loop outcome: write as visible response",
+      "id": "tool-result-loop-outcome-visible-response-text",
+      "description": "Instruction (non-brief mode) to write the loop's outcome as ordinary visible response text.",
+      "pieces": [
+        "write the loop's outcome for the user as ordinary visible response text"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Tool result: Artifact validation steer write HTML file",
@@ -182675,6 +185048,17 @@
       "version": "2.1.257"
     },
     {
+      "name": "Tool Description: Ask-user tool fallback reference",
+      "id": "tool-description-ask-user-tool-fallback-reference",
+      "description": "Fallback phrase naming the ask-user tool when no tool name is known, used inside the Chrome browser selection instruction",
+      "pieces": [
+        "your ask-user tool (if available)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
+    },
+    {
       "name": "Background Observer Report Delivery",
       "id": "system-reminder-background-observer-report",
       "description": "The system-reminder injected into the main agent's context delivering a background observer's one-way advisory report and warning it is not user consent; model-facing.",
@@ -183497,6 +185881,22 @@
       "version": "2.1.178"
     },
     {
+      "name": "Cloud Session Bundle Notice: Read Rules Partly Unreadable",
+      "id": "data-cloud-session-bundle-notice-read-rules-partial",
+      "description": "Lead clause naming the settings files whose errors kept Read rules from loading; fills the slot of data-cloud-session-bundle-notice-read-rules-unreadable.",
+      "pieces": [
+        "Your Read rules and sandbox settings could not all be read${",
+        "}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "DATA_CLOUD_SESSION_BUNDLE_NOTICE_READ_RULES_PARTIAL_VAR_0"
+      },
+      "version": "2.1.295"
+    },
+    {
       "name": "Memory Deletion Concurrent-Write Conflict",
       "id": "tool-result-memory-deletion-conflict",
       "description": "Model-facing PostToolUse additionalContext telling the model its memory-file deletion was not applied due to a concurrent-write conflict and to re-read and delete again.",
@@ -183654,6 +186054,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.53"
+    },
+    {
+      "name": "Artifact publish: scratchpad directory label",
+      "id": "data-artifact-publish-scratchpad-directory",
+      "description": "Location label for the session scratchpad directory in artifact publish path messages.",
+      "pieces": [
+        "your scratchpad directory"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.295"
     },
     {
       "name": "Agent Prompt: Conversation summarization",
