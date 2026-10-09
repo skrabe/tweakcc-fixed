@@ -39,7 +39,33 @@ const fixture288 =
   'class T{a(N,ye,E){N.transcript.apply({type:"append",messages:[duration(ye.durationMs,E,V(N.transcript.getSnapshot(),TE),ye.pendingBackgroundAgentCount,ye.pendingWorkflowCount)]})}}' +
   'function render(m){let{message:l,addMargin:p,verb:h}=m,q="42s",W="5:17 PM";return{children:`${h} for ${q}${W?` \\xB7 done ${W}`:""}`}}';
 
+// 2.1.295: the duration factory dropped its budget parameter, so calls pass
+// the duration, then the message count, then the optional pending counts.
+const fixture295 =
+  'function duration(e,n,r,s){return{type:"system",subtype:"turn_duration",durationMs:e,messageCount:n,pendingBackgroundAgentCount:r,pendingWorkflowCount:s}}' +
+  'async function*query(e,n,r,s,g,{modelFacts:h,...b}){let{fallbackModel:w}=x(b.model,b.fallbackModel),V=w===b.fallbackModel?b:{...b,fallbackModel:w},ye=f=>f();let Jr=ye(()=>carry(V)),sr=ye(()=>ow(Xe,V.effortValue,{turnEffort:V.turnEffort,hookEffortValue:V.hookEffortValue,carriedEffort:Jr}));yield sr}' +
+  'class T{a(N,Z){N.transcript.apply({type:"append",messages:[duration(Z.durationMs,V(N.transcript.getSnapshot(),TE),Z.pendingBackgroundAgentCount,Z.pendingWorkflowCount)]})}b(D){this._requireHost().transcript.apply({type:"append",messages:[duration(D,V(this._requireHost().transcript.getSnapshot(),TE))]})}}' +
+  'function render(m){let{message:l,addMargin:p,verb:h}=m,q="42s",W="5:17 PM";return{children:`${h} for ${q}${W?` \\xB7 done ${W}`:""}`}}';
+
 describe('router completed-turn status', () => {
+  it('patches the 2.1.295 shape: four-parameter duration factory without a budget argument', () => {
+    const patched = writeComplexityRouterTurnStatus(fixture295)!;
+    expect(patched).not.toBeNull();
+    expect(patched).toContain(
+      'function duration(e,n,r,s,__tweakccRouterSnapshot){return{...(__tweakccRouterSnapshot?{tweakccRouter:__tweakccRouterSnapshot}:{}),type:"system"'
+    );
+    expect(patched).toContain(
+      'duration(Z.durationMs,V(N.transcript.getSnapshot(),TE),Z.pendingBackgroundAgentCount,Z.pendingWorkflowCount,globalThis.__tweakccRouterSnapshotTurn?.(N.transcript.getSnapshot()))'
+    );
+    expect(patched).toContain(
+      'duration(D,V(this._requireHost().transcript.getSnapshot(),TE),void 0,void 0,globalThis.__tweakccRouterSnapshotTurn?.(this._requireHost().transcript.getSnapshot()))'
+    );
+    expect(patched).toContain(
+      'globalThis.__tweakccRouterRecordTurn?.(e,V,__tweakccResolved,'
+    );
+    expect(() => new vm.Script(patched)).not.toThrow();
+  });
+
   it('patches the 2.1.288 shape: rest-destructured options + carriedEffort request', () => {
     const patched = writeComplexityRouterTurnStatus(fixture288)!;
     expect(patched).not.toBeNull();

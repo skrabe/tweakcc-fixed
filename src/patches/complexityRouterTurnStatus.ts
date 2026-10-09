@@ -27,7 +27,7 @@ export const writeComplexityRouterTurnStatus = (
   if (!oldFile.includes('subtype:"turn_duration"')) return oldFile;
 
   const factory = oldFile.match(
-    /function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+)\)\{return\{type:"system",subtype:"turn_duration",durationMs:\2,/
+    /function ([$\w]+)\(([$\w]+)(?:,[$\w]+){3,4}\)\{return\{type:"system",subtype:"turn_duration",durationMs:\2,/
   );
   // 2.1.288+: the request-site call also passes `carriedEffort:CARRY`, and a
   // second counterfactual call passes `carriedEffort:null` for telemetry. Only
@@ -82,7 +82,7 @@ export const writeComplexityRouterTurnStatus = (
   const calls = [
     ...oldFile.matchAll(
       new RegExp(
-        `${factory[1].replace(/\$/g, '\\$')}\\(([$\\w]+(?:\\.durationMs)?),([$\\w]+),([$\\w]+)\\(((?:[$\\w]+(?:\\([^()]*\\))?)(?:\\.[$\\w]+(?:\\([^()]*\\))?)*),([$\\w]+)\\)(,[$\\w]+\\.pendingBackgroundAgentCount,[$\\w]+\\.pendingWorkflowCount)?\\)`,
+        `${factory[1].replace(/\$/g, '\\$')}\\(([$\\w]+(?:\\.durationMs)?),(?:([$\\w]+),)?([$\\w]+)\\(((?:[$\\w]+(?:\\([^()]*\\))?)(?:\\.[$\\w]+(?:\\([^()]*\\))?)*),([$\\w]+)\\)(,[$\\w]+\\.pendingBackgroundAgentCount,[$\\w]+\\.pendingWorkflowCount)?\\)`,
         'g'
       )
     ),
