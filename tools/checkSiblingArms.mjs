@@ -16,19 +16,25 @@
 //
 // A group is
 //   - a `switch`: the literals returned from each of its cases (through `if`
-//     blocks inside the case, ternary arms, array elements and `||`/`??`), or
+//     blocks inside the case, ternary arms, array elements, `+` chains and
+//     `||`/`??`), or
 //   - a returned ternary: the literal leaves of a conditional that is a
 //     `return` argument or an arrow body.
-// A group is checked only when one of its leaves is catalogued (a `model`
-// cache verdict or a catalogue body). Each other leaf that has no verdict at
-// all, is not catalogued, and reads as words (two or more outside `${}`) is a
-// finding. Leaves that already carry a `ui`/`internal` verdict were ruled on
-// and are not re-reported.
+// An array or `+` chain is one arm when the extractor ruled its joined text (a
+// composite verdict); otherwise its own literal leaves are the arms, each under
+// the body the extractor looks it up by (a composite element is a fragment).
+// A group is checked only when one of its arms is catalogued (a `model` cache
+// verdict or a catalogue body). Each other arm that has no verdict at all
+// (current or pre-promotion key), is not catalogued, and reads as words (two
+// or more outside `${}`) is a finding. Arms that already carry a
+// `ui`/`internal` verdict were ruled on and are not re-reported.
 //
 // Usage:
 //   node tools/checkSiblingArms.mjs <cli.js> <prompts.json>
 //     [--cache data/prompt-classification.json] [--json]
-// Exit 0 = no finding, 1 = findings, 2 = usage error.
+// Exit 0 = no finding, 1 = findings, 2 = usage error or a bundle segment acorn
+// could not parse (its arms were never seen, so a pass would be unearned).
+// With --json, stdout is the JSON alone and the summary goes to stderr.
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
@@ -37,6 +43,7 @@ import {
   buildEntries,
   describe,
   detectVersion,
+  entryKeys,
   keyVariants,
 } from './probeCacheKey.mjs';
 
@@ -91,23 +98,46 @@ function childNodes(n) {
 const isLiteralLeaf = n =>
   (n.type === 'Literal' && typeof n.value === 'string') ||
   n.type === 'TemplateLiteral';
+const isConcat = n => n.type === 'BinaryExpression' && n.operator === '+';
 
-// The literal values an expression can evaluate to, looking through ternary
-// arms, array elements, `||`/`??` operands and the tail of a comma list.
+// The arm nodes an expression can evaluate to, looking through ternary arms,
+// `||`/`??` operands and the tail of a comma list. A literal, an array and a
+// `+` chain are arm nodes; armOf() opens the last two.
 function leaves(n, out = []) {
   if (!n) return out;
-  if (isLiteralLeaf(n)) out.push(n);
+  if (isLiteralLeaf(n) || isConcat(n) || n.type === 'ArrayExpression')
+    out.push(n);
   else if (n.type === 'ConditionalExpression') {
     leaves(n.consequent, out);
     leaves(n.alternate, out);
-  } else if (n.type === 'ArrayExpression') {
-    for (const el of n.elements)
-      if (el && el.type !== 'SpreadElement') leaves(el, out);
   } else if (n.type === 'LogicalExpression' && n.operator !== '&&') {
     leaves(n.left, out);
     leaves(n.right, out);
   } else if (n.type === 'SequenceExpression') leaves(n.expressions.at(-1), out);
   return out;
+}
+
+// The prose of a literal, from the AST: a template's cooked quasis, so a `{`
+// inside a slot (`${e("{")} Please confirm`) cannot swallow the text after it.
+const proseOf = n =>
+  n.type === 'Literal'
+    ? n.value
+    : n.quasis.map(q => q.value.cooked ?? q.value.raw).join(' ');
+
+// An arm as absolute ranges: a literal carries its prose; an array or `+`
+// chain carries `parts`, the arms of its elements / operands, used when the
+// joined text has no verdict of its own.
+function armOf(n, base) {
+  const arm = { start: base + n.start, end: base + n.end };
+  if (isLiteralLeaf(n)) {
+    arm.text = proseOf(n);
+    return arm;
+  }
+  const kids = isConcat(n)
+    ? [n.left, n.right]
+    : n.elements.filter(el => el && el.type !== 'SpreadElement');
+  arm.parts = kids.flatMap(k => leaves(k)).map(k => armOf(k, base));
+  return arm;
 }
 
 // Return arguments reachable from a case body without entering a nested
@@ -142,6 +172,7 @@ function isReturned(node, parents) {
   while (
     p &&
     (p.type === 'ArrayExpression' ||
+      isConcat(p) ||
       (p.type === 'LogicalExpression' && p.operator !== '&&') ||
       (p.type === 'SequenceExpression' && p.expressions.at(-1) === cur))
   ) {
@@ -153,74 +184,80 @@ function isReturned(node, parents) {
   return p.type === 'ArrowFunctionExpression' && p.body === cur;
 }
 
-// Every switch / returned-ternary group in `code`, as absolute literal ranges.
+// Every switch / returned-ternary group in `code`, its arms as absolute
+// ranges (see armOf), and the bundle segments acorn could not parse.
 export function armGroups(code) {
   const segments = splitModuleBundle(code) || [
     { name: '', start: 0, source: code },
   ];
   const groups = [];
+  const unparsed = [];
   for (const seg of segments) {
     let ast;
     try {
       ast = parseSegment(seg.source);
-    } catch {
+    } catch (err) {
+      unparsed.push({
+        name: seg.name,
+        start: seg.start,
+        error: err.message.split('\n')[0],
+      });
       continue;
     }
     const parents = new Map();
     const stack = [ast];
     while (stack.length) {
       const n = stack.pop();
+      let arms = null;
+      let kind = null;
       if (n.type === 'SwitchStatement') {
-        const arms = n.cases.flatMap(c =>
+        kind = 'switch';
+        arms = n.cases.flatMap(c =>
           caseReturns(c.consequent).flatMap(r => leaves(r))
         );
-        if (arms.length > 1)
-          groups.push({
-            kind: 'switch',
-            at: seg.start + n.start,
-            arms: arms.map(a => [seg.start + a.start, seg.start + a.end]),
-          });
       } else if (
         n.type === 'ConditionalExpression' &&
         parents.get(n)?.type !== 'ConditionalExpression' &&
         isReturned(n, parents)
       ) {
-        const arms = leaves(n);
-        if (arms.length > 1)
-          groups.push({
-            kind: 'ternary',
-            at: seg.start + n.start,
-            arms: arms.map(a => [seg.start + a.start, seg.start + a.end]),
-          });
+        kind = 'ternary';
+        arms = leaves(n);
       }
+      if (arms && arms.length > 1)
+        groups.push({
+          kind,
+          at: seg.start + n.start,
+          arms: arms.map(a => armOf(a, seg.start)),
+        });
       for (const c of childNodes(n)) {
         parents.set(c, n);
         stack.push(c);
       }
     }
   }
-  return groups;
+  return { groups, unparsed };
 }
 
-// Two or more words outside the `${…}` slots: an enum value, a bare slot or
-// punctuation can be an arm but is never a prompt on its own.
-export function readsAsWords(body) {
-  let text = '';
-  let depth = 0;
-  for (let i = 0; i < body.length; i++) {
-    if (depth === 0 && body[i] === '$' && body[i + 1] === '{') {
-      depth = 1;
-      i++;
-      continue;
-    }
-    if (depth > 0) {
-      if (body[i] === '{') depth++;
-      else if (body[i] === '}') depth--;
-      continue;
-    }
-    text += body[i];
+// One word: letters, a one-letter word included, with inner apostrophes or
+// hyphens, once surrounding punctuation is stripped. A token carrying `_` or
+// `/`, or a dot between letters, is an identifier, path or host
+// (`own_calls`, `/usr/bin/chromium`, `api.github.com`), not prose.
+const WORD = /^[A-Za-z]+(?:['\u2019-][A-Za-z]+)*$/;
+const isWord = token => {
+  if (/[_/\\${}]/.test(token)) return false;
+  const core = token.replace(/^[^A-Za-z]+|[^A-Za-z]+$/g, '');
+  return WORD.test(core);
+};
+
+// Two or more words in the literal text of an arm (a template's quasis, never
+// its slots): an enum value, a bare slot or punctuation can be an arm but is
+// never a prompt on its own.
+export function readsAsWords(text) {
+  let n = 0;
+  for (const token of text.split(/\s+/)) {
+    if (token && isWord(token) && ++n >= 2) return true;
   }
-  return (text.match(/[A-Za-z]{2,}/g) || []).length >= 2;
+  return false;
 }
 
 function quietly(fn) {
@@ -243,60 +280,89 @@ export function scanSiblingArms(cliPath, { catalogue, cache, version } = {}) {
   const records = quietly(() =>
     ex.collectLiteralSites(cliPath, { composites: true })
   );
-  const byStart = new Map();
+  // A string folded into a composite element keeps only its fragment entry
+  // (buildEntries), so every kind but the joined composite text is a literal
+  // site; where a range has more than one, string/template wins.
+  const literals = new Map();
+  const composites = new Map();
+  const rank = e => (e.kind === 'string' || e.kind === 'template' ? 0 : 1);
   for (const e of buildEntries(records)) {
-    if (e.kind !== 'string' && e.kind !== 'template') continue;
-    if (!byStart.has(e.start)) byStart.set(e.start, e);
+    const k = `${e.start}:${e.end}`;
+    if (e.kind === 'composite') {
+      if (!composites.has(k)) composites.set(k, e);
+      continue;
+    }
+    if (!literals.has(k)) literals.set(k, []);
+    literals.get(k).push(e);
   }
+  for (const list of literals.values()) list.sort((a, b) => rank(a) - rank(b));
+
   const catalogued = new Map();
   for (const p of catalogue || []) {
     const body = (p.pieces || []).filter(x => typeof x === 'string').join('');
     for (const v of keyVariants(body))
       if (!catalogued.has(v.key)) catalogued.set(v.key, p.id);
   }
+  const ruling = e => {
+    const d = describe(e, cache || {});
+    const keys = entryKeys(e);
+    const catId = keys.map(k => catalogued.get(k.key)).find(Boolean) || null;
+    return {
+      start: e.start,
+      end: e.end,
+      kind: e.kind,
+      body: e.cacheBody,
+      key: keys[0]?.key,
+      verdict: d.verdict,
+      modelId:
+        d.verdict?.facing === 'model'
+          ? d.verdict.id || catId || '(unnamed)'
+          : catId,
+    };
+  };
   const memo = new Map();
-  const site = start => {
-    if (memo.has(start)) return memo.get(start);
-    const e = byStart.get(start);
+  const lookup = (map, start, end) => {
+    const k = `${map === composites ? 'c' : 'l'}:${start}:${end}`;
+    if (memo.has(k)) return memo.get(k);
     let r = null;
-    if (e) {
-      const d = describe(e, cache || {});
-      const keys = keyVariants(e.cacheBody);
-      const catId = keys.map(k => catalogued.get(k.key)).find(Boolean) || null;
-      r = {
-        start: e.start,
-        end: e.end,
-        kind: e.kind,
-        body: e.cacheBody,
-        key: keys[0]?.key,
-        verdict: d.verdict,
-        modelId:
-          d.verdict?.facing === 'model'
-            ? d.verdict.id || catId || '(unnamed)'
-            : catId,
-      };
+    const hit = map.get(`${start}:${end}`);
+    if (map === composites) r = hit ? ruling(hit) : null;
+    else if (hit) {
+      const rulings = hit.map(ruling);
+      r = rulings.find(x => x.modelId || x.verdict) || rulings[0];
     }
-    memo.set(start, r);
+    memo.set(k, r);
     return r;
   };
+  // An array or `+` chain whose joined text is ruled is one arm, covered or
+  // anchoring as a whole; otherwise its parts are the arms.
+  const resolve = arm => {
+    if (!arm.parts) {
+      const r = lookup(literals, arm.start, arm.end);
+      return r ? [{ ...r, text: arm.text }] : [];
+    }
+    const c = lookup(composites, arm.start, arm.end);
+    if (c && (c.verdict || c.modelId)) return [c];
+    return arm.parts.flatMap(resolve);
+  };
 
-  const groups = armGroups(code);
+  const { groups, unparsed } = armGroups(code);
   const findings = [];
   const seen = new Set();
   let anchored = 0;
   let trivial = 0;
   for (const g of groups) {
-    const arms = g.arms.map(([s]) => site(s)).filter(Boolean);
+    const arms = g.arms.flatMap(resolve);
     const anchors = arms.filter(a => a.modelId);
     if (!anchors.length) continue;
     anchored++;
     for (const a of arms) {
-      if (a.modelId || a.verdict || seen.has(a.start)) continue;
-      if (!readsAsWords(a.body)) {
+      if (a.modelId || a.verdict || seen.has(`${a.start}:${a.end}`)) continue;
+      if (!readsAsWords(a.text ?? a.body)) {
         trivial++;
         continue;
       }
-      seen.add(a.start);
+      seen.add(`${a.start}:${a.end}`);
       findings.push({
         start: a.start,
         end: a.end,
@@ -309,7 +375,7 @@ export function scanSiblingArms(cliPath, { catalogue, cache, version } = {}) {
       });
     }
   }
-  return { groups: groups.length, anchored, trivial, findings };
+  return { groups: groups.length, anchored, trivial, unparsed, findings };
 }
 
 function parseArgs(argv) {
@@ -353,10 +419,13 @@ function main() {
       console.log(
         `SIBLING ${f.start}-${f.end} ${f.kind} raw=${f.key} ${f.group}@${f.groupAt} beside ${f.anchors.join(',')} ${JSON.stringify(f.body.length > 120 ? f.body.slice(0, 120) + '…' : f.body)}`
       );
-  console.log(
-    `sibling arms: ${r.findings.length} uncatalogued unclassified arm(s) in ${r.anchored} group(s) with a catalogued arm (${r.groups} switch/ternary groups scanned, ${r.trivial} non-prose arm(s) skipped)`
+  const say = opt.json ? console.error : console.log;
+  for (const u of r.unparsed)
+    say(`UNPARSED segment ${u.name || '(bundle)'}@${u.start}: ${u.error}`);
+  say(
+    `sibling arms: ${r.findings.length} uncatalogued unclassified arm(s) in ${r.anchored} group(s) with a catalogued arm (${r.groups} switch/ternary groups scanned, ${r.trivial} non-prose arm(s) skipped, ${r.unparsed.length} unparseable segment(s))`
   );
-  process.exit(r.findings.length ? 1 : 0);
+  process.exit(r.unparsed.length ? 2 : r.findings.length ? 1 : 0);
 }
 
 if (
