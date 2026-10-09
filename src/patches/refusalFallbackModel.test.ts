@@ -58,6 +58,11 @@ const MESSAGE =
 const REPL =
   'Yo=await this._runImpl(dt,jo,h,k,D,V,ee,Ce,Pe,De,Le,zo,We,Co??void 0,Je,$e)}finally{eo.clearPending(),this.stream.deferredSlashEchoUuid=null;try{ut.flush()}catch(Zo){u(Zo)}if(this._frameNotifier.flush(),this.stream.pendingPreservedInsert!==null)i("tengu_compact_preserved_unanchored",{preservedCount:this.stream.pendingPreservedInsert.preserved.length}),ko({type:"append",messages:this.stream.pendingPreservedInsert.preserved}),this.stream.pendingPreservedInsert=null;';
 
+const REPL_CATCH = REPL.replace(
+  ')}finally{',
+  ')}catch(Zo){throw Wo=!0,Zo}finally{'
+);
+
 const HEADLESS =
   'noteTurnEnded(e,r,n){if(this.selector.noteTurnEnded(e),e||n.num_turns>0){if(!e&&this.heldCompletionChars>0)y("print_task_notification_coalesce");this.heldCompletionChars=0,this.heldCompletionWorkload=void 0}else if(r.queryHeldForNextTurn===!0&&typeof r.value==="string"&&n.result==="")this.heldCompletionChars+=r.value.length,this.heldCompletionWorkload=r.workload}';
 
@@ -73,7 +78,11 @@ const ROUTING = module(
   WALKER
 );
 
-const bundle = (sessionState = SESSION_STATE, routing = ROUTING): string =>
+const bundle = (
+  sessionState = SESSION_STATE,
+  routing = ROUTING,
+  repl = REPL
+): string =>
   [
     sessionState,
     module(128, 'chunk-zfg8t6ef.js', QUEUE),
@@ -87,7 +96,7 @@ const bundle = (sessionState = SESSION_STATE, routing = ROUTING): string =>
       WRITER
     ),
     module(1223, 'chunk-skp01brc.js', HEADLESS),
-    module(1405, 'chunk-cz85x099.js', REPL),
+    module(1405, 'chunk-cz85x099.js', repl),
   ].join('');
 
 const BUNDLE = bundle();
@@ -469,6 +478,22 @@ describe('writeRefusalFallbackModel: the return', () => {
     // The splice is guarded and ahead of the finally's own work, which runs
     // whatever the return does.
     expect(repl).toContain('}}catch{}eo.clearPending()');
+  });
+
+  it('returns at the end of an interactive turn whose call is followed by a catch that records the throw', () => {
+    expect(REPL_CATCH).not.toBe(REPL);
+    const out = writeRefusalFallbackModel(
+      bundle(SESSION_STATE, ROUTING, REPL_CATCH),
+      ROUTES
+    );
+    expect(out).not.toBeNull();
+    const repl = moduleText(out as string, 1405);
+    expect(repl).toContain(
+      '}catch(Zo){throw Wo=!0,Zo}finally{try{let __tweakccN=globalThis.__tweakccRefusalFallbackReturn?.(Yo?.num_turns>0);'
+    );
+    expect(repl).toContain(
+      'ko({type:"append",messages:[__tweakccM]})}}catch{}eo.clearPending()'
+    );
   });
 
   it('returns at the end of a headless turn and queues the line ahead of the result', () => {

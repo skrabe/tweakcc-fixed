@@ -758,6 +758,18 @@ const CURATED_IDENTIFIER_MAPS = {
         3: 'STRUCTURED_OUTPUT_TOOL_NAME',
       },
     },
+    {
+      // A later shape appends the verdict-instructions block. Upstream's
+      // 2.1.295 map renames it; the name stays as shipped in 2.8.41.
+      identifiers: [0, 1, 1, 2, 3, 4],
+      identifierMap: {
+        0: 'HOOK_EVALUATION_TASK_PROMPT',
+        1: 'TRANSCRIPT_PATH',
+        2: 'IS_REMOTE_HOOK_CALL',
+        3: 'STRUCTURED_OUTPUT_TOOL_NAME',
+        4: 'AGENT_PROMPT_AGENT_HOOK_VAR_4',
+      },
+    },
   ],
   'agent-prompt-pr-follow-up-cron': [
     {
@@ -835,6 +847,58 @@ const CURATED_IDENTIFIER_MAPS = {
         2: 'PASTED_CONTENT_TRUST_RULE_BLOCK',
         3: 'EMPTY_STRING',
         4: 'EMPTY_SESSION_RULE_SLOT',
+      },
+    },
+  ],
+  // Upstream's 2.1.295 maps rename these generated slot names under an
+  // unchanged layout. The names stay as shipped in 2.8.41 so overrides written
+  // against it keep binding.
+  'system-reminder-remote-chrome-browser-extension-not-connected': [
+    {
+      identifiers: [0, 1],
+      identifierMap: {
+        0: 'CHROME_EXTENSION_URL',
+        1: 'SYSTEM_REMINDER_REMOTE_CHROME_BROWSER_EXTENSION_NOT_CONNECTED_VAR_1',
+      },
+    },
+  ],
+  'agent-prompt-hook-condition-evaluator': [
+    {
+      identifiers: [0],
+      identifierMap: { 0: 'AGENT_PROMPT_HOOK_CONDITION_EVALUATOR_VAR_0' },
+    },
+  ],
+  'agent-prompt-hook-condition-evaluator-stop': [
+    {
+      identifiers: [0],
+      identifierMap: { 0: 'AGENT_PROMPT_HOOK_CONDITION_EVALUATOR_STOP_VAR_0' },
+    },
+  ],
+  // CC 2.1.295 split the AskUserQuestion description: the base keeps the old
+  // id and this plan-mode arm renders it through slot 0. Upstream names the
+  // same layout under the base id, so adoption cannot reach it.
+  'tool-description-askuserquestion-plan-mode-note': [
+    {
+      identifiers: [0, 1, 2],
+      identifierMap: {
+        0: 'ASKUSERQUESTION_BASE_DESCRIPTION',
+        1: 'ENTER_PLAN_MODE_TOOL_NAME',
+        2: 'EXIT_PLAN_MODE_TOOL_NAME',
+      },
+    },
+  ],
+  // CC 2.1.295 reworded the body past fuzzy carryover, so the classification
+  // cache restored the id with generated names. The slots are unchanged.
+  'tool-description-artifact-design-skill-loading-guidance-app-wording-2': [
+    {
+      identifiers: [0, 1, 2, 0, 3, 4, 5],
+      identifierMap: {
+        0: 'ARTIFACT_DESIGN_SKILL_NAME',
+        1: 'WORKSHOP_SKILL_NAME',
+        2: 'ARTIFACT_DIAGRAMMING_SKILL_NAME',
+        3: 'TOOL_DESCRIPTION_ARTIFACT_DESIGN_SKILL_LOADING_GUIDANCE_APP_WORDING_2_VAR_3',
+        4: 'TOOL_DESCRIPTION_ARTIFACT_DESIGN_SKILL_LOADING_GUIDANCE_APP_WORDING_2_VAR_4',
+        5: 'TOOL_DESCRIPTION_ARTIFACT_DESIGN_SKILL_LOADING_GUIDANCE_APP_WORDING_2_VAR_5',
       },
     },
   ],

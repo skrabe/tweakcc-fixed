@@ -620,9 +620,13 @@ const patchReturnOnReplTurnEnd = (file: string): string | null => {
     );
     return file;
   }
-  const turn = file.match(
-    /([$\w.]+)=await this\._runImpl\([$\w]+,[^)]*\)\}finally\{/
-  );
+  const turn =
+    // Method 1: a catch that records the throw sits between the call and the finally
+    file.match(
+      /([$\w.]+)=await this\._runImpl\([$\w]+,[^)]*\)\}catch\([$\w]+\)\{[^{}]*\}finally\{/
+    ) ??
+    // Method 2: the call is followed directly by the finally
+    file.match(/([$\w.]+)=await this\._runImpl\([$\w]+,[^)]*\)\}finally\{/);
   if (!turn || turn.index === undefined) {
     console.error(
       "patch: refusalFallbackModel: failed to find the REPL's turn-end finally"

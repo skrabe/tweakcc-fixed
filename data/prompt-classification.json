@@ -61064,12 +61064,7 @@
     "name": "Subagent Spawn Hook Unknown Agent Type",
     "desc": "Agent-tool error when a plugin agent.spawn hook names a subagentType this call cannot dispatch."
   },
-  "8e0f9e91dfbd1a98d8c7cd46f5911b12fae46e52": {
-    "facing": "model",
-    "id": "data-dir-sync-unreadable-settings-errors-clause",
-    "name": "Dir Sync Unreadable Settings Errors Clause",
-    "desc": "Parenthetical list of settings files with parse errors, interpolated into directory-sync refusals the model reads."
-  },
+  "8e0f9e91dfbd1a98d8c7cd46f5911b12fae46e52": { "facing": "ui" },
   "85f617701d067b357191aec3ea903a83163794f1": { "facing": "ui" },
   "5974c9b4b293a098cdb307190ef4315c85caba36": {
     "facing": "model",
@@ -104643,5 +104638,1676 @@
     "id": "tool-result-send-message-permission-handler-structured-message-prefix",
     "name": "SendMessage Structured Rewrite Refusal Prefix",
     "desc": "Opening fragment of the tool-result refusal when a permission handler rewrites an approved SendMessage as structured content."
+  },
+  "43876a57da57f0fad86fd3d08d7e08d19f63c04e": { "facing": "internal" },
+  "40a6520f8b6fd640f1c423106187b291d8e046fa": { "facing": "internal" },
+  "b274a6d81f32db39ffa3b2eee3d7b9a16f5b7163": { "facing": "internal" },
+  "8da8a015b53774ad9fd18de4151b4506a4aec0ba": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-version-diff-marker",
+    "name": "Tool Result: Artifact Live Version Diff Marker",
+    "desc": "Labels the live artifact version and the diff against the submitted content."
+  },
+  "54936d204b5667b91de9917466d229d818ab658d": { "facing": "internal" },
+  "e164d485d4a016f018c9054c02eb302caca320e3": { "facing": "internal" },
+  "5ded0eb3bd5362e5fd03995134b49c19df9e3241": {
+    "facing": "model",
+    "id": "tool-result-git-discovery-ceiling",
+    "name": "Tool Result: Git Discovery Ceiling Cannot Express Path",
+    "desc": "Explains that the plugin cache or temporary path contains an unsupported git discovery delimiter."
+  },
+  "f5241dded82845dd1af07aad69e4a3155e5d9ed1": {
+    "facing": "model",
+    "id": "tool-result-tool-results-files-disabled",
+    "name": "Tool Result: Tool Results Files Disabled",
+    "desc": "Reports that the session cannot persist tool result files on this machine."
+  },
+  "42e1015d94b93451a586599eeab56881ae86a86a": { "facing": "internal" },
+  "bec35372e317e47ee1806f92a2203d18e93c0e89": { "facing": "internal" },
+  "d6a69456224e8e5e2f63f4b28e0f19800a3653ee": { "facing": "internal" },
+  "7f30535cf87069d8c9b014a029f9b1c7bd3b9e13": { "facing": "internal" },
+  "16e0e3c1161696cfdeb677dab35c8446eba4c015": { "facing": "internal" },
+  "80f2c9e9b5b20d32bac475a71fd627af4508f157": { "facing": "ui" },
+  "6d80fecc29d47060d99c1f54a65860b1419350dd": { "facing": "ui" },
+  "dc1aa5073b6b5f21a96d07303c6b7f36ac106c9e": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-var-state-reference-declared",
+    "name": "Slash Command: Plugin Validate State Reference Declared",
+    "desc": "Reports a state-reference variable declared more than once."
+  },
+  "26e5ab6d1529bc28a6d73a7e94cc3ae08f586b58": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-var-state-reference-assigned",
+    "name": "Slash Command: Plugin Validate State Reference Assigned",
+    "desc": "Reports a state-reference variable assigned after declaration."
+  },
+  "b2701c37a2d0c5a0eb25e9099dfeab1367fa37dc": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-var-state-reference-doubted",
+    "name": "Slash Command: Plugin Validate State Reference Doubted",
+    "desc": "Reports a state-reference variable whose name may be rebound by the engine."
+  },
+  "1e28fba472985f0f91aad9edbcb964b5a1eba4de": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-var-state-reference-looped",
+    "name": "Slash Command: Plugin Validate State Reference Looped",
+    "desc": "Reports a state-reference variable written through a loop head."
+  },
+  "9045148e648ccf675a3b0c25a09e53002d0c3cac": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-var-state-reference-early",
+    "name": "Slash Command: Plugin Validate State Reference Early",
+    "desc": "Reports a state-reference variable read before its declaration."
+  },
+  "41b49d9872ee2b3d725705bb92094e748246d529": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-module-var-state-reference-prefix",
+    "name": "Slash Command: Plugin Validate State Reference Variable",
+    "desc": "Introduces the variable name in a hooks-module state reference validation error."
+  },
+  "eed16b9dc66ce65de5a59660176b11657e44a1eb": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-code-parser-stack",
+    "name": "Slash Command: Plugin Validate Parser Stack Exhausted",
+    "desc": "Reports parser stack exhaustion while validating deeply nested plugin code."
+  },
+  "2b459f8a1e153ffa52bfbb84eefe5d1d104503c7": { "facing": "internal" },
+  "34ec4bb0df9bad07c0d9a8a0df38afe52fd5f0d7": { "facing": "internal" },
+  "4d01c91ef152dadf9044f870c84e5c2926eb366f": { "facing": "internal" },
+  "3e39767a339c04b45736ddaea9af164ef9be4b4f": { "facing": "ui" },
+  "dcfd4676e91486aa3a5eaac42f1b4e441ca3febc": { "facing": "ui" },
+  "369acaf8474821f3733828ab379044a3f7e0d01f": { "facing": "ui" },
+  "04cc37ab43bd41f81a258f796fa857e183b1e6c2": { "facing": "internal" },
+  "801cb3f191c2299bdbc88847ba608f498f8d2e7a": { "facing": "ui" },
+  "b3b94fe43c4797be47891c91fcb232ab8be85274": { "facing": "internal" },
+  "a141608c164e4cfc1aa498d757911e640491d696": { "facing": "ui" },
+  "3d13b30d31181dee702ebaf8944cac30fdcbd4c1": { "facing": "internal" },
+  "50b18f3d0c7081b82db61d4cc03f335c32f5b55a": {
+    "facing": "model",
+    "id": "tool-result-hooks-worker-reloading-refusal",
+    "name": "Tool Result: Hooks Worker Reloading Refusal",
+    "desc": "Reports that a hook with a catch handler cannot run while its worker is being replaced."
+  },
+  "7edddb387afac29bdea2a16c33d1b6a310999496": { "facing": "internal" },
+  "99555002664d2dbde382f49fd14fcb1c43e0bb91": { "facing": "internal" },
+  "11fde61bb7dbe8d1d632567b8681e6388220424e": { "facing": "internal" },
+  "804baa4f9ccf1ffb1c4c9cb8686d31afc086423d": { "facing": "internal" },
+  "b1dcbefcb276c87f5eddabc5f2845973bd5c0835": { "facing": "internal" },
+  "3ad10004fefb07f0c5ba7049f5889e10befc7fac": { "facing": "internal" },
+  "55986c7d2a77ff60862ae967b1c69c362c2f0170": {
+    "facing": "model",
+    "id": "tool-description-askuserquestion-plan-mode-note",
+    "name": "Tool Description: AskUserQuestion (plan mode note)",
+    "desc": "Plan mode note appended to the AskUserQuestion tool description when plan mode is available: switch modes with the enter tool, ask clarifying questions before the plan is final, and never ask whether the plan is ready"
+  },
+  "54c4c5f66f880130a43ba35768ad65ef893f807a": { "facing": "internal" },
+  "a7692c47ef2fa92549eab018f2f484276d62d94b": { "facing": "internal" },
+  "967534d7064e9488136e88f44dc27e6022621217": {
+    "facing": "model",
+    "id": "data-memory-sync-file-not-saved-stays-local",
+    "name": "Data: Memory Sync File Not Saved Stays Local",
+    "desc": "Warns that a rejected memory file remains local and will not persist."
+  },
+  "dcee50cd93d6360ca62afdc502a1b08e2180bb91": { "facing": "ui" },
+  "d03da940b29cc2d223781b5f50100bdfd5c8006b": { "facing": "ui" },
+  "a4eab37c91a72006f0eb340316add65fcfd4a284": { "facing": "ui" },
+  "c4d81b705bd49a7a96e0bd297f7ed0e17429bbfe": { "facing": "internal" },
+  "f22fe0d9837ff3878e816115baca7791fa4300d7": {
+    "facing": "model",
+    "id": "tool-description-background-command-no-completion-notice",
+    "name": "Tool Description: Background Command No Completion Notice",
+    "desc": "Explains how to check a background command when completion notifications are disabled."
+  },
+  "a86a982f9b7d0632db1757473189566c4495d636": {
+    "facing": "model",
+    "id": "tool-result-personal-hook-input-change-blocked",
+    "name": "Tool Result: Personal Hook Input Change Blocked",
+    "desc": "Reports a restricted personal hook input change and instructs the model to continue without the call."
+  },
+  "dff2029f9868fdb80202d9fe58b86043c8566883": { "facing": "internal" },
+  "4e76dc832a835a2e60d112adf362b3fdd13af84c": { "facing": "ui" },
+  "ee964e9b049a222217ba941bfdf3acaa171870fd": { "facing": "internal" },
+  "3eead72d1bc96e58137935c26ecd55c73eb6460b": { "facing": "internal" },
+  "cf70606f115bb14f3d1161cedf514ac8bade11e4": { "facing": "internal" },
+  "cd01879b3e9aad3338b956857b9d0a45d93ab08a": { "facing": "internal" },
+  "c306889ae36bef2bd2d30dacfebbe7d02cd13abc": {
+    "facing": "model",
+    "id": "tool-description-websearch-untrusted-results",
+    "name": "Tool Description: WebSearch Untrusted Results",
+    "desc": "Instructs the model to treat search result titles and page text as untrusted data."
+  },
+  "4419910452fe105a7fef3bae83bf0a7e2108bb7d": { "facing": "internal" },
+  "b318426e7f0888a44541a208ab4546db4e75ec29": { "facing": "internal" },
+  "99848edbc999483cb775b990dabc0fec828a62d0": {
+    "facing": "model",
+    "id": "tool-result-message-attachment-upload-error-limit-note",
+    "name": "Tool Result: Message attachment upload error limit note",
+    "desc": "Attachment upload error explanation in the message delivery tool result, noting a suspected account upload limit and a size guaranteed to fit."
+  },
+  "e9e38f2b3bce4da4dda9566a854374f06daf8af3": { "facing": "internal" },
+  "ed8efd6426c729fce285bd6947a8c855884e3de8": {
+    "facing": "model",
+    "id": "tool-result-chrome-setup-mobile-unavailable",
+    "name": "Tool Result: Chrome setup unavailable on mobile",
+    "desc": "Tells the model to continue without offering desktop Chrome setup to a mobile user."
+  },
+  "4ac2303cf73360001df14240383a08ec04740245": { "facing": "internal" },
+  "90d40b5e7e844be846a6b730c467eb3c6e2f7ece": { "facing": "internal" },
+  "3ac0eabee7be9acf0de8c697043726c94303480c": { "facing": "internal" },
+  "a5d02698f5e46bb6932184674e9a5bdf3fc2b39b": { "facing": "internal" },
+  "d7c6e46d15a5a3311cbbe93271ce442ec9f54ec4": { "facing": "internal" },
+  "af849acdea319e41facc31d5c5daf0b716aa7e6a": { "facing": "internal" },
+  "d5a6d3ec6df2a85910257fa2db97c576ee25d7d0": { "facing": "internal" },
+  "1cdf271b969cf58ce59cbb1f54f501d3ea7b5bf5": { "facing": "internal" },
+  "65440a21ec76b12751b4a864fbd8e6959e8e8868": { "facing": "internal" },
+  "bea8ea21abef9ac33a1071ea0efe3589709f86a2": { "facing": "internal" },
+  "10e0bd9238e69b2b9fdabe2b50478a946051126a": { "facing": "internal" },
+  "173efe611246d3cb8f6575e2c1fff49a6f0fa4c8": { "facing": "internal" },
+  "6344f366d8c587991e599c23eaf40ae1b9c21fb7": { "facing": "internal" },
+  "244aae055e1be252b3894d06fccb77a748ca8e47": { "facing": "internal" },
+  "70480c0c221353f1a244a81ae80cb9afce8cfc24": { "facing": "internal" },
+  "c08665ea7968cade2c1ea7e1ac16ba4f2c8e3aa5": { "facing": "internal" },
+  "7927c702f64586ac3756ed736e422c03f6c09ef9": {
+    "facing": "model",
+    "id": "tool-result-plugin-hook-cross-environment-input-blocked",
+    "name": "Tool Result: Plugin hook cross-environment input blocked",
+    "desc": "Explains refusal when a plugin hook rewrites input for a tool in another environment."
+  },
+  "feecd0153ef77ef630db67c395cf5ad779168248": { "facing": "internal" },
+  "c8927c8bf7804d8784a44132bea6ee6932dec911": { "facing": "internal" },
+  "41242d491cf19ba3fac4099a0e7fd66c35cc3c34": {
+    "facing": "model",
+    "id": "tool-result-personal-hook-required-failure",
+    "name": "Tool Result: Required personal hook failure",
+    "desc": "Explains why a failing personal hook blocks the session and must be fixed by the user."
+  },
+  "c9bf44c68fee7f9e73fdc9a0f26074ba7eb7f54f": { "facing": "internal" },
+  "aefd82a50a797a98a9fac1ad9e0f005322aaf7b7": { "facing": "internal" },
+  "11c8586297308ac8fa783144ef713777b966b509": { "facing": "internal" },
+  "f572e8e246c84e48eef74046ab22079bce2eb95f": {
+    "facing": "model",
+    "id": "tool-result-grep-aliased-path-parameter-note",
+    "name": "Tool Result: Grep aliased path parameter note",
+    "desc": "Explains conversion of file_path into Grep's path parameter."
+  },
+  "2954dcff771688ec278cc264f57631885a1887da": {
+    "facing": "model",
+    "id": "tool-result-grep-output-mode-alias",
+    "name": "Tool Result: Grep output mode alias",
+    "desc": "Explains interpreting an unsupported flag as an output_mode value."
+  },
+  "46fcd2e857a45165bd20137db6f38c14c1fcca12": {
+    "facing": "model",
+    "id": "tool-result-grep-output-mode-repeated-alias",
+    "name": "Tool Result: Grep repeated output mode alias",
+    "desc": "Explains ignoring an alias that repeats output_mode."
+  },
+  "cd03da3870ad4bd68940a30e1b16bf92626f2504": {
+    "facing": "model",
+    "id": "tool-result-grep-recursive-flag-ignored",
+    "name": "Tool Result: Grep recursive flag ignored",
+    "desc": "Explains that Grep searches directories recursively without -r."
+  },
+  "d26616427c0cefcaa7b29e899661ad673f95d2ae": {
+    "facing": "model",
+    "id": "tool-parameter-bash-run_in_background-guidance-completion-notices-disabled",
+    "name": "Tool Parameter: Bash run_in_background guidance (completion notices disabled)",
+    "desc": "Bash run_in_background guidance for sessions where background completion notices are disabled: nothing announces the finish, so read the output file or end the command with an echo, and no trailing ampersand is needed"
+  },
+  "b71c80524b61de30ebce14e0f77951d40884b7b7": { "facing": "ui" },
+  "a4c07908dee5e32c002b02f8fb454658fb6a2669": { "facing": "ui" },
+  "321a98a1e2b3cdd5af4792dd1b47b5bccdff25c2": { "facing": "ui" },
+  "78fa24ecf15356d937907375ace609eb45de19df": {
+    "facing": "model",
+    "id": "system-prompt-relayed-chrome-tool-name-note",
+    "name": "System Prompt: Relayed Chrome tool name note",
+    "desc": "Explains how claude-device Chrome tool names are displayed."
+  },
+  "b808a8380be53b81909890d570935145df44118d": { "facing": "internal" },
+  "b74b099628315bebd4e83af472a595e50f4cb031": { "facing": "internal" },
+  "e3012c23c12e6e298aafa13000d550209353d184": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-private-git-directory-failed",
+    "name": "Tool Result: Private git directory preparation failed",
+    "desc": "Explains upload refusal when a safe private git directory cannot be prepared."
+  },
+  "2fc22a4f4bca718e43a5d815e59387fe46fd19ed": {
+    "facing": "model",
+    "id": "tool-result-cloud-environment-create-failed",
+    "name": "Tool Result: Cloud environment creation failed",
+    "desc": "Directs the model to cloud environment setup when automatic creation fails."
+  },
+  "a16ce295a30593eda2129dde1e958d0a6cbd46ad": { "facing": "internal" },
+  "fffd00bc2daa46c01d031e70bb590280ad4cc8f3": {
+    "facing": "model",
+    "id": "tool-result-cloud-remote-control-environment-refused",
+    "name": "Tool Result: Remote Control environment refused cloud session",
+    "desc": "Advises choosing a cloud environment after a Remote Control environment refuses session creation."
+  },
+  "625f40a2a0a48d3197d29b7430b6bb139e190970": { "facing": "internal" },
+  "f159880f3118e8181cd5fbf88f7033ae9d962e78": { "facing": "internal" },
+  "83c43015c5113a17385be5d528f5d907253874d4": { "facing": "internal" },
+  "0bb81a8ec0305f55d6f5fcb635b88d7777ee91a7": {
+    "facing": "model",
+    "id": "tool-result-webfetch-artifact-fetch-deny-rule",
+    "name": "Tool Result: WebFetch artifact fetch deny rule",
+    "desc": "Explains the permission deny rule blocking an artifact fetch."
+  },
+  "91e41ce547b4a34ad5d6186e04e490b3c2367475": {
+    "facing": "model",
+    "id": "tool-result-webfetch-artifact-read-deny-rule",
+    "name": "Tool Result: WebFetch artifact read deny rule",
+    "desc": "Explains why an artifact was not fetched under a Read deny rule."
+  },
+  "6c60d041757675f524c608ec23012d030a8ae185": {
+    "facing": "model",
+    "id": "tool-result-mcp-hook-copy-truncated",
+    "name": "Tool Result: MCP hook result copy truncated",
+    "desc": "Marks text omitted from the model-facing copy of an MCP result."
+  },
+  "16d514c2d2d764a94bcea731ef759b061a0d1d98": {
+    "facing": "model",
+    "id": "system-prompt-harness-instructions-2",
+    "name": "System Prompt: Harness instructions 2",
+    "desc": "Introduces the agent's output style and instructions, including the URL policy."
+  },
+  "845ccdb5c97e83cd16572366f4ba6e2129c70791": { "facing": "internal" },
+  "d918bb81ca672572648a6f67b287138d7bb53b1d": { "facing": "internal" },
+  "06709af4501e14136ba46dcb4f3e04cfdf3d6aa7": { "facing": "internal" },
+  "066db540ccfd656dd21794b0529e39ccfd5b84d4": { "facing": "internal" },
+  "70c8a72a8b72d6676f9cf7bbf82601c9f721b696": {
+    "facing": "model",
+    "id": "tool-result-hook-replacement-fields-omitted",
+    "name": "Tool Result: Hook replacement fields omitted",
+    "desc": "Explains retaining only text, inline images and PDFs from an oversized hook replacement."
+  },
+  "1056e78c81783eacdec684d81cd3d7bbe0361b10": {
+    "facing": "model",
+    "id": "data-personal-hooks-load-errors-notice",
+    "name": "Data: Personal hook load errors notice",
+    "desc": "Notifies the model that some personal hooks did not load while other settings still apply."
+  },
+  "d3860aefdb3fcfa1388eb2a9a05e3b460b373430": {
+    "facing": "model",
+    "id": "tool-result-personal-config-file-invalid",
+    "name": "Tool Result: Invalid personal configuration file",
+    "desc": "Explains that an invalid settings file disables its hooks and permission rules."
+  },
+  "98fd83eb4a7324fb109b8ece9fd4335f12e549f8": {
+    "facing": "model",
+    "id": "tool-result-personal-config-rules-hooks-unloaded",
+    "name": "Tool Result: Personal rules or hooks did not load",
+    "desc": "Explains that invalid personal rules and hooks cannot ask or block."
+  },
+  "bd6ed68402c4bd5d3535464d6c068677e24e6161": {
+    "facing": "model",
+    "id": "tool-result-personal-config-hook-event-unsupported",
+    "name": "Tool Result: Personal hook event unsupported",
+    "desc": "Explains the restriction to command and HTTP hooks on blocking events."
+  },
+  "e9ebc4045946a4a87fee46997d80bd71df71767f": {
+    "facing": "model",
+    "id": "tool-result-personal-hooks-unsupported-event-recovery",
+    "name": "Tool Result: Unsupported personal hook recovery",
+    "desc": "Advises changing hook types or events and restarting the session."
+  },
+  "5ca96390e8ad38ae80ed73c8e96d52f0de1a95e2": {
+    "facing": "model",
+    "id": "tool-result-personal-config-session-blocked-wrapper",
+    "name": "Tool Result: Personal configuration session blocked",
+    "desc": "Wraps the reason and recovery instructions for a restricted personal-config session."
+  },
+  "0fe3c496ab217cff08c153c9d8f9ca5e45db3e74": { "facing": "internal" },
+  "5bea7a87f119da47621bfc74751828582a20a4e2": { "facing": "internal" },
+  "453f80211350891c8d63e9e8e18ab44b63c92c6c": { "facing": "ui" },
+  "b1684dfaef947ce727ffec73452b9c23c624678e": { "facing": "internal" },
+  "d9c45068bb5a0d579dc03384f4da2ceced2c79e5": { "facing": "ui" },
+  "0c08bc8090915df138ea80ecbe6f5cd2e1fd934e": { "facing": "internal" },
+  "75fdd2d261a41d96eb36e2f1ddcf3bf8a5cec3ac": { "facing": "internal" },
+  "4ae2af884751e51e719bd1380d31b689b827c41e": { "facing": "internal" },
+  "9f39fdb60ac8ee0c9b0ecc502a07412028e6dc85": { "facing": "internal" },
+  "9e2ae43a1e95a5f205fb8bbdd1aef20d0003d800": { "facing": "internal" },
+  "bfd6e25b1161018b52bf26562704c2f1830ac41a": { "facing": "internal" },
+  "c26c5c06653a6ce7666251d7934335ba795db105": {
+    "facing": "model",
+    "id": "tool-result-worktree-create-personal-hook-restricted",
+    "name": "Tool Result: WorktreeCreate personal hook restricted",
+    "desc": "Explains why a personal WorktreeCreate hook cannot choose the worktree folder under restricted personal configuration."
+  },
+  "f83d385d82852c8efcdc6489820a2ce2a0473747": {
+    "facing": "model",
+    "id": "tool-result-http-hook-could-not-be-asked",
+    "name": "Tool Result: HTTP hook could not be asked",
+    "desc": "Reports an HTTP hook refusal that will also block retries."
+  },
+  "bc1a691c25a903442f1c7115d8b9a1438a34699e": {
+    "facing": "model",
+    "id": "tool-result-hook-runner-stdio-cut-exit-2",
+    "name": "Tool Result: Hook runner stdio cut at exit 2",
+    "desc": "Explains that incomplete hook runner stdio preserves the exit-2 block."
+  },
+  "3740b000828416426ac8185ec11827005713dbf3": { "facing": "internal" },
+  "8f6e04f2b5a3663d6b3a9de6563dbd54cd8e642a": { "facing": "ui" },
+  "464058ecf0e0f1361cf8ad8da25be116ae73475f": {
+    "facing": "model",
+    "id": "tool-result-plugin-result-withheld",
+    "name": "Tool Result: Plugin withheld tool result",
+    "desc": "Reports that a plugin withheld the result of a tool that already ran."
+  },
+  "552483419a27a39d5a93cdc8ffa2f7d4e2ac7160": { "facing": "internal" },
+  "34e63d20ff1876a97a13305bff41e93a66cabf22": { "facing": "internal" },
+  "2f30bbc0ab8e91da0a67ee653dc843a593ca76c5": {
+    "facing": "model",
+    "id": "tool-result-bash-cwd-gone-served-recovered",
+    "name": "Tool Result: Bash served working directory gone",
+    "desc": "Reports a missing served-call working directory and the recovered shell directory without running the command."
+  },
+  "a8d74a4aa732d28617d7188a12aa78662759cbeb": {
+    "facing": "model",
+    "id": "tool-result-bash-cwd-unverified-before-spawn",
+    "name": "Tool Result: Bash working directory could not be verified",
+    "desc": "Refuses a command when the working directory can no longer be confirmed as the permission-checked directory."
+  },
+  "d8e060fbf06492f7060c66863415e4c9839535f4": { "facing": "internal" },
+  "d17c44f29635e546448a7ac4c350d3d81ce10d1b": { "facing": "internal" },
+  "4f1b050d6aa4026db0ccad077c53359137882253": { "facing": "internal" },
+  "24ece801a52c6349f8eb06fd12891aeccfcd04c5": {
+    "facing": "model",
+    "id": "slash-command-plugin-marketplace-name-cannot-form-plugin-id",
+    "name": "Slash Command: Invalid marketplace name",
+    "desc": "Explains that a marketplace name cannot form a valid plugin id and must be changed by its maintainer."
+  },
+  "64409d6483e28c246fca53f0a477889b296d6029": { "facing": "internal" },
+  "0ebde3d370c6bb0322b7e2ae6c057ac147a844ef": { "facing": "internal" },
+  "932853f31f2691577d4d54eac4043f3a4f93fa1b": { "facing": "ui" },
+  "30d7671ad487dfb5358cf58b7099d34cc2b534e9": { "facing": "internal" },
+  "977c0038fcd6f576c9efd84187d92e4f9a230352": { "facing": "internal" },
+  "37798580dfde03178134ef5b4ac0cef3b8ce273b": { "facing": "internal" },
+  "4ebf104155cdb8b446778e21f02be969f1162caf": { "facing": "internal" },
+  "4e96452a1a9a418983e340b2715a23badc7f17c9": {
+    "facing": "model",
+    "id": "system-reminder-mcp-servers-failed-to-connect-guidance",
+    "name": "System Reminder: MCP servers failed to connect guidance",
+    "desc": "Closes the failed-connection server groups by telling the agent to treat them as a connection failure, report it when a request depends on one, and use quoted error text only as diagnostic data"
+  },
+  "511d2f7d4b5ab848183e6efac323970c1bfe8869": {
+    "facing": "model",
+    "id": "system-reminder-mcp-servers-need-auth",
+    "name": "System Reminder: MCP servers need authentication",
+    "desc": "Tells the agent when to report MCP servers needing authorization and forbids requesting authorization secrets."
+  },
+  "38ec91886da76a866cbec35ee7747b04dc413cfe": {
+    "facing": "model",
+    "id": "system-reminder-mcp-servers-failed-to-connect-retry-status",
+    "name": "System Reminder: MCP server background retry status",
+    "desc": "Explains that failed MCP connections may recover when the session retries them in the background."
+  },
+  "e095fbe5cd7c1f8012aef89632f89fa5c35c52f9": {
+    "facing": "model",
+    "id": "system-reminder-mcp-servers-failed-to-connect",
+    "name": "System Reminder: MCP servers failed to connect",
+    "desc": "Lists one group of configured MCP servers that failed to connect and whether their tools are unavailable for the session or only for now while the session retries in the background"
+  },
+  "39f88c5cf60d7b226feab0cdd675d7f663faa8c8": {
+    "facing": "model",
+    "id": "system-reminder-mcp-servers-failed-to-connect-mixed-retry-guidance",
+    "name": "System Reminder: Mixed MCP connection retry guidance",
+    "desc": "Distinguishes retry advice for temporarily unavailable MCP servers from advice for other failed servers."
+  },
+  "8d2c089eaf58d0c41290802096637b6f08e3c03d": { "facing": "internal" },
+  "bb6376c09eaac999ca298d72dbc8b9605d4fb69e": { "facing": "ui" },
+  "bbae5e1b6dfb77d8e2369d2f8005c6b6fee7c3a4": { "facing": "ui" },
+  "9e06c7adad4ab5d0ef91e1b2e129ebc4ea65fe6b": { "facing": "ui" },
+  "dc2ccd208662f0425f2a65d6db2008a8878a04c3": { "facing": "ui" },
+  "41db799d830ec24813b3b54f0e403361d668d5e0": { "facing": "ui" },
+  "ee3201e353aee8f7db40cd2c9d4e025deb4b1b6c": { "facing": "ui" },
+  "baa1891b32c15f28793211f1a2163f7b14d6057a": { "facing": "ui" },
+  "7c082b37ebebc7afcc105cd8ed5a0ae22cf7bf26": { "facing": "ui" },
+  "020ed7951ae49ff862d039b3f6b61f04d4cfa0c5": { "facing": "ui" },
+  "fcea26dbab33c53b7b55136f57a2abc59feb7994": { "facing": "ui" },
+  "be4bb7468e28efc90c22faeb076840bde9922245": { "facing": "ui" },
+  "deb0bde1d4f45758d31a7e66f15c67a922444239": { "facing": "ui" },
+  "320b3e60035658c79940606a104279a22b395c55": { "facing": "ui" },
+  "98d178f5962c72de18f21dbaaf5cc99e794f8fa7": { "facing": "ui" },
+  "071be4266b5c0c4c55ff4a1d72f15dc9d02e299c": { "facing": "ui" },
+  "68a584395e719fbb273d2451e9a3f07cff305045": { "facing": "ui" },
+  "15137aebde664445ffaa3747c25cd2f372ec52e7": { "facing": "ui" },
+  "5040b7cb737b1a08db12617eb0fcd406ab63d479": { "facing": "ui" },
+  "ea1ea90917157b0013a8f8b6d39b5067f04ff985": { "facing": "ui" },
+  "be678637cfd6c032db9eac6f8763396f8bbf554d": { "facing": "ui" },
+  "ce0118a01e982ea9978b8b137fedc14a02cf63ed": { "facing": "ui" },
+  "e7d2495bd542833ee26ef4c8b385712c18d69bde": { "facing": "ui" },
+  "9d5bbe9e3170d66341d167f1450a501d74fcc3c2": { "facing": "internal" },
+  "d9c0aa6b94e897519ba591e7826e345845cdbd42": { "facing": "internal" },
+  "384fa232a3953877874368ac5ee88cf85816ae1a": { "facing": "ui" },
+  "1fbe13c96509d45a4c66c15898ea5fae3f7bc314": { "facing": "internal" },
+  "71801e9b981bbc55b06a692bc2bdde5aa52cbe50": { "facing": "ui" },
+  "1da4ec6c3cf39a1f60c0b9899e8d42c8ba3b14c5": { "facing": "ui" },
+  "460c04068ff513416563f3292c1b753d00aa60c5": { "facing": "internal" },
+  "a92dba7e04903f5ceac2b3d5ef00eb5c0cb260b9": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-looks-like-artifact-id-pass-full-link",
+    "name": "Tool Result: Artifact id needs full link",
+    "desc": "Asks for the full artifact link when a bare artifact id is supplied."
+  },
+  "213797213f7b3f5b4820577dd34c3068d1459164": {
+    "facing": "model",
+    "id": "system-reminder-task-stopped-by-user-with-note",
+    "name": "System Reminder: User stopped task with note",
+    "desc": "Notifies the agent that the user stopped a task and includes the associated note."
+  },
+  "72c5cc9abc50858c7bb87623627864a7d022e8ef": { "facing": "internal" },
+  "ee9a56155787fe1961c5e72790f19770cba4659b": { "facing": "internal" },
+  "da89a42076d48d601feb919f62ef4b709f15b799": { "facing": "ui" },
+  "e12e33245039c48138aa1a30720434c35780a969": { "facing": "internal" },
+  "e2740e4eab139f8d54f6e530b219a78d7adb8bd6": { "facing": "internal" },
+  "b1129b75acc50c062851b5e505dec161daf0feea": {
+    "facing": "model",
+    "id": "tool-result-subagent-handback-already-delivered",
+    "name": "Tool Result: Subagent handback already delivered",
+    "desc": "Explains that the agent's single report was already delivered and gives next-step stop guidance."
+  },
+  "e6c916f37169e597d54d0fd674d72634c970994d": {
+    "facing": "model",
+    "id": "tool-result-agent-cloud-personal-config-restricted",
+    "name": "Tool Result: Cloud agent personal configuration restricted",
+    "desc": "Refuses cloud agent launches that would bypass personal configuration restrictions and recommends worktree isolation."
+  },
+  "ba05452c908f16c20e9432545494b5450530efba": {
+    "facing": "model",
+    "id": "tool-result-subagent-spawn-hook-rewrite-ruled",
+    "name": "Tool Result: Subagent spawn hook rewrite ruled",
+    "desc": "Reports that a plugin rewrote a subagent spawn into a permission-ruled request and instructs direct dispatch."
+  },
+  "4c1c3c34ceddd42c603df681ceda29895a4dbc5d": { "facing": "internal" },
+  "9fe1742354a897a6219510e780ff7d57e1d3704e": { "facing": "internal" },
+  "1c57fa0ed527c01983b2b43b27dff6b1b7fba3eb": {
+    "facing": "model",
+    "id": "system-reminder-mcp-task-cancelled-no-result",
+    "name": "System Reminder: Cancelled MCP task produces no result",
+    "desc": "Warns that a cancelled MCP task will not return a result even though server-side work may continue."
+  },
+  "d3d58ae649b85fc59798b7dfecdb0963a39fc324": { "facing": "internal" },
+  "bebe8577daef78817cb626fd974d5bcb788fa61f": { "facing": "ui" },
+  "9197c7914e846864058ca64d7f6e7a805685661e": { "facing": "internal" },
+  "d2b98618ddf6ecff795960a0e6e3c15f27d992c7": { "facing": "internal" },
+  "6d4b31861c0f86b92906cd29364bd449ae426f50": { "facing": "internal" },
+  "98cf21e4530bf6f9abc9d5f9174470646d07757a": { "facing": "internal" },
+  "c01f4daa849e40fef4efb45843bdcf4b194164d9": { "facing": "internal" },
+  "51a2529aaff80c8bbb31047ae8a2d330251a4cde": { "facing": "internal" },
+  "98f2eece64e22c1e56b1e4bb8f04d1cdfaf95f9b": {
+    "facing": "model",
+    "id": "skill-claude-in-chrome-tools-unavailable",
+    "name": "Skill: Claude in Chrome tools unavailable",
+    "desc": "Directs the model to avoid unavailable Chrome MCP tools and continue with the tools currently available."
+  },
+  "37588436b63759cba0ec6f47ae91dc2670d15482": { "facing": "internal" },
+  "2dde46e28e971c70735e4fd2cb391402b3289ebe": { "facing": "internal" },
+  "3399d84181875ee511aaa3ed66b9d825b79b200a": {
+    "facing": "model",
+    "id": "slash-command-terminal-setup-ide-gpu-disabled",
+    "name": "Slash Command: Terminal setup IDE GPU disabled",
+    "desc": "Reports disabling IDE terminal GPU acceleration and explains reload and undo steps."
+  },
+  "4182ff85d9497417825a92380e0a5087b86a4e0f": {
+    "facing": "model",
+    "id": "slash-command-terminal-setup-zed-keymap-manual-block",
+    "name": "Slash Command: Terminal setup Zed manual keymap block",
+    "desc": "Provides the manual Zed keymap block for sending Shift+Enter in the terminal."
+  },
+  "af206040f0e02dae00b3f242b627cc8f1ac341c4": { "facing": "internal" },
+  "e49574919472c3bc66f47133e337b6da84f4e93c": { "facing": "ui" },
+  "1fcda4a542dd87dcfd4e99073814bcaafa547832": { "facing": "ui" },
+  "ef6e89fc54e89982b9d9970d93eb938368990c91": { "facing": "ui" },
+  "a3eb520f2ad8b1c32d5037988bd5cb97d87cc43e": { "facing": "ui" },
+  "c4f22842c876501e65af73a40a941a31d107d920": { "facing": "internal" },
+  "64db84ed7b3640470ebaf9873eaae4f35526c6f5": {
+    "facing": "model",
+    "id": "slash-command-fast-plugin-rewrite-refused",
+    "name": "Slash Command: Fast mode plugin rewrite refused",
+    "desc": "Refuses a plugin rewrite of the selected fast-mode value and directs the user to configuration."
+  },
+  "a5d23e609a45733675f532534d71a25087148882": { "facing": "ui" },
+  "91f63f3c9c4177ddbe0885e538df830c3ab70c75": {
+    "facing": "model",
+    "id": "tool-result-artifact-diff-unchanged-line-omitted",
+    "name": "Tool Result: Artifact diff unchanged line omitted",
+    "desc": "Marks a long unchanged line omitted from the live-page comparison diff."
+  },
+  "613a36769a768d4306ee888b1e4f03fd2b6f7362": {
+    "facing": "model",
+    "id": "tool-description-artifact-stale-publish-line-diff-guidance",
+    "name": "Tool Description: Artifact stale publish line diff guidance",
+    "desc": "Refuses stale Artifact publishes with a live-page line diff, marks the live version viewed, and requires merging its changes into the file being published"
+  },
+  "de0def0748185491b82999a98afc744e4ab48b61": {
+    "facing": "model",
+    "id": "tool-result-artifact-stale-guard-persisted-body",
+    "name": "Artifact Stale Guard Persisted Autoread Body",
+    "desc": "Persisted-mode stale-version guard body: the live source is saved at a path, counts as viewed, and must be Read and merged before republishing."
+  },
+  "95940668f49b712899a0d72559528ec3450bbe85": {
+    "facing": "model",
+    "id": "tool-description-artifact-line-diff-reading-legend",
+    "name": "Tool Description: Artifact line diff reading legend",
+    "desc": "Legend for the live-page line diff in a stale Artifact publish refusal, explaining the column-1 marks (+, -, space, ~), the @@ hunk header and the block ids that publish stamps on /doc pages"
+  },
+  "07d483e85cd7c458b98d28f2be82852bde54d459": {
+    "facing": "model",
+    "id": "tool-result-artifact-stale-guard-autoread-header",
+    "name": "Tool Result: Artifact stale guard autoread header",
+    "desc": "Introduces live artifact source that now counts as viewed and requires merging before republishing."
+  },
+  "f34bae244603bb591ba11973415c307e5392f458": {
+    "facing": "model",
+    "id": "tool-result-artifact-diff-comparison-scope-clause",
+    "name": "Tool Result: Artifact diff comparison scope",
+    "desc": "Clarifies that the artifact comparison excludes supporting files, removals and title."
+  },
+  "abd809f7f269afb4f315fbdace20155e7509f242": {
+    "facing": "model",
+    "id": "tool-result-artifact-diff-untrusted-content-clause",
+    "name": "Tool Result: Artifact diff untrusted content",
+    "desc": "Warns that live diffs and saved source can contain other contributors' content and must be treated as data."
+  },
+  "b321674daf8c3b42751cf3f950260e4b321a3cd0": {
+    "facing": "model",
+    "id": "tool-result-artifact-stale-guard-identical-author-content",
+    "name": "Tool Result: Artifact stale guard identical author content",
+    "desc": "Explains that a stale page has identical author content, marks it viewed and permits a repeat publish."
+  },
+  "97fa989ba71e59c1cf2f1dfd4a4a073209bd9cab": {
+    "facing": "model",
+    "id": "tool-result-artifact-diff-end-merge-reminder",
+    "name": "Tool Result: Artifact diff end merge reminder",
+    "desc": "Ends the live-page changes with a reminder to merge them into the file and publish again."
+  },
+  "5d49325788ec0ca323e4bbc6400087a835dac0bf": {
+    "facing": "model",
+    "id": "tool-result-artifact-diff-unshown-summary",
+    "name": "Tool Result: Artifact unshown diff summary",
+    "desc": "Summarizes differences between submitted and live artifact content when the line diff is not shown."
+  },
+  "9d5f40ddfc05ae224ae9f2a1fec83b5b304ae2fe": {
+    "facing": "model",
+    "id": "tool-result-artifact-conflict-live-content-withheld-ask-rule",
+    "name": "Tool Result: Artifact conflict live content withheld by ask rule",
+    "desc": "Explains that an artifact read requires consent and a publish cannot prompt for that consent."
+  },
+  "3e9b23f59de210f0ecbfe86a7197bfc3845ad0f4": {
+    "facing": "model",
+    "id": "tool-result-artifact-identical-resubmission-unviewed-source-changed",
+    "name": "Tool Result: Artifact resubmission saved source changed",
+    "desc": "Requires fetching and fully reading fresh artifact source after the saved copy changed or disappeared."
+  },
+  "bf7eeb1e1a3d4fa42cd9098470b88dc0c17f92cc": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-saved-viewed-once-clause",
+    "name": "Tool Result: Artifact saved HTML viewed once clause",
+    "desc": "Explains when reading every line of saved artifact HTML makes its version count as viewed."
+  },
+  "a72e409f2de54eb392ff819a04e8ec1afbe28808": { "facing": "internal" },
+  "9e8a77234e7bfcb4ce0527ae24312b023f1bd6d2": { "facing": "ui" },
+  "ce15215b5913787ff5db1e0937f1279dbf3aaffb": { "facing": "ui" },
+  "0bc0568b1d996760e1c2eb527615f42286719952": { "facing": "ui" },
+  "009bcfbd45707dde8f3540d052353c7e21351b04": { "facing": "ui" },
+  "c2276daf601c69bc55e478eb2cac0e04e07e04f5": { "facing": "ui" },
+  "e35f961d48a014aa8e6e130208bb27fab24c8184": { "facing": "ui" },
+  "c8c588104b336e736e24c42ad882e432d102bb95": { "facing": "ui" },
+  "82e495b89c386a79960fcd3f05ccc212883319d2": { "facing": "ui" },
+  "5bf704e06700a544df73a157c08d281534a769f8": { "facing": "ui" },
+  "edaefd6ffb130d98a8a727b4064f6d9f4ae21330": { "facing": "ui" },
+  "a3cdbd0b89fca386042b23d5dcb54c8a7dcd2e20": { "facing": "ui" },
+  "04be4d62a038588cca1deefdde216d4df3b129a3": { "facing": "ui" },
+  "1c29d72827e0c8101eaf93a1bad5e09629196487": { "facing": "ui" },
+  "01d77474b1af6cbd58db11aadaa0d9aca9590285": { "facing": "ui" },
+  "78bb55ad8d3cac90b20a1ed07800e5767bea144f": { "facing": "ui" },
+  "8f7e19813addcbbd6fa84db8564e2b69775f76e4": { "facing": "internal" },
+  "6537c0fb85464e6908f8df8cb613ae02d6cfda7d": { "facing": "internal" },
+  "2eb110e7c2e314740e06b9b003973e1bdb870faa": { "facing": "internal" },
+  "f024b93323cb0d30725b24a63793285f91d35f34": { "facing": "internal" },
+  "0fdee8b859a19c074d59e5d06f9778f00c1ee0c4": { "facing": "internal" },
+  "83d6064f95f5251d2bb298c5cf91f6e841e8a503": { "facing": "internal" },
+  "7c0c0e01e68a51aa254520f41ccfd8b33c0086bb": {
+    "facing": "model",
+    "id": "tool-parameter-powershell-run_in_background-note-completion-notices-disabled",
+    "name": "Tool Parameter: PowerShell run_in_background note (completion notices disabled)",
+    "desc": "PowerShell run_in_background note for sessions where background completion notices are disabled, telling the model nothing announces the finish so it must read the output file or end the command with its own echo"
+  },
+  "e8907518c29ac1c8be653a4e41f49195151f3997": { "facing": "internal" },
+  "5480b609abbc254ef44a1eae5bd5cc3caea238bc": { "facing": "internal" },
+  "8a8a70d69b4978a8c3607a4726cf68a3cae3d77c": { "facing": "ui" },
+  "9db5242a2aed7394e82045506a68bb83261eefd9": { "facing": "ui" },
+  "2d449106a98337d12af5febb93c89bda1138f440": { "facing": "ui" },
+  "933d0acb5d5738a2c6601df5730669da3cb6ebcd": { "facing": "ui" },
+  "d174036de7866cadc6a0d734075157f7b9d91a9b": { "facing": "ui" },
+  "3f23cf2e6791c9f4fce44f1bd6c2cb89b8e4e853": { "facing": "ui" },
+  "f6e6b534cd3abd8d88a9ea17b1936fdd9e9a3750": { "facing": "ui" },
+  "52cb66a0cd4f280a0ff670eed63216e46e1e35ac": { "facing": "ui" },
+  "8c9c697a7ce626e5d47bd4434a90837d580c87b9": { "facing": "ui" },
+  "217c113f5cb553cb74a418161d0dc68a05eee9b9": { "facing": "ui" },
+  "88b998dd994679e36f53795dafbf14f396ea00fe": { "facing": "ui" },
+  "c1bac2c2472ee7e4e7a28a4dac5f17050f6dc68d": { "facing": "ui" },
+  "d29642818f8c94a7ba058aba01b3a548e7cd31a4": { "facing": "ui" },
+  "3444ffd3e8fd09618628b1d754d37c41b1060e0e": { "facing": "ui" },
+  "1e4b520e57b3c73b0f51a0faccb88915740a64db": { "facing": "ui" },
+  "dd7855109cf6fc57eeb8cc50076da4bbc2ecd9b6": { "facing": "ui" },
+  "7eac42adea887681d5afbc54623c838a93146d3f": { "facing": "ui" },
+  "1b602e1acb4f65842e45a95482e64ad2bdc19e9e": { "facing": "ui" },
+  "1f0acf65ecea1385498dba5ce40b58d559aea672": { "facing": "ui" },
+  "a9253f76fefa3577e2ea19a85b0b0a10df78d5aa": { "facing": "ui" },
+  "d5232c956bc96ef4959b8d51ef0a173605752c75": { "facing": "internal" },
+  "509e51d6c658afb7376c0763ab74cc490cdde221": {
+    "facing": "model",
+    "id": "data-plugin-manifest-own-version-note",
+    "name": "Data: Plugin manifest own version note",
+    "desc": "Explains that a displayed manifest version belongs to the plugin while the library numbers its stored copies separately."
+  },
+  "29019ed7c29f319b467a198a3afc0c62f74caf78": { "facing": "internal" },
+  "2cb9047d397fbfdc57bc8461d9b88230b67ddf00": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-forked-skill-scoping-diskless",
+    "name": "Tool Result: Agent resume forked skill scoping diskless",
+    "desc": "Refuses to resume an agent when the diskless session cannot verify its forked skill permission scoping record."
+  },
+  "ed8a05a8bcfa7c2f4eacca5ee4d45b351a3861fb": {
+    "facing": "model",
+    "id": "system-reminder-orphaned-agent-redispatched",
+    "name": "System Reminder: Orphaned agent redispatched",
+    "desc": "Explains missing completion records for agents redispatched in the previous session and how to recover their results."
+  },
+  "e9df661b260177da678e31fab789b9918d4c6ced": {
+    "facing": "model",
+    "id": "data-task-notification-background-agent-redispatched-output-follow-up",
+    "name": "Data: Background agent redispatched output follow-up",
+    "desc": "Advises resuming a redispatched agent or checking its worktree and output before assuming its task completed."
+  },
+  "8e739b983199ee586f8257d1498a2f5c9b7c4374": {
+    "facing": "model",
+    "id": "data-task-notification-workflow-stopped-or-paused",
+    "name": "Data: Workflow stopped or paused",
+    "desc": "Describes workflow stops or pauses that leave no transcript marker."
+  },
+  "75b7329df7df92e6a54448dc37c1a4708ac281f6": {
+    "facing": "model",
+    "id": "system-reminder-orphaned-workflow",
+    "name": "System Reminder: Orphaned workflow",
+    "desc": "Explains missing completion records for workflows from the previous session and supplies recovery guidance."
+  },
+  "0a9c208e1c03e5deb3173c7b65346c76d5061763": {
+    "facing": "model",
+    "id": "system-reminder-orphaned-agents-aggregate-stopped",
+    "name": "System Reminder: Orphaned agents aggregate stopped",
+    "desc": "Describes possible stopping causes for an aggregate group of orphaned tasks marked stopped."
+  },
+  "9b93bb3eae9668ae1b7acc5ad23fb45608bade52": {
+    "facing": "model",
+    "id": "data-task-notification-orphaned-shell-stop-causes",
+    "name": "Data: Orphaned shell stop causes",
+    "desc": "Lists shell stopping causes that leave no transcript marker in an aggregate orphaned-task notification."
+  },
+  "69b7486dbd7c20a6f329393ddf6e33b1988afd27": {
+    "facing": "model",
+    "id": "system-reminder-loop-wakeup-expired-on-resume",
+    "name": "System Reminder: Loop wakeup expired on resume",
+    "desc": "Explains that the previous process's overdue wakeup will not fire and asks the model to reschedule only if the loop remains wanted."
+  },
+  "8cba97be5078665c9df90f71763d81fae01836c5": {
+    "facing": "model",
+    "id": "data-task-notification-loop-wakeup-expired-on-resume",
+    "name": "Data: Loop wakeup expired on resume",
+    "desc": "Reports how late the session restarted after a missed loop wakeup and that the loop remains stopped."
+  },
+  "5fbbdaf3db3037672a9a404b9d8cce1f20322575": {
+    "facing": "model",
+    "id": "system-reminder-attached-machine-away-until-reachable-condition",
+    "name": "System Reminder: Attached machine away until-reachable condition",
+    "desc": "Defers further calls to an attached machine until a later attached-machines note reports it reachable again or the user says it is back or asks to try again"
+  },
+  "c3d0028199b61cac3d82a085a41a208a1c487a57": {
+    "facing": "model",
+    "id": "system-reminder-attached-machine-away-recheck-on-request-ending",
+    "name": "System Reminder: Attached machine away recheck-on-request ending",
+    "desc": "Closing sentence allowing one more check of an unreachable attached machine only when the user says it is back or asks to try again"
+  },
+  "08d44af3dc1e0e26f30cd7a1e751589cfa63547e": {
+    "facing": "model",
+    "id": "system-reminder-attached-machine-stopped-answering-return-noted",
+    "name": "System Reminder: Attached machine stopped answering (return noted)",
+    "desc": "Follows the stopped-answering notice when the session is tracking the machine's return, barring calls until a later note or the user reports it back, requiring a check of what the command did before repeating it, and telling the user what i…"
+  },
+  "8949c73c9e4aeeec7e7e1601cdfab8485843c31a": {
+    "facing": "model",
+    "id": "system-reminder-attached-machine-stopped-answering-return-not-noted",
+    "name": "System Reminder: Attached machine stopped answering (return not noted)",
+    "desc": "Follows the stopped-answering notice when the session is not tracking the machine's return, forbidding retries of non-idempotent commands until reconnection and further calls this turn, and allowing one recheck only when the user says it is…"
+  },
+  "cbb181e10e05afa248587bd46b4e86ec1da0c910": {
+    "facing": "model",
+    "id": "system-reminder-attached-machine-went-to-sleep-return-noted",
+    "name": "System Reminder: Attached machine went to sleep (return noted)",
+    "desc": "Follows the went-to-sleep notice when the session is tracking the machine's return, barring calls until a later note or the user reports it back, then requiring a check of what the command did and telling the user what is paused"
+  },
+  "8d041ae63c084e06c4d02aab9ac34bc632b77488": {
+    "facing": "model",
+    "id": "system-reminder-attached-machine-asleep-command-paused",
+    "name": "System Reminder: Attached machine asleep command paused",
+    "desc": "Says a command sent to a sleeping attached machine was not cancelled but paused with it, will most likely continue on waking, keeps what it already did, and must not be repeated here or there"
+  },
+  "7caec68cf9891f06d111e43f95881d44d4f128a4": {
+    "facing": "model",
+    "id": "system-reminder-attached-machine-asleep-command-withdrawn",
+    "name": "System Reminder: Attached machine asleep command withdrawn",
+    "desc": "Says the session stopped waiting on a sleeping attached machine and withdrew the command, which will be stopped when the machine wakes, may have partly run, and must not be repeated without checking"
+  },
+  "a982a7bab0649e2592b80001c43fa37fe3378fc2": {
+    "facing": "model",
+    "id": "system-reminder-attached-machine-went-to-sleep",
+    "name": "System Reminder: Attached machine went to sleep",
+    "desc": "Opens the notice that an attached machine said it was going to sleep while or after a command was sent, followed by whether the command was withdrawn or left paused"
+  },
+  "04583a751a1d1d6c7f28472a1c43e894893b91c7": { "facing": "internal" },
+  "f66c712b46f0746cbe8046a99a0a12e949dabcf8": { "facing": "internal" },
+  "3980e53c3465e14ea6f44248dbdb2927798d3e48": {
+    "facing": "model",
+    "id": "agent-prompt-subagent-delegation-configuration-classifier",
+    "name": "Agent Prompt: Subagent delegation configuration classifier",
+    "desc": "Classifies a user's CLAUDE.md, installed skills and custom agent definitions as encouraging or not encouraging delegation to subagents, naming which sections say so while ignoring any instructions found inside the configuration"
+  },
+  "81aaf2c2b1843495d9305cdf7a8d01fbbb479772": {
+    "facing": "model",
+    "id": "tool-result-artifact-list-permission-denied",
+    "name": "Tool Result: Artifact list permission denied",
+    "desc": "Reports that a configured permission rule denies an Artifact list request."
+  },
+  "597ebc82917000352532a5c2adfffda7f946ee4e": {
+    "facing": "model",
+    "id": "tool-result-artifact-earlier-edit-write-not-applied",
+    "name": "Tool Result: Artifact earlier edit or write did not apply",
+    "desc": "Refuses publishing after an earlier same-response edit or write failed, and asks to settle the change first."
+  },
+  "2b600cc4f2b4c2f9373084b7f2757829517cd0dc": {
+    "facing": "model",
+    "id": "tool-description-artifact-design-skill-loading-guidance-app-wording-2",
+    "name": "Tool Description: Artifact design skill loading guidance (app wording)",
+    "desc": "Requires the design skill before authoring an artifact and explains the viewer-supplied HTML skeleton."
+  },
+  "903ea4e57d05c710f6b911cf9f12ff61ba00bcbe": {
+    "facing": "model",
+    "id": "tool-description-artifact-same-response-edit-and-publish-guidance",
+    "name": "Tool Description: Artifact same-response edit and publish guidance",
+    "desc": "Publish-result tail, shown when same-response editing is enabled, saying the sent files are still on disk so a small known change can be made by sending the Edit calls and the Artifact publish together in one response, with no Read or shell…"
+  },
+  "446d961f9601181507656d760c37c66c07f56583": {
+    "facing": "model",
+    "id": "tool-result-artifact-publish-files-still-on-disk-edit-there",
+    "name": "Tool Result: Artifact files remain on disk",
+    "desc": "Explains how to edit the artifact files on disk and publish them again."
+  },
+  "8030aa161912738d95b66b11295e2ded95cc713d": { "facing": "internal" },
+  "e7ded770239fde352c601da04ecd3943740b43b3": { "facing": "internal" },
+  "eb777b42cc2649130748fe22260f838cfc37e14d": { "facing": "internal" },
+  "d67755c92d95b3af47a44a6091ac331c847ee2b4": {
+    "facing": "model",
+    "id": "tool-result-device-bridge-host-unreachable-2",
+    "name": "Tool Result: Device bridge host unreachable",
+    "desc": "Reports an unreachable machine and asks the agent to stop calling it until the user requests another check."
+  },
+  "7df2b8b93393da14b9be2c881fc34096aed6f1fa": {
+    "facing": "model",
+    "id": "system-reminder-attached-machine-could-not-be-reached-return-not-noted",
+    "name": "System Reminder: Attached machine could not be reached (return not noted)",
+    "desc": "Follows the could-not-be-reached notice when the session is not tracking the machine's return, adding that an oversized call will not succeed on retry, barring calls this turn, and allowing one recheck only when the user says it is back"
+  },
+  "add8dc0bc42c936a134058c0d15c13b0d8f83ea9": {
+    "facing": "model",
+    "id": "system-reminder-attached-machine-could-not-be-reached-return-noted",
+    "name": "System Reminder: Attached machine could not be reached (return noted)",
+    "desc": "Follows the could-not-be-reached notice when the session is tracking the machine's return, barring calls until a later note or the user reports it back and telling the user what is blocked"
+  },
+  "97a668ec394ea172d24143fb8e311776fb11a84a": {
+    "facing": "model",
+    "id": "tool-result-remote-host-session-unreachable",
+    "name": "Tool Result: Remote host session unreachable",
+    "desc": "Reports that the call did not run because a machine could not be reached from this session."
+  },
+  "2c8be77c16ccead0d99f8c7ad7a329efbb392d19": { "facing": "internal" },
+  "ea6437dde5d4c8d39ad63b5e65ffac1f33bb211e": {
+    "facing": "model",
+    "id": "system-reminder-attached-machine-could-not-be-reached-oversized-call",
+    "name": "System Reminder: Attached machine could not be reached (oversized call)",
+    "desc": "Appends to the could-not-be-reached notice that a call too large to deliver will not succeed on a retry, when the failure is on this session's side rather than the machine not answering"
+  },
+  "2e13a37ddbfa2c6573e7f3c07086595c2751a042": {
+    "facing": "model",
+    "id": "system-reminder-tool-hosts-correction-asleep",
+    "name": "System Reminder: Tool hosts correction asleep",
+    "desc": "Describes the earlier report that a command was paused with unknown state when its machine went to sleep."
+  },
+  "a793b299bb211a794f7f7eef687962403ae3180b": {
+    "facing": "model",
+    "id": "system-reminder-unreachable-attached-machines-rechecked",
+    "name": "System Reminder: Unreachable attached machines (rechecked)",
+    "desc": "Says the session rechecks unreachable machines a few times in the next five minutes and notes any that answer, then explains that a later call takes up to 10 seconds to fail and should wait for the user"
+  },
+  "926851ef2289c27e064191fbc46138f70e127a8c": {
+    "facing": "model",
+    "id": "system-reminder-unreachable-attached-machines-return-noted",
+    "name": "System Reminder: Unreachable attached machines (return noted)",
+    "desc": "Tells the agent not to check on unreachable machines because a later copy of the note will say when they reconnect, to call one only then or when the user asks, and to say what is waiting if the turn ends"
+  },
+  "224b12733ca3c1577dc2c1d96388386cc27625da": {
+    "facing": "model",
+    "id": "system-reminder-unreachable-attached-machines-retry-by-call-guidance",
+    "name": "System Reminder: Unreachable attached machines retry-by-call guidance",
+    "desc": "Shared tail explaining that a call is the only way to learn an unreachable machine is back, so make one only when the user says so, then stop calling it and never sleep, poll, loop, or schedule a wait"
+  },
+  "7d094ffc1e6c20960f3c9e1f504c7b42fa651ffc": {
+    "facing": "model",
+    "id": "system-reminder-attached-machine-return-unknown-duration",
+    "name": "System Reminder: Attached machine return with unknown duration",
+    "desc": "Warns that a returned machine's earlier command state is unknown and must be checked before replay."
+  },
+  "dbff18904b92fd0d8a6064515f98e2af0b510e1e": {
+    "facing": "model",
+    "id": "system-reminder-attached-machine-return-command-may-be-running",
+    "name": "System Reminder: Attached machine return command may be running",
+    "desc": "Warns that a previously abandoned command may still be running and should not be repeated."
+  },
+  "fcc2e964180a3d63bc640972f619a77a210e93b0": {
+    "facing": "model",
+    "id": "system-reminder-attached-machine-return-ready-to-retry",
+    "name": "System Reminder: Attached machine return ready to retry",
+    "desc": "Allows calls to a returned machine after the current step, with checks before repeating commands of unknown state."
+  },
+  "e87c9f09a808139e9595813970d4ee16129ca41d": {
+    "facing": "model",
+    "id": "system-reminder-attached-machine-return-time-since-heard",
+    "name": "System Reminder: Attached machine return time since heard",
+    "desc": "Adds how long the session had not heard from the returned machine."
+  },
+  "fe73191d66494cd37a5320d8ad7073f9a17d1b83": { "facing": "internal" },
+  "a8dd60ec7f0b464559ebe5de8a24efef1e15c142": { "facing": "internal" },
+  "e9d1db415be783f0f81141eb4d423ca804ca988e": { "facing": "ui" },
+  "65e20c646200f81f16796a4d5f9f786882519397": { "facing": "ui" },
+  "5a247546b08758173e74a2edcf2fe9e196d8e3fa": { "facing": "ui" },
+  "f5d2d957c02859ca2057a6e8519d594ac12eb2f2": { "facing": "internal" },
+  "bf068853603b2da0d4e3b14977e874404c22b152": {
+    "facing": "model",
+    "id": "data-permission-callback-expected-return-shape",
+    "name": "Data: Permission callback expected return shape",
+    "desc": "States the expected permission callback result shape and the total limit on permission updates."
+  },
+  "5f5b8e8c72dfe3795ace396f659ac5745a850af4": { "facing": "internal" },
+  "3101e4a7e27201e9e7bd17cf575f7a21b5150606": { "facing": "internal" },
+  "e4acab4713253575144d26b6d5aaaab6508ab0c2": { "facing": "internal" },
+  "cce74a3915df9640c519ca0fab86d1b21ea8ae57": { "facing": "internal" },
+  "2d55d836abfc77583d529023cbee6c78112c4366": { "facing": "internal" },
+  "58318ce4c596db06724e46be4434fc86ec1c1616": { "facing": "internal" },
+  "a8d8e718c6df9f4284618631d38a5560847943f7": { "facing": "internal" },
+  "43be7cdd874be9e3d0373130ae09a0e335d3ee47": { "facing": "internal" },
+  "930a17c59fec84268b7b69e5e95565c6a7ed976d": { "facing": "internal" },
+  "723db760fc6381a83fbb9291b416cc8ae77c6c47": { "facing": "internal" },
+  "3ff02892eb1f15a89fb745d443b330751e808afb": {
+    "facing": "model",
+    "id": "tool-result-permission-request-withdrawn-unanswered",
+    "name": "Tool Result: Permission request withdrawn unanswered",
+    "desc": "Denies a pending local permission request after Stop or session ending and instructs the agent not to ask again."
+  },
+  "1d471f30ab4396620f1dbed630cca332b846f4ae": { "facing": "ui" },
+  "b8218798dad972840505f5b6efa4f11898d4a7eb": {
+    "facing": "model",
+    "id": "system-reminder-attached-machine-return-wake",
+    "name": "System Reminder: Attached machine return wake",
+    "desc": "Resumes authorized work after an attached computer becomes reachable, while preserving any user approval requirements."
+  },
+  "6d7a14836d2653b5c2c37ada1e04bbfbfa65abec": {
+    "facing": "model",
+    "id": "system-reminder-attached-machine-outcome-correction-wake",
+    "name": "System Reminder: Attached machine outcome correction wake",
+    "desc": "Resumes authorized work after the outcome of a previously abandoned remote command becomes known."
+  },
+  "ff19f15fad1f1829576f447383ab33e1fc6c3f32": {
+    "facing": "model",
+    "id": "system-reminder-staged-files-not-placed",
+    "name": "System Reminder: Staged files not placed",
+    "desc": "Lists handed-off files that may be missing or stale because they did not arrive at the current worker."
+  },
+  "1171252677ce45d38a99bbd92c554ca2776de5bc": { "facing": "internal" },
+  "08956a372614e09969c85434e6280d3056cb2286": { "facing": "internal" },
+  "22d767d6e881d1830f538445f76ea6443a1ef0ee": { "facing": "internal" },
+  "fe894cae06932ec5a424b87afaf0463778e345c0": { "facing": "internal" },
+  "003389cf25a2222cd055534e30ae0f8987056e4d": { "facing": "internal" },
+  "7f713eca7b324c6fb5f355189767da4beb92a46a": { "facing": "internal" },
+  "7c9f99ec7572cff1a282fda9e425a35bd47fdf3a": { "facing": "internal" },
+  "bab6c62c9214144812dc3ec470fd3cce75be8d8f": { "facing": "ui" },
+  "24147044c80adf3b6af607c9768ae7fb1f20bb42": { "facing": "internal" },
+  "f23c72369921f433da3e971d4c3b3c4108ed9247": {
+    "facing": "model",
+    "id": "skill-plugin-authoring-cloud-session-surface",
+    "name": "Skill: Plugin authoring cloud session surface",
+    "desc": "Explains the cloud container and pane placement for mod authoring."
+  },
+  "91109525959d54d533b84db51ed2dd9e2a69c180": {
+    "facing": "model",
+    "id": "skill-plugin-authoring-hosted-session-surface",
+    "name": "Skill: Plugin authoring hosted session surface",
+    "desc": "Explains hosted session surfaces and loading a mod without hot reload."
+  },
+  "0d638eb67575d81953d1f18fda11c6760c252152": {
+    "facing": "model",
+    "id": "skill-plugin-authoring-organization-library-surface",
+    "name": "Skill: Plugin authoring organization library surface",
+    "desc": "Explains publishing plugins to the organization library."
+  },
+  "9dc6ecbb8dbfa40838f7bb273704074aa8aaef30": {
+    "facing": "model",
+    "id": "skill-plugin-authoring-description",
+    "name": "Skill: Plugin authoring description",
+    "desc": "Description of the plugin-authoring skill for writing Claude Code mods (function-hook plugins with panes, bands, status lines, toasts) that hot-reload in-session"
+  },
+  "70364d3b1ff0dfaf9444b585005870b9609ffae8": {
+    "facing": "model",
+    "id": "skill-plugin-authoring-terminal-session-surface",
+    "name": "Skill: Plugin authoring terminal session surface",
+    "desc": "Explains terminal pane widths and mod loading without hot reload."
+  },
+  "2c93597e93eecefb598ae3b0f3bc8f23cee5b8d2": { "facing": "internal" },
+  "396918523a7a6d15b5360ccb75a7656c4c6c5f30": { "facing": "internal" },
+  "e3a892e2e1db30017c769f8d6c2bc58079811d06": {
+    "facing": "model",
+    "id": "tool-result-chrome-unreadable-site-denied",
+    "name": "Tool Result: Chrome unreadable site denied",
+    "desc": "Explains refusing a Chrome call whose target cannot be checked against deny rules."
+  },
+  "3d07d28d51851441db0e464671583d6ebb87b592": {
+    "facing": "model",
+    "id": "tool-result-chrome-action-may-leave-site-reason",
+    "name": "Tool Result: Chrome action may leave site reason",
+    "desc": "Describes a Chrome action that may navigate beyond its named site."
+  },
+  "9755bae5da911bceaca0ef6b72cae8422abbe0b2": { "facing": "internal" },
+  "3a635bd58b6971ffe3bb5de2ac974c7595829dfc": { "facing": "internal" },
+  "8987014388b865bdb3cc3ff29aa7b8d520c8a2b3": { "facing": "internal" },
+  "69634edcb3c95d46613d4bfda1a1ddc4b27a0a4c": { "facing": "internal" },
+  "fd9880c89d662f648c525997636736a9c80b0f98": { "facing": "ui" },
+  "82688ab82588f66a1a91ef7a0bfbdce5003a615b": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-advice-heading",
+    "name": "Slash Command: Plugin validate advice heading",
+    "desc": "Introduces advisory validation results without changing the verdict."
+  },
+  "aefcad07a466e096b183d3831c92ce1641e382e9": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-readme-install-version",
+    "name": "Slash Command: Plugin validate README install version",
+    "desc": "States the Claude Code version supporting one-step README installation."
+  },
+  "36ed0bf761be31e701008f8141c3b9b1ba1b3e95": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-marketplace-listed-name",
+    "name": "Slash Command: Plugin validate marketplace listed name",
+    "desc": "Requests the name used by the marketplace when filling installation guidance."
+  },
+  "ad42c20f42d8ec1aa8895584425a30861f9d1600": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-marketplace-repository-replacement",
+    "name": "Slash Command: Plugin validate marketplace repository replacement",
+    "desc": "Explains replacing the owner/repo placeholder with the marketplace repository."
+  },
+  "7ea01f8f673b8648ad0a5878648a6554e50acd56": { "facing": "ui" },
+  "dfcc37540118a9d2ec1e43cda9e29de034905c79": { "facing": "ui" },
+  "1bc8047ad2c12cf5d915aa8836dcd3bf3eb2e5c5": { "facing": "ui" },
+  "1c6e27ca83a3aac3be4cbbec444fa50cace8f2d0": { "facing": "ui" },
+  "cff3bf7ffc2bc880612ffb9b9d9522e96ffa59a6": { "facing": "ui" },
+  "7f689cdf3afb8bc12dcb883061ed8b6827a307f2": { "facing": "ui" },
+  "5e85d7e528eb66ac693fa86c6282953333d5c5ab": { "facing": "ui" },
+  "59c9a0199de23e3a0b9898d657517337ce72804c": { "facing": "ui" },
+  "6c9ae2614f536976deaa2fc9926d17ab7baca69d": { "facing": "ui" },
+  "2c3bf7df51ed7899c7a323a804a5ec07a14e5895": { "facing": "ui" },
+  "fb3bc019d7865b8f8e07f804a9741eec614f0d87": { "facing": "ui" },
+  "ddc3c5bb5cf86afe58bce452df760c9b323f6638": { "facing": "ui" },
+  "7643f77d422dbed5d8ac74ddff3088ba24788b0d": { "facing": "ui" },
+  "cc18ed031574f8b7510fe7bac769abbf4c3f4fec": {
+    "facing": "model",
+    "id": "agent-prompt-background-agent-state-classifier-chat-thread-relay-rule",
+    "name": "Agent Prompt: Background agent state classifier chat-thread relay rule",
+    "desc": "Classifier addendum for sessions that reach people only through posts in a chat thread: a named person counts as the user, an open ask stays blocked even beside a scheduled check-in, and third-party waits stay done"
+  },
+  "a4e3652dde939d0f4707be6487ed583c9f341d33": { "facing": "internal" },
+  "39492c250cdaf29546a342256acbbad8c578cb5c": { "facing": "ui" },
+  "b81d3abbba4122e474c22952ea331f7380451ae9": { "facing": "ui" },
+  "23bd332bde73da547e368009124c0f850f9e36e0": { "facing": "ui" },
+  "ca87236a4ae7cb90e04422e00a81afb53cdd6f7e": { "facing": "ui" },
+  "1a8224f8fa5e45ee2b3bab08e1782471665560dc": { "facing": "ui" },
+  "5305cf79960349b251347837364a429812881232": { "facing": "ui" },
+  "d7450f9b8205f041801a2e44285ac781a65151ef": { "facing": "ui" },
+  "55ffe97cce4ee54bd729875f0a0190c500580d49": { "facing": "ui" },
+  "40ec0c0d2144a89fc6bd39abde4b11a1140e3c02": { "facing": "ui" },
+  "b0e05ed6dcd02fe8a899105b37975a9a78afd03f": { "facing": "internal" },
+  "dffa92d6b33bfc35c7701c762d274f200699cb71": {
+    "facing": "model",
+    "id": "tool-result-mcp-serve-launch-settings-unreadable",
+    "name": "Tool Result: MCP serve launch settings unreadable",
+    "desc": "Explains why unreadable launch settings prevent served tool execution."
+  },
+  "6bd3e8a7261da5a5531dfd7aaf013443d87588c9": {
+    "facing": "model",
+    "id": "tool-result-mcp-serve-permission-request-unanswered",
+    "name": "Tool Result: MCP serve permission request unanswered",
+    "desc": "Explains the refusal when a served permission request gets no answer."
+  },
+  "8128fccff63b938d7b0b71722039a3943d86eed8": {
+    "facing": "model",
+    "id": "tool-result-mcp-serve-tool-not-served",
+    "name": "Tool Result: MCP serve tool not served",
+    "desc": "Explains refusal of a tool this server does not serve."
+  },
+  "238edaebcb34fa100f305d3ac21f63620a5912db": { "facing": "internal" },
+  "a8706cecb03f1caa8819ff88fec3e503ffa4312a": {
+    "facing": "model",
+    "id": "tool-result-mcp-serve-input-refused",
+    "name": "Tool Result: MCP serve input refused",
+    "desc": "Explains a served tool refusing validated input."
+  },
+  "6061d6b3dcdc61a6903058f197299ffa0dbdfd63": {
+    "facing": "model",
+    "id": "tool-result-mcp-serve-deny-rule-unreadable",
+    "name": "Tool Result: MCP serve deny rule unreadable",
+    "desc": "Explains refusal of unreadable per-call deny rules."
+  },
+  "04a4db443e01fe0398a94b0269d1944428e64ee8": { "facing": "internal" },
+  "5d44b77a732d0c5fbee0efd6960b794c5b160eba": { "facing": "internal" },
+  "c102dceb2ce1f925e76ecafc084975a73ce4a413": {
+    "facing": "model",
+    "id": "tool-result-served-project-commands-count",
+    "name": "Tool Result: Served project commands count",
+    "desc": "Summarizes listed project commands and truncation or refusal counts."
+  },
+  "54c5eb8dc8b6ea07727cfb20bf56f16556fb0617": {
+    "facing": "model",
+    "id": "tool-result-served-skill-changed-since-listing",
+    "name": "Tool Result: Served skill changed since listing",
+    "desc": "Explains refusal to render a skill that changed after listing."
+  },
+  "8f6bde1e794544a22402f55ec9e3d0f0edd46287": {
+    "facing": "model",
+    "id": "tool-result-served-skill-shell-handoff-render-refused",
+    "name": "Tool Result: Served skill shell handoff render refused",
+    "desc": "Explains limits on rendered skill text and inline shell handoff."
+  },
+  "7128d0b43bc6bad4bca1b01e98dff4d7cb6e3d80": { "facing": "internal" },
+  "df0ed2efd77001ae1c0f2708ca4e2ae20cde9cc8": { "facing": "internal" },
+  "504f2da382863db64d44b2a8e2320b442f25226a": { "facing": "ui" },
+  "fd9da268916ce02892dc37526cc5b8a665889313": { "facing": "ui" },
+  "240701e97a3754fcf315868bc5ee2634d5e25b8a": { "facing": "ui" },
+  "c7eab9225b53ddb92085361fb7b6092699ee6aee": {
+    "facing": "model",
+    "id": "tool-result-mcp-serve-rendered-form-unavailable",
+    "name": "Tool Result: MCP serve rendered form unavailable",
+    "desc": "Returns raw output when a served result has no rendered form."
+  },
+  "91e29f09bd7cdc705f2767222f3368a4600988d0": {
+    "facing": "model",
+    "id": "tool-result-mcp-serve-result-too-large",
+    "name": "Tool Result: MCP serve result too large",
+    "desc": "Explains that a served result exceeds the answer size limit."
+  },
+  "4764dea532546b1918fd51a5e605a58fa63613ac": { "facing": "internal" },
+  "0be7ec5673b4b52f3b66317ca36be29b2ea4f3f6": { "facing": "internal" },
+  "f919f6814584da8840151c90815d158e52d2b8ff": { "facing": "internal" },
+  "b0222d243ee37bb27ac2f24244d5614b8d3f5250": {
+    "facing": "model",
+    "id": "tool-result-served-plugin-hook-builtin-remote-refused",
+    "name": "Tool Result: Served plugin hook builtin remote refused",
+    "desc": "Explains why built-in plugin hooks cannot run for another machine."
+  },
+  "d2b4db8dba5adc6d3f541d3df79130ddec85cdf6": {
+    "facing": "model",
+    "id": "tool-result-served-plugin-hook-sync-unsettled",
+    "name": "Tool Result: Served plugin hook sync unsettled",
+    "desc": "Explains retrying before plugin synchronization settles."
+  },
+  "12aa6e604e56efc10b62f18a75a7e21890a5115a": {
+    "facing": "model",
+    "id": "tool-result-served-plugin-hook-unreadable",
+    "name": "Tool Result: Served plugin hook unreadable",
+    "desc": "Explains failure to read the requested plugin hook."
+  },
+  "6ac6cc2c0b72fb11f2e8d38e27806461415ac8b7": {
+    "facing": "model",
+    "id": "tool-result-served-hook-condition-unjudgeable",
+    "name": "Tool Result: Served hook condition unjudgeable",
+    "desc": "Explains failure to evaluate a hook condition."
+  },
+  "acd965a98b70cd0bccf458daeb9f965996927bd7": {
+    "facing": "model",
+    "id": "tool-result-served-hook-output-too-large",
+    "name": "Tool Result: Served hook output too large",
+    "desc": "Explains a hook output exceeding the remote answer limit."
+  },
+  "a7dda0c6fdfe6e48ede049c8d87b5c40fd92dcb1": {
+    "facing": "model",
+    "id": "tool-result-served-hook-policy-unreadable",
+    "name": "Tool Result: Served hook policy unreadable",
+    "desc": "Explains failure to read the machine hook policy."
+  },
+  "4eeb7d740456236be7c3cc4f721caabf6b58138a": {
+    "facing": "model",
+    "id": "tool-result-served-plugin-hooks-disabled",
+    "name": "Tool Result: Served plugin hooks disabled",
+    "desc": "Explains settings, policy or trust disabling plugin hooks."
+  },
+  "74a0720cadaea9c355f997a6a5641d2e2ba10cb2": {
+    "facing": "model",
+    "id": "tool-result-served-account-plugin-settings-held",
+    "name": "Tool Result: Served account plugin settings held",
+    "desc": "Explains machine settings holding account plugins."
+  },
+  "136283bc5ab4493fddcc062a3f5f12448c02bd0a": {
+    "facing": "model",
+    "id": "tool-result-served-repo-hooks-disabled",
+    "name": "Tool Result: Served repo hooks disabled",
+    "desc": "Explains why repository hooks are disabled on this machine."
+  },
+  "ca439d804ac47c21195aacf453150511d9f4ce08": {
+    "facing": "model",
+    "id": "tool-result-served-hook-matcher-unjudgeable",
+    "name": "Tool Result: Served hook matcher unjudgeable",
+    "desc": "Explains failure to evaluate a repository hook matcher."
+  },
+  "1a439cf19730ed79f49335615fa1366631de93db": {
+    "facing": "model",
+    "id": "tool-result-served-repo-hook-settings-unreadable",
+    "name": "Tool Result: Served repo hook settings unreadable",
+    "desc": "Explains unreadable repository settings during hook lookup."
+  },
+  "22a32db6c35356f7cd5558b99c8fea3da119a699": {
+    "facing": "model",
+    "id": "tool-result-served-repo-hook-not-declared",
+    "name": "Tool Result: Served repo hook not declared",
+    "desc": "Explains no matching repository hook declaration for the event."
+  },
+  "1ce0a4ed6455fa4d5fbee44feace38b96392e422": {
+    "facing": "model",
+    "id": "tool-result-served-permission-context-too-large",
+    "name": "Tool Result: Served permission context too large",
+    "desc": "Explains refusal of an oversized remote permission context."
+  },
+  "cef774357a5e07a6874d11495472a191d54efc79": { "facing": "internal" },
+  "f65bc47fd8c7d194a1c7621382bd49457b0011c8": {
+    "facing": "model",
+    "id": "tool-result-served-project-agents-count",
+    "name": "Tool Result: Served project agents count",
+    "desc": "Summarizes the number of listed project agents and truncation."
+  },
+  "a11f2c444edea2a8d5587a086a83a34212eb36cb": {
+    "facing": "model",
+    "id": "tool-result-mcp-list-connection-summary",
+    "name": "MCP server connection summary",
+    "desc": "Reports how many MCP servers connected and whether listing was cut."
+  },
+  "36f6671be6472645f85f3acaa5f4d5ca6252ee4c": {
+    "facing": "model",
+    "id": "tool-result-mcp-call-invalid-request",
+    "name": "Invalid MCP request",
+    "desc": "Rejects an MCP relay request missing a server name or JSON-RPC id."
+  },
+  "645cd74f60249ec6db124015f510d4dd14f7a34c": {
+    "facing": "model",
+    "id": "tool-result-mcp-call-server-not-connected",
+    "name": "MCP server not connected",
+    "desc": "Rejects a relay request for a server absent from the last listing."
+  },
+  "f9483c4d1a4d9fdb840ed479df13a25781914a5e": {
+    "facing": "model",
+    "id": "tool-result-mcp-call-answer-over-limits",
+    "name": "MCP response exceeds limits",
+    "desc": "Explains the byte, field and nesting limits on a relayed MCP answer."
+  },
+  "100a7d6ed895597a00f95f2987e31df8db62bbbd": {
+    "facing": "model",
+    "id": "tool-result-read-task-output-unknown-shell-task",
+    "name": "Unknown shell task",
+    "desc": "Rejects task output requests whose id is not a shell task."
+  },
+  "698629d9befc671c8c0bf9b049889c64e4839dc7": {
+    "facing": "model",
+    "id": "tool-result-monitor-command-no-launch-settings-detail",
+    "name": "Monitor launch settings unavailable",
+    "desc": "Explains why absent launch permission settings prevent monitoring."
+  },
+  "d7fc3df03ae1fc12ecd7feb9f1711dc47627854f": {
+    "facing": "model",
+    "id": "tool-result-monitor-command-inapplicable-rule-detail",
+    "name": "Monitor rule cannot be applied",
+    "desc": "Explains why a launch permission rule prevents all monitoring."
+  },
+  "7b27a7b565e0a0c7f172c60fa28db97315d7445b": {
+    "facing": "model",
+    "id": "tool-result-monitor-command-progress-token-required",
+    "name": "Monitor progress token required",
+    "desc": "Requests a progress token so monitor output has a destination."
+  },
+  "1fffcbf251dfd259d0fc68f5a60731280ae61ded": {
+    "facing": "model",
+    "id": "tool-result-monitor-command-launch-rule-refusal",
+    "name": "Monitor launch rule refusal",
+    "desc": "Wraps a monitor refusal caused by missing or incompatible launch permission settings."
+  },
+  "3ffca3d4a2ab12ad44c26764a6663d715b156f9f": { "facing": "internal" },
+  "316713591d45cf97571789a2c5d85ab78d0639f6": { "facing": "internal" },
+  "c4997a67487e0558d97502a48c0056bda837d134": {
+    "facing": "model",
+    "id": "tool-result-monitor-command-working-directory-changed",
+    "name": "Monitor directory changed",
+    "desc": "Requests a fresh call after the working directory changes during permission checking."
+  },
+  "4d49ae2fc5cba31b3e9f389923c194b22a166d92": {
+    "facing": "model",
+    "id": "tool-result-monitor-command-capacity-reached",
+    "name": "Monitor capacity reached",
+    "desc": "Asks to stop a monitor before starting another at the concurrency limit."
+  },
+  "41fad79d0210a82bf859bc07e3d64bfb60581890": { "facing": "internal" },
+  "9fd8482a5ab7b2b6b1d925a8d250438eb0bb2f8f": {
+    "facing": "model",
+    "id": "tool-result-served-file-absolute-local-path-required",
+    "name": "Absolute local path required",
+    "desc": "Rejects served file operations with paths that are not absolute local paths."
+  },
+  "193616792ba63ccdc434c53d86b071ef7e73189b": {
+    "facing": "model",
+    "id": "tool-result-served-file-invalid-file-name",
+    "name": "Invalid served file name",
+    "desc": "Requires a short non-staging file name without a directory component."
+  },
+  "b087160b6d93fdcdcad8f2dfebf40304d9db0ea4": {
+    "facing": "model",
+    "id": "tool-result-served-file-bytes-not-base64",
+    "name": "Invalid base64 bytes",
+    "desc": "Rejects a staged file write whose bytes are not valid base64."
+  },
+  "e6d68a5fbb5e62b855722b40de45c62a5372bae5": {
+    "facing": "model",
+    "id": "tool-result-served-file-staging-not-write-file",
+    "name": "Invalid staged write file",
+    "desc": "Rejects a staging path that is not a single-link file for the write."
+  },
+  "3bf96f880c62330e084758feaa73c231a0d26290": {
+    "facing": "model",
+    "id": "tool-result-served-file-staging-identity-changed",
+    "name": "Staged write identity changed",
+    "desc": "Rejects a later write part whose staged file differs from the initial write."
+  },
+  "c70a1b996d71211000921d7b41d4987767a24f03": {
+    "facing": "model",
+    "id": "tool-result-served-file-part-offset-mismatch",
+    "name": "File part offset mismatch",
+    "desc": "Rejects a write part that does not follow the existing bytes."
+  },
+  "e6f9dd2eea85533a946aae29c2aed39d981534d8": {
+    "facing": "model",
+    "id": "tool-result-served-file-part-write-incomplete",
+    "name": "File part could not be written",
+    "desc": "Explains a zero-byte write while staging a file part."
+  },
+  "ddcf8b8634aaf77e33b07622f29d3775f63ba6ea": {
+    "facing": "model",
+    "id": "tool-result-served-file-replaced-before-placement",
+    "name": "Staged file replaced before placement",
+    "desc": "Rejects a file whose identity changes before final placement."
+  },
+  "a6d6987b5aa1da0dd11987f632b1163e2c70dd54": {
+    "facing": "model",
+    "id": "tool-result-served-file-archive-required",
+    "name": "File archive required",
+    "desc": "Requires an archive when placing a nonempty file list."
+  },
+  "4f1f44b60c75e6cdd39bda32f07e59d69d445ad5": {
+    "facing": "model",
+    "id": "tool-result-served-file-directory-unopenable",
+    "name": "File directory cannot be opened",
+    "desc": "Reports inability to open the destination directory."
+  },
+  "05f678a23b0310b653350e267dde4504b56d8b73": {
+    "facing": "model",
+    "id": "tool-result-served-file-duplicate-name",
+    "name": "Duplicate file name",
+    "desc": "Rejects a file list containing the same name twice."
+  },
+  "f5a99e8abf3bed38ff5ed5c3e1ca9a23d88f50f4": {
+    "facing": "model",
+    "id": "tool-result-served-file-total-size-exceeded",
+    "name": "File placement size limit",
+    "desc": "Rejects a file list whose total size exceeds a call limit."
+  },
+  "c1bd1ac693d1f65cde4c62fdd25d5d6b1355043c": {
+    "facing": "model",
+    "id": "tool-result-served-file-staged-archive-invalid",
+    "name": "Staged archive invalid",
+    "desc": "Rejects a missing archive or one whose identity does not match the write."
+  },
+  "165a734a00a72b7a602c889c3e660bc5424c581d": {
+    "facing": "model",
+    "id": "tool-result-served-file-archive-range-exceeded",
+    "name": "File range exceeds archive",
+    "desc": "Rejects a file range extending beyond the staged archive."
+  },
+  "5445203c342cdcd57b6f6fd8c18c7036efb7c7d0": {
+    "facing": "model",
+    "id": "tool-result-served-file-placement-summary",
+    "name": "File placement summary",
+    "desc": "Reports how many files were placed and kept existing."
+  },
+  "5a995acbdc09593bc43d88788c084a29c1e9881a": {
+    "facing": "model",
+    "id": "tool-result-served-file-inflation-failed",
+    "name": "File inflation failed",
+    "desc": "Reports a file that cannot inflate within its declared size."
+  },
+  "3bf9a6243f15f0a98318f74b9fbfea9405da7a76": {
+    "facing": "model",
+    "id": "tool-result-served-file-inflated-size-mismatch",
+    "name": "Inflated file size mismatch",
+    "desc": "Rejects inflated bytes whose size differs from the declaration."
+  },
+  "c83d65e77fca92152d8cdd0879584af368c44f74": {
+    "facing": "model",
+    "id": "tool-result-served-file-sha256-mismatch",
+    "name": "File checksum mismatch",
+    "desc": "Rejects a file whose bytes do not match the declared SHA-256."
+  },
+  "c1c666efe12a8437ca56e356b5968ec54e579ec4": {
+    "facing": "model",
+    "id": "tool-result-served-file-staging-disk-full",
+    "name": "Staging disk full",
+    "desc": "Reports a full disk preventing file staging."
+  },
+  "db5078f6f397d543c1b922e502320739bea6d17a": {
+    "facing": "model",
+    "id": "tool-result-served-file-staging-write-forbidden",
+    "name": "Staging write forbidden",
+    "desc": "Reports filesystem permissions preventing file staging."
+  },
+  "541b50a61ead8d2082443c4e23c830cb4aae6d08": {
+    "facing": "model",
+    "id": "tool-result-served-tool-interface-version-refusal",
+    "name": "Server interface version refusal",
+    "desc": "Reports an unreadable or incompatible caller interface version."
+  },
+  "dd098a688fb0595f6b6d60c847a3da208824673c": {
+    "facing": "model",
+    "id": "tool-result-served-tool-interface-session-too-old-detail",
+    "name": "Caller interface too old",
+    "desc": "Explains the caller interface version is older than the server minimum."
+  },
+  "2ba15f557ec7988b10724145f14edcdbee28f919": {
+    "facing": "model",
+    "id": "tool-result-served-tool-interface-server-too-old-detail",
+    "name": "Server interface too old",
+    "desc": "Explains the server interface version is older than the caller minimum."
+  },
+  "48808746ddbbc29215a51430fecd8fae2c2fa47f": {
+    "facing": "model",
+    "id": "tool-result-served-tool-approval-directory-unconfirmed",
+    "name": "Approval directory unconfirmed",
+    "desc": "Requests a directory change before asking approval for an unreadable working directory."
+  },
+  "bfde5797f5ea496063edcadd4f4e41318a5e14f4": {
+    "facing": "model",
+    "id": "tool-result-served-tool-person-approval-required",
+    "name": "Person approval required",
+    "desc": "Explains that a plain served call needs a person's approval."
+  },
+  "6915d569f6e73d0a487c7ed0188ea1560cb6a736": {
+    "facing": "model",
+    "id": "tool-result-served-tool-approval-not-from-person-detail",
+    "name": "Approval not from a person",
+    "desc": "Rejects an approval not attested by a person."
+  },
+  "b61de3deb282e27196be49aee5ed544da39bb11a": {
+    "facing": "model",
+    "id": "tool-result-served-tool-approval-question-changed-detail",
+    "name": "Approved call changed",
+    "desc": "Requests fresh checking when an approved call or its directory has changed."
+  },
+  "527f7314f5c978704f7617860f049d59cfb81c0e": {
+    "facing": "model",
+    "id": "tool-result-served-tool-approval-offer-unreadable",
+    "name": "Approval offer unreadable",
+    "desc": "Reports an unreadable offer to ask a person for approval."
+  },
+  "e3b89346755a4eb89eb92617353a4935e5f4cf66": {
+    "facing": "model",
+    "id": "tool-result-served-tool-approval-question-too-large",
+    "name": "Approval question too large",
+    "desc": "Requests smaller calls or paths when the approval question exceeds server limits."
+  },
+  "98f68d0c58322681e3f892569e5c5b969ca31bad": {
+    "facing": "model",
+    "id": "tool-result-served-tool-output-with-approval-request",
+    "name": "Output object conflicts with approval request",
+    "desc": "Requests a plain call when approval metadata accompanies an output object request."
+  },
+  "be91e94ad74914f020b1bc448fb490f65e2d5792": {
+    "facing": "model",
+    "id": "tool-result-served-tool-output-deny-digest-mismatch",
+    "name": "Output deny rule digest mismatch",
+    "desc": "Requests reconnection when the deny rule digest differs from the server advertisement."
+  },
+  "65b6de1af981d3e85d23db56e328cce95ee7fbfc": {
+    "facing": "model",
+    "id": "tool-result-served-tool-output-disabled",
+    "name": "Output objects disabled",
+    "desc": "Requests an ordinary call when server output objects are disabled."
+  },
+  "9bde5c88907eaedfd5ec3ee73fda1b025d2c9548": {
+    "facing": "model",
+    "id": "tool-result-served-tool-output-no-launch-rules",
+    "name": "Output objects require launch rules",
+    "desc": "Requests an ordinary call when launch permission settings are absent."
+  },
+  "398f60a897e17017305c3daee556d7289cd66923": {
+    "facing": "model",
+    "id": "tool-result-served-tool-output-deny-rules-over-bounds",
+    "name": "Output deny rules exceed limits",
+    "desc": "Requests an ordinary call when deny rules cannot be advertised."
+  },
+  "5ed0562e6529ac3b7bdc7ff718a1963c3ba15d33": {
+    "facing": "model",
+    "id": "tool-result-served-tool-output-malformed-metadata",
+    "name": "Malformed output request metadata",
+    "desc": "Specifies the required output object request metadata fields and bounds."
+  },
+  "59055cbd847df4b9c3cb48784dd8949103d00e77": {
+    "facing": "model",
+    "id": "tool-result-served-tool-output-no-shared-version",
+    "name": "Output protocol version mismatch",
+    "desc": "Reports incompatible output object protocol versions."
+  },
+  "472ffd83cade8bdb3806b2ee4274abcf73105e00": {
+    "facing": "model",
+    "id": "tool-result-served-tool-output-unknown-tool",
+    "name": "Unknown output object tool",
+    "desc": "Rejects an output object request for an unknown tool."
+  },
+  "4c3a6ad6ef993348fd42e227394db3a0a7678ae8": {
+    "facing": "model",
+    "id": "tool-result-served-tool-output-tool-not-supported",
+    "name": "Tool lacks output object support",
+    "desc": "Lists the tools supporting structured output objects."
+  },
+  "9a40c74fb5b1c8a27f1579902d3bca351c8a3b64": {
+    "facing": "model",
+    "id": "tool-result-served-tool-permission-check-crashed",
+    "name": "Permission check failed",
+    "desc": "Reports failure to evaluate a served tool call's permission rules."
+  },
+  "cf13d978e270994fa1905263e4e466622d8c53d4": {
+    "facing": "model",
+    "id": "tool-result-served-tool-ask-rule-prevents-call",
+    "name": "Ask rule prevents served call",
+    "desc": "Explains that a permission rule requires asking a person and the environment cannot ask."
+  },
+  "52133e7dc98dabaee7b6e6dfbd338c363c910319": {
+    "facing": "model",
+    "id": "tool-result-served-tool-cannot-ask-person",
+    "name": "Served call cannot ask a person",
+    "desc": "Reports a permission objection that cannot be put to a person."
+  },
+  "3358f4fa7d19f57f7f24935dcb9e401087d48f2d": {
+    "facing": "model",
+    "id": "tool-result-served-tool-structured-output-summary",
+    "name": "Structured tool output available",
+    "desc": "Directs the model to a served tool result's structured content."
+  },
+  "6a321a6773889f58ec7014380ba6dd0fc1aba2b2": {
+    "facing": "model",
+    "id": "tool-result-served-bash-truncated-output-no-saved-rest",
+    "name": "Truncated Bash output has no saved remainder",
+    "desc": "Explains that the saved served Bash output contains only the returned start and suggests rerunning safely."
+  },
+  "13ebe0b3bcf6c2f7d446b5b5f91a8b077d9d6bc7": {
+    "facing": "model",
+    "id": "tool-result-served-tool-result-unsendable",
+    "name": "Tool result could not be sent",
+    "desc": "Warns to inspect changes before retrying a tool whose result could not be sent."
+  },
+  "31255ee712f3da38b48a3091bad208e37a435b99": {
+    "facing": "model",
+    "id": "tool-result-served-bash-writes-settings-permission",
+    "name": "Command writes Claude settings",
+    "desc": "Flags a command writing Claude Code settings files for permission review."
+  },
+  "b70c1a359b0bf36cc143ae5c2bb8a4fb51dd63d9": {
+    "facing": "model",
+    "id": "tool-result-served-tool-permission-context-too-large",
+    "name": "Permission context too large",
+    "desc": "Rejects a permission context exceeding server limits."
+  },
+  "544fea892fc145b587570aafa037a235e831edd8": {
+    "facing": "model",
+    "id": "tool-result-served-tool-permission-request-unreadable",
+    "name": "Permission request unreadable",
+    "desc": "Rejects malformed permission requests or unlisted restrictions."
+  },
+  "86d86ad3d38b9f363905f2d41a9a2e15addb6dd2": {
+    "facing": "model",
+    "id": "tool-result-served-tool-permission-session-version-too-old",
+    "name": "Permission caller version too old",
+    "desc": "Explains that the caller permission interface version is older than the server minimum."
+  },
+  "010dd8eea6cc02dd3d28b0a6c0996590e963148d": {
+    "facing": "model",
+    "id": "tool-result-served-tool-permission-server-version-too-old",
+    "name": "Permission server version too old",
+    "desc": "Explains that the server permission interface version is older than the caller minimum."
+  },
+  "421616315cb6d43e4081fcd65042876d41febd0c": {
+    "facing": "model",
+    "id": "tool-result-served-tool-start-directory-gone-next-directory",
+    "name": "Start directory gone with fallback",
+    "desc": "Requests a fresh call after switching from a missing start directory to the launch directory."
+  },
+  "c256a90e874ff91a1db1be0928fae17b2db352d3": {
+    "facing": "model",
+    "id": "tool-result-served-tool-handler-crashed",
+    "name": "Served tool handler failed",
+    "desc": "Warns to check changes before retrying a call whose server handler crashed."
+  },
+  "348c827598b707cf4cc3df5bb3ba0e3b151acc34": {
+    "facing": "model",
+    "id": "tool-result-served-tool-server-decides-no-permissions",
+    "name": "Server decides no permissions",
+    "desc": "Rejects permission requests when the server has no permission capability."
+  },
+  "d055b56f3427b338d34b7bb128043d6ae59bd5f6": {
+    "facing": "model",
+    "id": "tool-result-served-tool-permission-tool-not-supported",
+    "name": "Tool permission decisions unsupported",
+    "desc": "Rejects permission requests for absent or unsupported tools."
+  },
+  "21e23e482c29d903d169a8d74a5d5e47aff91236": {
+    "facing": "model",
+    "id": "tool-result-served-tool-launch-directory-gone",
+    "name": "Server launch directory gone",
+    "desc": "Explains that the server launch directory is missing or unreadable."
+  },
+  "f063edb9374302c0e5a55f8b7a82426e2265e63f": {
+    "facing": "model",
+    "id": "tool-result-served-tool-duplicate-call-not-run-again",
+    "name": "Duplicate tool call refused",
+    "desc": "Warns that a call already started and asks to inspect its effects before retrying."
+  },
+  "ec25adc0794374b223a055313098659486a9ce21": {
+    "facing": "model",
+    "id": "tool-result-served-tool-directory-changed-during-permission",
+    "name": "Directory changed during permission check",
+    "desc": "Requests a fresh call after the start directory changes during permission checking."
+  },
+  "4f794b39abdddf4a1edba694dce45fd76b150f4a": {
+    "facing": "model",
+    "id": "tool-result-served-tool-permission-objections-too-large",
+    "name": "Permission objections exceed limits",
+    "desc": "Requests smaller calls or paths when objections cannot be presented to the user."
+  },
+  "68223fe21c71ac3a967c6e1c8ff4e8f4828f9519": {
+    "facing": "model",
+    "id": "tool-result-served-tool-approval-not-user",
+    "name": "Approval must come from user",
+    "desc": "Rejects an approval that requires the user but was supplied by another approver."
+  },
+  "809bc07e33cb72efd9ecfd16a8b84047056c0f8f": {
+    "facing": "model",
+    "id": "tool-result-served-tool-approval-no-longer-valid",
+    "name": "Approval no longer valid",
+    "desc": "Requests a fresh call after approval state, directory or environment changes."
+  },
+  "408ff7e9a87d0eede3558484e83219ec6bc055ac": {
+    "facing": "model",
+    "id": "tool-result-served-tool-nested-permission-forbidden",
+    "name": "Nested permission request forbidden",
+    "desc": "Requests a separate call when a running cloud tool asks another permission."
+  },
+  "6b608096d812110d4cce68798670fe8939af5f13": {
+    "facing": "model",
+    "id": "tool-result-served-tool-result-too-large-check-changes",
+    "name": "Oversized tool result check changes",
+    "desc": "Warns to inspect changes before rerunning a tool with an oversized result."
+  },
+  "de17c6c7bed2c116c1949acf726963f019434182": {
+    "facing": "model",
+    "id": "tool-result-served-read-result-too-large-fewer-pages",
+    "name": "Oversized read result fewer pages",
+    "desc": "Suggests reading less or fewer PDF pages after an oversized Read result."
+  },
+  "1a9113883b103838fc86991d512ae0911102eb2b": {
+    "facing": "model",
+    "id": "tool-result-served-tool-validation-crashed",
+    "name": "Served input validation failed",
+    "desc": "Reports an internal error during validation of a served tool input."
+  },
+  "dc57d96d6fa720e2906be07d74a3d73701a75e50": {
+    "facing": "model",
+    "id": "tool-result-served-tool-switched-off",
+    "name": "Served tool switched off",
+    "desc": "Rejects a tool disabled in the server."
+  },
+  "fe3e1649f5d4c86e91a4ba4ea340a6b4aa6310e8": {
+    "facing": "model",
+    "id": "tool-result-served-tool-permission-only-no-execution",
+    "name": "Only permission decision requested",
+    "desc": "Explains that a tool was not executed because only its permission decision was requested."
+  },
+  "8c3b657d70a9d4c97dc153aa8251bd7a9f54719e": { "facing": "internal" },
+  "4be4a6210f334d0eed0d75a4cc5d889a83290abf": { "facing": "internal" },
+  "2d281378524842533b521faa166c1b4bf20ee0c4": { "facing": "ui" },
+  "f0561c22d7046bb8248aadac763891979707fa0a": { "facing": "internal" },
+  "9ec9f905a57775debc468d8d5302a1fb8dac0649": {
+    "facing": "model",
+    "id": "system-reminder-unreachable-attached-machines-call-only",
+    "name": "System Reminder: Unreachable attached machines (call only)",
+    "desc": "Explains that a call to an unreachable machine takes up to 10 seconds to fail and is the only way to learn it is back, so it should be made only when the user says so"
   }
 }
