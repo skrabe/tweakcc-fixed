@@ -20,7 +20,8 @@
 // kind is string | template | composite (the joined text of a `[…].join()`,
 // array or `+` chain) | fragment (one element of a composite, `of=<s>-<e>`).
 // verdict is `facing/id`, `facing`, or `uncached`; `*` marks the key it binds
-// under (the first hit in classifyByCache's order).
+// under (the first hit in classifyByCache's order; a promoted template's
+// pre-promotion body comes last, as `legacy…`).
 // Exit 0 with a match, 1 with none, 2 on usage error.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -113,7 +114,14 @@ export function buildEntries(records) {
         if (typeof f.body !== 'string') continue;
         put({ start: f.start, end: f.end, kind: 'fragment', cacheBody: f.body, of: [r.start, r.end] });
       }
-    } else put({ start: r.start, end: r.end, kind: r.kind, cacheBody: r.cacheBody });
+    } else
+      put({
+        start: r.start,
+        end: r.end,
+        kind: r.kind,
+        cacheBody: r.cacheBody,
+        ...(typeof r.legacyCacheBody === 'string' && { legacyCacheBody: r.legacyCacheBody }),
+      });
   }
   return [...entries.values()];
 }
@@ -151,6 +159,21 @@ export function keyVariants(body) {
   return out;
 }
 
+// Every key a site binds under, in classifyByCache's order: the current body's
+// variants, then those of its pre-promotion `legacyCacheBody` (labelled
+// `legacy`), so a verdict recorded before a slot was promoted still binds.
+export function entryKeys(entry) {
+  const keys = keyVariants(entry.cacheBody);
+  if (typeof entry.legacyCacheBody !== 'string') return keys;
+  const seen = new Set(keys.map(k => k.key));
+  for (const k of keyVariants(entry.legacyCacheBody)) {
+    if (seen.has(k.key)) continue;
+    seen.add(k.key);
+    keys.push({ ...k, variant: k.variant === 'raw' ? 'legacy' : `legacy+${k.variant}` });
+  }
+  return keys;
+}
+
 // Template pieces keep raw escapes (`\n`, `\``); let --text match either form.
 const cook = s =>
   s.replace(/\\([nrt`$\\'"])/g, (_m, c) => ({ n: '\n', r: '\r', t: '\t' })[c] ?? c);
@@ -170,11 +193,11 @@ export function selectEntries(entries, { offset, text, hash }) {
         (text.includes('<<') && keyVariants(e.cacheBody).some(v => v.form.includes(text)))
     );
   }
-  return entries.filter(e => keyVariants(e.cacheBody).some(v => v.key === hash));
+  return entries.filter(e => entryKeys(e).some(v => v.key === hash));
 }
 
 export function describe(entry, cache) {
-  const keys = keyVariants(entry.cacheBody);
+  const keys = entryKeys(entry);
   let verdict = null;
   const out = keys.map(({ variant, key }) => {
     const hit = cache[key] || null;

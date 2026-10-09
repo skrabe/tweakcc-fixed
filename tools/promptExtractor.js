@@ -3738,7 +3738,9 @@ function loadSlotLiterals() {
   return _slotLiterals;
 }
 // Debug seam: `TWEAKCC_DUMP_CANDIDATES=<path>` writes one JSON line per string
-// node the extractor considers, as {start, end, kind, cacheBody}.
+// node the extractor considers, as {start, end, kind, cacheBody}, plus
+// `legacyCacheBody` for a template whose slot was promoted (the second body
+// classifyByCache looks it up under).
 //
 // It exists because the cache key for a TEMPLATE literal is not the text anyone
 // reading the binary would write down. `cacheBody` is `pieces.join('')` — the
@@ -4990,6 +4992,7 @@ function extractStrings(filepath, minLength = 500, opts = {}) {
       end: site.end,
       kind: 'template',
       cacheBody: tbody,
+      ...(site.legacy && { legacyCacheBody: site.legacy.pieces.join('') }),
     });
     if (
       shouldCapture(fullContent, tbody, lead, minLength, {
