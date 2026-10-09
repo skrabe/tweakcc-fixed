@@ -1,7 +1,8 @@
 // Worker for tools/lib/matcherDifferential.mjs. Loads the bundled differential
-// core once, holds one target's content at a time (a target's chunks are queued
-// contiguously, so each bundle is read once per worker), and answers chunks.
-import fs from 'node:fs';
+// core once, decodes one target's bytes at a time from the shared memory the
+// runner hashed (a target's chunks are queued contiguously, so each bundle is
+// decoded once per worker), and answers chunks. It never reads the file: the
+// bytes it checks must be the bytes the cache key was computed from.
 import { parentPort, workerData } from 'node:worker_threads';
 import { pathToFileURL } from 'node:url';
 
@@ -13,7 +14,13 @@ let content = null;
 parentPort.on('message', async task => {
   if (task.target !== loadedTarget) {
     content = null;
-    content = task.file === null ? null : fs.readFileSync(task.file, 'utf8');
+    const bytes = workerData.contents[task.target];
+    content =
+      bytes === null
+        ? null
+        : Buffer.from(bytes.buffer, bytes.byteOffset, bytes.length).toString(
+            'utf8'
+          );
     loadedTarget = task.target;
   }
   const results = [];

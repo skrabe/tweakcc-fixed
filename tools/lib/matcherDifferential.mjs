@@ -16,7 +16,10 @@
 // version the regexes are built for; the prompt key is sha1 of the prompt's
 // pieces and identifiers. Only deterministic verdicts are cached ("match" and
 // "the regex builder rejected the pieces"); a mismatch, an error, or a
-// RegExp-engine rejection is recomputed on every run.
+// RegExp-engine rejection is recomputed on every run. Each bundle is read once,
+// into shared memory the workers check directly, so the bytes hashed are the
+// bytes checked even when the file is rewritten mid-run (every --apply
+// rewrites the pristine copy).
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import { builtinModules } from 'node:module';
@@ -37,6 +40,24 @@ const DETAIL_LIMIT = 10;
 const PROGRESS_EVERY = 500;
 
 const sha1 = data => crypto.createHash('sha1').update(data).digest('hex');
+
+// The file's bytes, read once into memory every worker can see.
+const readShared = file => {
+  const fd = fs.openSync(file, 'r');
+  try {
+    const size = fs.fstatSync(fd).size;
+    const bytes = new Uint8Array(new SharedArrayBuffer(size));
+    let at = 0;
+    while (at < size) {
+      const n = fs.readSync(fd, bytes, at, size - at, at);
+      if (n === 0) throw new Error(`${file} shrank while being read`);
+      at += n;
+    }
+    return bytes;
+  } finally {
+    fs.closeSync(fd);
+  }
+};
 
 export const defaultWorkerCount = () =>
   Math.max(1, os.availableParallelism() - 1);
@@ -167,7 +188,7 @@ const writeCacheFile = (file, fresh) => {
   fs.renameSync(tmp, file);
 };
 
-const runPool = ({ coreFile, tasks, workers, onResults }) =>
+const runPool = ({ coreFile, contents, tasks, workers, onResults }) =>
   new Promise((resolve, reject) => {
     if (tasks.length === 0) {
       resolve();
@@ -183,10 +204,10 @@ const runPool = ({ coreFile, tasks, workers, onResults }) =>
       for (const w of pool) void w.terminate();
       reject(err);
     };
-    const count = Math.min(workers, tasks.length);
+    const count = Math.max(1, Math.min(workers, tasks.length));
     for (let n = 0; n < count; n++) {
       const worker = new Worker(WORKER_FILE, {
-        workerData: { coreFile },
+        workerData: { coreFile, contents },
         execArgv: [],
       });
       pool.push(worker);
@@ -251,6 +272,10 @@ export const runMatcherDifferential = async ({
   cacheDir = defaultCacheDir(),
   log = line => console.log(line),
 }) => {
+  if (!Number.isInteger(workers) || workers < 1)
+    throw new RangeError(
+      `matcher differential: workers must be a positive integer, got ${workers}`
+    );
   const started = Date.now();
   const secs = from => `${((Date.now() - from) / 1000).toFixed(0)}s`;
   const data = JSON.parse(fs.readFileSync(promptsFile, 'utf8'));
@@ -271,19 +296,22 @@ export const runMatcherDifferential = async ({
       kind: 'synthetic',
       label: 'synthetic differential',
       file: null,
+      bytes: null,
       version: promptsVersion,
       contentKey: 'synthetic',
       size: null,
     });
   for (const file of bundles) {
-    const buf = fs.readFileSync(file);
+    const bytes = readShared(file);
+    const view = Buffer.from(bytes.buffer, bytes.byteOffset, bytes.length);
     targets.push({
       kind: 'bundle',
       label: `real-bundle differential [${file}]`,
       file: path.resolve(file),
-      version: core.bundleCcVersion(buf.toString('utf8'), promptsVersion),
-      contentKey: sha1(buf),
-      size: buf.length,
+      bytes,
+      version: core.bundleCcVersion(view.toString('utf8'), promptsVersion),
+      contentKey: sha1(view),
+      size: bytes.length,
     });
   }
 
@@ -316,7 +344,6 @@ export const runMatcherDifferential = async ({
     for (let s = 0; s < pending.length; s += chunk)
       tasks.push({
         target: t,
-        file: target.file,
         version: target.version,
         items: pending
           .slice(s, s + chunk)
@@ -336,6 +363,7 @@ export const runMatcherDifferential = async ({
 
   await runPool({
     coreFile: coreBuild.file,
+    contents: targets.map(target => target.bytes),
     tasks,
     workers,
     onResults: ({ target: t, results }) => {
