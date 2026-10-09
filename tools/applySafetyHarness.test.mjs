@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  applyFailureTail,
   harnessVerdict,
   introducedHumanNames,
   introducedRawNonAscii,
@@ -230,5 +231,27 @@ describe('applySafetyHarness: introducedHumanNames', () => {
     expect(
       introducedHumanNames('x', '`docs \\${OUTPUT_STYLE_AGENT_INTRO_FN}`', known)
     ).toEqual([]);
+  });
+});
+
+describe('applySafetyHarness: applyFailureTail', () => {
+  it('keeps the last N lines of a crashed apply, dropping trailing blanks', () => {
+    const log = Array.from({ length: 60 }, (_, i) => `line ${i}`).join('\n');
+    const tail = applyFailureTail(`${log}\n\n`, 40);
+    expect(tail).toHaveLength(40);
+    expect(tail[0]).toBe('line 20');
+    expect(tail.at(-1)).toBe('line 59');
+  });
+
+  it('returns a short log whole, even with no Error-shaped line', () => {
+    expect(applyFailureTail('patching...\nSegmentation fault')).toEqual([
+      'patching...',
+      'Segmentation fault',
+    ]);
+  });
+
+  it('returns nothing for an empty or missing log', () => {
+    expect(applyFailureTail('')).toEqual([]);
+    expect(applyFailureTail(undefined)).toEqual([]);
   });
 });

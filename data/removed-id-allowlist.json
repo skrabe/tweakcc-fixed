@@ -4382,9 +4382,7 @@
   "data-dir-sync-unreadable-settings-errors-clause": {
     "verdict": "archived",
     "version": "2.1.295",
-    "facing": "ui",
-    "hash": "8e0f9e91dfbd1a98d8c7cd46f5911b12fae46e52",
-    "why": "ruled ui in the 2.1.295 catalogue correction: the clause only completes the cloud-session settings notice (onBundleNotice / publish warning), which is uncatalogued as ui in 2.1.294 and 2.1.295"
+    "why": "Removed in 2.1.295: the clause was split out of its builder; the 2.1.295 body is model-facing (/ultrareview returns bundle notices to the model) and is catalogued as data-cloud-session-bundle-notice-settings-errors-clause"
   },
   "tool-result-artifact-delete-consent-ask": {
     "verdict": "archived",
@@ -4405,5 +4403,68 @@
     "verdict": "archived",
     "version": "2.1.295",
     "why": "Removed in 2.1.295: the PostToolUse cross-environment result-kept path is gone; no window of its text remains in the bundle."
+  },
+  "tool-result-cloud-session-starts-empty-notice": {
+    "verdict": "archived",
+    "version": "2.1.295",
+    "facing": "ui",
+    "hash": "a0c0fb45acec834f4701c04a9aee44c6717128ba",
+    "why": "ruled ui in 2.1.295: emitted only through onBundleNotice on the non-environment cloud-session start path, whose receivers are the remote session's local warnings and the headless SDK notices; /ultrareview, the one model-bound receiver, always takes the environment path"
+  },
+  "tool-result-cloud-session-starts-empty-trust-unconfirmed-reason": {
+    "verdict": "archived",
+    "version": "2.1.295",
+    "facing": "ui",
+    "hash": "7b5b73f67bd06bfb7e2e5f47d0d721ab9791f2d7",
+    "why": "ruled ui in 2.1.295: emitted only through onBundleNotice on the non-environment cloud-session start path, whose receivers are the remote session's local warnings and the headless SDK notices; /ultrareview, the one model-bound receiver, always takes the environment path"
+  },
+  "tool-result-cloud-session-starts-empty-no-github-repo-reason": {
+    "verdict": "archived",
+    "version": "2.1.295",
+    "facing": "ui",
+    "hash": "5530753b74dd542c78e50f50fbc3ebcc3779eabc",
+    "why": "ruled ui in 2.1.295: emitted only through onBundleNotice on the non-environment cloud-session start path, whose receivers are the remote session's local warnings and the headless SDK notices; /ultrareview, the one model-bound receiver, always takes the environment path"
+  },
+  "tool-result-cloud-session-branch-ahead-of-remote-notice": {
+    "verdict": "archived",
+    "version": "2.1.295",
+    "facing": "ui",
+    "hash": "46d20152e7dc348d87be96bf4464253d592634b6",
+    "why": "ruled ui in 2.1.295: emitted only through onBundleNotice on the non-environment cloud-session start path, whose receivers are the remote session's local warnings and the headless SDK notices; /ultrareview, the one model-bound receiver, always takes the environment path"
+  },
+  "data-cloud-session-notice-ahead-of-remote": {
+    "verdict": "archived",
+    "version": "2.1.295",
+    "facing": "ui",
+    "hash": "67d0ab86c0ec2fa1d0623580e2e799843421a378",
+    "why": "ruled ui in 2.1.295: emitted only through onBundleNotice on the non-environment cloud-session start path, whose receivers are the remote session's local warnings and the headless SDK notices; /ultrareview, the one model-bound receiver, always takes the environment path"
+  },
+  "data-cloud-session-notice-start-from-host-tip": {
+    "verdict": "archived",
+    "version": "2.1.295",
+    "facing": "ui",
+    "hash": "778502cc6fa3b32b2cd31048a41139a84a9eee36",
+    "why": "ruled ui in 2.1.295: emitted only through onBundleNotice on the non-environment cloud-session start path, whose receivers are the remote session's local warnings and the headless SDK notices; /ultrareview, the one model-bound receiver, always takes the environment path"
+  },
+  "data-cloud-session-notice-uncommitted-stay-local": {
+    "verdict": "archived",
+    "version": "2.1.295",
+    "facing": "ui",
+    "hash": "a34384ae66d03ca3c977d557e591c223928d99b0",
+    "why": "ruled ui in 2.1.295: emitted only through onBundleNotice on the non-environment cloud-session start path, whose receivers are the remote session's local warnings and the headless SDK notices; /ultrareview, the one model-bound receiver, always takes the environment path"
+  },
+  "data-cloud-session-notice-unrelated-history": {
+    "verdict": "archived",
+    "version": "2.1.295",
+    "facing": "ui",
+    "hash": "6c6369e2efbb6d9c2d3d1ea0ffc2cff25d71edde",
+    "why": "ruled ui in 2.1.295: emitted only through onBundleNotice on the non-environment cloud-session start path, whose receivers are the remote session's local warnings and the headless SDK notices; /ultrareview, the one model-bound receiver, always takes the environment path"
+  },
+  "data-cloud-session-unverified-remote-branch-push-notice": {
+    "verdict": "archived",
+    "version": "2.1.295",
+    "facing": "ui",
+    "hash": "650a406a29b791ce2025e56b0e2145bdc42f6ea3",
+    "why": "ruled ui in 2.1.295: emitted only through onBundleNotice on the non-environment cloud-session start path, whose receivers are the remote session's local warnings and the headless SDK notices; /ultrareview, the one model-bound receiver, always takes the environment path"
   }
 }
