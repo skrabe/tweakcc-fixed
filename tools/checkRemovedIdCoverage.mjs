@@ -523,10 +523,12 @@ const classify = id => {
   }
   const probes = entries.flatMap(midBodyProbes);
   if (probes.length) {
-    return {
-      bucket: probes.some(pr => cli.includes(pr)) ? 'IN-BUNDLE' : 'gone',
-      near,
-    };
+    // A probe the catalogue already holds at every bundle site is text an
+    // existing id carries (a body spread over several successors, none of
+    // which clears RENAME_SHARE), so only an uncovered surplus is a loss.
+    const live = probes.filter(pr => cli.includes(pr));
+    const uncovered = strayUnits(live, entries.flatMap(proseLines));
+    return { bucket: uncovered.length ? 'IN-BUNDLE' : 'gone', near };
   }
   for (const p of entries) {
     for (const run of literalRuns(p)) {

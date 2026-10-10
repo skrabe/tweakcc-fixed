@@ -487,3 +487,56 @@ describe('checkRemovedIdCoverage: a window that coincides with unrelated text', 
     expect(out).toMatch(/removed-id coverage: FAIL/);
   });
 });
+
+// CC 2.1.296: the second-person Artifact tool description was reworded into a
+// third-person module, and one of its sentences survived verbatim inside an id
+// that was already catalogued. No successor cleared the rename share, so the
+// mid-body probe branch saw that sentence in the bundle and called the id
+// IN-BUNDLE although the catalogue covers every site holding it.
+describe('checkRemovedIdCoverage: a reworded body whose survivors are catalogued', () => {
+  const kept =
+    'Publishing makes the page reachable by anyone holding the share link until it is unpublished.';
+  const old = {
+    id: 'tool-description-fixture-artifact-second-person',
+    version: '2.1.295',
+    pieces: [
+      `You render the file you wrote as a page and hand it to the people you work with.\n${kept}\nYou never publish a file you did not write yourself without asking first.`,
+    ],
+    identifiers: [],
+    identifierMap: {},
+  };
+  const live = {
+    id: 'tool-description-fixture-artifact-third-person',
+    version: '2.1.295',
+    pieces: [
+      `Claude renders an HTML file it made as a page for the people it works with.\n${kept}`,
+    ],
+    identifiers: [],
+    identifierMap: {},
+  };
+  const catalogued = `x=\`${live.pieces[0].replace('\n', '\\n')}\``;
+
+  it('calls it removed when every live probe sits at a catalogued site', () => {
+    const out = run(
+      write('cli-spread.js', catalogued),
+      write('prev-spread.json', { prompts: [old, live] }),
+      write('cur-spread.json', { prompts: [live] })
+    );
+    expect(out).toMatch(/0 STILL IN BUNDLE/);
+    expect(out).not.toMatch(/STILL IN BUNDLE —/);
+    expect(out).toMatch(
+      /truly removed, no recorded verdict:\s+tool-description-fixture-artifact-second-person/
+    );
+  });
+
+  it('still flags it when the sentence also survives at an uncatalogued site', () => {
+    const out = run(
+      write('cli-spread-stray.js', `${catalogued};y="${kept}"`),
+      write('prev-spread-stray.json', { prompts: [old, live] }),
+      write('cur-spread-stray.json', { prompts: [live] })
+    );
+    expect(out).toMatch(
+      /STILL IN BUNDLE —[\s\S]*tool-description-fixture-artifact-second-person/
+    );
+  });
+});
