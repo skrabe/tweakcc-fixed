@@ -299,6 +299,15 @@ const curBlob = cur.map(reconstruct).join('\n');
 const curBodies = cur
   .filter(p => p.id)
   .map(p => ({ id: p.id, body: reconstruct(p) }));
+const namedSites = run => {
+  const holders = curBodies.map(b => b.body).filter(b => b.includes(run));
+  return holders
+    .filter(
+      (b, i) =>
+        !holders.some((o, j) => j !== i && o.length > b.length && o.includes(b))
+    )
+    .reduce((n, b) => n + countOf(b, run), 0);
+};
 // The current id carrying the largest share of `units`, and that share.
 const bestSuccessor = units => {
   let best = null;
@@ -523,10 +532,23 @@ const classify = id => {
   }
   const probes = entries.flatMap(midBodyProbes);
   if (probes.length) {
-    return {
-      bucket: probes.some(pr => cli.includes(pr)) ? 'IN-BUNDLE' : 'gone',
-      near,
-    };
+    // A run that named ids hold as often as the bundle does is text existing
+    // ids carry (a body spread over several successors, none of which clears
+    // RENAME_SHARE). Plain counts, not strayUnits: its context-site test drops
+    // a short line whose surroundings changed, and anonymous captures and the
+    // sidecar are pending classification, not coverage.
+    // Every live run of the body, not only the probes: the probes skip its
+    // head and tail. A fragment id nested in a composite parent's body is the
+    // same bundle site, so only the outermost bodies holding a run count.
+    const runs = [
+      ...new Set([
+        ...probes,
+        ...entries.flatMap(proseLines).flatMap(asciiRunsOnLine),
+      ]),
+    ];
+    const live = runs.filter(r => cli.includes(r));
+    const uncovered = live.filter(r => countOf(cli, r) > namedSites(r));
+    return { bucket: uncovered.length ? 'IN-BUNDLE' : 'gone', near };
   }
   for (const p of entries) {
     for (const run of literalRuns(p)) {

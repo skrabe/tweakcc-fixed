@@ -487,3 +487,225 @@ describe('checkRemovedIdCoverage: a window that coincides with unrelated text', 
     expect(out).toMatch(/removed-id coverage: FAIL/);
   });
 });
+
+// CC 2.1.296: the second-person Artifact tool description was reworded into a
+// third-person module, and one of its sentences survived verbatim inside an id
+// that was already catalogued. No successor cleared the rename share, so the
+// mid-body probe branch saw that sentence in the bundle and called the id
+// IN-BUNDLE although the catalogue covers every site holding it.
+describe('checkRemovedIdCoverage: a reworded body whose survivors are catalogued', () => {
+  const kept =
+    'Publishing makes the page reachable by anyone holding the share link until it is unpublished.';
+  const old = {
+    id: 'tool-description-fixture-artifact-second-person',
+    version: '2.1.295',
+    pieces: [
+      `You render the file you wrote as a page and hand it to the people you work with.\n${kept}\nYou never publish a file you did not write yourself without asking first.`,
+    ],
+    identifiers: [],
+    identifierMap: {},
+  };
+  const live = {
+    id: 'tool-description-fixture-artifact-third-person',
+    version: '2.1.295',
+    pieces: [
+      `Claude renders an HTML file it made as a page for the people it works with.\n${kept}`,
+    ],
+    identifiers: [],
+    identifierMap: {},
+  };
+  const catalogued = `x=\`${live.pieces[0].replace('\n', '\\n')}\``;
+
+  it('calls it removed when every live probe sits at a catalogued site', () => {
+    const out = run(
+      write('cli-spread.js', catalogued),
+      write('prev-spread.json', { prompts: [old, live] }),
+      write('cur-spread.json', { prompts: [live] })
+    );
+    expect(out).toMatch(/0 STILL IN BUNDLE/);
+    expect(out).not.toMatch(/STILL IN BUNDLE —/);
+    expect(out).toMatch(
+      /truly removed, no recorded verdict:\s+tool-description-fixture-artifact-second-person/
+    );
+  });
+
+  it('still flags it when the sentence also survives at an uncatalogued site', () => {
+    const out = run(
+      write('cli-spread-stray.js', `${catalogued};y="${kept}"`),
+      write('prev-spread-stray.json', { prompts: [old, live] }),
+      write('cur-spread-stray.json', { prompts: [live] })
+    );
+    expect(out).toMatch(
+      /STILL IN BUNDLE —[\s\S]*tool-description-fixture-artifact-second-person/
+    );
+  });
+});
+
+// Review of the 2.1.296 fix: two ways the catalogue-coverage test could hide a
+// line still shipped under no id.
+describe('checkRemovedIdCoverage: coverage counts only named catalogue sites', () => {
+  it('flags a short surviving line whose surrounding text changed', () => {
+    const old = {
+      id: 'tool-description-fixture-publish-approval',
+      version: '2.1.295',
+      pieces: [
+        'Keep draft contents confidential — Publish pages only after explicit approval.',
+      ],
+      identifiers: [],
+      identifierMap: {},
+    };
+    const out = run(
+      write('cli-short.js', 'x="Publish pages only after explicit approval."'),
+      write('prev-short.json', { prompts: [old] }),
+      write('cur-short.json', { prompts: [] })
+    );
+    expect(out).toMatch(
+      /STILL IN BUNDLE —[\s\S]*tool-description-fixture-publish-approval/
+    );
+  });
+
+  it('does not count an anonymous capture or the sidecar as coverage', () => {
+    const kept =
+      'Publishing makes the page reachable by anyone holding the share link until it is unpublished.';
+    const old = {
+      id: 'tool-description-fixture-artifact-anon',
+      version: '2.1.295',
+      pieces: [
+        `You render the file you wrote as a page.\n${kept}\nYou never publish a file you did not write yourself without asking first.`,
+      ],
+      identifiers: [],
+      identifierMap: {},
+    };
+    const anonBody = `Claude renders an HTML file it made as a page.\\n${kept}`;
+    const anon = {
+      id: '',
+      version: '2.1.296',
+      pieces: [anonBody],
+      identifiers: [],
+      identifierMap: {},
+    };
+    const sidecarDir = path.join(dir, 'sidecar-anon');
+    fs.mkdirSync(sidecarDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(sidecarDir, 'classify-chunk-00.json'),
+      JSON.stringify([{ hash: 'f'.repeat(40), body: anonBody }])
+    );
+    let out;
+    try {
+      out = execFileSync(
+        process.execPath,
+        [
+          TOOL,
+          write('cli-anon.js', `x=\`${anonBody}\`;y="${kept}"`),
+          write('prev-anon.json', { prompts: [old] }),
+          write('cur-anon.json', { prompts: [anon] }),
+        ],
+        {
+          encoding: 'utf8',
+          env: {
+            ...process.env,
+            TWEAKCC_CLASSIFY_DIR: sidecarDir,
+            TWEAKCC_RENAME_MAP: path.join(dir, 'renames.json'),
+          },
+        }
+      );
+    } catch (e) {
+      out = `${e.stdout ?? ''}${e.stderr ?? ''}`;
+    }
+    expect(out).toMatch(
+      /STILL IN BUNDLE —[\s\S]*tool-description-fixture-artifact-anon/
+    );
+  });
+});
+
+describe('checkRemovedIdCoverage: every live run, each site once', () => {
+  const sentences = [
+    'Tag the release branch before the freeze window opens on Monday.',
+    'Attach the signed checksum file to every published archive.',
+    'Run the migration dry run against a copy of production data.',
+    'Confirm the rollback script restores the previous schema cleanly.',
+    'Announce the maintenance window in the status channel first.',
+    'Rotate the deploy key whenever a maintainer leaves the project.',
+    'Keep the changelog entries grouped by user-visible impact.',
+    'Verify the container image digest matches the build manifest.',
+    'Archive the old documentation site under a versioned path.',
+    'Notify downstream packagers once the tarball is mirrored.',
+    'Close the milestone only after every blocker is triaged.',
+    'Record the release duration so the next estimate improves.',
+  ];
+  const line = n => sentences[n - 10];
+
+  it('flags head and tail lines the mid-body probes never look at', () => {
+    const lines = Array.from({ length: 12 }, (_, i) => line(i + 10));
+    const old = {
+      id: 'tool-description-fixture-long-checklist',
+      version: '2.1.295',
+      pieces: [lines.join('\n')],
+      identifiers: [],
+      identifierMap: {},
+    };
+    const moved = {
+      id: 'tool-description-fixture-checklist-middle',
+      version: '2.1.296',
+      pieces: [lines.slice(2, 9).join('\n')],
+      identifiers: [],
+      identifierMap: {},
+    };
+    const stray = [...lines.slice(0, 2), ...lines.slice(10)].join('\\n');
+    const out = run(
+      write(
+        'cli-long.js',
+        `x=\`${lines.slice(2, 9).join('\\n')}\`;y=\`${stray}\``
+      ),
+      write('prev-long.json', { prompts: [old, moved] }),
+      write('cur-long.json', { prompts: [moved] })
+    );
+    expect(out).toMatch(
+      /STILL IN BUNDLE —[\s\S]*tool-description-fixture-long-checklist/
+    );
+  });
+
+  it('counts a fragment nested in its composite parent as one site', () => {
+    const kept =
+      'Secrets stay in the vault and never enter the conversation transcript.';
+    const old = {
+      id: 'tool-description-fixture-secret-handling',
+      version: '2.1.295',
+      pieces: [
+        [
+          'Rotate the token after every incident review.',
+          'Page the on-call owner before you revoke a production key.',
+          'Record each rotation in the audit log with its ticket number.',
+          kept,
+        ].join('\n'),
+      ],
+      identifiers: [],
+      identifierMap: {},
+    };
+    const parent = {
+      id: 'tool-description-fixture-vault-parent',
+      version: '2.1.296',
+      pieces: [`Use the vault for credentials. ${kept}`],
+      identifiers: [],
+      identifierMap: {},
+    };
+    const fragment = {
+      id: 'tool-description-fixture-vault-fragment',
+      version: '2.1.296',
+      pieces: [kept],
+      identifiers: [],
+      identifierMap: {},
+    };
+    const out = run(
+      write(
+        'cli-nested.js',
+        `x="Use the vault for credentials. ${kept}";y="${kept}"`
+      ),
+      write('prev-nested.json', { prompts: [old, parent, fragment] }),
+      write('cur-nested.json', { prompts: [parent, fragment] })
+    );
+    expect(out).toMatch(
+      /STILL IN BUNDLE —[\s\S]*tool-description-fixture-secret-handling/
+    );
+  });
+});

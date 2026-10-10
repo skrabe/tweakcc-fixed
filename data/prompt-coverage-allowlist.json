@@ -383,5 +383,20 @@
     "verdict": "not-model-facing",
     "version": "2.1.295",
     "why": "Cloud-session start notice on the non-environment path: reaches only the CLI warnings and SDK notices lines; /ultrareview returns before this branch (verified from the bundle)."
+  },
+  "data-turn-handoff-hydrates-carried-lines-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.296",
+    "why": "@internal .describe() on the SDK turn_handoff hydrates_carried_lines member: control-protocol schema for the session service, not sent to the model."
+  },
+  "data-sdk-set-model-only-if-model-is-current-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.296",
+    "why": "@internal .describe() on the SDK set_model only_if_model_is_current flag: control-protocol schema for host consumers, not sent to the model."
+  },
+  "data-self-hosted-runner-disabled-by-org-fatal-message": {
+    "verdict": "not-model-facing",
+    "version": "2.1.296",
+    "why": "[runner:fatal] line the self-hosted runner prints when RegisterRunner is refused; operator-facing process output, ruled ui by classify."
   }
 }

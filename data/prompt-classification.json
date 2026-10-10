@@ -86604,12 +86604,7 @@
     "name": "Tool Result: Cloud Session First Prompt Not Sent Busy",
     "desc": "Branch of the first-prompt-not-sent failure when the service was busy or unreachable while the prompt was sent."
   },
-  "6bf869d445ded0143f13bc1c023c5768ef1b1192": {
-    "facing": "model",
-    "id": "tool-result-cloud-session-first-prompt-not-sent-unsent",
-    "name": "Tool Result: Cloud Session First Prompt Not Sent Unsent",
-    "desc": "Branch of the first-prompt-not-sent failure when the prompt could not be sent from this machine."
-  },
+  "6bf869d445ded0143f13bc1c023c5768ef1b1192": { "facing": "ui" },
   "3211a6c307983706b4f2b1f08a48b202e44e1aaf": {
     "facing": "model",
     "id": "tool-result-git-bundle-head-symbolic-ref",
@@ -107254,5 +107249,689 @@
     "id": "tool-result-artifact-quickstart-start-kit-read-would-ask",
     "name": "Tool Result: Artifact quickstart start kit (reading would ask)",
     "desc": "Fallback start-kit reason arm when reading the artifact would ask first"
-  }
+  },
+  "ea915129e73148dccafb9feb0dc7680eeee5ea52": { "facing": "internal" },
+  "3fd2048ce96a888096543682f73aa6fb1fcdb885": {
+    "facing": "model",
+    "id": "tool-result-edit-file-not-valid-utf8",
+    "name": "Tool Result: Edit file not valid UTF-8",
+    "desc": "Validation error returned when an edit targets a file that is not valid UTF-8; tells the model to use a shell command or ask the user before converting."
+  },
+  "88bc7e9ed8d6ff9751459ffd825f2b17bdaa999a": {
+    "facing": "model",
+    "id": "tool-result-write-file-content-holds-replacement-chars",
+    "name": "Tool Result: Write content holds U+FFFD for non-UTF-8 file",
+    "desc": "Error returned when Write content contains U+FFFD for a file on disk that is not valid UTF-8, warning that writing would destroy undecodable bytes."
+  },
+  "200bfb7b5e32b0ddfc66960f18d2d5868565cd11": { "facing": "internal" },
+  "4d6ac2520c2256949efa710caed980dc26463ec5": { "facing": "internal" },
+  "4a210ccd06ea216982dcfde7b7bb2e278913e3f8": { "facing": "internal" },
+  "f791afd61173983bec64b10f4f4abcb237133103": { "facing": "internal" },
+  "d651bfd48cce9d0313df282913fb18a4b408bf33": { "facing": "internal" },
+  "8528a5edeb854fb9a41a31dfab5bf3033e27ee65": { "facing": "ui" },
+  "2204364ca35342391c9ab06d8b01da1c5c5765bd": {
+    "facing": "model",
+    "id": "tool-result-read-file-too-large-full-read-hint",
+    "name": "Tool Result: Read too large, full-read option hint",
+    "desc": "Suffix appended to the Read size/token limit error telling the model it may retry with the full-read option only when it genuinely needs the whole file."
+  },
+  "bccf25c222860ad7f75d543b79b9f79ff3e1cf9b": {
+    "facing": "model",
+    "id": "tool-result-read-file-too-large-even-with-full-read",
+    "name": "Tool Result: Read too large even with full-read option",
+    "desc": "Suffix appended to the Read size error when even the full-read option cannot fit the remaining context this turn."
+  },
+  "c6e18ec9b392de4c624c6df3ef5853ffa6afa1f0": {
+    "facing": "model",
+    "id": "tool-result-read-file-full-read-unavailable",
+    "name": "Tool Result: Read full-read option unavailable",
+    "desc": "Suffix appended to the Read size error when the full-read option is not available where the read runs; tells the model to read in parts."
+  },
+  "aa7ddbe66498c738247bc69be842dbb924fc5fa1": {
+    "facing": "model",
+    "id": "tool-result-read-file-content-exceeds-max-tokens",
+    "name": "Tool Result: Read file content exceeds max tokens",
+    "desc": "Read tool error when file content exceeds the maximum allowed tokens; suggests offset/limit or searching instead."
+  },
+  "2dbb1bb30f03129937110f17adc36416f0171dba": { "facing": "internal" },
+  "523d7c349b492e38a2c6b9320a515b46fd075e98": { "facing": "internal" },
+  "ca21d2b4eb9cfe88b8fa199c3362cce6e079e5f7": { "facing": "internal" },
+  "91c4a8b6419203dfddaa74c0f23331fb846d741b": { "facing": "internal" },
+  "5b0167c5f574534d03eaf1d7d0a56725cf428522": { "facing": "ui" },
+  "e98a2790e96e1c9b5db419c7d3b1f2b7fc65ec95": { "facing": "ui" },
+  "78e69ac9a4ba46015ee49df1047ff102003fbb34": { "facing": "ui" },
+  "16cebab9cf21139bc413a93aa9d51e32b93f09e3": { "facing": "ui" },
+  "4ff41e70ec88fe7435824f614ed5f0c039e2e3ca": { "facing": "ui" },
+  "5a944def2b93dead995deb74205234eb278ca74b": { "facing": "internal" },
+  "0bc481a59382e63c1ac57da5f28bc07f9197b054": { "facing": "internal" },
+  "7703cd9a29f37cc1c2f1c07f88316a27e5cfbc94": { "facing": "internal" },
+  "f338efc61ca3ed02e2ecaba921e1ad61095350f9": { "facing": "internal" },
+  "5f2a8b59e72a7ae59fef99dbf733f1cb35dc0f0f": {
+    "facing": "model",
+    "id": "tool-result-synced-plugin-sync-off-reason",
+    "name": "Tool Result: synced plugin refused, sync off reason",
+    "desc": "Reason clause explaining that plugins sync is turned off, interpolated into errors when a synced plugin agent or forked skill is refused."
+  },
+  "54043566f670638753d62f3c1426e99bfcb7c92a": { "facing": "internal" },
+  "e9b8a9a8565764bc5e5f7b3cf33615de76e6ee82": { "facing": "internal" },
+  "cecbdd31a3c79de44a81df4d02f9a3b8f2d9ea6e": { "facing": "ui" },
+  "53d96574515db11ebbeb53f39dfd5ad145371015": { "facing": "ui" },
+  "5f1f7bb21c322ad8bb93addf4974a861ab4be2da": {
+    "facing": "model",
+    "id": "tool-result-permission-denied-cloud-hook",
+    "name": "Tool Result: permission denied, cloud hook cannot run",
+    "desc": "Permission deny message when a PermissionRequest hook type cannot run in a cloud session."
+  },
+  "d5ec3eae08742b18fab3d27ff331c0f1167729c2": {
+    "facing": "model",
+    "id": "tool-result-hook-matcher-untestable-in-cloud",
+    "name": "Tool Result: hook matcher untestable in cloud session",
+    "desc": "Reason given when a hook's matcher cannot be tested in a cloud session, carried into the hook-blocked tool result."
+  },
+  "1646c127377c725658906926ae5825fc85606323": {
+    "facing": "model",
+    "id": "tool-result-hook-matcher-name-too-long-in-cloud",
+    "name": "Tool Result: hook matcher name too long in cloud session",
+    "desc": "Reason given when the name a hook's matcher is tested against exceeds the cloud session length limit, carried into the hook-blocked tool result."
+  },
+  "0ba4fab3c724d92b06f76f746cd7cb86e41d009e": { "facing": "ui" },
+  "fbbaea427483c8c56ab466bde59ef44f6b2290b9": { "facing": "ui" },
+  "954e5fac8944d67648dbaebbf33a5b9b438b81a9": {
+    "facing": "model",
+    "id": "tool-result-read-file-too-large",
+    "name": "Tool Result: Read file too large",
+    "desc": "Read tool error when file content exceeds the maximum allowed size; suggests offset/limit or searching instead."
+  },
+  "397e14ed124983e0e1416c851f159032a88c4fb0": {
+    "facing": "model",
+    "id": "tool-result-read-line-range-too-large",
+    "name": "Tool Result: Read line range too large",
+    "desc": "Read tool error when the requested line range contains more text than a read can return."
+  },
+  "0faa46f0b23e6045c3f1b83fefe6f5ce9597af97": { "facing": "ui" },
+  "4579dd16f3504b3b4cfdb80a16333c12b720c89e": { "facing": "ui" },
+  "1af4c3807d4243d92338f0c683ac712dbaac983c": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-own-settings-waiting-note",
+    "name": "Tool Result: remote tool note, own settings waiting",
+    "desc": "Note attached to a remote tool call result telling the model that the person's own settings hold unaccepted changes for cloud sessions and to tell the user to run apply-project-settings."
+  },
+  "b20615f08b4e9c8bfe5e9936e20ed36b7717032c": { "facing": "ui" },
+  "2de2bb7a443ef096b5422ade011f38c03935fe51": { "facing": "internal" },
+  "e5d1057b52abd909826220508c96c7caf7174363": { "facing": "internal" },
+  "fc6fccbb53ecb9b0fe94975e8f4f2edf3f74e838": { "facing": "internal" },
+  "71eae781d9cf1cd3e0726b7d109c460efc1c1735": { "facing": "ui" },
+  "4f1797d260e6fff76b4e81fba90cd4bb37a60828": { "facing": "ui" },
+  "2a8fef7374cd8214500def35a1f6c42d21f14d9a": { "facing": "internal" },
+  "c512d72bd019f21371c987640e689865711d4b9a": { "facing": "internal" },
+  "ea229707cc955c35a843b4b98a23552a0b94053a": { "facing": "internal" },
+  "c4ce07b4c7b85c68500bf640c9173401f996ade0": { "facing": "internal" },
+  "537c0be86ba3f5848eeb234efe423a17c2dff82b": { "facing": "internal" },
+  "39f762f38719dc40459fd2c703282366c9bdb918": { "facing": "internal" },
+  "8e1aa51f52bd698eecd5b3fb75006d7ab5c9679d": { "facing": "internal" },
+  "f276e13fa6c5abc49a621924b2da4873a6f3a0ee": { "facing": "internal" },
+  "9462daa431a01b2d23be917b89a6a19322b120e4": {
+    "facing": "model",
+    "id": "tool-result-permission-updated-permissions-too-many",
+    "name": "Tool Result: permission answer has too many updatedPermissions",
+    "desc": "Deny message reason when a permission answer's updatedPermissions exceeds the allowed number of updates, rules and directories."
+  },
+  "4b0f39434e3987a95d0b1ca2acb8ab0cc96e3e34": {
+    "facing": "model",
+    "id": "tool-result-permission-answer-rules-not-applied",
+    "name": "Tool Result: permission answer rule changes not applied",
+    "desc": "Deny message when a permission answer allowed a call but its rule changes could not all be applied, so the call was not run."
+  },
+  "3d277e26813b9892ca1fbfe8024e368622f91725": { "facing": "internal" },
+  "6eda4ebcf49691bbb7063c72c3d932f05119cb22": { "facing": "internal" },
+  "c7eafb6e33e2ff467bc7faae6323e318e1b1e4eb": { "facing": "internal" },
+  "8e2a1710abddaaec2252897b1ede70c3e97faff1": { "facing": "internal" },
+  "672a90d786063bb648796c0d91659fea65bfc64d": {
+    "facing": "model",
+    "id": "tool-result-hook-not-run-blocked",
+    "name": "Tool Result: hook not run, call blocked",
+    "desc": "Blocking error when a hook could not be run and the call is blocked; tells the model retrying will not help, followed by the reason."
+  },
+  "5e0dea215303925093fdf97464eaa4fb9cff57ca": {
+    "facing": "model",
+    "id": "tool-result-hook-not-run-blocked-plugin-suffix",
+    "name": "Tool Result: hook not run, plugin attribution",
+    "desc": "Variant of the hook-not-run blocking error that adds which plugin the hook comes from."
+  },
+  "f26caf3f923157d42645d4568e985cb1acc9c540": {
+    "facing": "model",
+    "id": "tool-result-hook-error-details-hidden-url",
+    "name": "Tool Result: hook error details hidden for URL secrets",
+    "desc": "Note in a blocking hook failure explaining that error details are hidden because they may contain the hook URL's secrets."
+  },
+  "53fcfa704092bd9909d5edf51aa801188f661b7a": { "facing": "internal" },
+  "020cf192f683b436cdd6dfeb699bd78c16f2c406": {
+    "facing": "model",
+    "id": "tool-result-remote-tools-command-not-recorded-after-restart",
+    "name": "Tool Result: Remote tools command not recorded after restart",
+    "desc": "Tool result telling the model a session restart lost the record of sending a command to another computer, so it likely did not run"
+  },
+  "661a559451efc9ec4c615c2c51ccfe3463937f43": { "facing": "internal" },
+  "181a6d668712c6e826285c3597db0d4546111ca2": {
+    "facing": "model",
+    "id": "tool-description-bash-background-vs-detached-process-lifetime",
+    "name": "Tool Description: Bash background vs detached process lifetime",
+    "desc": "Explains that run_in_background commands outlive the reply while shell-detached processes are stopped shortly after"
+  },
+  "d0bb5526de926bae6a17b6bb99b04ffc008d2727": {
+    "facing": "model",
+    "id": "tool-parameter-bash-run_in_background-guidance",
+    "name": "Tool Parameter: Bash run_in_background guidance",
+    "desc": "Explains Bash run_in_background behavior and that commands do not need a trailing ampersand"
+  },
+  "23beddf50d944c30f5781893247dc9e5711c8135": {
+    "facing": "model",
+    "id": "tool-description-bash-run-in-background-detached",
+    "name": "Tool Description: Bash run_in_background detached",
+    "desc": "Bash tool description line explaining run_in_background runs detached and re-invokes the model on exit, with timeout clause"
+  },
+  "e548edcdf123a370f06c0ba4e106f2a48c7d09c6": {
+    "facing": "model",
+    "id": "tool-result-send-message-plain-text-own-agents-only",
+    "name": "Tool Result: SendMessage limited to plain text to own agents",
+    "desc": "Refusal telling the model messaging in this session carries only plain text to agents of this session and how to set the to field"
+  },
+  "935c787a6ef907ceadc73846e00830d7b4aa9059": { "facing": "ui" },
+  "5c2c5537523ee40ee02048f9dee789d7ea1defb5": { "facing": "ui" },
+  "cab767d647d1c10c2810a68e084b23ee9a6af6d0": { "facing": "ui" },
+  "3db86698d600089f3f4677fc5d8f2b0621383e26": { "facing": "ui" },
+  "7f06a59804cd1df518c957fc027503e93d7450ec": { "facing": "ui" },
+  "eca60d8452301baccbc0c3d0840b915d20a313e5": { "facing": "ui" },
+  "335c43aada37ae4cea71664bac5c0fa48b53c8c3": {
+    "facing": "model",
+    "id": "tool-result-git-bundle-private-git-directory-failed",
+    "name": "Tool Result: Git bundle private git directory failed",
+    "desc": "Upload failure explaining the private git directory for a cloud-session bundle could not be prepared"
+  },
+  "d0f6931af1f096ed88371132f6a02b17cdd8d726": { "facing": "internal" },
+  "c8e9f172fd030fc50f5b59e34d75a5ac5be47d41": { "facing": "internal" },
+  "9f77ec829b87c6215e3d9961265007056dcd5bc9": { "facing": "internal" },
+  "712c4a037b2e3526d7cdd1478eab74d03868dcf4": { "facing": "internal" },
+  "2b3d15785aed834ca603d13befefb575c3723d6e": { "facing": "internal" },
+  "5e549d44de5ef4696068bb05f11ae4e134390d5c": { "facing": "internal" },
+  "8f1dfaa534f798b3151b3d8601cbc7dae825b423": {
+    "facing": "model",
+    "id": "tool-result-personal-config-restricted-mode-no-user-settings",
+    "name": "Tool Result: Personal config restricted mode reads no user settings",
+    "desc": "Reason clause explaining the session runs in restricted mode and reads no user settings"
+  },
+  "84e08f472f14831ab5dbd7e890c13499d26f5e9a": {
+    "facing": "model",
+    "id": "tool-result-personal-config-hook-event-unsupported",
+    "name": "Tool Result: Personal config hook event unsupported",
+    "desc": "Explains personal hooks on certain events are not allowed in this session except command and http hooks"
+  },
+  "8764f32cfa5259256172c7327c4518035781cde2": {
+    "facing": "model",
+    "id": "tool-result-personal-config-flag-settings-source-label",
+    "name": "Tool Result: Personal config --settings source label",
+    "desc": "Label naming the --settings file as a source of turned-off hooks"
+  },
+  "4669c92195740f83df400f278c2aae28349b3243": {
+    "facing": "model",
+    "id": "tool-result-personal-config-hooks-off-managed-unreadable",
+    "name": "Tool Result: Personal hooks off when managed settings unreadable",
+    "desc": "Explains hooks are off because project disableAllHooks is set and managed settings could not be read"
+  },
+  "7a319f95c5de16f7990eda507c27a1ff9162f135": {
+    "facing": "model",
+    "id": "tool-result-personal-config-hooks-off-managed-unreadable-fix",
+    "name": "Tool Result: Personal hooks off managed unreadable fix",
+    "desc": "Recovery hint to fix managed settings or remove disableAllHooks then start a new session"
+  },
+  "f4549f537c158a097da2ff0081f995907a5f71b3": {
+    "facing": "model",
+    "id": "tool-result-personal-config-flag-settings-disable-all-hooks",
+    "name": "Tool Result: Personal config --settings sets disableAllHooks",
+    "desc": "Reason clause naming the --settings file as setting disableAllHooks"
+  },
+  "0afd269d91ba6f22427d5b6a7eb64b5c7d4cd7f0": { "facing": "internal" },
+  "aff7d16e18bb13ccb08353035204a6f78ccf9c05": { "facing": "internal" },
+  "c347622ebdfa819d3c7dd3308a91e9e17a62aac2": { "facing": "ui" },
+  "ccc17efb26c3a53408fbbe7283c74201e5ee69ce": {
+    "facing": "model",
+    "id": "agent-prompt-conversation-summarization-short-wrapper",
+    "name": "Agent Prompt: Conversation summarization short wrapper",
+    "desc": "Wrapper for short compaction summary instructions ending with the note about additional summarization instructions"
+  },
+  "933b87820617fe7cc84ce8c74e42266662c9cb71": {
+    "facing": "model",
+    "id": "agent-prompt-conversation-summarization-short-v2-instructions",
+    "name": "Agent Prompt: Conversation summarization short_v2 instructions",
+    "desc": "short_v2 compaction instruction to copy an earlier summary's record of user requests unchanged"
+  },
+  "5fbdd7b4dd1ad9f76200b34fafac0b85c2e92e48": {
+    "facing": "model",
+    "id": "system-prompt-post-compaction-resume-guidance",
+    "name": "System Prompt: Post-compaction resume guidance",
+    "desc": "After compaction, tells the model unfinished or unverified work is still part of the task and to test before reporting back"
+  },
+  "a8167a42f25a80f8b61db05a7fe69398c9df5da2": {
+    "facing": "model",
+    "id": "system-prompt-post-compaction-continue",
+    "name": "System Prompt: Post-compaction continue",
+    "desc": "Instructs the model to continue after compaction without questions or acknowledging the summary"
+  },
+  "f20b71345a89071302d0e97b2b5a5053551b5497": {
+    "facing": "model",
+    "id": "system-prompt-post-compaction-continue-pick-up-last-task",
+    "name": "System Prompt: Post-compaction pick up last task",
+    "desc": "Closing sentence telling the model to pick up the last task as if the break never happened"
+  },
+  "3a89667f3aa81351e84cd4a88269418ffd2ef68a": { "facing": "internal" },
+  "4b31ca48ec6a0293da19dbb97f629efcaf17b576": {
+    "facing": "model",
+    "id": "tool-parameter-read-allow-large",
+    "name": "Tool Parameter: Read allow large",
+    "desc": "Read tool parameter describing reading a file over the usual size limits up to what fits in context"
+  },
+  "e67ce4498772bbae5d718e4c2c8cf69ba5def8f8": {
+    "facing": "model",
+    "id": "tool-result-read-pagination-footer",
+    "name": "Tool Result: Read pagination footer",
+    "desc": "Footer on truncated Read results giving the shown line range and how to fetch the next page"
+  },
+  "4de9e9eece12db3329b417cc83049c1fd8dc2f92": {
+    "facing": "model",
+    "id": "tool-result-read-long-lines-footer",
+    "name": "Tool Result: Read long lines footer",
+    "desc": "Footer on Read results for files with very long lines explaining character truncation and paging by offset"
+  },
+  "bbc58f548cc67e8bcec279b1a989c90d38a2f638": {
+    "facing": "model",
+    "id": "tool-description-agent-effort-lower-for-parallel-lookups",
+    "name": "Tool Description: Agent effort lower for parallel lookups",
+    "desc": "Agent tool note recommending effort lower for parallel or mechanical briefs and higher for reasoning-heavy pieces"
+  },
+  "89ad1e05091f933e6b3abfc07b25212afb276cb1": {
+    "facing": "model",
+    "id": "tool-description-agent-simple-when-to-use",
+    "name": "Tool Description: Agent simple When to use",
+    "desc": "When to use section header of the simple Agent tool prompt with delegation-cost guidance"
+  },
+  "b9f7532fcc44c51314c6870079c1f99058fb4474": {
+    "facing": "model",
+    "id": "tool-description-agent-when-to-use-effort-lower-note",
+    "name": "Tool Description: Agent When to use effort lower note",
+    "desc": "Note that running several independent lookups at once pays with effort lower"
+  },
+  "af7e3198664e1c19a4c3f75c5da01fcecd428c3d": {
+    "facing": "model",
+    "id": "tool-description-agent-simple-usage-notes",
+    "name": "Tool Description: Agent simple usage notes",
+    "desc": "Usage notes of the simple Agent tool prompt covering final reports, continuation, agent definitions and worktree isolation"
+  },
+  "ad89e4e73e22be5ded9335a63d7e5cea5c946bb6": {
+    "facing": "model",
+    "id": "slash-command-plugin-marketplace-name-inherited-object-member",
+    "name": "Slash Command: Plugin marketplace name reserved",
+    "desc": "Marketplace add refusal for a name Claude Code reserves, asking the maintainer to change it"
+  },
+  "f4432ce92725fefa34c8aa9f65ad6ddc59824a58": { "facing": "internal" },
+  "d042f79f3dd0009063b611d5e21bca375cc05d89": { "facing": "ui" },
+  "add6fd2e500569a3dbf52f86d9b6e7c72ebb6c53": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-server-context-stale-probe-other-organization",
+    "name": "Tool Result: Auto mode stale context probe other organization",
+    "desc": "Clause explaining the artifact is in another of the user's organizations the login cannot open"
+  },
+  "1b454ff07d7d04a9e1bd4e5bb21bd889ef06125e": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-server-context-stale-probe-not-found",
+    "name": "Tool Result: Auto mode stale context probe not found",
+    "desc": "Clause explaining the artifact lookup got HTTP 404"
+  },
+  "34a6047bb5cebc2548fc0946fec66ad6cd46ad32": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-server-context-stale-changed",
+    "name": "Tool Result: Auto mode stale context changed",
+    "desc": "Explains the server reviewed the call against artifact sharing state that has since changed, with current facts"
+  },
+  "a8ea0b2216486294e2d8419650d6e6445416ef6f": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-server-context-stale",
+    "name": "Tool Result: Auto mode server context stale",
+    "desc": "Opening telling the model a stale-context denial is not a judgement and to repeat the identical call once"
+  },
+  "f6d828912cfc4b68a78e11405be84234f083991b": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-server-context-stale-probe-failed",
+    "name": "Tool Result: Auto mode stale context probe failed",
+    "desc": "Explains the artifact ownership lookup failed so the server review is not relied on"
+  },
+  "e6a56be9e06799183678e8d421233b8be8bdd365": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-server-context-stale-first-touch",
+    "name": "Tool Result: Auto mode stale context first touch",
+    "desc": "Explains the server reviewed the call before knowing whose artifact it is, so it will be reviewed afresh"
+  },
+  "1445ddaf2c223770684667fb97c3d15608ffec0b": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-server-context-stale-first-touch-with-facts",
+    "name": "Tool Result: Auto mode stale context first touch with facts",
+    "desc": "First-touch variant giving the artifact facts Claude Code looked up for the repeated review"
+  },
+  "1e9e7a5bd17d46a54ec7b299e177d11325d0dac1": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-classifier-artifact-changed-while-reviewed",
+    "name": "Tool Result: Auto Mode Classifier Artifact Changed While Reviewed",
+    "desc": "Parenthetical reason interpolated into auto-mode no-verdict tool results when the classifier's view of the artifact was missing or out of date (server_context_stale)."
+  },
+  "6911af0a15880c3a998247affa31b9077a006b7b": {
+    "facing": "model",
+    "id": "system-reminder-mcp-auth-claude-ai-connectors-only-signin",
+    "name": "System Reminder: MCP sign-in claude.ai connectors only",
+    "desc": "Clause telling the model only claude.ai connectors can be signed in from this session"
+  },
+  "79de34783b011c64931605ee9f4720288f8ef757": { "facing": "internal" },
+  "9afaca5762f11d20d4fab813fa621259453a5ffe": { "facing": "internal" },
+  "1e441043fcee27bd89e8bd3d9e32f195acca0642": { "facing": "ui" },
+  "aa7edcebe49ca99f7f9eab7610120c928470d386": { "facing": "internal" },
+  "4497023084077279bb1230db63bcda329626ddf4": { "facing": "ui" },
+  "2ee62b5fdd4dfb24844ed9c3c21cd2dd944d63c3": { "facing": "ui" },
+  "56650b435d1e2723da77a44226a14ebdb6c665dc": { "facing": "ui" },
+  "0a0b679e62426f9a66d184c71e9a66dc4f385ae5": { "facing": "ui" },
+  "41d82195a9cb0e172815dccaf50ea94c9da44699": { "facing": "ui" },
+  "07e4bd2d4f4cd640b591d269a4bf94e8d492507b": { "facing": "ui" },
+  "46bace33b9c5a52784993438a00298b055820a97": { "facing": "ui" },
+  "0a7d662a0c700550a152aedb71667a79c7638d0c": { "facing": "ui" },
+  "11b43509c539da528a9bd18144d0be583f249ad6": { "facing": "ui" },
+  "28d1730a110fe17011fe26af41e2a398fcabf59d": { "facing": "ui" },
+  "dbc0b37507c39fcbe86e3a83b7ab0c8af925d0b2": { "facing": "ui" },
+  "5b1f25062fef966c6277ec2f66867077319ef06f": { "facing": "ui" },
+  "f687a7f7dad6182a07b7a543a19b63cba6c1555e": { "facing": "ui" },
+  "d0d3c1c820820f557a1124d4872519d16fc9b17f": { "facing": "ui" },
+  "d6747004bc568dbe286a96b30463888b16a47a0d": { "facing": "ui" },
+  "2aafae9a786f6fc0ad9b73e3b67a06ad0dae7cf6": { "facing": "internal" },
+  "b79be9d346469ec1fadfcf27d28e12ef9a4e5f99": { "facing": "internal" },
+  "fdec3111c0ef95bfd4a2216e2c01bf48604ccdfe": { "facing": "internal" },
+  "00568ebfee0083a10d753ddf63bf034c7352bbad": {
+    "facing": "model",
+    "id": "tool-parameter-agent-effort-relative-step",
+    "name": "Tool Parameter: Agent effort (relative step)",
+    "desc": "Agent tool effort parameter description (variant with lower/higher steps) explaining when to pass lower or higher relative to the default effort, opening the list of named levels."
+  },
+  "47decf3d5e62c7f8c4e4990e8d8f6eb4a0e78ebe": {
+    "facing": "model",
+    "id": "tool-parameter-agent-effort-relative-explicit-level",
+    "name": "Tool Parameter: Agent effort (explicit level rule)",
+    "desc": "Second half of the Agent tool relative-effort parameter description: name a level only when explicitly asked, and lower/higher are ignored for forks, remote isolation and teammates."
+  },
+  "19cf9c8794dd9eab4350cc404fd1b3f33ca4aaaa": {
+    "facing": "model",
+    "id": "tool-result-subagent-spawn-hook-rewrite-ruled",
+    "name": "Tool Result: Subagent spawn hook rewrite ruled",
+    "desc": "Agent tool error when a plugin agent.spawn hook rewrote the spawn into one a permission rule denies or asks about, telling the model to dispatch it directly."
+  },
+  "84ea4f6598b25e02242c822a79bb8eb9a85cf91f": { "facing": "internal" },
+  "a8e8c9246bcf8197d233b82fa22ed2f7aec7bf59": {
+    "facing": "model",
+    "id": "tool-result-mcp-directory-listing-too-large",
+    "name": "Tool Result: MCP directory listing too large",
+    "desc": "MCP directory-listing tool error when the listing of a resource is too large to read."
+  },
+  "b7f8bbb8a4722e0e8b9d4f5894c8327843fa3198": {
+    "facing": "model",
+    "id": "system-prompt-web-search-assistant",
+    "name": "Web-search assistant system prompt",
+    "desc": "System prompt for the utility model call that performs a web search tool use."
+  },
+  "9016a410fe97817f329f3398faf3a9545ec55853": { "facing": "internal" },
+  "aee821fbd693d8cd87016e9bc3d2ec02674f0962": { "facing": "ui" },
+  "c0bbc8f412728426cffd23b20c0e108099f87498": { "facing": "ui" },
+  "467d89998c8cda48c59bcd8994359afae807b825": { "facing": "ui" },
+  "adb91a8d6e6dcdaff280fb82dab0a701f261bb16": { "facing": "ui" },
+  "915b9bc4d267fb482c5fcb7e65b4a3476f0d85aa": { "facing": "ui" },
+  "88e3f035def7e8fd5afc66a4c46d7ad833e26299": { "facing": "ui" },
+  "d68c8bc71b3e9feeb51e7094e7358510995517d1": { "facing": "ui" },
+  "97ce1128ab3e8ed58ce0cfb8c9f22aaec41d3e5a": { "facing": "ui" },
+  "ae6a6c67529f0f41dacf1691222102f13fbf4837": { "facing": "internal" },
+  "05fa051fc8bf7e5a99cf5ef69be58f5c4ab9b7e7": { "facing": "ui" },
+  "491ebe99db7c46c8ecc16f82b7d3ad43da072c5a": { "facing": "ui" },
+  "425d437220c2dfea54f538e3204668f070cb5d89": { "facing": "ui" },
+  "3a2640b32ce83bf871ecd6d30709830b4cccbf5f": { "facing": "ui" },
+  "e974c859e337ff7d5ce134e5cf2160cbb5dd4084": { "facing": "ui" },
+  "c6184b300641e7f724af476856a239780b548cd4": { "facing": "ui" },
+  "34d73096e19d8cb9e4cb64220a20b820691bffca": { "facing": "ui" },
+  "f8939af9b8d846435441bcdb5c28742f3bdc1c95": { "facing": "ui" },
+  "6164f8a1ce80dd26426aab010f8bcd5ba9adc347": { "facing": "ui" },
+  "0be58e32cbff0060c6b189fd70ba61f7e58b0569": { "facing": "ui" },
+  "78420e203a86b7c7a1990cfbecde6254816a1dd5": { "facing": "ui" },
+  "33277f019731aa3326366148d4828fc1947c173d": { "facing": "ui" },
+  "7d411022420293d7fd5c8ce610192843d73d7e20": { "facing": "internal" },
+  "c5d8b604dfd10000a71c0c7b2f08b792a427607f": { "facing": "ui" },
+  "d01f05d71ce245febc089b7e11261cb57a2bd028": { "facing": "ui" },
+  "eb9bd6774113cad08c415c6c0471d0a50a75b4b8": { "facing": "internal" },
+  "82f61d23f4b1db4934a6fafabdd2f49d997f5728": { "facing": "internal" },
+  "e06fc0b0ee778977a834d1e014ab269f44100b42": {
+    "facing": "model",
+    "id": "tool-result-filesystem-directory-moved-undone",
+    "name": "Tool Result: Filesystem directory moved, operation undone",
+    "desc": "Error text from the safe filesystem layer when a directory may have been moved so the write made nothing or was rolled back, surfaced in tool errors and /copy output."
+  },
+  "004be65eb3b61ed36e0cd78c480a9fccd5f27d9e": { "facing": "internal" },
+  "ad6624fd1c35d47d4dd4fc5f85fc4996169ed37a": { "facing": "internal" },
+  "8ab4829dff173545d22b044b31ecaf0afb7094f7": { "facing": "ui" },
+  "7a39580e8bd8285e66157dbdb3e020da5970651e": { "facing": "ui" },
+  "cd6cd670006309635ed548d2fc82992a4a67c103": { "facing": "ui" },
+  "5219bb694ca5c5e66d0a90355a6bc112cd1813db": { "facing": "ui" },
+  "3b2df61951c16c6fa4744fdbef0083f71e3bf4d9": { "facing": "ui" },
+  "aee73d8f128c84496ebea019d6dfdfadfee8fc42": { "facing": "ui" },
+  "240fa790feb543ab4f78ac789458d17cda75daf0": { "facing": "ui" },
+  "b764a10ca9e1bd33bf6c50fc004e15a30a7cf7b2": { "facing": "ui" },
+  "c07ed039fc4437b138512e1c66eb88bce5cf3b26": { "facing": "ui" },
+  "affa50206e35805dcdfa0e8e4c1c8c92949fd884": { "facing": "ui" },
+  "651449751c1e58ff0001a8e3bb3cb4523f45ba4d": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-transcript-body-encoded",
+    "name": "Tool result: agent resume transcript body encoded",
+    "desc": "Error returned when a resumed agent's earlier transcript arrived in an unrequested encoding and could not be read."
+  },
+  "e07f8164ebe58c15ecb129ed51610b04ba8b2599": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-transcript-unreadable-or-empty",
+    "name": "Tool result: agent resume transcript unreadable or empty",
+    "desc": "Error returned when a resumed agent's stored transcript cannot be read or is empty."
+  },
+  "bc45d06cfad12079d896a5ea03067cc5dd5fbc12": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-background-unavailable",
+    "name": "Tool result: agent resume background unavailable",
+    "desc": "Error returned when background agents cannot be started in the session; tells the model to resend so the agent runs in the foreground."
+  },
+  "ebdb8a5ea2986b14869b4fc3fab18df1fd51ba2d": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-type-unmatched-diskless",
+    "name": "Tool result: agent resume type unmatched",
+    "desc": "Error returned when the agent type a resumed agent ran as is no longer on the session's list or its name now maps to a different type."
+  },
+  "55d9e452318816a88b86bf36fc00a4a8e035ee40": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-no-saved-settings-diskless",
+    "name": "Tool result: agent resume no saved settings",
+    "desc": "Error returned when the session has no saved settings for the agent being resumed."
+  },
+  "35fa31f6637af1890ec8220aa15255a5bc23684e": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-background-off-untracked",
+    "name": "Tool result: agent resume background agents off",
+    "desc": "Error returned when background agents are switched off and the session no longer tracks the agent to resume."
+  },
+  "d1bac13efdf13d3ebf5371a10dd82693f30c3c41": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-forked-skill-synced-plugin-refused",
+    "name": "Tool result: agent resume forked skill refused",
+    "desc": "Error returned when a forked-skill agent cannot be resumed for a skill-resolution reason, interpolating that reason."
+  },
+  "b461efc8d5ee3a11c98dd53986858e9bbde4b149": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-transcript-gap",
+    "name": "Tool result: agent resume transcript gap",
+    "desc": "Error returned when part of a resumed agent's transcript is missing so it cannot continue."
+  },
+  "8d63712dba2f3bf03f5d0fb1003e17f9919330e8": {
+    "facing": "model",
+    "id": "tool-result-agent-resume-transcript-over-bound",
+    "name": "Tool result: agent resume transcript too large",
+    "desc": "Error returned when a resumed agent's earlier transcript is too large to load or has a malformed timestamp row."
+  },
+  "eca4c4ff011b6f595d56d6fe24bec52d2eee2ba9": { "facing": "internal" },
+  "f4b1995430026cdd1c2e8829f04dd8bd20109821": { "facing": "internal" },
+  "92c1715e7ef297519cf240e0fda735736cd6d144": { "facing": "internal" },
+  "41beead278175922a2c8e2eb89dea172a3fd4680": { "facing": "internal" },
+  "2177dfcd61dc11c462a1223be5e259cdbd750be0": { "facing": "internal" },
+  "61a64504e30e473a57fc6fe06d597446a3fd0b6a": {
+    "facing": "model",
+    "id": "tool-result-artifact-live-doc-shim-published",
+    "name": "Tool result: artifact live doc shim published",
+    "desc": "Tool result for an artifact live-document shim publish, built from liveDocShimLine plus status notes."
+  },
+  "29087e3414e8c8a98adf05c6ecf843ce6ec157b1": {
+    "facing": "model",
+    "id": "tool-parameter-send-message-to-session-agent",
+    "name": "Tool parameter: SendMessage to (session agents)",
+    "desc": "SendMessage 'to' parameter description in the schema variant used when zte() is on: recipient is a session agent name/agentId or main."
+  },
+  "de8844dfab72ba99cc4334b9fd38c0acccadc10e": {
+    "facing": "model",
+    "id": "tool-result-send-message-not-protocol-frame-plain",
+    "name": "Tool result: SendMessage protocol frame rejected (plain)",
+    "desc": "SendMessage validation error when message text is a teammate protocol frame, zte() variant telling the model to send plain text."
+  },
+  "c25c0670f5154a224ca52eb8948050aa0d69dbe1": {
+    "facing": "model",
+    "id": "tool-result-workflow-script-control-character",
+    "name": "Tool result: workflow script control character",
+    "desc": "Workflow validation error when the script contains a control character an approval prompt cannot show."
+  },
+  "cda88a710d27c4197ff8a57c13c48964ab15522d": { "facing": "internal" },
+  "35280a89c875e5db47bca4f116e76efcfc742bc5": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-permission-hook-failed-inherited-approval",
+    "name": "Tool result: remote tool permission hook failed",
+    "desc": "Denial returned when a PermissionRequest hook failed before an earlier approval could be applied to a remote-host tool call."
+  },
+  "1f51bdb6f450879a1e27e2fe0929568e314c43b0": { "facing": "internal" },
+  "c3409ef7de19ac80a4b6e4227914a9887a605005": { "facing": "internal" },
+  "b42831ddfd6a1bb0f8a8f9be4fff996fd58cdb12": { "facing": "internal" },
+  "048e9524d327bc03f973580e03c8e25555fec00f": { "facing": "ui" },
+  "a2b45ce5b4e0f5e59b6d44402c88b67f9e9e4d97": { "facing": "internal" },
+  "799b6d2a33acafc99b9c4d748317687c1e17e5d8": { "facing": "internal" },
+  "ea446357b3b5cdd14423ba4e8d7febe919216248": { "facing": "internal" },
+  "23c056bfb3aa198b141155c4e8eebb47380e1e2f": { "facing": "internal" },
+  "5bb2a589341f55361a3d2b9e9d18900870ee45c8": { "facing": "internal" },
+  "a0bb0aa77cae1436ff7e599239165fdedfa353fe": { "facing": "ui" },
+  "c43f375f54d677248a6f49158222f37bb0a5d4bc": { "facing": "internal" },
+  "bad4f32bc2e3648915af440efc30ecdb801339e1": { "facing": "internal" },
+  "ce880bfce43ef11eb14b4a9b795e93b19b37948d": { "facing": "ui" },
+  "34511d3c56781664ef9aa040c458d37fde540736": { "facing": "ui" },
+  "76784d2f478ea16750ed2981455f928c731297c1": { "facing": "internal" },
+  "56a778c5ace1b25b44cfdc165517b17cef086c94": { "facing": "ui" },
+  "fcf85f629dbc13e6087e532ab384e6001f95d7fb": { "facing": "ui" },
+  "a971fbc4275bc99946c1ad59f27cf8c222132e07": { "facing": "ui" },
+  "2865de3f78813f51ce58e749bb56dd16bf347fd4": { "facing": "internal" },
+  "14fd91d521740f7fc4c0c89675885ea47cfa1ff0": { "facing": "internal" },
+  "fa9dfe87d38405fc014d94245c7c477db637b8a7": {
+    "facing": "model",
+    "id": "tool-result-mcp-file-input-name-direction",
+    "name": "Tool result: MCP file input name direction",
+    "desc": "Error for an MCP tool call when an attached file name contains a text-direction character."
+  },
+  "1883d856cdcac308d9e2ca0a8b137b6e67a10fc3": {
+    "facing": "model",
+    "id": "tool-result-mcp-file-input-too-large-total",
+    "name": "Tool result: MCP file input too large total",
+    "desc": "Error for an MCP tool call when attached files are too large together."
+  },
+  "eaa984d2c776e8545f8b893141e4ca20370aff87": {
+    "facing": "model",
+    "id": "tool-result-mcp-file-input-changed",
+    "name": "Tool result: MCP file input changed",
+    "desc": "Error for an MCP tool call when a file changed while being attached."
+  },
+  "58333068fd3bec1252882ab6159eed4624b0837d": {
+    "facing": "model",
+    "id": "tool-result-mcp-file-input-policy-denied",
+    "name": "Tool result: MCP file input policy denied",
+    "desc": "Error for an MCP tool call when organization policy forbids attaching files."
+  },
+  "98371d1b49ef11ef6da951916acdcd47f837738e": {
+    "facing": "model",
+    "id": "tool-result-mcp-file-input-unavailable-in-session",
+    "name": "Tool result: MCP file input unavailable",
+    "desc": "Error for an MCP tool call when files cannot be attached in this session."
+  },
+  "9db797f4a9f3239a0da1b7285e3fd8c2114bdab3": {
+    "facing": "model",
+    "id": "tool-result-mcp-file-input-upload-failed",
+    "name": "Tool result: MCP file input upload failed",
+    "desc": "Error for an MCP tool call when the file upload failed, asking to try again."
+  },
+  "59f53bbb1bcdea1be7fa5d558d5eb8a2161b7a2e": {
+    "facing": "model",
+    "id": "tool-result-mcp-file-input-authorize-failed",
+    "name": "Tool result: MCP file input authorize failed",
+    "desc": "Error for an MCP tool call when the server's file authorization request failed."
+  },
+  "8f42bfcec6a4b1c7b9756cd1ba2fc5185605ee26": {
+    "facing": "model",
+    "id": "tool-result-mcp-file-input-authorize-bad-answer",
+    "name": "Tool result: MCP file input authorize bad answer",
+    "desc": "Error for an MCP tool call when the server's authorization answer does not match the files."
+  },
+  "888ee57d313c9bcadb498cac1b95ef17e7cbfe00": {
+    "facing": "model",
+    "id": "tool-result-mcp-file-input-arguments-changed",
+    "name": "Tool result: MCP file input arguments changed",
+    "desc": "Error for an MCP tool call whose arguments changed while waiting for approval; tells the model to call the tool again giving each file by its local field."
+  },
+  "acb17ede36f66a8d42070866fbf264a17f427e4b": { "facing": "internal" },
+  "e4fc0ebbf6c34248fc589d60c08fc1dafb2365f6": { "facing": "internal" },
+  "14309f044a6ad679becb3d91189672b293febcf7": {
+    "facing": "model",
+    "id": "tool-result-mcp-task-backgrounded-quiet-chat-note",
+    "name": "Tool result: MCP task backgrounded quiet chat note",
+    "desc": "Stop hint plus note that the task result may not be fetched until the user sends another message, so the model should not promise to report back."
+  },
+  "4fa9554be48842a44d9f683adece53551c95b9b4": {
+    "facing": "model",
+    "id": "tool-result-mcp-task-backgrounded-stop-hint",
+    "name": "Tool result: MCP task backgrounded stop hint",
+    "desc": "Hint telling the model how to stop a backgrounded MCP task by task_id."
+  },
+  "1ba0d697325c50bc12a8c105b28360da13684760": {
+    "facing": "model",
+    "id": "tool-result-mcp-task-backgrounded-notification-suffix",
+    "name": "Tool result: MCP task backgrounded notification suffix",
+    "desc": "Stop hint followed by a note that the result arrives as a task notification (non-quiet variant)."
+  },
+  "a6f87066c86674127b7a8f98cebee77c510142bb": { "facing": "internal" },
+  "e92a950ae235819ddf02e26902db65050b20289a": { "facing": "internal" },
+  "527f4872f2ab8d24ebd5691203274df76b11a7ba": {
+    "facing": "model",
+    "id": "tool-result-mcp-call-repo-servers-closed",
+    "name": "Tool result: mcp_call repo servers closed",
+    "desc": "Error when an mcp_call targets the repo's MCP servers after they have been closed."
+  },
+  "06beaa5de9ddfe83ba19fd93de1b2338520b5e4d": { "facing": "ui" },
+  "ab81fbbc3e4391c1c2103996c2ae7c84ea7d1db2": { "facing": "ui" },
+  "9aff0882464db22a72b34c76282faade636a2262": { "facing": "ui" },
+  "f244406c9fc7bc9bc0569e13504c6d14502b8bb0": {
+    "facing": "model",
+    "id": "tool-result-start-task-input-wrong-type",
+    "name": "Tool Result: Start task input — wrong type",
+    "desc": "start_task input refusal clause saying a field (or the arguments) must be one of the listed JSON types, joined with \"or\"; returned to the model when the call's input fails the schema type check."
+  },
+  "e19c0946a58f6e3dde72e4fb7fb00f14e62afcd4": {
+    "facing": "model",
+    "id": "tool-description-artifact-deliverable-lives-in-conversation-cowork-wording",
+    "name": "Tool Description: Artifact deliverable lives-in-conversation wording",
+    "desc": "Replacement half of the Artifact tool description respelling pair: outside the terminal, the finished-work paragraph says unpublished work exists only in this conversation or in a local file."
+  },
+  "f9ba89960f1ab6bca2a73b6c043442f2b5d506ec": { "facing": "internal" }
 }
