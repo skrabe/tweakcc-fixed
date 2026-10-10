@@ -667,6 +667,15 @@ const CURATED_IDENTIFIER_MAPS = {
         2: 'SHOULD_INCLUDE_LEGACY_PROTOCOL_RESPONSES',
       },
     },
+    {
+      identifiers: [0, 1, 0, 2, 3, 0],
+      identifierMap: {
+        0: 'IS_MESSAGING_BEYOND_OWN_AGENTS_DISABLED',
+        1: 'CROSS_SESSION_RECIPIENT_ROWS',
+        2: 'CROSS_SESSION_SECTION',
+        3: 'SHOULD_INCLUDE_LEGACY_PROTOCOL_RESPONSES',
+      },
+    },
   ],
   'tool-description-bash-git-commit-and-pr-creation-instructions': {
     identifiers: [
