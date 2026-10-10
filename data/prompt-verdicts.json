@@ -60926,5 +60926,335 @@
     "verdict": "pristine-keep",
     "version": "2.1.295",
     "why": "Keep the concurrent-update reason at both write and deletion occurrences. It explains why persistence failed; the recovery sentence alone cannot supply that fact."
+  },
+  "agent-prompt-conversation-summarization-short-v2-instructions": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique compaction contract (preserve user-request record verbatim across re-compaction, rewrite only the work account); opensWithSlot body is the knn.short_v2 instructions, conditional and zero-cost otherwise."
+  },
+  "agent-prompt-conversation-summarization-short-wrapper": {
+    "verdict": "trim",
+    "version": "2.1.296",
+    "why": "Keep the three slots (instructions, security-preservation note, attribution guard) and the directive to follow extra summarization instructions; cut only the hedging wording, matching the already-deployed rewrite of agent-prompt-conversation-summarization."
+  },
+  "slash-command-plugin-marketplace-name-inherited-object-member": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Exact error text with unique reason (reserved inherited-object-member name) and the frozen path/key hint; error strings are mechanics."
+  },
+  "system-prompt-post-compaction-continue-pick-up-last-task": {
+    "verdict": "wipe-merge",
+    "version": "2.1.296",
+    "why": "Fully covered by the co-rendering post-compaction-continue element. Concatenated neighbour knn[n.promptArm].resumeGuidance (system-prompt-post-compaction-resume-guidance) is a separate array element ending in its own full stop, so no sentence crosses the boundary; that neighbour stays pristine and is unaffected by blanking this element."
+  },
+  "system-prompt-post-compaction-resume-guidance": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique post-compaction anti-early-stopping contract, only rendered for the short_v2 arm; both served models stop early, so it is a keep."
+  },
+  "system-reminder-mcp-auth-claude-ai-connectors-only-signin": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Interpolated into system-reminder-mcp-servers-need-auth at the auth-hint slot; it is the only text that tells the model which sign-in route exists in this session mode."
+  },
+  "tool-description-agent-effort-lower-for-parallel-lookups": {
+    "verdict": "trim",
+    "version": "2.1.296",
+    "why": "Keep the unique fan-out guidance and delete the frozen 'More generally' sentence whole, since the co-rendering effort parameter covers it in full."
+  },
+  "tool-description-agent-simple-when-to-use": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Structural header and slot contract for the simple Agent description; nothing that can be cut safely."
+  },
+  "tool-description-bash-background-vs-detached-process-lifetime": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique runtime-lifetime mechanic (run_in_background survives the reply, nohup/& does not); gated by EPt()."
+  },
+  "tool-parameter-agent-effort-relative-explicit-level": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique gate and ignore-list for relative effort. Its concatenated neighbour Ia.join(', ') and the preceding tool-parameter-agent-effort-relative-step ('Name a level (') form one sentence, so it stays whole with both kept."
+  },
+  "tool-parameter-agent-effort-relative-step": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique semantics of lower/higher. Its tail 'Name a level (' crosses into Ia.join(', ') and tool-parameter-agent-effort-relative-explicit-level, which are kept whole too."
+  },
+  "tool-parameter-read-allow-large": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "The schema description is the only always-on statement of what allow_large does and when to use it."
+  },
+  "tool-parameter-send-message-to-session-agent": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "The only recipient description in the zte() schema variant."
+  },
+  "tool-result-agent-resume-background-off-untracked": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Exact runtime error string; error text is mechanics."
+  },
+  "tool-result-agent-resume-background-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Exact error string with unique remedy semantics (resend, runs in the foreground, report is the call result)."
+  },
+  "tool-result-agent-resume-forked-skill-synced-plugin-refused": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Exact runtime error template."
+  },
+  "tool-result-agent-resume-no-saved-settings-diskless": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Exact runtime error string."
+  },
+  "tool-result-agent-resume-transcript-body-encoded": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Exact runtime error string; its retry-then-new-agent ordering is a contract."
+  },
+  "tool-result-agent-resume-transcript-gap": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Exact runtime error string."
+  },
+  "tool-result-agent-resume-transcript-over-bound": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Exact runtime error string with a unique no-retry contract."
+  },
+  "tool-result-agent-resume-transcript-unreadable-or-empty": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Conditional error from kn() thrown only on unreadable/empty resume transcript; it is the only text telling the model what happened and the retry-then-new-agent ordering (frozen: 'then'-style ordering, 'if that fails too'). Unique and load-bearing."
+  },
+  "tool-result-agent-resume-type-unmatched-diskless": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Only copy of this resume-failure cause and its bounded retry ordering; conditional tool result costs nothing until thrown."
+  },
+  "tool-result-auto-mode-server-context-stale-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique explanation for the 'changed' case completing the sentence begun by tool-result-auto-mode-server-context-stale (concatenated via s +); kept whole so the neighbour's 'Repeat the identical call once now;' sentence stays complete."
+  },
+  "tool-result-auto-mode-server-context-stale-first-touch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Only text for the first_touch arm with empty facts; completes the concatenated stale sentence; unique."
+  },
+  "tool-result-auto-mode-server-context-stale-first-touch-with-facts": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique: carries the factsNow the repeated review uses; completes the concatenated stale sentence."
+  },
+  "tool-result-auto-mode-server-context-stale-probe-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Only text for the probe_failed case; completes the sentence begun by the concatenated tool-result-auto-mode-server-context-stale prefix, so it stays whole."
+  },
+  "tool-result-auto-mode-server-context-stale-probe-not-found": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Clause spliced by Dzr() into probe-failed sentence; carries the 404 fact (frozen number); unique."
+  },
+  "tool-result-auto-mode-server-context-stale-probe-other-organization": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique Dzr() clause spliced mid-sentence; must stay to keep the sentence intact and tell the model retrying is futile."
+  },
+  "tool-result-edit-file-not-valid-utf8": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Only Edit-side statement that nothing was written and how to proceed without corrupting a non-UTF-8 file; data-safety contract."
+  },
+  "tool-result-filesystem-directory-moved-undone": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Only description of the WORKING_DIRECTORY_MOVED_UNDONE outcome (nothing made or rolled back)."
+  },
+  "tool-result-hook-error-details-hidden-url": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Security contract explaining hidden hook error details; unique."
+  },
+  "tool-result-hook-matcher-name-too-long-in-cloud": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique limit fact for cloud hook matchers."
+  },
+  "tool-result-hook-matcher-untestable-in-cloud": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique reason telling the matcher must be rewritten."
+  },
+  "tool-result-hook-not-run-blocked": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Blocking hook-failure contract (no-retry) is unique; base text the plugin-suffix variant wraps."
+  },
+  "tool-result-hook-not-run-blocked-plugin-suffix": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Opens with slot holding the base blocked message; plugin attribution is unique and tells the model which plugin's hook blocked."
+  },
+  "tool-result-mcp-call-repo-servers-closed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique error state for mcp_call."
+  },
+  "tool-result-mcp-directory-listing-too-large": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique error for the MCP directory listing tool."
+  },
+  "tool-result-mcp-file-input-arguments-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique recovery instruction naming the tool and local field."
+  },
+  "tool-result-mcp-file-input-authorize-bad-answer": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Minimal unique error; nothing to cut."
+  },
+  "tool-result-mcp-file-input-authorize-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique error carrying the server's failure detail."
+  },
+  "tool-result-mcp-file-input-changed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique error and retry signal for this case."
+  },
+  "tool-result-mcp-file-input-name-direction": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique error for MCP file input path."
+  },
+  "tool-result-mcp-file-input-policy-denied": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique policy-denial error."
+  },
+  "tool-result-mcp-file-input-too-large-total": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique error for this MCP file input case."
+  },
+  "tool-result-mcp-file-input-unavailable-in-session": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique error for the session-unavailable codes."
+  },
+  "tool-result-mcp-file-input-upload-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Conditional error result for a failed MCP file upload; carries the slot detail and the retry instruction, no other carrier renders with it."
+  },
+  "tool-result-mcp-task-backgrounded-notification-suffix": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Opens with the stop-hint slot (task id/TaskStop mechanics) and states how the result is delivered; unique to this arm."
+  },
+  "tool-result-mcp-task-backgrounded-quiet-chat-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique mechanic: results may not be fetched until the user sends a message, so the model must give the user the check-in instruction instead of promising a report."
+  },
+  "tool-result-permission-answer-rules-not-applied": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Security/error contract for partially applied permission rule changes; unique and conditional."
+  },
+  "tool-result-permission-updated-permissions-too-many": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Validation limit with parameter name and threshold slot; frozen mechanics."
+  },
+  "tool-result-personal-config-flag-settings-disable-all-hooks": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Reason clause interpolated into the hooks-off notice; names the flag and setting key, needed for the user fix."
+  },
+  "tool-result-personal-config-flag-settings-source-label": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Source label joined into the managed-unreadable notice; removing it would break that sentence's list."
+  },
+  "tool-result-personal-config-hooks-off-managed-unreadable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique error explanation with paths .claude/settings.json/.claude/settings.local.json and disableAllHooks; frozen."
+  },
+  "tool-result-personal-config-hooks-off-managed-unreadable-fix": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Only recovery hint for this condition; ordering 'then start a new session' is mechanics."
+  },
+  "tool-result-personal-config-restricted-mode-no-user-settings": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Reason clause interpolated into the user-settings hooks notice; unique."
+  },
+  "tool-result-read-file-full-read-unavailable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Opens with the parameter-name slot; states a runtime-availability fact that no carrier states; frozen sentence kept verbatim."
+  },
+  "tool-result-read-file-too-large-even-with-full-read": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique mechanic (other large reads in the same turn share the room); conditional suffix."
+  },
+  "tool-result-read-file-too-large-full-read-hint": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Stage-3 refuted the wipe: this hint renders only when the file fits with allow_large, so its presence is a per-call signal the Read schema cannot give; empty reads like the branch where allow_large is unavailable."
+  },
+  "tool-result-remote-tool-own-settings-waiting-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique explanation plus exact CLI command for the user."
+  },
+  "tool-result-remote-tool-permission-hook-failed-inherited-approval": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Error contract naming PermissionRequest hook failure and host; unique."
+  },
+  "tool-result-remote-tools-command-not-recorded-after-restart": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Unique idempotence/ordering guidance for an unknown-delivery restart state."
+  },
+  "tool-result-send-message-not-protocol-frame-plain": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Validation error contract for its arm; unique when it renders."
+  },
+  "tool-result-send-message-plain-text-own-agents-only": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Stage-3 refuted the trim: the cited to-parameter carrier sits on SendMessage, a deferred tool under tool search, so its schema is not proven to co-render with this refusal; the recovery sentence stays."
+  },
+  "tool-result-synced-plugin-sync-off-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Reason clause interpolated into refusal errors; unique."
+  },
+  "tool-result-workflow-script-control-character": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Opens with a scriptPath/name ternary slot; unique validation error with recovery instruction."
+  },
+  "tool-result-write-file-content-holds-replacement-chars": {
+    "verdict": "pristine-keep",
+    "version": "2.1.296",
+    "why": "Data-loss guard with unique mechanic and recovery options."
   }
 }
