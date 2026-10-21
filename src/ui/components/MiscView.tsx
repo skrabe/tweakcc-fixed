@@ -7,8 +7,9 @@ import {
 import { Box, Text, useInput } from 'ink';
 import { useContext, useState, useMemo } from 'react';
 import { SettingsContext } from '../App';
+import { DEFAULT_SETTINGS } from '../../defaultSettings';
 import Header from './Header';
-import { TableFormat, AutoModeClassifierModel } from '../../types';
+import { TableFormat, AutoModeClassifierModel, Settings } from '../../types';
 
 interface MiscViewProps {
   onSubmit: () => void;
@@ -53,6 +54,15 @@ const STATUSLINE_THROTTLE_MIN = 0;
 const STATUSLINE_THROTTLE_MAX = 1000;
 const STATUSLINE_THROTTLE_DEFAULT = 300;
 const STATUSLINE_THROTTLE_STEP = 50;
+
+// Shimmer constraints (null = CC default)
+const SHIMMER_STEP_MIN = 10;
+const SHIMMER_STEP_MAX = 1000;
+const SHIMMER_STEP_DEFAULT = 200;
+const SHIMMER_STEP_STEP = 25;
+const SHIMMER_WIDTH_MIN = 1;
+const SHIMMER_WIDTH_MAX = 30;
+const SHIMMER_WIDTH_DEFAULT = 3;
 
 export function MiscView({ onSubmit }: MiscViewProps) {
   const { settings, updateSettings } = useContext(SettingsContext);
@@ -111,12 +121,24 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     autoModeClassifierModel: 'default' as AutoModeClassifierModel,
     suppressDeferredTools: false,
     claudemdContextOncePerConversation: true,
+    keybindingCustomization: false,
+    tmuxGraphicsPassthrough: false,
+    disableCtrlZSuspend: false,
+    skipSkillShellValidation: false,
+    shimmer: { ...DEFAULT_SETTINGS.misc.shimmer },
+    webFetchUserAgent: null as string | null,
   };
 
   const ensureMisc = () => {
     if (!settings.misc) {
       settings.misc = { ...defaultMisc };
     }
+  };
+
+  const ensureShimmer = (settings: Settings) => {
+    settings.misc ??= { ...defaultMisc };
+    settings.misc.shimmer ??= { ...DEFAULT_SETTINGS.misc.shimmer };
+    return settings.misc.shimmer;
   };
 
   const cycleAutoModeClassifierModel = (
@@ -218,6 +240,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
               settings.inputBox = {
                 removeBorder: false,
                 chevronIdleThemeColor: null,
+                cursorColor: null,
               };
             }
             settings.inputBox.removeBorder = !settings.inputBox.removeBorder;
@@ -946,6 +969,158 @@ export function MiscView({ onSubmit }: MiscViewProps) {
               cycleAutoModeClassifierModel(
                 settings.misc!.autoModeClassifierModel ?? 'default'
               );
+          });
+        },
+      },
+      {
+        id: 'disableCtrlZSuspend',
+        title: 'Disable Ctrl-Z suspend',
+        description:
+          'Ctrl-Z no longer suspends Claude Code to the background; it reaches keybindings like any other key.',
+        getValue: () => settings.misc?.disableCtrlZSuspend ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.disableCtrlZSuspend =
+              !settings.misc!.disableCtrlZSuspend;
+          });
+        },
+      },
+      {
+        id: 'keybindingCustomization',
+        title: 'Keybinding customization with nonessential traffic off',
+        description:
+          'Keeps ~/.claude/keybindings.json working when CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 turns off the feature gate.',
+        getValue: () => settings.misc?.keybindingCustomization ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.keybindingCustomization =
+              !settings.misc!.keybindingCustomization;
+          });
+        },
+      },
+      {
+        id: 'tmuxGraphicsPassthrough',
+        title: 'tmux graphics passthrough',
+        description:
+          'Show images inside tmux by wrapping kitty graphics in tmux passthrough. Needs `set -g allow-passthrough on` in tmux and CLAUDE_CODE_FORCE_TERMINAL_IMAGES=1.',
+        getValue: () => settings.misc?.tmuxGraphicsPassthrough ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.tmuxGraphicsPassthrough =
+              !settings.misc!.tmuxGraphicsPassthrough;
+          });
+        },
+      },
+      {
+        id: 'skipSkillShellValidation',
+        title: 'Skip shell permission check in your skills/commands',
+        description:
+          'SECURITY: !`...` commands in your user and project skills/commands run without a permission prompt, including those of any project you open. Explicit deny rules still apply.',
+        getValue: () => settings.misc?.skipSkillShellValidation ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.skipSkillShellValidation =
+              !settings.misc!.skipSkillShellValidation;
+          });
+        },
+      },
+      {
+        id: 'shimmerEnabled',
+        title: 'Spinner shimmer',
+        description:
+          'Sweep a highlight across the spinner message while Claude works. Off = static color.',
+        getValue: () => settings.misc?.shimmer?.enabled ?? true,
+        toggle: () => {
+          updateSettings(settings => {
+            const shimmer = ensureShimmer(settings);
+            shimmer.enabled = !shimmer.enabled;
+          });
+        },
+      },
+      {
+        id: 'shimmerStepMs',
+        title: 'Shimmer speed',
+        description: `Milliseconds per shimmer step (${SHIMMER_STEP_MIN}-${SHIMMER_STEP_MAX}). Use ←/→ to adjust. Space resets to default (50ms requesting, 200ms otherwise).`,
+        getValue: () => settings.misc?.shimmer?.stepMs ?? null,
+        getDisplayValue: () => {
+          const stepMs = settings.misc?.shimmer?.stepMs ?? null;
+          return stepMs === null ? 'Default' : `${stepMs}ms`;
+        },
+        toggle: () => {
+          updateSettings(settings => {
+            ensureShimmer(settings).stepMs = null;
+          });
+        },
+        increment: () => {
+          updateSettings(settings => {
+            const shimmer = ensureShimmer(settings);
+            shimmer.stepMs = Math.min(
+              SHIMMER_STEP_MAX,
+              (shimmer.stepMs ?? SHIMMER_STEP_DEFAULT) + SHIMMER_STEP_STEP
+            );
+          });
+        },
+        decrement: () => {
+          updateSettings(settings => {
+            const shimmer = ensureShimmer(settings);
+            shimmer.stepMs = Math.max(
+              SHIMMER_STEP_MIN,
+              (shimmer.stepMs ?? SHIMMER_STEP_DEFAULT) - SHIMMER_STEP_STEP
+            );
+          });
+        },
+      },
+      {
+        id: 'shimmerWidth',
+        title: 'Shimmer width',
+        description: `Highlighted cells (${SHIMMER_WIDTH_MIN}-${SHIMMER_WIDTH_MAX}). Use ←/→ to adjust. Space resets to default (${SHIMMER_WIDTH_DEFAULT}).`,
+        getValue: () => settings.misc?.shimmer?.width ?? null,
+        getDisplayValue: () => {
+          const width = settings.misc?.shimmer?.width ?? null;
+          return width === null
+            ? `Default (${SHIMMER_WIDTH_DEFAULT})`
+            : `${width}`;
+        },
+        toggle: () => {
+          updateSettings(settings => {
+            ensureShimmer(settings).width = null;
+          });
+        },
+        increment: () => {
+          updateSettings(settings => {
+            const shimmer = ensureShimmer(settings);
+            shimmer.width = Math.min(
+              SHIMMER_WIDTH_MAX,
+              (shimmer.width ?? SHIMMER_WIDTH_DEFAULT) + 1
+            );
+          });
+        },
+        decrement: () => {
+          updateSettings(settings => {
+            const shimmer = ensureShimmer(settings);
+            shimmer.width = Math.max(
+              SHIMMER_WIDTH_MIN,
+              (shimmer.width ?? SHIMMER_WIDTH_DEFAULT) - 1
+            );
+          });
+        },
+      },
+      {
+        id: 'webFetchUserAgent',
+        title: 'WebFetch User-Agent',
+        description:
+          'Set misc.webFetchUserAgent in config.json to replace the "Claude-User (...)" User-Agent WebFetch sends. Space resets to default.',
+        getValue: () => settings.misc?.webFetchUserAgent ?? null,
+        getDisplayValue: () =>
+          settings.misc?.webFetchUserAgent ?? 'Default (Claude-User)',
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.webFetchUserAgent = null;
           });
         },
       },

@@ -57,6 +57,14 @@ import { writeSubagentModels } from './subagentModels';
 import { writeThinkingVisibility } from './thinkingVisibility';
 import { writeHideStartupBanner } from './hideStartupBanner';
 import { writeHideCtrlGToEdit } from './hideCtrlGToEdit';
+import { writePlanExitCommand } from './planExitCommand';
+import { writeKeybindingCustomization } from './keybindingCustomization';
+import { writeInputCursorColor } from './inputCursorColor';
+import { writeTmuxGraphicsPassthrough } from './tmuxGraphicsPassthrough';
+import { writeDisableCtrlZSuspend } from './disableCtrlZSuspend';
+import { writeSkipSkillShellValidation } from './skipSkillShellValidation';
+import { writeShimmerStyle } from './shimmerStyle';
+import { writeWebFetchUserAgent } from './webFetchUserAgent';
 import { writeHideStartupClawd } from './hideStartupClawd';
 import { writeIncreaseFileReadLimit } from './increaseFileReadLimit';
 import { writeSuppressLineNumbers } from './suppressLineNumbers';
@@ -319,6 +327,15 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
   'statusline-update-throttle': c =>
     writeStatuslineUpdateThrottle(c, 300, false),
   'clear-screen': c => writeClearScreen(c),
+  'plan-exit-command': c => writePlanExitCommand(c),
+  'keybinding-customization': c => writeKeybindingCustomization(c),
+  'input-cursor-color': c => writeInputCursorColor(c, 'rgb(255,0,135)'),
+  'tmux-graphics-passthrough': c => writeTmuxGraphicsPassthrough(c),
+  'disable-ctrl-z': c => writeDisableCtrlZSuspend(c),
+  'skip-skill-shell-validation': c => writeSkipSkillShellValidation(c),
+  'shimmer-style': c =>
+    writeShimmerStyle(c, { enabled: false, stepMs: 100, width: 5 }),
+  'webfetch-user-agent': c => writeWebFetchUserAgent(c, 'tweakcc-test/1.0'),
   'input-chevron-color': c => writeInputChevronColor(c, 'green'),
   'session-color': c => writeSessionColor(c),
   'strip-empty-system-reminders': c => writeStripEmptySystemReminders(c),

@@ -107,6 +107,14 @@ export interface InputBoxConfig {
   removeBorder: boolean;
   // Theme color key applied to the idle input chevron (null = leave default).
   chevronIdleThemeColor: string | null;
+  // Theme color key or rgb(r,g,b) for the input cursor (null = inverse video).
+  cursorColor: string | null;
+}
+
+export interface ShimmerConfig {
+  enabled: boolean;
+  stepMs: number | null; // null = CC default (50ms requesting, 200ms otherwise)
+  width: number | null; // null = CC default (3 cells)
 }
 
 export type TableFormat = 'default' | 'ascii' | 'clean' | 'clean-top-bottom';
@@ -181,6 +189,12 @@ export interface MiscConfig {
   autoModeClassifierModel: AutoModeClassifierModel;
   suppressDeferredTools: boolean;
   claudemdContextOncePerConversation: boolean;
+  keybindingCustomization: boolean;
+  tmuxGraphicsPassthrough: boolean;
+  disableCtrlZSuspend: boolean;
+  skipSkillShellValidation: boolean;
+  shimmer: ShimmerConfig;
+  webFetchUserAgent: string | null;
 }
 
 export interface InputPatternHighlighter {

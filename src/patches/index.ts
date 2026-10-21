@@ -131,6 +131,14 @@ import {
   restoreClijsFromBackup,
 } from '../installationBackup';
 import { compareVersions } from '../systemPromptSync';
+import { writePlanExitCommand } from './planExitCommand';
+import { writeKeybindingCustomization } from './keybindingCustomization';
+import { writeInputCursorColor } from './inputCursorColor';
+import { writeTmuxGraphicsPassthrough } from './tmuxGraphicsPassthrough';
+import { writeDisableCtrlZSuspend } from './disableCtrlZSuspend';
+import { writeSkipSkillShellValidation } from './skipSkillShellValidation';
+import { isShimmerCustomized, writeShimmerStyle } from './shimmerStyle';
+import { writeWebFetchUserAgent } from './webFetchUserAgent';
 
 export { showDiff, showPositionalDiff, globalReplace } from './patchDiffing';
 export {
@@ -279,7 +287,61 @@ const PATCH_DEFINITIONS = [
     description:
       'Short-circuits CC\'s universal system-reminder wrapper so empty / "(no content)" inputs produce no reminder. Kills the drift-inducing "<system-reminder>(no content)</system-reminder>" blocks that get appended to roughly every other tool call.',
   },
+  {
+    id: 'plan-exit-command',
+    name: '/plan exit command',
+    group: PatchGroup.ALWAYS_APPLIED,
+    description:
+      'Add /plan exit to open the plan approval dialog without a model turn',
+  },
   // Misc Configurable
+  {
+    id: 'keybinding-customization',
+    name: 'Keybinding customization',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'Force-enable custom keybindings when CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1',
+  },
+  {
+    id: 'input-cursor-color',
+    name: 'Input cursor color',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'The input cursor uses your color instead of inverse video (not with CLAUDE_CODE_NATIVE_CURSOR=1)',
+  },
+  {
+    id: 'tmux-graphics-passthrough',
+    name: 'tmux graphics passthrough',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'Images show inside tmux (needs allow-passthrough on and CLAUDE_CODE_FORCE_TERMINAL_IMAGES=1)',
+  },
+  {
+    id: 'disable-ctrl-z',
+    name: 'Disable Ctrl-Z suspend',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description: 'Ctrl-Z will no longer suspend Claude Code',
+  },
+  {
+    id: 'skip-skill-shell-validation',
+    name: 'Skip skill shell validation',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'Run !`...` commands in your own skills/commands without the permission check (SECURITY: includes project .claude skills; explicit deny rules still apply; plugins unaffected)',
+  },
+  {
+    id: 'shimmer-style',
+    name: 'Shimmer style',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description: 'Spinner message shimmer will be toggled, sped up, or widened',
+  },
+  {
+    id: 'webfetch-user-agent',
+    name: 'WebFetch User-Agent',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'WebFetch sends your User-Agent instead of "Claude-User (...)"',
+  },
   {
     id: 'model-customizations',
     name: 'Model customizations',
@@ -1174,6 +1236,9 @@ export const applyCustomization = async (
     'strip-empty-system-reminders': {
       fn: c => writeStripEmptySystemReminders(c),
     },
+    'plan-exit-command': {
+      fn: c => writePlanExitCommand(c),
+    },
     // Misc Configurable
     'patches-applied-indication': {
       fn: c =>
@@ -1387,6 +1452,42 @@ export const applyCustomization = async (
       condition:
         (config.settings.misc?.autoModeClassifierModel ?? 'default') !==
         'default',
+    },
+    'keybinding-customization': {
+      fn: c => writeKeybindingCustomization(c),
+      condition: !!config.settings.misc?.keybindingCustomization,
+    },
+    'input-cursor-color': {
+      fn: c => {
+        const cursorColor = config.settings.inputBox!.cursorColor!;
+        const theme = config.settings.themes?.[0];
+        const resolved =
+          (theme?.colors as Record<string, string>)?.[cursorColor] ??
+          cursorColor;
+        return writeInputCursorColor(c, resolved);
+      },
+      condition: !!config.settings.inputBox?.cursorColor,
+    },
+    'tmux-graphics-passthrough': {
+      fn: c => writeTmuxGraphicsPassthrough(c),
+      condition: !!config.settings.misc?.tmuxGraphicsPassthrough,
+    },
+    'disable-ctrl-z': {
+      fn: c => writeDisableCtrlZSuspend(c),
+      condition: !!config.settings.misc?.disableCtrlZSuspend,
+    },
+    'skip-skill-shell-validation': {
+      fn: c => writeSkipSkillShellValidation(c),
+      condition: !!config.settings.misc?.skipSkillShellValidation,
+    },
+    'shimmer-style': {
+      fn: c => writeShimmerStyle(c, config.settings.misc!.shimmer),
+      condition: isShimmerCustomized(config.settings.misc?.shimmer),
+    },
+    'webfetch-user-agent': {
+      fn: c =>
+        writeWebFetchUserAgent(c, config.settings.misc!.webFetchUserAgent!),
+      condition: !!config.settings.misc?.webFetchUserAgent,
     },
     // Features
     'complexity-router': {
