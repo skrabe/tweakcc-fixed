@@ -174,7 +174,7 @@ describe('fffBashReads', () => {
       const command =
         fffViewerSetup(viewers, maskWrapper) +
         '; printf "%s\\n%s\\n" "$PATH" "$RG_FFF_CONTEXT_ROOT"';
-      const result = spawnSync('/bin/bash', ['-c', command], {
+      const result = spawnSync('/bin/bash', ['--norc', '-c', command], {
         cwd: root,
         env: { PATH: '' },
         encoding: 'utf8',
@@ -191,6 +191,7 @@ describe('fffBashReads', () => {
       ]);
       expect(missing.status).toBe(0);
       for (const shell of ['/bin/bash', '/bin/zsh']) {
+        const noRc = shell === '/bin/zsh' ? '-f' : '--norc';
         for (const variable of [
           'PATH',
           'RG_FFF_VIEWER_DIR',
@@ -199,6 +200,7 @@ describe('fffBashReads', () => {
           const guarded = spawnSync(
             shell,
             [
+              noRc,
               '-c',
               `readonly ${variable}=original; ` +
                 fffViewerSetup(viewers, maskWrapper) +
@@ -215,6 +217,7 @@ describe('fffBashReads', () => {
         const unset = spawnSync(
           shell,
           [
+            noRc,
             '-c',
             'set -u; unset PATH; ' +
               fffViewerSetup(viewers, maskWrapper) +
