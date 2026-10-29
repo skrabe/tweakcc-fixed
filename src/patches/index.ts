@@ -1376,7 +1376,7 @@ export const applyCustomization = async (
     },
     'disable-agent-summaries': {
       fn: c => writeDisableAgentSummaries(c),
-      condition: config.settings.misc?.disableAgentSummaries ?? true,
+      condition: !!config.settings.misc?.disableAgentSummaries,
     },
     'increase-file-read-limit': {
       fn: c => writeIncreaseFileReadLimit(c),
