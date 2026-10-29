@@ -103,6 +103,7 @@ import { writeVoiceMode } from './voiceMode';
 import { writeChannelsMode } from './channelsMode';
 import { writeAttachedBackgroundInteractive } from './attachedBackgroundInteractive';
 import { writeProposeGoal } from './proposeGoal';
+import { writeDisableAgentSummaries } from './disableAgentSummaries';
 import {
   writeSuppressDeferredTools,
   writeStripEmptySystemReminders,
@@ -383,6 +384,7 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
   'hide-startup-banner': c => writeHideStartupBanner(c),
   'hide-ctrl-g-to-edit': c => writeHideCtrlGToEdit(c),
   'hide-startup-clawd': c => writeHideStartupClawd(c),
+  'disable-agent-summaries': c => writeDisableAgentSummaries(c),
   'increase-file-read-limit': c => writeIncreaseFileReadLimit(c),
   'suppress-line-numbers': c => writeSuppressLineNumbers(c),
   'suppress-rate-limit-options': c => writeSuppressRateLimitOptions(c),
