@@ -720,6 +720,7 @@ export const DEFAULT_SETTINGS: Settings = {
     hideStartupBanner: false,
     hideCtrlGToEdit: false,
     hideStartupClawd: false,
+    disableAgentSummaries: true,
     increaseFileReadLimit: false,
     suppressLineNumbers: false,
     suppressRateLimitOptions: false,

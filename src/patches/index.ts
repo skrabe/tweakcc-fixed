@@ -81,6 +81,7 @@ import { writeConversationTitle } from './conversationTitle';
 import { writeHideStartupBanner } from './hideStartupBanner';
 import { writeHideCtrlGToEdit } from './hideCtrlGToEdit';
 import { writeHideStartupClawd } from './hideStartupClawd';
+import { writeDisableAgentSummaries } from './disableAgentSummaries';
 import { writeIncreaseFileReadLimit } from './increaseFileReadLimit';
 import { writeSuppressLineNumbers } from './suppressLineNumbers';
 import { writeSuppressRateLimitOptions } from './suppressRateLimitOptions';
@@ -463,6 +464,13 @@ const PATCH_DEFINITIONS = [
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
       'The "Clawd" icon on startup will be hidden for a cleaner look',
+  },
+  {
+    id: 'disable-agent-summaries',
+    name: 'Disable agent progress summaries',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      "Stop the ~30 s Opus request that re-reads each background agent's transcript to label its row; rows show the task description instead",
   },
   {
     id: 'increase-file-read-limit',
@@ -1365,6 +1373,10 @@ export const applyCustomization = async (
     'hide-startup-clawd': {
       fn: c => writeHideStartupClawd(c),
       condition: !!config.settings.misc?.hideStartupClawd,
+    },
+    'disable-agent-summaries': {
+      fn: c => writeDisableAgentSummaries(c),
+      condition: config.settings.misc?.disableAgentSummaries ?? true,
     },
     'increase-file-read-limit': {
       fn: c => writeIncreaseFileReadLimit(c),
