@@ -1515,3 +1515,43 @@ describe('plan-file-reference reminder', () => {
     expect(planFileRef.apply(once, '', true)).toBe(once);
   });
 });
+
+const claudemdContext = REMINDER_REGISTRY.find(
+  r => r.id === 'claudemd-context'
+)!;
+
+// 2.1.314 spreads the message into `{...Oe({…}),userContextReminder:!0}` and a
+// consumer reads that flag; older builds return the builder call bare.
+const MOCK_CLAUDEMD_FLAGGED =
+  'function UKs(e,n){if(Object.entries(n).length===0)return e;' +
+  'return[{...Oe({content:yYr+Object.entries(n).map(([r,s])=>`# ${r}\\n${s}`).join(`\\n`)+Uui,isMeta:!0}),userContextReminder:!0},...e]}';
+const MOCK_CLAUDEMD_BARE =
+  'function UKs(e,n){if(Object.entries(n).length===0)return e;' +
+  'return[Oe({content:yYr+Object.entries(n).join(`\\n`)+Uui,isMeta:!0}),...e]}';
+
+describe('claudemd-context wrapper', () => {
+  it('keeps the userContextReminder flag on the 2.1.314 shape', () => {
+    const result = claudemdContext.apply(
+      MOCK_CLAUDEMD_FLAGGED,
+      'ctx {{context_blocks}}',
+      false
+    );
+    expect(result).not.toBeNull();
+    expect(result).toMatch(
+      /return\[\{\.\.\.Oe\(\{content:`<system-reminder>[\s\S]*,isMeta:!0\}\),userContextReminder:!0\},\.\.\.e\]\}$/
+    );
+    expect(result).toContain('Object.entries(n).length===0)return e;');
+  });
+
+  it('still rewrites the bare pre-2.1.314 shape', () => {
+    const result = claudemdContext.apply(MOCK_CLAUDEMD_BARE, 'ctx', false);
+    expect(result).toMatch(/return\[Oe\(\{content:`<system-reminder>/);
+    expect(result).not.toContain('userContextReminder');
+  });
+
+  it('suppresses either shape to a pass-through', () => {
+    expect(claudemdContext.apply(MOCK_CLAUDEMD_FLAGGED, '', true)).toBe(
+      'function UKs(e,n){return e;}'
+    );
+  });
+});

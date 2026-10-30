@@ -51,6 +51,26 @@ describe('fffBashReads', () => {
     expect(writeFffBashReads(patched, '/tmp/viewers', wrapper)).toBe(patched);
   });
 
+  it('applies on top of the 2.1.314 snapshot consumer shape', () => {
+    const source = searchFixture.replace(
+      ';function snapshot(){let commands=snippets();if(commands!==null){const marker="FIND_GREP_FUNC_END";return commands}return""}',
+      ';function snapshot(){let commands=snippets(),end=`CLAUDE_CODE_END_${"x"}`,lines=[...commands!==null?["# Shadow",commands]:[]];return lines.join("\\n")}'
+    );
+    const integrated = writeSwapRipgrepForFff(
+      source + instructionFixture + commandFixture,
+      wrapper
+    )!;
+    expect(integrated).not.toBeNull();
+    const patched = writeFffBashReads(integrated, '/tmp/viewers', wrapper)!;
+    expect(patched).not.toBeNull();
+    const commands = new Function('quote', patched + ';return build("task")')(
+      () => 'cwd'
+    ) as string[];
+    expect(commands.slice(0, 2)).toEqual(['snapshot', 'scrub']);
+    expect(commands[2]).toBe(fffViewerSetup('/tmp/viewers', wrapper));
+    expect(commands[3]).toBe('eval task');
+  });
+
   it('keeps JS and shell syntax valid for difficult directory names', () => {
     const directory = "/tmp/José/'`x${HOME}/viewers";
     const trickyWrapper = directory + '/../rg-fff';

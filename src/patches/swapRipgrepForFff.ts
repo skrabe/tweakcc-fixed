@@ -28,6 +28,57 @@ export const hasFffShellIntegration = (
   wrapperPath: string
 ): boolean => file.includes('=[' + fffShellSetup(wrapperPath) + ',');
 
+interface ShellSetupConsumer {
+  start: number;
+  end: number;
+  variable: string;
+  tail: string;
+}
+
+const findShellSetupConsumer = (
+  file: string,
+  producer: string
+): ShellSetupConsumer | null => {
+  // CC 2.1.314+: `let L=P(),G=\`CLAUDE_CODE_END_...\`,Y=[...,...L!==null?[...]:[]]`
+  const snapshotLines = [
+    ...file.matchAll(/let ([$\w]+)=([$\w]+)\(\),(?=[$\w]+=`CLAUDE_CODE_END_)/g),
+  ].filter(
+    match =>
+      match[2] === producer &&
+      file
+        .slice(match.index, match.index! + 1000)
+        .includes(`...${match[1]}!==null?[`)
+  );
+  if (snapshotLines.length === 1 && snapshotLines[0].index !== undefined) {
+    const match = snapshotLines[0];
+    return {
+      start: match.index,
+      end: match.index + match[0].length,
+      variable: match[1],
+      tail: ',',
+    };
+  }
+  const markers = [
+    ...file.matchAll(/let ([$\w]+)=([$\w]+)\(\);if\(\1!==null\)/g),
+  ].filter(
+    match =>
+      match[2] === producer &&
+      file
+        .slice(match.index, match.index! + 1000)
+        .includes('FIND_GREP_FUNC_END')
+  );
+  if (markers.length === 1 && markers[0].index !== undefined) {
+    const match = markers[0];
+    return {
+      start: match.index,
+      end: match.index + match[0].length,
+      variable: match[1],
+      tail: `;if(${match[1]}!==null)`,
+    };
+  }
+  return null;
+};
+
 const installFffShell = (file: string, wrapperPath: string): string | null => {
   if (hasFffShellIntegration(file, wrapperPath)) return file;
   const pattern =
@@ -39,29 +90,20 @@ const installFffShell = (file: string, wrapperPath: string): string | null => {
     );
     return null;
   }
-  const consumers = [
-    ...file.matchAll(/let ([$\w]+)=([$\w]+)\(\);if\(\1!==null\)/g),
-  ].filter(
-    match =>
-      match[2] === matches[0][1] &&
-      file
-        .slice(match.index, match.index! + 1000)
-        .includes('FIND_GREP_FUNC_END')
-  );
-  if (consumers.length !== 1 || consumers[0].index === undefined) {
+  const producer = matches[0][1];
+  const consumer = findShellSetupConsumer(file, producer);
+  if (consumer === null) {
     console.error(
       'patch: swapRipgrepForFff: failed to find unique native shell setup consumer'
     );
     return null;
   }
-  const match = consumers[0];
-  const start = match.index!;
+  const { start, end, variable, tail } = consumer;
   const insertion =
-    `let ${match[1]}=[${fffShellSetup(wrapperPath)},${match[2]}()].filter(Boolean).join("\\n");` +
-    `if(${match[1]}!==null)`;
-  const updated =
-    file.slice(0, start) + insertion + file.slice(start + match[0].length);
-  showDiff(file, updated, insertion, start, start + match[0].length);
+    `let ${variable}=[${fffShellSetup(wrapperPath)},${producer}()].filter(Boolean).join("\\n")` +
+    tail;
+  const updated = file.slice(0, start) + insertion + file.slice(end);
+  showDiff(file, updated, insertion, start, end);
   return updated;
 };
 

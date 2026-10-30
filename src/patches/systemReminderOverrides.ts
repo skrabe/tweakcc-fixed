@@ -1050,8 +1050,10 @@ const CLAUDEMD_INJECTION: ReminderInjection = {
     // it stays unique (exactly one match on darwin, linux-arm64 and linux-x64 on
     // both the 2.1.259 inline shape and the 2.1.261 hoisted one). The replacement
     // never reads the captured expression, so capturing it generically is safe.
+    // CC 2.1.314 spreads the message into `{...j6({…}),userContextReminder:!0}`;
+    // a consumer reads that flag, so the replacement keeps the same wrapping.
     const pattern =
-      /function ([$\w]+)\(([$\w]+),([$\w]+)\)\{if\(Object\.entries\(\3\)\.length===0\)return \2;return\[([$\w]+)\(\{content:[\s\S]{0,600}?,isMeta:!0\}\),\.\.\.\2\]\}/;
+      /function ([$\w]+)\(([$\w]+),([$\w]+)\)\{if\(Object\.entries\(\3\)\.length===0\)return \2;return\[(\{\.\.\.)?([$\w]+)\(\{content:[\s\S]{0,600}?,isMeta:!0\}\)(,[$\w]+:!0\})?,\.\.\.\2\]\}/;
     const match = content.match(pattern);
     if (!match || match.index === undefined) {
       if (/function [$\w]+\([$\w]+,[$\w]+\)\{return [$\w]+;\}/.test(content)) {
@@ -1062,7 +1064,14 @@ const CLAUDEMD_INJECTION: ReminderInjection = {
       );
       return null;
     }
-    const [fullMatch, fnName, msgsParam, ctxParam, j6Name] = match;
+    const [fullMatch, fnName, msgsParam, ctxParam, spreadOpen, j6Name, flag] =
+      match;
+    if (!spreadOpen !== !flag) {
+      console.error(
+        'patch: reminder claudemd-context: unbalanced kY6 message wrapper'
+      );
+      return null;
+    }
 
     let replacement: string;
     if (isSuppressed) {
@@ -1075,7 +1084,7 @@ const CLAUDEMD_INJECTION: ReminderInjection = {
       replacement =
         `function ${fnName}(${msgsParam},${ctxParam}){` +
         `if(Object.entries(${ctxParam}).length===0)return ${msgsParam};` +
-        `return[${j6Name}({content:\`<system-reminder>\n${bodyForThisBuild}\n</system-reminder>\n\`,isMeta:!0}),...${msgsParam}]}`;
+        `return[${spreadOpen ?? ''}${j6Name}({content:\`<system-reminder>\n${bodyForThisBuild}\n</system-reminder>\n\`,isMeta:!0})${flag ?? ''},...${msgsParam}]}`;
     }
     const newContent =
       content.slice(0, match.index) +

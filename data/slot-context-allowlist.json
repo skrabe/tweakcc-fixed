@@ -90,12 +90,12 @@
     }
   },
   "tool-description-bash-run-in-background-detached": {
-    "bodyHash": "15b0513e45fa",
-    "pristineHash": "4d091b4c9f74",
-    "valueHash": "f965e79b6119",
-    "reviewed": "2026-10-20 (CC 2.1.304)",
+    "bodyHash": "d07e9f513caa",
+    "pristineHash": "fba9aa770ff3",
+    "valueHash": "07ee1594ee3c",
+    "reviewed": "2026-10-30 (CC 2.1.314)",
     "tokens": {
-      "TOOL_DESCRIPTION_BASH_RUN_IN_BACKGROUND_DETACHED_VAR_4": "Value is \"\" or \" A command started with run_in_background keeps running after your reply ends, until it finishes or reaches its timeout; a process the shell itself detaches (nohup, &) is usually stopped a few minutes after the reply.\" (EPt -> ` ${kro}`), a whole space-led sentence. It ends the bullet after \"re-invoked.\"; 2.1.304 renumbered the slot (a new notify flag took slot 0); only the trimmed \" No `&` needed.\" used to follow it."
+      "TOOL_DESCRIPTION_BASH_RUN_IN_BACKGROUND_DETACHED_VAR_4": "Value is \"\" or a whole space-led sentence (the background lifetime note). It follows the closing full stop of the timeout clause and is followed by VAR_5, which is \"\" or another whole space-led sentence pointing at background agents, so neither runs into a phrase. Only the trimmed \" No `&` needed.\" used to follow them."
     }
   },
   "tool-description-webfetch-private-url-warning": {
@@ -114,6 +114,15 @@
     "reviewed": "2026-10-28 (CC 2.1.312)",
     "tokens": {
       "PASTED_CONTENT_GUIDANCE_BULLET": "Value is \"\" or \"\\n - <bullet>\". It opens its own bullet line; its left neighbour is the reminder-guidance call's output instead of the cut \"Hooks may intercept …\" sentence. Unchanged from the 2.1.295 review; 2.1.312 only renamed the id and reshaped the intro slots."
+    }
+  },
+  "tool-parameter-bash-run_in_background-note": {
+    "bodyHash": "4b73fa595486",
+    "pristineHash": "71aa740e629c",
+    "valueHash": "fb951bc3cfcb",
+    "reviewed": "2026-10-30 (CC 2.1.314)",
+    "tokens": {
+      "TOOL_PARAMETER_BASH_RUN_IN_BACKGROUND_NOTE_VAR_1": "Value is \"\" or the space-led sentence \" With `run_in_background` the timeout is instead how long the command may run in the background (…); at that limit it is stopped….\" It follows the full stop that ends either arm of the notify ternary, so it renders as its own sentence closing the bullet, as in pristine. 2.1.314 moved the ternary inside the bullet; the trim only folded the opening sentence into the arms."
     }
   }
 }

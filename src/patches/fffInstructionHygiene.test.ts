@@ -47,6 +47,12 @@ const RENDER_2_1_299 = RENDER.replace(
 );
 const PRISTINE_2_1_299 =
   API_2_1_299 + CONTEXT + RENDER_2_1_299 + ';var $type="prompt_snapshot";';
+const API_2_1_314 = API_2_1_299.replace(
+  'let $state={toolUseContext:$input.toolUseContext},$pending=[];async function*$loop(){if(',
+  'let $state={toolUseContext:$input.toolUseContext},$pending=[],$halted=false,$note=()=>{};async function*$loop(){if($halted)return yield*$pending,$note($state.toolUseContext),{reason:"hook_stopped"};if('
+);
+const PRISTINE_2_1_314 =
+  API_2_1_314 + CONTEXT + RENDER_2_1_299 + ';var $type="prompt_snapshot";';
 const TOOLS = [{ name: 'Bash' }, { name: 'Grep' }, { name: 'Glob' }];
 
 type Entry = {
@@ -323,6 +329,8 @@ describe('fff hygiene native call sites', () => {
     ['2.1.296', PRISTINE, true],
     ['2.1.299', PRISTINE_2_1_299, false],
     ['2.1.299', PRISTINE_2_1_299, true],
+    ['2.1.314', PRISTINE_2_1_314, false],
+    ['2.1.314', PRISTINE_2_1_314, true],
   ] as const)(
     'cleans resumed API/context maps without changing saved records, shape=%s, enabled=%s',
     async (_shape, pristine, enabled) => {
@@ -417,6 +425,19 @@ describe('fff hygiene native call sites', () => {
     expect(snapshot.toolEntries?.get('Bash')?.description).toContain(
       'Native search and fff files:'
     );
+  });
+
+  it('scopes the 2.1.314 API selection to the hook-guarded query loop', () => {
+    expect(PRISTINE_2_1_314).toContain('{reason:"hook_stopped"};if($state&&');
+    const repaired = writeFffInstructionHygiene(PRISTINE_2_1_314)!;
+    expect(repaired).not.toBeNull();
+    const loop = repaired.indexOf('async function*$loop(){if($halted)');
+    const site = repaired.indexOf(
+      '$selected=(function __tweakccFffToolRecords'
+    );
+    expect(loop).toBeGreaterThan(-1);
+    expect(site).toBeGreaterThan(loop);
+    expect(repaired.indexOf('}yield*$loop()}')).toBeGreaterThan(site);
   });
 
   it('does nothing on pristine builds without native prompt snapshots', () => {

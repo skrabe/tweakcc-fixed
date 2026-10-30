@@ -301,8 +301,13 @@ const API_SCOPE =
 // CC 2.1.299+ moved the query loop body into a nested generator.
 const API_LOOP_SCOPE =
   /(?:^|[;}])async function\*([$\w]+)\(\)\{if\([$\w]+&&[$\w]+\.toolUseContext\.shouldStopBeforeNextApiCall\?\.\(\)\)return yield\*[$\w]+,\{reason:"background_requested"\};/g;
+// CC 2.1.314+: a stop-hook early return precedes the background check.
+const API_HOOK_LOOP_SCOPE =
+  /(?:^|[;}])async function\*([$\w]+)\(\)\{if\([$\w]+\)return yield\*[$\w]+,[^;]*?\{reason:"hook_stopped"\};if\([$\w]+&&[$\w]+\.toolUseContext\.shouldStopBeforeNextApiCall\?\.\(\)\)return yield\*[$\w]+,\{reason:"background_requested"\};/g;
 const readApiScope = (file: string): Scope | null =>
-  readScope(file, API_LOOP_SCOPE) ?? readScope(file, API_SCOPE);
+  readScope(file, API_HOOK_LOOP_SCOPE) ??
+  readScope(file, API_LOOP_SCOPE) ??
+  readScope(file, API_SCOPE);
 const CONTEXT_SCOPE =
   /(?:^|[;}])async function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+)\)\{let\{session:[$\w]+,terminalWidth:[$\w]+,toolUseContext:[$\w]+,mainThreadAgentDefinition:/g;
 

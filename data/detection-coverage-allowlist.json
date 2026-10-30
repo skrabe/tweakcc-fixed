@@ -1087,5 +1087,11 @@
     "shape": "concat",
     "excerpt": "Whether sandboxed commands may use local ports directly (default: false). macOS: allows binding and accepting on any local port and connecti",
     "why": "zod .describe() on settings.json sandbox.network.allowLocalBinding — config schema"
+  },
+  "6fe2df429b0bfb87": {
+    "verdict": "ui",
+    "shape": "array",
+    "excerpt": "Select with numbers [1-2] or up / down arrow keys. Then Enter to submit or Escape to cancel: 12 Invalid selection \"12\". Enter a number betwe",
+    "why": "terminal layout fixture for the numbered approval selector, used to size rows — never sent to the model"
   }
 }

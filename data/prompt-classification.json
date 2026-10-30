@@ -135812,5 +135812,2877 @@
     "id": "tool-result-artifact-db-read-approval-scope-conversation",
     "name": "Artifact database read approval scope (conversation)",
     "desc": "Clause inside the first-read confirmation reason saying the approval covers reads of this artifact for the rest of the conversation."
+  },
+  "53c736a51ea5fe45841eaf5fb159838b5ce986ad": {
+    "facing": "model",
+    "id": "data-auto-mode-safety-classifier-unavailable",
+    "name": "Data: Auto mode safety classifier unavailable",
+    "desc": "Tells the model the safety classifier is temporarily unavailable and to retry shortly"
+  },
+  "1a5ef4dc88374b811d635637104bfbda3821372a": {
+    "facing": "model",
+    "id": "data-task-notification-message-files-missing-unknown-which-clause",
+    "name": "Data: task notification files missing, unknown which",
+    "desc": "Task-notification line saying some files attached to an earlier user message may be missing from the uploads folder and to ask the user to reattach any named file not found"
+  },
+  "309c17318be132121307a8be64f4f11c4ccedee7": {
+    "facing": "model",
+    "id": "system-reminder-at-mention-reference-not-attached",
+    "name": "System Reminder: At-mention reference not attached",
+    "desc": "Tells the model at-mentioned file contents were not attached and how to read them before responding"
+  },
+  "3ff449507e30ce7328fcae65e832048f2f5c2b94": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-no-result-deny-rules-hold",
+    "name": "Tool Result: Auto mode no result, deny rules hold",
+    "desc": "Deny tool_result when auto mode's safety check gave no result (or does not run this session) and nobody is asked because the settings hold auto mode deny rules."
+  },
+  "fd8de0c12f8a81ae72ee41908f6c3eee81de082c": {
+    "facing": "model",
+    "id": "tool-result-mcp-tool-backgrounded-notification-suffix",
+    "name": "Tool result: MCP tool backgrounded notification suffix",
+    "desc": "Suffix telling the model it will be notified on completion, can keep working, how to stop it with TaskStop, and that it does not survive exit"
+  },
+  "2dd85d0d6a94ccd2cf6afa393017b14db9714740": {
+    "facing": "model",
+    "id": "tool-result-permission-denied-dangerous-removal-safety-check",
+    "name": "Tool Result: Permission denied dangerous removal safety check",
+    "desc": "Explains that a built-in safety check blocked a broad removal that only a person may approve"
+  },
+  "3db0f539d5434c0e6ce248800634660d1b7d1dbb": {
+    "facing": "model",
+    "id": "tool-result-permission-denied-no-interactive-approval",
+    "name": "Tool Result: Permission denied no interactive approval",
+    "desc": "Explains that a tool use was denied because interactive approval is unavailable and tells the model not to retry"
+  },
+  "6b45b81a13025e3da81e5bbc28869952f22d0cb8": {
+    "facing": "model",
+    "id": "data-design-auto-classifier-paths",
+    "name": "Data: design auto-classifier paths summary",
+    "desc": "Path-list summary in the DesignSync finalize_plan auto-mode classifier input, used when there are too many paths to list."
+  },
+  "1af3ff8f52b497895076effce9170b8088dd246d": {
+    "facing": "model",
+    "id": "slash-command-permissions-granted-retry",
+    "name": "Slash command: /permissions granted retry",
+    "desc": "Meta message telling the model permission was granted only for the exact commands or calls listed and it may retry them"
+  },
+  "f5f8d9960a5cc1356a4061c6e607b4b68b42014f": {
+    "facing": "model",
+    "id": "system-reminder-attached-image-deleted",
+    "name": "System Reminder: Attached image deleted",
+    "desc": "Critical system reminder placed where a deleted image was attached, telling the model not to open or recover any saved copy of it and to tell the person it was deleted if asked."
+  },
+  "e56ac6f8ac6067def469c8abe520b35262a6994d": { "facing": "internal" },
+  "b44b04ebc2126848b92f733540717f9138792b09": { "facing": "ui" },
+  "7bb03c8f57bebf4a1f246e08c4e7d88b0fe59ba0": {
+    "facing": "model",
+    "id": "tool-result-writes-outside-working-directories-blocked",
+    "name": "Tool Result: Writes outside working directories blocked",
+    "desc": "Error the Write/Edit/NotebookEdit tools return when permissions.blockWritesOutsideWorkingDirectories blocks a write outside the working directories, pointing to /add-dir or removing the setting."
+  },
+  "07c6c9e7a3860938dbf5bd001fb429ab46fe454e": {
+    "facing": "model",
+    "id": "tool-result-settings-file-writes-blocked-outside-working-directories",
+    "name": "Tool Result: Settings file writes blocked",
+    "desc": "Deny message explaining writes to Claude Code settings files are blocked while permissions.blockWritesOutsideWorkingDirectories is on, and that any .json counts while managed settings cannot be resolved."
+  },
+  "180bf23bf3828d06af27c9c26ca71587861b03ac": { "facing": "internal" },
+  "61d22bc7b529ee285717ccc526ba6c65b1230821": { "facing": "internal" },
+  "2d89d7cfad1c283f44137de2e98addb98451965b": { "facing": "internal" },
+  "460c4f585bef6d0773ac8fc3f295b5405f122dab": { "facing": "internal" },
+  "369bd260b5cadd42aaba1a77858b98a1d84f37fe": { "facing": "internal" },
+  "bd80317c7dab35454cd079053a1c9feef96cb42c": { "facing": "internal" },
+  "d853e001883543ec92d0449fc8f948dd0e628942": { "facing": "internal" },
+  "19f2657d19c79210e6d8ab051581396136592c63": { "facing": "internal" },
+  "c2e069468ca93d9e1c4ebb486697ebfccd12b001": {
+    "facing": "model",
+    "id": "tool-result-remote-cancel-stopped-while-running-correction",
+    "name": "Tool Result: Remote cancel stopped while running correction",
+    "desc": "Tool result appended to the rejection text when a remote cancel stopped a call mid-run, correcting that the call may have partly or fully run and that started work may still be running."
+  },
+  "f8ec756bb65e9219ac451ddf1adba9df105276df": { "facing": "internal" },
+  "d1b4912a9eafb0fca76f7aa63e6fcbf5c773fd0c": { "facing": "internal" },
+  "1c1d7fb701e4ba8204cea9061e83ce672f31438a": { "facing": "internal" },
+  "2690fa1f664817763d7ff68d1f3cf0a73a15567e": { "facing": "internal" },
+  "b93bb3eb08a309edf37e0ba0680e69a96f65f610": { "facing": "internal" },
+  "bf3fe71037b336ee12c613e11b2463a403e68268": { "facing": "internal" },
+  "fd9b310dfbb5c77721a898f787a262c4f2eed5c2": { "facing": "internal" },
+  "0a7f55e5f8966ffa195d32132614087541be0f79": { "facing": "internal" },
+  "153541b2ab81fbf0094d764c5c89fe60aea605b0": { "facing": "internal" },
+  "527ba085c144c5927592d762fb84ea9aaa452efb": { "facing": "internal" },
+  "5d258df79aa059cfaf2ed2d257ca150ce3627728": { "facing": "internal" },
+  "2e25de86db8bf0db9b2579be059707f796bbde6f": { "facing": "internal" },
+  "3cfa61d8c6086d84ed4727d74dfea5e0018866b3": { "facing": "internal" },
+  "b6877d5ec94954b6e58a2db52e99ce211415e26a": {
+    "facing": "model",
+    "id": "tool-result-self-hosted-runner-login-withheld-api-key-helper",
+    "name": "Tool Result: Self-hosted runner login withheld by API key helper",
+    "desc": "Error the self-hosted runner pool tools return when the claude.ai login was not sent to the configured API address because an administrator set an API key helper."
+  },
+  "e7557063386e5a08a5d3d9b94761279ad6350370": { "facing": "ui" },
+  "d8f02910cc42ac231c3be474eb6566e9aa71dcdd": { "facing": "internal" },
+  "6abcb6ab31af95016c50a766818ff188130ee0ca": { "facing": "internal" },
+  "294c682e9a373676263a6942c5feda57f17cf3d4": { "facing": "internal" },
+  "0cb7e65f405f37e52e62eecff4f290ddde8c3e70": { "facing": "internal" },
+  "db840ee7b5ca99d13c7d6b03e2340e02d063a595": {
+    "facing": "model",
+    "id": "tool-result-stored-login-held-back-api-key-helper",
+    "name": "Tool Result: Stored login held back by API key helper",
+    "desc": "Error message (StoredLoginHeldBackError) explaining Claude Code did not send the claude.ai login because the administrator's API key helper is not in effect, returned when uploads or API calls are refused."
+  },
+  "2e9079312b241e884efb5294d7a476950e69bfaf": {
+    "facing": "model",
+    "id": "tool-result-bash-unset-word-value-not-static",
+    "name": "Tool Result: Bash unset word value not static",
+    "desc": "Bash too-complex permission reason when an unset operand (word form) no longer has a statically known value, so what the command leaves behind cannot be verified."
+  },
+  "c735f246b010bf98000f89925209d236f1ed9711": {
+    "facing": "model",
+    "id": "tool-result-bash-unset-variable-name-value-not-static",
+    "name": "Tool Result: Bash unset variable name value not static",
+    "desc": "Bash too-complex permission reason when an unset variable_name operand no longer has a statically known value, so what the command leaves behind cannot be verified."
+  },
+  "36a9420c1a552b2689caceb63c0a7c4f2a543208": {
+    "facing": "model",
+    "id": "system-prompt-memory-md-template-metadata-line",
+    "name": "System Prompt: Memory md template metadata line",
+    "desc": "The 'metadata:' frontmatter line of the memory file template shown in the memory system prompt."
+  },
+  "843de1c92010dd88f7604fc62a13f4541d5720e0": {
+    "facing": "model",
+    "id": "tool-result-block-writes-outside-working-directories-ask-user",
+    "name": "Tool Result: Block writes outside working directories ask user",
+    "desc": "Deny reason telling the model the permissions.blockWritesOutsideWorkingDirectories setting blocks writes outside the working directories and to ask the user to /add-dir or remove the setting."
+  },
+  "3c6b183d348f955357b33a3fba45083e98ab8125": {
+    "facing": "model",
+    "id": "data-empty-list-none-placeholder",
+    "name": "Data: Empty list (none) placeholder",
+    "desc": "The '(none)' placeholder written when a list in model-facing output, such as recent local sessions in the project brief, is empty."
+  },
+  "1d45ad53a30b71d8ed4a3a5dfd88b27c93885a9c": { "facing": "internal" },
+  "bf233ce81f8292281740412a786f483bca10b8f6": { "facing": "internal" },
+  "cc75436052dc9b6093227890d0f21762ef2aee50": {
+    "facing": "model",
+    "id": "tool-result-file-reference-upload-approval-ask",
+    "name": "Tool Result: File reference upload approval ask",
+    "desc": "checkPermissions ask message when Claude wants to upload a file by reference to a connector service, which needs approval even if the tool is already allowed; on decline it is the tool_result."
+  },
+  "ab2d82284cd084211b1c132a4976554ab6b12879": { "facing": "internal" },
+  "cd8ed3175738d399a1e9783c84478303148dc9a1": { "facing": "internal" },
+  "eb1a4383b719506b01b042c7b7a0d3508e4eb287": {
+    "facing": "model",
+    "id": "tool-result-send-message-remote-control-elevated-session-tool-hint",
+    "name": "Tool Result: SendMessage Remote Control elevated session tool hint",
+    "desc": "Hint appended to a SendMessage Remote Control failure saying the target may be reachable with the session service's own send tool and giving that session's id."
+  },
+  "d2425158f6fb51aebd9cb84a662d81a251761d32": { "facing": "internal" },
+  "3ee286c0ecb0d629dc4aa02d031cce6fc540c53f": { "facing": "internal" },
+  "ad6446dd402dccadaf87ded5d863d53dc73e1876": { "facing": "ui" },
+  "898223e053c732dccbbe25c947b5bdd5da1b355b": {
+    "facing": "model",
+    "id": "data-task-notification-monitor-timed-out-likely-stopped-after-reply",
+    "name": "Data: Monitor timed out notification (likely stopped after reply)",
+    "desc": "Task notification when a monitor timed out in a session where processes are likely stopped after the reply, telling the model to re-arm only if it has more to do before replying."
+  },
+  "8b13af41ad09edfc605ecaec8085493794473b40": {
+    "facing": "model",
+    "id": "data-task-notification-monitor-expired-rearm-likely-stopped-after-reply",
+    "name": "Data: Monitor expired re-arm advice (likely stopped after reply)",
+    "desc": "Re-arm advice inside the monitor-expired notification for sessions where a new watch is likely stopped a few minutes after the reply."
+  },
+  "43be0892cefb7c64db0ad037b9ad19c804bbcbae": {
+    "facing": "model",
+    "id": "tool-description-monitor-likely-stopped-after-reply",
+    "name": "Tool Description: Monitor likely stopped after reply",
+    "desc": "Monitor tool description note that in this session a monitor is likely stopped a few minutes after the reply, and to use a foreground command to wait for one thing."
+  },
+  "087d5f5127c7c87988b2f3c6f90790a50819b378": {
+    "facing": "model",
+    "id": "tool-description-monitor-timeout-likely-stopped-after-reply",
+    "name": "Tool Description: Monitor timeout likely stopped after reply",
+    "desc": "Monitor tool description timeout note (K_ sessions): expiry or kill on timeout, plus that any monitor is likely stopped a few minutes after the reply without notice."
+  },
+  "bffe82cdc838471033b9c64d2d2dd5f167f3a655": {
+    "facing": "model",
+    "id": "tool-description-monitor-timeout-expiry-notice",
+    "name": "Tool Description: Monitor timeout expiry notice",
+    "desc": "Monitor description fragment stating every monitor expires after timeout_ms (default and max) and is killed with one notice carrying the event count."
+  },
+  "fac698ea2b7dfc74b8c9935ef713e8b01bfc5811": {
+    "facing": "model",
+    "id": "tool-result-worktree-create-lstat-failed",
+    "name": "Tool Result: Worktree create lstat failed",
+    "desc": "Error when worktree creation cannot lstat a path under the anchor."
+  },
+  "689ca762b735f82a30d34809cc7a2cc8b4f897b9": {
+    "facing": "model",
+    "id": "tool-result-worktree-create-symlink-rejected",
+    "name": "Tool Result: Worktree create symlink rejected",
+    "desc": "Error when a repository-committed symlink in the .claude/worktrees path would redirect worktree creation."
+  },
+  "da7ab31da1e4e0bf58ac8bb4907fdb3dd4ec1464": { "facing": "ui" },
+  "95d33dd8d864f6aaa3796e665d40616adcc2e8cd": { "facing": "ui" },
+  "ee9b27e1694ef962f0ad1679184afa98c0e64380": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-auto-off-reason-consent-forced-off",
+    "name": "Tool Result: Remote tool auto-off reason (consent forced off)",
+    "desc": "Reason given in served-call permission notes when this computer's settings turn off unattended commands from cloud sessions in auto mode (remoteTools.allowUnattendedServing)."
+  },
+  "b22bb81023a0baf4324d7ea49cc2942975f00c4e": { "facing": "internal" },
+  "7f8f6274c10a48327ee972c1eb74d793db80eb71": { "facing": "ui" },
+  "b3fd0164134e43464cfd4db03d02f5a46c05f9c2": {
+    "facing": "model",
+    "id": "system-reminder-container-restarted-processes-likely-stopped-after-reply",
+    "name": "System Reminder: Container restarted processes likely stopped after reply",
+    "desc": "Note in the container-restarted reminder that re-created processes are likely stopped after each reply, so run what must finish in the foreground or tell the user."
+  },
+  "51fe8e6aa9a995f8d56f6e412813674e392882b4": {
+    "facing": "model",
+    "id": "system-reminder-container-restarted-tasks-stopped-list",
+    "name": "System Reminder: Container restarted tasks stopped list",
+    "desc": "Lists background tasks that were running and are now stopped after a container restart, asking to re-create them if still needed."
+  },
+  "c4ea1d1708fd522e92e1eca391be008e23d7b4c0": {
+    "facing": "model",
+    "id": "tool-description-bash-run-in-background-deadline-suffix",
+    "name": "Tool Description: Bash run_in_background deadline suffix",
+    "desc": "Bash/PowerShell description suffix giving the background run deadline and that it is stopped at that limit."
+  },
+  "fadd0e8897faaee4e058c9350370dd670fe02d5d": {
+    "facing": "model",
+    "id": "data-task-notification-shell-interactive-prompt-stall-advice",
+    "name": "Data: Shell interactive prompt stall advice",
+    "desc": "Advice in the stalled-shell task notification that the command is likely blocked on an interactive prompt and should be re-run with piped input or a non-interactive flag."
+  },
+  "4056803d8c11727cb7ffcf3a7e5d4ab618c2091d": {
+    "facing": "model",
+    "id": "tool-result-bash-background-delivered-while-working-foreground-wait",
+    "name": "Tool Result: Bash background delivered while working foreground wait",
+    "desc": "Bash backgrounded-command tool result (K_ sessions) saying the result is delivered automatically if it finishes while working, and to wait with one foreground command if needed before replying."
+  },
+  "e7fd981af2ce7a52303284a4c1b13471f0c89985": {
+    "facing": "model",
+    "id": "tool-result-task-output-do-not-poll-foreground-wait",
+    "name": "Tool Result: TaskOutput do not poll foreground wait",
+    "desc": "TaskOutput result for a still-running task telling the model not to call it again, that the result is delivered automatically, and to wait with one foreground command if needed."
+  },
+  "00d624cfc39bc9e441e341655be369ca46b7a9df": { "facing": "ui" },
+  "241bc072a6accdd1cfb3ad815e709368ae0acfdc": { "facing": "ui" },
+  "016c9b61dcf183dc2db7e042437e9717e2c434b7": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-unavailable-agent-stopped",
+    "name": "Tool Result: Auto mode unavailable agent stopped",
+    "desc": "Message when auto mode's safety check is unavailable so a subagent was stopped before finishing, telling the model its result is partial and to finish without it and tell the user."
+  },
+  "675b3a0445f2cd5c5b41a490763edc8831ac18ab": { "facing": "ui" },
+  "c3e1a6e0524d1a9a893593e6be1b6f6167b3ee10": { "facing": "ui" },
+  "7b687fd4fafdfa516c5c71cd8fb426415da543b7": { "facing": "ui" },
+  "d10b5181c4370399d87b1c7feb772ae0a56f6106": { "facing": "ui" },
+  "0408813bf01223f742b3a37334401aaf132d24d9": { "facing": "ui" },
+  "672bbdb766d84dcfc68fc2d49b6d26ec76c2c4a3": { "facing": "ui" },
+  "0fe6ea430c21781f280dbd9695cbe805189acdcb": {
+    "facing": "model",
+    "id": "tool-description-bash-background-agent-foreground-work",
+    "name": "Tool Description: Bash background agent foreground work",
+    "desc": "Points work that must outlive the reply to a background agent that runs its commands in the foreground"
+  },
+  "b42434af863fd7bab27b54b0d26950fdbc9e7e34": {
+    "facing": "model",
+    "id": "tool-parameter-bash-run_in_background-guidance",
+    "name": "Tool Parameter: Bash run_in_background guidance",
+    "desc": "Explains Bash run_in_background behavior and that commands do not need a trailing ampersand"
+  },
+  "abd816943efab7d9a9aa6a6113b70b401a424301": {
+    "facing": "model",
+    "id": "tool-description-bash-run-in-background-detached",
+    "name": "Tool Description: Bash run_in_background detached",
+    "desc": "Describes run_in_background running commands detached, notification on exit, the background timeout limit, and that no trailing ampersand is needed"
+  },
+  "c464f514736fc84775424111597d3d8d9b3f867c": {
+    "facing": "model",
+    "id": "tool-description-bash-run-in-background-no-repeated-poll",
+    "name": "Tool Description: Bash run_in_background no repeated polling",
+    "desc": "Tells the model not to poll a background command repeatedly and to block with one foreground command when it needs the result before replying"
+  },
+  "f5aaea9906e80f26916afe9ed6fe92c4542527c4": {
+    "facing": "model",
+    "id": "tool-result-mcp-resource-skills-off-not-read",
+    "name": "Tool Result: MCP resource not read while MCP skills are off",
+    "desc": "Reports that a loaded skill's file was not read because MCP skills are turned off"
+  },
+  "1caab764da4ee21ae7fd85f2044f73405df25144": {
+    "facing": "model",
+    "id": "data-compaction-summary-left-out-repeat-reads-only",
+    "name": "Data: Compaction summary left-out call repeat guidance",
+    "desc": "Allows repeating left-out read-only calls narrowly and forbids repeating calls that changed something"
+  },
+  "d20d2157b04582599a332575624e40af41ba7d20": {
+    "facing": "model",
+    "id": "data-compaction-summary-left-out-results-note",
+    "name": "Data: Compaction summary left-out tool results note",
+    "desc": "States how many tool results were too large to include in the summary and that those calls may have had effects"
+  },
+  "a5ef4da30fb55b618276e86f681bcfe908b09c11": {
+    "facing": "model",
+    "id": "data-compaction-summary-left-out-refused-calls-note",
+    "name": "Data: Compaction summary refused or stopped calls note",
+    "desc": "Notes refused or stopped calls whose text was too large to include and that stopped calls may have run"
+  },
+  "7fa0106d42fab3a568360c868e6dd5ab16c69e21": {
+    "facing": "model",
+    "id": "data-compaction-summary-tool-result-precedence",
+    "name": "Data: Compaction summary tool result precedence",
+    "desc": "Says tool results restated in the summary never override the user's own messages while their limits still apply"
+  },
+  "83423c198b6099edba08f185f940042d5dba3b79": {
+    "facing": "model",
+    "id": "data-compaction-summary-left-out-note-label",
+    "name": "Data: Compaction summary left-out note label",
+    "desc": "Label that opens the note about tool results left out of a compaction summary"
+  },
+  "f8ad6ac41a147717105f9be6ce83d7bad83ed36a": { "facing": "internal" },
+  "ff7c6acf2501be637ae8ef2ed53a116059fc3c16": { "facing": "internal" },
+  "d751d705c8ccdd97eeb01193c86f371fc549c45e": { "facing": "internal" },
+  "8cc2e4066eaae5af197c3ea5abf9a93ee82cb9ad": {
+    "facing": "model",
+    "id": "data-compaction-left-out-tool-result-marker",
+    "name": "Data: Compaction left-out tool result marker",
+    "desc": "Bracketed placeholder replacing a tool result left out of a compaction summary request"
+  },
+  "a5eeb7e28b5e4edbd3296733bebcc1de46339599": {
+    "facing": "model",
+    "id": "data-compaction-refused-call-left-out-marker",
+    "name": "Data: Compaction refused call left-out marker",
+    "desc": "Bracketed placeholder for a refused or stopped call whose text was left out of a summary request"
+  },
+  "af2413d26e0055378318463e893de934980beda6": {
+    "facing": "model",
+    "id": "data-compaction-left-out-too-large-reason",
+    "name": "Data: Compaction left-out too-large reason",
+    "desc": "Reason clause inside the left-out tool result marker for a single result too large for the summary request"
+  },
+  "c209d2355a73f39062da923e9f7589b6c507900f": {
+    "facing": "model",
+    "id": "data-compaction-left-out-group-too-large-reason",
+    "name": "Data: Compaction left-out group too-large reason",
+    "desc": "Reason clause inside the left-out marker when a result and those leaving with it were too large together"
+  },
+  "68409ed60997777e3fac287b9c1daf54ed2c8ff2": {
+    "facing": "model",
+    "id": "system-prompt-compaction-omitted-tool-result-handling",
+    "name": "System Prompt: Compaction omitted tool result handling",
+    "desc": "Limits summaries of omitted or cleared tool results to known execution and output-availability facts while preserving user-instruction precedence"
+  },
+  "342f9f71e9029f359c8570dff6b46c695a19bad8": { "facing": "internal" },
+  "c0f0118d922f45ff51a4c618a71f4c7bd42c64a5": { "facing": "internal" },
+  "41c72f882f972902a2942677981a96617ecbed6b": { "facing": "internal" },
+  "bd989d15d49ea1fa639f060a7a62724aaea30df4": { "facing": "internal" },
+  "117e58fc6bda7664400198e0ba32513549f9e72f": {
+    "facing": "model",
+    "id": "system-prompt-original-games-guidance",
+    "name": "System Prompt: Original games guidance",
+    "desc": "Allows building original or genre games but forbids recreating a specific existing game even if renamed"
+  },
+  "4cc2ac8ce09b7f09e595131a0d44384d5e0ce7e7": {
+    "facing": "model",
+    "id": "system-prompt-guide-agent-no-answer-report-issue",
+    "name": "System Prompt: Guide agent no-answer issue report",
+    "desc": "Directs the user to report an issue via the issues explainer when the guide agent cannot find an answer"
+  },
+  "66e5ab840a0b9566a3e826786cd0b693e7b1cf20": { "facing": "internal" },
+  "36adfaa25756d50d76f0c084975e0955dc3e6db2": { "facing": "internal" },
+  "84f1cb3272ad3e18f8f65e8efd860e8fbfe11fcb": { "facing": "internal" },
+  "b37db5226fbea08f15e35478fb6352f5fab45c31": { "facing": "ui" },
+  "d5c66b19357d814ea55a26488f95ed4e85031d49": { "facing": "internal" },
+  "dc4d8352b851f5f31e64796d2425123cc31e67c7": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-unavailable-turn-ended",
+    "name": "Tool Result: Auto mode unavailable turn ended",
+    "desc": "Reports that auto mode is unavailable, the call was not run and the turn has ended"
+  },
+  "56fd0cc5ae97f1966982433146df6f699bbdb706": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-no-safety-result-retry-once",
+    "name": "Tool Result: Auto mode no safety result retry once",
+    "desc": "Tells the model to reissue a call with no safety result once and stop retrying if denied again"
+  },
+  "453090a9c3042f86ca9e1bbccaef2dd8a89da46a": { "facing": "internal" },
+  "086dd736a71d710bd8ad4bb532adac2b15c7ebbe": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-script-call-never-checked",
+    "name": "Tool Result: Auto mode script call never checked",
+    "desc": "Explains that auto mode's safety check never sees calls made from a script so the call is always refused"
+  },
+  "ed93093ecedca08ae772440d95eb416d048a1b52": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-no-safety-result-nobody-to-ask",
+    "name": "Tool Result: Auto mode no safety result nobody to ask",
+    "desc": "Reports a call was not run because auto mode has no safety result and nobody can approve it"
+  },
+  "eef08ce654bfaad989b86cfa54e2f48237e76387": { "facing": "internal" },
+  "3b3db854d57b434c6a564a1ca87db89a7d45f9b5": { "facing": "internal" },
+  "d21560e020300428be8a70983137d9238dca59c0": { "facing": "internal" },
+  "d0c801b9d8e5efe96c08b81cd2ef8425caf56a19": {
+    "facing": "model",
+    "id": "tool-result-bash-notified-after-final-response-unless-idle",
+    "name": "Tool Result: Bash notified after final response unless idle",
+    "desc": "Says a background command's completion notice arrives even after the final response unless the session goes idle"
+  },
+  "5714bd9de9e0d7fc4649581f0c6bd886c5a6482e": {
+    "facing": "model",
+    "id": "tool-result-bash-background-deadline-stop-notice",
+    "name": "Tool Result: Bash background deadline stop notice",
+    "desc": "Warns that a background command still running after its deadline will be stopped"
+  },
+  "d057014a10c1c22a1076cb91e521361c113e3423": {
+    "facing": "model",
+    "id": "system-prompt-background-agent-session-keepalive-guidance",
+    "name": "System Prompt: Background agent session keepalive guidance",
+    "desc": "Explains that background agents keep a stopping session alive only during model responses or foreground tool calls and must use bounded foreground commands"
+  },
+  "33589d30d680d84cc65ae27dc6232f3943143969": {
+    "facing": "model",
+    "id": "tool-description-agent-simple-usage-notes",
+    "name": "Tool Description: Agent simple usage notes",
+    "desc": "Usage notes for the Agent tool covering result relay, continuing agents, agent definitions and worktree isolation"
+  },
+  "5286f952f4d2b514c1e095cb7c130a03caa76882": { "facing": "internal" },
+  "55bc9b3af0a4c304befd51c8afd2e2c639a00b7e": {
+    "facing": "model",
+    "id": "data-precompact-hook-output-cut-notice",
+    "name": "Data: PreCompact hook output cut notice",
+    "desc": "Marks PreCompact hook output truncated at the character limit before it joins the compaction instructions"
+  },
+  "0316181970d864de8d3dc65045bac6a946278a1c": { "facing": "internal" },
+  "cd5039f1496f54a368cf477e7e27fa3316f970e3": { "facing": "internal" },
+  "9111aba45ec49b5e235e31a29fa3d571970db068": { "facing": "internal" },
+  "77654e6d960b8833a7a4ba5842a743e6e2615e75": { "facing": "internal" },
+  "60fcddc15b7d7365268b19220c197d7c0758f80d": { "facing": "internal" },
+  "92fb0d15d907329bd96f7d2cbc9a00d8fe15ab5f": { "facing": "internal" },
+  "3c91d90cad0ed301ca03ab03615032a5c055ed80": { "facing": "internal" },
+  "83ef825b30ae438e98aaf38cc9c3359fde2eb1ed": {
+    "facing": "model",
+    "id": "tool-result-permission-denied-interactive-approval-lead",
+    "name": "Tool Result: Permission denied interactive approval lead",
+    "desc": "Opening clause stating a tool use was denied because it requires interactive approval"
+  },
+  "4aa50937a59af708b2bf244c9483f48cc676c49f": {
+    "facing": "model",
+    "id": "tool-result-permission-denied-no-approval-surface",
+    "name": "Tool Result: Permission denied no approval surface",
+    "desc": "Explains automatic denial when no approval surface exists and forbids retrying approval-requiring actions"
+  },
+  "c4a94815de624bf863bafec082fd3e80ce32b25f": {
+    "facing": "model",
+    "id": "tool-result-permission-denied-no-approval-surface-lead",
+    "name": "Tool Result: Permission denied no approval surface lead",
+    "desc": "Opening clause stating a tool use was denied because the session has no approval surface"
+  },
+  "bdb70a58ab64df9f6ac09db733404b994c077167": {
+    "facing": "model",
+    "id": "tool-result-permission-denied-add-bash-rule",
+    "name": "Tool Result: Permission denied add permission rule",
+    "desc": "Tells the user they can add a permission rule to allow this type of action in the future"
+  },
+  "35dd2e05386a9c79e9e023f88a825f356138fd75": {
+    "facing": "model",
+    "id": "system-prompt-tool-execution-denied-auto-mode-classifier",
+    "name": "System Prompt: Tool execution denied by auto mode classifier",
+    "desc": "Tells the model to continue with other tasks that don't depend on an action the auto mode classifier denied"
+  },
+  "8606b2f7e439b120502bb578484441027acab994": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-classifier-api-wait-not-unsafe",
+    "name": "Tool Result: Auto mode classifier API wait not unsafe",
+    "desc": "Reports that the API asked the safety classifier to wait and that this is not a safety judgment"
+  },
+  "7cb854291afa20a22c284d7fa7899a49ce27b6fd": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-no-local-check-no-server-verdict",
+    "name": "Tool Result: Auto mode no local check and no server verdict",
+    "desc": "Reports a call was not run because Claude Code no longer checks actions locally and no server verdict covers it"
+  },
+  "e378d7979610803c417130d432781f652a69b407": {
+    "facing": "model",
+    "id": "tool-result-subagent-output-unreviewed-security-warning",
+    "name": "Tool Result: Subagent output unreviewed security warning",
+    "desc": "Warns that a subagent's output was not reviewed and must be checked for prompt injection before acting on it"
+  },
+  "f5610d5d4d759c758bd2863646c3f4aa3ac75da6": {
+    "facing": "model",
+    "id": "system-reminder-at-mention-reference-read-tool-pdf-guidance",
+    "name": "System Reminder: At-mention reference read tool PDF guidance",
+    "desc": "Tells the model to call the read tool on at-mentioned paths and that it returns whole PDFs up to a page limit"
+  },
+  "5ed6fd216e51586352e514ed019c8132341b8e9f": {
+    "facing": "model",
+    "id": "system-reminder-mcp-servers-reserved-address-refused",
+    "name": "System Reminder: MCP servers reserved address refused",
+    "desc": "Lists configured MCP servers Claude Code refuses because it reserves their address and says retrying will not help"
+  },
+  "992e871226cfda1d1f3c885c8d1fd6df8ae75e99": { "facing": "internal" },
+  "5f4e29e67494b981b52b4bbc467bb95294b1bb27": { "facing": "internal" },
+  "06d1d1f08a4bf951660359214b26f0cc336c4b42": { "facing": "ui" },
+  "6f4e626a0ace0a7e3b63d278f058d1036e0d99c8": { "facing": "ui" },
+  "41b9ad27e4f415b46400c949f42d604f719fe439": {
+    "facing": "model",
+    "id": "slash-command-bg-gate-bypass-permissions-user-settings-off",
+    "name": "Slash Command: background gate bypass-permissions user settings off",
+    "desc": "Refusal returned when a background or forked session needs the bypass-permissions disclaimer but user settings are not loaded, telling the user to relaunch with user settings on"
+  },
+  "26639d69296e90d8fb16ef2cc8c563e53ca89a1a": { "facing": "ui" },
+  "6a5b69e71470cd758595017d7d3a10d0797f845c": { "facing": "ui" },
+  "35488d7439f4dccebff313603add7ca8b1a0b5e3": { "facing": "internal" },
+  "1415b5c36b7bbe356d88f695826ac755cd2ec4f8": {
+    "facing": "model",
+    "id": "tool-parameter-monitor-persistent-stopping-session",
+    "name": "Tool Parameter: Monitor persistent (stopping session)",
+    "desc": "Monitor persistent parameter description for sessions stopped soon after the reply, warning that persistent does not keep a watch running past the reply"
+  },
+  "d55092b45e914a1086743bf70952f03e8e068630": {
+    "facing": "model",
+    "id": "tool-result-monitor-started-likely-stopped-after-reply-suffix",
+    "name": "Tool Result: Monitor started likely-stopped-after-reply suffix",
+    "desc": "Clause appended to the Monitor started expiry note warning the watch is likely stopped a few minutes after the reply"
+  },
+  "7201752114b20d18bd2ee809cf9859a525340cba": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-watch-stop-reason-could-not-connect",
+    "name": "Data: artifact watch stop reason could not connect",
+    "desc": "Short reason label shown in the artifact watch stopped task-notification summary when the live watch could not connect"
+  },
+  "64441f4d09bff7208be7ef3ada8d71700930137b": { "facing": "internal" },
+  "19e455de41bb3ff8bb001a68fa0cf8d61cc4b2e5": {
+    "facing": "model",
+    "id": "tool-result-subagent-handback-auto-mode-blocked-warning",
+    "name": "Tool Result: subagent handback auto-mode blocked warning",
+    "desc": "Security warning prefixed to a subagent report that auto mode blocked, telling the model to review the subagent's actions before acting"
+  },
+  "6be462bc1d31ad88c34631edf3ec2a051ac297bd": {
+    "facing": "model",
+    "id": "tool-result-workflow-structured-result-security-warning",
+    "name": "Tool Result: workflow structured result security warning",
+    "desc": "Security warning recorded when auto mode flags a subagent's structured result in a workflow script, telling the model to check what the subagent and script did"
+  },
+  "62b2ed3c2b37ae9f26808a3bcc8fbeba9823b265": {
+    "facing": "model",
+    "id": "tool-result-workflow-structured-result-flagged-received",
+    "name": "Tool Result: workflow structured result flagged (received)",
+    "desc": "Warning label that auto mode flagged the subagent's structured result which the script already received"
+  },
+  "fd3748bbd5929fe99a0664f9cac76b353483db00": {
+    "facing": "model",
+    "id": "tool-result-workflow-structured-result-flagged-then-changed",
+    "name": "Tool Result: workflow structured result flagged then changed by hook",
+    "desc": "Warning label that auto mode flagged the subagent's original structured result and a hook changed it before the script received it"
+  },
+  "1fbb1c4b0cb4dca577712f2f4fb29f599fe9a8d5": {
+    "facing": "model",
+    "id": "tool-result-workflow-structured-result-flagged-another",
+    "name": "Tool Result: workflow structured result flagged (another attempt)",
+    "desc": "Warning label that auto mode flagged a different structured result the subagent tried to return than the one the script received"
+  },
+  "45c71f4cf7210455f1256b6a1dd6d35f3c9ded21": {
+    "facing": "model",
+    "id": "tool-description-gettask-default-completion-guidance",
+    "name": "Tool Description: GetTask default completion guidance",
+    "desc": "Completes the shared GetTask description with result delivery after replies and foreground waiting for tasks terminated at the final response"
+  },
+  "d4e502ab1b038489b0139ebf37a737bbea850e01": {
+    "facing": "model",
+    "id": "tool-description-gettask-stopping-session-completion-guidance",
+    "name": "Tool Description: GetTask stopping-session completion guidance",
+    "desc": "Completes the shared GetTask description for stopping sessions, warning that needed results must be obtained in the foreground before replying"
+  },
+  "e652af12baa474287cfc6d2d89cbdd7378d6689e": { "facing": "internal" },
+  "5b348e4d5ff667796ba705057c7b6e8c9e4fd3c1": { "facing": "internal" },
+  "eca8b097e8aca0adaf96160fec9eb036afd137f5": {
+    "facing": "model",
+    "id": "system-reminder-unsent-file-link-reminder",
+    "name": "System Reminder: unsent file link reminder",
+    "desc": "Hidden meta note after an SDK reply that links files not sent, telling the model to send them with the file tool or end its turn silently"
+  },
+  "e91d17672528ae85a5ada8d2f210b84b6c6cbbd2": { "facing": "ui" },
+  "8eb613e84104db0f84e21f1bdf6bd68de129d7f7": { "facing": "internal" },
+  "824e895dcca2e56ff3fa99090fdbcb721bf93dbf": {
+    "facing": "model",
+    "id": "slash-command-restart-refused-version-on-hold",
+    "name": "Slash Command: restart refused (version on hold)",
+    "desc": "/restart refusal when the installed version is on hold, saying the session stays on the current version and nothing changed"
+  },
+  "202a2127c9c5d19fb67518e2bebcaffdfb6ad1a4": { "facing": "ui" },
+  "1b098cc82e0fca7042ae4dd7f858d5bd43e5f61c": {
+    "facing": "model",
+    "id": "skill-insights-earlier-run-still-stopping",
+    "name": "Skill: /insights earlier run still stopping",
+    "desc": "/insights prompt returned when an earlier run in the session is still stopping, asking the model to tell the user to retry shortly"
+  },
+  "40694c88c0ea0c1c94ebb69e21ebfb47de066d58": {
+    "facing": "model",
+    "id": "skill-insights-session-report-output",
+    "name": "Skill: /insights session report output",
+    "desc": "Session-scoped /insights prompt giving the model the insights data and at-a-glance summary to relay without mentioning a report file"
+  },
+  "d77ac6f861b577eb793fd548baee261f66c3bd95": {
+    "facing": "model",
+    "id": "data-artifact-read-ownership-header",
+    "name": "Data: artifact read ownership header",
+    "desc": "Ownership clause in the artifact read header for the user's own artifact, with audience and provenance notes"
+  },
+  "16f074f4e271bacf96e8435b4cf057bde7c1cdc3": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-saved-untrusted-provenance-clause",
+    "name": "Tool Result: artifact HTML saved untrusted provenance clause",
+    "desc": "Clause after a saved artifact HTML path warning that the file may hold type, co-writer or outside content and should be treated as data when Read"
+  },
+  "721828d06c5b8c0e91e5a4ad2f0460fc797b6bb2": {
+    "facing": "model",
+    "id": "tool-result-artifact-html-saved-untrusted-cowriter-arm",
+    "name": "Tool Result: artifact HTML saved untrusted co-writer arm",
+    "desc": "Arm of the saved-HTML provenance clause for files that may include outside or co-writer content"
+  },
+  "cd57355198d1df1c5a6229f07f41dda287056014": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-computed-find-paths-at-once",
+    "name": "Tool Result: worktree guard computed find paths at once",
+    "desc": "Worktree guard reason that find substitutes all found paths at once with {} +"
+  },
+  "bdca3ba67b66654dcaf9d0167726fac7226dcbfe": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-computed-at-style-list",
+    "name": "Tool Result: worktree guard computed @-style list",
+    "desc": "Worktree guard reason that a computed value should be one element or spelled out instead of an @-style list"
+  },
+  "073c9126206e522c7b9340745595c0f8b500f4ea": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-computed-star-join-refused",
+    "name": "Tool Result: worktree guard computed $*-join refused",
+    "desc": "Worktree guard reason refusing $*-style joins, array lengths and bare arithmetic or special parameters"
+  },
+  "e47fdadd4a81ed2d331372d2314595aab3890c09": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-computed-quote-whole-cluster",
+    "name": "Tool Result: worktree guard computed value quote whole in cluster",
+    "desc": "Worktree guard reason that a computed option value in a cluster should be quoted whole as its own word"
+  },
+  "8edada0668621b6cf562cddc63453dfca4b8c897": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-computed-one-quoted-word",
+    "name": "Tool Result: worktree guard computed one quoted word",
+    "desc": "Worktree guard reason that a computed value should be one double-quoted or spelled-out word"
+  },
+  "92f956af05d151383e3d3ee449d3ca450425be12": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-computed-value-reads-exactly-one",
+    "name": "Tool Result: worktree guard computed value where one is read",
+    "desc": "Worktree guard frame describing a computed value where the command reads exactly one word"
+  },
+  "fa7569427bd21e6210bf35baef94e8c72db37a15": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-reason-word-file-pattern",
+    "name": "Tool Result: worktree guard word expands as file pattern",
+    "desc": "Worktree guard reason that a word's * or ? expands as a file pattern"
+  },
+  "4b62a366af0861b4bb32d883e50cea6f5c5c1147": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-ssh-computed-option-value",
+    "name": "Tool Result: worktree guard ssh computed option value",
+    "desc": "Worktree guard operand detail for ssh with a computed option value"
+  },
+  "17660090ac48dd868939e1ebf299544769b6e11d": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-pushd-n-option",
+    "name": "Tool Result: worktree guard pushd -n",
+    "desc": "Worktree guard reason that pushd -n stacks the directory without entering it"
+  },
+  "faec4f8db2c5c31bbe1f053bcda517fc4e703096": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-pushd-word-may-be-n",
+    "name": "Tool Result: worktree guard pushd word may be -n",
+    "desc": "Worktree guard reason that a pushd word may come out as -n"
+  },
+  "c97bb391cecd3694556d978d4f35194afa84c5e9": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-zsh-dirs-stack-word",
+    "name": "Tool Result: worktree guard zsh dirs stack word",
+    "desc": "Worktree guard reason that zsh dirs puts a word on the directory stack without entering it"
+  },
+  "9cc2eeb7b0db2b9afc741f37472fbb6bb90ad988": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-unquoted-glob-word-variable-names",
+    "name": "Tool Result: worktree guard unquoted glob word read as variable names",
+    "desc": "Worktree guard operand detail that an unquoted glob word may expand and following words be read as variable names"
+  },
+  "7854c676153a64df5bab6928fb384465983c4ef3": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-spell-option-letters-hint",
+    "name": "Tool Result: worktree guard spell option letters hint",
+    "desc": "Hint arm telling the model to spell option letters out"
+  },
+  "7df5d7e29d8dc1276e90a51e60ef61d9e0cf7b1a": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-computed-after-t-n-option",
+    "name": "Tool Result: worktree guard computed value after -t/-n/-N",
+    "desc": "Worktree guard operand detail that a computed value after -t, -n or -N may be read as variable names"
+  },
+  "271ecef154dd5d148e098a44cc840b8118cdfb54": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-computed-single-value-slot",
+    "name": "Tool Result: worktree guard computed value in single-value slot",
+    "desc": "Worktree guard operand detail that a computed value where one value belongs may split, with quoting guidance"
+  },
+  "5f892192843e24f7c2133f48b31084b8c3bcc504": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-find-computed",
+    "name": "Tool Result: worktree guard find computed operand",
+    "desc": "Worktree guard operand detail for find with a computed word"
+  },
+  "68ca0628077255f9b5cb775d74a296043d7e7ba8": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-find-computed-after-exec-begun",
+    "name": "Tool Result: worktree guard find computed word after -exec",
+    "desc": "Worktree guard arm for a computed find word after an -exec action began"
+  },
+  "b2233a7cc628f6425edd55998e768f1c34ab3172": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-find-exec-clause-gnu-bsd-end",
+    "name": "Tool Result: worktree guard find exec clause GNU/BSD end",
+    "desc": "Worktree guard operand detail for a find -exec clause that GNU and BSD end differently"
+  },
+  "15b1662cd681756268d45156e96a8fa1c6d46e03": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-xargs-computed-option-value",
+    "name": "Tool Result: worktree guard xargs computed option value",
+    "desc": "Worktree guard operand detail for xargs with a computed option value"
+  },
+  "6e996f2e791c3140ccd0e4bb5e8808ee39df2441": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-computed-option-value",
+    "name": "Tool Result: worktree guard computed option value",
+    "desc": "Worktree guard operand detail for a command with a computed option value"
+  },
+  "61fb599290eefa9d01d481a960c9a8bf76ba45d5": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-option-value-double-dash-is-value",
+    "name": "Tool Result: worktree guard -- is an option value",
+    "desc": "Worktree guard operand detail where the -- before a computed value is itself an option value so options have not ended"
+  },
+  "eed615d9709edaab101358673ccee03df1f955d0": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-double-dash-is-option-value-reason",
+    "name": "Tool Result: worktree guard -- option value reason",
+    "desc": "Reason clause that the -- is an option's value so options have not ended"
+  },
+  "b6d1ce47ab1b1ef07db589dcaf3cf060bd1c2e2b": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-as-option-value-where-option-may-stand",
+    "name": "Tool Result: worktree guard as option value where option may stand",
+    "desc": "Clause naming the option whose value a computed word is, where an option may stand"
+  },
+  "d118948e19be9f477c979251c4f0e37dc5631b7a": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-option-value-spelled-out-count",
+    "name": "Tool Result: worktree guard option value spelled-out count",
+    "desc": "Worktree guard operand detail asking for a spelled-out count or key option value"
+  },
+  "b7061b0cde463cbefdbdca7ea4514a17b5d18502": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-option-value-quote-path-or-spell-out",
+    "name": "Tool Result: worktree guard option value quote path or spell out",
+    "desc": "Worktree guard operand detail that a computed option value may begin with - unless quoted as a path or spelled out"
+  },
+  "9d641f44633c0e792efcf07d5de679cda1d92967": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-option-value-previous-option-value",
+    "name": "Tool Result: worktree guard option is previous option's value",
+    "desc": "Worktree guard operand detail where the preceding option is itself another option's value"
+  },
+  "f2c3ca6f480c5d94d6de8327ace5fcb9b2142d7d": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-previous-option-value-reason",
+    "name": "Tool Result: worktree guard previous option value reason",
+    "desc": "Reason clause telling the model to give each option its own value"
+  },
+  "d3fbf7544ce64e69122ca213f26ee9f656e349e3": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-option-value-own-word",
+    "name": "Tool Result: worktree guard option value as own word",
+    "desc": "Worktree guard operand detail asking to write a clustered option as its own word"
+  },
+  "7ff8f930cfa53da14f6db5fcf11e8d02fa733c5a": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-computed-where-option-may-stand",
+    "name": "Tool Result: worktree guard computed operand where option may stand",
+    "desc": "Worktree guard operand detail pairing a computed value with the where-an-option-may-stand explanation"
+  },
+  "bbe15f6d93553640d82c206797dc3e3a1f77e69d": {
+    "facing": "model",
+    "id": "tool-parameter-bash-run_in_background-note",
+    "name": "Tool Parameter: Bash run_in_background note",
+    "desc": "Shell run_in_background note (emitted in the PowerShell tool prompt) explaining background completion notices and warning stopping-session users to wait for needed results before replying"
+  },
+  "1b8b5cd3c50341039af3a2b7289e46a58809ef3b": {
+    "facing": "model",
+    "id": "tool-description-sendtoproject-work-brief",
+    "name": "Tool Description: SendToProject work brief",
+    "desc": "Describes sending an approved session brief to a new or existing Claude Project, saving it to memory and posting a setup card without starting threads"
+  },
+  "71c2f743c24233aef3d05b2374b335083ca6edda": {
+    "facing": "model",
+    "id": "tool-description-sendtoproject-message",
+    "name": "Tool Description: SendToProject message",
+    "desc": "Describes posting one approved message as the user to a new or existing Claude Project without saving project memory or posting a setup card"
+  },
+  "dced0d6bf79b1a4dd69144fe16bf36d7339ca4d7": {
+    "facing": "model",
+    "id": "tool-description-sendtoprojectcontext",
+    "name": "Tool Description: SendToProjectContext",
+    "desc": "Describes the one-use read-only tool that returns previously gathered folder and target-project context as untrusted data for the current send-to-project turn"
+  },
+  "fcf55b421ba25102fb903db9caca40d77b205704": {
+    "facing": "model",
+    "id": "tool-description-sendtoproject-work-brief-summary",
+    "name": "Tool Description: SendToProject work brief summary",
+    "desc": "Short description() of SendToProject for sending a drafted brief to a Claude Project after approval on its pane"
+  },
+  "4707c99df2ba6ad37bb2932317baccaaa2a7088a": {
+    "facing": "model",
+    "id": "tool-description-sendtoproject-message-summary",
+    "name": "Tool Description: SendToProject message summary",
+    "desc": "Short description() of SendToProject for posting one message to a Claude Project as the user after approval"
+  },
+  "5ee367ca5a6cd4af169ece12bd3d9785ca5c4c7a": {
+    "facing": "model",
+    "id": "tool-description-sendtoprojectcontext-summary",
+    "name": "Tool Description: SendToProjectContext summary",
+    "desc": "Short description() of SendToProjectContext as a read-only view of what /send-to-project gathered"
+  },
+  "dae60ec65805cfa1d900e4c792a84a9e76cb4900": { "facing": "internal" },
+  "acfb499a03c2546459d6bd3a6b3da0d3aaab8921": { "facing": "internal" },
+  "42b12a59248850545865c62462f929dab6f51f92": { "facing": "internal" },
+  "566fcf808bf61db827d685f5a9f069d466266fce": {
+    "facing": "model",
+    "id": "tool-result-mcp-file-reference-tell-user-suffix",
+    "name": "Tool Result: MCP file reference tell-user suffix",
+    "desc": "Suffix appended to MCP file-reference refusals asking the model to tell the user the upload failed and ask what to do"
+  },
+  "12b60c03278ea2be3f115d633e401732843c91bd": {
+    "facing": "model",
+    "id": "tool-result-mcp-file-reference-cannot-upload",
+    "name": "Tool Result: MCP file reference cannot upload",
+    "desc": "Refusal when a referenced file does not exist or cannot be sent by reference, suggesting base64 when allowed"
+  },
+  "62fe3c39042650015be11f528c62193d3ed967ab": { "facing": "internal" },
+  "f77ac8470ced15eb039624650190a0d77bd082db": { "facing": "internal" },
+  "e4e682ea037e46bf555a11cd0c68e4333a7e2cdc": { "facing": "internal" },
+  "16a24c1f89623d31142368290f52d12d221f69d2": { "facing": "internal" },
+  "ca1f6cbeeff1cfafc448c49fdfb222ff6e1cda0e": { "facing": "internal" },
+  "af7f31cb94af117ab2d5380e678230b0f1c98993": { "facing": "internal" },
+  "9c3c6a8917adf960153dd9a380af095283132c01": {
+    "facing": "model",
+    "id": "tool-result-send-message-cloud-post-refused-nothing-sent",
+    "name": "Tool result: SendMessage cloud post refused, nothing sent",
+    "desc": "SendMessage tool result when a post from a cloud session to a peer is refused with HTTP 401/403, naming the target and a hint about the service tool to use instead."
+  },
+  "9d2376d7fcb27ee847a5e6ecf755e62e7d8797fc": {
+    "facing": "model",
+    "id": "tool-result-remote-host-sandbox-unavailable-clause",
+    "name": "Tool result: remote host sandbox may not be starting",
+    "desc": "Clause appended to a remote-host command result when its output is only a bwrap/sandbox-exec error, telling the model a rerun will not help and to tell the user the sandbox may not be starting."
+  },
+  "418433427ca2358f21557df43f510dfc2074e362": {
+    "facing": "model",
+    "id": "tool-result-remote-host-sandbox-files-and-network-confined",
+    "name": "Tool result: remote host sandbox confines files and network",
+    "desc": "First-time note on a remote-host command result that the host's sandbox hides denied paths, blocks writes outside the working folders and limits network hosts, so missing things may be the sandbox."
+  },
+  "de094e3184de3777879795dd68de8a0ecc40432e": {
+    "facing": "model",
+    "id": "tool-result-remote-host-sandbox-denied-paths-clause",
+    "name": "Tool result: remote host sandbox denied paths clause",
+    "desc": "Clause naming the paths the remote host's sandbox settings deny, saying they look missing or empty and telling the model not to substitute another file but to tell the user they are blocked."
+  },
+  "c69bd233fdd3f6137bb532acce4f0efd0f87876e": {
+    "facing": "model",
+    "id": "tool-result-remote-host-sandbox-network-only",
+    "name": "Tool result: remote host sandbox limits network only",
+    "desc": "First-time note on a remote-host command result that the host's sandbox lets commands reach only allowed network hosts and does not restrict file reads or writes."
+  },
+  "299e83039ed245126803275a89e136ef6f6d4db1": {
+    "facing": "model",
+    "id": "tool-result-remote-host-sandbox-tell-user-clause",
+    "name": "Tool result: remote host sandbox tell user clause",
+    "desc": "Clause appended to a failed remote-host sandboxed command note telling the model to tell the user rather than work around the sandbox."
+  },
+  "20f4f8f923fcdcab0b4551016a329c9f7518f883": {
+    "facing": "model",
+    "id": "tool-result-remote-host-sandbox-launch-services-clause",
+    "name": "Tool result: remote host sandbox blocks opening apps clause",
+    "desc": "Clause noting that opening an app or system service is blocked in the remote host's sandbox and the step should run outside it or the user should open it."
+  },
+  "880a70b1da378488da0b303ce797dd2976b75c23": {
+    "facing": "model",
+    "id": "tool-result-remote-host-sandbox-violations-clause",
+    "name": "Tool result: remote host sandbox violations clause",
+    "desc": "Clause on a remote-host command result saying the sandbox_violations lines name what was blocked and that rerunning unchanged will fail the same way."
+  },
+  "39908cc0d97395c8086e0a6ee31b326a527dd74e": {
+    "facing": "model",
+    "id": "tool-result-remote-host-sandbox-violation-rerun-fails-clause",
+    "name": "Tool result: remote host sandbox rerun fails clause",
+    "desc": "Sub-clause used when the sandboxed remote command failed: if the blocked item is what failed it, rerunning unchanged will fail the same way."
+  },
+  "934e09df6570e5faf21ea089bcd5f8376e709559": {
+    "facing": "model",
+    "id": "tool-result-remote-host-sandbox-symptoms-clause",
+    "name": "Tool result: remote host sandbox refusal symptoms clause",
+    "desc": "Clause listing what a remote-host command's output says (sandbox refusal symptoms) and that rerunning unchanged will fail the same way."
+  },
+  "4b33f754bb03182c13c27084695a3dd075ebbe84": {
+    "facing": "model",
+    "id": "tool-result-remote-host-sandbox-ran-inside-files-and-network",
+    "name": "Tool result: remote host command ran in sandbox (files and network)",
+    "desc": "Note that a remote-host command ran inside the host's sandbox and a missing path, refused write or unreachable host may be the sandbox rather than the command."
+  },
+  "cb7e1d18403264a6387375b0cc58921f0e2dc5c0": {
+    "facing": "model",
+    "id": "tool-result-remote-host-sandbox-ran-inside-network-only",
+    "name": "Tool result: remote host command ran in sandbox (network only)",
+    "desc": "Note that a remote-host command ran inside the host's sandbox and a failure reaching a network host may be the sandbox rather than the command."
+  },
+  "3a44a9bb9524bc373815398e494f49276c828eb6": {
+    "facing": "model",
+    "id": "tool-result-remote-host-sandbox-it-hides-clause",
+    "name": "Tool result: remote host sandbox it hides clause",
+    "desc": "Final assembly of the remote host sandbox note: the lead sentence, an ' It hides <denied paths>' clause when paths are denied, and the violation/symptom clause."
+  },
+  "7caf5ab02bf485974d98ee09646e4fe35c673ab8": {
+    "facing": "model",
+    "id": "tool-result-remote-host-sandbox-hides-paths",
+    "name": "Tool result: remote host sandbox hides paths",
+    "desc": "Note on a remote-host command result that it ran inside the host's sandbox, which hides the named denied paths."
+  },
+  "f697f84e661dfe99afd5b8bf8cdc77e30a5a6bd8": { "facing": "internal" },
+  "c3b40d8f733b46babb935c60d76bfa2d755bba22": { "facing": "internal" },
+  "f723028b697ea1c45eba8504da5b581b7a95cfe4": { "facing": "ui" },
+  "e3591a97cf2e80163029d6f7137c6065167d65d6": { "facing": "ui" },
+  "ded32a9b167b1a7e5ebae1438ffb86e0fca702d0": { "facing": "ui" },
+  "8b7fe275f9cb4314b88294c80e5e4db88eb8a14a": { "facing": "ui" },
+  "75b84a0f76694974580c56097c0029a0d2b612d1": { "facing": "ui" },
+  "f94b43b1c3a15bcf9a9b890199ae2bba35aaae2b": { "facing": "ui" },
+  "6bab6b6d5da2fa088c245b4c6d2867affb92eba8": { "facing": "ui" },
+  "5cb6dbcc62a3e0e40302fd22e89de43f031c60c3": { "facing": "ui" },
+  "4a82a4c4d599a0637ae7bde0ee3bbb76292af4b8": { "facing": "ui" },
+  "58e651e0e832a13fd70cd5f68338f70551a1ad40": { "facing": "ui" },
+  "d3686a1b61b16f7eb6c6d99aa464797a773da3e9": { "facing": "ui" },
+  "3f66c39cee315139c0204233a42b0f83a4eedbce": { "facing": "ui" },
+  "585ac99e0964dc28b66874f14bc4662bdc9ba0ae": { "facing": "ui" },
+  "d09eb22f98bbad148e73f91c98663b61b71b38df": { "facing": "ui" },
+  "5f4d110937c86dabde5d49a426ec1becad87d5e0": { "facing": "ui" },
+  "2742d3166ec7edc756aee692e7537a552c45191c": { "facing": "ui" },
+  "92935b63fb8619af68a92dda48495a791eef40c3": { "facing": "ui" },
+  "cafc8516722b6f614cd16806c5efd29b8bfacf99": { "facing": "ui" },
+  "f123989a010b1db71f9c7eb09797572e0956d4e3": { "facing": "internal" },
+  "de1eeb007a61892d2a145deab9b6b39169fe73b2": { "facing": "ui" },
+  "5de11f58c8f54f367c227894bb437ce9f00f4480": { "facing": "ui" },
+  "acc2ef28cef8b8cd18400b30ddd5fb57a3c8078a": { "facing": "ui" },
+  "630a04fcc2b3c94a796e5c9803f47833348a4cb9": { "facing": "ui" },
+  "82689c774369c2e9437c5a7687999ae98c319463": { "facing": "internal" },
+  "c6b62a4439baba3f14a781fa8dc8092bda2caf56": { "facing": "ui" },
+  "050ae0c8ed5e83d75f1960febbcde7c9b82e220a": { "facing": "ui" },
+  "1aade3a8dd0a557920a4f92178f0301f8e58d352": { "facing": "ui" },
+  "7bd88a3d1f60d64cb506d68cb0b9ffcb8d08f1ab": { "facing": "internal" },
+  "88f917b5a1a7c8d41c83af65333c31abadf7c20f": { "facing": "internal" },
+  "02c05269865ef7bab6840c7d4992cee557b57609": {
+    "facing": "model",
+    "id": "tool-result-design-create-project-org-visible-note",
+    "name": "Tool result: design create_project org visibility note",
+    "desc": "Line in the DesignSync create_project permission ask saying everyone in the organization can see the new project and it can be changed from its Share menu."
+  },
+  "7381ed4fb78f757ac189f956a8d6e3fde23e1e83": { "facing": "ui" },
+  "c987fbbc0d55ed2187f98530d853014a5d04994b": {
+    "facing": "model",
+    "id": "tool-result-design-finalize-plan-files-unlisted-hint",
+    "name": "Tool result: design finalize_plan unlisted files hint",
+    "desc": "Line in the DesignSync finalize_plan permission ask telling the user that to see files not listed, answer No and ask Claude."
+  },
+  "5a920ae48e5c4bfb70e9850263431b2885482931": {
+    "facing": "model",
+    "id": "tool-result-design-create-project-question",
+    "name": "Tool result: design create_project question",
+    "desc": "Opening question of the DesignSync create_project permission ask: create a design system project on claude.ai/design?"
+  },
+  "b09937307815f4adc729dd17084f2c5bc912ed51": { "facing": "ui" },
+  "cb24dfc7e33c0d819817882a4bd4694162ca86cb": { "facing": "ui" },
+  "5c96327a2fe2a1ee5261469e73df52226df74548": {
+    "facing": "model",
+    "id": "tool-result-design-create-project-name-unshowable",
+    "name": "Tool result: design create_project name cannot be shown",
+    "desc": "DesignSync validateInput error when a create_project name cannot be shown in full to the approver, asking for a name with ordinary spaces and no tabs, line breaks or stacked accents."
+  },
+  "7c7711bdb61c45a198cc6672e75cca170204ee7e": {
+    "facing": "model",
+    "id": "tool-result-design-write-files-localpath-needs-permission",
+    "name": "Tool result: design write_files localPath needs read permission",
+    "desc": "write_files error when a localPath may not be read without asking the user (rule, network path, unresolvable link, or special Windows name); nothing was uploaded, stop and ask the user."
+  },
+  "316710193a72d07ef1885de7a04b796a706bcd18": {
+    "facing": "model",
+    "id": "tool-result-design-write-files-localpath-protected-file",
+    "name": "Tool result: design write_files localPath is a protected file",
+    "desc": "write_files error when a localPath is or leads to a credential file, device or Claude Code's own config/token files; nothing was uploaded, stop and ask the user."
+  },
+  "c0653cca190ff1e75a293ec552063f343c5efa97": {
+    "facing": "model",
+    "id": "tool-result-design-write-files-localpath-hard-link",
+    "name": "Tool result: design write_files localPath is a hard link",
+    "desc": "write_files error when the file at a localPath is a hard link whose other name cannot be permission-checked; nothing was uploaded, stop and ask the user."
+  },
+  "b258535e54ea889610f2e1e53a55b1aa78db1e35": {
+    "facing": "model",
+    "id": "tool-result-design-write-files-localpath-open-mismatch",
+    "name": "Tool result: design write_files localPath opened file mismatch",
+    "desc": "write_files error when the file at a localPath could not be opened as the file that was checked; nothing uploaded, retry once then stop and ask the user."
+  },
+  "c9461307f39d84c5caebca097a669de36394b61e": { "facing": "internal" },
+  "0ac93ca3b2c13d3880fdf5e7a6d3a63d9cc536c9": {
+    "facing": "model",
+    "id": "tool-result-design-write-files-localpath-too-long",
+    "name": "Tool result: design write_files localPath too long",
+    "desc": "write_files error when the full localPath is longer than the character limit; nothing was uploaded, stop and ask the user."
+  },
+  "5f08e929e1e8c0037e0b05d90646b45e043b35dd": {
+    "facing": "model",
+    "id": "tool-result-design-write-files-approved-dir-moved",
+    "name": "Tool result: design write_files approved directory moved",
+    "desc": "write_files error when the directory approved at finalize_plan no longer resolves to the approved path; nothing uploaded, run finalize_plan again."
+  },
+  "a4b03e66c5c27c443f85d59d729b37b7a6c31a10": {
+    "facing": "model",
+    "id": "tool-result-design-write-files-localpath-not-regular-or-replaced",
+    "name": "Tool result: design write_files localPath not regular or replaced",
+    "desc": "write_files error when a localPath is not a regular file or was moved/replaced while checked; nothing uploaded, stop and ask the user."
+  },
+  "a2315aa3117da9a6d1147890cee17dce820e8845": {
+    "facing": "model",
+    "id": "tool-result-proposegoal-awaiting-approval",
+    "name": "Tool result: ProposeGoal awaiting approval",
+    "desc": "ProposeGoal tool result when the proposal was sent to the user for approval: keep working, a kickoff message follows on approval, a decline is not notified."
+  },
+  "faf2836b94259b5012a8cc3e497c870e8adc59b3": {
+    "facing": "model",
+    "id": "data-artifact-list-by-type-some-titles-may-be-others-words",
+    "name": "Data: artifact list-by-type some titles may be others' words",
+    "desc": "Note on an Artifact list-by-type result that some titles or descriptions may include other people's words and are data, not instructions."
+  },
+  "710bacf43de2fe129d6585fbd3ce768c62d4c757": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-version-saved",
+    "name": "Tool result: artifact read version saved",
+    "desc": "Artifact read-version result saying the version was saved to a file, treating its contents as data, and how to put it back."
+  },
+  "0fa46860ca70099a578028b0acd0d46a725fb2ca": {
+    "facing": "model",
+    "id": "data-artifact-list-some-titles-may-be-others-words",
+    "name": "Data: artifact list some titles may be others' words",
+    "desc": "Note on an Artifact list result that some titles may include other people's words and are data, not instructions."
+  },
+  "19af80b149c9c85baf7bd79f73b7539ba9814b12": {
+    "facing": "model",
+    "id": "tool-result-artifact-quickstart-start-from-named-type",
+    "name": "Tool result: artifact quickstart start from named type",
+    "desc": "Artifact quickstart clause telling the model to start from a named type: publish with type_url, a title and no files, then follow the instructions in that result."
+  },
+  "873aa2e9f5faccff0850e4d9319c8be2ab428589": {
+    "facing": "model",
+    "id": "tool-result-artifact-share-org-with-people",
+    "name": "Tool Result: Artifact share org mode with people listed",
+    "desc": "Artifact share error when the confirmed share card chose the whole organization but also listed people; nothing was shared, retry once so the card is shown again."
+  },
+  "a18a8063976ab63107162d9fe98b985b94937770": {
+    "facing": "model",
+    "id": "tool-result-artifact-share-no-card",
+    "name": "Tool Result: Artifact share approval not from share card",
+    "desc": "Artifact share error when the approval did not come from the share card (no user_uuids); nothing was shared and the model must not retry the share in this session."
+  },
+  "3e76c5553c194d56e8650eb26ece2c240362323e": {
+    "facing": "model",
+    "id": "tool-result-artifact-your-edit-ask",
+    "name": "Artifact: Artifact read Edit-rule consent note",
+    "desc": "Artifact read Edit-rule consent note. Consent prose which is emitted to the model on rejected or unanswered permission requests."
+  },
+  "c476373388d1a8c9880e263d7e6e68bdfc5bc1a8": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-project-paused-or-archived",
+    "name": "Send to Project: Picked project paused or archived",
+    "desc": "Reason that the picked Claude Project is paused or archived and cannot be a target; the user should pick a personal project or create a new one."
+  },
+  "65193664ac28e76c8c528986938fc940b1b5e4e1": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-project-shared",
+    "name": "Send to Project: Picked project is shared",
+    "desc": "Reason that the picked Claude Project is shared rather than personal, so it cannot be a target; pick a personal project or create a new one."
+  },
+  "2c2a46546fd38d03c588d04650c3c32213c9c112": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-project-visibility-unknown",
+    "name": "Send to Project: Picked project visibility unknown",
+    "desc": "Reason that the server did not say whether the picked Claude Project is personal, so it cannot be a target; pick a personal project or create a new one."
+  },
+  "3e74b696ff527aad62f0f6ddf450290da2622128": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-projects-no-auth",
+    "name": "Send to Project: Projects require Claude.ai login",
+    "desc": "Reason appended to an auth detail when Projects requests fail because there is no Claude.ai login, pointing to /login."
+  },
+  "c1d04c5f963c2260f2ae9b8cdec70986aff82b95": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-projects-data-residency",
+    "name": "Send to Project: Projects first-party API only",
+    "desc": "Reason that Projects are only available on the first-party Anthropic API provider, surfaced when a Projects request is refused."
+  },
+  "7dfd943891cb53d0627ae2d2b6cc539b3d06e3ce": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-projects-essential-traffic-only",
+    "name": "Send to Project: Projects disabled by essential-traffic-only",
+    "desc": "Reason that Projects are disabled because CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC restricts traffic to essentials."
+  },
+  "60723053853b5cc7fe449e4abd5a23c9b30e29e1": { "facing": "internal" },
+  "60e8908c1188a4a95b745088f39c07507a5d1e18": { "facing": "internal" },
+  "d272f19fa77792daba1e64e1c012fa46fe061faa": { "facing": "internal" },
+  "e214b11255f0547e02e76a304026751744fb0fc4": { "facing": "internal" },
+  "db5fe09bb9799b35b564c55d98a4d29e7d5135f5": { "facing": "internal" },
+  "d9527b3342b0649cc5dc56b972168310c139b62c": {
+    "facing": "model",
+    "id": "data-send-to-project-repo-app-not-installed",
+    "name": "Send to Project: Repo access, GitHub App not installed",
+    "desc": "Repository-status label in the /send-to-project folder facts saying the user has access but the Claude GitHub App is not installed."
+  },
+  "98cf1de39dbb04d0e4b61f7f4b3839eaa6577856": { "facing": "ui" },
+  "b0849d205f09e969bff9a6f227d3ac317f9d0be9": {
+    "facing": "model",
+    "id": "data-send-to-project-mcp-connector-not-connected",
+    "name": "Send to Project: MCP claude.ai connector not connected",
+    "desc": "Per-server label in the MCP tool-call list of the /send-to-project folder facts marking a claude.ai connector not connected when the history was written."
+  },
+  "9cd90d8e8f44554fe01fd60ea41ed15ecb038bfe": {
+    "facing": "model",
+    "id": "data-send-to-project-mcp-remote-server-not-connector",
+    "name": "Send to Project: MCP remote server not a connector",
+    "desc": "Per-server label in the /send-to-project MCP tool-call list marking a non-stdio server configured on this computer that is not a claude.ai connector."
+  },
+  "b8ccddffdf96479f0beb381a2b9ccada9f1e0ea7": {
+    "facing": "model",
+    "id": "data-send-to-project-mcp-local-server-stays",
+    "name": "Send to Project: MCP local server stays on computer",
+    "desc": "Per-server label in the /send-to-project MCP tool-call list marking a local stdio/sdk server that stays on this computer."
+  },
+  "2e399f3f9e03c2d63bc99b2839d5dfedd7e85c29": {
+    "facing": "model",
+    "id": "data-send-to-project-mcp-server-unmatched",
+    "name": "Send to Project: MCP server not matched",
+    "desc": "Per-server label in the /send-to-project MCP tool-call list for a server not matched to one configured in this session."
+  },
+  "d74e32c5df8fd6bcc4974199faac4b3ce0c2e2ca": {
+    "facing": "model",
+    "id": "data-send-to-project-mcp-claudeai-connector-label",
+    "name": "Send to Project: MCP claude.ai connector label",
+    "desc": "Per-server label (and pluralised noun) in the /send-to-project MCP tool summaries marking a claude.ai connector."
+  },
+  "f577a02f4a7238f750750b25f567aef077bc468d": {
+    "facing": "model",
+    "id": "data-send-to-project-unused-claudeai-connectors",
+    "name": "Send to Project: Unused claude.ai connectors",
+    "desc": "Line in the /send-to-project folder facts listing claude.ai connectors that are connected but not used in the read sessions."
+  },
+  "bbaef45cbcd24339e29685987315bd29dec8c3f7": { "facing": "ui" },
+  "b758d0b35302c5ac846f838b9b483080e3a43ec5": { "facing": "ui" },
+  "5c4899a045abab1c84102af0c2d0e281e69a3d35": { "facing": "ui" },
+  "24bca29b9febd7f6a62b4fc28cb9bff1aab2d7ef": { "facing": "ui" },
+  "deefda147aabe452abb93d0cebfc861a871c1ba6": { "facing": "ui" },
+  "e6e741ce8389818fd10e804d48bfb7930274c59a": {
+    "facing": "model",
+    "id": "data-send-to-project-transcript-middle-omitted",
+    "name": "Send to Project: Transcript middle omitted marker",
+    "desc": "Marker inserted when a condensed past-session transcript in the /send-to-project folder facts is cut in the middle to fit its budget."
+  },
+  "7c1fe20358ba0808488e7dd85dacc390fcca8b75": { "facing": "internal" },
+  "be7ad5d8468b72b3335be58d2f5109e9c8cd28c2": { "facing": "internal" },
+  "f34c9e0c242459bafeb7e16e8b56105f28c07bf5": {
+    "facing": "model",
+    "id": "data-send-to-project-mcp-tool-calls-header",
+    "name": "Send to Project: MCP tool calls by server intro",
+    "desc": "Intro line of the MCP tool-calls section in the /send-to-project folder facts, saying what was counted and explaining connectors versus local servers."
+  },
+  "947678cc7d3d5340a84ca3c07d365b082335ae64": {
+    "facing": "model",
+    "id": "data-send-to-project-folder-path-in-repo",
+    "name": "Send to Project: Folder path inside repository",
+    "desc": "Line in the /send-to-project folder facts saying the folder is a subpath of the repository and commits are filtered to it."
+  },
+  "8c92d9eee6f9ab3bcb4968e6b4a362bbee34cb85": {
+    "facing": "model",
+    "id": "data-send-to-project-older-sessions-omitted",
+    "name": "Send to Project: Older sessions omitted",
+    "desc": "Note appended to the /send-to-project local-history block when older sessions were omitted to stay within the context budget."
+  },
+  "4090efd4b8185218fc07b71c37be7137d16ea2da": {
+    "facing": "model",
+    "id": "data-send-to-project-recent-sessions-heading",
+    "name": "Send to Project: Recent local sessions heading",
+    "desc": "Section heading for recent local sessions in the /send-to-project folder facts."
+  },
+  "a64621e59fb6ea7dda8a13173192be755ffd9df0": {
+    "facing": "model",
+    "id": "data-send-to-project-no-mcp-tool-calls",
+    "name": "Send to Project: No MCP tool calls",
+    "desc": "Placeholder in the /send-to-project MCP section when the read sessions made no MCP tool calls."
+  },
+  "8f727c7c02e9d7f305de92e8907e6b46a3defa6a": {
+    "facing": "model",
+    "id": "data-send-to-project-doc-excerpt",
+    "name": "Send to Project: Doc excerpt entry",
+    "desc": "Per-doc heading plus excerpt in the Docs section of the /send-to-project folder facts."
+  },
+  "51cd455843166bfb048db1da36b819c405446a20": {
+    "facing": "model",
+    "id": "data-send-to-project-no-docs-found",
+    "name": "Send to Project: No docs found",
+    "desc": "Placeholder in the Docs section of the /send-to-project folder facts when no README, CLAUDE.md or docs directory exists."
+  },
+  "9bd5138c6fd78b610a832f794d5aa99804d19f15": {
+    "facing": "model",
+    "id": "data-send-to-project-docs-heading",
+    "name": "Send to Project: Docs heading",
+    "desc": "Docs section heading in the /send-to-project folder facts."
+  },
+  "8bcb6f6f1a81f9f85b2ec91089befdfcec168dc1": {
+    "facing": "model",
+    "id": "data-send-to-project-recent-commits",
+    "name": "Send to Project: Recent commits section",
+    "desc": "Recent commits section (heading and list) in the /send-to-project folder facts."
+  },
+  "ebb9cf15845adadaa753f32a4fdb9cd4bb0129bb": {
+    "facing": "model",
+    "id": "data-send-to-project-top-level-entries",
+    "name": "Send to Project: Top-level entries section",
+    "desc": "Top-level entries section (heading and listing) in the /send-to-project folder facts."
+  },
+  "2e2cb5ffee1211a27def81e92ec5a9cf0b54951d": {
+    "facing": "model",
+    "id": "data-send-to-project-working-tree-status",
+    "name": "Send to Project: Working tree status",
+    "desc": "Line in the /send-to-project folder facts reporting uncommitted, untracked and unpushed state of the repository."
+  },
+  "087d8788d9133ef3abd66522c811be991d67855e": {
+    "facing": "model",
+    "id": "data-send-to-project-repository-line",
+    "name": "Send to Project: Repository line",
+    "desc": "Repository line in the /send-to-project folder facts."
+  },
+  "b7df62b39cf9f0971bd660cf96a3c0bf9451a059": {
+    "facing": "model",
+    "id": "data-send-to-project-folder-name-line",
+    "name": "Send to Project: Folder name line",
+    "desc": "Folder name line opening the /send-to-project folder facts."
+  },
+  "22ce134df7d0efc3aa628304ca3a5ea5e4a8f8b0": {
+    "facing": "model",
+    "id": "data-send-to-project-local-sessions-summary",
+    "name": "Send to Project: Local sessions summary line",
+    "desc": "Line in the /send-to-project folder facts saying how many local Claude Code sessions in this folder were read and condensed below."
+  },
+  "6f787bd31559de5de0b3940b5228a706e4151cb4": {
+    "facing": "model",
+    "id": "data-send-to-project-local-sessions-read-count",
+    "name": "Send to Project: Local sessions read count clause",
+    "desc": "Clause of the local-sessions summary line giving how many most recent sessions were read and condensed."
+  },
+  "ebfa349214c04e9249926a5cbf199674e75441bd": { "facing": "internal" },
+  "e56e49cfec4a79a7c06859e871f56e34fbc225f5": { "facing": "internal" },
+  "1aab3ae8d5d4e7b99aab63a89b94ec276561dc66": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-field-max-bytes",
+    "name": "Send to Project: Field byte limit",
+    "desc": "Zod refine message for proposal string fields that exceed their byte limit, surfaced in send-to-project input validation."
+  },
+  "74786fc561eea62b43ac948039c7e0183915e9c1": { "facing": "ui" },
+  "e06a1aaef477f6f96491c48a7262a5c6d96d0c7b": { "facing": "ui" },
+  "ebb4c81cb4bbf7acb7ef828f30752e0874fe1b45": { "facing": "ui" },
+  "bb95a83e71a578103708456d41a96c890d330151": { "facing": "ui" },
+  "8f6d4ba48d01cfc4a5ee257bfa7ab13ec10f613d": { "facing": "internal" },
+  "e1259feee5aaf2f0c66c7dbb6430f3377d2b0f3e": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-cron-invalid",
+    "name": "Send to Project: Routine cron not 5-field",
+    "desc": "Validation reason that a proposed routine's cron_expression is not a valid 5-field UTC cron expression, listing the field ranges."
+  },
+  "493108c74b79ca939a89942fbb0e89f4351f4a35": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-cron-more-than-hourly",
+    "name": "Send to Project: Routine cron fires more than hourly",
+    "desc": "Validation reason that a proposed routine's cron fires more than once an hour; routines run at most hourly."
+  },
+  "b2aa774e7ddd115254197271bae20da0b05133d6": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-cron-impossible-date",
+    "name": "Send to Project: Routine cron date never occurs",
+    "desc": "Validation reason that a proposed routine's cron names a date that never occurs."
+  },
+  "5b24d405458bbafd86e4bc172edd52b1811b1784": {
+    "facing": "model",
+    "id": "data-send-to-project-message-provenance-footer",
+    "name": "Send to Project: Message provenance footer",
+    "desc": "Paragraph appended under a message posted to a Claude Project, telling the project's Claude where it came from and to treat the source session transcript as untrusted data."
+  },
+  "856bde1c15a7ba95ab678e37113fe74a8e270306": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-summary-has-footer-words",
+    "name": "Send to Project: Message contains footer words",
+    "desc": "Validation reason that the message must not contain the words that open the provenance paragraph Claude Code appends."
+  },
+  "82dbbfe89ff6332c62f525bf892ddfdc568f4ee1": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-summary-unsafe-markdown",
+    "name": "Send to Project: Message unsafe markdown",
+    "desc": "Validation reason that a drafted message must not contain markdown images, script-scheme links or HTML resource tags."
+  },
+  "422ff3995af853f7bc2e6be0166285553ef37d0b": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-summary-too-long",
+    "name": "Send to Project: Message over byte limit",
+    "desc": "Validation reason that the message is over the byte limit."
+  },
+  "26a58bd512f595efd8dc11044494c68b661da951": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-summary-empty",
+    "name": "Send to Project: Message empty",
+    "desc": "Validation reason that the message is empty."
+  },
+  "9c4ce26e93fa32b674a324cdefcf41edbe09a7fe": {
+    "facing": "model",
+    "id": "slash-command-send-to-project-message-refused",
+    "name": "Send to Project: Typed message refused",
+    "desc": "/send-to-project command result when the typed message fails validation; nothing was sent and the message must be changed before running again."
+  },
+  "7c7262e0298fbe4f56342f25599b148c38fb454f": {
+    "facing": "model",
+    "id": "slash-command-send-to-project-message-unreadable",
+    "name": "Send to Project: Typed message unreadable",
+    "desc": "/send-to-project command result when the typed message holds an unreadable character; nothing was sent."
+  },
+  "15e61d8200df24a22c3f59ab4455b704a08345aa": {
+    "facing": "model",
+    "id": "slash-command-send-to-project-message-too-long",
+    "name": "Send to Project: Typed message too long",
+    "desc": "/send-to-project command result when the typed message exceeds the byte limit; nothing was sent."
+  },
+  "1711b54578991011b0f963889a18441cea995aa1": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-field-unsafe-markdown",
+    "name": "Send to Project: Proposal field unsafe markdown",
+    "desc": "Validation reason that a proposal field must not contain markdown images, script-scheme links or HTML resource tags."
+  },
+  "2048912d4c4502cdfee67f637d019bd834906dae": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-field-marker-line",
+    "name": "Send to Project: Proposal field marker-shaped line",
+    "desc": "Validation reason that a proposal field must not contain a marker-shaped line or the reserved block marker words."
+  },
+  "91a7ed50f740c75c709b4c01fd268af6e58b5aec": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-proposal-empty",
+    "name": "Send to Project: Proposal empty",
+    "desc": "Validation reason that the proposal is empty and needs at least a summary, instructions, suggested thread or routine."
+  },
+  "85cf40bcc34f5c747eb994a80bb35554d0bd62f4": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-fields-combine-unsafe",
+    "name": "Send to Project: Proposal fields combine unsafely",
+    "desc": "Validation reason that proposal fields must not combine into a markdown image, raw HTML resource tag or script-scheme link."
+  },
+  "0c342339d060566441e57d4242101e8b28af0d2f": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-proposal-too-large",
+    "name": "Send to Project: Proposal too large",
+    "desc": "Validation reason giving the whole proposal's byte size and limit, asking to shorten or drop entries."
+  },
+  "7e8b128a109bab6ae256de8cea0fba9e1a923558": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-field-empty",
+    "name": "Send to Project: Proposal field empty",
+    "desc": "Validation reason that a named proposal field is empty."
+  },
+  "6e9f105e2e3183a46a36f5e62d091f2b072637bc": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-routine-cron-invalid",
+    "name": "Send to Project: Routine cron field error",
+    "desc": "Validation message prefixing a routine's cron_expression path to the cron problem."
+  },
+  "13a091389af658912e64dfe55bce382d63148159": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-proposal-schema-issue",
+    "name": "Send to Project: Proposal schema issue",
+    "desc": "Validation message giving the first schema issue's path and message for an off-shape proposal."
+  },
+  "c62f5a1c00ccc7b4396a9f452105e942245b380c": { "facing": "internal" },
+  "cf8e2a9af04de6be1e3a83c7bebf14cd8163a787": {
+    "facing": "model",
+    "id": "system-prompt-send-to-project-approval-via-host",
+    "name": "System Prompt: Send-to-project approval via host",
+    "desc": "Describes a send-to-project brief as allowed through a host application's permission prompt, not necessarily reviewed by a person"
+  },
+  "008d6487c54378733b59de51a3f7ee6a462d03c5": {
+    "facing": "model",
+    "id": "system-prompt-send-to-project-approval-via-terminal",
+    "name": "System Prompt: Send-to-project approval via terminal",
+    "desc": "Describes a send-to-project brief as approved by the user in the terminal"
+  },
+  "b37a91a437cf51ebcbc22bce3ac42cd543e1183f": {
+    "facing": "model",
+    "id": "system-prompt-send-to-project-approval-via-desktop",
+    "name": "System Prompt: Send-to-project approval via Desktop",
+    "desc": "Describes a send-to-project brief as approved on Claude Desktop's permission card"
+  },
+  "35baf39d86d2849baf4dc235bcfce24359f5b57e": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-memory-brief-trust-boundary",
+    "name": "System Reminder: Send-to-project memory brief trust boundary",
+    "desc": "Introduces a saved project brief and optional local MCP-server context as fenced background data rather than instructions"
+  },
+  "c0cc079b3ab8e0c7df4774b9539f6946115e084a": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-memory-brief-description-cloud",
+    "name": "System Reminder: Send-to-project memory brief description (cloud)",
+    "desc": "Frontmatter description of the saved project-memory brief for a cloud-session source"
+  },
+  "067067814afca88372626419f4e921959dfdafe0": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-memory-brief-description-local",
+    "name": "System Reminder: Send-to-project memory brief description (local)",
+    "desc": "Frontmatter description of the saved project-memory brief for a local-session source"
+  },
+  "878735522dcefa97c2ba572e060760db1ba7ce8c": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-memory-brief-name-frontmatter",
+    "name": "System Reminder: Send-to-project memory brief name frontmatter",
+    "desc": "Name frontmatter line of the saved project-memory brief file"
+  },
+  "041e4916581110d8aa2b4ca3283ef437530bcacb": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-memory-brief-description-frontmatter",
+    "name": "System Reminder: Send-to-project memory brief description frontmatter",
+    "desc": "Description frontmatter line of the saved project-memory brief file"
+  },
+  "55512edcc786424a95d273dbee094a829a36b6bf": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-memory-brief-type-frontmatter",
+    "name": "System Reminder: Send-to-project memory brief type frontmatter",
+    "desc": "Metadata type: project frontmatter line of the saved project-memory brief file"
+  },
+  "64a440039375c50bc5925db4c7ab43016098ac4b": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-source-session-untrusted",
+    "name": "System Reminder: Send-to-project source session untrusted",
+    "desc": "Names the source session a brief was continued from and marks its transcript as untrusted data"
+  },
+  "e06122b2b764f8ef77fe89baba3eef3b34408270": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-memory-section-in-flight",
+    "name": "System Reminder: Send-to-project memory section in-flight threads",
+    "desc": "Lists the in-flight threads of the brief in the MEMORY.md section"
+  },
+  "12d580741e6d3660715282218d8fc7b7a146a1eb": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-memory-section-cloud-lead",
+    "name": "System Reminder: Send-to-project memory section cloud lead",
+    "desc": "Opening line of the MEMORY.md section for a cloud-drafted brief, marking it background not instructions"
+  },
+  "2ee9232eabf47bb8135029e9c31cbe6764190504": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-memory-section-quoted-session-data",
+    "name": "System Reminder: Send-to-project memory section quoted session data",
+    "desc": "Marks the BEGIN/END lines in a cloud MEMORY.md section as quoted data from that session"
+  },
+  "d973ee6e5c51044503dfc36f45bc5fd8252e5000": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-memory-section-local-lead",
+    "name": "System Reminder: Send-to-project memory section local lead",
+    "desc": "Opening line of the MEMORY.md section for a brief drafted from local sessions, marking it background not instructions"
+  },
+  "c83a7efd8c7f0d47065bff610c4937d42a0c11be": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-memory-section-quoted-folder-data",
+    "name": "System Reminder: Send-to-project memory section quoted folder data",
+    "desc": "Marks the BEGIN/END lines in a local MEMORY.md section as quoted data from that folder"
+  },
+  "5778f563bd47b122e0e41170475ded3a13c8aed7": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-memory-section-repository-attached",
+    "name": "System Reminder: Send-to-project memory section repository attached",
+    "desc": "States the attached repository URL in the MEMORY.md section"
+  },
+  "e78a661f5787fa186f591b92ac3cbbcf553d621d": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-memory-section-no-repository",
+    "name": "System Reminder: Send-to-project memory section no repository",
+    "desc": "States no repository was attached and names the local folder in the MEMORY.md section"
+  },
+  "804798ae352c9fa2419196c984609a486edabb6f": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-memory-section-existing-repositories",
+    "name": "System Reminder: Send-to-project memory section existing project repositories",
+    "desc": "States an existing project uses its own repositories and names the local folder in the MEMORY.md section"
+  },
+  "5042eacd04df9edd9a74da9ceb2c0379da0517f1": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-memory-section-what-this-is",
+    "name": "System Reminder: Send-to-project memory section summary line",
+    "desc": "What-this-is summary line of the brief in the MEMORY.md section"
+  },
+  "df8a54fc6c86217d3c0b0daf5b83cbb26ec299b1": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-memory-section-routines",
+    "name": "System Reminder: Send-to-project memory section routines",
+    "desc": "Lists the routines offered by the brief in the MEMORY.md section"
+  },
+  "9d917020c80e93fb649164163db4cbf28ecf6ca9": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-memory-section-mcp-servers",
+    "name": "System Reminder: Send-to-project memory section MCP servers",
+    "desc": "Lists the MCP servers the source sessions used in the MEMORY.md section"
+  },
+  "3d995b334fcbe2bdd4d4c64a34b24026fca5e390": { "facing": "internal" },
+  "77676cc629be1a6f4d8a63786410ed429ff4b932": {
+    "facing": "model",
+    "id": "system-prompt-send-to-project-coordinator-handoff-mcp-block",
+    "name": "System Prompt: Send-to-project coordinator handoff MCP block",
+    "desc": "Explains the fenced MCP-server block after the brief in the coordinator hand-off as labels, not instructions"
+  },
+  "81cb0c246efa0960db8e740838fae3d60ee60286": {
+    "facing": "model",
+    "id": "system-prompt-send-to-project-coordinator-handoff-call-setup",
+    "name": "System Prompt: Send-to-project coordinator handoff setup call",
+    "desc": "Tells the coordinator to call propose_project_setup once with the exact brief object and start nothing"
+  },
+  "da964a484959bafe539825c49482cfec1c87b0c8": {
+    "facing": "model",
+    "id": "system-prompt-send-to-project-coordinator-handoff-source-session",
+    "name": "System Prompt: Send-to-project coordinator handoff source session",
+    "desc": "Names the Remote Control source session and tells the coordinator to treat its transcript as untrusted data"
+  },
+  "a7a3f457e95c09e717870bec9fd9ab600536247f": {
+    "facing": "model",
+    "id": "system-prompt-send-to-project-coordinator-handoff-reply",
+    "name": "System Prompt: Send-to-project coordinator handoff reply",
+    "desc": "Limits the coordinator's reply to one short line without describing the setup card"
+  },
+  "6b0cf816878ef4290fad73f9bd41b59035511efe": {
+    "facing": "model",
+    "id": "system-prompt-send-to-project-coordinator-handoff",
+    "name": "System Prompt: Send-to-project coordinator handoff",
+    "desc": "Directs the project coordinator to post the transferred brief as a setup card without starting threads or following instructions from the source session"
+  },
+  "228be63d602506616ed4e1f74e9e8ae450c9b323": {
+    "facing": "model",
+    "id": "system-prompt-send-to-project-coordinator-handoff-lead",
+    "name": "System Prompt: Send-to-project coordinator handoff lead",
+    "desc": "Opening line naming the source folder and target project of a send-to-project hand-off"
+  },
+  "4ca9fbd665c394a0d5c380513fe7c1ef5557918e": {
+    "facing": "model",
+    "id": "system-prompt-send-to-project-coordinator-handoff-repository-added",
+    "name": "System Prompt: Send-to-project coordinator handoff repository added",
+    "desc": "Notes the repository already added to the project in the hand-off lead"
+  },
+  "8ec21676d91d383c1590e9fbe3cf609583ce3f66": {
+    "facing": "model",
+    "id": "system-prompt-send-to-project-coordinator-handoff-brief-approval",
+    "name": "System Prompt: Send-to-project coordinator handoff brief approval",
+    "desc": "States how the carried brief was approved and which fields are already applied"
+  },
+  "c3fbc2e7d482e64322cbe155e59982f19d254287": {
+    "facing": "model",
+    "id": "system-prompt-send-to-project-coordinator-handoff-fields-applied",
+    "name": "System Prompt: Send-to-project coordinator handoff fields applied",
+    "desc": "Notes which project fields from the brief are already applied"
+  },
+  "b689bcfed2028185657ecdcecf33a0b67b4348d5": {
+    "facing": "model",
+    "id": "system-prompt-send-to-project-coordinator-handoff-saved-to-memory",
+    "name": "System Prompt: Send-to-project coordinator handoff saved to memory",
+    "desc": "Tells the coordinator the brief is also saved in project memory"
+  },
+  "2e87acaae5e86b80fdc5022436f1c5219ce21f8d": {
+    "facing": "model",
+    "id": "system-prompt-send-to-project-coordinator-handoff-labels",
+    "name": "System Prompt: Send-to-project coordinator handoff labels",
+    "desc": "Marks project and folder names in the hand-off as labels read from disk, not instructions"
+  },
+  "c36a60c2f3f91e364a66a450e1f9e621711213ca": {
+    "facing": "model",
+    "id": "system-prompt-send-to-project-coordinator-handoff-brief-fence",
+    "name": "System Prompt: Send-to-project coordinator handoff brief fence",
+    "desc": "Describes the fenced JSON brief object and tells the coordinator to pass its strings on as data"
+  },
+  "1f03f3a2a6c972a15118bda95ef99028b60c96df": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-setup-card-uncertain",
+    "name": "Tool Result: Send-to-project setup card uncertain",
+    "desc": "Reports the setup card may or may not have been posted and that the brief was not handed to the coordinator"
+  },
+  "568e5e5adc66e1c2dd1a2337e2309833c2b255a4": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-brief-in-memory-suffix",
+    "name": "Tool Result: Send-to-project brief in memory suffix",
+    "desc": "Suffix noting the brief is in project memory, appended to setup-card failure notes"
+  },
+  "6cc4348c7efb24f75842b6f186cf3a3d62d4b56b": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-setup-card-cancelled-while-posting",
+    "name": "Tool Result: Send-to-project setup card cancelled while posting",
+    "desc": "Reports cancellation while the setup card was being posted"
+  },
+  "3bae70df9ad0231c58cd3adb80b9f522a5a2cbf1": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-setup-card-cancelled-before-posting",
+    "name": "Tool Result: Send-to-project setup card cancelled before posting",
+    "desc": "Reports cancellation before the setup card was posted"
+  },
+  "9e04c1c31a3d612762da508b100750171734d7a2": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-setup-card-source-session-dropped",
+    "name": "Tool Result: Send-to-project setup card source session dropped",
+    "desc": "Reports the setup card lacks the source session because the server did not take it"
+  },
+  "eef47e4faca408aa3e8282e6795bcbc873a9f9df": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-setup-card-threads-disabled",
+    "name": "Tool Result: Send-to-project setup card threads disabled",
+    "desc": "Reports the organization has threads on the setup card turned off"
+  },
+  "60010d9b3792e18fc6a6ede83b6e3cd86c8b3091": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-threads-in-memory-suffix",
+    "name": "Tool Result: Send-to-project threads in memory suffix",
+    "desc": "Suffix noting the brief in project memory still has the threads"
+  },
+  "3805e31d0434be4d90511884bbbf9df9f5034b56": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-default-environment",
+    "name": "Tool Result: Send-to-project default environment",
+    "desc": "Reports the new project uses the organization default cloud environment"
+  },
+  "32b4600d2ac442bcec28a288efc7c8daedde2bea": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-repository-not-reachable",
+    "name": "Tool Result: Send-to-project repository not reachable",
+    "desc": "Reports the added repository is not visible to the Claude account and how to connect GitHub"
+  },
+  "8721eb7e6b8a25370bb920d2e797a58afd353a42": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-repository-not-shown",
+    "name": "Tool Result: Send-to-project repository not shown at approval",
+    "desc": "Reports the repository was not added because none was shown at approval"
+  },
+  "c7de51a6da3a6ea0d0d1ca892de2eedabff549eb": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-no-setup-card-applied-at-create",
+    "name": "Tool Result: Send-to-project no setup card, applied at create",
+    "desc": "Reports no setup card was posted because the brief fields were set at project creation"
+  },
+  "8928cff31018ce6fbc0b1a9038516691b7687252": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-origin-changed",
+    "name": "Tool Result: Send-to-project origin changed",
+    "desc": "Reports the origin remote changed after approval so no repository was added"
+  },
+  "f3829a86b9fd2e983daad60aaaccf784ba7bbdf4": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-environment-rejected",
+    "name": "Tool Result: Send-to-project environment rejected",
+    "desc": "Reports the chosen cloud environment could not be used and the default applies"
+  },
+  "65869e224b2a6fa4cd4c3d00b58024dbc4ab3816": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-no-github-origin",
+    "name": "Tool Result: Send-to-project no GitHub origin",
+    "desc": "Reports no GitHub origin remote was found so no repository was added"
+  },
+  "d75a5f77daef0376983110507ec9c1c2e1423bed": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-github-app-unchecked",
+    "name": "Tool Result: Send-to-project GitHub App unchecked",
+    "desc": "Reports the Claude GitHub App installation could not be checked"
+  },
+  "d74f5425e706bbd166522e13c9ee838cc434472e": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-repository-cancelled",
+    "name": "Tool Result: Send-to-project repository add cancelled",
+    "desc": "Reports cancellation before the repository was added"
+  },
+  "a8fc80e9d3d0a9e3634300eec38dc9e4921aa9a3": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-repository-add-failed",
+    "name": "Tool Result: Send-to-project repository add failed",
+    "desc": "Reports the repository was not added with the error"
+  },
+  "3f68948d8f29e0f8435ce9e8496cd741237f15e7": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-message-not-sent",
+    "name": "Tool Result: Send-to-project message not sent",
+    "desc": "Reports the message may not have arrived or was not sent"
+  },
+  "5527e6787f03ccde944518c9266cf0ee6898c90f": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-memory-save-cancelled",
+    "name": "Tool Result: Send-to-project memory save cancelled",
+    "desc": "Reports cancellation before the brief was saved to project memory"
+  },
+  "9f037c43268df6eed7020075cfd8e50f2aa04843": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-memory-unavailable",
+    "name": "Tool Result: Send-to-project memory unavailable",
+    "desc": "Reports project memory is not available so the brief was not saved"
+  },
+  "112754a395e7208e12a6263b6ca25a738c276ed5": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-memory-brief-replaced",
+    "name": "Tool Result: Send-to-project memory brief replaced",
+    "desc": "Reports the existing brief file in project memory was replaced"
+  },
+  "29fda1180ced8e96ffa6594026039a3e5e4f407b": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-memory-save-failed",
+    "name": "Tool Result: Send-to-project memory save failed",
+    "desc": "Reports the brief could not be saved to project memory with the error"
+  },
+  "8cee0aae20f762dc13b6147fe31948f2a311f9a5": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-memory-index-unreadable",
+    "name": "Tool Result: Send-to-project MEMORY.md unreadable",
+    "desc": "Reports the brief was saved but its MEMORY.md section could not be added because MEMORY.md could not be read"
+  },
+  "06c49eb0ded8238e8caa8bc348b6c2f4c6322313": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-memory-index-full",
+    "name": "Tool Result: Send-to-project MEMORY.md full",
+    "desc": "Reports MEMORY.md is full so it has no section or pointer for the brief"
+  },
+  "9296e4187816743724003090e4cbf162e930b87b": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-memory-index-nearly-full",
+    "name": "Tool Result: Send-to-project MEMORY.md nearly full",
+    "desc": "Reports MEMORY.md is nearly full so it only points at the brief"
+  },
+  "27d36637f24f43648155b23264d24853edefc899": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-memory-index-no-answer",
+    "name": "Tool Result: Send-to-project MEMORY.md no answer",
+    "desc": "Reports the MEMORY.md section could not be added because project memory did not answer"
+  },
+  "af968a4e787f4f5d79650bae73c9b540eca21d2d": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-memory-index-failed",
+    "name": "Tool Result: Send-to-project MEMORY.md section failed",
+    "desc": "Reports the MEMORY.md section could not be added with the error"
+  },
+  "a5d1d8f8b1d75ee15a136880dd3e623f14a4222c": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-no-setup-card-empty-brief",
+    "name": "Tool Result: Send-to-project no setup card, empty brief",
+    "desc": "Reports no setup card was posted because the brief has nothing to post"
+  },
+  "920130e87cdb6091e43c95f235993abe4bee1e4b": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-no-coordinator",
+    "name": "Tool Result: Send-to-project no coordinator",
+    "desc": "Reports the project has no coordinator so the brief could not be handed over"
+  },
+  "7a670e10770b56a614c3c78b9f5e76a3c903c682": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-handoff-failed",
+    "name": "Tool Result: Send-to-project hand-off failed",
+    "desc": "Reports the brief was not handed to the project with the error"
+  },
+  "84faf00b9370ffdde142a537650ce10bfa80f10f": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-handoff-memory-suffix",
+    "name": "Tool Result: Send-to-project hand-off memory suffix",
+    "desc": "Suffix noting the brief is still in project memory after a failed hand-off"
+  },
+  "568de7e1c3a4b0a3b3d51b8f7af6e6f705603e87": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-untitled-project",
+    "name": "Tool Result: Send-to-project untitled project",
+    "desc": "Fallback project name used when a project has no name"
+  },
+  "4a28ed53e47144063996e62e9b065011e274cd51": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-remote-control-unverified",
+    "name": "Tool Result: Send-to-project Remote Control unverified",
+    "desc": "Reports it could not be checked whether the conversation may go to its Remote Control session"
+  },
+  "51617f97a990a32d2f265b78d15d4d6eb90ac1a2": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-remote-control-withheld",
+    "name": "Tool Result: Send-to-project Remote Control withheld",
+    "desc": "Reports the conversation is kept off its Remote Control session so it cannot be sent"
+  },
+  "1ba29ceb349dad251d29f68bc60ec3f62092d2a7": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-remote-control-not-connected",
+    "name": "Tool Result: Send-to-project Remote Control not connected",
+    "desc": "Reports the session is not connected to Remote Control and how to turn it on"
+  },
+  "6376a30bc534a6cb7639574d53d61a798a16f96a": {
+    "facing": "model",
+    "id": "tool-parameter-sendtoproject-attach-git-remote",
+    "name": "Tool Parameter: SendToProject attach_git_remote",
+    "desc": "Describes whether to attach the folder's GitHub origin as the project repository"
+  },
+  "559eb41c20787f21ed502b4bf159ef4980f98c77": {
+    "facing": "model",
+    "id": "tool-parameter-sendtoproject-project-name",
+    "name": "Tool Parameter: SendToProject project_name",
+    "desc": "Describes the name for a new project and its length limit"
+  },
+  "e2cdb37d1030338d794913387ef13bc14c629ca4": {
+    "facing": "model",
+    "id": "tool-parameter-sendtoproject-project-id",
+    "name": "Tool Parameter: SendToProject project_id",
+    "desc": "Describes passing an existing project id only when /send-to-project named one"
+  },
+  "cd955002edf51949fe8d7762783b438804ba0236": {
+    "facing": "model",
+    "id": "tool-parameter-sendtoproject-proposal",
+    "name": "Tool Parameter: SendToProject proposal",
+    "desc": "Defines the message or work-brief proposal fields, limits, confirmation behavior and setup-card application rules for SendToProject"
+  },
+  "a31e908bf892511737a3181a3a2f7c1ab02b4bb2": {
+    "facing": "model",
+    "id": "tool-parameter-send-to-project-created-output",
+    "name": "Tool parameter: Send to project created result field",
+    "desc": "outputSchema describe() on the Send to project tool's created field, explaining what created true/false means and pointing to reason and mayExist."
+  },
+  "ba050f1e67bbecabca61467993732d4c71d44b54": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-runs-only-when-typed",
+    "name": "Tool result: Send to project runs only when typed",
+    "desc": "Reason fragment saying /send-to-project runs only when the user types it in this session and takes one call per turn; interpolated into validation and call error results."
+  },
+  "54fb1269b68082a240dd83d37e65dcfc8e125463": { "facing": "ui" },
+  "d3ca40b7befce4727d750d41706334fcaef0abff": { "facing": "ui" },
+  "b63fd1d8b160aeba74db49ca668b2b723f913f87": { "facing": "ui" },
+  "4c266fab4eced5ca6daa15c95349463581ebf19d": { "facing": "ui" },
+  "cef0b776a36358c424fd875f64c2a17cc6e8ffea": { "facing": "ui" },
+  "0213508cc22274528cb83273b69fe30c5f835cab": { "facing": "ui" },
+  "6d6ebe0c6c2f790935330bc31ecf42ba9c6f2a83": { "facing": "ui" },
+  "5715558c2d22c4b666f8973a8a8a1df8a23f6e2e": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-message-key-not-input",
+    "name": "Tool result: Send to project message key not an input",
+    "desc": "Validation error telling the model a hidden message key is not an input of the Send to project tool and to leave it out."
+  },
+  "257c277b7f4be328454d2f7b0acc76f0530f3aac": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-internal-keys-not-inputs",
+    "name": "Tool result: Send to project internal keys not inputs",
+    "desc": "Validation error telling the model two internal pane keys are not inputs of the Send to project tool and to leave them out."
+  },
+  "a0ff081600c3d5875b0402e9cccdf49b5c331fbd": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-not-run-by-user",
+    "name": "Tool result: Send to project not run by user",
+    "desc": "Validation error saying nothing was created or sent because /send-to-project was not typed by the user, and to tell the user to run it themselves."
+  },
+  "cd082fd4a1c5f7e9e25549b66d0174aeb21b0be0": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-project-id-unchanged",
+    "name": "Tool result: Send to project project_id must be unchanged",
+    "desc": "Validation error requiring project_id to be the id the command gave, unchanged."
+  },
+  "e2e3cdfbc12c89203204a354399869a7906ead2f": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-project-id-must-be-omitted",
+    "name": "Tool result: Send to project project_id must be omitted",
+    "desc": "Validation error saying project_id must be omitted because this /send-to-project run creates a new project."
+  },
+  "e7c5c4415cb9ffec26ebb029113581ce98375029": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-project-id-must-match-choice",
+    "name": "Tool result: Send to project project_id must match chosen project",
+    "desc": "Validation error saying project_id must be the id of the project the user chose in this run, as given by the folder context."
+  },
+  "93711e872913998137ccce2681091f3e388e8a51": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-attach-git-remote-existing",
+    "name": "Tool result: Send to project attach_git_remote with existing project",
+    "desc": "Validation error saying attach_git_remote must be false with project_id because an existing project keeps its repositories."
+  },
+  "b964dcea4079da8756a2c97896fecfb28355bf6f": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-proposal-summary-only",
+    "name": "Tool result: Send to project proposal summary only",
+    "desc": "Validation error saying proposal takes only summary in a run that sends one message."
+  },
+  "183672e5c842925ca766bd8ef6301e86032be163": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-proposal-summary-is-message",
+    "name": "Tool result: Send to project proposal.summary is the message",
+    "desc": "Validation error stating proposal.summary is the message, followed by the reason the drafted message cannot be sent."
+  },
+  "9caf560a6f2150d5597d958ba6785140f2d11908": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-proposal-fields-existing-project",
+    "name": "Tool result: Send to project proposal fields with existing project",
+    "desc": "Validation error saying proposal name, icon, color and instructions must be omitted with project_id because an existing project keeps them."
+  },
+  "ee8b7ed30544877efe62080224e99612c00ac2bc": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-consent-reason-message",
+    "name": "Tool result: Send to project consent reason (message run)",
+    "desc": "Permission decisionReason for a message-sending run, stating what is posted with the user's Claude account plus the transcript disclosure lines."
+  },
+  "cd292e49371b476b82c1078bd19c1704dbdccde9": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-consent-reason-new-project",
+    "name": "Tool result: Send to project consent reason (new project)",
+    "desc": "Permission decisionReason for creating a new Claude Project from the brief, listing what is created, saved to memory and posted as the setup card."
+  },
+  "52346b03c16d2ee1acd68633bba0bf5d865bb055": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-consent-reason-existing-project",
+    "name": "Tool result: Send to project consent reason (existing project)",
+    "desc": "Permission decisionReason for sending the brief to an existing Claude Project's memory and setup card."
+  },
+  "55ffe8f849c551969253939d4d22c9798099ce8b": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-transcript-disclosure",
+    "name": "Tool result: Send to project transcript disclosure",
+    "desc": "Disclosure line in the send-to-project consent reason that the session transcript, including what Claude read and ran, is also sent."
+  },
+  "78f262ab00b4658714b7e5e54bcadbc5fb82c22f": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-no-thread-starts",
+    "name": "Tool result: Send to project no thread starts",
+    "desc": "Line in the send-to-project consent reason stating no thread starts and the user starts each one from the setup card."
+  },
+  "3184795ea56d801e91f784876994929cacefe518": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-ask-create-and-send",
+    "name": "Tool result: Send to project ask create and send",
+    "desc": "Permission ask message asking whether to create the named Claude Project and send this message; returned to the model on decline."
+  },
+  "4fb3b69a6c404ea633c43f4d374ae46508c6ccbf": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-ask-create-from-session",
+    "name": "Tool result: Send to project ask create from session",
+    "desc": "Permission ask message asking whether to create a Claude Project from this session."
+  },
+  "bea9e5defed695ebc2ef4352c24ce58231844ac1": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-ask-send-message",
+    "name": "Tool result: Send to project ask send message",
+    "desc": "Permission ask message asking whether to send this message to the chosen project."
+  },
+  "c28bf50dfbbda3efd10aef02d899e1f81fcd6722": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-interrupted-result-recovery",
+    "name": "System Reminder: Send-to-project interrupted result recovery",
+    "desc": "Reports the committed project-transfer result after interruption and explains when rerunning could duplicate a project or setup card"
+  },
+  "2c3a9a54a042cb0a4b8c4ae85548201095eccea4": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-create-uncertain",
+    "name": "System Reminder: Send-to-project create uncertain after interruption",
+    "desc": "Task notification after an interrupted create call with no definite answer, telling the model to have the user check their Projects list before rerunning to avoid a duplicate."
+  },
+  "7b13251e3d61a88bab3f1b600d0af24c2c972e7f": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-draft-needs-a-person",
+    "name": "Tool result: Send to project draft needs a person",
+    "desc": "Reason that a Claude-drafted message is not posted because this app cannot show a person approved it; run /send-to-project with the typed message."
+  },
+  "fd84739b1cbb75593dfcd7a1568dfc0123b9962a": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-remote-control-changed",
+    "name": "Tool result: Send to project Remote Control session changed",
+    "desc": "Failure reason that the Remote Control session changed while the message or brief was being prepared; run /send-to-project again."
+  },
+  "773a013c86f71e020025378b39a9e459f2241fdc": {
+    "facing": "model",
+    "id": "tool-description-send-to-project-search-hint",
+    "name": "Tool description: Send to project search hint",
+    "desc": "searchHint for the deferred Send to project tool, shown to the model in tool search listings."
+  },
+  "e6916cbf96a28e83ad46c04d1c70828e8d2e0887": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-message-key-in-brief-run",
+    "name": "Tool result: Send to project message key in brief run",
+    "desc": "Failure reason that the request was shown as one message while this run sends the brief."
+  },
+  "e55e56eda67bf33b87dea34060c99d1f931dcd10": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-hook-changed-request",
+    "name": "Tool result: Send to project hook changed request",
+    "desc": "Failure reason that the confirmation did not show what this run sends, typically because a hook changed the request."
+  },
+  "6f437b8365975a0ead31f918e97f135462cfa81f": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-pane-not-answered",
+    "name": "Tool result: Send to project pane not answered",
+    "desc": "Failure reason that the confirmation pane did not answer the call because a hook or another surface approved it, so nothing was created or sent."
+  },
+  "951b1ce1eb13bca7a4fe753acd2a6a5c3729579a": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-request-mismatch",
+    "name": "Tool result: Send to project request mismatch",
+    "desc": "Failure reason that the request is not the one this call asked about, so nothing was posted."
+  },
+  "fefa77dde9a885d22fef5a63ec445f5c2216fcbe": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-create-uncertain",
+    "name": "Tool result: Send to project create uncertain",
+    "desc": "Error result when creating the project got no definite answer; tells the model to have the user check Projects before rerunning to avoid duplicates."
+  },
+  "749937dd0542998a55319e9a352cbe9cfce979e3": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-nothing-created",
+    "name": "Tool result: Send to project nothing created",
+    "desc": "Error result that nothing was created or sent, with the reason, suggesting a rerun if the cause looks temporary."
+  },
+  "d11df44992c8a07290df96a31b9353eb5ec963ff": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-coordinator-posts-setup-card",
+    "name": "Tool result: Send to project coordinator posts setup card",
+    "desc": "Result line that the project's coordinator posts the setup card shortly and the user starts threads there."
+  },
+  "095f16dbc80930c7d85937837f8106631a494b31": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-reply-with-lines-above",
+    "name": "Tool result: Send to project reply with lines above",
+    "desc": "Instruction in the result to reply to the user with exactly the lines above, in order and wording, without ids or bare URLs."
+  },
+  "7a33327d2bc2a1aaef052d9b9704f03184aff80d": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-may-have-reached",
+    "name": "Tool result: Send to project may have reached",
+    "desc": "Result line that the message or brief may have reached the project."
+  },
+  "60122db338bd3478adbf3a6b1ffce421ffdfb86a": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-threads-wait-on-setup-card",
+    "name": "Tool result: Send to project threads wait on setup card",
+    "desc": "Result line giving how many threads wait for the user on the setup card."
+  },
+  "fad48619536d0d2b2fcd81f41500a99055a755ba": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-added-repo",
+    "name": "Tool result: Send to project added repository",
+    "desc": "Result line naming the GitHub repository added to the project, with an optional GitHub App install note."
+  },
+  "d399d5a94f69168c1f66e02e95400db4596fef7d": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-install-github-app",
+    "name": "Tool result: Send to project install GitHub App note",
+    "desc": "Clause telling the user to install the Claude GitHub App on the added repository so threads can clone it."
+  },
+  "4f36c9439cbe3775e3e3132e4e38896daed6cd3e": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-rerun-if-temporary",
+    "name": "Tool result: Send to project rerun if temporary",
+    "desc": "Result line suggesting running /send-to-project again if the cause looks temporary."
+  },
+  "1750c5e09bc8e13cf8d8ebaad371d846151f0972": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-send-message-pick-project",
+    "name": "Tool result: Send to project send message by picking project",
+    "desc": "Result line saying to send the message, run /send-to-project again and pick this project."
+  },
+  "4d8fe75fbca84b5787ea43ef3229308c2dd12d92": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-do-not-call-again",
+    "name": "Tool result: Send to project do not call again",
+    "desc": "Clause telling the model not to call the Send to project tool again in this run."
+  },
+  "6621bbaaea7ecbc87f9c1d2e5f7f6b7adb259e14": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-reference-message-run",
+    "name": "Tool result: Send to project reference note (message run)",
+    "desc": "For-reference note on a message run saying whether the message was posted and that nothing was saved to memory and no setup card posted."
+  },
+  "46c51fff389001653e834d21fd6e3aa74847366b": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-message-posted-as-user",
+    "name": "Tool result: Send to project message posted as user",
+    "desc": "Clause in the reference note that the message is posted in the project as the user with this session's id under it."
+  },
+  "3453e19cb60df2f67d602fc9b391de4d39a6970b": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-reference-brief-run",
+    "name": "Tool result: Send to project reference note (brief run)",
+    "desc": "For-reference note on a brief run stating memory save, setup card status and that no thread was started."
+  },
+  "11b6d0db77be42cad0a67e58a26a634e7b7efc12": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-created",
+    "name": "Tool result: Send to project created",
+    "desc": "Result line naming the project that was created, as a markdown link."
+  },
+  "9bd8d6f4ff8f11c46b12f4a013467822c22c88d6": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-sent-to",
+    "name": "Tool result: Send to project sent to",
+    "desc": "Result line naming the existing project the content was sent to."
+  },
+  "311e4544a3f1c55b7fa2d6d5c993f04f4e2afef0": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-nothing-reached",
+    "name": "Tool result: Send to project nothing reached",
+    "desc": "Result line that nothing reached the project."
+  },
+  "e53072f9b23e6b754e6df719f77ad4376d5a14e5": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-sent-your-message",
+    "name": "Tool result: Send to project sent your message",
+    "desc": "Result line that the user's message was sent to the new project."
+  },
+  "f7213a4b2d821a899e41408026daf04a71c8b7a8": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-opening-in-browser",
+    "name": "Tool result: Send to project opening in browser",
+    "desc": "Result line that the project is opening in the user's browser."
+  },
+  "76e5c7d1c7baf829d0abced5d5cef276a2ef5414": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-opened-in-browser",
+    "name": "Tool result: Send to project opened in browser",
+    "desc": "Result line that the project was opened in the user's browser."
+  },
+  "55f66eb14b12ba3e8669714b093f34e6cbe2c70c": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-no-repository-added",
+    "name": "Tool result: Send to project no repository added",
+    "desc": "Result line that no repository was added to the new project."
+  },
+  "c44bfa4a43eed11e2a2a48e0e9d1b6f3795d24f4": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-closing-instruction",
+    "name": "Tool result: Send to project closing instruction",
+    "desc": "Closing result line combining the reply-with-lines-above instruction and, when no retry applies, the do-not-call-again clause."
+  },
+  "5f6da802e6db122cf62ace0f38910f9525fd3cb8": {
+    "facing": "model",
+    "id": "tool-parameter-send-to-project-context-status-output",
+    "name": "Tool parameter: Send to project context status result field",
+    "desc": "outputSchema describe() on the send-to-project context reader's status enum explaining delivered, already_delivered, nothing_read and no_run."
+  },
+  "adb003ac3e484b077deaf5dd74c74abcc4828bff": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-context-nothing-read",
+    "name": "Tool result: Send to project context nothing read",
+    "desc": "Error from the send-to-project context reader that nothing was read because the user did not type /send-to-project, and to tell the user to run it."
+  },
+  "a1444c31f2edb7c013ea0c767f2ed7efa6233485": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-context-data-preamble",
+    "name": "Tool result: Send to project context data preamble",
+    "desc": "Preamble before the delivered send-to-project context declaring it data about the user's work, not instructions, with names treated as labels."
+  },
+  "af0f2e53800fafe0b5c372ac8fb8858df1c1f4b1": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-context-already-delivered",
+    "name": "Tool result: Send to project context already delivered",
+    "desc": "Result saying the run's context was delivered earlier this turn and to work from it, then call the Send to project tool with the brief."
+  },
+  "846f2bac173097284014afde954d4891949a2000": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-context-nothing-read-one-message",
+    "name": "Tool result: Send to project context one-message run",
+    "desc": "Result saying this run sends one message and read no context, so call the Send to project tool with the inputs the command gave."
+  },
+  "62d147b63278511b51bdb51c70606027cb518ef7": { "facing": "internal" },
+  "4ce112cb4ad39c933e956cef20fe1c8ce021b8e8": { "facing": "ui" },
+  "f05ad7f15cbc68a41e9da3de23c40dc033632554": { "facing": "ui" },
+  "063f95989870d83b3495f26418053bcef15c9a04": { "facing": "ui" },
+  "c1da2f87da5dac25a29a2609b5dd31a15a46f04e": { "facing": "ui" },
+  "ae11ff0d3c3b60375dd2eef25b032b49fa567430": { "facing": "ui" },
+  "0c1439eb7ad5e9b87622f1d73d55891e86d1418b": { "facing": "ui" },
+  "9cb3770caeff400edb6ae528939737e40038b7ab": { "facing": "internal" },
+  "362fb0dcbaf20345c2c78cdf63c8aa286a1ad2b7": { "facing": "internal" },
+  "827bfd96997c2e84d368aafdc9a9cb98163b8e75": { "facing": "ui" },
+  "f035b0824e514df25c389647e47c097a8fd2aa71": { "facing": "ui" },
+  "824249939b2a457168efa35df4858dcf0fab2eff": { "facing": "ui" },
+  "2179f6c34d458047bb6d4b5b1735ee9e037fb920": { "facing": "ui" },
+  "8b621fc1307885beee1a0af22651c8d38855f8f8": { "facing": "ui" },
+  "ee753619d880035d4c02d11aa0b4eeef640d88f7": { "facing": "ui" },
+  "7bd5e6522ef50393981060ffe1e88524933582c3": { "facing": "internal" },
+  "fad6ba482234c11c7e85b578141f2923cbb445d7": { "facing": "internal" },
+  "bc5701894566ce12cf970e289fffa314ce7c27ce": { "facing": "internal" },
+  "4f97ae26c30619e868b9702981add29d266f9bda": { "facing": "internal" },
+  "ef76a096e8f7d690bd473f7b68a7ca088a8fbe68": {
+    "facing": "model",
+    "id": "user-message-attachment-path-occupied-clause",
+    "name": "User message attachment: path held something else clause",
+    "desc": "Clause appended to an attachment-not-saved note saying the target path held other content (possibly a copy changed this session) that was left in place"
+  },
+  "c76d87c5459d28ea83a8c6e208c76224472dfa52": {
+    "facing": "model",
+    "id": "user-message-attachment-displaced-file-moved-clause",
+    "name": "User message attachment: displaced file moved clause",
+    "desc": "Clause in attachment save notes stating the earlier file at the path (possibly changed this session) was moved aside, and where"
+  },
+  "4cff9c4e922b99b8c3a35a8ed1fadb410679d9d7": {
+    "facing": "model",
+    "id": "user-message-attachment-second-move-clause",
+    "name": "User message attachment: second displaced file clause",
+    "desc": "Sub-clause noting what then stood at the moved-to location was itself moved, and where"
+  },
+  "25c8fcb19c36386c9025f27b6749c73fb9cefe8d": {
+    "facing": "model",
+    "id": "user-message-attachment-just-sent-unavailable-clause",
+    "name": "User message attachment: just-sent file unavailable clause",
+    "desc": "Clause saying the file just sent is not available and what happened to the file previously at that path"
+  },
+  "dac838b6f3b4905efeb0ba8fcaf90e5dd5d67064": { "facing": "internal" },
+  "b706ccf4e5be4bc7c6961c52be29bab09952784a": { "facing": "ui" },
+  "e612d40a6765afa9be5e7fe7eaae586cdef02bbc": { "facing": "ui" },
+  "1ca0377289c69f9a885c0febe3c43b3f5a11598f": { "facing": "ui" },
+  "b6428609fed27c93ff169cfaa288a623fc6902f4": { "facing": "ui" },
+  "52da76200dd85863e72af3b1e0c9837fed977d0b": { "facing": "ui" },
+  "8e343a8e68e337e2b774e78a286459b8c6fa159d": {
+    "facing": "model",
+    "id": "data-task-notification-message-files-missing",
+    "name": "Data: task notification message files missing",
+    "desc": "Task-notification line listing files attached to a user message that could not be fetched or saved, with the affected paths"
+  },
+  "476643bb1d0ca6b82d54777ace933a528682e955": { "facing": "ui" },
+  "826a956c4d22e12fcbbf166adf90bf842dc4da3f": { "facing": "ui" },
+  "a601e589e3eba6d6350bab6122b12f6feae5f291": { "facing": "ui" },
+  "a7fa081bd8895d93b0d57c2e6521f48a0568b1e9": {
+    "facing": "model",
+    "id": "system-reminder-cloud-sandbox-sustained-cpu-limit-stop",
+    "name": "System Reminder: Cloud sandbox sustained CPU limit stop",
+    "desc": "Reports shell work stopped after sustained near-full CPU use and requires agreement on a lower-CPU approach before restarting heavy work"
+  },
+  "c42bf7b048a4e41bda594acfd607d939f5f2a00c": { "facing": "internal" },
+  "38733229b203bcc6b67b97be6b1e2e4cc7790f25": { "facing": "ui" },
+  "f01e31e7ef5b05ce257383b571690d6479929ae0": {
+    "facing": "model",
+    "id": "skill-send-to-project-name-quotes-problem",
+    "name": "Skill: /send-to-project name quoting problem",
+    "desc": "Problem message when the project name argument is not in one pair of double quotes, pointing to running the command alone"
+  },
+  "5c4c35f1ec0ac73301ef8077ce9c755d6c37e212": {
+    "facing": "model",
+    "id": "skill-send-to-project-project-flag-removed-problem",
+    "name": "Skill: /send-to-project --project flag removed problem",
+    "desc": "Problem message saying --project is gone and the project goes first by quoted name, id or link"
+  },
+  "90cc2dbd1cfd69094b348ad5ad5bf705b3cf7587": {
+    "facing": "model",
+    "id": "skill-send-to-project-link-not-project-problem",
+    "name": "Skill: /send-to-project link not a project problem",
+    "desc": "Problem message when the given link is not a Claude Project link"
+  },
+  "04d351fa1c4fca48505f9f51650840db0952549a": {
+    "facing": "model",
+    "id": "skill-send-to-project-no-project-named",
+    "name": "Skill: /send-to-project no project with that name",
+    "desc": "Says none of the user's personal projects has the given name, noting shared/paused/archived ones and quote-led messages cannot be named"
+  },
+  "183997e06da4339cb8831099f5077b911cb29644": {
+    "facing": "model",
+    "id": "skill-send-to-project-ambiguous-project-name",
+    "name": "Skill: /send-to-project ambiguous project name",
+    "desc": "Says more than one of the user's Claude Projects has the given name"
+  },
+  "ff5ee6b22f8e65b8066bb2dbc1694d95490618ab": {
+    "facing": "model",
+    "id": "skill-send-to-project-run-alone-to-pick-hint",
+    "name": "Skill: /send-to-project run alone to pick hint",
+    "desc": "Hint to run /send-to-project with no arguments to pick the project"
+  },
+  "4f5568ce1dfa239bb94458b08e18cdee715648b7": {
+    "facing": "model",
+    "id": "skill-send-to-project-brief-drafting-guidance",
+    "name": "Skill: /send-to-project brief drafting guidance",
+    "desc": "Guides drafting a minimal supported project brief, handling confirmation declines and adapting fields to existing projects and current-session versus historical work"
+  },
+  "424f1e79a2bac2488fc723e57893b0a0462d0933": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-repo-not-visible-warning",
+    "name": "Tool result: send-to-project repository not visible to account",
+    "desc": "Warns the Claude account cannot see the GitHub repository so threads cannot clone it, and to say so before the call"
+  },
+  "d6e0da107436afc26b68b18def75a7dd1e7b6d51": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-repo-no-git",
+    "name": "Tool result: send-to-project folder not a git repository",
+    "desc": "Repository line saying the folder is not a git repository so there is no origin to add"
+  },
+  "e1a1023792647e97c43c8009754ddfc5ffd13cbe": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-repo-non-github-origin",
+    "name": "Tool result: send-to-project non-GitHub origin",
+    "desc": "Repository line saying origin is not a github.com repository so nothing can be added now; user can add it in project settings later"
+  },
+  "1c34a111e58a37ac0b5cbba7f406cf96a192df5e": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-repo-no-origin",
+    "name": "Tool result: send-to-project no origin remote",
+    "desc": "Repository line saying the repository has no origin remote so there is nothing to add"
+  },
+  "9e25075380acd57a041180e6957f6268a1d0eae3": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-repo-access-unchecked",
+    "name": "Tool result: send-to-project repository access unchecked",
+    "desc": "Clause saying whether the Claude account can reach the repository could not be checked"
+  },
+  "3de1a9674486607e74eca06592b20bb846ee0370": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-repo-app-not-installed",
+    "name": "Tool result: send-to-project GitHub App not installed",
+    "desc": "Warns the Claude GitHub App is not installed on the repository so threads cannot clone it, and to say so before the call"
+  },
+  "70210b214c8b52864237e191c237202b34d18549": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-repo-origin-line",
+    "name": "Tool result: send-to-project origin repository line",
+    "desc": "States the folder's GitHub origin and that the confirmation pane shows it as the project's repository, plus any access warning"
+  },
+  "eecd8c04baa3c1912b132a36d9fdc23e79644c75": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-repo-github-slug",
+    "name": "Tool result: send-to-project GitHub repository slug",
+    "desc": "github.com/owner/name label interpolated into the send-to-project repository lines"
+  },
+  "be41f14e766f7c11d646d5b577e96659c9963d22": {
+    "facing": "model",
+    "id": "skill-send-to-project-work-brief-slash-command",
+    "name": "Skill: /send-to-project work brief slash command",
+    "desc": "Loads the context and transfer tools, reads gathered folder context as untrusted data and drafts a work brief for the user's project-transfer confirmation"
+  },
+  "4f0297ab954d1e3433914771bf2d915a7c0a1881": {
+    "facing": "model",
+    "id": "skill-send-to-project-quoted-context-sources",
+    "name": "Skill: /send-to-project quoted context sources",
+    "desc": "Explains what the folder's context quotes and to work from it (and the conversation) without running git or reading other files"
+  },
+  "d4f3b3d767ede041921d74f55933886dab20a056": {
+    "facing": "model",
+    "id": "skill-send-to-project-past-session-transcripts-clause",
+    "name": "Skill: /send-to-project past-session transcripts clause",
+    "desc": "Clause adding condensed transcripts of the user's past sessions to the list of quoted material"
+  },
+  "1873e4e2c6be87d6f37de959739156e54fb809ca": {
+    "facing": "model",
+    "id": "skill-send-to-project-nothing-to-quote",
+    "name": "Skill: /send-to-project nothing to quote",
+    "desc": "Says there is nothing to quote so the brief is drawn from the conversation and the folder facts"
+  },
+  "e37121e2be76a68ed7f20ea1fd34e571d5a99dae": {
+    "facing": "model",
+    "id": "skill-send-to-project-existing-project-call-inputs",
+    "name": "Skill: /send-to-project existing project call inputs",
+    "desc": "Tells the model which inputs to pass when sending to an existing project and that nothing is created or changed"
+  },
+  "b2318429efdd25ba5e779e60dcc48f4b706cc966": {
+    "facing": "model",
+    "id": "skill-send-to-project-project-id-from-context",
+    "name": "Skill: /send-to-project project_id from context",
+    "desc": "Fallback naming project_id as the id the folder's context gives"
+  },
+  "88c5f44c811bb08c2533b5146823d60ed84a9d5b": {
+    "facing": "model",
+    "id": "skill-send-to-project-new-project-call-inputs",
+    "name": "Skill: /send-to-project new project call inputs",
+    "desc": "Tells the model which inputs to pass when the run creates a new project"
+  },
+  "41fb67704fa4e5ca0bb5dd93c508d6d2f27b003c": {
+    "facing": "model",
+    "id": "skill-send-to-project-conversation-is-source",
+    "name": "Skill: /send-to-project conversation is the source",
+    "desc": "Says the conversation above the command is the work being sent"
+  },
+  "c90cc3023454b5ab005b271078022a1e5684142d": {
+    "facing": "model",
+    "id": "skill-send-to-project-history-is-source",
+    "name": "Skill: /send-to-project quoted history is the source",
+    "desc": "When run at session start, pick the main recent work stream from quoted history and note what was left out in summary"
+  },
+  "96a09c36d797f68370f0ffbaf6fb72fa551a24c0": {
+    "facing": "model",
+    "id": "skill-send-to-project-reply-after-call",
+    "name": "Skill: /send-to-project reply after call",
+    "desc": "After the call goes through, reply with the tool result's lines, one fact per line, as markdown links, never ids or bare URLs"
+  },
+  "b17df2669e5ca3fc17321ec2b5ab5feaece0db62": {
+    "facing": "model",
+    "id": "skill-send-to-project-message-slash-command",
+    "name": "Skill: /send-to-project message slash command",
+    "desc": "Directs one project-message tool call with command-selected inputs, user confirmation and controlled retry only after a requested revision"
+  },
+  "fb7c21c4e0c419a21588e4605d854f9ef8197dd8": {
+    "facing": "model",
+    "id": "skill-send-to-project-message-summary-input",
+    "name": "Skill: /send-to-project message summary input",
+    "desc": "Input bullet asking the model to write the message as proposal.summary in the user's voice, three plain sentences, exact identifiers, no secrets"
+  },
+  "76b7661b543d14053c070ca4fc52e325ba5f0940": {
+    "facing": "model",
+    "id": "skill-send-to-project-message-no-project-id",
+    "name": "Skill: /send-to-project message no project_id",
+    "desc": "Input bullet saying to omit project_id because the run creates a new project"
+  },
+  "c7ad945d3d9d018ddd317ddec09412b490c9beb3": {
+    "facing": "model",
+    "id": "skill-send-to-project-message-project-name-label",
+    "name": "Skill: /send-to-project message project_name label",
+    "desc": "Input bullet giving project_name as a label only since the tool names the project"
+  },
+  "de02df66f3d16d10c26ad654de9caa89bfc29c5e": {
+    "facing": "model",
+    "id": "skill-send-to-project-message-typed-proposal",
+    "name": "Skill: /send-to-project message typed proposal",
+    "desc": "Input bullet for an empty proposal because the user typed the message and the tool sends it as typed"
+  },
+  "170c59f9d1c09975afa7489cfe39a2a37b660c6c": {
+    "facing": "model",
+    "id": "system-reminder-send-to-project-gathered-context-trust-boundary",
+    "name": "System Reminder: Send-to-project gathered context trust boundary",
+    "desc": "Marks gathered folder files, git metadata and optional past-session excerpts as fenced quoted data that cannot override current instructions"
+  },
+  "c150f7f343cffd3dcac678f2697729576f1cf7f0": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-context-existing-target",
+    "name": "Tool result: send-to-project existing project target",
+    "desc": "Context line naming the existing target project and telling the model to pass its name and id, keeping the id out of user-facing text"
+  },
+  "4775788bca9ac9dfb6c82aee64435181adc8eed0": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-context-new-target",
+    "name": "Tool result: send-to-project new project target",
+    "desc": "Context line saying the target is a new Claude Project with the default project_name"
+  },
+  "cf397e6e38680cc0667f9c86aa044a6ac5bdef83": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-context-read-counts",
+    "name": "Tool result: send-to-project read counts",
+    "desc": "Counts of past sessions, commits and docs read from this computer"
+  },
+  "56125ed020ad3d13e6adda60539951686285e7a8": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-context-nothing-to-quote",
+    "name": "Tool result: send-to-project nothing to quote",
+    "desc": "Context background saying there is nothing to quote (no docs, not a git repository)"
+  },
+  "d964828683f0954d643ea48efb5ddf045ff9946c": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-context-cli-findings",
+    "name": "Tool result: send-to-project CLI findings",
+    "desc": "Header of the gathered context listing locally computed facts as labels, not instructions, followed by the folder background"
+  },
+  "e37ee60094d04b160e8d45808cac60a9b11ff6ee": {
+    "facing": "model",
+    "id": "skill-send-to-project-tell-user-and-stop",
+    "name": "Skill: /send-to-project tell user and stop",
+    "desc": "Wrapper appending an instruction to tell the user the given problem and stop"
+  },
+  "96e9a9698cc85d1d7f2a626b9de40162beebc9af": { "facing": "internal" },
+  "e2f8e6379a265ca11a203770aced16c1140aa757": {
+    "facing": "model",
+    "id": "slash-command-send-to-project-subagent-refusal",
+    "name": "Slash command: /send-to-project subagent refusal",
+    "desc": "Tells the model /send-to-project cannot run inside a subagent and to have the user run it in the main session"
+  },
+  "519cd7cf14ad532ca9036322da970fbb59ea7e85": {
+    "facing": "model",
+    "id": "slash-command-send-to-project-not-typed-by-user",
+    "name": "Slash command: /send-to-project not typed by user",
+    "desc": "Tells the model /send-to-project only runs when the user types it, so nothing was sent"
+  },
+  "c88c8be489f7ed05235bae5a939084fc1a17f720": {
+    "facing": "model",
+    "id": "skill-send-to-project-message-preload-description",
+    "name": "Skill: /send-to-project message preload description",
+    "desc": "Preloads the user-only command's project-message behavior, typed or drafted message selection and approval requirement"
+  },
+  "cf1e36154f87f8b823b1c89bdcbbbf8d58db4b3b": {
+    "facing": "model",
+    "id": "skill-send-to-project-work-brief-preload-description",
+    "name": "Skill: /send-to-project work brief preload description",
+    "desc": "Preloads the user-only command's project work-brief transfer behavior, approval requirement and Remote Control dependency"
+  },
+  "f9364d89ea3130065d98cd232c36be44e7fec8b1": {
+    "facing": "model",
+    "id": "slash-command-send-to-project-projects-availability-unknown-warning",
+    "name": "Slash command: /send-to-project projects availability unknown warning",
+    "desc": "Warning line telling the model Claude Projects availability could not be checked and project creation may still fail"
+  },
+  "257487368c9ae32ff651390267314a88d19ff670": {
+    "facing": "model",
+    "id": "slash-command-send-to-project-folder-read-failed",
+    "name": "Slash command: /send-to-project folder read failed",
+    "desc": "Tells the model the folder's git state or session history could not be read, so nothing was sent"
+  },
+  "1afa033f04a459b6426f91422fee06406c11bd92": {
+    "facing": "model",
+    "id": "slash-command-send-to-project-history-read-failed",
+    "name": "Slash command: /send-to-project history read failed",
+    "desc": "Tells the model the folder's history could not be read, so nothing was sent"
+  },
+  "0d8d905cc1ce7f102eb98b9bd6c6d50b85189864": {
+    "facing": "model",
+    "id": "slash-command-send-to-project-project-unusable-pick-own",
+    "name": "Slash command: /send-to-project project unusable pick own",
+    "desc": "Tells the model the named project cannot be used and to have the user rerun and pick one of their own projects"
+  },
+  "9df6b2af2ff3ebaeb5a78c450be2d82da5d00bb2": {
+    "facing": "model",
+    "id": "slash-command-send-to-project-project-lookup-transient-failure",
+    "name": "Slash command: /send-to-project project lookup transient failure",
+    "desc": "Tells the model the project could not be looked up just now and to have the user retry shortly"
+  },
+  "6a38a579f7424c4a33c9d4e3469970e90cf82f04": {
+    "facing": "model",
+    "id": "slash-command-send-to-project-picker-closed",
+    "name": "Slash command: /send-to-project picker closed",
+    "desc": "Tells the model the user closed the project picker so nothing was sent, to say so in one line and stop"
+  },
+  "78bbc909c8f4d5c81cf6c4de9ee6d292a4107f31": {
+    "facing": "model",
+    "id": "slash-command-send-to-project-no-conversation-for-draft",
+    "name": "Slash command: /send-to-project no conversation for draft",
+    "desc": "Tells the model there is no conversation to draft a message from and to have the user rerun with the message typed"
+  },
+  "f9571e410572ca7ee887968317438fa6948b08c9": {
+    "facing": "model",
+    "id": "slash-command-send-to-project-no-work-to-send",
+    "name": "Slash command: /send-to-project no work to send",
+    "desc": "Tells the model there is no conversation, history, docs or repo to send, to ask what the project is for and stop"
+  },
+  "444b653e7bde8a4dcd0684d58b7f349664cdcd6e": {
+    "facing": "model",
+    "id": "slash-command-send-to-project-not-signed-in",
+    "name": "Slash command: /send-to-project not signed in",
+    "desc": "Tells the model the user is not signed in to a Claude account and should run /login then retry"
+  },
+  "0facea63fef22be81bdf812eb66e9498fdab514b": {
+    "facing": "model",
+    "id": "slash-command-send-to-project-project-list-failed",
+    "name": "Slash command: /send-to-project project list failed",
+    "desc": "Tells the model the user's projects could not be listed and to have the user retry shortly"
+  },
+  "95a8958719b28143a887c8a1183408fe4ee40a6d": {
+    "facing": "model",
+    "id": "slash-command-send-to-project-project-unusable-now",
+    "name": "Slash command: /send-to-project project unusable now",
+    "desc": "Tells the model the named project cannot be used right now with the reason, to tell the user and stop"
+  },
+  "11f42afdc6d4df37e208372d196b2046753e2977": {
+    "facing": "model",
+    "id": "slash-command-send-to-project-projects-unavailable",
+    "name": "Slash command: /send-to-project projects unavailable",
+    "desc": "Tells the model Claude Projects is not available to the account, with the refusal reason, so nothing was sent"
+  },
+  "2d6cd47d034284dbbd0455d596e637ffb58479ba": {
+    "facing": "model",
+    "id": "skill-claude-code-help-recent-releases",
+    "name": "Skill: claude-code-help recent releases",
+    "desc": "Lists recent Claude Code release notes and the running version in the claude-code-help skill context"
+  },
+  "3f38a8780553ea2eacad89f7da9f27c7a14eab20": { "facing": "ui" },
+  "fecf91b0596069632be491584c475c215fbf4977": {
+    "facing": "model",
+    "id": "tool-result-mcp-task-block-invalid-base64",
+    "name": "Tool result: MCP task block invalid base64",
+    "desc": "Placeholder in an MCP task result when a binary content block is not valid base64 and was not saved"
+  },
+  "bcaed204fa0f4e2bda348da8ba9051c8b4ca22a5": { "facing": "internal" },
+  "77a125e5631abd0ef533e4995b5ae4e7dfcc29bc": { "facing": "internal" },
+  "d361ace862f0c027bb92cef637241a40a5fd64aa": { "facing": "internal" },
+  "903876199654420b40b936c19d0bfb125ff99625": { "facing": "internal" },
+  "7417c190f2d36531e5090356ef55e9e626f6c7ba": { "facing": "ui" },
+  "ad16dd3f05e1e9b4e50aa0a1eb2bc0a82b5e58ba": {
+    "facing": "model",
+    "id": "agent-prompt-background-agent-state-classifier-user-merge-handoff-rule",
+    "name": "Agent Prompt: Background agent state classifier user merge handoff rule",
+    "desc": "Classifies finished work handed over for the user's own merge or review as done unless a question, required approval or follow-up work still waits"
+  },
+  "0ffefd81c555cff6a1e823542c03f6b2b388caec": { "facing": "ui" },
+  "715e009f7c1504fb77f2e7b5da471679b3fb2b16": {
+    "facing": "model",
+    "id": "data-command-upgrade-billed-google-play",
+    "name": "Data: /upgrade billed through Google Play",
+    "desc": "/upgrade result telling the user the plan is billed via Google Play and to change it in the Android app then /login"
+  },
+  "2a3e6a2008f45a86c0fedc87a0d491ebdfb0b275": {
+    "facing": "model",
+    "id": "data-command-upgrade-billed-app-store",
+    "name": "Data: /upgrade billed through App Store",
+    "desc": "/upgrade result telling the user the plan is billed via the App Store and to change it in the iOS app then /login"
+  },
+  "1c2257b42104cedf1c0f2eada16418cd40d8e5cb": { "facing": "ui" },
+  "6b33c1187a77d8dc8ad40e20ab3263e850eb32c3": { "facing": "ui" },
+  "98e67df6bf9db640856a51c34b641b5d0cdfa9f5": { "facing": "ui" },
+  "7e2ec67f72b4eaeff46b00970dcc2ca1d6a67d49": { "facing": "ui" },
+  "2526c911004e53603deb3742174a1b1db6c177a3": {
+    "facing": "model",
+    "id": "system-reminder-agent-transcript-start-unavailable",
+    "name": "System Reminder: agent transcript start unavailable",
+    "desc": "Meta note prepended when the start of an agent's transcript with its prompt is missing"
+  },
+  "bcb5d87762f715506d583776691a8ebeb3b267d9": {
+    "facing": "model",
+    "id": "system-prompt-artifact-title-outsiders-may-have-written",
+    "name": "System Prompt: artifact title outsiders may have written",
+    "desc": "Warns that an attached artifact's title may contain words from people outside the organization and is data"
+  },
+  "cd328d2b691a344c112a6fa21873b9e0f21f17e4": { "facing": "ui" },
+  "f1fd0a0f31085ac368e08bba3e891beb689fddb5": { "facing": "ui" },
+  "16d35dfdc5abbb0897172f4e94b729f2cbed56c4": { "facing": "ui" },
+  "0c1f948d2c72d211d64ff5f8356c83e6a521f667": { "facing": "ui" },
+  "9651c486ae1939f88855c9c3d4c58c3fd29a7727": { "facing": "ui" },
+  "bf996293d5194102724e6bb010a870b03e351f98": { "facing": "ui" },
+  "139076f12c0f08a747e0fb024b050b1e6def9406": { "facing": "ui" },
+  "061b667887e2592f99b81bab2305b61a23bae0c9": { "facing": "ui" },
+  "f887d816ffed0d54fdab311d037f1747a32a41f6": { "facing": "ui" },
+  "008b5454990fd4814f2d4ca0e9226a4d3baa408a": { "facing": "ui" },
+  "ee07cd0660851823e395a2d0baa209db6fe30122": { "facing": "ui" },
+  "09ad7006b11555cff38d69b2d0c31d79afbf35c2": { "facing": "ui" },
+  "37526723d9af93e21564bc4ac257cc50cbdd5a07": { "facing": "ui" },
+  "8e0737e8bdf9c894beb22ab34c5063298f9403a6": { "facing": "ui" },
+  "b9df7457b7180eb0bd5fca459f09bf32422034a2": { "facing": "ui" },
+  "bf73ee42ba60ab8de689d11ca231992761ae91b7": { "facing": "ui" },
+  "31f76b4a5217a3f7cef54f0481d19c673efd34dd": { "facing": "ui" },
+  "b657194c2169cf044d17b69b3e77f59cc8db3b62": { "facing": "ui" },
+  "ab1db31563611b4fcd62c461a4d9a8a8076ae958": { "facing": "ui" },
+  "a5921c1ff56621539c500456d133edebd5846b28": { "facing": "ui" },
+  "b419f2d8f00ccf3342f14e84913237e6e7186f83": { "facing": "ui" },
+  "d6bd0ef3615a377a1de21b83a177f7f391add768": { "facing": "ui" },
+  "b3dd1ba69b5c8c8cec3a74833ab19c8cb49700d8": { "facing": "ui" },
+  "7c66f6043ccdc241bb2730686a3f1b3c4454c9df": { "facing": "ui" },
+  "07d77e62464914280c811abf64e272d9ad80ec60": { "facing": "ui" },
+  "63d23d5836fe5031da8345ec084816adf19009df": { "facing": "ui" },
+  "bf7f99090ed60a07613a9910ab71440b622a4e07": { "facing": "ui" },
+  "6e4fa032b6d58fe71c456a3cb656cfa99513bdc7": { "facing": "ui" },
+  "cad87f9fb2770140d80c8e599c5f2ccfe1e7a852": { "facing": "ui" },
+  "146fe7b1c7764d6f573529e134f3d478f03178e5": { "facing": "ui" },
+  "d88b362efd86c0004613837e021c1f0b2856802c": { "facing": "ui" },
+  "9cafc7dc32bf390b896f2a089948f1ba8658c816": { "facing": "ui" },
+  "284c8aa83d46c010d0b4530b927ce8fbcf496ff0": {
+    "facing": "model",
+    "id": "tool-result-easel-chart-policy-withheld",
+    "name": "Tool result: easel chart policy withheld",
+    "desc": "Denial result telling the model the organization's policy withholds easel and every call will be refused"
+  },
+  "a20d2674875cbceb9164bdce791f24e6d3ca4f8c": {
+    "facing": "model",
+    "id": "system-reminder-background-mcp-call-stopping-session-warning",
+    "name": "System Reminder: Background MCP call stopping session warning",
+    "desc": "Warns that a background MCP call's result may be lost after the reply in a stopping session and explains cancellation and background-agent alternatives without duplicating the call"
+  },
+  "e1910252b391c30b199dd0c678eb8a0ec81f0366": {
+    "facing": "model",
+    "id": "tool-result-mcp-tool-backgrounded",
+    "name": "Tool result: MCP tool backgrounded",
+    "desc": "Tells the model an MCP tool call was moved to the background as a task so a newly arrived message can reach it, and keeps running"
+  },
+  "0c59b4960290f684cedb80aa0245206c022c98ec": {
+    "facing": "model",
+    "id": "tool-result-mcp-tool-backgrounded-still-running",
+    "name": "Tool result: MCP tool backgrounded still running",
+    "desc": "Tells the model an MCP tool is still running after N seconds and was moved to the background as a task"
+  },
+  "d36763ed1abd73eb7b2f3add784372e1e25c99fd": { "facing": "internal" },
+  "7f68e7c9087fc22eb3a78774275cd076ac746688": {
+    "facing": "model",
+    "id": "tool-result-served-plugin-hook-managed-settings-unread",
+    "name": "Tool Result: Served plugin hook managed settings unread",
+    "desc": "Served RunPluginHook result summary saying a PreToolUse hook was not run because the organization's managed settings have not been read yet."
+  },
+  "8254a3a21963f54b7d9c1f844ff9f3a257761286": {
+    "facing": "model",
+    "id": "tool-result-served-tool-permission-declined-acknowledged",
+    "name": "Tool Result: Served tool permission declined acknowledged",
+    "desc": "Served tool result acknowledging that nothing was run because the permission question was answered no or withdrawn."
+  },
+  "3c04127e3221a3fff2903f671197c88841392d3e": {
+    "facing": "model",
+    "id": "tool-result-served-tool-permission-request-part-refused",
+    "name": "Tool Result: Served tool permission request part refused",
+    "desc": "Served tool error saying the call was not run because its permission request contains a part this server does not accept; retrying won't help."
+  },
+  "ff6c1182fcb632a315fba3f89ab97a9b97dbc1f1": {
+    "facing": "model",
+    "id": "tool-result-served-tool-duplicate-call-not-run-again",
+    "name": "Duplicate tool call refused",
+    "desc": "Warns that a call already started and asks to inspect its effects before retrying."
+  },
+  "044b7119035807fcf6a1f3b9f4c3ebbcaca365d2": {
+    "facing": "model",
+    "id": "data-claude-code-d-ts",
+    "name": "Data: claude-code.d.ts",
+    "desc": "Claude Code plugin API declarations written as the plugin-authoring skill file types/claude-code.d.ts, which SKILL.md points the model to as the API reference (also used for type-checking)."
+  },
+  "eea596ffd781993ab3bcd4862f2dc004775714be": {
+    "facing": "model",
+    "id": "data-managed-agents-reference-go",
+    "name": "Data: Managed Agents reference — Go",
+    "desc": "claude-api skill reference file (Managed Agents reference — Go) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "d9522e45167de922d20ee0321702a54d3abd6cba": {
+    "facing": "model",
+    "id": "data-managed-agents-reference-java",
+    "name": "Data: Managed Agents reference — Java",
+    "desc": "claude-api skill reference file (Managed Agents reference — Java) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "014003ce3f5df38ee2dbb028443a932f0d40dfd3": {
+    "facing": "model",
+    "id": "data-managed-agents-reference-php",
+    "name": "Data: Managed Agents reference — PHP",
+    "desc": "claude-api skill reference file (Managed Agents reference — PHP) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "bd93cf6d8c2928680dc9f0f758491c0ff133751e": {
+    "facing": "model",
+    "id": "data-managed-agents-reference-ruby",
+    "name": "Data: Managed Agents reference — Ruby",
+    "desc": "Managed Agents API reference doc (Ruby bindings)."
+  },
+  "39e8fa5847ed51a711754ac81dcb4bca8058e5fd": {
+    "facing": "model",
+    "id": "data-anthropic-cli",
+    "name": "Data: Anthropic CLI",
+    "desc": "claude-api skill reference file (Anthropic CLI) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "069affedf87b47910f95b36a54bbc564b7c67a21": {
+    "facing": "model",
+    "id": "data-cost-optimization",
+    "name": "Data: Cost optimization guide",
+    "desc": "claude-api skill workflow for /claude-api cost-optimize: baseline, token profile, ranked levers, apply-measure loop and deliverables"
+  },
+  "204e3be1d89164f70e7618558c64f0f163ae2f84": {
+    "facing": "model",
+    "id": "data-managed-agents-core-concepts",
+    "name": "Data: Managed Agents core concepts",
+    "desc": "claude-api skill reference on Managed Agents architecture, session lifecycle and budgets, agents, versioning and overrides"
+  },
+  "384c95274eb73e3392b93a744b801f7499ad5c03": {
+    "facing": "model",
+    "id": "data-managed-agents-environments-and-resources",
+    "name": "Data: Managed Agents environments and resources",
+    "desc": "Managed Agents environments and resources: networking, self-hosted config, environment CRUD, file uploads, session outputs, GitHub repositories and Files API."
+  },
+  "cc7ca6c1d4eed9d366d6ee63a8c3209ec2aa0d3d": {
+    "facing": "model",
+    "id": "data-managed-agents-multiagent",
+    "name": "Data: Managed Agents multiagent sessions",
+    "desc": "Rosters, dynamic workflows, threads, multiagent events, previews, advisor, subagent tool permissions, interrupting and archiving"
+  },
+  "68f696f28a58b38cb4b094f578aed35d6b765242": {
+    "facing": "model",
+    "id": "data-managed-agents-onboarding-from-url",
+    "name": "Data: Managed Agents onboarding from a URL",
+    "desc": "Fetch, extract, propose, write, apply flow for setting up a Managed Agent from a page, with first/third-party tiers"
+  },
+  "5a8c6692266360131db94ed45921c2e50263aa25": {
+    "facing": "model",
+    "id": "data-managed-agents-overview",
+    "name": "Data: Managed Agents overview",
+    "desc": "claude-api skill overview of Managed Agents: mandatory agent-then-session flow, beta headers, reading guide and pitfalls"
+  },
+  "9d52cb4891d49125ec423823661e0f58ed5bd7d5": {
+    "facing": "model",
+    "id": "data-opentelemetry-opentelemetry-tracing-for-the-claude-api",
+    "name": "Data: opentelemetry (OpenTelemetry Tracing for the Claude API)",
+    "desc": "Shared OpenTelemetry guide for the Claude API: SDK vs API tracing, content modes, SDK setup, API destinations, reading traces, token counting and span reference."
+  },
+  "0e51ce5c853950a3181a66b9ee3fb28e0006bd21": {
+    "facing": "model",
+    "id": "data-config-mjs",
+    "name": "Data: config.mjs",
+    "desc": "claude-test shared library (skills/run/scripts/lib/config.mjs) whose config warnings, consent and sign-in notes surface in ct.mjs status JSON and the browser server's tool results that the model reads."
+  },
+  "a65a60975a075cb5e20f06d5662ce0855f75dc3e": {
+    "facing": "model",
+    "id": "data-run-tools-mjs",
+    "name": "Data: run-tools.mjs",
+    "desc": "claude-test browser-server module (skills/run/scripts/lib/run-tools.mjs) defining the background runner's claude_test_save / status / elapsed / progress / write_log / finish / read / write MCP tool descriptions, input schemas and result texts the model receives."
+  },
+  "8a9888e80bab630e584ae52e3a9a68c25c3e0789": {
+    "facing": "model",
+    "id": "data-skill-claude-test-the-spec-author-background",
+    "name": "Data: SKILL (Claude Test — the spec author (background; nobody is watchin)",
+    "desc": "Prompt body of the claude-test \"draft\" skill (spec-author background), loaded as skill text by we()."
+  },
+  "d2af82999015551309a3d19d6bc99055febb09fc": {
+    "facing": "model",
+    "id": "data-skill-claude-test-runner-drive-the-app",
+    "name": "Data: SKILL (Claude Test runner — drive the app in a browser, judge each )",
+    "desc": "Prompt body of the claude-test \"execute\" skill (runner that drives the app), loaded as skill text by we()."
+  },
+  "8583332ea72cde7badb3f9aee6bffb9eac41785d": {
+    "facing": "model",
+    "id": "data-data-visualization-anti-patterns",
+    "name": "Data: Data visualization anti-patterns",
+    "desc": "data-visualization reference (references/anti-patterns.md) the skill tells the model to Read."
+  },
+  "99860346874f0bc5952fb353a649850fbf7808c7": {
+    "facing": "model",
+    "id": "data-data-visualization-choosing-a-form",
+    "name": "Data: Data visualization choosing a form",
+    "desc": "data-visualization reference (references/choosing-a-form.md) the skill tells the model to Read."
+  },
+  "589deb6a4fa44100cda8f161a5756a713450c07b": {
+    "facing": "model",
+    "id": "data-data-visualization-components",
+    "name": "Data: Data visualization components",
+    "desc": "data-visualization reference (references/components.md) the skill tells the model to Read."
+  },
+  "7ba3a5d8d64a6cb5a5b2b55c86c69fd49070dea1": {
+    "facing": "model",
+    "id": "data-data-visualization-marks-and-anatomy",
+    "name": "Data: Data visualization marks and anatomy",
+    "desc": "data-visualization reference (references/marks-and-anatomy.md) the skill tells the model to Read."
+  },
+  "dcfbc13904f228cffbcebe34ab15ea80346f9892": {
+    "facing": "model",
+    "id": "skill-data-visualization",
+    "name": "Skill: Data Visualization",
+    "desc": "Prompt body of the data-visualization skill, injected at skill invocation."
+  },
+  "2f74b93a6292f8926eaf3dca7ba8eba3e07b5907": {
+    "facing": "model",
+    "id": "tool-result-design-sync-design-system-authorization-required",
+    "name": "Tool Result: DesignSync design-system authorization required",
+    "desc": "Error thrown to the model when DesignSync cannot get design-system authorization, with the underlying reason."
+  },
+  "90cb0a9257e4e14b1ae42d306f23a90b778155a0": {
+    "facing": "model",
+    "id": "tool-result-design-sync-access-token-failed",
+    "name": "Tool Result: DesignSync access token failed",
+    "desc": "Error thrown to the model when DesignSync cannot obtain an access token: the formatted reason plus optional detail."
+  },
+  "e8abf87e5ebd19bbd671a6b455eee6a38250b0b2": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-message-cannot-be-sent",
+    "name": "Tool Result: send to project message cannot be sent",
+    "desc": "Reason fragment returned to the model when the send-to-project message fails validation."
+  },
+  "6a0b6c7cbbe004ca6a641f92a1ebd71c3a4fb43c": {
+    "facing": "model",
+    "id": "tool-result-send-to-project-bad-project-id",
+    "name": "Tool Result: send to project bad project id",
+    "desc": "Reason fragment returned to the model when the project id passed to send-to-project has an unexpected shape."
+  },
+  "afaf147e059f20d67e9aaad16de7eac2c9af8874": {
+    "facing": "model",
+    "id": "slash-command-send-to-project-nothing-sent",
+    "name": "Slash Command: send to project nothing sent",
+    "desc": "Text the /send-to-project command returns to the model when nothing was sent, with the reason."
   }
 }
