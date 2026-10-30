@@ -8,6 +8,7 @@ import {
   moduleSentinel,
   parseSentinelBundle,
   rebuildBunDataFromVirtualBundle,
+  selectBunRwSegment,
   virtualBundleFromBunData,
 } from './nativeInstallation';
 import { zstdAvailable } from './nativeTextAssets';
@@ -475,5 +476,39 @@ describe('text assets in the virtual bundle', () => {
     expect(() =>
       rebuildBunDataFromVirtualBundle(blob, Buffer.from(cut, 'latin1'))
     ).toThrow(/sentinel mismatch/);
+  });
+});
+
+describe('selectBunRwSegment', () => {
+  // linux-arm64 CC 2.1.314: two writable LOADs; BUN_COMPILED lives in the
+  // second (.data at 0x6fcafc0), .bun at 0x7200000 sits inside its span.
+  const LOADS_2_1_314 = [
+    { flags: 4, virtualAddress: 0x200000n, virtualSize: 0x17956ecn },
+    { flags: 5, virtualAddress: 0x19a5700n, virtualSize: 0x55f7970n },
+    { flags: 6, virtualAddress: 0x6fad070n, virtualSize: 0x12f90n },
+    { flags: 6, virtualAddress: 0x6fcafa8n, virtualSize: 0xada5058n },
+  ];
+
+  it('picks the writable LOAD that covers .bun, not the first writable one', () => {
+    expect(selectBunRwSegment(LOADS_2_1_314, 0x7200000n)).toBe(
+      LOADS_2_1_314[3]
+    );
+  });
+
+  it('falls back to the last writable LOAD below .bun when none covers it', () => {
+    const loads = [
+      { flags: 6, virtualAddress: 0x1000n, virtualSize: 0x100n },
+      { flags: 6, virtualAddress: 0x5000n, virtualSize: 0x100n },
+      { flags: 5, virtualAddress: 0x8000n, virtualSize: 0x100n },
+    ];
+    expect(selectBunRwSegment(loads, 0x9000n)).toBe(loads[1]);
+  });
+
+  it('keeps the single writable LOAD of older builds', () => {
+    const loads = [
+      { flags: 5, virtualAddress: 0x1000n, virtualSize: 0x100n },
+      { flags: 6, virtualAddress: 0x4000n, virtualSize: 0x100n },
+    ];
+    expect(selectBunRwSegment(loads, 0x10000n)).toBe(loads[1]);
   });
 });

@@ -1916,6 +1916,38 @@ export function computeBunSectionPlacement(params: {
   return { newVaddr, newFileOffset, alignedNewSize, extensionSize, compact };
 }
 
+interface LoadSegmentShape {
+  flags: number;
+  virtualAddress: bigint | number;
+  virtualSize: bigint | number;
+}
+
+/**
+ * Pick the writable PT_LOAD that holds BUN_COMPILED. CC 2.1.314's Linux build
+ * links two writable LOADs: TLS/.data.rel.ro/.got first, then .data with
+ * BUN_COMPILED and .bun. The first writable LOAD is then the wrong one, so
+ * prefer the one whose span covers the .bun vaddr, else the last writable
+ * LOAD that starts below it.
+ */
+export const selectBunRwSegment = <T extends LoadSegmentShape>(
+  loads: T[],
+  bunVaddr: bigint | number
+): T | undefined => {
+  const bun = BigInt(bunVaddr);
+  const writable = loads.filter(s => (s.flags & 2) !== 0);
+  const covering = writable.find(s => {
+    const start = BigInt(s.virtualAddress);
+    return start <= bun && bun < start + BigInt(s.virtualSize);
+  });
+  if (covering) return covering;
+  const below = writable
+    .filter(s => BigInt(s.virtualAddress) <= bun)
+    .sort((a, b) =>
+      BigInt(a.virtualAddress) < BigInt(b.virtualAddress) ? -1 : 1
+    );
+  return below[below.length - 1] ?? writable[0];
+};
+
 /**
  * Repack an ELF binary that uses the new .bun section format (post-PR#26923).
  *
@@ -1943,9 +1975,10 @@ function repackELFSection(
       throw new Error('.bun section not found');
     }
 
-    const rwSegment = elfBinary
-      .segments()
-      .find(s => s.type === 'LOAD' && (s.flags & 2) !== 0);
+    const rwSegment = selectBunRwSegment(
+      elfBinary.segments().filter(s => s.type === 'LOAD'),
+      bunSection.virtualAddress
+    );
     if (!rwSegment) {
       throw new Error('No writable ELF PT_LOAD segment found');
     }
