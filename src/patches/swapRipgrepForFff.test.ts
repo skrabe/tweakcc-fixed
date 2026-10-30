@@ -146,6 +146,47 @@ describe('swapRipgrepForFff', () => {
     expect(writeSwapRipgrepForFff(patched, WRAPPER)).toBe(patched);
   });
 
+  it('installs into the 2.1.314 snapshot line array', () => {
+    const snapshot314 =
+      ';function snapshot(){let $commands=snippets(),$end=`CLAUDE_CODE_END_${"x"}`,' +
+      '$lines=["# head",...$commands!==null?["# Shadow find/grep with embedded bfs/ugrep",$commands]:[],"# tail"];' +
+      'return $lines.join("\\n")}';
+    const source = BASE.replace(SNAPSHOT, snapshot314);
+    const patched = writeSwapRipgrepForFff(source, WRAPPER)!;
+    expect(patched).not.toBeNull();
+    expect(patched).toContain(SETUP);
+    expect(patched).toContain(',$end=`CLAUDE_CODE_END_${"x"}`,');
+    expect(patched).toContain(
+      '...$commands!==null?["# Shadow find/grep with embedded bfs/ugrep",$commands]:[]'
+    );
+    expect(patched).toContain('snippets()].filter(Boolean).join("\\n"),$end=');
+    expect(hasFffShellIntegration(patched, WRAPPER)).toBe(true);
+    expect(writeSwapRipgrepForFff(patched, WRAPPER)).toBe(patched);
+    const lines = shellCommands(patched);
+    expect(lines[0]).toBe('# head');
+    expect(lines[2]).toContain(`if [ -x '${WRAPPER}' ]; then`);
+    expect(lines[2]).toContain('RG_FFF_SESSION=31415;');
+    expect(lines).toContain('unalias find 2>/dev/null || true');
+    expect(lines.at(-1)).toBe('# tail');
+    const disabled = shellCommands(patched, false);
+    expect(disabled[2]).toContain(`if [ -x '${WRAPPER}' ]; then`);
+    expect(disabled).not.toContain('unalias find 2>/dev/null || true');
+  });
+
+  it('requires the 2.1.314 consumer to spread the producer result', () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      const unrelated =
+        ';function snapshot(){let $commands=snippets(),$end=`CLAUDE_CODE_END_${"x"}`,' +
+        '$lines=["# head"];return $lines.join("\\n")}';
+      expect(
+        writeSwapRipgrepForFff(BASE.replace(SNAPSHOT, unrelated), WRAPPER)
+      ).toBeNull();
+    } finally {
+      error.mockRestore();
+    }
+  });
+
   it('requires native tool visibility and unique shell setup', () => {
     const error = vi.spyOn(console, 'error').mockImplementation(() => {});
     try {
