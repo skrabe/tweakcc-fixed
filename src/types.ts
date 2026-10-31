@@ -169,6 +169,7 @@ export interface MiscConfig {
   fffLearnFromBashReads: boolean;
   allowCustomAgentModels: boolean;
   enableContextLimitOverride: boolean;
+  enableModelContextTokens: boolean;
   enableModelCustomizations: boolean;
   enableVoiceMode: boolean;
   enableVoiceConciseOutput: boolean;
