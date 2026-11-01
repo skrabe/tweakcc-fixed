@@ -80770,5 +80770,475 @@
     "verdict": "pristine-keep",
     "version": "2.1.314",
     "why": "No cut is possible. This mid-sentence clause f is on the o===void 0 branch and is the only explanation of why the attachment was not saved. The alternative branch never co-renders, and the quoted path slot is frozen."
+  },
+  "data-api-error-connection-closed-before-response-finished": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe-merge into tool-result-mcp-connection-closed-may-have-run. Fails: that carrier is a different module emitted only on an MCP tool call close, never in the same request as QEe's StreamTruncated return (s1 @3117032, its own if-branch), and a wipe would blank the only error text the user sees. Unique, load-bearing."
+  },
+  "data-api-error-connection-lost": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe-merge citing data-api-error-connection-lost-computer-asleep. Fails: bundle query shows it is the tm()? consequent at @3116934 with the asleep text as the alternate arm, and an alternative arm never co-renders. Wiping would leave StreamSuspended with an empty message. Keep."
+  },
+  "data-api-error-connection-lost-computer-asleep": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: trim to 'Connection lost' (dropping the asleep cause). Fails: the cause is the unique information in this arm (s1 ?:.alternate @3116952), and 'Connection lost' is the other ternary arm, which never co-renders. Keep."
+  },
+  "data-api-error-no-response": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe-merge citing the StreamNoResponseError message. Fails: QEe (s2 @3117113) returns this string instead of that message, so they are alternatives, not co-rendered, and the error text is the only output. Keep."
+  },
+  "data-api-error-request-timed-out": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe-merge into slash-command-plugin-marketplace-url-download-timeout. Fails: no co-render (different module, different error), and externalRefs.predicateRuns lists 'timed out' so the literal is matched elsewhere and frozen. Keep."
+  },
+  "data-api-error-ssl-private-ca-remedy-it-team": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe-merge citing data-api-error-ssl-private-ca-remedy-self. Fails: s1 @3117470 shows E(selfText, itText) picks one arm (managed vs self-configured), so the arms never co-render; this is the only remedy a managed-machine user sees, spliced after 'private CA:' in the untrusted-authority detail. Keep."
+  },
+  "data-api-error-ssl-private-ca-remedy-self": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe-merge into data-claude-code-agent-proxy-troubleshooting-guide. Fails: no co-render with the QEe error (different module, conditional), and the body is frozen by tripwire (env var NODE_EXTRA_CA_CERTS, URL). Keep."
+  },
+  "data-api-error-ssl-untrusted-authority-detail": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: trim the 'usually a TLS-inspecting corporate proxy...' clause as covered by the untrusted-chain message. Fails: the bundle slice @3118600 shows `l` renders only in the DEPTH_ZERO_SELF_SIGNED_CERT/SELF_SIGNED_CERT_IN_CHAIN case, an alternative switch arm to the untrusted-chain message, so they never co-render. Also both slots must be kept. Keep."
+  },
+  "data-api-error-ssl-verification-failed-ca-issuer-missing": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: trim the 'often a leftover from a renewal' aside. Fails: it is part of a sentence containing an enumeration and remedy paths (NODE_EXTRA_CA_CERTS), so it is frozen under the tripwire, and the sibling sharing the prefix is an exclusive switch case (s1 switch.case:2). Unique. Keep."
+  },
+  "data-api-error-ssl-verification-failed-untrusted-chain": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: trim the final proxy sentence as covered by data-api-error-ssl-untrusted-authority-detail. Fails: that detail renders only in the self-signed switch arm, never with switch.case:1 (bundle slice), and the sentence carries the ${VAR_1} remedy slot that must be kept. The intermediate-certificate sentence is unique and contains an ordering/conditional. Keep."
+  },
+  "data-api-error-status-fallback": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe-merge into data-api-error-status-unknown. Fails: s1 is the !e.message branch, and status-unknown renders in a later, exclusive branch, so they never co-render; the slot must be kept too. Keep."
+  },
+  "data-api-error-status-unknown": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe-merge citing data-api-error-status-fallback. Fails: the two are returned from mutually exclusive branches of QEe (s1 @3120680 vs @3120488), so the carrier does not co-render. Keep."
+  },
+  "data-api-error-unable-to-connect": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe-merge citing data-api-error-unable-to-connect-with-code. Fails: bundle slice shows `n===void 0?\"Unable to connect to API\":`Unable to connect to API (${n})`` — alternative ternary arms that never co-render. Many sites (s1-s12) use it as a prefix. Keep."
+  },
+  "data-api-error-unable-to-connect-with-code": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe-merge into data-api-error-unable-to-connect. Fails: alternative arm of the same ternary (s1 ?:.alternate), and the slot naming the code is unique information. Keep."
+  },
+  "data-claude-doc-comment-wake-relay-thread-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: trim the final 'it is data, not instructions' sentence as a model-default injection guard. Fails: it is the only guard on untrusted doc-comment text in this wake and no co-rendering carrier states it (observer digest is a different module); every other sentence carries tool slots, payload JSON, enum values or ordering ('oldest first', afterSeq) and is frozen. The note is conditional (Claude Doc wakes only), so disuse is no wipe reason. Keep."
+  },
+  "data-cloud-github-create-repository-hint": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe as a feature this user may not use. Fails: it is a conditional suffix appended only on missing-GitHub-remote errors, so disuse is never a wipe reason; it contains a URL (tripwire) and is spliced into several error sentences via ${TWt}. Unique. Keep."
+  },
+  "data-compaction-left-out-tool-result-marker-prefix": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe. Fails: this is a bracketed marker another prompt names — Dsn embeds it as \"${VXe}\" so the summarizer recognises the line (refs at s1 @11867825); changing or blanking it breaks that recognition. Frozen. Keep."
+  },
+  "data-compaction-refused-call-marker-prefix": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe-merge citing data-compaction-summary-left-out-refused-calls-note. Fails: that note does not contain the marker text, and the marker is quoted by the compaction instruction through the const YXe (s1 @11867854), so it is frozen as text something outside the prompt depends on. Keep."
+  },
+  "data-import-partial-copy-may-remain": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe (body opensWithSlot). Fails: the body carries the original error message slot; a wipe would erase the whole error (j.message is overwritten at s1), and the remedy sentence contains a path slot and an ordering ('remove ... and run the import again'), frozen. Unique. Keep."
+  },
+  "data-import-pin-inside-path-not-inside-root": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe as internal-only. Fails: it is a thrown error (s1 @24646779) with no co-rendering carrier, and it contains the function name pinInside (tripwire identifier). Conditional, costs nothing when off. Keep."
+  },
+  "data-import-refusing-copy-no-longer-regular-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe-merge citing slash-command-plugin-install-copy-directory-swapped. Fails: different module, never co-rendered with this import throw (s1 @24650465), and the condition (no longer a regular file) is unique. Keep."
+  },
+  "data-import-refusing-copy-target-created-concurrently": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: trim the 'while the import was copying' clause. Fails: the sentence contains an ordering word ('while' timing) and the cause is the only diagnosis; no co-rendering carrier (Ye() at s1 is the sole emitter). Keep."
+  },
+  "data-import-refusing-path-not-confirmed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: trim the '(for example by a symbolic link)' example. Fails: it sits in a sentence with e.g.-style example and an enumeration of two causes, frozen verbatim-or-delete, and deleting the whole sentence would drop the unique letter-case cause. The final sentence contains 'then' (ordering). Keep."
+  },
+  "data-import-refusing-read-not-regular-file": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe-merge citing tool-result-start-task-files-not-regular-refusal. Fails: that carrier is a different function's attach error, never rendered with the import read throw (s1 @24648379). Keep."
+  },
+  "data-import-special-bits-not-kept-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe as a niche note. Fails: it is conditional (only when specialBitsDropped>0), contains an enumeration (setuid, setgid or sticky), and is the only record that permissions were dropped. Unique. Keep."
+  },
+  "data-import-special-files-not-copied-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe (opensWithSlot). Fails: the note is the only signal that symlinks/special files were skipped in the copied skill (s1 @24655723), conditional on notCopied>0, and contains an enumeration in the plural slot arguments. Keep."
+  },
+  "data-mcp-server-config-auth-server-metadata-url-too-long": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe-merge citing data-mcp-server-config-url-too-long. Fails: that message validates the url field (L_=65536) while this validates authServerMetadataUrl (N_=4096); each renders only for its own field. Contains a parameter name (tripwire). Keep."
+  },
+  "data-mcp-server-config-url-too-long": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe-merge citing data-mcp-server-config-auth-server-metadata-url-too-long. Fails: different field and limit, never co-rendered; this is the only text a user sees when an MCP url exceeds 65536 chars, and it names the url field (tripwire). Keep."
+  },
+  "data-self-hosted-runner-unreadable-character-validation-guidance": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut would trim the rename/move clause as covered by tool-result-self-hosted-runner-path-control-character-validation, but that is a different validation message (bundle: J is the zod refine message of S() at 34551936) that does not co-render, and the sentence is frozen (enumeration, path, ordering 'otherwise'). It is a validation error message, so it is mechanics. Keep."
+  },
+  "data-send-to-project-footer-words": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "No cut possible: the bundle matches pt with Cn(s).includes(Cn(pt)) at 35570552 and interpolates it into the footer and the validation error, so it is a literal the bundle matches and is frozen. Changing it would break the footer/validation pairing."
+  },
+  "data-server-classifier-no-ask-reason-dont-ask-mode": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut is a wipe as covered by tool-result-permission-denied-dont-ask-mode. It fails: that message is emitted by a different function, and the sibling clauses are exclusive ternary arms, so none co-render. A wipe would also leave a hole in the '[server-classifier] … no s…' message. Keep."
+  },
+  "data-server-classifier-no-ask-reason-no-prompt-can-approve": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "The only cut is a wipe, and nothing covers the clause: it is one arm of the reason ternary, so its siblings are alternatives. Wiping it would garble the deny message. Keep."
+  },
+  "data-server-classifier-no-ask-reason-session-shows-no-prompts": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "A wipe would remove the only statement of why no prompt was raised in this arm. The ternary siblings are exclusive arms and never co-render. Keep."
+  },
+  "data-settings-permissions-block-reads-exempt-paths-description": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut would drop the closing sandbox.filesystem.allowRead sentence as covered by system-prompt-windows-sandbox-allow-read-tool-folder-remedy. It fails: that carrier is a conditional Windows sandbox remedy that does not co-render with this schema description, and the sentence is frozen (setting path). Every other sentence trips the tripwire too (enumerations, setting names, ~, '..', every). This is a new 2.1.316 setting with unique semantics. Keep."
+  },
+  "data-task-notification-claude-doc-comment-wake-not-registered": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut would trim the closing 'To see them…' sentence. It fails: no co-rendering carrier names the connector tool slot or the read-it-yourself remedy, and the sentence is frozen (tool-name slot, never-style guard). It is a conditional event body. Keep."
+  },
+  "slash-command-code-review-prompt-assembly": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "There is nothing to cut. The body is pure slot assembly (bundle read at 19918776 shows the flag sections concatenated, ending with the B==='message' arm that adds Fs). Wiping it would drop the whole /code-review prompt, and opensWithSlot forbids any change to the lead. Keep."
+  },
+  "slash-command-code-review-report-outcome-per-finding": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut would drop the reason clause after the colon. It fails: the clause explains why the model narrates despite the tool call, and both models under-narrate, so it is a keep. The sentence is also frozen ('After', 'per finding'). It renders only when B==='message' (bundle 19918776). Keep."
+  },
+  "slash-command-model-not-available-not-offered": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "No legitimate cut: the error string is a single sentence plus a description slot, and its sibling is an exclusive branch. Keep."
+  },
+  "slash-command-model-not-available-org-restricted": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "A trim of 'Your organization restricts model selection.' would remove the only cause statement, and the not-offered sibling is an alternative return path. Keep."
+  },
+  "slash-command-model-unavailable-for-account": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "No cut: a one-sentence error plus a description slot, emitted in its own switch arm. Keep."
+  },
+  "slash-command-ultrareview-needs-github-remote-clone": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut would drop the git remote sentence as covered by the PR sibling. It fails: the sibling is a different error path that never co-renders, its command lacks '&& git push -u origin HEAD', and the sentence is frozen (command literal). Keep."
+  },
+  "slash-command-ultrareview-pr-needs-github-remote": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut would trim the 'Or run … with no argument' sentence as covered by slash-command-ultrareview-base-ref-not-found. It fails: those are alternative error returns, not co-rendering, and the sentence carries a slot and a command. Keep."
+  },
+  "system-prompt-agent-progress-label-task-language": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "A wipe as covered by the title-generator text fails: that text is a separate system prompt for a different query, and this is the alternate arm used when no language setting is set (bundle 18179681). The 'English of these instructions' clause prevents English drift. Keep."
+  },
+  "system-prompt-environment-github-proxy-other-traffic-own-egress": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "A wipe would leave the '; ${l} If' sentence in system-prompt-environment-github-session-proxy dangling, and no carrier conveys the fact. Keep."
+  },
+  "tool-parameter-sendtoproject-icon-names": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "It is an enum value list interpolated as 'icon (one of ${En}, …)' (bundle 35596742). It is frozen and unique. Keep."
+  },
+  "tool-result-agent-call-interrupted-process-stopped": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "No cut possible: the string is an element of ave, which the bundle matches with startsWith/includes (2265592, 2267155, 5458529, 27416488), so it is a frozen literal. The neighbours (tool-result-agent-request-interrupted-session-ended, tool-result-request-interrupted-by-user-for-tool-use) are separate array elements with no crossing sentence and need no change. Keep."
+  },
+  "tool-result-artifact-updated-state-served-path-in-files": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "A wipe as covered by tool-parameter-artifact-root-requires-files-except-from-type fails: that tool is DEFERRED, so co-render with its result is not proven. The clause also carries the concrete files-map entry (slots) that no carrier gives. Keep."
+  },
+  "tool-result-bash-command-text-carrier-lost": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut would drop the parenthetical example. It fails: the sentence is frozen ('first', parenthetical example), and the example is the only cue to where the cause lies. The retry instruction is unique. Keep."
+  },
+  "tool-result-bash-disk-full-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "A wipe would empty the cause slot in 'The command was not started: … on the volume' with no other carrier stating disk full. Keep."
+  },
+  "tool-result-bash-oom-kill-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut would merge the two 'may have been / may also have belonged' sentences. It fails: 'All commands … share one memory limit' is frozen (ALL), the others carry enumerations and are frozen, and merging is barred. Each sentence is unique and steers the model away from wrongly blaming this command. Keep."
+  },
+  "tool-result-bash-output-cut-marker": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut would be a wipe on the remote-saved-output sibling, but that carrier is emitted by a different module and never co-renders with this marker. Decisive: the marker is a sentinel the bundle matches itself (bundleQuery refs vie: WVn does e.lastIndexOf(vie) and slices on vie.length to split start/end), so the text is externally depended on and frozen verbatim; the only claim (output was cut, full output saved to a file) is unique to this render."
+  },
+  "tool-result-bash-output-lost-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut would be wiping it as covered by the host no-space clause, but that host only carries the slot ${VAR_0} that this clause fills (s=n?this:alternate in hco); wiping would render 'so  and its own writes...' and drop the only statement that output was lost. It is the consequent arm of a ternary, unique, and the replacement half of a mid-sentence splice: keep."
+  },
+  "tool-result-bash-output-may-be-cut-short-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe as covered by the other ternary arm or the cut marker. Fails: the lost-clause is an alternative arm (never co-renders) and the marker is emitted elsewhere; wiping would leave the host 'so ${VAR_0} and its own writes...' with an empty subject. Unique, load-bearing: keep."
+  },
+  "tool-result-bash-worktree-guard-dynamic-variable-shell-set": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: trim ', which bash or zsh sets by itself' as duplicated by shell-set-integer-variable. Fails co-render: that carrier is a different function and does not render in the same refusal; the clause also contains an enumeration (bash or zsh), so the phrase is frozen. Keep."
+  },
+  "tool-result-bash-worktree-guard-glob-may-expand-to-nothing-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: drop the remedy '(quote it, or name the files instead of a pattern)' as covered by may-expand-to-no-word. Fails: that carrier is not emitted with this suffix (Ae returns either the >16 refusal or `${o}, since ...`), so no co-render; the sentence also has an enumeration (quote it, or name the files) and so is frozen; opensWithSlot means a wipe would leave the inner reason without its glob explanation. Keep."
+  },
+  "tool-result-bash-worktree-guard-operand-gcloud-computed-before-ssh": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: trim '(spell it out)' or the 'may be a flag of its own' clause as covered by a sibling. No sibling co-renders (each w('gcloud',...) is a separate return), the sentence names ssh/a flag (tool/parameter tripwire) and is spliced into the w() refusal, so it is frozen. Unique: keep."
+  },
+  "tool-result-bash-worktree-guard-operand-gcloud-flag-before-ssh": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe as covered by computed-before-ssh. Fails: that is a separate return in Zt, never co-rendered; this phrase carries the slot and the ordering word 'before' (frozen). Wiping would leave the refusal without its reason. Keep."
+  },
+  "tool-result-bash-worktree-guard-operand-gcloud-scp-ssh-flag-placement": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: drop the ternary arm 'put --ssh-flag after the word ssh' as covered by gcloud-flag-before-ssh. Fails: that sibling is an alternative return and gives no remedy; both arms name parameters (--scp-flag, --ssh-flag) and ordering (after), so frozen. The scp-runs-a-local-program fact is unique. Keep."
+  },
+  "tool-result-bash-worktree-guard-operand-gcloud-ssh-before-and-after-compute": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: trim the remedy as covered by the separate-flag-value arm's '=ssh instead'. Fails: exclusive ternary arm; the sentence has ordering words (before/after) and an enumeration of remedies, so frozen. Keep."
+  },
+  "tool-result-bash-worktree-guard-operand-gcloud-ssh-pointed-at-local-machine": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe as covered by gcloud-ssh-possibly-local. Fails: no proof that carrier renders in the same refusal; this site returns w('gcloud', this literal) as the entire reason, so wiping leaves an empty operand. Unique at its site: keep."
+  },
+  "tool-result-bash-worktree-guard-operand-gcloud-ssh-separate-flag-value": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: drop '(write ${VAR_0}=ssh instead)' as covered by the other arm's 'join a flag's value to it with ='. Fails: exclusive ternary arm never co-renders; the sentence contains ordering (before) and a parameter value, frozen. Keep."
+  },
+  "tool-result-bash-worktree-guard-operand-gcloud-value-before-ssh-may-vanish": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: trim 'it may expand to no word at all and the next word would take its place' as covered by may-expand-to-no-word. Fails: no co-render (separate function, separate return); the sentence has ordering words (before, next, after) and is frozen. Keep."
+  },
+  "tool-result-bash-worktree-guard-operand-may-expand-to-no-word": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: drop the gloss parenthetical as an example. Fails: it is inside one sentence that contains an enumeration and ordering ('the word after it'), so it is frozen (no partial cuts); no sibling co-renders with Ye's output. opensWithSlot: wiping removes the reason entirely. Keep."
+  },
+  "tool-result-bash-worktree-guard-operand-sed-computed-inplace-suffix": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: trim ', which macOS and BSD sed take as the backup suffix' as covered by the co-rendered $e hint (proven: same return expression). Fails the tripwire: the sentence contains an enumeration (macOS and BSD), a parameter (-i) and an ordering word (after), so it is frozen verbatim-or-delete; deleting it whole would leave w('sed', '') with no reason. Keep."
+  },
+  "tool-result-bash-worktree-guard-operand-ssh-glob-options": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: trim '(quote it)' as obvious. Fails: the remedy is part of a frozen sentence (tool name ssh, enumeration-free but names a tool), and nothing co-renders. Unique: keep."
+  },
+  "tool-result-bash-worktree-guard-operand-sshpass-later-remote-client": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: drop 'which this guard does not read past' as narration. Fails: it is the reason the remedy exists and sits in one frozen sentence (ordering 'later', tool name sshpass); no sibling co-renders. Keep."
+  },
+  "tool-result-bash-worktree-guard-operand-sshpass-unreadable-option": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: trim the option enumeration as an example list. Fails: the sentence is frozen (enumeration of options, ordering 'before', each), and the list is the parser's accepted set the model must reproduce exactly; no co-rendering carrier. Keep."
+  },
+  "tool-result-bash-worktree-guard-operand-too-many-glob-words": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe as covered by the glob siblings. Fails: they are alternative returns; this sentence carries the threshold 16 (frozen number, matching the runtime cap F(...)>16). Keep."
+  },
+  "tool-result-bash-worktree-guard-reason-brace-body-after-c-for": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: none available; the remedy 'write it as do …; done' is the only content and is unique. Frozen (ordering 'after'). Keep."
+  },
+  "tool-result-bash-worktree-guard-sed-bsd-inplace-suffix-hint": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: trim the 'takes the word after a bare -i as the backup suffix' clause as duplicated by the co-rendered operand. Fails: $e is shared by three emission sites, two of which do not include the operand, so coverage is not proven at every render; the sentence is frozen (enumeration, -i parameter, 'every', ordering 'after/later'). Keep."
+  },
+  "tool-result-bash-worktree-guard-sed-option-order-hint": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: none; it is the sole remedy appended to sed program refusals and $e is an alternative arm. Frozen (every, first, -e/-i parameters). Keep."
+  },
+  "tool-result-bash-worktree-guard-shell-set-integer-variable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe as covered by typeset-shell-set-variable. Fails co-render (different function/return); the sentence has an enumeration (bash or zsh) and is frozen; opensWithSlot means wiping drops the reason. Keep."
+  },
+  "tool-result-bash-worktree-guard-typeset-shell-set-variable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: drop the 'and with that type the shell can evaluate...' explanation as covered by shell-set-integer-variable. It fails because that carrier is emitted by Xn, not je, so it never co-renders, and the sentence is frozen anyway (enumeration 'bash or zsh', 'integer or float'). Conditional tool result, the only copy of its reason: keep."
+  },
+  "tool-result-bash-worktree-guard-unset-name-shell-rewrites": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: none possible. Every sibling is an alternative return arm of Xn @25472170, so nothing co-renders; the sentence has 'never', a tool name (Bash) and an ordering-free remedy that is the only actionable step. opensWithSlot lead ${Z(t)} must stay. Keep."
+  },
+  "tool-result-bash-worktree-guard-use-another-variable-name": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe as covered by shell-set-integer-variable. It fails because at s1 (le(e) branch) the other carriers are alternative returns (if(Yt(e)) arm) or a different function (je), so they never co-render; wiping removes the only remedy in that message. Keep."
+  },
+  "tool-result-ca-certs-system-store-all-expired-or-denied": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe as covered by tool-result-ca-certs-all-denied-no-builtin-roots. It fails because that error is thrown on a different path (runtime with no built-in roots) and is never rendered together with this clause; wiping would leave a dangling '... and .' in the no-authority-to-trust message. Keep."
+  },
+  "tool-result-cloud-agent-requires-github-remote": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: trim the command as covered by the ultrareview carriers. It fails because they render only for /ultrareview, never alongside sRe's cloud-agent eligibility error, and the sentence holds a command literal (frozen). Keep."
+  },
+  "tool-result-easel-chart-no-conversation": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: drop 'and every call made here will be refused' as narration. It fails because the sentence is frozen ('every'), and it is the only signal that stops pointless retries. Keep."
+  },
+  "tool-result-mcp-request-not-sent-tls-ca-mismatch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: drop the 'most likely because ... TLS settings changed' explanation. It fails because it contains 'after' (ordering, frozen) and is the only diagnosis, and nothing else covers the reconnect remedy. Keep."
+  },
+  "tool-result-mcp-tool-backgrounded": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: trim the 'so that a message ... can reach you; it was not interrupted' clause as covered by bash-backgrounded-to-deliver-message. It fails because that carrier is the Bash result and never co-renders with this MCP result; still-running is the alternative arm. The 'not interrupted and keeps running' fact is unique here. Keep."
+  },
+  "tool-result-mcp-tool-listing-check-failed-server-no-answer": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe as a generic phrase. It fails because no carrier co-renders inside this refusal, and wiping leaves D() with an empty reason. Keep."
+  },
+  "tool-result-mcp-tool-listing-check-failed-unidentified-tool": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe. It fails because this is the only reason text in the e===void 0 refusal from H(), and no carrier co-renders. Keep."
+  },
+  "tool-result-output-preview-first-bytes": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe the header. It fails because it is a structural label with a number slot (frozen) telling the model the text that follows is a truncated head, and nothing co-renders on this path. Keep."
+  },
+  "tool-result-output-preview-start-and-end": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: none, since every line is a slot or structural marker with a number slot. Wiping would drop the preview contents themselves. Keep."
+  },
+  "tool-result-output-too-large-full-output-saved": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe as covered by exceeded-persist-limit. It fails because that is the alternative arm of the same ternary and never co-renders; this is the only carrier of the saved file path, and the claude-test skill matches its 'Output too large' opening (external dependency). Keep."
+  },
+  "tool-result-permission-denied-built-in-safety-check": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: replace with the generic 'Permission denied'. It fails because it is a distinct constant (chn) used instead of the default, not alongside it, and it is the only text telling the model the denial came from a built-in check rather than a user rule. Keep."
+  },
+  "tool-result-self-hosted-runner-invalid-id-validation": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: none. Both sentences are frozen (an enumeration, the range '1 and 256', 'only') and mirror the regex V=/^[a-zA-Z0-9_-]{1,256}$/. It is a conditional validation message: keep."
+  },
+  "tool-result-self-hosted-runner-path-control-character-validation": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe as covered by unreadable-character-validation-guidance. It fails because a zod refine emits only its own message, so that constant never co-renders with w; the sentence is also frozen (an enumeration). Keep."
+  },
+  "tool-result-send-to-project-check-setup-card-before-rerun": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: drop the directive as covered by create-uncertain's 'before they run /send-to-project again'. It fails because create-uncertain is a different function's result for a different failure, and this sentence is frozen ('before', a command name). Keep."
+  },
+  "tool-result-stored-login-held-back-restart-needed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe. It fails because it is the entire message of StoredLoginHeldBackError('restart_needed'); nothing co-renders. Keep."
+  },
+  "tool-result-stored-login-held-back-settings-unloaded": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: drop the remedy as generic. It fails because the remedy has an ordering word ('then', frozen) and is the only action in this sole error message. Keep."
+  },
+  "tool-result-tool-completed-no-output": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: replace with '(no output)'. It fails because this would reword rather than cut, and empty-output-placeholder is a different emission site that does not co-render. The placeholder prevents an empty tool_result. Keep."
+  },
+  "tool-result-tool-unavailable-artifact-link-reader-capability": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe as covered by tool-description-webfetch-artifact-links-artifacts-mcp. It fails because WebFetch is DEFERRED (absent from tools[]), so its description does not provably co-render with this result. The suffix (an Et conditional) is the only pointer to the tool that can read the link. Keep."
+  },
+  "tool-result-tool-unavailable-artifact-tell-the-user": {
+    "verdict": "pristine-keep",
+    "version": "2.1.316",
+    "why": "Strongest cut: wipe as a model default. It fails because, with no reader available, the instruction is what stops a futile workaround attempt; there is no co-rendering carrier and no MODEL_DEFAULT is stated in both card digests. Keep."
   }
 }
