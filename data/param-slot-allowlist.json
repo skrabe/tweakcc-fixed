@@ -626,5 +626,27 @@
     "text": "this build carries no scan.",
     "verdict": "off-route",
     "why": "Off-route: yn @37851394 binds n=(t)=>({text:`Result: the scan could not run: ${t}`}) and passes this literal from its scan stub, but yn is only the module's `register` export with no callers; the live hooks module is Bn(T) @37868800, which calls T.registerHooks with its own refuse/scan. The catalogued host is `Result: the scan could not run in ${t}: ${Dn(n.error)}` in Ge @37858726 (t=le(e,200), the folder). \"this build carries no scan.\" @37851720 is passed to yn's local n=(t)=>({text:`Result: the scan could not run: ${t}`,isError:!0}) @37851406 (scan:async()=>n(...)), a different template without 'in ${folder}', so it never reaches the host's t. yn is only the module's default `register` export (T @37843124) with 0 resolved callers; the live hooks module uses Bn(T) @37868800 → registerHooks=Le directly with its own refuse/scan. So this literal is also probably dead in this build."
+  },
+  "0ee695155f403de0": {
+    "promptId": "tool-result-mcp-tool-listing-check-failed",
+    "builder": "D",
+    "param": "e",
+    "note": "H @20160403 returns D(r,o.name,<text>) when the tool's identity is unknown; the result is the message of validateInput (errorCode 3) / the deny message of checkPermissions, i.e. a tool error the model reads, rendered into catalogued tool-result-mcp-tool-listing-check-failed. Reason clause, same shape as the catalogued allowlist entries.",
+    "text": "Claude Code could not tell which of the server's tools this is",
+    "verdict": "catalogue",
+    "id": "tool-result-mcp-tool-listing-check-failed-unidentified-tool",
+    "name": "Tool result: MCP tool listing check failed, tool not identifiable",
+    "desc": "Reason clause in the MCP tool-listing check refusal when Claude Code cannot tell which of the server's tools the call is"
+  },
+  "af598dc8208692b2": {
+    "promptId": "tool-result-bash-worktree-isolation-runs-construct-not-git",
+    "builder": "x",
+    "param": "e",
+    "note": "Model-facing is right: Zn @25921048 passes it to x(\"find\",…), which builds the worktree-isolation refusal. But this exact literal is already catalogued: prompts-2.1.314.json holds tool-result-bash-worktree-guard-find-exec-clause-gnu-bsd-end (pieces \"${\",\"} with a clause containing ${\",\"(\",\")}, which GNU and BSD find end differently,\"; classification b2233a7cc628f6425edd55998e768f1c34ab3172). The proposed tool-result-bash-worktree-isolation-find-clause-ends-differently would be a second id for the same text. Point the param-slot verdict at the existing id.",
+    "text": "${} with a clause containing ${}, which GNU and BSD find end differently,",
+    "verdict": "catalogue",
+    "id": "tool-result-bash-worktree-guard-find-exec-clause-gnu-bsd-end",
+    "name": "Tool Result: worktree guard find exec clause GNU/BSD end",
+    "desc": "Worktree guard operand detail for a find -exec clause that GNU and BSD end differently"
   }
 }

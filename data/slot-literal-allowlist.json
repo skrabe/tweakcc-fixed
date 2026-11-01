@@ -4638,5 +4638,313 @@
     "verdict": "glue",
     "text": "https:// or mailto:",
     "reason": "mailto arm of `b` in nt @47930015, rendered as `is not ${b}; it was dropped…` and in the fix `Use an ${b} URL.`. It only names the accepted URL schemes."
+  },
+  "7f60d658c6fe42b8": {
+    "promptId": "tool-result-ca-certs-no-authority-to-trust",
+    "label": "TOOL_RESULT_CA_CERTS_NO_AUTHORITY_TO_TRUST_VAR_0",
+    "verdict": "catalogue",
+    "text": "every certificate in the system CA store is expired or on the deny list",
+    "reason": "Catalogue is right: v @2148529 is the initial arm of the CA-store cause, rendered into \"No certificate authority to trust: … and ${v}.\" @2149767. The other arms of v are catalogued as tool-result-ca-certs-system-store-empty, plus \"reading the system CA store failed\". The id tool-result-ca-certs-no-authority-cause is vague, and the other arms are causes too. Name the specific cause, as the sibling does.",
+    "id": "tool-result-ca-certs-system-store-all-expired-or-denied",
+    "name": "Tool Result: CA certs — every system certificate expired or denied",
+    "desc": "Cause clause in the no-certificate-authority error: every certificate in the system CA store is expired or on the deny list."
+  },
+  "ae90eb6493ec49c5": {
+    "promptId": "tool-result-bash-output-no-space-clause",
+    "promptIds": ["tool-result-bash-output-temp-dir-quota-exceeded"],
+    "label": "TOOL_RESULT_BASH_OUTPUT_NO_SPACE_CLAUSE_VAR_0",
+    "verdict": "catalogue",
+    "text": "whatever this command printed was lost",
+    "reason": "carries model-facing prose of its own: Tells the model that whatever the command printed was lost when the output volume ran out of space.",
+    "id": "tool-result-bash-output-lost-clause",
+    "name": "Tool Result: Bash output — command output was lost",
+    "desc": "Tells the model that whatever the command printed was lost when the output volume ran out of space."
+  },
+  "beb4400388392660": {
+    "promptId": "tool-result-bash-output-no-space-clause",
+    "promptIds": ["tool-result-bash-output-temp-dir-quota-exceeded"],
+    "label": "TOOL_RESULT_BASH_OUTPUT_NO_SPACE_CLAUSE_VAR_0",
+    "verdict": "catalogue",
+    "text": "this command's output may be cut short",
+    "reason": "carries model-facing prose of its own: Tells the model that the command output may be cut short because the output volume ran out of space.",
+    "id": "tool-result-bash-output-may-be-cut-short-clause",
+    "name": "Tool Result: Bash output — output may be cut short",
+    "desc": "Tells the model that the command output may be cut short because the output volume ran out of space."
+  },
+  "68c372199fc8f3ca": {
+    "promptId": "system-reminder-hook-blocking-reason-git-bash-not-found-exit-code-127",
+    "label": "GIT_FOR_WINDOWS_INSTALL_LINK",
+    "verdict": "glue",
+    "text": "Git for Windows (https://git-scm.com/downloads/win)",
+    "reason": "names the install target (a name plus URL) inside the surrounding Install/Git-not-found sentence; the constraint is the sentence"
+  },
+  "d262f63321059743": {
+    "promptId": "data-compaction-left-out-tool-result-marker",
+    "promptIds": ["system-prompt-compaction-omitted-tool-result-handling"],
+    "label": "OMITTED_TOOL_RESULT_MARKER_PREFIX",
+    "verdict": "catalogue",
+    "text": "[Tool result left out:",
+    "reason": "Catalogue is right. wXe @11886552 has 3 refs: its definition, the Srn compaction instruction (\"a bracketed line that begins \\\"${wXe}\\\"\") and the marker builder @11892555. No startsWith/includes/regex matches it anywhere in the bundle (text and regex queries each return 1 hit, the definition). Both readers use the same const, so an override changes the instruction and the marker together and stays consistent; the risk is low. That matches the matched-marker precedent in the allowlist (system-prompt-project-thread-reply-marker-consent-next-after-reply-marker). The id is the problem: system-prompt-compaction-tool-result-left-out-marker is nearly the same name as the existing data-compaction-left-out-tool-result-marker, which is the whole marker line. Use a -prefix id in that data family.",
+    "id": "data-compaction-left-out-tool-result-marker-prefix",
+    "name": "Data: Compaction — \"Tool result left out\" marker prefix",
+    "desc": "Opening words of the bracketed line that stands in for a tool result left out of the summary request. The compaction instruction quotes the same words so the summarizer can recognise the line."
+  },
+  "980a18b67b513daa": {
+    "promptId": "data-compaction-refused-call-left-out-marker",
+    "promptIds": ["system-prompt-compaction-omitted-tool-result-handling"],
+    "label": "REFUSED_OR_STOPPED_CALL_MARKER_PREFIX",
+    "verdict": "catalogue",
+    "text": "[Refused or stopped call:",
+    "reason": "Catalogue is right. TXe @11886581 has 3 refs: its definition, the Srn instruction @11886738 and the refused-marker builder dor @11892222. No startsWith/includes matcher, so the instruction and the marker share one const and an override stays consistent. The proposed id nearly collides with the existing data-compaction-refused-call-left-out-marker (the whole line). Use a -prefix id in that family.",
+    "id": "data-compaction-refused-call-marker-prefix",
+    "name": "Data: Compaction — \"Refused or stopped call\" marker prefix",
+    "desc": "Opening words of the bracketed line that stands in for a refused or stopped call's text left out of the summary request. The compaction instruction quotes the same words so the summarizer can recognise the line."
+  },
+  "7878d40ad63c9275": {
+    "promptId": "data-compaction-summary-left-out-results-note",
+    "label": "DATA_COMPACTION_SUMMARY_LEFT_OUT_RESULTS_NOTE_VAR_2",
+    "verdict": "glue",
+    "text": "it held an image or a document",
+    "reason": "parenthetical fact label inside the left-out-results note; the constraint is the surrounding sentence"
+  },
+  "b95e50664df26692": {
+    "promptId": "data-compaction-summary-left-out-results-note",
+    "label": "DATA_COMPACTION_SUMMARY_LEFT_OUT_RESULTS_NOTE_VAR_2",
+    "verdict": "glue",
+    "text": " of them with an image or a document",
+    "reason": "parenthetical count label inside the left-out-results note; the constraint is the surrounding sentence"
+  },
+  "ebcf17977d77866d": {
+    "promptId": "tool-result-server-classifier-no-verdict-not-asked",
+    "label": "TOOL_RESULT_SERVER_CLASSIFIER_NO_VERDICT_NOT_ASKED_VAR_1",
+    "verdict": "catalogue",
+    "text": "the permission mode is don't ask",
+    "reason": "Catalogue is right: this is the first arm of the Sc reason chain @12782895, interpolated into the no-verdict deny result. The other arms of that same chain are catalogued as data-server-classifier-no-ask-reason-{deny-rules,app-or-script,background-agent,remote-control}. Put this one in that family so its id does not stand apart from its siblings.",
+    "id": "data-server-classifier-no-ask-reason-dont-ask-mode",
+    "name": "Data: No-ask reason — permission mode is don't ask",
+    "desc": "Reason clause for the no-verdict deny message: the permission mode is don't ask."
+  },
+  "152b5c16b042c6eb": {
+    "promptId": "tool-result-server-classifier-no-verdict-not-asked",
+    "label": "TOOL_RESULT_SERVER_CLASSIFIER_NO_VERDICT_NOT_ASKED_VAR_1",
+    "verdict": "catalogue",
+    "text": "no prompt can approve this tool",
+    "reason": "Catalogue is right. It is an Sc arm @12782942 (ft!==void 0); for family consistency use the data-server-classifier-no-ask-reason-* ids its sibling arms already have.",
+    "id": "data-server-classifier-no-ask-reason-no-prompt-can-approve",
+    "name": "Data: No-ask reason — no prompt can approve this tool",
+    "desc": "Reason clause for the no-verdict deny message: no prompt can approve this tool."
+  },
+  "c49bba5561d7cb00": {
+    "promptId": "tool-result-server-classifier-no-verdict-not-asked",
+    "label": "TOOL_RESULT_SERVER_CLASSIFIER_NO_VERDICT_NOT_ASKED_VAR_1",
+    "verdict": "catalogue",
+    "text": "this session shows no prompts",
+    "reason": "Catalogue is right. It is an Sc arm @12783300 (shouldAvoidPermissionPrompts); for family consistency use the data-server-classifier-no-ask-reason-* ids its sibling arms already have.",
+    "id": "data-server-classifier-no-ask-reason-session-shows-no-prompts",
+    "name": "Data: No-ask reason — session shows no prompts",
+    "desc": "Reason clause for the no-verdict deny message: this session shows no permission prompts."
+  },
+  "d21772793e203b27": {
+    "promptId": "tool-result-bash-disk-full-output-file",
+    "label": "TOOL_RESULT_BASH_DISK_FULL_OUTPUT_FILE_VAR_0",
+    "verdict": "catalogue",
+    "text": "this computer's disk is full (",
+    "reason": "Catalogue is right: Kl @12870786 is the ENOSPC arm of a ternary whose EDQUOT arm is already catalogued as tool-result-bash-disk-quota-used-up-clause. Use the parallel -clause id, not -cause.",
+    "id": "tool-result-bash-disk-full-clause",
+    "name": "Tool Result: Bash not started — computer disk is full",
+    "desc": "Clause saying this computer's disk is full, used in the command-not-started message."
+  },
+  "ea59226675939190": {
+    "promptId": "data-worktree-creation-on-demand-fetch-disabled-error",
+    "promptIds": [
+      "data-worktree-creation-submodule-on-demand-fetch-disabled-error"
+    ],
+    "label": "BASE_COMMIT_SHORT_SHA",
+    "verdict": "glue",
+    "text": "<the base commit>",
+    "reason": "placeholder noun phrase standing in for a commit sha inside the on-demand-fetch error sentence"
+  },
+  "277921927ae9a700": {
+    "promptId": "tool-result-tool-unavailable-artifact-replaced-by-mcp-find",
+    "promptIds": [
+      "tool-result-tool-unavailable-artifact-replaced-by-mcp-listed"
+    ],
+    "label": "TOOL_RESULT_TOOL_UNAVAILABLE_ARTIFACT_REPLACED_BY_MCP_FIND_VAR_2",
+    "verdict": "catalogue",
+    "text": " can read claude.ai artifact links.",
+    "reason": "carries model-facing prose of its own: Tells the model that a named tool can read claude.ai artifact links.",
+    "id": "tool-result-tool-unavailable-artifact-link-reader-capability",
+    "name": "Tool Result: Artifact tool unavailable — which tool can read artifact links",
+    "desc": "Tells the model that a named tool can read claude.ai artifact links."
+  },
+  "9c8fa84deace0571": {
+    "promptId": "tool-result-tool-unavailable-artifact-tool-local-sessions",
+    "label": "TOOL_RESULT_TOOL_UNAVAILABLE_ARTIFACT_TOOL_LOCAL_SESSIONS_VAR_1",
+    "verdict": "catalogue",
+    "text": " Tell the user.",
+    "reason": "carries model-facing prose of its own: Instructs the model to tell the user when no alternative artifact reader exists.",
+    "id": "tool-result-tool-unavailable-artifact-tell-the-user",
+    "name": "Tool Result: Artifact tool unavailable — tell the user",
+    "desc": "Instructs the model to tell the user when no alternative artifact reader exists."
+  },
+  "f43b5d68807f5792": {
+    "promptId": "tool-result-permission-denied-dangerous-removal-safety-check",
+    "label": "TOOL_RESULT_PERMISSION_DENIED_DANGEROUS_REMOVAL_SAFETY_CHECK_VAR_0",
+    "verdict": "catalogue",
+    "text": "Permission for this command was denied by a built-in Claude Code safety check",
+    "reason": "carries model-facing prose of its own: States that permission for a command was denied by a built-in Claude Code safety check.",
+    "id": "tool-result-permission-denied-built-in-safety-check",
+    "name": "Tool Result: Permission denied — built-in safety check",
+    "desc": "States that permission for a command was denied by a built-in Claude Code safety check."
+  },
+  "8b8645551ef45a3d": {
+    "promptId": "data-task-notification-artifact-comment-read-thread",
+    "label": "DATA_TASK_NOTIFICATION_ARTIFACT_COMMENT_READ_THREAD_VAR_0",
+    "verdict": "glue",
+    "text": "The user sent you ",
+    "reason": "opening clause naming the event; the instruction follows in the host sentence"
+  },
+  "66cd402199793537": {
+    "promptId": "system-prompt-agent-progress-label-predominant-language",
+    "label": "SYSTEM_PROMPT_AGENT_PROGRESS_LABEL_PREDOMINANT_LANGUAGE_VAR_0",
+    "verdict": "catalogue",
+    "text": "the language of the task",
+    "reason": "b @18021531 picks which language the progress label is written in: \"the language of the task\" when the summary writer is haiku, otherwise the notes' predominant language. It fills \"Write the label in ${b}\", so the noun phrase is the constraint itself, not a label for a runtime value. Overriding it is how a user would change the target language. That is the same kind of output-language constraint the catalogued sibling system-prompt-agent-progress-label-language carries.",
+    "id": "system-prompt-agent-progress-label-task-language",
+    "name": "System Prompt: Agent progress label — language of the task",
+    "desc": "Language the progress label must be written in when the summary writer is a Haiku model: the language of the task."
+  },
+  "2395f08822d34526": {
+    "promptId": "system-prompt-agent-progress-label-predominant-language",
+    "label": "SYSTEM_PROMPT_AGENT_PROGRESS_LABEL_PREDOMINANT_LANGUAGE_VAR_0",
+    "verdict": "catalogue",
+    "text": "the predominant language of the notes",
+    "reason": "This is the non-haiku arm of b @18021558. It is the constraint on which language the label is written in, not a label for an interpolated value (see 66cd402199793537).",
+    "id": "system-prompt-agent-progress-label-notes-predominant-language",
+    "name": "System Prompt: Agent progress label — predominant language of the notes",
+    "desc": "Language the progress label must be written in when no language is configured and the writer is not Haiku: the predominant language of the notes."
+  },
+  "ed1e6a9f28d9d772": {
+    "promptId": "tool-result-bash-worktree-guard-shell-filled-variable",
+    "label": "TOOL_RESULT_BASH_WORKTREE_GUARD_SHELL_FILLED_VARIABLE_VAR_3",
+    "verdict": "catalogue",
+    "text": ", so use another variable name",
+    "reason": "tells the model to rename the variable",
+    "id": "tool-result-bash-worktree-guard-use-another-variable-name",
+    "name": "Tool Result: Bash worktree guard — use another variable name",
+    "desc": "Tells the model to pick a different variable name when the guard rejects a shell-filled integer variable."
+  },
+  "7f1718f1c2469e4e": {
+    "promptId": "system-prompt-environment-github-session-proxy",
+    "label": "SYSTEM_PROMPT_ENVIRONMENT_GITHUB_SESSION_PROXY_VAR_4",
+    "verdict": "catalogue",
+    "text": "other network traffic uses this machine's own egress.",
+    "reason": "full sentence stating non-GitHub traffic is not proxied",
+    "id": "system-prompt-environment-github-proxy-other-traffic-own-egress",
+    "name": "System Prompt: Environment — other network traffic uses own egress",
+    "desc": "Tells the model that network traffic other than git/gh goes out through the machine own egress, not the session proxy."
+  },
+  "c2ab22f5de6c9d95": {
+    "promptId": "tool-result-artifact-quickstart-start-from-named-type",
+    "label": "TOOL_RESULT_ARTIFACT_QUICKSTART_START_FROM_NAMED_TYPE_VAR_2",
+    "verdict": "glue",
+    "text": " (listed as ",
+    "reason": "label before an interpolated listed name"
+  },
+  "bb6f1991aff4c606": {
+    "promptId": "tool-result-artifact-updated-from-type",
+    "label": "TOOL_RESULT_ARTIFACT_UPDATED_FROM_TYPE_VAR_6",
+    "verdict": "glue",
+    "text": " New to this Artifact: ",
+    "reason": "field label before an interpolated file list"
+  },
+  "20cc7d9c34557764": {
+    "promptId": "tool-result-artifact-updated-from-type",
+    "label": "TOOL_RESULT_ARTIFACT_UPDATED_FROM_TYPE_VAR_22",
+    "verdict": "catalogue",
+    "text": ", stating its served path in `files`: {",
+    "reason": "tells the model to state served path in the files parameter",
+    "id": "tool-result-artifact-updated-state-served-path-in-files",
+    "name": "Tool Result: Artifact updated — state the served path in files",
+    "desc": "Tells the model that when re-publishing it must state the artifact served path in the files map, mapped to the local path."
+  },
+  "1a475401de924bb7": {
+    "promptId": "data-send-to-project-message-provenance-footer",
+    "promptIds": ["tool-result-send-to-project-summary-has-footer-words"],
+    "label": "DATA_SEND_TO_PROJECT_MESSAGE_PROVENANCE_FOOTER_VAR_1",
+    "verdict": "catalogue",
+    "text": "Sent from my Claude Code session",
+    "reason": "footer sentence the model must recognise and must not write in a summary",
+    "id": "data-send-to-project-footer-words",
+    "name": "Data: Send-to-project — provenance footer words",
+    "desc": "The exact opening words Claude Code adds as the last paragraph of a sent message, which the model must not include in its own summary."
+  },
+  "a346cdbf9c4de4a8": {
+    "promptId": "tool-result-send-to-project-setup-card-cancelled-while-posting",
+    "promptIds": ["tool-result-send-to-project-setup-card-uncertain"],
+    "label": "TOOL_RESULT_SEND_TO_PROJECT_SETUP_CARD_CANCELLED_WHILE_POSTING_VAR_0",
+    "verdict": "catalogue",
+    "text": "Check the project’s setup card before you run /send-to-project again.",
+    "reason": "instruction to check setup card before re-running the command",
+    "id": "tool-result-send-to-project-check-setup-card-before-rerun",
+    "name": "Tool Result: Send-to-project — check the setup card before re-running",
+    "desc": "Tells the model to check the project setup card before running /send-to-project again after an uncertain post."
+  },
+  "c6a6faad564735e2": {
+    "promptId": "tool-parameter-sendtoproject-proposal",
+    "label": "PROJECT_ICON_EXAMPLES",
+    "verdict": "catalogue",
+    "text": "Projects, Folder, Code, Database, HandHeart, Beaker, Wrench, Activity, Chart, Team, Users, Book, Box, Note, File, Lightbulb, Palette, Star, Flag, Home, Sun, Clock, Calendar, Scroll",
+    "reason": "enumerates the valid icon names the model must choose from",
+    "id": "tool-parameter-sendtoproject-icon-names",
+    "name": "Tool Parameter: SendToProject — icon names",
+    "desc": "Lists the icon names the model may pick from for a new project."
+  },
+  "2fc74d5e000cdc3c": {
+    "promptId": "system-reminder-attached-machine-idle-disconnect-notice",
+    "promptIds": [
+      "system-reminder-attached-machine-released-disconnect-notice",
+      "system-reminder-attached-machine-signed-off-notice"
+    ],
+    "label": "IDLE_MACHINE_POSSESSIVE",
+    "verdict": "glue",
+    "text": "those machines'",
+    "reason": "possessive noun phrase filling a sentence"
+  },
+  "e65cc8c73dbde63a": {
+    "promptId": "slash-command-ide-extension-install-failed",
+    "promptIds": ["slash-command-ide-extension-not-installed"],
+    "label": "SLASH_COMMAND_IDE_EXTENSION_INSTALL_FAILED_VAR_2",
+    "verdict": "glue",
+    "text": "To install it yourself, see ",
+    "reason": "label introducing an interpolated docs link; reaches the user-facing message"
+  },
+  "786f39912d3889e5": {
+    "promptId": "data-artifact-mcp-auto-classifier-input",
+    "label": "DATA_ARTIFACT_MCP_AUTO_CLASSIFIER_INPUT_VAR_6",
+    "verdict": "glue",
+    "text": " [copies from: ",
+    "reason": "label before interpolated source URL in classifier input"
+  },
+  "e1454eb69bc74d92": {
+    "promptId": "data-artifact-mcp-auto-classifier-input",
+    "label": "DATA_ARTIFACT_MCP_AUTO_CLASSIFIER_INPUT_VAR_6",
+    "verdict": "glue",
+    "text": "[copy source:",
+    "reason": "label replacement for an ownership marker in classifier input"
+  },
+  "c8639caf66d395e5": {
+    "promptId": "data-artifact-mcp-auto-classifier-input",
+    "label": "DATA_ARTIFACT_MCP_AUTO_CLASSIFIER_INPUT_VAR_6",
+    "verdict": "not-a-slot",
+    "text": "[artifact created",
+    "reason": "@49051112 \"[artifact created\" is only the search argument of ye(a.from_url).replace(\"[artifact created\",\"[copy source: created\"); a string replace removes it, so it never lands in R. Only the replacement \"[copy source: created\" reaches the classifier input. The needle has to keep matching jxn \" [artifact created by this session]\" @2272959, so it is internal."
+  },
+  "9ee91ce7b051e93f": {
+    "promptId": "data-artifact-mcp-auto-classifier-input",
+    "label": "DATA_ARTIFACT_MCP_AUTO_CLASSIFIER_INPUT_VAR_6",
+    "verdict": "glue",
+    "text": "[copy source: created",
+    "reason": "label replacement for an ownership marker in classifier input"
   }
 }

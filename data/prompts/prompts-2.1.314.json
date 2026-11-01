@@ -12032,6 +12032,22 @@
       "version": "2.1.294"
     },
     {
+      "name": "Tool Result: Artifact tool unavailable — which tool can read artifact links",
+      "id": "tool-result-tool-unavailable-artifact-link-reader-capability",
+      "description": "Tells the model that a named tool can read claude.ai artifact links.",
+      "pieces": [
+        " ${",
+        "} can read claude.ai artifact links."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_TOOL_UNAVAILABLE_ARTIFACT_LINK_READER_CAPABILITY_VAR_0"
+      },
+      "version": "2.1.314"
+    },
+    {
       "name": "Agent Tool Worktree Result Branch Note",
       "id": "tool-description-agent-worktree-result-branch-note",
       "description": "Clause in the Agent tool description telling the model that each worktree-isolated result includes a branch and worktree path to merge.",
@@ -13736,22 +13752,6 @@
         "0": "TOOL_RESULT_ARTIFACT_WATCHING_AUTO_REPLY_DECLINED_CLAUSE_VAR_0"
       },
       "version": "2.1.246"
-    },
-    {
-      "name": "Tool result: cloud session commits remote lacks stay local",
-      "id": "tool-result-cloud-session-commits-remote-lacks-stay-local",
-      "description": "Trailer arm saying the commits the remote lacks, plus uncommitted changes, stay on this machine.",
-      "pieces": [
-        " Commits that ${",
-        "} lacks, and any uncommitted changes, stay on this machine"
-      ],
-      "identifiers": [
-        0
-      ],
-      "identifierMap": {
-        "0": "TOOL_RESULT_CLOUD_SESSION_COMMITS_REMOTE_LACKS_STAY_LOCAL_VAR_0"
-      },
-      "version": "2.1.308"
     },
     {
       "name": "deniedModels Context-Size Tag Note",
@@ -16591,33 +16591,6 @@
       "version": "2.1.239"
     },
     {
-      "name": "Tool Result: cloud session push branch hint",
-      "id": "tool-result-cloud-session-push-branch-hint",
-      "description": "Fragment advising to push the branch and start a new session to include the commits",
-      "pieces": [
-        " Push the branch and start a new session to have ${",
-        "?\"that commit\":\"those commits\"}."
-      ],
-      "identifiers": [
-        0
-      ],
-      "identifierMap": {
-        "0": "TOOL_RESULT_CLOUD_SESSION_PUSH_BRANCH_HINT_VAR_0"
-      },
-      "version": "2.1.308"
-    },
-    {
-      "name": "Tool result: cloud session push branch hint",
-      "id": "tool-result-cloud-session-push-branch-start-new-session",
-      "description": "Suffix advising to push the branch and start a new session to use it.",
-      "pieces": [
-        " Push the branch, then start a new session to use it."
-      ],
-      "identifiers": [],
-      "identifierMap": {},
-      "version": "2.1.308"
-    },
-    {
       "name": "Tool Parameter: Artifact Type URL List Or Read",
       "id": "tool-parameter-artifact-type-url-list-or-read",
       "description": "type_url schema addendum when the type catalog is on: read describes a type, list lists its Artifacts, with a create-unavailable caveat.",
@@ -17295,6 +17268,17 @@
       "version": "2.1.257"
     },
     {
+      "name": "Tool Result: Artifact tool unavailable — tell the user",
+      "id": "tool-result-tool-unavailable-artifact-tell-the-user",
+      "description": "Instructs the model to tell the user when no alternative artifact reader exists.",
+      "pieces": [
+        " Tell the user."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.314"
+    },
+    {
       "name": "Tool Result: resume_replies stop-cause fragment (taken over by another session)",
       "id": "tool-result-artifact-resume-replies-yielded-stop-fragment",
       "description": "Fragment naming the auto-replies being resumed as ones another session of this conversation took over, inserted into the resume_replies approval reason.",
@@ -17538,22 +17522,6 @@
         "0": "TOOL_RESULT_BASH_SANDBOX_PROFILE_ADDS_FILESYSTEM_DENY_VAR_0"
       },
       "version": "2.1.296"
-    },
-    {
-      "name": "Tool Result: Send-to-project brief in memory suffix",
-      "id": "tool-result-send-to-project-brief-in-memory-suffix",
-      "description": "Suffix noting the brief is in project memory, appended to setup-card failure notes",
-      "pieces": [
-        " The brief is in project memory as ${",
-        "}."
-      ],
-      "identifiers": [
-        0
-      ],
-      "identifierMap": {
-        "0": "TOOL_RESULT_SEND_TO_PROJECT_BRIEF_IN_MEMORY_SUFFIX_VAR_0"
-      },
-      "version": "2.1.314"
     },
     {
       "name": "Tool Result: ProposeSkills Card Renders At This Point",
@@ -25079,6 +25047,17 @@
       "version": "2.1.206"
     },
     {
+      "name": "Tool Result: Bash worktree guard — use another variable name",
+      "id": "tool-result-bash-worktree-guard-use-another-variable-name",
+      "description": "Tells the model to pick a different variable name when the guard rejects a shell-filled integer variable.",
+      "pieces": [
+        ", so use another variable name"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.314"
+    },
+    {
       "name": "User message attachment: just-sent file unavailable clause",
       "id": "user-message-attachment-just-sent-unavailable-clause",
       "description": "Clause saying the file just sent is not available and what happened to the file previously at that path",
@@ -25107,6 +25086,34 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.295"
+    },
+    {
+      "name": "Tool Result: Artifact updated — state the served path in files",
+      "id": "tool-result-artifact-updated-state-served-path-in-files",
+      "description": "Tells the model that when re-publishing it must state the artifact served path in the files map, mapped to the local path.",
+      "pieces": [
+        ", stating its served path in \\`files\\`: {${",
+        "(",
+        ")}: ${",
+        "(",
+        "(",
+        ".path))}}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_ARTIFACT_UPDATED_STATE_SERVED_PATH_IN_FILES_VAR_0",
+        "1": "TOOL_RESULT_ARTIFACT_UPDATED_STATE_SERVED_PATH_IN_FILES_VAR_1",
+        "2": "TOOL_RESULT_ARTIFACT_UPDATED_STATE_SERVED_PATH_IN_FILES_VAR_2",
+        "3": "TOOL_RESULT_ARTIFACT_UPDATED_STATE_SERVED_PATH_IN_FILES_VAR_3",
+        "4": "TOOL_RESULT_ARTIFACT_UPDATED_STATE_SERVED_PATH_IN_FILES_VAR_4"
+      },
+      "version": "2.1.314"
     },
     {
       "name": "WebFetch overflow summary appended",
@@ -35281,6 +35288,17 @@
       "version": "2.1.295"
     },
     {
+      "name": "Data: Compaction — \"Refused or stopped call\" marker prefix",
+      "id": "data-compaction-refused-call-marker-prefix",
+      "description": "Opening words of the bracketed line that stands in for a refused or stopped call's text left out of the summary request. The compaction instruction quotes the same words so the summarizer can recognise the line.",
+      "pieces": [
+        "[Refused or stopped call:"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.314"
+    },
+    {
       "name": "Tool Result: Remote tool — rejected, not run",
       "id": "tool-result-remote-tool-rejected-not-run",
       "description": "Bracketed outcome for a remote call rejected by validation on the host.",
@@ -36114,6 +36132,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.178"
+    },
+    {
+      "name": "Data: Compaction — \"Tool result left out\" marker prefix",
+      "id": "data-compaction-left-out-tool-result-marker-prefix",
+      "description": "Opening words of the bracketed line that stands in for a tool result left out of the summary request. The compaction instruction quotes the same words so the summarizer can recognise the line.",
+      "pieces": [
+        "[Tool result left out:"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.314"
     },
     {
       "name": "Data: Tool use interrupted placeholder",
@@ -52701,40 +52730,6 @@
         "2": "LOST_CALL_LABELS"
       },
       "version": "2.1.310"
-    },
-    {
-      "name": "Tool Result: cloud session remote unreadable",
-      "id": "tool-result-cloud-session-remote-unreadable-start-hint",
-      "description": "Notice that no remote could be read so the branch or HEAD could not be checked on the host",
-      "pieces": [
-        "${",
-        "?`This checkout is on a detached HEAD, and no remote of it could be read, so its commit could not be looked for on ${",
-        "}. The cloud session was asked to start from HEAD as ${",
-        "} has it, its default branch.`:`Whether branch ${",
-        "(",
-        ")} is on ${",
-        "} could not be checked, because no remote of this checkout could be read. The cloud session was asked to start from it by name.`}${",
-        "?` ${",
-        "?\"To start from your work, push it\":\"If it is not there, push your work\"} to a branch and start a new session from that branch.`:\"\"}"
-      ],
-      "identifiers": [
-        0,
-        1,
-        1,
-        2,
-        3,
-        1,
-        4,
-        0
-      ],
-      "identifierMap": {
-        "0": "TOOL_RESULT_CLOUD_SESSION_REMOTE_UNREADABLE_START_HINT_VAR_0",
-        "1": "TOOL_RESULT_CLOUD_SESSION_REMOTE_UNREADABLE_START_HINT_VAR_1",
-        "2": "TOOL_RESULT_CLOUD_SESSION_REMOTE_UNREADABLE_START_HINT_VAR_2",
-        "3": "TOOL_RESULT_CLOUD_SESSION_REMOTE_UNREADABLE_START_HINT_VAR_3",
-        "4": "TOOL_RESULT_CLOUD_SESSION_REMOTE_UNREADABLE_START_HINT_VAR_4"
-      },
-      "version": "2.1.304"
     },
     {
       "name": "Artifact read: out_dir must be local (action)",
@@ -108941,6 +108936,25 @@
       "version": "2.1.305"
     },
     {
+      "name": "Tool Result: Send-to-project — check the setup card before re-running",
+      "id": "tool-result-send-to-project-check-setup-card-before-rerun",
+      "description": "Tells the model to check the project setup card before running /send-to-project again after an uncertain post.",
+      "pieces": [
+        "Check the project’s setup card before you run /send-to-project again.${",
+        ".savedToMemory?` The brief is in project memory as ${",
+        "}.`:\"\"}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_SEND_TO_PROJECT_CHECK_SETUP_CARD_BEFORE_RERUN_VAR_0",
+        "1": "TOOL_RESULT_SEND_TO_PROJECT_CHECK_SETUP_CARD_BEFORE_RERUN_VAR_1"
+      },
+      "version": "2.1.314"
+    },
+    {
       "name": "Ultrareview Post Check The Pull Request Suffix",
       "id": "data-ultrareview-post-check-pr-suffix",
       "description": "Shared suffix on ultrareview post deadline/no-answer reasons telling the model to check the PR before posting by hand.",
@@ -109453,6 +109467,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.299"
+    },
+    {
+      "name": "Tool result: MCP tool listing check failed, tool not identifiable",
+      "id": "tool-result-mcp-tool-listing-check-failed-unidentified-tool",
+      "description": "Reason clause in the MCP tool-listing check refusal when Claude Code cannot tell which of the server's tools the call is",
+      "pieces": [
+        "Claude Code could not tell which of the server's tools this is"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.314"
     },
     {
       "name": "Tool Result: Plugin publish policy unloaded",
@@ -128119,6 +128144,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.311"
+    },
+    {
+      "name": "Tool Result: CA certs — every system certificate expired or denied",
+      "id": "tool-result-ca-certs-system-store-all-expired-or-denied",
+      "description": "Cause clause in the no-certificate-authority error: every certificate in the system CA store is expired or on the deny list.",
+      "pieces": [
+        "every certificate in the system CA store is expired or on the deny list"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.314"
     },
     {
       "name": "System Reminder: Project Memory All Stores Read Only",
@@ -162974,6 +163010,17 @@
       "version": "2.1.265"
     },
     {
+      "name": "Data: No-ask reason — no prompt can approve this tool",
+      "id": "data-server-classifier-no-ask-reason-no-prompt-can-approve",
+      "description": "Reason clause for the no-verdict deny message: no prompt can approve this tool.",
+      "pieces": [
+        "no prompt can approve this tool"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.314"
+    },
+    {
       "name": "Data: Auto-Mode Classifier-Only No Prompt Raised",
       "id": "data-auto-mode-classifier-only-no-prompt-raised",
       "description": "Suffix interpolated into the classifierOnly deny tool_result when an ASK never raised a prompt and the classifier did not allow.",
@@ -172435,6 +172482,17 @@
       "version": "2.1.310"
     },
     {
+      "name": "System Prompt: Environment — other network traffic uses own egress",
+      "id": "system-prompt-environment-github-proxy-other-traffic-own-egress",
+      "description": "Tells the model that network traffic other than git/gh goes out through the machine own egress, not the session proxy.",
+      "pieces": [
+        "other network traffic uses this machine's own egress."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.314"
+    },
+    {
       "name": "Artifact read permission ask: cowritten",
       "id": "tool-result-artifact-read-cowritten-permission-ask",
       "description": "Permission ask when other people can edit the artifact.",
@@ -175074,6 +175132,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.206"
+    },
+    {
+      "name": "Tool Result: Permission denied — built-in safety check",
+      "id": "tool-result-permission-denied-built-in-safety-check",
+      "description": "States that permission for a command was denied by a built-in Claude Code safety check.",
+      "pieces": [
+        "Permission for this command was denied by a built-in Claude Code safety check"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.314"
     },
     {
       "name": "Tool Result: Permission denied interactive approval lead",
@@ -179475,6 +179544,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.206"
+    },
+    {
+      "name": "Tool Parameter: SendToProject — icon names",
+      "id": "tool-parameter-sendtoproject-icon-names",
+      "description": "Lists the icon names the model may pick from for a new project.",
+      "pieces": [
+        "Projects, Folder, Code, Database, HandHeart, Beaker, Wrench, Activity, Chart, Team, Users, Book, Box, Note, File, Lightbulb, Palette, Star, Flag, Home, Sun, Clock, Calendar, Scroll"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.314"
     },
     {
       "name": "Data: subagentPromptCacheTtl setting description (part 1 of 2)",
@@ -193410,6 +193490,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.294"
+    },
+    {
+      "name": "Data: Send-to-project — provenance footer words",
+      "id": "data-send-to-project-footer-words",
+      "description": "The exact opening words Claude Code adds as the last paragraph of a sent message, which the model must not include in its own summary.",
+      "pieces": [
+        "Sent from my Claude Code session"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.314"
     },
     {
       "name": "Tool Result: Artifact room_send Delivered",
@@ -211132,6 +211223,17 @@
       "version": "2.1.296"
     },
     {
+      "name": "System Prompt: Agent progress label — language of the task",
+      "id": "system-prompt-agent-progress-label-task-language",
+      "description": "Language the progress label must be written in when the summary writer is a Haiku model: the language of the task.",
+      "pieces": [
+        "the language of the task"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.314"
+    },
+    {
       "name": "Language Preference Cleared",
       "id": "system-prompt-language-preference-cleared",
       "description": "Language-attachment prompt telling the model the language preference was cleared and to match the user's language.",
@@ -213646,6 +213748,17 @@
       "version": "2.1.234"
     },
     {
+      "name": "Data: No-ask reason — permission mode is don't ask",
+      "id": "data-server-classifier-no-ask-reason-dont-ask-mode",
+      "description": "Reason clause for the no-verdict deny message: the permission mode is don't ask.",
+      "pieces": [
+        "the permission mode is don't ask"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.314"
+    },
+    {
       "name": "Tool Result: Permission Prompt Tool Disconnected",
       "id": "tool-result-permission-prompt-tool-disconnected",
       "description": "Deny message from the --permission-prompt-tool canUseTool wrapper when that MCP server is no longer connected; it becomes the blocked tool_result the model reads.",
@@ -214577,6 +214690,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.227"
+    },
+    {
+      "name": "System Prompt: Agent progress label — predominant language of the notes",
+      "id": "system-prompt-agent-progress-label-notes-predominant-language",
+      "description": "Language the progress label must be written in when no language is configured and the writer is not Haiku: the predominant language of the notes.",
+      "pieces": [
+        "the predominant language of the notes"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.314"
     },
     {
       "name": "Cloud PreToolUse HTTP Hook Refusal",
@@ -216954,6 +217078,17 @@
         "2": "SYSTEM_PROMPT_SLACK_WAKE_ENVELOPE_HUMAN_CONSENT_VAR_2"
       },
       "version": "2.1.299"
+    },
+    {
+      "name": "Tool result: MCP tool listing check failed, server did not answer",
+      "id": "tool-result-mcp-tool-listing-check-failed-server-no-answer",
+      "description": "Reason clause in the MCP tool-listing check refusal when the server did not answer the tool check in time",
+      "pieces": [
+        "the server did not answer in time"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.314"
     },
     {
       "name": "Send to Project: Picked project visibility unknown",
@@ -224357,6 +224492,17 @@
       "version": "2.1.259"
     },
     {
+      "name": "Tool Result: Bash output — output may be cut short",
+      "id": "tool-result-bash-output-may-be-cut-short-clause",
+      "description": "Tells the model that the command output may be cut short because the output volume ran out of space.",
+      "pieces": [
+        "this command's output may be cut short"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.314"
+    },
+    {
       "name": "Sandbox Policy Custody Directory Unprepared",
       "id": "tool-result-sandbox-policy-custody-directory-unprepared",
       "description": "SandboxPolicyRefusalError message returned as a tool_result when per-command deny materialization cannot prepare credential-file custody.",
@@ -224503,6 +224649,22 @@
         "darwin"
       ],
       "version": "2.1.178"
+    },
+    {
+      "name": "Tool Result: Bash not started — computer disk is full",
+      "id": "tool-result-bash-disk-full-clause",
+      "description": "Clause saying this computer's disk is full, used in the command-not-started message.",
+      "pieces": [
+        "this computer's disk is full (${",
+        "})"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_BASH_DISK_FULL_CLAUSE_VAR_0"
+      },
+      "version": "2.1.314"
     },
     {
       "name": "Tool Result: Artifact Publish Host Grant Carry Unreadable",
@@ -229757,6 +229919,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.300"
+    },
+    {
+      "name": "Data: No-ask reason — session shows no prompts",
+      "id": "data-server-classifier-no-ask-reason-session-shows-no-prompts",
+      "description": "Reason clause for the no-verdict deny message: this session shows no permission prompts.",
+      "pieces": [
+        "this session shows no prompts"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.314"
     },
     {
       "name": "Tool Result: Artifact Live Subscription Watch Cap Reconnect",
@@ -240487,6 +240660,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.296"
+    },
+    {
+      "name": "Tool Result: Bash output — command output was lost",
+      "id": "tool-result-bash-output-lost-clause",
+      "description": "Tells the model that whatever the command printed was lost when the output volume ran out of space.",
+      "pieces": [
+        "whatever this command printed was lost"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.314"
     },
     {
       "name": "Data: autoContinueAtUsageLimit setting description",
