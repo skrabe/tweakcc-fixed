@@ -34,6 +34,10 @@ const harness = (replies, { file = FILE } = {}) => {
   const fn = src.match(/async function agentWithRetry[\s\S]*?\n}\n/)[0];
   // Stage 1's retry calls the script's own `passed` acceptance check.
   const passedFn = (src.match(/const passed = [\s\S]*?;\n/) || [''])[0];
+  // The API-death breaker the retry reads: a counter and the receipt text.
+  const breaker = (src.match(
+    /let apiDeaths = 0;\nconst API_DIED = [^\n]*\n/
+  ) || [''])[0];
   const prompts = [];
   const logs = [];
   let call = 0;
@@ -61,7 +65,10 @@ const harness = (replies, { file = FILE } = {}) => {
     console,
   };
   vm.createContext(ctx);
-  vm.runInContext(`${passedFn}${fn}; globalThis.__f = agentWithRetry;`, ctx);
+  vm.runInContext(
+    `${breaker}${passedFn}${fn}; globalThis.__f = agentWithRetry;`,
+    ctx
+  );
   return { run: (...a) => ctx.__f(...a), prompts, logs };
 };
 
@@ -103,15 +110,30 @@ describe.skipIf(!has)('stage-1 retry resumes from the verdicts file', () => {
     expect(h.prompts[1]).toContain('/p/verdicts-03.json');
     expect(h.prompts[1]).toContain('FAIL g03: 2 error(s)');
     // It re-reads the markdown packet and merges fixes into the file.
-    expect(h.prompts[1]).toContain('Read the markdown packet, /p/audit-packet-03.md in full, and that file');
+    expect(h.prompts[1]).toContain(
+      'Read the markdown packet, /p/audit-packet-03.md in full, and that file'
+    );
     expect(h.prompts[1]).toContain('--merge');
   });
 
-  it('survives an attempt that returns nothing at all', async () => {
+  // A null means the runtime already spent its own API retries (usually a
+  // 429); retrying at once burns the attempts into the same limit.
+  it('ends the group on an agent that died on an API error, without retrying', async () => {
     const h = harness([null, pass]);
     const out = await h.run('BASE', { label: 'audit:g03' }, group, 3);
-    expect(out.ok).toBe(true);
-    expect(h.logs.join(' ')).toContain('returned nothing');
+    expect(out).toMatchObject({ group: 'g03', ok: false });
+    expect(out.checker).toMatch(/^API_ERROR/);
+    expect(h.prompts).toHaveLength(1);
+  });
+
+  it('starts no further agent once two have died on API errors', async () => {
+    const h = harness([null, null, pass]);
+    await h.run('BASE', { label: 'audit:g03' }, group, 3);
+    await h.run('BASE', { label: 'audit:g03' }, group, 3);
+    const third = await h.run('BASE', { label: 'audit:g03' }, group, 3);
+    expect(third.ok).toBe(false);
+    expect(third.checker).toMatch(/^API_ERROR/);
+    expect(h.prompts).toHaveLength(2);
   });
 
   it('rejects a PASS line for another group or an incomplete count', async () => {
@@ -126,13 +148,13 @@ describe.skipIf(!has)('stage-1 retry resumes from the verdicts file', () => {
   });
 
   it('gives up after the last attempt without throwing, so siblings keep their results', async () => {
-    const h = harness([null, null, null]);
+    const h = harness([
+      { ...pass, checker: 'FAIL g03' },
+      { ...pass, checker: 'FAIL g03' },
+      { ...pass, checker: 'FAIL g03' },
+    ]);
     const out = await h.run('BASE', { label: 'audit:g03' }, group, 3);
-    expect(out).toMatchObject({
-      group: 'g03',
-      ok: false,
-      checker: 'no result',
-    });
+    expect(out).toMatchObject({ group: 'g03', ok: false, checker: 'FAIL g03' });
   });
 });
 
@@ -182,10 +204,11 @@ describe.skipIf(!hasS3)(
       expect(out.passed).toEqual(['00']);
     });
 
-    it('survives an attempt that returns nothing and gives up without throwing', async () => {
+    it('reports an agent that died on an API error without retrying or throwing', async () => {
       const { out, prompts } = await runWorkflow(S3, args, () => null);
-      expect(prompts).toHaveLength(3);
-      expect(out.failed).toEqual([{ task: '00', checker: 'no result' }]);
+      expect(prompts).toHaveLength(1);
+      expect(out.failed).toHaveLength(1);
+      expect(out.failed[0].checker).toMatch(/^API_ERROR/);
     });
 
     it('takes the findings from disk, never from the receipt', async () => {
@@ -217,10 +240,19 @@ describe.skipIf(!hasCls)(
       expect(h.logs.join(' ')).toContain('recovered on attempt 2');
     });
 
-    it('retries a null result and gives up loudly after the attempts run out', async () => {
-      const h = harness([null, null, null], { file: CLS });
+    it('leaves a chunk whose agent died on an API error for the harvest rerun list', async () => {
+      const h = harness([null, ok], { file: CLS });
+      const out = await h.run('BASE', { label: 'classify:00' }, 3, null);
+      expect(out).toBeNull();
+      expect(h.prompts).toHaveLength(1);
+      expect(h.logs.join(' ')).toContain('API_ERROR');
+    });
+
+    it('gives up loudly after rejected receipts run out', async () => {
+      const bad = { ...ok, pass: false, note: 'x' };
+      const h = harness([bad, bad, bad], { file: CLS });
       await expect(
-        h.run('BASE', { label: 'classify:00' }, 3, null)
+        h.run('BASE', { label: 'classify:00' }, 3, r => (r.pass ? null : 'no'))
       ).rejects.toThrow(/no passing receipt after 3 attempts/);
       expect(h.prompts).toHaveLength(3);
     });
