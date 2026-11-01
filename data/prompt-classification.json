@@ -124734,12 +124734,7 @@
   "27ac7740f57c5af6d590c62314583136369a566b": { "facing": "internal" },
   "50d3b0e83432c722941facd58e8942539f8fd1de": { "facing": "internal" },
   "711ecec600802400df6cff95813eaefd8278c36a": { "facing": "ui" },
-  "e53b6ffdc3834926771278b1cfce41977378f1a7": {
-    "facing": "model",
-    "id": "tool-result-cloud-session-push-branch-hint",
-    "name": "Tool Result: cloud session push branch hint",
-    "desc": "Fragment advising to push the branch and start a new session to include the commits"
-  },
+  "e53b6ffdc3834926771278b1cfce41977378f1a7": { "facing": "ui" },
   "adca4a3dc2a65ff3ab52a5eb68a6301908d3b12f": { "facing": "ui" },
   "d8f502214cd690e57a6430d5ef9b7d31e3f1b293": { "facing": "ui" },
   "d6cef14a48316571c2b3364cd724cbd4d3aa002b": {
@@ -125269,22 +125264,12 @@
   "2d5773b10060086a64e42450be71aa34c1812855": { "facing": "internal" },
   "a6fddb298e03754f07a46817e0c6cbd67ee0d0e3": { "facing": "internal" },
   "aec73b88493de5886c67db5292089d705c1632b3": { "facing": "ui" },
-  "2e25956c3342af1aa25c2dc898f70a03a190eefa": {
-    "facing": "model",
-    "id": "tool-result-cloud-session-push-branch-start-new-session",
-    "name": "Tool result: cloud session push branch hint",
-    "desc": "Suffix advising to push the branch and start a new session to use it."
-  },
+  "2e25956c3342af1aa25c2dc898f70a03a190eefa": { "facing": "ui" },
   "6ea2d5929797fcb4bc625668924f93dd787d893e": { "facing": "ui" },
   "48b9eb58548db10240e6778e4f06477f88c1b05a": { "facing": "ui" },
   "2add3f8fb3e29d5ce4a152790b5b10897b9e2c3b": { "facing": "ui" },
   "2fee85640c0d67d03b1615b22c17b7c40a2c079e": { "facing": "ui" },
-  "f289f870ec763e1e95acdd7f786fa6dc6a87d6cf": {
-    "facing": "model",
-    "id": "tool-result-cloud-session-commits-remote-lacks-stay-local",
-    "name": "Tool result: cloud session commits remote lacks stay local",
-    "desc": "Trailer arm saying the commits the remote lacks, plus uncommitted changes, stay on this machine."
-  },
+  "f289f870ec763e1e95acdd7f786fa6dc6a87d6cf": { "facing": "ui" },
   "f35bcb281e296d32443cc614a2a5798afd20b5e6": { "facing": "internal" },
   "d146d7d1144e3ad1bc3757ad089479cb1411351f": { "facing": "internal" },
   "476fa886e36806fae283b8c37de515244c939306": {
@@ -138684,5 +138669,21 @@
     "id": "slash-command-send-to-project-nothing-sent",
     "name": "Slash Command: send to project nothing sent",
     "desc": "Text the /send-to-project command returns to the model when nothing was sent, with the reason."
-  }
+  },
+  "9cad03a02b4ae3a19f8aaed8714fd77cf8fad0cc": {
+    "facing": "model",
+    "id": "tool-result-mcp-tool-listing-check-failed-unidentified-tool",
+    "name": "Tool result: MCP tool listing check failed, tool not identifiable",
+    "desc": "Reason clause in the MCP tool-listing check refusal when Claude Code cannot tell which of the server's tools the call is"
+  },
+  "0f1d8f67386d9ac09eadaf1d1b93095fd9991c14": { "facing": "ui" },
+  "1c4b22426a70bc4aeb691d4488ef322e648af294": { "facing": "ui" },
+  "a0991baca04f26a1c5e306346801e30a10b6d13d": {
+    "facing": "model",
+    "id": "tool-result-mcp-tool-listing-check-failed-server-no-answer",
+    "name": "Tool result: MCP tool listing check failed, server did not answer",
+    "desc": "Reason clause in the MCP tool-listing check refusal when the server did not answer the tool check in time"
+  },
+  "f66489635b466db86b83049598d5274c10958ef3": { "facing": "ui" },
+  "90749e7bc89c24ba329834c3a97cfbc3f6bcc693": { "facing": "ui" }
 }

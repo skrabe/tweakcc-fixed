@@ -383,5 +383,115 @@
     "verdict": "not-model-facing",
     "version": "2.1.302",
     "why": "Clause of the description string of the managed-settings bootstrap JSON schema (editor autocomplete, beside 'Structural reference for editor autocomplete'); the schema object is returned to config tooling, not sent as a prompt or tool schema. Sibling clauses are ruled internal in the classification cache."
+  },
+  "data-sdk-user-message-requeue-if-interrupted-within-ms-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "Verified at @2535433 in chunk-svc70m2z.js (SDK/control-protocol zod schemas, the file holding the stdout and control_request schemas): user-message input schema (SDK stdin message from the host). The .describe() text is documentation for SDK hosts, consumed by the CLI input-queue handler, which reads the field from the host-sent user message. It is not a model tool input schema or a settings schema."
+  },
+  "data-sdk-turn-handoff-required-rewind-request-id-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "Verified at @2921151 in chunk-svc70m2z.js (SDK/control-protocol zod schemas, the file holding the stdout and control_request schemas): turn_handoff control_request schema (requires_rewind_request_id member). The .describe() text is documentation for SDK hosts, consumed by the SDK/CCR worker control handler that validates the host message. It is not a model tool input schema or a settings schema."
+  },
+  "data-sdk-read-file-anchor-as-written-kind": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "Verified at @2880059 in chunk-svc70m2z.js (SDK/control-protocol zod schemas, the file holding the stdout and control_request schemas): anchor discriminated-union member (kind:\"as_written\") of the read_file control request. The .describe() text is documentation for SDK hosts, consumed by the read_file control handler that resolves the path for the host client. It is not a model tool input schema or a settings schema."
+  },
+  "data-sdk-result-model-usage-since-last-result-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "Verified at @2596683 in chunk-svc70m2z.js (SDK/control-protocol zod schemas, the file holding the stdout and control_request schemas): result-message field description (YA const) in the success result schema. The .describe() text is documentation for SDK hosts, consumed by SDK hosts reading the stdout result JSON. It is not a model tool input schema or a settings schema."
+  },
+  "data-sdk-read-file-anchor-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "Verified at @2882732 in chunk-svc70m2z.js (SDK/control-protocol zod schemas, the file holding the stdout and control_request schemas): anchor field of the read_file control_request schema (subtype read_file, path, max_bytes, encoding). The .describe() text is documentation for SDK hosts, consumed by the read_file control handler that answers the host client; read_file is a host request, not a model tool. It is not a model tool input schema or a settings schema."
+  },
+  "data-sdk-result-startup-garbage-collection-counts-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "Verified at @2638306 in chunk-svc70m2z.js (SDK/control-protocol zod schemas, the file holding the stdout and control_request schemas): process_garbage_collections field of the success result schema. The .describe() text is documentation for SDK hosts, consumed by SDK hosts reading the stdout result JSON. It is not a model tool input schema or a settings schema."
+  },
+  "data-mcp-status-control-request-live-reply-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "Verified at @2838972 in chunk-svc70m2z.js (SDK/control-protocol zod schemas, the file holding the stdout and control_request schemas): liveReply field of the mcp_status control_request schema. The .describe() text is documentation for SDK hosts, consumed by the control-request handler that publishes the reply to attached CCR clients. It is not a model tool input schema or a settings schema."
+  },
+  "data-sdk-ui-prompt-paint-request-schema": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "Verified at @3024175 in chunk-svc70m2z.js (SDK/control-protocol zod schemas, the file holding the stdout and control_request schemas): ui_prompt_paint agent-to-client control request schema (describe on the request object). The .describe() text is documentation for SDK hosts, consumed by the attached UI client (ui_attach) that paints its composer. It is not a model tool input schema or a settings schema."
+  },
+  "data-sdk-result-runtime-tuning-environment-bitmask-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "Verified at @2636983 in chunk-svc70m2z.js (SDK/control-protocol zod schemas, the file holding the stdout and control_request schemas): process_start_tuning field of the success result schema. The .describe() text is documentation for SDK hosts, consumed by SDK hosts reading the stdout result JSON. It is not a model tool input schema or a settings schema."
+  },
+  "data-sdk-set-model-error-response-model-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "Verified at @3041749 in chunk-svc70m2z.js (SDK/control-protocol zod schemas, the file holding the stdout and control_request schemas): model field of the control_response error schema (set_model refusals). The .describe() text is documentation for SDK hosts, consumed by the SDK host reading the control_response. It is not a model tool input schema or a settings schema."
+  },
+  "data-sdk-result-process-model-request-turn-count-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "Verified at @2610751 in chunk-svc70m2z.js (SDK/control-protocol zod schemas, the file holding the stdout and control_request schemas): process_turn_index field of the success result schema. The .describe() text is documentation for SDK hosts, consumed by SDK hosts reading the stdout result JSON. It is not a model tool input schema or a settings schema."
+  },
+  "data-sdk-result-process-streaming-cpu-time-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "Verified at @2620347 in chunk-svc70m2z.js (SDK/control-protocol zod schemas, the file holding the stdout and control_request schemas): process_cpu_ms_streaming field of the success result schema. The .describe() text is documentation for SDK hosts, consumed by SDK hosts reading the stdout result JSON. It is not a model tool input schema or a settings schema."
+  },
+  "data-sdk-set-model-success-payload-model-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "Verified at @2835678 in chunk-svc70m2z.js (SDK/control-protocol zod schemas, the file holding the stdout and control_request schemas): model field of the set_model success-payload schema (mY). The .describe() text is documentation for SDK hosts, consumed by the SDK host reading the control_response. It is not a model tool input schema or a settings schema."
+  },
+  "data-code-review-startup-token-file-descriptor-error": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "Ln @20389727 chunk-bk10414k.js: process.stderr.write at startup before any turn; operator-facing stderr, never sent to a model."
+  },
+  "data-untrusted-folder-environment-variables-ignored-warning": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "asFromAFolderNobodyTrusted @4934214 chunk-hsd6za49.js: t(...,{level:\"warn\"}) log call for a human/operator; not injected into a model request."
+  },
+  "data-sdk-command-lifecycle-scheduled-for-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "Verified at @2745053 in chunk-svc70m2z.js (SDK/control-protocol zod schemas, the file holding the stdout and control_request schemas): scheduled_for field of the command_lifecycle stdout message schema (type command_lifecycle, command_uuid, loop_wakeup). The .describe() text is documentation for SDK hosts, consumed by SDK hosts reading the stream; it is not a settings schema and not the ScheduleWakeup tool input. It is not a model tool input schema or a settings schema."
+  },
+  "data-sdk-result-main-stream-chunk-count-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "Verified at @2622225 in chunk-svc70m2z.js (SDK/control-protocol zod schemas, the file holding the stdout and control_request schemas): main_stream_chunk_count field of the success result schema. The .describe() text is documentation for SDK hosts, consumed by SDK hosts reading the stdout result JSON. It is not a model tool input schema or a settings schema."
+  },
+  "data-sdk-ui-attach-client-request-capabilities-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "Verified at @2986452 in chunk-svc70m2z.js (SDK/control-protocol zod schemas, the file holding the stdout and control_request schemas): answers field of the ui_attach control_request schema (surface, client_id, viewport). The .describe() text is documentation for SDK hosts, consumed by the engine, which records which ui_* requests a UI client answers. It is not a model tool input schema or a settings schema."
+  },
+  "data-sandbox-worktrees-directory-listing-failure-warning": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "ao @7514189 chunk-x1rzzwwt.js: t(...,{level:\"warn\"}) debug/warn log from sandbox config build; not model-visible."
+  },
+  "data-server-classifier-beta-rejection-warning": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "_Ne @12472688 chunk-sq7yspzm.js: [server-classifier] message emitted via log/warn on HTTP 400 handling; operator-facing, not sent to a model."
+  },
+  "data-self-hosted-runner-diff-finds-nested-repository-exec-path-notice": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "Bh @15279305 in chunk-ntr36ry9.js builds this [runner] notice; its only caller is TR @15279886 (self-hosted runner main), which passes it to the runner log writer v(ae) at startup, alongside the \"Connecting to ...\" log line. The text goes to the operator log, never to a model request."
+  },
+  "data-cloud-session-unverified-remote-branch-push-notice": {
+    "verdict": "not-model-facing",
+    "version": "2.1.314",
+    "why": "Template assigned to Ui @11773965 in g$ (chunk with the cloud-session bundle builder); Ui is read only by e.onBundleNotice on the launch path without an environmentId. Every onBundleNotice handler is ui (the --remote launcher writes it to stderr; session openers pass it to host streams); model-invoked callers of g$ set none."
   }
 }
