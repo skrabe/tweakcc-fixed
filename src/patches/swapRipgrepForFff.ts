@@ -39,7 +39,28 @@ const findShellSetupConsumer = (
   file: string,
   producer: string
 ): ShellSetupConsumer | null => {
-  // CC 2.1.314+: `let L=P(),G=\`CLAUDE_CODE_END_...\`,Y=[...,...L!==null?[...]:[]]`
+  // CC 2.1.316+: `D=\`CLAUDE_CODE_END_...\`,G=[];...let Y=P();if(Y!==null)G.push(...,Y);`
+  const pushes = [
+    ...file.matchAll(
+      /let ([$\w]+)=([$\w]+)\(\);if\(\1!==null\)([$\w]+)\.push\([^;]*?,\1\);/g
+    ),
+  ].filter(match => {
+    if (match[2] !== producer) return false;
+    const before = file.slice(Math.max(0, match.index! - 1500), match.index);
+    const end = before.lastIndexOf('`CLAUDE_CODE_END_');
+    return end !== -1 && before.slice(end).includes(`,${match[3]}=[];`);
+  });
+  if (pushes.length === 1 && pushes[0].index !== undefined) {
+    const match = pushes[0];
+    const head = `let ${match[1]}=${match[2]}();`;
+    return {
+      start: match.index,
+      end: match.index + head.length,
+      variable: match[1],
+      tail: ';',
+    };
+  }
+  // CC 2.1.314: `let L=P(),G=\`CLAUDE_CODE_END_...\`,Y=[...,...L!==null?[...]:[]]`
   const snapshotLines = [
     ...file.matchAll(/let ([$\w]+)=([$\w]+)\(\),(?=[$\w]+=`CLAUDE_CODE_END_)/g),
   ].filter(

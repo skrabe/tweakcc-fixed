@@ -6,11 +6,12 @@
 // the agents panel. No setting turns it off: the SDK option and env var can
 // only enable it, and the interval is a server flag clamped to 30-240 s.
 //
-// The summarizer owns a single timer, armed by one scheduler (CC 2.1.312):
+// The summarizer owns a single timer, armed by one scheduler:
 //
-//     async function Me(){if(j)return;...t(`[AgentSummary] Timer fired ...`)
+//     async function Ee(){if(ie)return;...t(`[AgentSummary] Timer fired ...`)
 //     ...
-//     function xe(){if(j)return;let we=fe(R.calls),...;Pe+=Re,ue=setTimeout(Me,Re)}
+//     function me(){if(ie)return;j=setTimeout(Ee,Te>0?cn:v)}        (2.1.316)
+//     function xe(){if(j)return;...;Pe+=Re,ue=setTimeout(Me,Re)}     (2.1.312)
 //
 // We make the scheduler return before arming, so no summary request is ever
 // sent. The rest of the summarizer (stop handle, cleanup) stays intact, and
@@ -45,13 +46,24 @@ export const writeDisableAgentSummaries = (oldFile: string): string | null => {
   const [, callback, stopFlag] = cbMatch;
 
   const esc = (s: string) => s.replace(/\$/g, '\\$');
-  const schedulerRe = new RegExp(
-    `function ([$\\w]+)\\(\\)\\{if\\(${esc(stopFlag)}\\)return;` +
-      `[^{}]*?=setTimeout\\(${esc(callback)},[$\\w]+\\)\\}`
-  );
+  const schedulerHead = `function ([$\\w]+)\\(\\)\\{if\\(${esc(stopFlag)}\\)return;`;
+  const schedulerRes = [
+    // CC 2.1.316: the delay is an expression (`Te>0?cn:v`).
+    new RegExp(
+      schedulerHead + `[$\\w]+=setTimeout\\(${esc(callback)},[^(){};,]+\\)\\}`
+    ),
+    // CC 2.1.312: the delay is a plain identifier.
+    new RegExp(
+      schedulerHead + `[^{}]*?=setTimeout\\(${esc(callback)},[$\\w]+\\)\\}`
+    ),
+  ];
   const searchFrom = anchorIdx;
   const tail = oldFile.slice(searchFrom, searchFrom + 20000);
-  const m = tail.match(schedulerRe);
+  let m: RegExpMatchArray | null = null;
+  for (const re of schedulerRes) {
+    m = tail.match(re);
+    if (m) break;
+  }
   if (!m || m.index === undefined) {
     console.error(
       'patch: disableAgentSummaries: failed to find summary timer scheduler'

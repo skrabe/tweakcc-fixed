@@ -38,7 +38,7 @@ export const writeFffBashReads = (
   }
   if (file.includes('export RG_FFF_VIEWER_DIR=')) return file;
   const pattern =
-    /;([$\w]+)\.push\(`eval \$\{([$\w]+)\}`\),\1\.push\(`pwd -P >\| /g;
+    /;([$\w]+)\.push\((?:[$\w]+\?[$\w]+\(\):)?`eval \$\{([$\w]+)\}`\),\1\.push\(`pwd -P >\| /g;
   const matches = [...file.matchAll(pattern)];
   if (matches.length !== 1 || matches[0].index === undefined) {
     console.error(

@@ -71,6 +71,44 @@ describe('fffBashReads', () => {
     expect(commands[3]).toBe('eval task');
   });
 
+  it('applies on top of the 2.1.316 snapshot and fast-path evaluation shapes', () => {
+    const source = searchFixture.replace(
+      ';function snapshot(){let commands=snippets();if(commands!==null){const marker="FIND_GREP_FUNC_END";return commands}return""}',
+      ';function snapshot(){let end=`CLAUDE_CODE_END_${"x"}`,lines=[];let commands=snippets();if(commands!==null)lines.push("# Shadow",commands);return lines.join("\\n")}'
+    );
+    const command316 = commandFixture.replace(
+      '$commands.push(`eval ${command}`)',
+      '$commands.push(fast?direct():`eval ${command}`)'
+    );
+    const integrated = writeSwapRipgrepForFff(
+      source + instructionFixture + command316,
+      wrapper
+    )!;
+    expect(integrated).not.toBeNull();
+    const patched = writeFffBashReads(integrated, '/tmp/viewers', wrapper)!;
+    expect(patched).not.toBeNull();
+    expect(patched).toContain(
+      ');$commands.push(fast?direct():`eval ${command}`),$commands.push(`pwd -P >| '
+    );
+    for (const fast of [false, true]) {
+      const commands = new Function(
+        'quote',
+        'fast',
+        'direct',
+        patched + ';return build("task")'
+      )(
+        () => 'cwd',
+        fast,
+        () => 'direct task'
+      ) as string[];
+      expect(commands.slice(0, 2)).toEqual(['snapshot', 'scrub']);
+      expect(commands[2]).toBe(fffViewerSetup('/tmp/viewers', wrapper));
+      expect(commands[3]).toBe(fast ? 'direct task' : 'eval task');
+      expect(commands[4]).toBe('pwd -P >| cwd');
+    }
+    expect(writeFffBashReads(patched, '/tmp/viewers', wrapper)).toBe(patched);
+  });
+
   it('keeps JS and shell syntax valid for difficult directory names', () => {
     const directory = "/tmp/José/'`x${HOME}/viewers";
     const trickyWrapper = directory + '/../rg-fff';

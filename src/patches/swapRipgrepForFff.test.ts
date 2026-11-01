@@ -173,6 +173,48 @@ describe('swapRipgrepForFff', () => {
     expect(disabled).not.toContain('unalias find 2>/dev/null || true');
   });
 
+  it('installs into the 2.1.316 snapshot line pushes', () => {
+    const snapshot316 =
+      ';function snapshot(){let $end=`CLAUDE_CODE_END_${"x"}`,$lines=[];$lines.push("# head");' +
+      'let $commands=snippets();if($commands!==null)$lines.push("# Shadow find/grep with embedded bfs/ugrep",$commands);' +
+      '$lines.push("# tail");return $lines.join("\\n")}';
+    const source = BASE.replace(SNAPSHOT, snapshot316);
+    const patched = writeSwapRipgrepForFff(source, WRAPPER)!;
+    expect(patched).not.toBeNull();
+    expect(patched).toContain(SETUP);
+    expect(patched).toContain('let $end=`CLAUDE_CODE_END_${"x"}`,$lines=[];');
+    expect(patched).toContain(
+      'snippets()].filter(Boolean).join("\\n");if($commands!==null)$lines.push("# Shadow find/grep with embedded bfs/ugrep",$commands);'
+    );
+    expect(hasFffShellIntegration(patched, WRAPPER)).toBe(true);
+    expect(writeSwapRipgrepForFff(patched, WRAPPER)).toBe(patched);
+    const lines = shellCommands(patched);
+    expect(lines[0]).toBe('# head');
+    expect(lines[1]).toBe('# Shadow find/grep with embedded bfs/ugrep');
+    expect(lines[2]).toContain(`if [ -x '${WRAPPER}' ]; then`);
+    expect(lines[2]).toContain('RG_FFF_SESSION=31415;');
+    expect(lines).toContain('unalias find 2>/dev/null || true');
+    expect(lines.at(-1)).toBe('# tail');
+    const disabled = shellCommands(patched, false);
+    expect(disabled[2]).toContain(`if [ -x '${WRAPPER}' ]; then`);
+    expect(disabled).not.toContain('unalias find 2>/dev/null || true');
+  });
+
+  it('requires the 2.1.316 consumer to push into the snapshot line array', () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      const unrelated =
+        ';function snapshot(){let $lines=[];' +
+        'let $commands=snippets();if($commands!==null)$lines.push("# Shadow",$commands);' +
+        'return $lines.join("\\n")}';
+      expect(
+        writeSwapRipgrepForFff(BASE.replace(SNAPSHOT, unrelated), WRAPPER)
+      ).toBeNull();
+    } finally {
+      error.mockRestore();
+    }
+  });
+
   it('requires the 2.1.314 consumer to spread the producer result', () => {
     const error = vi.spyOn(console, 'error').mockImplementation(() => {});
     try {
