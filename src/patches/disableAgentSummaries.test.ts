@@ -12,6 +12,15 @@ const FIXTURE =
   'function Le(){if(j)return;if(t(`[AgentSummary] Stopping summarization for ${e}`),j=!0,ue)clearTimeout(ue),ue=null}' +
   'return xe(),{stop:Le}}';
 
+// Trimmed from CC 2.1.316: the scheduler's delay became an expression.
+const FIXTURE_316 =
+  'function Di(e,n,s,y,r,b={}){let v=b.waitsMs?.[0]??hu,j=null,ie=!1,he=!1,de=null,Te=0;' +
+  'async function Ee(){if(ie)return;let je=!1;t(`[AgentSummary] Timer fired for agent ${n}`);' +
+  'try{if(he)return;send()}finally{if(!je)Te=0;if(!ie)me()}}' +
+  'function me(){if(ie)return;j=setTimeout(Ee,Te>0?cn:v)}' +
+  'function Je(){if(ie)return;if(t(`[AgentSummary] Stopping summarization for ${e}`),ie=!0,j)clearTimeout(j),j=null;if(de)de.abort(),de=null}' +
+  'return me(),{stop:Je}}';
+
 const FIXTURE_DOLLAR = FIXTURE.replace(/\bMe\b/g, '$e').replace(/\bj\b/g, 'j$');
 
 describe('writeDisableAgentSummaries', () => {
@@ -66,6 +75,65 @@ describe('writeDisableAgentSummaries', () => {
       30000
     );
     expect(setTimeoutSpy).toHaveBeenCalledTimes(1);
+  });
+
+  describe('CC 2.1.316 shape', () => {
+    const runDi = (code: string, setTimeoutSpy: (...a: unknown[]) => void) =>
+      new Function(
+        'setTimeout',
+        'clearTimeout',
+        't',
+        'send',
+        'hu',
+        'cn',
+        `${code};return Di("a","b",{},()=>[],new Map,{});`
+      )(
+        setTimeoutSpy,
+        () => {},
+        () => {},
+        () => {},
+        30000,
+        5000
+      );
+
+    it('makes the scheduler return before arming the summary timer', () => {
+      const out = writeDisableAgentSummaries(FIXTURE_316);
+      expect(out).not.toBeNull();
+      expect(out).toContain(
+        'function me(){/*tweakcc:disable-agent-summaries*/return;if(ie)return;j=setTimeout(Ee,Te>0?cn:v)}'
+      );
+      expect(out).toContain('if(!ie)me()}}');
+      expect(out).toContain('return me(),{stop:Je}}');
+      expect(out).toContain('[AgentSummary] Stopping summarization');
+    });
+
+    it('never arms a timer, and stop still works', () => {
+      const spy = vi.fn();
+      const handle = runDi(writeDisableAgentSummaries(FIXTURE_316)!, spy);
+      expect(spy).not.toHaveBeenCalled();
+      expect(() => handle.stop()).not.toThrow();
+    });
+
+    it('arms the timer in the unpatched control', () => {
+      const spy = vi.fn();
+      runDi(FIXTURE_316, spy);
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('handles minified names containing $', () => {
+      const dollar = FIXTURE_316.replace(/\bEe\b/g, '$E').replace(
+        /\bie\b/g,
+        'i$'
+      );
+      expect(writeDisableAgentSummaries(dollar)).toContain(
+        'function me(){/*tweakcc:disable-agent-summaries*/return;if(i$)return;j=setTimeout($E,'
+      );
+    });
+
+    it('is idempotent', () => {
+      const once = writeDisableAgentSummaries(FIXTURE_316)!;
+      expect(writeDisableAgentSummaries(once)).toBe(once);
+    });
   });
 
   it('handles minified names containing $', () => {
