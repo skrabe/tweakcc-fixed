@@ -4804,26 +4804,6 @@
     "text": "The user sent you ",
     "reason": "opening clause naming the event; the instruction follows in the host sentence"
   },
-  "66cd402199793537": {
-    "promptId": "system-prompt-agent-progress-label-predominant-language",
-    "label": "SYSTEM_PROMPT_AGENT_PROGRESS_LABEL_PREDOMINANT_LANGUAGE_VAR_0",
-    "verdict": "catalogue",
-    "text": "the language of the task",
-    "reason": "b @18021531 picks which language the progress label is written in: \"the language of the task\" when the summary writer is haiku, otherwise the notes' predominant language. It fills \"Write the label in ${b}\", so the noun phrase is the constraint itself, not a label for a runtime value. Overriding it is how a user would change the target language. That is the same kind of output-language constraint the catalogued sibling system-prompt-agent-progress-label-language carries.",
-    "id": "system-prompt-agent-progress-label-task-language",
-    "name": "System Prompt: Agent progress label — language of the task",
-    "desc": "Language the progress label must be written in when the summary writer is a Haiku model: the language of the task."
-  },
-  "2395f08822d34526": {
-    "promptId": "system-prompt-agent-progress-label-predominant-language",
-    "label": "SYSTEM_PROMPT_AGENT_PROGRESS_LABEL_PREDOMINANT_LANGUAGE_VAR_0",
-    "verdict": "catalogue",
-    "text": "the predominant language of the notes",
-    "reason": "This is the non-haiku arm of b @18021558. It is the constraint on which language the label is written in, not a label for an interpolated value (see 66cd402199793537).",
-    "id": "system-prompt-agent-progress-label-notes-predominant-language",
-    "name": "System Prompt: Agent progress label — predominant language of the notes",
-    "desc": "Language the progress label must be written in when no language is configured and the writer is not Haiku: the predominant language of the notes."
-  },
   "ed1e6a9f28d9d772": {
     "promptId": "tool-result-bash-worktree-guard-shell-filled-variable",
     "label": "TOOL_RESULT_BASH_WORKTREE_GUARD_SHELL_FILLED_VARIABLE_VAR_3",

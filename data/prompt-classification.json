@@ -138685,5 +138685,711 @@
     "desc": "Reason clause in the MCP tool-listing check refusal when the server did not answer the tool check in time"
   },
   "f66489635b466db86b83049598d5274c10958ef3": { "facing": "ui" },
-  "90749e7bc89c24ba329834c3a97cfbc3f6bcc693": { "facing": "ui" }
+  "90749e7bc89c24ba329834c3a97cfbc3f6bcc693": { "facing": "ui" },
+  "0db320cc4d71f2ca916786d8aa4383d35654853b": {
+    "facing": "model",
+    "id": "data-mcp-server-config-url-too-long",
+    "name": "Data: MCP server config URL too long",
+    "desc": "Validation message when an MCP server entry's url exceeds the length cap"
+  },
+  "45ad8d3b53bc187b0568b79f545539f8e328e90f": {
+    "facing": "model",
+    "id": "data-mcp-server-config-auth-server-metadata-url-too-long",
+    "name": "Data: MCP server authServerMetadataUrl too long",
+    "desc": "Validation message when an MCP server oauth authServerMetadataUrl exceeds the length cap"
+  },
+  "9a9e5ed15cafcb69fe71be183f9f3576ae48239d": { "facing": "internal" },
+  "e4395e52bc67822e193179453b2de48feeb97cf4": {
+    "facing": "model",
+    "id": "system-reminder-plugin-message-between-turns",
+    "name": "System Reminder: Plugin message between turns",
+    "desc": "Frames a prompt a plugin submits between turns as arriving in the user's place"
+  },
+  "a5b5813872f38e21ef33724222986feb75037f85": { "facing": "ui" },
+  "ba46626164bd244cea3af5809fe3183d749813c9": { "facing": "internal" },
+  "7aeebd3d95a3b88ac1102aba4bcb561f960a17b1": { "facing": "internal" },
+  "517cf39b7f2f188937244c0f0d569458eb6a4c2a": { "facing": "internal" },
+  "02eccead69c593fbd29534dcad24c12527399500": { "facing": "internal" },
+  "b8dfc587891c4a094fc611db89f76fed0197a506": {
+    "facing": "model",
+    "id": "tool-result-agent-call-interrupted-process-stopped",
+    "name": "Tool Result: Agent call interrupted, process stopped",
+    "desc": "Synthetic Agent tool_result when the process running the conversation stopped before the agent finished"
+  },
+  "d125884602381800537afae51518b17e5f5ce3a9": { "facing": "internal" },
+  "8d2ce591af1b5279a0c80837c7f5db7f79b86289": { "facing": "internal" },
+  "974e797414a7960cdbd5d07618b5809ad562c9fa": { "facing": "internal" },
+  "ee0fb93c773f3fb6da2879f2c80e1aa1232f940b": { "facing": "internal" },
+  "63f1ac5afede1c6c04fb3ff252b800628ee08193": { "facing": "internal" },
+  "7e4280173404c67ce53b3478dfe8fb0bfced1c8f": {
+    "facing": "model",
+    "id": "data-api-error-ssl-verification-failed-untrusted-chain",
+    "name": "Data: API error SSL verification failed, untrusted chain",
+    "desc": "API connection error text when the server's certificate chain doesn't lead to a trusted authority"
+  },
+  "d4773f05c60a7f88de1a9c858b9d9a7ca0ab3a79": {
+    "facing": "model",
+    "id": "data-api-error-ssl-verification-failed-ca-issuer-missing",
+    "name": "Data: API error SSL verification failed, CA issuer missing",
+    "desc": "API connection error text when a trusted CA certificate's own issuer is missing"
+  },
+  "3bbfd32d58e117debf235627950a414306ef53d3": {
+    "facing": "model",
+    "id": "data-api-error-ssl-private-ca-remedy-self",
+    "name": "Data: API error SSL private CA remedy (self-managed)",
+    "desc": "Remedy fragment telling the user to set NODE_EXTRA_CA_CERTS or add the CA to the system store"
+  },
+  "d950f3bd5cd99943115a4f7ae1ccd4fea7ca83a3": {
+    "facing": "model",
+    "id": "data-api-error-ssl-private-ca-remedy-it-team",
+    "name": "Data: API error SSL private CA remedy (IT team)",
+    "desc": "Remedy fragment telling the user to ask IT to add the CA to the machine's certificate store"
+  },
+  "022a3593f423cc6af311b031d70bc7b5e644c03c": {
+    "facing": "model",
+    "id": "data-api-error-ssl-untrusted-authority-detail",
+    "name": "Data: API error SSL untrusted authority detail",
+    "desc": "Detail fragment explaining the certificate comes from an untrusted authority such as a TLS-inspecting proxy"
+  },
+  "61f9a4954d224a950968e898e46e0bfc2e2286a4": {
+    "facing": "model",
+    "id": "data-api-error-status-and-message",
+    "name": "Data: API error status and message",
+    "desc": "API error text joining the HTTP status and extracted message"
+  },
+  "5cfe9bfe669bc3bed058ffebb4b6d6ab48e80bbc": {
+    "facing": "model",
+    "id": "data-api-error-status-unknown",
+    "name": "Data: API error status unknown",
+    "desc": "API error text when an HTML error body carries no status"
+  },
+  "523aafc79b344e9da7d3a9876ec52e26f448fd3c": {
+    "facing": "model",
+    "id": "data-api-error-status-fallback",
+    "name": "Data: API error status fallback",
+    "desc": "API error text naming only the status when the error has no message"
+  },
+  "98749fb649e557ae248fd61442b1467dfbc7237e": {
+    "facing": "model",
+    "id": "data-api-error-unable-to-connect-with-code",
+    "name": "Data: API error unable to connect with code",
+    "desc": "API connection error text naming the network error code"
+  },
+  "f382ac8d7e8a5331377ea3e61855405f403fde9c": {
+    "facing": "model",
+    "id": "data-api-error-unable-to-connect",
+    "name": "Data: API error unable to connect",
+    "desc": "Short API connection error text with no code"
+  },
+  "15b3d7c0900ffc90967050ad5b3acd9716809b13": {
+    "facing": "model",
+    "id": "data-api-error-request-timed-out",
+    "name": "Data: API error request timed out",
+    "desc": "Short API error text for a timed-out request"
+  },
+  "afebe0b2d532d88fab2d9e1ddd7c56af1e19a1ed": {
+    "facing": "model",
+    "id": "data-api-error-no-response",
+    "name": "Data: API error no response",
+    "desc": "API error text when the stream produced no response"
+  },
+  "586b60ba281a313017cfa26f6a709dfb20d0d357": {
+    "facing": "model",
+    "id": "data-api-error-connection-closed-before-response-finished",
+    "name": "Data: API error connection closed before response finished",
+    "desc": "API error text when the stream was truncated"
+  },
+  "6258376987e1987609393c1420e8d80302c149bd": {
+    "facing": "model",
+    "id": "data-api-error-connection-lost",
+    "name": "Data: API error connection lost",
+    "desc": "Short API error text for a suspended stream"
+  },
+  "afe40e15dccd96ce06bfca57c66c7a7dbeb27c21": {
+    "facing": "model",
+    "id": "data-api-error-connection-lost-computer-asleep",
+    "name": "Data: API error connection lost while asleep",
+    "desc": "API error text for a stream suspended while the computer slept"
+  },
+  "bbe455a421e6cd6531900a2052c382eb47022b27": { "facing": "internal" },
+  "8ac664453dd454fa12be53b6d8d9d6844b83dcff": {
+    "facing": "model",
+    "id": "tool-result-stored-login-held-back-settings-unloaded",
+    "name": "Tool Result: Stored login held back, settings unloaded",
+    "desc": "Error when the stored login is held back because organization settings couldn't load"
+  },
+  "26887483fc2ca90bf491649faa2d1e2619c68bce": {
+    "facing": "model",
+    "id": "tool-result-stored-login-held-back-api-key-helper",
+    "name": "Tool Result: Stored login held back, API key helper",
+    "desc": "Error when the stored login is held back because the administrator's API key helper configuration needs fixing"
+  },
+  "aa19d794f1776c7315f9faa9b3436496a29e3850": {
+    "facing": "model",
+    "id": "tool-result-stored-login-held-back-restart-needed",
+    "name": "Tool Result: Stored login held back, restart needed",
+    "desc": "Error telling the user to restart Claude Code to finish signing in"
+  },
+  "3f47541f0bf490bb1a6c31e464e1d46602a93e33": { "facing": "internal" },
+  "91388fb59150afe665ec9a06c680455ef780ba4c": {
+    "facing": "model",
+    "id": "system-prompt-surface-scheduled-run",
+    "name": "System Prompt: Surface scheduled run",
+    "desc": "Surface note for scheduled or triggered runs with nobody watching live"
+  },
+  "57795691bcdbd725433976a86b22f9ee09ab71e9": { "facing": "internal" },
+  "cb75a2bf57a8d25c002e3ed4a2bc31fa0e246aa8": { "facing": "internal" },
+  "d465659d5e11d9f101ec1b12182598ea9da4088d": { "facing": "internal" },
+  "266ccf8e3e0e4279637fd111fc4fffcc7aa2a3c7": { "facing": "internal" },
+  "ca5796a3c6485cee80a9dd16095539af4e263434": { "facing": "internal" },
+  "855a8902c525fac554757bc77f89a70ec3342978": { "facing": "internal" },
+  "3320f72e18b4a1d4f83558f174448ef5da300f5e": { "facing": "internal" },
+  "65f38ccaae606adb82c45f19a14986ec3fee0f30": { "facing": "internal" },
+  "6eebcf59d237725dbb0673dc3db729a793529e1c": { "facing": "internal" },
+  "18f96c2052f12f45221892d2a6d0a0ba590c4244": { "facing": "internal" },
+  "f09b7029d5e66ac8cfb6b4c326c107fcb5989344": { "facing": "internal" },
+  "c42532d8829d96d86ad3627e1672ee4ffdedf33e": { "facing": "internal" },
+  "a03f8cd4443f77e092d41fd9545ecc4618d5be1d": { "facing": "internal" },
+  "98f12cb45a74f6826269a68cbc80edc0ffd32951": { "facing": "internal" },
+  "ad504bec2ea0c069526b92fad6a2b9a262def929": { "facing": "internal" },
+  "39febb3b8d73f38ded45cdf34227501d34406a28": { "facing": "internal" },
+  "47e136b6e2231aeb4b2b1bc1dedf29feeab63242": { "facing": "internal" },
+  "60436fac85b6450fbba1ae9be99b0a32c0d08aa5": { "facing": "internal" },
+  "d3db8bffd2d42dbdc65ba9f872898f44b741758e": { "facing": "internal" },
+  "bfed0b455b9eaa9fabf79521a9b626d98837bbcd": { "facing": "internal" },
+  "d229216889d7e9ea7ca9777ef89d4a320b4ce5a7": { "facing": "internal" },
+  "bceecf7ba7bc27f70574e3d21d24519bc7945eef": { "facing": "internal" },
+  "d6dbbd99998c07eb0c9c81bf67add5ed46a8842a": { "facing": "internal" },
+  "b2e3c7c500e12e6cfc7ec90d06bf49ad785aeec7": { "facing": "internal" },
+  "1584ee26caf395bc95d5c9d42acab380552058b8": { "facing": "internal" },
+  "3167d34e041767ce31693fd9c1c223f825846388": { "facing": "internal" },
+  "5d6b95dac17fd67e8105a25c22b5987761e4d154": { "facing": "internal" },
+  "29234e2aae8582022237a4b3aef17c94d655997b": { "facing": "internal" },
+  "085e45a12f1b9f87d3e34ee5e93c741cfe2cd662": { "facing": "internal" },
+  "a69ec699b57347de0b44e248abb16b6239412a59": { "facing": "internal" },
+  "7e24baf463cd3d84f968777016d03547fb321856": { "facing": "internal" },
+  "2f98357dc465826350e0ced2cf11c9b1fab3d0fe": { "facing": "internal" },
+  "a9d55393c1bf8faaec2a049d50d812f174f91ece": { "facing": "internal" },
+  "fb4af2652836584538a341759167530e9e641978": { "facing": "internal" },
+  "c3f28d57ffbf4ae129109a380cb30d7faeb504c8": { "facing": "internal" },
+  "16028e58848f0a59b7ff0f03d09237019794d224": {
+    "facing": "model",
+    "id": "tool-result-output-preview-first-bytes",
+    "name": "Tool result: output preview (first N bytes)",
+    "desc": "Header introducing the leading preview of a tool output that was too large and persisted to a file."
+  },
+  "b5edf493b95a2cff166f70a373296cbb9e47ec4d": {
+    "facing": "model",
+    "id": "tool-result-output-too-large-full-output-saved",
+    "name": "Tool result: output too large, saved to file",
+    "desc": "Lead of the persisted-output notice when the whole output was saved, giving its size and the file path."
+  },
+  "28096235729e6b931c1582f78781aa69d6ff4b3b": {
+    "facing": "model",
+    "id": "tool-result-output-preview-start-and-end",
+    "name": "Tool result: output preview start and end",
+    "desc": "Persisted-output preview showing the beginning and end of a large tool output with the omitted byte count between."
+  },
+  "7079090586f08606fd1a07e0e948df41b25fe563": {
+    "facing": "model",
+    "id": "tool-result-tool-completed-no-output",
+    "name": "Tool result: tool completed with no output",
+    "desc": "Placeholder tool result content when a tool returned empty output."
+  },
+  "cff88233f38ef1261ba4c01f9b1134d1d755db8c": { "facing": "ui" },
+  "4b432389d714dc1876319f447aa460fa7e6631a8": { "facing": "ui" },
+  "62b0accbf046a713ee6aee04032a55541a052c3c": { "facing": "ui" },
+  "3ec044a6ff945b6a37b92f7fcb6b71f177d0dba6": {
+    "facing": "model",
+    "id": "data-cloud-github-create-repository-hint",
+    "name": "Data: create a GitHub repository hint",
+    "desc": "Shared hint appended to cloud-agent and ultrareview GitHub-remote errors, pointing to github.com/new."
+  },
+  "345fa5449fcfd6f2e99827b09cdce40d15b9f228": {
+    "facing": "model",
+    "id": "tool-result-cloud-agent-requires-github-remote",
+    "name": "Tool result: cloud agent requires GitHub remote",
+    "desc": "Eligibility error when launching a cloud agent or ultraplan from a repo without a GitHub remote."
+  },
+  "7fd3bd5de21cdaa99d43fae26b64e4f892308a38": {
+    "facing": "model",
+    "id": "system-prompt-guide-agent-no-answer-report-issue",
+    "name": "System prompt: guide agent no-answer report issue",
+    "desc": "Guide-agent instruction, when /feedback is unavailable, to direct the user to report the issue via the issues link."
+  },
+  "cb9981a284b453b9bf149522f37d8cab086c7d60": { "facing": "internal" },
+  "e1a72839d9b39808ab19416872292db2922ab362": { "facing": "internal" },
+  "08ab36144ad10e319011fdec0c6c1ed9066ed8f0": {
+    "facing": "model",
+    "id": "tool-result-bash-command-text-carrier-lost",
+    "name": "Tool result: Bash command text carrier lost",
+    "desc": "Bash output replacement when a startup file unset the variable carrying the command text, so the command was not run."
+  },
+  "d79a2ed7b814f3a5ec1ed3fdcffc9f85998d87ae": { "facing": "internal" },
+  "0b14d1b8435499cfa3b0489b596fc6cacd4dc11e": { "facing": "internal" },
+  "30929b791795fca482f241361d94efd6a0a7643a": { "facing": "ui" },
+  "3f8dccebb600d7bfe850079d50f26f616bd17ad0": {
+    "facing": "model",
+    "id": "tool-result-bash-output-cut-marker",
+    "name": "Tool result: Bash output cut marker",
+    "desc": "Marker inserted where long Bash output was cut, noting the full output was saved to a file."
+  },
+  "b2ea11795948e2937a3c49790f53b9553c83c23f": { "facing": "internal" },
+  "50bd685c1c0ea0e0d89e8706544b9e3d902f3271": {
+    "facing": "model",
+    "id": "tool-result-bash-oom-kill-note",
+    "name": "Tool result: Bash OOM kill note",
+    "desc": "Note appended to Bash output when the kernel killed a process for lack of memory during the command."
+  },
+  "51fdb874f9dfdfc5f96b62d48c1e2505ab83e287": { "facing": "internal" },
+  "288078ea74deb7f62b19d40347981dacc01f969d": {
+    "facing": "model",
+    "id": "system-reminder-mcp-servers-reserved-address",
+    "name": "System reminder: MCP servers refused for reserved address",
+    "desc": "Reminder listing configured MCP servers Claude Code refuses because their address is reserved, with guidance for the user."
+  },
+  "e97f00f0ed0db5baf9d1cfc1343354225ff265b8": {
+    "facing": "model",
+    "id": "data-task-notification-claude-doc-comment-wake-not-registered",
+    "name": "Task notification: Claude Doc comment wake not registered",
+    "desc": "Event body telling the model @Claude comments on a Claude Doc will not reach this session because its comment wake was not registered."
+  },
+  "c8e3e9a790a84458481fc1c700597a9e6736877d": {
+    "facing": "model",
+    "id": "system-prompt-agent-progress-label-task-language",
+    "name": "System prompt: agent progress label task language",
+    "desc": "Label-writer instruction to write the progress label in the task's language when no language setting is set."
+  },
+  "6f989dc784070a3d7ee6c1c50df4fddb43bc0b10": { "facing": "internal" },
+  "c2f55e4cee0edcb1f768d56e76ff2ba0acbfddb1": { "facing": "internal" },
+  "b751312d2da0215d17f7d71d12f1dd80457342a4": { "facing": "internal" },
+  "311a709f6813b21c0d74e99a4bd5c74a2f121dee": { "facing": "internal" },
+  "936474b624034b0b85b1bbd03d110c2ed36f72f7": {
+    "facing": "model",
+    "id": "slash-command-code-review-prompt-assembly",
+    "name": "Slash command: code review prompt assembly",
+    "desc": "Slot-only template that concatenates the /code-review command prompt parts (notices, review target, body, flag sections, closing lines) into one text block."
+  },
+  "8ce7c5234d2981ee9bd9aea523d6b9f69b6b5e15": {
+    "facing": "model",
+    "id": "slash-command-code-review-report-outcome-per-finding",
+    "name": "Slash command: code review report outcome per finding",
+    "desc": "Instruction after the findings tool call to give one line per finding with its outcome, for clients that hide tool calls."
+  },
+  "e4f8f254050047b00b402e97ec699a06d104f22e": { "facing": "ui" },
+  "ffffbff7bedf7b539b16d8a84a85cb88b8d6156e": { "facing": "ui" },
+  "c6f069606a61b71f3e868d794963d86499b4ee52": {
+    "facing": "model",
+    "id": "slash-command-restart-refused-version-on-hold",
+    "name": "Slash command: restart refused, version on hold",
+    "desc": "/restart refusal when the installed version is above the max allowed version, so the session stays on the current version."
+  },
+  "4edf6bc425e8f9dfc57a84983475ffd53bf403a1": {
+    "facing": "model",
+    "id": "slash-command-model-alias-1m-unsupported-run-command",
+    "name": "Slash command: model alias 1M unsupported (run command)",
+    "desc": "/model message that the carrier model lacks a 1M window, telling the user to run the command for its standard window."
+  },
+  "b74d45e13ae664ed3961a32dd6e753a5aa296765": {
+    "facing": "model",
+    "id": "slash-command-model-alias-1m-unsupported-switch",
+    "name": "Slash command: model alias 1M unsupported (switch)",
+    "desc": "/model message that the carrier model lacks a 1M window, suggesting switching to the standard model."
+  },
+  "d0d25060d352c8822e0550422bee8d5d81533acb": {
+    "facing": "model",
+    "id": "slash-command-model-not-available-org-restricted",
+    "name": "Slash command: model not available, org restricts selection",
+    "desc": "/model message that the requested model is unavailable because the organization restricts model selection."
+  },
+  "4726adbb10eb8029ab6bc697b39cce7072b97e95": {
+    "facing": "model",
+    "id": "slash-command-model-restricted-by-organization",
+    "name": "Slash command: model restricted by organization",
+    "desc": "/model message that the requested model is restricted by organization settings, with a hint to choose another."
+  },
+  "9ace2097d4ca4546ab277b2da49c66268206453a": {
+    "facing": "model",
+    "id": "slash-command-model-not-available-not-offered",
+    "name": "Slash command: model not offered",
+    "desc": "/model message that the requested model is not available (not offered), followed by its description."
+  },
+  "dd102eeddb17887b4ae413e3da47fdc122d4408c": {
+    "facing": "model",
+    "id": "slash-command-model-unavailable-for-account",
+    "name": "Slash command: model unavailable for account",
+    "desc": "/model message that the requested model is disabled for this account, followed by its description."
+  },
+  "3de3628db2b0c31fc88448ccf170863555b1bae2": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-pr-needs-github-remote",
+    "name": "Slash command: ultrareview PR needs GitHub remote",
+    "desc": "Ultrareview error that reviewing a PR number needs a GitHub remote, with how to add one or review the current branch."
+  },
+  "efb235248d5cc5c98685561822368a708d896673": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-needs-github-remote-clone",
+    "name": "Slash command: ultrareview needs GitHub remote to clone",
+    "desc": "Ultrareview precondition error that a GitHub remote is needed to clone the repo into the cloud, with git remote add/push command."
+  },
+  "318bc3721167c1392226dd7c053fbfcfa6d849b2": {
+    "facing": "model",
+    "id": "data-import-pin-inside-path-not-inside-root",
+    "name": "Data: import path not inside root",
+    "desc": "Import error when a target path is not strictly inside its root."
+  },
+  "fb87c9303013c32b1185d30c03cbb2b33d9b22bb": {
+    "facing": "model",
+    "id": "data-import-refusing-path-not-confirmed",
+    "name": "Data: import refusing unconfirmed path",
+    "desc": "Import error that it could not confirm a path is still the place it checked (symlink or case mismatch), with how to fix it."
+  },
+  "13492f2a044f170f154091375c5001b4090c9532": {
+    "facing": "model",
+    "id": "data-import-refusing-read-not-regular-file",
+    "name": "Data: import refusing to read non-regular file",
+    "desc": "Import error when a file to read is not a regular file."
+  },
+  "f7cab000f42384523767461d831dd0c88f269527": {
+    "facing": "model",
+    "id": "data-import-refusing-copy-target-created-concurrently",
+    "name": "Data: import copy target created concurrently",
+    "desc": "Import error when something else created a file or folder with the target name during the copy."
+  },
+  "f02a2c01e99c6e3e708060d61c7f4a68b770d5a0": {
+    "facing": "model",
+    "id": "data-import-refusing-copy-no-longer-regular-file",
+    "name": "Data: import copy source no longer regular file",
+    "desc": "Import error when a file being copied is no longer a regular file."
+  },
+  "c6e692f7a37d20940e19d624e133af394f18997c": {
+    "facing": "model",
+    "id": "data-import-partial-copy-may-remain",
+    "name": "Data: import partial copy may remain",
+    "desc": "Suffix rewriting an import copy error to warn a partial copy may remain and must be removed before retrying."
+  },
+  "976a3edfcb1708b58b7ca042502820a192cda9c0": {
+    "facing": "model",
+    "id": "data-import-special-bits-not-kept-note",
+    "name": "Data: import setuid/setgid bits not kept note",
+    "desc": "Note on a copied skill that setuid, setgid or sticky bits were not kept on some files."
+  },
+  "74d02a035141d78e701d31d15fd0d896d7ee4911": {
+    "facing": "model",
+    "id": "data-import-special-files-not-copied-note",
+    "name": "Data: import special files not copied note",
+    "desc": "Note on a copied skill that symbolic links or other special files were not copied."
+  },
+  "7313b1ccaae7fe30904be71cb84d11121ccef41d": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-shell-set-integer-variable",
+    "name": "Tool result: worktree guard shell-set integer variable",
+    "desc": "Worktree guard reason that an integer-typed variable is one bash or zsh sets itself, advising another name."
+  },
+  "65c1403fb60d28b0c3cced8535d63b46b881c304": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-unset-name-shell-rewrites",
+    "name": "Tool result: worktree guard unset name assigned shell-rewritten value",
+    "desc": "Worktree guard reason that an unset variable's inherited text is read as names and the command assigns a shell-rewritten name."
+  },
+  "d32d27f5f5931895eed3400f060370a7db94fff0": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-dynamic-variable-shell-set",
+    "name": "Tool result: worktree guard dynamic shell-set variable",
+    "desc": "Worktree guard phrase naming a variable that bash or zsh sets by itself."
+  },
+  "595b77ce4e9bc6753ebb828124e00c2a8d734384": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-reason-brace-body-after-c-for",
+    "name": "Tool result: worktree guard brace body after C-style for",
+    "desc": "Worktree guard reason for a { … } body after for ((…)), advising do …; done."
+  },
+  "65fab7d14f0f43da06e74105918824f70597ae71": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-typeset-shell-set-variable",
+    "name": "Tool result: worktree guard typed shell-set variable",
+    "desc": "Worktree guard reason that declaring a shell-set variable integer or float lets the shell evaluate stored text as arithmetic."
+  },
+  "83d9f72faf96a72dc52fc78518a1e788d19944e3": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-may-expand-to-no-word",
+    "name": "Tool result: worktree guard operand may expand to no word",
+    "desc": "Worktree guard phrase that a pattern or empty value may expand to no word so the next word takes its place."
+  },
+  "6fee108e92f63721f34e3a28ee72c75430e975f6": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-ssh-glob-options",
+    "name": "Tool result: worktree guard ssh glob read as options",
+    "desc": "Worktree guard reason that an ssh operand pattern may expand to file names ssh reads as options."
+  },
+  "043a6bc9a5e31d5605837cb44980fd1f70ec42cf": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-gcloud-value-before-ssh-may-vanish",
+    "name": "Tool result: Bash worktree guard gcloud value before ssh may vanish",
+    "desc": "Worktree-guard refusal operand: a computed value before the word ssh may expand to nothing so gcloud's subcommand cannot be determined"
+  },
+  "c79de1fce5677ebe0706cd566789fb7987b384f8": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-gcloud-ssh-separate-flag-value",
+    "name": "Tool result: Bash worktree guard gcloud ssh as separate flag value",
+    "desc": "Worktree-guard refusal operand: ssh given as the separate value of a flag before compute, suggesting flag=ssh"
+  },
+  "4ebc3adc44e8411acab964ea0a8f6d3f1992bf67": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-gcloud-ssh-before-and-after-compute",
+    "name": "Tool result: Bash worktree guard gcloud ssh before and after compute",
+    "desc": "Worktree-guard refusal operand: ssh appears both before and after compute so the subcommand is ambiguous"
+  },
+  "5e225b10aa274e87636c366a6cc27080570138e6": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-gcloud-scp-ssh-flag-placement",
+    "name": "Tool result: Bash worktree guard gcloud scp/ssh flag placement",
+    "desc": "Worktree-guard refusal operand naming an --scp-flag or misplaced --ssh-flag with its fix"
+  },
+  "0199eb3adac8b52f4d5989a69d59761625300b00": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-gcloud-scp-flag-runs-local-hint",
+    "name": "Tool result: Bash worktree guard gcloud scp-flag hint",
+    "desc": "Parenthetical hint inside the gcloud flag refusal: --scp-flag hands options to scp which can run a local program"
+  },
+  "82006dfec4e55734b2fb29415c80a2b1b859bedb": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-gcloud-computed-before-ssh",
+    "name": "Tool result: Bash worktree guard gcloud computed word before ssh",
+    "desc": "Worktree-guard refusal operand: a computed word before ssh that may be a flag of its own"
+  },
+  "5d3b6cac19f1d5b5ef8f52a3bf0fc784b18f6804": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-gcloud-flag-before-ssh",
+    "name": "Tool result: Bash worktree guard gcloud flag before ssh",
+    "desc": "Worktree-guard refusal operand: an --ssh-flag/--scp-flag given before the word ssh"
+  },
+  "55611540abdcdeba0264589d92fc1f011ed9081a": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-gcloud-ssh-pointed-at-local-machine",
+    "name": "Tool result: Bash worktree guard gcloud ssh pointed at local machine",
+    "desc": "Worktree-guard refusal operand: gcloud's ssh is pointed at what may be this machine"
+  },
+  "62f2042bd01027b27b9827582e686ee8d5a381d5": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-too-many-glob-words",
+    "name": "Tool result: Bash worktree guard too many possibly-empty words",
+    "desc": "Worktree-guard refusal operand: more than 16 words that may expand to nothing"
+  },
+  "384d7c4e2f4a2fc2d1b3f028501a725ae462e328": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-glob-may-expand-to-nothing-reason",
+    "name": "Tool result: Bash worktree guard glob may expand to nothing",
+    "desc": "Suffix appended to a worktree-guard refusal explaining a glob word may expand to no word at all"
+  },
+  "675f57b511447c8d32dba66852ba70c042f93529": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-sshpass-unreadable-option",
+    "name": "Tool result: Bash worktree guard sshpass unreadable option",
+    "desc": "Worktree-guard refusal operand for sshpass: an option or computed word before its program, with how to spell options"
+  },
+  "2ae29f55ea10707c94a73035aa010712fed9ff8e": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-sshpass-later-remote-client",
+    "name": "Tool result: Bash worktree guard sshpass later remote client",
+    "desc": "Worktree-guard refusal operand: sshpass's program is followed by a word that may name a remote client"
+  },
+  "1311136f2b306240dfca5ea62ca1ba785a01ec13": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-sed-option-order-hint",
+    "name": "Tool result: Bash worktree guard sed option order hint",
+    "desc": "Hint appended to sed refusals: put every -e first and attach any -i suffix"
+  },
+  "275d45b4ea03de7fd06f166907e399ba929ee0e0": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-sed-bsd-inplace-suffix-hint",
+    "name": "Tool result: Bash worktree guard sed BSD -i suffix hint",
+    "desc": "Hint appended to sed refusals explaining macOS/BSD -i backup-suffix parsing and the portable spelling"
+  },
+  "115980bacc46da8cae8197d7841741facd072324": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-operand-sed-computed-inplace-suffix",
+    "name": "Tool result: Bash worktree guard sed computed -i suffix",
+    "desc": "Worktree-guard refusal operand: a computed word after a bare -i that BSD sed takes as the backup suffix"
+  },
+  "1fd139ac3fc42edd001e14a0c8f32671ab32bf87": { "facing": "internal" },
+  "08ed0c9be4f8207a03d2eee9129ab23d247de4cc": { "facing": "ui" },
+  "154c8e4d0d193811c35b7f150117d0c6bca17fcc": { "facing": "internal" },
+  "79f9fa677fb6181533662c475dda6bdcfeafcd6c": { "facing": "internal" },
+  "27dc87413f3ab83cc0fce109e3df24f4126cff4c": { "facing": "internal" },
+  "c713b741f64c6e3e9fe53183b7b6c7eb43ad0d42": { "facing": "internal" },
+  "9fb49e748903be347acb5ac84f7e8da2d97d2092": { "facing": "internal" },
+  "419282ac243ce64a66dfb1db78b91b29bfd82aa3": { "facing": "internal" },
+  "d65b05413f54f6a8cb32f7a804164394cbfc4b48": { "facing": "internal" },
+  "cc14619d51816856e69bb5ddcfa13f437409634b": { "facing": "internal" },
+  "db33ade067bbf48b0d980516a046b6fbb31de8e5": {
+    "facing": "model",
+    "id": "tool-result-mcp-request-not-sent-tls-ca-mismatch",
+    "name": "Tool result: MCP request not sent (TLS CA mismatch)",
+    "desc": "Error returned when an MCP request is blocked because the server's trusted CA list no longer overlaps Claude Code's current TLS settings"
+  },
+  "e85ef5ff4935ff4eea244b60d701c1e366256187": { "facing": "internal" },
+  "71a4ae85c3a7105f3cd1b878e26adc87e116f523": { "facing": "internal" },
+  "b24e9d10d839f309f4fabcabdb79b15dbee84e9c": { "facing": "internal" },
+  "5bd37650f3614d619cb1ed0e400d5f6e5432cb06": { "facing": "internal" },
+  "fc2d0d2f7946dc19a27f87c3e6152dcdb88adb20": { "facing": "internal" },
+  "66e7913e041e8822ee2af1b0dbd9b4d47b9b640d": {
+    "facing": "model",
+    "id": "data-claude-doc-comment-wake-relay-thread-note",
+    "name": "Data: Claude Doc comment wake relay-thread note",
+    "desc": "Wake note sent to the model when a Claude Doc comment arrives on a resolved relay thread, explaining how to read and reply to the doc's comments through the Claude Docs connector"
+  },
+  "49256d092a960c96ac4fc549440f89d030bba583": { "facing": "ui" },
+  "def47777066c1bcf5cb3decd17c8f382cea6d6e0": { "facing": "ui" },
+  "a8371349f9fe8c5e060241fbfbdfaef062eec637": { "facing": "ui" },
+  "12931b341a1f203dd0a9ea9c06da0ea52460f165": { "facing": "ui" },
+  "8c52b2de1d5f78e507b072c04f03c2e1d381dc11": { "facing": "ui" },
+  "b36cb447970cd55c33b3664ac321cd6123b4aee5": { "facing": "ui" },
+  "bdca215f370d46be711b2073398d5f2907edf54e": { "facing": "ui" },
+  "361ea526a3804b1074e68ed50159c6b342d33683": { "facing": "ui" },
+  "eb72c009f9e66393b67749caefaff1907bf7bb58": { "facing": "ui" },
+  "c744a0717efa6cb0a85dd89a17da56ff1b3b774b": { "facing": "ui" },
+  "98c83bf516060bb45dbe1a0b868aa6be28aeac55": { "facing": "ui" },
+  "c8875ff2b2ccbf586db2dbc502e5fbd173c54e87": { "facing": "internal" },
+  "c99117d37eb553389ac29c057268c579b37df064": { "facing": "internal" },
+  "8b71e36024d441296871d762b64e8c4bc5648124": { "facing": "ui" },
+  "08a1d16ec8894ab8ae3f479f3257bf3c8cc959f1": { "facing": "internal" },
+  "ad65f7af1f01359d325b14ddc21dab9fa9783473": { "facing": "ui" },
+  "0ecff55b6698d2a1c60af866c4477bb90992e782": { "facing": "ui" },
+  "0f315b66de909841c1600da7d2c22a32ee3c462a": { "facing": "ui" },
+  "9f1c4433ae00d36c8884fcfac403323cd7eb01c4": { "facing": "internal" },
+  "2e9229300f826b2f41363c6e3b5fe16c3e47a7af": { "facing": "ui" },
+  "bc0a985e5e39e4102c85f2f4fe3fb25bcbc11c03": { "facing": "internal" },
+  "8499937a6b5a6d30dd2df7b2cdf4be46aea6813f": { "facing": "internal" },
+  "c5127fd42735e4181ce4e1fa053632046ffb4c78": { "facing": "internal" },
+  "d92e351ac04aae99e8883228838a9c047ef784ec": { "facing": "ui" },
+  "15b1d0688f178da3a0d912d146e92a13e06385f9": { "facing": "internal" },
+  "e3cf6e77f74ef8a85fa572949455a5989893c0ed": { "facing": "internal" },
+  "31541dfc44d8e2f5c69e8e4e52be113044b71db3": { "facing": "internal" },
+  "62fff9f427afc8615e105f87ef209b9583f8799d": { "facing": "internal" },
+  "bffd9174e4cb62e86841a62d8f846de859d96ba2": { "facing": "ui" },
+  "7a6cf4af4ed308ebbd730f578a89152e14a254d9": {
+    "facing": "model",
+    "id": "data-self-hosted-runner-unreadable-character-validation-guidance",
+    "name": "Data: Self-hosted runner unreadable character validation guidance",
+    "desc": "Guides correction of unreadable characters in self-hosted runner tool inputs without changing the identity of a real path"
+  },
+  "623411d6cd5682b4fcd66509ad4a688fa60f4db3": {
+    "facing": "model",
+    "id": "tool-result-self-hosted-runner-invalid-id-validation",
+    "name": "Tool result: Self-hosted runner invalid id validation",
+    "desc": "Input validation message for self-hosted runner tool id fields: allowed characters and length, pass the id alone"
+  },
+  "c4c652e09b8dd49625a6030de589e900a5691111": {
+    "facing": "model",
+    "id": "tool-result-self-hosted-runner-path-control-character-validation",
+    "name": "Tool result: Self-hosted runner path control character validation",
+    "desc": "Input validation message for self-hosted runner path parameters holding control characters, tabs or line breaks"
+  },
+  "dd850f8ecac9ca064cd17dbcf66156b5390ad882": { "facing": "internal" },
+  "d913af1dc1f131c078e96264a47a2f74c7b4c28d": { "facing": "internal" },
+  "210d73d1b053dafc2000a061af028db2918c8ab8": { "facing": "ui" },
+  "a61f7f8d37f0ca5a506b7bc289605a9dec8b72d5": { "facing": "ui" },
+  "e5ce368ebe2ce445051a72063e209427e6ac17fc": { "facing": "ui" },
+  "a4e7c02e36ee2e26dfd5c4be0e274b20df067b10": { "facing": "ui" },
+  "f54f69665ad5051b23054813ddbe2024c0efc84d": { "facing": "ui" },
+  "977013c433be5edabf603e1fe202144eb728cc3d": { "facing": "ui" },
+  "b9e324dbd6a9cb4811d0473369ae5fa8cddbe3e5": { "facing": "ui" },
+  "b1137115913181cb59b985a8c8ccb237552f3b25": { "facing": "ui" },
+  "551a721417b3f18119a4be1af2ef0e63613cdd7a": { "facing": "ui" },
+  "9cd2e3d80be23b0eb1bac910d2d6ebbe479b0e88": { "facing": "ui" },
+  "f869ef6ee426d802e3090caf9f252eee58a07052": { "facing": "ui" },
+  "586b6840ec45758121af8cf8ddf54dfe81e039cb": { "facing": "ui" },
+  "1aa124520b2a534851d31b3e6963b8a8e7cbd532": { "facing": "ui" },
+  "fdf833b5ea0f46f0d2e618f2c0f30e9e4c871e31": { "facing": "ui" },
+  "0189c900190eaf76dfc938f35b8b0fd4e71db129": {
+    "facing": "model",
+    "id": "skill-claude-code-help-recent-releases",
+    "name": "Skill: Claude Code help recent releases",
+    "desc": "Recent-releases section of the claude-code-help skill's Current Build block, listing the last release notes for the running version."
+  },
+  "2315eac8cca3ee3928793ca3c2f79d79db61620e": { "facing": "ui" },
+  "b917a702632c226b6efdce3c4e0ae344590c8c58": { "facing": "internal" },
+  "7a5d55d6ddc40947672d6779529da65a4a04d5fe": { "facing": "internal" },
+  "34039a5ec65308470494e55d8f4f43dc2db91475": { "facing": "internal" },
+  "1320514a639d31d1a508d48f63c8dcb8cecc823f": {
+    "facing": "model",
+    "id": "tool-result-easel-chart-no-conversation",
+    "name": "Tool result: easel chart no conversation",
+    "desc": "Denial result telling the model the session keeps no conversation for the easel chart call, so every call here will be refused."
+  },
+  "58f3398686566bb277b7111551cfbacc7d8c654c": { "facing": "internal" },
+  "e5654efe6307409ed5f4887bfca233c8a10bdd4b": { "facing": "internal" },
+  "0024eec66242cff3061b9c94837acdee8a4da7aa": {
+    "facing": "model",
+    "id": "agent-prompt-security-monitor-for-autonomous-agent-actions-second-part",
+    "name": "Agent Prompt: Security Monitor Environment (Part 2)",
+    "desc": "Environment/trust-slot, definitions, block and allow rules section of the external auto-mode security-monitor classifier prompt sent as the classifier model's prompt."
+  },
+  "70f398edb59fb12958d86cdbf8395c785014e59d": {
+    "facing": "model",
+    "id": "data-claude-code-d-ts",
+    "name": "Data: claude-code.d.ts",
+    "desc": "Claude Code plugin API declarations written as the plugin-authoring skill file types/claude-code.d.ts, which SKILL.md points the model to."
+  },
+  "e694fd423de3eaea43a2917a8022a9192471c6e9": {
+    "facing": "model",
+    "id": "data-reference",
+    "name": "Data: reference",
+    "desc": "Long-form plugin/mod API reference (reference.md) extracted with the plugin-authoring skill and pointed to by its SKILL.md."
+  },
+  "43ccd9e4655bf34134bd42ad1e37f56d037e4ef7": {
+    "facing": "model",
+    "id": "skill-building-llm-powered-applications-with-claude",
+    "name": "Skill: Building LLM-powered applications with Claude",
+    "desc": "Main prompt body of the claude-api skill (building LLM-powered applications with Claude)."
+  },
+  "3a1a6a6dcc60c385a012dde61f00f66b76a1e8c1": {
+    "facing": "model",
+    "id": "data-http-error-codes-reference",
+    "name": "Data: HTTP error codes reference",
+    "desc": "claude-api skill reference file (HTTP error codes reference) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "f07bbe68fae052aad518a2b34554d314c186261d": {
+    "facing": "model",
+    "id": "skill-model-migration-guide",
+    "name": "Skill: Model migration guide",
+    "desc": "claude-api skill reference file (Model migration guide) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "56993071ccd574bcc3ab25e6c388dbe142df9b23": {
+    "facing": "model",
+    "id": "data-claude-model-catalog",
+    "name": "Data: Claude model catalog",
+    "desc": "claude-api skill reference file (Claude model catalog) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "2a311280e61bbf4199db48dca2a289ef771aac08": {
+    "facing": "model",
+    "id": "data-platform-availability",
+    "name": "Data: platform-availability",
+    "desc": "claude-api skill reference file (platform-availability) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "03b39fd0582946d98f5e43bfa2a7c42506df2b58": {
+    "facing": "model",
+    "id": "data-preserved-thinking-migration",
+    "name": "Data: preserved-thinking-migration",
+    "desc": "claude-api skill reference file (preserved-thinking-migration) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "422f0612cd6e98930c6a9e088a0522f49cf3796f": {
+    "facing": "model",
+    "id": "data-causes",
+    "name": "Data: causes",
+    "desc": "claude-api skill reference file (causes) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "48f82188f85a833ba744a63405af4255ee4ee8e4": {
+    "facing": "model",
+    "id": "skill-prompt-audit",
+    "name": "Skill: Prompt audit",
+    "desc": "claude-api skill reference file (Prompt audit) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "9d29cbb1fb06fd5754c9c9e5d39a021e39d7c521": {
+    "facing": "model",
+    "id": "data-prompt-caching",
+    "name": "Data: prompt-caching",
+    "desc": "claude-api skill reference file (prompt-caching) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  }
 }
