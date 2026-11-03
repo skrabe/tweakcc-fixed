@@ -45,14 +45,32 @@ export const writeComplexityRouterTurnStatus = (
     return null;
   }
   const requestPrefix = oldFile.slice(0, request.index);
-  // 2.1.288+: the options param is destructured as `{modelFacts:F,...REST}`;
-  // REST is the options object the alias spreads.
-  const query = [
-    ...requestPrefix.matchAll(
+  const escapeId = (id: string) => id.replace(/\$/g, '\\$');
+  // 2.1.285+: the generator aliases its options param to a local
+  // (`D=b===h.fallbackModel?h:{...h,fallbackModel:b}`) and the request site
+  // reads that alias. The alias is the options object for the record call.
+  const findQuery = (pattern: RegExp) => {
+    const query = [...requestPrefix.matchAll(pattern)].at(-1);
+    const options = query ? (query[2] ?? query[3]) : undefined;
+    if (!query || !options) return undefined;
+    const aliased =
+      options === request[5] ||
+      new RegExp(
+        `[,{]${escapeId(request[5])}=[$\\w]+===${escapeId(options)}\\.fallbackModel\\?${escapeId(options)}:\\{\\.\\.\\.${escapeId(options)},`
+      ).test(oldFile.slice(query.index, request.index));
+    return aliased ? query : undefined;
+  };
+  // Method 1 (2.1.317+): trailing params follow the options param
+  // (`{modelFacts:F,...REST},W`).
+  // Method 2 (2.1.288+): the options param is the last one, destructured as
+  // `{modelFacts:F,...REST}`; REST is the options object the alias spreads.
+  const query =
+    findQuery(
+      /function\*[$\w]+\(([$\w]+),[$\w]+,[$\w]+,[$\w]+,[$\w]+,(?:([$\w]+)|\{(?:[$\w]+:[$\w]+,)*\.\.\.([$\w]+)\})(?:,[$\w]+)+\)\{/g
+    ) ??
+    findQuery(
       /function\*[$\w]+\(([$\w]+),[$\w]+,[$\w]+,[$\w]+,[$\w]+,(?:([$\w]+)|\{(?:[$\w]+:[$\w]+,)*\.\.\.([$\w]+)\})\)\{/g
-    ),
-  ].at(-1);
-  const queryOptions = query ? (query[2] ?? query[3]) : undefined;
+    );
   const renderPrefix = oldFile.slice(
     Math.max(0, renderer.index! - 7000),
     renderer.index
@@ -63,18 +81,7 @@ export const writeComplexityRouterTurnStatus = (
       /\{message:([$\w]+),addMargin:[$\w]+,verb:[$\w]+(?:,[$\w]+:[$\w]+)*\}/g
     ),
   ].at(-1)?.[1];
-  const escapeId = (id: string) => id.replace(/\$/g, '\\$');
-  // 2.1.285+: the generator aliases its options param to a local
-  // (`D=b===h.fallbackModel?h:{...h,fallbackModel:b}`) and the request site
-  // reads that alias. The alias is the options object for the record call.
-  const optionsAlias =
-    !!query &&
-    !!queryOptions &&
-    (queryOptions === request[5] ||
-      new RegExp(
-        `[,{]${escapeId(request[5])}=[$\\w]+===${escapeId(queryOptions)}\\.fallbackModel\\?${escapeId(queryOptions)}:\\{\\.\\.\\.${escapeId(queryOptions)},`
-      ).test(oldFile.slice(query.index, request.index)));
-  if (!query || !optionsAlias || !message) {
+  if (!query || !message) {
     console.error('patch: complexityRouter: failed to find turn status scopes');
     return null;
   }

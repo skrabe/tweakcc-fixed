@@ -512,6 +512,13 @@ const patchEffortLookup = (
  *      where `r` is already what `uM` routed the subagent to at spawn, with the
  *      subagent's own mode (`LF(…,mode)`), so it keys on itself, unmapped.
  *
+ * CC >= 2.1.317 runs the state through a picked-model filter before the
+ * lookup, which keeps any extra keys, and folds B into A: hook input calls the
+ * per-request resolver with `s??{}`, so that one resolver reads an optional
+ * context:
+ *      `function Imr(e,o=L(e)){let t=g(e);return hl(odt(e.getAppState?.()??{},t,e.pickedEffortModel),t,{withHold:o})}`
+ *      `function Gqn({…,model:n,effortState:o,pickedEffortModel:f,…}){…p=hl(odt(o,n,f),n)`
+ *
  * Callers with no request context (status, bridge, picker, prompt sections)
  * keep the session's mode.
  */
@@ -541,6 +548,12 @@ const patchEffortContext = (
   const r = escapeIdent(resolver);
   const edits: [number, number, string][] = [];
 
+  // A+B, CC >= 2.1.317 — `Kl(odt(ctx.getAppState?.()??{},`, the one resolver
+  // that both request contexts and hook input reach.
+  const wrapped = new RegExp(
+    `([^$\\w.]${r}\\([$\\w]+\\()([$\\w]+)\\.getAppState\\?\\.\\(\\)\\?\\?\\{\\},`,
+    'g'
+  );
   // A — in any module with both the lookup and `de` in scope.
   const perRequest = new RegExp(
     `([^$\\w.]${r}\\()([$\\w]+)\\.getAppState\\(\\),([$\\w]+)\\(\\2\\)(?=[,)])`,
@@ -557,6 +570,16 @@ const patchEffortContext = (
     names.every(n => boundInModule(file, at, n));
 
   const found = { a: 0, b: 0, c: 0 };
+  for (const c of file.matchAll(wrapped)) {
+    if (c.index === undefined || !inScope(c.index, resolver, de)) continue;
+    found.a++;
+    found.b++;
+    edits.push([
+      c.index,
+      c.index + c[0].length,
+      `${c[1]}{...${c[2]}.getAppState?.()??{},${MODE_KEY}:${c[2]}.getAppState?${de}(${c[2]}).mode:void 0},`,
+    ]);
+  }
   for (const c of file.matchAll(perRequest)) {
     if (c.index === undefined || !inScope(c.index, resolver, de)) continue;
     found.a++;
@@ -580,21 +603,31 @@ const patchEffortContext = (
     // The call sits in the body of the function this destructuring opens.
     const body = c.index + c[0].length;
     const next = file.indexOf('function ', body);
+    const model = escapeIdent(c[1]);
+    const state = escapeIdent(c[2]);
+    // CC >= 2.1.317: `Kl(odt(state,model,picked),model)`; before: `Kl(state,model)`.
     const call = new RegExp(
-      `[^$\\w.]${r}\\(${escapeIdent(c[2])},${escapeIdent(c[1])}\\)`
+      `[^$\\w.]${r}\\((?:([$\\w]+)\\(${state},${model},([$\\w]+)\\),${model}|${state},${model})\\)`
     ).exec(file.slice(body, next === -1 ? undefined : next));
     if (!call) continue;
     found.c++;
     const at = body + call.index + 1;
+    const routed = `{...${c[2]},${MODE_KEY}:"${ROUTED}"}`;
     edits.push([
       at,
       at + call[0].length - 1,
-      `${resolver}({...${c[2]},${MODE_KEY}:"${ROUTED}"},${c[1]})`,
+      call[1]
+        ? `${resolver}(${call[1]}(${routed},${c[1]},${call[2]}),${c[1]})`
+        : `${resolver}(${routed},${c[1]})`,
     ]);
   }
 
   const already = {
-    a: file.includes(`.getAppState(),${MODE_KEY}:${de}(`),
+    a:
+      file.includes(`.getAppState(),${MODE_KEY}:${de}(`) ||
+      new RegExp(
+        `,${MODE_KEY}:[$\\w]+\\.getAppState\\?${escapeIdent(de)}\\(`
+      ).test(file),
     b: file.includes(`??{},${MODE_KEY}:`),
     c: file.includes(`${MODE_KEY}:"${ROUTED}"`),
   };
