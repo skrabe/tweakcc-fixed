@@ -1,4 +1,5 @@
 import { escapeIdent } from '.';
+import { debug } from '../utils';
 
 const TWEAKCC_MODULE_MARK = '/*@@TWEAKCC_MODULE:';
 
@@ -81,7 +82,7 @@ export const getModuleLoaderFunction = (
     return shortest;
   }
 
-  console.log(
+  debug(
     'patch: getModuleLoaderFunction: failed to find module loader function'
   );
   return undefined;
@@ -100,9 +101,7 @@ export const getReactModuleNameNonBun = (
     /var ([$\w]+)=[$\w]+\((?:\([$\w]+\)=>|function\([$\w]+\))\{var [$\w]+=Symbol\.for\("react\.(transitional\.)?element"\)/;
   const match = fileContents.match(pattern);
   if (!match) {
-    console.log(
-      'patch: getReactModuleNameNonBun: failed to find React module name'
-    );
+    debug('patch: getReactModuleNameNonBun: failed to find React module name');
     return undefined;
   }
   return match[1];
@@ -129,7 +128,7 @@ export const getReactModuleFunctionBun = (
 ): string | undefined => {
   const reactModuleNameNonBun = getReactModuleNameNonBun(fileContents);
   if (!reactModuleNameNonBun) {
-    console.log(
+    debug(
       '^ patch: getReactModuleFunctionBun: failed to find React module name (Bun)'
     );
     return undefined;
@@ -142,7 +141,7 @@ export const getReactModuleFunctionBun = (
   );
   const match = fileContents.match(pattern);
   if (!match) {
-    console.log(
+    debug(
       `patch: getReactModuleFunctionBun: failed to find React module function (Bun) (reactModuleNameNonBun=${reactModuleNameNonBun})`
     );
     return undefined;
@@ -167,7 +166,7 @@ export const getReactVar = (fileContents: string): string | undefined => {
 
   const moduleLoader = getModuleLoaderFunction(fileContents);
   if (!moduleLoader) {
-    console.log('^ patch: getReactVar: failed to find moduleLoader');
+    debug('^ patch: getReactVar: failed to find moduleLoader');
     reactVarCache = undefined;
     return undefined;
   }
@@ -175,7 +174,7 @@ export const getReactVar = (fileContents: string): string | undefined => {
   // Try non-bun first (reactModuleNameNonBun)
   const reactModuleVarNonBun = getReactModuleNameNonBun(fileContents);
   if (!reactModuleVarNonBun) {
-    console.log('^ patch: getReactVar: failed to find reactModuleVarNonBun');
+    debug('^ patch: getReactVar: failed to find reactModuleVarNonBun');
     reactVarCache = undefined;
     return undefined;
   }
@@ -195,7 +194,7 @@ export const getReactVar = (fileContents: string): string | undefined => {
   // If reactModuleNameNonBun fails, try reactModuleFunctionBun
   const reactModuleFunctionBun = getReactModuleFunctionBun(fileContents);
   if (!reactModuleFunctionBun) {
-    console.log('^ patch: getReactVar: failed to find reactModuleFunctionBun');
+    debug('^ patch: getReactVar: failed to find reactModuleFunctionBun');
     reactVarCache = undefined;
     return undefined;
   }
@@ -206,7 +205,7 @@ export const getReactVar = (fileContents: string): string | undefined => {
   );
   const bunMatch = fileContents.match(bunPattern);
   if (!bunMatch) {
-    console.log(
+    debug(
       `patch: getReactVar: failed to find bunPattern (moduleLoader=${moduleLoader}, reactModuleVarNonBun=${reactModuleVarNonBun}, reactModuleFunctionBun=${reactModuleFunctionBun})`
     );
     reactVarCache = undefined;
