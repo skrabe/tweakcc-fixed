@@ -1093,5 +1093,29 @@
     "shape": "array",
     "excerpt": "Select with numbers [1-2] or up / down arrow keys. Then Enter to submit or Escape to cancel: 12 Invalid selection \"12\". Enter a number betwe",
     "why": "terminal layout fixture for the numbered approval selector, used to size rows — never sent to the model"
+  },
+  "d5477790ac568417": {
+    "excerpt": "create_webhook_trigger Claude wants to make an outside event, such as a GitHub event, start a routine under your claude.ai account.",
+    "shape": "array",
+    "verdict": "ui",
+    "why": "Routine tool's per-action description(input): read by the permission dialog (and teammate permission request) to word the approval prompt; not sent to the model."
+  },
+  "3733d4bcdcb88560": {
+    "excerpt": "create Claude wants to create a routine that runs Claude under your claude.ai account.",
+    "shape": "array",
+    "verdict": "ui",
+    "why": "Routine tool's per-action description(input): read by the permission dialog (and teammate permission request) to word the approval prompt; not sent to the model."
+  },
+  "29a8e86c2a753f25": {
+    "excerpt": "update Claude wants to change a routine that runs Claude under your claude.ai account.",
+    "shape": "array",
+    "verdict": "ui",
+    "why": "Routine tool's per-action description(input): read by the permission dialog (and teammate permission request) to word the approval prompt; not sent to the model."
+  },
+  "7d96ddc5004a3539": {
+    "excerpt": "hardlink(s); the deny would be kept or removed through one name only hardlink(s); ace_holders rows are path-keyed",
+    "shape": "array",
+    "verdict": "internal",
+    "why": "Windows sandbox init: substrings matched with includes() against an acl_grant_failed error message to collect hard-linked deny targets; never rendered."
   }
 }
