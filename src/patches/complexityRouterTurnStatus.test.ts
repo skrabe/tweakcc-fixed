@@ -47,7 +47,31 @@ const fixture295 =
   'class T{a(N,Z){N.transcript.apply({type:"append",messages:[duration(Z.durationMs,V(N.transcript.getSnapshot(),TE),Z.pendingBackgroundAgentCount,Z.pendingWorkflowCount)]})}b(D){this._requireHost().transcript.apply({type:"append",messages:[duration(D,V(this._requireHost().transcript.getSnapshot(),TE))]})}}' +
   'function render(m){let{message:l,addMargin:p,verb:h}=m,q="42s",W="5:17 PM";return{children:`${h} for ${q}${W?` \\xB7 done ${W}`:""}`}}';
 
+// 2.1.317: the main query generator gained a parameter after the destructured
+// options, and a later generator without the alias must not win the lookup.
+const fixture317 =
+  'function duration(e,n,r,s){return{type:"system",subtype:"turn_duration",durationMs:e,messageCount:n,pendingBackgroundAgentCount:r,pendingWorkflowCount:s}}' +
+  'async function*query(e,n,r,s,g,{modelFacts:h,...b},w){let{fallbackModel:L}=x(b.model,b.fallbackModel),Z=L===b.fallbackModel?b:{...b,fallbackModel:L},we=f=>f();let Ur=we(()=>carry(Z)),wt=Z.model;function*inner(a,c,d,f,k,m){yield m}let Te=we(()=>ow(wt,Z.effortValue,{turnEffort:Z.turnEffort,hookEffortValue:Z.hookEffortValue,carriedEffort:Ur}));yield Te}' +
+  'class T{a(N,Z){N.transcript.apply({type:"append",messages:[duration(Z.durationMs,V(N.transcript.getSnapshot(),TE),Z.pendingBackgroundAgentCount,Z.pendingWorkflowCount)]})}}' +
+  'function render(m){let{message:l,addMargin:p,verb:h}=m,q="42s",W="5:17 PM";return{children:`${h} for ${q}${W?` \\xB7 done ${W}`:""}`}}';
+
 describe('router completed-turn status', () => {
+  it('patches the 2.1.317 shape: a trailing parameter after the destructured options', () => {
+    const patched = writeComplexityRouterTurnStatus(fixture317)!;
+    expect(patched).not.toBeNull();
+    expect(patched).toContain(
+      'async function*query(e,n,r,s,g,{modelFacts:h,...b},w){'
+    );
+    expect(patched).toContain(
+      'Te=we(()=>{globalThis.__tweakccRouterResolution=void 0;let __tweakccResolved=ow(wt,Z.effortValue,{turnEffort:Z.turnEffort,hookEffortValue:Z.hookEffortValue,carriedEffort:Ur},Z);globalThis.__tweakccRouterRecordTurn?.(e,Z,__tweakccResolved,globalThis.__tweakccRouterResolution);return __tweakccResolved})'
+    );
+    expect(patched).toContain(
+      'duration(Z.durationMs,V(N.transcript.getSnapshot(),TE),Z.pendingBackgroundAgentCount,Z.pendingWorkflowCount,globalThis.__tweakccRouterSnapshotTurn?.(N.transcript.getSnapshot()))'
+    );
+    expect(patched).toContain('Router \\u2192 "+l.tweakccRouter.effort');
+    expect(() => new vm.Script(patched)).not.toThrow();
+  });
+
   it('patches the 2.1.295 shape: four-parameter duration factory without a budget argument', () => {
     const patched = writeComplexityRouterTurnStatus(fixture295)!;
     expect(patched).not.toBeNull();

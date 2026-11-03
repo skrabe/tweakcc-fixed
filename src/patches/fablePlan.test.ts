@@ -117,6 +117,31 @@ const RUNNABLE_291 = [
   EFFORT_CALLER_291,
 ].join('');
 
+// CC >= 2.1.317: the state passes through a picked-model filter (`odt`) before
+// the lookup, and hook input calls the per-request resolver with an optional
+// context instead of reading the state itself.
+const EFFORT_CALLER_317 =
+  'function de(e){let o=e.getAppState().toolPermissionContext;for(let t of e.permissionLayers??[])' +
+  'if(t.kind==="permission_mode")o={...o,mode:t.mode};return o}' +
+  'function Zk(e,n){return e===n}' +
+  'function Fr(e){return e.sessionEffort?.kind==="level"?{...e,sessionEffort:{kind:"inherit"}}:e}' +
+  'function odt(e,n,r){return e.sessionEffort?.kind!=="level"||n===void 0||r===void 0||Zk(n,r)?e:Fr(e)}' +
+  'function Imr(e,o=jr(e)){let t=p(e);return Qk(odt(e.getAppState?.()??{},t,e.pickedEffortModel),t,{withHold:o})}' +
+  'function bh(e){return Sh(e.permissionLayers)??Imr(e)}' +
+  'function bq(e){return bh(e)===void 0?Imr(e,!1):void 0}' +
+  'function yd(e,n,r,s){let h=s?.options?.mainLoopModel,b=Imr(s??{});return b}' +
+  'function Cz(e){return Qk(e,dl())}' +
+  'function bln({agentDefinition:e,isFork:t,model:r,effortState:n,pickedEffortModel:f,inheritedLayers:s}){' +
+  'let l=Cz(n),i=Qk(odt(n,r,f),r);return i}';
+
+const RUNNABLE_317 = RUNNABLE_291.replace(
+  EFFORT_CALLER_291,
+  EFFORT_CALLER_317
+).replace(
+  'function p(e){return e.options.mainLoopModel}',
+  'function p(e){return e.options?.mainLoopModel}'
+);
+
 type Runtime = {
   setSel: (alias: string) => void;
   am: (args: { permissionMode: string; mainLoopModel: string }) => string;
@@ -230,6 +255,95 @@ describe('writeFablePlan', () => {
     // the session-scoped caller keeps the session's mode
     expect(out).toContain('function Cz(e){return Qk(e,dl())}');
     expect(writeFablePlan(out, config())).toBe(out);
+  });
+
+  it('keys the CC 2.1.317 filtered effort callers on the request mode', () => {
+    const out = writeFablePlan(
+      cli + EFFORT_LOOKUP_291 + EFFORT_CALLER_317,
+      config()
+    )!;
+    expect(out).not.toBeNull();
+    // The one resolver both request contexts and hook input reach: the mode
+    // goes inside the filter, which keeps the key, and only with a context.
+    expect(out).toContain(
+      'return Qk(odt({...e.getAppState?.()??{},__tweakccPermissionMode:e.getAppState?de(e).mode:void 0},' +
+        't,e.pickedEffortModel),t,{withHold:o})}'
+    );
+    // The spawn helper's routed model keys on itself, through the filter.
+    expect(out).toContain(
+      'i=Qk(odt({...n,__tweakccPermissionMode:"routed"},r,f),r);'
+    );
+    expect(out).toContain('function Cz(e){return Qk(e,dl())}');
+    expect(out.split('__tweakccPermissionMode:').length - 1).toBe(2);
+    expect(writeFablePlan(out, config())).toBe(out);
+  });
+
+  it('routes CC 2.1.317 effort through the filter, picked model and all', () => {
+    const rt = run(writeFablePlan(RUNNABLE_317, config())!);
+    const state = {
+      toolPermissionContext: { mode: 'plan' },
+      settingsEffortTable: {
+        default: 'medium',
+        byModel: {
+          'claude-fable-5': 'max',
+          'claude-opus-5': 'low',
+          'claude-haiku-5': 'high',
+        },
+      },
+    };
+    const ctx = {
+      getAppState: () => state,
+      options: { mainLoopModel: 'claude-opus-5' },
+      permissionLayers: [] as { kind: string; mode: string }[],
+    };
+    expect(rt.bh(ctx)).toBe('max');
+    expect(
+      rt.bh({
+        ...ctx,
+        permissionLayers: [{ kind: 'permission_mode', mode: 'default' }],
+      })
+    ).toBe('low');
+    state.toolPermissionContext.mode = 'default';
+    expect(rt.bh(ctx)).toBe('low');
+    state.toolPermissionContext.mode = 'plan';
+    // Hook input: with a context it follows that context; without, nothing.
+    const sub = {
+      ...ctx,
+      options: { mainLoopModel: 'claude-haiku-5' },
+      permissionLayers: [{ kind: 'permission_mode', mode: 'default' }],
+    };
+    expect(rt.yd({}, '/', 'default', sub)).toBe('high');
+    expect(rt.yd({}, '/', 'plan')).toBe(undefined);
+    // Spawn keys on the model the subagent was routed to.
+    expect(
+      rt.bln({
+        agentDefinition: {},
+        isFork: false,
+        model: rt.LF('claude-haiku-5', 'default'),
+        effortState: state,
+      })
+    ).toBe('high');
+    expect(
+      rt.bln({
+        agentDefinition: {},
+        isFork: false,
+        model: rt.LF('claude-haiku-5', 'plan'),
+        effortState: state,
+      })
+    ).toBe('max');
+  });
+
+  it('fails loudly when the CC 2.1.317 effort callers drift', () => {
+    for (const [from, to] of [
+      ['odt(e.getAppState?.()??{},t', 'odt(e.getAppState?.()??0,t'],
+      ['i=Qk(odt(n,r,f),r)', 'i=Qk(odt(r,n,f),r)'],
+    ]) {
+      const drifted = EFFORT_CALLER_317.replace(from, to);
+      expect(drifted).not.toBe(EFFORT_CALLER_317);
+      expect(
+        writeFablePlan(cli + EFFORT_LOOKUP_291 + drifted, config())
+      ).toBeNull();
+    }
   });
 
   it('fails loudly when the CC 2.1.291 hook-input or spawn effort caller drifts', () => {
