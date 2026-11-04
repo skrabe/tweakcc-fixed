@@ -32,24 +32,92 @@ const FROM_HEADER =
 const UP_TO_HEADER =
   'This session was rewound at your request, not a context overflow. The summary below covers the earlier portion up to your selected point; the recent messages are kept intact.';
 
+// The rewind-site tail: `}),isCompactSummary:!0,...<J>.length>0?{summarizeMetadata:{…,direction:<T>}}`.
+// [1] the isCompactSummary…summarizeMetadata tail, [2] the direction var.
+const REWIND_TAIL_RE =
+  /\}\),(isCompactSummary:!0,\.\.\.[$\w]+\.length>0\?\{summarizeMetadata:\{messagesSummarized:[$\w]+\.length,userContext:[$\w]+,direction:([$\w]+)\}\})/;
+
+// Index of the bracket closing the one opened at `open`, or -1. Skips string
+// and template literals (with `${…}` nesting) so braces inside them don't count.
+const findClosingBracket = (
+  src: string,
+  open: number,
+  limit: number
+): number => {
+  const stack: string[] = [];
+  for (let i = open; i < limit; i++) {
+    const ch = src[i];
+    const top = stack[stack.length - 1];
+    if (top === '`') {
+      if (ch === '\\') i++;
+      else if (ch === '`') stack.pop();
+      else if (ch === '$' && src[i + 1] === '{') {
+        stack.push('${');
+        i++;
+      }
+      continue;
+    }
+    if (ch === '"' || ch === "'") {
+      for (i++; i < limit && src[i] !== ch; i++) if (src[i] === '\\') i++;
+      continue;
+    }
+    if (ch === '`') stack.push('`');
+    else if (ch === '{' || ch === '(' || ch === '[') stack.push(ch);
+    else if (ch === '}' || ch === ')' || ch === ']') {
+      const want = ch === '}' ? ['{', '${'] : ch === ')' ? ['('] : ['['];
+      if (!want.includes(stack.pop() ?? '')) return -1;
+      if (stack.length === 0) return i;
+    }
+  }
+  return -1;
+};
+
+// Method 1 (CC >= 2.1.318): the spread helper call whose options object holds
+// nested objects, e.g. ...Yte(Qt,{…,...ae()&&Ni()&&{replBindingsKept:…},…}).
+// Anchors on the unique rewind tail, then finds the `...H(A,{` whose options
+// object closes exactly at that tail (balanced-bracket scan, so any nesting).
+// Returns a match shaped like the regex methods: [full, call, tail, dirVar].
+const matchNestedSpreadCall = (file: string): RegExpMatchArray | null => {
+  const tail = REWIND_TAIL_RE.exec(file);
+  if (!tail) return null;
+  const startRe = /\.\.\.[$\w]+\([$\w]+,\{/g;
+  startRe.lastIndex = Math.max(0, tail.index - 8000);
+  let m: RegExpExecArray | null;
+  while ((m = startRe.exec(file)) && m.index < tail.index) {
+    const open = m.index + m[0].length - 1;
+    if (findClosingBracket(file, open, tail.index + 1) !== tail.index) continue;
+    const end = tail.index + tail[0].length;
+    const result = [
+      file.slice(m.index, end),
+      file.slice(m.index + 3, tail.index + 2),
+      tail[1],
+      tail[2],
+    ] as unknown as RegExpMatchArray;
+    result.index = m.index;
+    return result;
+  }
+  return null;
+};
+
 export const writeFixRewindSummaryHeader = (file: string): string | null => {
   // The rewind summary message: content:<header helper call>,isCompactSummary:!0,...<J>.length>0?{summarizeMetadata:{messagesSummarized:<j>.length,userContext:<O>,direction:<T>}}
-  // Every method captures the same 3 groups: [1] the header-helper call to wrap,
+  // Method 1 (matchNestedSpreadCall, above) runs first; the regex fallbacks
+  // below cover older shapes. Every method captures the same 3 groups: [1] the header-helper call to wrap,
   // [2] the isCompactSummary…summarizeMetadata tail, [3] the direction var.
   const patterns = [
-    // Method 0 (CC >= 2.1.285): the helper returns a message-fields object
+    // Method 2 (CC 2.1.285–2.1.317): the helper returns a message-fields object
     // ({content,modelOnlyText?}) that is spread into the message, e.g.
     // ke({...a2(Ut,{suppressFollowUpQuestions:!1,...}),isCompactSummary:!0,...}).
     /\.\.\.([$\w]+\([$\w]+,\{[^}]*\}\)),(isCompactSummary:!0,\.\.\.[$\w]+\.length>0\?\{summarizeMetadata:\{messagesSummarized:[$\w]+\.length,userContext:[$\w]+,direction:([$\w]+)\}\})/,
-    // Method 1 (CC 2.1.210+): the header helper takes an options-object arg,
+    // Method 3 (CC 2.1.210+): the header helper takes an options-object arg,
     // e.g. X6r(H,{suppressFollowUpQuestions:!1,transcriptPath:V,replStateCleared:j}).
     // Tolerant of object-key reorder/additions (no nested braces at this site).
     /content:([$\w]+\([$\w]+,\{[^}]*\}\)),(isCompactSummary:!0,\.\.\.[$\w]+\.length>0\?\{summarizeMetadata:\{messagesSummarized:[$\w]+\.length,userContext:[$\w]+,direction:([$\w]+)\}\})/,
-    // Method 2 (<= CC 2.1.209): positional-arg helper, e.g. jR_(y,!1,r,void 0,s).
+    // Method 4 (<= CC 2.1.209): positional-arg helper, e.g. jR_(y,!1,r,void 0,s).
     /content:([$\w]+\([$\w]+,!1,[$\w]+,void 0,[$\w]+\)),(isCompactSummary:!0,\.\.\.[$\w]+\.length>0\?\{summarizeMetadata:\{messagesSummarized:[$\w]+\.length,userContext:[$\w]+,direction:([$\w]+)\}\})/,
   ];
-  let match: RegExpMatchArray | null = null;
-  for (const pattern of patterns) {
+  let match: RegExpMatchArray | null = matchNestedSpreadCall(file);
+  for (const pattern of match ? [] : patterns) {
     match = file.match(pattern);
     if (match && match.index !== undefined) break;
     match = null;

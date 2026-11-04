@@ -1555,3 +1555,68 @@ describe('claudemd-context wrapper', () => {
     );
   });
 });
+
+const skillsListing = REMINDER_REGISTRY.find(r => r.id === 'skills-listing')!;
+
+// CC 2.1.318 made the renderer's `content:` a ternary: a script-mode arm that
+// teaches `await tools.Skill(...)`, else the plain Skill-tool arm. Shape copied
+// from the real bundle with synthetic names.
+const MOCK_SKILLS_TERNARY =
+  'skill_listing:(q)=>{if(!q.content)return[];return Kd([Ce({content:Qa()&&Zb()&&q.callsSkillToolDirectly!==!0?' +
+  '`The following skills are available; a script loads one with \\`await tools.Skill({skill: "name"})\\`, ' +
+  "and its instructions arrive as a message right after the script's result:\n\n${q.content}`:" +
+  '`The following skills are available for use with the Skill tool:\n\n${q.content}`,isMeta:!0})])},' +
+  'dynamic_skill:(q)=>[]';
+
+// <=2.1.317: a single plain template.
+const MOCK_SKILLS_PLAIN =
+  'skill_listing:(q)=>{if(!q.content)return[];return Kd([Ce({content:' +
+  '`The following skills are available for use with the Skill tool:\n\n${q.content}`,isMeta:!0})])},' +
+  'dynamic_skill:(q)=>[]';
+
+const SCRIPT_ARM =
+  '`The following skills are available; a script loads one with \\`await tools.Skill({skill: "name"})\\`, ' +
+  "and its instructions arrive as a message right after the script's result:\n\n${q.content}`";
+
+describe('skills-listing reminder script-mode ternary', () => {
+  it('replaces only the plain arm on the 2.1.318 shape, keeping the condition and script-mode arm', () => {
+    const result = skillsListing.apply(
+      MOCK_SKILLS_TERNARY,
+      'Skills:\n\n${H.content}',
+      false
+    );
+    expect(result).not.toBeNull();
+    expect(result).toContain(
+      'skill_listing:(q)=>{if(!q.content)return[];return Kd([Ce({content:' +
+        'Qa()&&Zb()&&q.callsSkillToolDirectly!==!0?' +
+        SCRIPT_ARM +
+        ':`Skills:\n\n${q.content}`,isMeta:!0})])},dynamic_skill:(q)=>[]'
+    );
+    expect(result).not.toContain('for use with the Skill tool');
+  });
+
+  it('suppresses the whole 2.1.318 renderer, both arms, to an empty array', () => {
+    const result = skillsListing.apply(MOCK_SKILLS_TERNARY, '', true);
+    expect(result).toBe(
+      'skill_listing:(q)=>{return [];},dynamic_skill:(q)=>[]'
+    );
+    // Already suppressed: idempotent no-op.
+    expect(skillsListing.apply(result!, '', true)).toBe(result);
+  });
+
+  it('still rewrites the <=2.1.317 plain shape via the fallback', () => {
+    const result = skillsListing.apply(
+      MOCK_SKILLS_PLAIN,
+      'Skills:\n\n${H.content}',
+      false
+    );
+    expect(result).toBe(
+      'skill_listing:(q)=>{if(!q.content)return[];return Kd([Ce({content:`Skills:\n\n${q.content}`,isMeta:!0})])},dynamic_skill:(q)=>[]'
+    );
+  });
+
+  it('fails loud (null) when the plain arm text drifted', () => {
+    const drifted = MOCK_SKILLS_TERNARY.replace('for use with', 'via');
+    expect(skillsListing.apply(drifted, 'x ${H.content}', false)).toBeNull();
+  });
+});

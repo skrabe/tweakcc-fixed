@@ -1113,9 +1113,19 @@ const SKILLS_INJECTION: ReminderInjection = {
 
 {{skill_content}}`,
   apply(content, body, isSuppressed) {
-    const pattern =
+    // CC 2.1.318 made `content:` a ternary: a script-mode arm (taken when the
+    // model drives tools from a script and does not call Skill directly) that
+    // teaches `await tools.Skill({skill: "name"})`, else the plain "available
+    // for use with the Skill tool" arm. The override body has always been the
+    // plain arm's text, so it replaces only that arm; the condition and the
+    // script-mode arm (an API usage instruction specific to that mode) are
+    // re-emitted verbatim. An empty body still suppresses the whole renderer.
+    const ternaryPattern =
+      /skill_listing:\(([$\w]+)\)=>\{if\(!\1\.content\)return\[\];return ([$\w]+)\(\[([$\w]+)\(\{content:([^?`{}]{1,300})\?(`(?:[^`\\]|\\[\s\S])*`):`The following skills are available for use with the Skill tool:\n\n\$\{\1\.content\}`,isMeta:!0\}\)\]\)\}/;
+    // <=2.1.317: a single plain template.
+    const plainPattern =
       /skill_listing:\(([$\w]+)\)=>\{if\(!\1\.content\)return\[\];return ([$\w]+)\(\[([$\w]+)\(\{content:`The following skills are available for use with the Skill tool:\n\n\$\{\1\.content\}`,isMeta:!0\}\)\]\)\}/;
-    const match = content.match(pattern);
+    const match = content.match(ternaryPattern) ?? content.match(plainPattern);
     if (!match || match.index === undefined) {
       if (
         /skill_listing:\([$\w]+\)=>\{if\(!0\)return\[\]/.test(content) ||
@@ -1128,16 +1138,21 @@ const SKILLS_INJECTION: ReminderInjection = {
       );
       return null;
     }
-    const [fullMatch, argParam, o5Name, j6Name] = match;
+    const [fullMatch, argParam, o5Name, j6Name, scriptCond, scriptArm] = match;
     let replacement: string;
     if (isSuppressed) {
       replacement = `skill_listing:(${argParam})=>{return [];}`;
     } else {
       const bodyForBuild = body.replace(/\$\{H\./g, `\${${argParam}.`);
+      const plainArm = `\`${bodyForBuild}\``;
+      const contentExpr =
+        scriptCond !== undefined && scriptArm !== undefined
+          ? `${scriptCond}?${scriptArm}:${plainArm}`
+          : plainArm;
       replacement =
         `skill_listing:(${argParam})=>{` +
         `if(!${argParam}.content)return[];` +
-        `return ${o5Name}([${j6Name}({content:\`${bodyForBuild}\`,isMeta:!0})])}`;
+        `return ${o5Name}([${j6Name}({content:${contentExpr},isMeta:!0})])}`;
     }
     const newContent =
       content.slice(0, match.index) +

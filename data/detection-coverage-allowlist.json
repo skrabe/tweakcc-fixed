@@ -1117,5 +1117,11 @@
     "shape": "array",
     "verdict": "internal",
     "why": "Windows sandbox init: substrings matched with includes() against an acl_grant_failed error message to collect hard-linked deny targets; never rendered."
+  },
+  "e6888d35eb603911": {
+    "verdict": "ui",
+    "shape": "concat",
+    "excerpt": "Couldn’t add the note. If the box has text, send or clear it, then try again.",
+    "why": "Side-note respond plugin: shown only as a ui.toast when the prompt box cannot take the note; never sent to the model."
   }
 }

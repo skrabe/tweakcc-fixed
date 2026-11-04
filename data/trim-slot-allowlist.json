@@ -353,10 +353,10 @@
     }
   },
   "agent-prompt-conversation-summarization": {
-    "bodyHash": "6c1a2150abf2",
-    "reviewed": "2026-10-14 (CC 2.1.299)",
+    "bodyHash": "d4cea362c80d",
+    "reviewed": "2026-11-04 (CC 2.1.318)",
     "tokens": {
-      "AGENT_PROMPT_CONVERSATION_SUMMARIZATION_VAR_0": "The body carries its own summary contract: what the next window already has, a length rule scaled to the remaining work, and the items to keep (user requests and exact constraints, decisions and ruled-out approaches, work state, next step). Anthropic's analysis-instructions block would add a full-code-snippet chronological walk that the length rule replaces; its security note is covered by the exact-constraint item. VAR_1, the user-message attribution guard, is interpolated and stays live."
+      "AGENT_PROMPT_CONVERSATION_SUMMARIZATION_VAR_0": "The body carries its own summary contract: what the next window already has, a length rule scaled to the remaining work, and the items to keep (user requests and exact constraints, decisions and ruled-out approaches, work state, next step). Anthropic's analysis-instructions block (an unconditional slot since 2.1.318) would add a full-code-snippet chronological walk that the length rule replaces. Its security note is not lost: the compaction builder appends it whenever the template lacks it. VAR_1, the user-message attribution guard, is interpolated and stays live, and the body still names <analysis>, so the builder keeps the analysis-then-summary reply shape."
     }
   },
   "agent-prompt-recent-message-summarization": {
