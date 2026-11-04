@@ -14,7 +14,28 @@ const CALL_2210 =
 const CALL_2285 =
   'ke({...a2(Ut,{suppressFollowUpQuestions:!1,transcriptPath:Qn,...!1,foreignArtifactContent:eqe(b==="up_to"?Se:e)}),isCompactSummary:!0,...Ee.length>0?{summarizeMetadata:{messagesSummarized:Se.length,userContext:h,direction:b}}:{isVisibleInTranscriptOnly:!0}})';
 
+// CC 2.1.318+: the spread helper's options object holds a nested object.
+const CALL_2318 =
+  'Po=[Ie({...Yte(Qt,{suppressFollowUpQuestions:!1,transcriptPath:ko,...ae()&&Ni()&&{replBindingsKept:uDn(r.toolState,r.agentId)},foreignArtifactContent:bLn(_o),remoteControlDeviceReport:c7e(_o,uv),toolNamesUsed:QX(e,r.agentContext,r.agentId)}),isCompactSummary:!0,...Re.length>0?{summarizeMetadata:{messagesSummarized:Ce.length,userContext:y,direction:b}}:{isVisibleInTranscriptOnly:!0}})]';
+
 describe('writeFixRewindSummaryHeader', () => {
+  it('matches the CC 2.1.318 spread call whose options object nests braces', () => {
+    const out = writeFixRewindSummaryHeader(`${HEADER_DEF}x;${CALL_2318};`);
+    expect(out).not.toBeNull();
+    expect(out).toContain(
+      'Po=[Ie({...(($rw)=>({...$rw,content:$rw.content.replace(/This session is being continued from a previous conversation that ran out of context\\.[^\\n]*/,b==="up_to"?'
+    );
+    // the whole helper call, nested object included, is wrapped intact
+    expect(out).toContain(
+      '))(Yte(Qt,{suppressFollowUpQuestions:!1,transcriptPath:ko,...ae()&&Ni()&&{replBindingsKept:uDn(r.toolState,r.agentId)},foreignArtifactContent:bLn(_o),remoteControlDeviceReport:c7e(_o,uv),toolNamesUsed:QX(e,r.agentContext,r.agentId)})),isCompactSummary:!0,...Re.length>0?{summarizeMetadata:{messagesSummarized:Ce.length,userContext:y,direction:b}}:{isVisibleInTranscriptOnly:!0}})]'
+    );
+    expect(out).toContain(HEADER_DEF);
+    expect(
+      () => new Function(`let Po;${out!.slice(HEADER_DEF.length + 2)}`)
+    ).not.toThrow();
+    expect(writeFixRewindSummaryHeader(out!)).toBe(out);
+  });
+
   it('matches the CC 2.1.285 spread-object helper call site and keeps other fields', () => {
     const out = writeFixRewindSummaryHeader(`${HEADER_DEF}x;${CALL_2285};`);
     expect(out).not.toBeNull();
