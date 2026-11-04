@@ -1,146 +1,97 @@
-<div align="center">
+# tweakcc-fixed
 
-# ⚡ tweakcc-fixed
+Patch Claude Code's prompts, UI and tools. A fork of [Piebald's tweakcc](https://github.com/Piebald-AI/tweakcc) with fff filename search, effort routing, Fable planning and editable runtime reminders.
 
-### Customize Claude Code far past its settings menu — themes, prompts, thinking, toolsets, and behavior — patched straight into the installed binary.
+[![npm](https://img.shields.io/npm/v/tweakcc-fixed?color=cb3837&label=npm&style=flat-square)](https://www.npmjs.com/package/tweakcc-fixed)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-2.1.317-d97757?style=flat-square)](https://github.com/anthropics/claude-code)
+[![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 
-[![npm](https://img.shields.io/npm/v/tweakcc-fixed?color=cb3837&label=npm&logo=npm&style=flat-square)](https://www.npmjs.com/package/tweakcc-fixed)
-[![downloads](https://img.shields.io/npm/dt/tweakcc-fixed?color=cb3837&style=flat-square)](https://www.npmjs.com/package/tweakcc-fixed)
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-2.0.98%20%E2%86%92%202.1.317-d97757?style=flat-square)](https://github.com/anthropics/claude-code)
-[![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#credit--license)
-
-**[Install](#install) · [Customize](#what-you-can-customize) · [The fork](#what-this-fork-adds) · [How it works](#how-it-works)**
-
-</div>
-
----
-
-Claude Code only exposes so much through its settings. tweakcc reaches the rest: it patches the installed binary directly — the `cli.js`, and the JavaScript baked into the native Bun build — so you can restyle the interface, rewrite the prompts Claude actually runs on, and change how it behaves. You pick what you want from a terminal UI, apply it in one command, and roll it back whenever you like.
-
-This is **tweakcc-fixed**, a fork of [Piebald's tweakcc](https://github.com/Piebald-AI/tweakcc) that keeps everything the original does and pushes further — over four times the prompt coverage, a deeper set of patches, and overrides that reach the native install where upstream stops. More on that [below](#what-this-fork-adds).
-
-```console
-$ npx -y tweakcc-fixed@latest --apply
-  ✓ Theme, spinner, thinking verbs, statusline
-  ✓ System Prompt: Doing tasks (override)        92 fewer chars
-  ✓ Tool Description: Bash (override)             4 fewer chars
-  ✓ Toolset + subagent model selection
-  …  patches applied · backup written
-```
+[Install](#install) · [Fork additions](#fork-additions) · [Prompt editing](#prompt-editing) · [Build from source](#build-from-source)
 
 ## Install
 
-```bash
-npx -y tweakcc-fixed@latest            # interactive TUI — toggle patches, edit prompts
-npx -y tweakcc-fixed@latest --apply    # apply everything you've enabled
-npx -y tweakcc-fixed@latest --restore  # revert from the backup
-npx -y tweakcc-fixed@latest --validate-system-prompts  # dry-run the apply preflight over your overrides
+Requires Node.js 20+ and pnpm. Supports npm and native Claude Code installations; the tested target is 2.1.317.
+
+```sh
+pnpm dlx tweakcc-fixed@latest            # open the settings UI
+pnpm dlx tweakcc-fixed@latest --apply    # apply saved settings
+pnpm dlx tweakcc-fixed@latest --restore  # restore the original binary
 ```
 
-Nothing to clone or build. Prompt data is pulled at runtime from the release tag of the version you are running, so a new Claude Code release works once a tweakcc-fixed release carries its prompts. Updating Claude Code overwrites the patches, so you just re-run `--apply` — your configuration in `~/.tweakcc/config.json` is untouched either way.
+Restart Claude Code after applying. Claude Code updates replace the patched binary, so reapply after an update. Settings and overrides stay in `~/.tweakcc/`.
 
-> Versions ≤ 1.0.5 on npm came from a different, unmaintained fork. 2.0.0 onward is this one.
+These docs describe main. npm v2.9.23 predates the Bash-description FFF note and empty Environment cleanup; [build from source](#build-from-source) to use those changes.
 
-## What you can customize
+## Fork additions
 
-Everything lives behind one terminal UI: toggle a patch, edit a prompt, apply.
+Defaults below are for a new config. Existing settings are kept.
 
-The surface is wide. You can restyle the **look** — themes, the wording of the thinking verbs, the spinner's symbols and speed, the input border, the statusline, table rendering, session titles. You can rewrite the **prompts** — every system prompt, tool description, and `<system-reminder>` is plain markdown you can edit, so you change what Claude is told, not just how it's dressed. You can retune the **tooling** — toolsets, subagent model selection, input-pattern highlighters, file-read limits, MCP startup. And you can adjust **behavior** — reasoning-effort defaults, memory handling, session naming, and a good deal more.
+| Feature                                                           | What it does                                                                                                                                   | Default                 |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| [fff search](docs/fff-search.md)                                  | Fuzzy filename discovery through `fff files`, fuzzy `@` completion, and optional learning from file reads. Grep and Glob keep native behavior. | Off; experimental       |
+| [Effort Router](docs/effort-router.md)                            | Select `opusrouter` or `fablerouter` to choose reasoning effort per message. Haiku or Jev decisions; Jev sends selected context to TypeSafe.   | Off; experimental       |
+| [Fable Plan](src/patches/fablePlan.ts)                            | Select `fableplan` to plan with Fable and execute with Opus, using each model's native effort setting.                                         | Off                     |
+| [Model + effort](src/patches/modelAtEffort.ts)                    | `/model opus@high` switches the model, then sets effort.                                                                                       | On                      |
+| [Dynamic reminders](src/patches/systemReminderOverrides.ts)       | Edit per-turn messages and individual MCP servers' instruction blocks in Markdown.                                                             | Stock text until edited |
+| [Browser bridge](https://github.com/skrabe/claude-browser-bridge) | Install, repair or remove the bridge from the **Better Claude in Chrome** menu. Extension setup is a separate step.                            | Manual install          |
+| [Memory controls](src/patches/leanMemoryTypes.ts)                 | Expose bundled dream mode and compact memory-type instructions. Native settings still control automatic dreaming.                              | Off                     |
+| [Responsive mode](src/patches/responsiveMode.ts)                  | Expose the bundled responsive-mode plugin; enable it separately in `/plugin`.                                                                  | Off                     |
+| [Output-style reminders](src/patches/outputStyleTurnReminder.ts)  | Set custom reminder text with `turn-reminder:` in an output style's frontmatter.                                                               | Off                     |
+| [Rewind fixes](src/patches/fixSummarizeFromHere.ts)               | Summarize from the selected rewind point and label deliberate rewinds correctly.                                                               | On                      |
 
-It works the same on npm and native (Bun-compiled) installs, every change is a toggle, and `--restore` puts the original binary back.
+Empty reminder cleanup always runs. Main also removes empty Environment scaffolding and stale FFF notes from restored prompts.
 
-## What this fork adds
+Upstream provides the themes, spinners, thinking text, toolsets, subagent model selection and other base customization. Both projects support native prompt overrides. Their patch lists differ; see the [versioned comparison](docs/upstream-comparison.md) for upstream controls this fork doesn't include.
 
-tweakcc-fixed is a strict superset of the original: everything above still applies, on the same latest Claude Code target. What it adds is reach.
+<!-- coverage:start -->
 
-The biggest difference is coverage. Its extractor pulls over ten times the prompt surface upstream does — every model-facing string at any length: tool results, system reminders, utility-agent prompts, slash-command descriptions, and the short fragments the base skips. Every candidate string is classified by its emission site (model-facing vs UI vs internal) with verdicts cached content-addressed, so coverage is complete by construction, not by heuristic. That is what makes serious prompt editing possible in the first place.
+|                           | tweakcc-fixed | upstream |
+| ------------------------- | :-----------: | :------: |
+| Prompt sites (CC 2.1.317) |    16,355     |  1,084   |
+| Unique prompt IDs         |    15,141     |  1,084   |
+| Patches                   |      82       |    61    |
 
-|                              | tweakcc-fixed | upstream  |
-| ---------------------------- | :-----------: | :-------: |
-| Prompt sites (CC 2.1.317)    |  **16,355**   |   1,057   |
-| Unique prompt IDs            |  **15,141**   |   1,057   |
-| Patches                      |    **81**     |    61     |
-| Overrides on native installs |    **yes**    | gated off |
+Same Claude Code 2.1.317 catalogue, compared with [upstream 925d13fd](https://github.com/Piebald-AI/tweakcc/tree/925d13fd513bc86659ae395c647674cd0d57e6da). Counts describe source inventory; active prompts depend on model, tools and settings.
 
-That reach shows up in a few mechanisms the base doesn't have. The `<system-reminder>` injections that fire per turn — and never surface as named prompts — become editable: blank one out to drop it, or rewrite it. Each connected MCP server's instruction block can be dropped or rewritten the same way. And where upstream gates system-prompt overrides off for native installs, this fork applies them. It pairs with [lobotomized-claude-code](https://github.com/skrabe/lobotomized-claude-code), a set of per-model override packs tuned against exactly this extraction.
+<!-- coverage:end -->
 
-The extra patches cluster around a few themes: **memory** (a dream-mode consolidation pass, leaner memory types), **reasoning** (Opus defaulting to max effort, plus the experimental complexity router), **search** (the experimental fff backend), and a run of **correctness fixes** — an honest rewind-summary header, a "summarize from here" that actually starts at the rewind point, quieter empty system-reminders, and more.
+Refresh this table from a checkout with `git fetch upstream main`, then `node tools/readmeStats.mjs 2.1.317 --write`. The command requires the same Claude Code catalogue version on both sides.
 
-Two of those are worth calling out, and both ship off by default. **Native search and fff filename discovery** adds system-level guidance to start unknown-file discovery with `fff files`, then inspect candidate code. It also keeps Grep/Glob available. Native result ordering and Bash search behavior remain intact. [fff](https://github.com/dmtrKovalenko/fff) provides fuzzy filename words in any order, fuzzy `@` suggestions, local filename-use history, and a shared worktree daemon. See [search behavior and local verification](docs/fff-search.md). **The complexity router** chooses reasoning effort for each user message without switching the main model. It supports Haiku routing or opt-in Jev decisions with asynchronous Haiku conversation summaries. See the [effort router setup and behavior](docs/effort-router.md), including credential storage, context sharing, and fallback behavior.
+## Prompt editing
 
-Newest is **Better Claude in Chrome** — a menu item, not a patch, that installs [claude-browser-bridge](https://github.com/skrabe/claude-browser-bridge) and points Claude Code at your real, logged-in browser over the Chrome DevTools Protocol. It sees and _claims_ your existing signed-in tabs — a fuller, self-hosted take on Claude in Chrome, driven through a `/browser` skill and a programmable `run` primitive (script a whole flow — locate, fill, click, wait, read — in one call). Pick it and it fetches the bridge, wires up the MCP server and the skill, walks you through loading the extension once, and disables the built-in Claude in Chrome — in the CLI and the Claude desktop app — so you have one browser surface. Pure config plus a fetched repo, no `cli.js` patch; Reinstall and Uninstall live in the same menu.
+| Path                               | Contents                                                                        |
+| ---------------------------------- | ------------------------------------------------------------------------------- |
+| `~/.tweakcc/config.json`           | Patch switches, UI preferences and model settings                               |
+| `~/.tweakcc/system-prompts/*.md`   | System prompts, tool descriptions, bundled references and other named fragments |
+| `~/.tweakcc/system-reminders/*.md` | Dynamic reminders and MCP instruction overrides                                 |
 
-<details>
-<summary>Every patch the fork adds</summary>
+Use the prompt screens in the UI, or edit the files directly. Keep their metadata and variable bindings intact, then check and apply:
 
-<br>
-
-Each patch is tagged with how it behaves on `--apply`: **`[default on]`** applies unless you set its config flag to `false`, **`[always]`** applies unconditionally with no toggle, **`[opt-in]`** applies only if you turn it on. Patches that change model-facing behavior are marked **on by default** below — `--apply` activates them even if you never selected them, so review these before applying.
-
-**Memory & context**
-
-- `dream-mode` **`[opt-in]`** — `/dream` plus automatic memory consolidation
-- `lean-memory-types` **`[opt-in]`** — a trimmed memory-type taxonomy
-- `claudemd-context-once-per-conversation` **`[opt-in]`** — inject CLAUDE.md and context once per conversation, not every turn (rewrites how CLAUDE.md reaches the model)
-
-**Reasoning**
-
-- `max-effort-default` **`[opt-in]`** — Opus defaults to max reasoning effort
-- `complexity-router` **`[opt-in]`** — opt-in Opus 5.5 / Fable 5.1 model entries that route reasoning effort by task difficulty _(experimental)_
-
-**Search**
-
-- `swap-ripgrep-for-fff` **`[opt-in]`** — fff discovery instructions, fuzzy filenames, and native Grep/Glob _(experimental)_
-
-**Correctness & noise**
-
-- `fix-rewind-summary-header` **`[default on]`** — an honest rewind / compaction summary header
-- `fix-summarize-from-here` **`[default on]`** — "summarize from here" starts at the rewind point, not the top
-- `strip-empty-system-reminders` **`[always]`** — drop the empty `<system-reminder>` blocks left after empty tool output
-- `read-default-lines` **`[always]`** — an env-gated cap on the default `Read` line count
-- `attached-background-interactive` **`[opt-in]`** — a background session with a client attached offers what an interactive one does: ProposeGoal, usage-limit auto-resume, and the auto mode and workflow prompts; one nobody is attached to is unchanged; ProposeGoal also needs its flag, served by Anthropic or forced by `enable-propose-goal` (`settings.misc.attachedBackgroundInteractive`)
-- `enable-propose-goal` **`[opt-in]`** — force the ProposeGoal tool's rollout flag on, in every session kind its own checks allow; "Claude-proposed goals" in `/config` sets whether it asks first (`settings.misc.enableProposeGoal`)
-- `suppress-deferred-tools` **`[opt-in]`** — drop the deferred-tools announcement
-- `multi-skill-invocation` **`[opt-in]`** — invoke every `/skill` you type in one message ("`/a /b do X`") directly, not just the leading one (real user invocations, no model round-trip)
-
-**Models & prompts**
-
-- `autonomous-operation-all-models` **`[opt-in]`** — apply the Fable/Mythos autonomous prompt set to every model
-- `auto-mode-classifier-model` **`[opt-in]`** — pin the auto-mode safety classifier to a cheaper model
-- `refusal-fallback-model` **`[opt-in]`** — route a safeguard-flagged message by your own table, then switch back to your model once that turn is answered. `settings.misc.refusalFallbackRoutes` maps a refusal category to a model id or a chain of them and is merged over Claude Code's own routes, which stay behind yours as a backstop when none of your models is usable; `settings.misc.refusalFallbackMaxReturns` caps consecutive returns (default `1`, `null` for no limit)
-
-</details>
-
-## How it works
-
-Two kinds of edit, both driven by your config in `~/.tweakcc/config.json`:
-
-```
-  ┌──────────────────────┐      ┌────────────────────────────┐
-  │ 1. code patches      │      │ 2. prompt overrides        │
-  │ regex-anchored        │      │ swap embedded prompt text   │
-  │ splices of JS         │      │ for your markdown           │
-  └──────────┬───────────┘      └─────────────┬──────────────┘
-             └────────────┬────────────────────┘
-                          ▼
-       npm cli.js   ──or──   native Bun binary
-       (patched in place)    (JS extracted → patched → repacked)
-                          ▼
-             backup written · `--restore` anytime
+```sh
+pnpm dlx tweakcc-fixed@latest --validate-system-prompts
+pnpm dlx tweakcc-fixed@latest --apply
 ```
 
-A code patch finds a minified shape with a regex and splices in modified JS; a prompt override swaps the embedded prompt text for your markdown. npm installs are patched in place, while native installs have their JS pulled out of the Bun binary with [node-lief](https://github.com/Piebald-AI/node-lief), patched, and repacked with stale bytecode cleared. The same building blocks ship as a library — `tryDetectInstallation`, `readContent`/`writeContent`, `backupFile`, and the minified-identifier `helpers` — if you'd rather script your own patches.
+[lobotomized-claude-code](https://github.com/skrabe/lobotomized-claude-code) supplies ready-made overrides for Opus 5.5 and Fable 5.1. Its [clean Opus fixture](https://github.com/skrabe/lobotomized-claude-code/blob/main/docs/measurements.md) measured 22.6% fewer characters in system blocks and tool descriptions than stock. Token counts and task quality weren't measured.
 
-## Staying current
+## Build from source
 
-When Claude Code ships a new version, the [showtime skill](./skills/showtime/) runs the whole upgrade: pull the new `cli.js`, re-extract the prompts, realign anything that drifted, and verify it landed clean. Say "it's showtime," or run `node skills/showtime/driver.mjs check`.
+Use Node.js 24 and pnpm 11+ for development.
 
-## Credit & license
+```sh
+git clone https://github.com/skrabe/tweakcc-fixed
+cd tweakcc-fixed
+pnpm install --frozen-lockfile
+pnpm build
+node dist/index.mjs --apply
+```
 
-A fork of [Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc) (© [Piebald LLC](https://piebald.ai)) — all of the core customization is its work, carried here with fixes from upstream PRs [#601](https://github.com/Piebald-AI/tweakcc/pull/601), [#646](https://github.com/Piebald-AI/tweakcc/pull/646), [#655](https://github.com/Piebald-AI/tweakcc/pull/655), and [#664](https://github.com/Piebald-AI/tweakcc/pull/664) on top of the fork-only additions. [MIT](https://github.com/Piebald-AI/tweakcc/blob/main/LICENSE).
+`--list-patches --json` lists registered patch IDs. `--apply --patches <id,...>` applies selected patches plus required cleanup. Prompt data comes from `data/prompts/` in a checkout; packaged releases fetch it from their own GitHub release tag.
 
-<div align="center">
+Code patches change Claude Code's JavaScript. Prompt overrides replace embedded text. For native installations, tweakcc extracts the JavaScript, patches it and repacks the binary with affected bytecode cleared. `--restore` uses the saved original.
 
-If it made your Claude Code better, a ⭐ helps others find it.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development and test commands.
 
-</div>
+## License
+
+Forked from [Piebald-AI/tweakcc](https://github.com/Piebald-AI/tweakcc), © Piebald LLC and contributors. [MIT](LICENSE).

@@ -6,12 +6,12 @@
 //
 // Prompt sites: entries in data/prompts/prompts-X.Y.Z.json (one per binary
 // site). Unique prompt IDs: distinct ids among them. Patches: entries in
-// PATCH_DEFINITIONS. Upstream: the same counts from upstream/main's newest
-// catalogue and patch list at or below X.Y.Z (needs `git fetch upstream`).
+// PATCH_DEFINITIONS.
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { parse } from '@babel/parser';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const [version] = process.argv.slice(2).filter(a => !a.startsWith('--'));
@@ -27,12 +27,6 @@ const git = (...args) =>
     encoding: 'utf8',
     maxBuffer: 512 * 1024 * 1024,
   });
-const cmp = (a, b) => {
-  const x = a.split('.').map(Number);
-  const y = b.split('.').map(Number);
-  for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] - y[i];
-  return 0;
-};
 const promptCounts = text => {
   const prompts = JSON.parse(text).prompts;
   return {
@@ -40,12 +34,42 @@ const promptCounts = text => {
     ids: new Set(prompts.map(p => p.id).filter(Boolean)).size,
   };
 };
-// Counts `id: '…'` entries of the PATCH_DEFINITIONS array literal.
 const patchCount = source => {
-  const start = source.indexOf('const PATCH_DEFINITIONS');
-  const end = source.indexOf('\n]', start);
-  if (start < 0 || end < 0) throw new Error('PATCH_DEFINITIONS not found');
-  return (source.slice(start, end).match(/^\s+id: '/gm) || []).length;
+  const ast = parse(source, {
+    sourceType: 'module',
+    plugins: ['typescript'],
+  });
+  const declarations = ast.program.body.flatMap(node => {
+    const declaration =
+      node.type === 'ExportNamedDeclaration' ? node.declaration : node;
+    return declaration?.type === 'VariableDeclaration'
+      ? declaration.declarations
+      : [];
+  });
+  let value = declarations.find(
+    node => node.id.name === 'PATCH_DEFINITIONS'
+  )?.init;
+  while (
+    value?.type === 'TSAsExpression' ||
+    value?.type === 'TSSatisfiesExpression'
+  )
+    value = value.expression;
+  if (value?.type !== 'ArrayExpression')
+    throw new Error('PATCH_DEFINITIONS array not found');
+  const ids = value.elements.map(node => {
+    const id =
+      node?.type === 'ObjectExpression' &&
+      node.properties.find(
+        property =>
+          property.type === 'ObjectProperty' &&
+          (property.key.name ?? property.key.value) === 'id'
+      );
+    if (!id || id.value.type !== 'StringLiteral')
+      throw new Error('Patch definition has no literal ID');
+    return id.value.value;
+  });
+  if (new Set(ids).size !== ids.length) throw new Error('Duplicate patch IDs');
+  return ids.length;
 };
 
 const ours = {
@@ -60,28 +84,31 @@ const ours = {
   ),
 };
 
-const upstreamVersion = git(
+const upstreamCommit = git('rev-parse', 'upstream/main').trim();
+const upstreamVersions = git(
   'ls-tree',
   '--name-only',
-  'upstream/main',
+  upstreamCommit,
   'data/prompts/'
 )
   .split('\n')
   .map(l => /prompts-(\d+\.\d+\.\d+)\.json$/.exec(l)?.[1])
-  .filter(v => v && cmp(v, version) <= 0)
-  .sort(cmp)
-  .pop();
-if (!upstreamVersion) {
+  .filter(Boolean);
+if (!upstreamVersions.includes(version)) {
   console.error(
-    'no upstream catalogue at or below this version (git fetch upstream)'
+    `upstream/main has no exact Claude Code ${version} catalogue; run git fetch upstream main or choose a version present in both repositories`
   );
   process.exit(1);
 }
+const upstreamVersion = version;
 const upstream = {
   ...promptCounts(
-    git('show', `upstream/main:data/prompts/prompts-${upstreamVersion}.json`)
+    git(
+      'show',
+      `${upstreamCommit}:data/prompts/prompts-${upstreamVersion}.json`
+    )
   ),
-  patches: patchCount(git('show', 'upstream/main:src/patches/index.ts')),
+  patches: patchCount(git('show', `${upstreamCommit}:src/patches/index.ts`)),
 };
 
 const fmt = n => n.toLocaleString('en-US');
@@ -94,29 +121,27 @@ const row = (label, a, b) =>
 const table = [
   `|                              | tweakcc-fixed | upstream  |`,
   `| ---------------------------- | :-----------: | :-------: |`,
-  row(
-    `Prompt sites (CC ${version})`,
-    `**${fmt(ours.sites)}**`,
-    fmt(upstream.sites)
-  ),
-  row('Unique prompt IDs', `**${fmt(ours.ids)}**`, fmt(upstream.ids)),
-  row('Patches', `**${ours.patches}**`, String(upstream.patches)),
-  row('Overrides on native installs', '**yes**', 'gated off'),
+  row(`Prompt sites (CC ${version})`, fmt(ours.sites), fmt(upstream.sites)),
+  row('Unique prompt IDs', fmt(ours.ids), fmt(upstream.ids)),
+  row('Patches', String(ours.patches), String(upstream.patches)),
 ].join('\n');
+const block = `${table}\n\nSame Claude Code ${version} catalogue, compared with [upstream ${upstreamCommit.slice(0, 8)}](https://github.com/Piebald-AI/tweakcc/tree/${upstreamCommit}). Counts describe source inventory; active prompts depend on model, tools and settings.`;
 
 if (!write) {
-  console.log(table);
-  console.log(`(upstream catalogue: ${upstreamVersion})`);
+  console.log(block);
   process.exit(0);
 }
 const readmePath = path.join(ROOT, 'README.md');
 const readme = fs.readFileSync(readmePath, 'utf8');
-const re = /\|\s+\| tweakcc-fixed \| upstream\s+\|\n(?:\|.*\|\n)+/;
+const re = /<!-- coverage:start -->[\s\S]*?<!-- coverage:end -->/;
 if (!re.test(readme)) {
   console.error('README coverage table not found');
   process.exit(1);
 }
-fs.writeFileSync(readmePath, readme.replace(re, `${table}\n`));
+fs.writeFileSync(
+  readmePath,
+  readme.replace(re, `<!-- coverage:start -->\n${block}\n<!-- coverage:end -->`)
+);
 console.log(
   `README coverage table: CC ${version}, upstream ${upstreamVersion}`
 );
