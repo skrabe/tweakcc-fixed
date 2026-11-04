@@ -23,7 +23,8 @@ const instructionFixture =
   ';async function fffContext($messages,$model,$permissions,$visible,$agents,$details){let{session:$session,terminalWidth:$width,toolUseContext:$current,mainThreadAgentDefinition:$agent}=$details;' +
   'let $saved=$details.snapshot,$fallback=$details.prompt,$tools={};let $counted=$saved?.systemPrompt??$fallback,$descriptions=$tools?.toolDescriptions,$schemas=$tools?.toolEntries;return $counted;}' +
   ';function fffRender($rows,$visible=[],$model,$config){$rows=$fold($rows,$config?.accountMemoryWithheld,$memo(()=>$visible));let $output=[];for(let $row of $rows){' +
-  'let $options={},$active=false,$result=$config?.withoutAttachmentHooks?$live($row,$options):$recorded($row,$options,$active),$rendered=$result.messages,{isKnownType:$known,recordedRole:$role}=$result;$output.push(...$rendered)}return $output;}';
+  'let $options={},$active=false,$result=$config?.withoutAttachmentHooks?$live($row,$options):$recorded($row,$options,$active),$rendered=$result.messages,{isKnownType:$known,recordedRole:$role}=$result;$output.push(...$rendered)}return $output;}' +
+  ';async function $describe($tool,$options){let $cached=$options.cached??{description:await $tool.prompt(),input_schema:$tool.input_schema},$entry=$options.recordedEntry,$redescribed=$options.isRedescribed===true,$result={name:$tool.name,description:$redescribed?$cached.description:$entry?.description??$options.recordedDescription??$cached.description,input_schema:$entry?.input_schema??$cached.input_schema};return $result;}';
 const fixtureFor = (binary: string): string => {
   const patched = writeSwapRipgrepForFff(
     searchFixture + instructionFixture + commandFixture,

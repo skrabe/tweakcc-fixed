@@ -1,3 +1,6 @@
+export const FFF_BASH_GUIDANCE =
+  "Use fff files '<query>' for fuzzy filename discovery of unknown project files. Read candidate files before drawing code conclusions. Use native search for exact content/patterns, or if fff is unavailable or finds no useful candidates.";
+
 export const FFF_OWNED_TOOL_GUIDANCE_SUFFIXES = {
   Grep: [
     '\n\nNative Grep navigation: For broad file discovery by content, use output_mode files_with_matches. Use Glob for filename patterns. Narrow the path or glob, use output_mode content with a small context window to inspect matches, and Read candidate files to inspect current code. Matches are textual candidates. When LSP is available and a source position is known, use goToDefinition, findReferences, or incomingCalls for definitions, references, or callers.',
@@ -6,5 +9,11 @@ export const FFF_OWNED_TOOL_GUIDANCE_SUFFIXES = {
   Bash: [
     '\n\nNative search and fff files: For broad file discovery by content, use Grep with output_mode files_with_matches. Use Glob for filename patterns. Narrow the path or glob, use Grep output_mode content with a small context window, and Read candidate files to inspect current code. When LSP is available and a source position is known, use goToDefinition, findReferences, or incomingCalls for definitions, references, or callers. Use fff files SomeName for fuzzy filename discovery, or fff --stats for local aggregate service counts.',
     '\n\nNative search and fff files: When the relevant project file is unknown, start fuzzy filename discovery with fff files SomeName. Read plausible candidate files to inspect current code. For exact code text or when filenames give no useful candidates, use Grep with output_mode files_with_matches. Use Grep output_mode content with a small context window to inspect matches. Use Glob for filename patterns. When LSP is available and a source position is known, use goToDefinition, findReferences, or incomingCalls for definitions, references, or callers. Use fff --stats for local aggregate service counts.',
+    '\n\n' + FFF_BASH_GUIDANCE,
   ].flatMap(text => [text, '\n' + text.slice(2), ' ' + text.slice(2)]),
 } as const;
+
+export const FFF_OWNED_PROJECT_GUIDANCE = [
+  "FFF project navigation: When the relevant project file is not already known, start file discovery with fff files '<short filename or path words>' in Bash. This fuzzy filename search tolerates incomplete or misspelled names and ranks matching paths using local file usage and Git activity. Treat its results as candidate paths, not evidence of code behavior. Read plausible files to inspect current code. If filename search gives no useful candidates, or you need exact code text, use the available native content-search tools; Grep files_with_matches finds candidate files and a targeted content search shows matches. Use Glob for exact filename patterns when available. After one or two locating searches, inspect candidate code rather than repeating broad searches. Use LSP for symbol definitions or references when available. If fff is unavailable, continue with native search tools.",
+  "FFF project navigation: Start file discovery for unknown project files with fff files '<short filename or path words>' in Bash. It is fuzzy filename search: read candidates before drawing conclusions about code. Use available native tools for exact content (Grep) or filename patterns (Glob), and LSP for symbols when available. After one or two locating searches, inspect the code. If fff is unavailable, use native search.",
+] as const;

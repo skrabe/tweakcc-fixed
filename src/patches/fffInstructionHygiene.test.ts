@@ -1,11 +1,17 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
-  FFF_PROJECT_GUIDANCE,
+  FFF_BASH_GUIDANCE,
   normalizeFffRecordedTools,
   writeFffInstructionHygiene,
   writeFffInstructions,
 } from './fffInstructions';
-import { FFF_OWNED_TOOL_GUIDANCE_SUFFIXES } from './fffInstructionSuffixes';
+import {
+  FFF_OWNED_PROJECT_GUIDANCE,
+  FFF_OWNED_TOOL_GUIDANCE_SUFFIXES,
+} from './fffInstructionSuffixes';
+
+const SERIALIZER =
+  ';async function $describe($tool,$options){let $cached=$options.cached??{description:await $tool.prompt(),input_schema:$tool.input_schema},$entry=$options.recordedEntry,$redescribed=$options.isRedescribed===true,$result={name:$tool.name,description:$redescribed?$cached.description:$entry?.description??$options.recordedDescription??$cached.description,input_schema:$entry?.input_schema??$cached.input_schema};return $result;}';
 
 const API_SITE =
   'let{advisorModel:$advisor,advisorDeferred:$deferred,advisorActive:$active}=$changes,$selected=$choose($rows,$base,{options:$current.options,querySource:$source,resumeActive:$resume,stamp:$stamp,inheritedReminderFold:()=>$restore($rows)?.reminderFold,inheritedWireShape:()=>$restore($rows)?.wireShape,inheritedEchoWireToolInputs:()=>$restore($rows)?.echoWireToolInputs,contextRendering:$routing.rendering});';
@@ -26,7 +32,8 @@ const CONTEXT =
   'return{systemPrompt:$counted,toolDescriptions:$descriptions,toolEntries:$schemas,snapshot:$snapshot};}';
 const RENDER =
   ';function $render($rows,$visible=[],$model,$config){$rows=$fold($rows,$config?.accountMemoryWithheld,$memo(()=>$visible));let $output=[];for(let $row of $rows){let $options={},$active=false,$result=$config?.withoutAttachmentHooks?$live($row,$options):$recordedRender($row,$options,$active),$rendered=$result.messages,{isKnownType:$known,recordedRole:$role}=$result;$output.push(...$rendered)}return $output;}';
-const PRISTINE = API + CONTEXT + RENDER + ';var $type="prompt_snapshot";';
+const PRISTINE =
+  API + CONTEXT + RENDER + SERIALIZER + ';var $type="prompt_snapshot";';
 const API_HEAD = 'canUseTool:$permission}=$input;';
 const API_2_1_299 =
   API.slice(0, API.indexOf(API_HEAD) + API_HEAD.length) +
@@ -46,13 +53,21 @@ const RENDER_2_1_299 = RENDER.replace(
   '$memo(()=>$visible)),$rows=$tidy($rows);'
 );
 const PRISTINE_2_1_299 =
-  API_2_1_299 + CONTEXT + RENDER_2_1_299 + ';var $type="prompt_snapshot";';
+  API_2_1_299 +
+  CONTEXT +
+  RENDER_2_1_299 +
+  SERIALIZER +
+  ';var $type="prompt_snapshot";';
 const API_2_1_314 = API_2_1_299.replace(
   'let $state={toolUseContext:$input.toolUseContext},$pending=[];async function*$loop(){if(',
   'let $state={toolUseContext:$input.toolUseContext},$pending=[],$halted=false,$note=()=>{};async function*$loop(){if($halted)return yield*$pending,$note($state.toolUseContext),{reason:"hook_stopped"};if('
 );
 const PRISTINE_2_1_314 =
-  API_2_1_314 + CONTEXT + RENDER_2_1_299 + ';var $type="prompt_snapshot";';
+  API_2_1_314 +
+  CONTEXT +
+  RENDER_2_1_299 +
+  SERIALIZER +
+  ';var $type="prompt_snapshot";';
 const TOOLS = [{ name: 'Bash' }, { name: 'Grep' }, { name: 'Glob' }];
 
 type Entry = {
@@ -77,6 +92,10 @@ type Request = {
   snapshot: Snapshot;
 };
 type Fixture = {
+  $describe: (
+    tool: { name: string; prompt: () => Promise<string>; input_schema: object },
+    options: { recordedDescription?: unknown; recordedEntry?: Entry }
+  ) => Promise<Entry>;
   $query: (input: {
     systemPrompt: string[];
     systemContext: string[];
@@ -110,7 +129,7 @@ const evaluate = (source: string): Fixture =>
     '$active',
     '$recorded',
     '$messagesOf',
-    source + ';return{$query,$context};'
+    source + ';return{$query,$context,$describe};'
   )(
     (rows: Snapshot[], prompt: string[]) => rows[0] ?? { systemPrompt: prompt },
     (rows: Snapshot[]) => rows[0],
@@ -340,8 +359,16 @@ describe('fff hygiene native call sites', () => {
         input_schema: { type: 'object' },
       };
       const record = { type: 'prompt_snapshot', tools: [grep] };
+      const savedRoot =
+        'old system prompt\n\n# Environment\n - \n - \n - \n\n# Context management\nKeep working.';
+      const cleanedRoot =
+        'old system prompt\n\n# Context management\nKeep working.';
       const snapshot: Snapshot = {
-        systemPrompt: ['old system prompt'],
+        systemPrompt: [
+          savedRoot,
+          '# Environment\n - \n - \n - ',
+          ...FFF_OWNED_PROJECT_GUIDANCE,
+        ],
         toolDescriptions: new Map([['Grep', grep.description]]),
         toolEntries: new Map([['Grep', grep]]),
         record,
@@ -361,11 +388,7 @@ describe('fff hygiene native call sites', () => {
       expect(
         result.request.options.recordedToolEntries.get('Grep')?.input_schema
       ).toBe(grep.input_schema);
-      expect(result.request.systemPrompt).toEqual([
-        'old system prompt',
-        'environment',
-        ...(enabled ? [FFF_PROJECT_GUIDANCE] : []),
-      ]);
+      expect(result.request.systemPrompt).toEqual([cleanedRoot, 'environment']);
       expect(result.records).toEqual([record]);
       expect(result.records[0]).toBe(record);
       expect(record.tools[0]).toBe(grep);
@@ -388,12 +411,86 @@ describe('fff hygiene native call sites', () => {
         'Native Grep.'
       );
       expect(context.snapshot).toBe(snapshot);
-      expect(context.systemPrompt).toEqual([
-        'old system prompt',
-        ...(enabled ? [FFF_PROJECT_GUIDANCE] : []),
+      expect(snapshot.systemPrompt).toEqual([
+        savedRoot,
+        '# Environment\n - \n - \n - ',
+        ...FFF_OWNED_PROJECT_GUIDANCE,
       ]);
-      expect(source.includes('function __tweakccFffPrompt')).toBe(enabled);
+      expect(context.systemPrompt).toEqual([cleanedRoot]);
+      expect(source).toContain('function __tweakccRecordedPrompt');
       expect(writeFffInstructionHygiene(source)).toBe(source);
+    }
+  );
+
+  it.each([false, true])(
+    'normalizes a saved Bash note once for API, context, and fork use, enabled=%s',
+    async enabled => {
+      const schema = { type: 'object' };
+      const bash = {
+        name: 'Bash',
+        description: 'Saved Bash.\n\n' + FFF_BASH_GUIDANCE,
+        input_schema: schema,
+      };
+      const snapshot: Snapshot = {
+        systemPrompt: ['saved root', ...FFF_OWNED_PROJECT_GUIDANCE],
+        toolDescriptions: new Map([['Bash', bash.description]]),
+        toolEntries: new Map([['Bash', bash]]),
+      };
+      const repaired = writeFffInstructionHygiene(PRISTINE)!;
+      const fixture = evaluate(
+        enabled ? writeFffInstructions(repaired)! : repaired
+      );
+      const result = await request(fixture, snapshot);
+      const context = await fixture.$context(
+        [snapshot],
+        'model',
+        {},
+        TOOLS,
+        [],
+        { prompt: ['live'], toolUseContext: { options: { tools: TOOLS } } }
+      );
+      const expected =
+        'Saved Bash.' + (enabled ? '\n\n' + FFF_BASH_GUIDANCE : '');
+      for (const maps of [
+        {
+          descriptions: result.request.options.recordedToolDescriptions,
+          entries: result.request.options.recordedToolEntries,
+        },
+        {
+          descriptions: context.toolDescriptions,
+          entries: context.toolEntries,
+        },
+      ]) {
+        const output = await fixture.$describe(
+          {
+            name: 'Bash',
+            prompt: async () => 'Live Bash.',
+            input_schema: schema,
+          },
+          {
+            recordedDescription: maps.descriptions?.get('Bash'),
+            recordedEntry: maps.entries?.get('Bash'),
+          }
+        );
+        expect(output.description).toBe(expected);
+        expect(output.input_schema).toBe(schema);
+        const fork = await fixture.$describe(
+          {
+            name: 'Bash',
+            prompt: async () => output.description,
+            input_schema: schema,
+          },
+          { recordedEntry: output }
+        );
+        expect(fork.description).toBe(expected);
+      }
+      expect(result.request.systemPrompt).toEqual([
+        'saved root',
+        'environment',
+      ]);
+      expect(context.systemPrompt).toEqual(['saved root']);
+      expect(snapshot.systemPrompt).toContain(FFF_OWNED_PROJECT_GUIDANCE[0]);
+      expect(bash.description).toContain(FFF_BASH_GUIDANCE);
     }
   );
 
@@ -449,6 +546,14 @@ describe('fff hygiene native call sites', () => {
   });
 
   it.each([
+    [
+      'missing API prompt selection',
+      PRISTINE.replace('$selected.systemPrompt', '$selected.otherPrompt'),
+    ],
+    [
+      'missing context prompt selection',
+      PRISTINE.replace('$snapshot?.systemPrompt', '$snapshot?.otherPrompt'),
+    ],
     ['missing API selection', PRISTINE.replace(API_SITE, '')],
     ['missing context selection', PRISTINE.replace(CONTEXT_SITE, '$tools={}')],
     ['missing API scope', PRISTINE.replace(API, '')],

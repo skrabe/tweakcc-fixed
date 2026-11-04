@@ -120,6 +120,7 @@ import { writeSessionColor } from './sessionColor';
 import { writeReadDefaultLines } from './readDefaultLines';
 import { writeSwapRipgrepForFff } from './swapRipgrepForFff';
 import { writeFffInstructionHygiene } from './fffInstructions';
+import { writeEmptyEnvironment } from './emptyEnvironment';
 import { ensureRgFffWrapper } from '../ripgrepFff';
 import {
   writeSuppressDeferredTools,
@@ -246,11 +247,18 @@ const PATCH_DEFINITIONS = [
       'When a prompt override replaces one of Claude Code\'s identity lines, turn off the "global" cache scope that the first-party API rejects after a non-stock identity, so the prompt caches at organization scope instead. Does nothing while the identity lines are stock.',
   },
   {
+    id: 'empty-environment',
+    name: 'Suppress empty environment scaffolding',
+    group: PatchGroup.ALWAYS_APPLIED,
+    description:
+      'Omit the environment prose heading and list when every fragment is blank',
+  },
+  {
     id: 'fff-instruction-hygiene',
     name: 'Remove stale fff tool guidance',
     group: PatchGroup.ALWAYS_APPLIED,
     description:
-      'Remove previously appended fff guidance from active saved tool descriptions without modifying session records',
+      'Remove stale fff guidance from active prompts and saved tool descriptions without modifying session records',
   },
   {
     id: 'fix-summarize-from-here',
@@ -1220,6 +1228,9 @@ export const applyCustomization = async (
     },
     'fff-instruction-hygiene': {
       fn: c => writeFffInstructionHygiene(c),
+    },
+    'empty-environment': {
+      fn: c => writeEmptyEnvironment(c),
     },
     'fix-summarize-from-here': {
       fn: c => writeFixSummarizeFromHere(c),

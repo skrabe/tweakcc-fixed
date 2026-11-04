@@ -251,10 +251,10 @@
     }
   },
   "tool-parameter-artifact-capabilities": {
-    "bodyHash": "976560cae75e",
-    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "bodyHash": "5ff16c947a13",
+    "reviewed": "2026-11-04 (CC 2.1.317)",
     "tokens": {
-      "TOOL_PARAMETER_ARTIFACT_CAPABILITIES_VAR_0": "Both facts in deployed tool-description-artifact-runtime-capabilities-guidance with the slot live (${ARTIFACT_CAPABILITIES_SKILL_NAME}); serialized with this parameter."
+      "TOOL_PARAMETER_ARTIFACT_CAPABILITIES_VAR_0": "The parameter retains omission versus empty-object semantics. The co-rendered tool-description-artifact-runtime-capabilities-guidance-app-wording requires loading the current ${ARTIFACT_CAPABILITIES_SKILL_NAME} before passing capabilities or writing runtime code, preserving the skill name and contract-loading instruction. This slot was absent before this audit; the added parameter sentence does not remove it."
     }
   },
   "tool-parameter-cron-create-recurring": {
@@ -390,17 +390,6 @@
       "TOOL_RESULT_ACCOUNT_SKILLS_SEND_COMPLETE_SKILL_VAR_1": "Renders the same constant save-option sentence that system-prompt-saving-skills-via-file-delivery interpolates as its VAR_1, so it still reaches the model once on the send_file arm."
     }
   },
-  "agent-prompt-security-monitor-for-autonomous-agent-actions": {
-    "bodyHash": "3620c31330bd",
-    "reviewed": "2026-09-28 (CC 2.1.284)",
-    "tokens": {
-      "CLASSIFIER_WORDING_VARIANT.boundBullet": "The standing LCC trim deletes the whole Evaluation Rules section and the User Intent 'Bound' bullet; CC 2.1.284 moved those sections' wording into this A/B wording object. Realigned ccVersion-only rather than regrowing the deleted section; the new candidate rules therefore do not render under this override. Flagged to skrabe as a decision.",
-      "CLASSIFIER_WORDING_VARIANT.classifierBypassTail": "The standing LCC trim deletes the whole Evaluation Rules section and the User Intent 'Bound' bullet; CC 2.1.284 moved those sections' wording into this A/B wording object. Realigned ccVersion-only rather than regrowing the deleted section; the new candidate rules therefore do not render under this override. Flagged to skrabe as a decision.",
-      "CLASSIFIER_WORDING_VARIANT.unseenToolResultsTail": "The standing LCC trim deletes the whole Evaluation Rules section and the User Intent 'Bound' bullet; CC 2.1.284 moved those sections' wording into this A/B wording object. Realigned ccVersion-only rather than regrowing the deleted section; the new candidate rules therefore do not render under this override. Flagged to skrabe as a decision.",
-      "CLASSIFIER_WORDING_VARIANT.insertedEvaluationRules": "The standing LCC trim deletes the whole Evaluation Rules section and the User Intent 'Bound' bullet; CC 2.1.284 moved those sections' wording into this A/B wording object. Realigned ccVersion-only rather than regrowing the deleted section; the new candidate rules therefore do not render under this override. Flagged to skrabe as a decision.",
-      "CLASSIFIER_WORDING_VARIANT.persistentConfiguration": "The standing LCC trim deletes the whole Evaluation Rules section and the User Intent 'Bound' bullet; CC 2.1.284 moved those sections' wording into this A/B wording object. Realigned ccVersion-only rather than regrowing the deleted section; the new candidate rules therefore do not render under this override. Flagged to skrabe as a decision."
-    }
-  },
   "tool-description-agent-explicit-spawn-restriction": {
     "bodyHash": "da39a3ee5e6b",
     "reviewed": "2026-10-07 (CC 2.1.292)",
@@ -423,6 +412,21 @@
     "reviewed": "2026-10-20 (CC 2.1.304)",
     "tokens": {
       "TOOL_RESULT_ENTERWORKTREE_NOW_WORKING_MESSAGE_VAR_6": "2.1.304 moved the ExitWorktree how-to-leave sentence to a trailing slot. The override has cut that sentence since 2.1.210; the ExitWorktree tool description carries it."
+    }
+  },
+  "data-message-batches-api-typescript": {
+    "bodyHash": "57e3625212b5",
+    "reviewed": "2026-11-04 (CC 2.1.317)",
+    "tokens": {
+      "result.result.message.content": "This is an escaped interpolation inside a TypeScript documentation example, not a live Claude Code prompt-builder binding. The new example retains result.result.message.content as code, narrows all text blocks and joins them before text.slice(0, 100), replacing the unsafe content[0].text assumption. No runtime slot is lost."
+    }
+  },
+  "tool-description-snooze-delay-and-reason-guidance": {
+    "bodyHash": "43c10093723d",
+    "reviewed": "2026-11-04 (CC 2.1.317 native-route audit)",
+    "tokens": {
+      "TOOL_DESCRIPTION_SNOOZE_DELAY_AND_REASON_GUIDANCE_VAR_1": "Removed the comparison with the different CronCreate sentinel. This ScheduleWakeup body retains its actual dynamic sentinel in VAR_0; the co-rendered prompt schema also specifies the exact dynamic sentinel. CronCreate guidance is unchanged.",
+      "TOOL_DESCRIPTION_SNOOZE_DELAY_AND_REASON_GUIDANCE_VAR_2": "Removed the repeated tool name in that same CronCreate comparison. The offered tool name remains ScheduleWakeup in the tool schema; stop, required fields and dynamic-loop prompt contracts remain in the description and schema."
     }
   }
 }

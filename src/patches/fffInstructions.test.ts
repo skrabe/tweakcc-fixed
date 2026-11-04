@@ -1,10 +1,15 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
-  FFF_PROJECT_GUIDANCE,
+  FFF_BASH_GUIDANCE,
+  composeFffToolDescription,
   normalizeFffAutoMode,
-  normalizeFffPrompt,
+  normalizeRecordedPrompt,
   writeFffInstructions,
 } from './fffInstructions';
+import { FFF_OWNED_PROJECT_GUIDANCE } from './fffInstructionSuffixes';
+
+const SERIALIZER =
+  ';async function $describe($tool,$options){let $cached=$options.cached??{description:await $tool.prompt(),input_schema:$tool.input_schema},$entry=$options.recordedEntry,$redescribed=$options.isRedescribed===true,$result={name:$tool.name,description:$redescribed?$cached.description:$entry?.description??$options.recordedDescription??$cached.description,input_schema:$entry?.input_schema??$cached.input_schema};return $result;}';
 
 const API_SITE =
   'let $wire=$identity($merge($selected.systemPrompt,$routing.systemContext)),$unused,$other,$entries,$copies,$record=()=>{let $next=$extra($rows,$entries,{options:$current.options,querySource:$source,stamp:$stamp,toolInputCopies:$copies});return $next};';
@@ -26,7 +31,7 @@ const RENDER =
   ';function $render($rows,$visible=[],$model,$config){$rows=$fold($rows,$config?.accountMemoryWithheld,$memo(()=>$visible));let $output=[];for(let $row of $rows){' +
   RENDER_SITE +
   '$output.push(...$rendered)}return $output;}';
-const PRISTINE = API + CONTEXT + RENDER;
+const PRISTINE = API + CONTEXT + RENDER + SERIALIZER;
 const TOOLS = [{ name: 'Bash' }, { name: 'Glob' }, { name: 'Grep' }];
 
 type Message = {
@@ -36,6 +41,15 @@ type Message = {
 };
 
 type Fixture = {
+  $describe: (
+    tool: { name: string; prompt: () => Promise<string>; input_schema: object },
+    options: {
+      cached?: { description: string; input_schema: object };
+      recordedDescription?: string;
+      recordedEntry?: { description: string; input_schema: object };
+      isRedescribed?: boolean;
+    }
+  ) => Promise<{ name: string; description: string; input_schema: object }>;
   $query: (input: {
     systemPrompt: string[];
     userContext: object;
@@ -69,7 +83,7 @@ const evaluate = (source: string): Fixture =>
     '$memo',
     '$live',
     '$recorded',
-    source + ';return{$query,$context,$render};'
+    source + ';return{$query,$context,$render,$describe};'
   )(
     (value: unknown) => value,
     (prompt: string[], environment: string[]) => [...prompt, ...environment],
@@ -104,28 +118,59 @@ const query = async (
 };
 
 describe('fff instruction runtime', () => {
-  it('appends once after a custom prompt without mutating its array', () => {
-    const original = ['My custom instructions.'];
-    const first = normalizeFffPrompt(original, TOOLS, FFF_PROJECT_GUIDANCE);
-    expect(first).toEqual([...original, FFF_PROJECT_GUIDANCE]);
-    expect(normalizeFffPrompt(first, TOOLS, FFF_PROJECT_GUIDANCE)).toBe(first);
-    expect(original).toEqual(['My custom instructions.']);
+  it('composes one Bash note and preserves native text and other tools', () => {
+    const native = 'Custom shell instructions. Use exact search here.';
+    const first = composeFffToolDescription(native, 'Bash', FFF_BASH_GUIDANCE);
+    expect(first).toBe(native + '\n\n' + FFF_BASH_GUIDANCE);
+    expect(composeFffToolDescription(first, 'Bash', FFF_BASH_GUIDANCE)).toBe(
+      first
+    );
     expect(
-      normalizeFffPrompt(original, [{ name: 'Read' }], FFF_PROJECT_GUIDANCE)
-    ).toBe(original);
+      composeFffToolDescription(
+        first + '\n\n' + FFF_BASH_GUIDANCE,
+        'Bash',
+        FFF_BASH_GUIDANCE
+      )
+    ).toBe(first);
+    for (const name of ['Grep', 'Read', 'mcp__custom__Bash', undefined]) {
+      expect(composeFffToolDescription(native, name, FFF_BASH_GUIDANCE)).toBe(
+        native
+      );
+    }
+    expect(
+      composeFffToolDescription(undefined, 'Bash', FFF_BASH_GUIDANCE)
+    ).toBeUndefined();
+    expect(composeFffToolDescription(native, 'Bash', '  ')).toBe(native);
+  });
+
+  it('strips only complete owned root fragments without mutating saved prompts', () => {
+    const custom = 'FFF project navigation: custom instructions.';
+    const original = [
+      'Custom instructions.',
+      ...FFF_OWNED_PROJECT_GUIDANCE,
+      custom,
+    ];
+    expect(
+      normalizeRecordedPrompt(original, FFF_OWNED_PROJECT_GUIDANCE)
+    ).toEqual(['Custom instructions.', custom]);
+    expect(original).toHaveLength(4);
+    const clean = ['native'];
+    expect(normalizeRecordedPrompt(clean, FFF_OWNED_PROJECT_GUIDANCE)).toBe(
+      clean
+    );
   });
 
   it.each([undefined, null, {}, 'custom string', ['valid', 3]])(
     'leaves unsupported prompt inputs unchanged: %s',
     prompt => {
-      expect(normalizeFffPrompt(prompt, TOOLS, FFF_PROJECT_GUIDANCE)).toBe(
+      expect(normalizeRecordedPrompt(prompt, FFF_OWNED_PROJECT_GUIDANCE)).toBe(
         prompt
       );
     }
   );
 
   it.each(['strict', 'relaxed'])(
-    'changes only the %s search clause',
+    'redirects only the %s auto-mode search clause to the Bash description',
     variant => {
       const prefix =
         variant === 'strict'
@@ -141,28 +186,29 @@ describe('fff instruction runtime', () => {
         original,
         { type: 'auto_mode' },
         TOOLS,
-        FFF_PROJECT_GUIDANCE
+        FFF_BASH_GUIDANCE
       ) as Message[];
-      const updated = result[0].message.content as string;
-      const replacement =
-        'start discovery of unknown project files with fff files in Bash, use Glob for exact filename patterns, and use Grep for file contents';
-      expect(updated.replace(replacement, 'search with grep and find')).toBe(
-        text
-      );
+      expect(
+        (result[0].message.content as string).replace(
+          'search following the Bash tool description',
+          'search with grep and find'
+        )
+      ).toBe(text);
       expect(result[0].isMeta).toBe(true);
       expect(original[0].message.content).toBe(text);
+      expect(result[0].message.content).not.toContain('fff files');
       expect(
         normalizeFffAutoMode(
           result,
           { type: 'auto_mode' },
           TOOLS,
-          FFF_PROJECT_GUIDANCE
+          FFF_BASH_GUIDANCE
         )
       ).toBe(result);
     }
   );
 
-  it('preserves mixed content and only names available native tools', () => {
+  it('preserves mixed content and requires Bash availability for auto-mode', () => {
     const image = { type: 'image', source: { synthetic: true } };
     const untouched = {
       type: 'text',
@@ -183,20 +229,18 @@ describe('fff instruction runtime', () => {
       original,
       { type: 'auto_mode' },
       [{ name: 'Bash' }],
-      FFF_PROJECT_GUIDANCE
+      FFF_BASH_GUIDANCE
     ) as Message[];
     const content = result[0].message.content as { text?: string }[];
     expect(content[0]).toBe(untouched);
     expect(content[2]).toBe(image);
-    expect(content[1].text).toContain('fff files');
-    expect(content[1].text).not.toContain('Glob');
-    expect(content[1].text).not.toContain('Grep');
+    expect(content[1].text).toBe('search following the Bash tool description');
     expect(
       normalizeFffAutoMode(
         original,
         { type: 'plan_mode' },
         TOOLS,
-        FFF_PROJECT_GUIDANCE
+        FFF_BASH_GUIDANCE
       )
     ).toBe(original);
     expect(
@@ -204,86 +248,119 @@ describe('fff instruction runtime', () => {
         original,
         { type: 'auto_mode' },
         [{ name: 'Grep' }],
-        FFF_PROJECT_GUIDANCE
+        FFF_BASH_GUIDANCE
       )
     ).toBe(original);
   });
 });
 
 describe('fff scoped instruction patch', () => {
-  it('normalizes current and saved prompts after native snapshot selection', async () => {
+  it('composes live, cached, restored, and redescribed Bash entries at the shared serializer', async () => {
     const patched = writeFffInstructions(PRISTINE)!;
     expect(patched).not.toBeNull();
     const fixture = evaluate(patched);
-    for (const prompt of [['default'], ['custom override', 'user appendix']]) {
-      expect(await query(fixture, prompt)).toEqual([
-        ...prompt,
-        'environment',
-        FFF_PROJECT_GUIDANCE,
-      ]);
+    const schema = {
+      type: 'object',
+      properties: { command: { type: 'string' } },
+    };
+    const prompt = vi.fn(async () => 'Native full or lean description.');
+    for (const name of ['Bash', 'Grep', 'Read', 'mcp__custom__Bash']) {
+      const tool = { name, prompt, input_schema: schema };
+      for (const options of [
+        {},
+        {
+          cached: { description: 'Cached native text.', input_schema: schema },
+        },
+        { recordedDescription: 'Forked description.' },
+        {
+          recordedEntry: {
+            description: 'Saved description.',
+            input_schema: schema,
+          },
+        },
+        {
+          recordedEntry: {
+            description: 'Saved description.\n\n' + FFF_BASH_GUIDANCE,
+            input_schema: schema,
+          },
+        },
+        { isRedescribed: true, recordedDescription: 'Old override.' },
+      ]) {
+        const result = await fixture.$describe(tool, options);
+        const pristine = await evaluate(PRISTINE).$describe(tool, options);
+        expect(result.input_schema).toBe(pristine.input_schema);
+        expect(result.name).toBe(name);
+        expect(result.description).toBe(
+          name === 'Bash'
+            ? pristine.description.replaceAll('\n\n' + FFF_BASH_GUIDANCE, '') +
+                '\n\n' +
+                FFF_BASH_GUIDANCE
+            : pristine.description
+        );
+      }
     }
+    expect(writeFffInstructions(patched)).toBe(patched);
+  });
+
+  it('leaves root prompts and snapshot arrays unchanged and gates guidance on the tool name', async () => {
+    const patched = writeFffInstructions(PRISTINE)!;
+    const fixture = evaluate(patched);
     const snapshot = { systemPrompt: ['old saved prompt'] };
-    expect(await query(fixture, ['new live prompt'], TOOLS, snapshot)).toEqual([
+    expect(await query(fixture, ['live'], TOOLS, snapshot)).toEqual([
       'old saved prompt',
       'environment',
-      FFF_PROJECT_GUIDANCE,
     ]);
-    expect(snapshot.systemPrompt).toEqual(['old saved prompt']);
     expect(
       await fixture.$context([], 'model', {}, TOOLS, [], {
         prompt: ['live'],
         snapshot,
       })
-    ).toEqual(['old saved prompt', FFF_PROJECT_GUIDANCE]);
-    expect(
-      await query(fixture, ['custom'], [{ name: 'Read' }], snapshot)
-    ).toEqual(['old saved prompt', 'environment']);
-    expect(
-      await fixture.$context([], 'model', {}, [{ name: 'Read' }], [], {
-        prompt: ['live'],
-        snapshot,
-      })
     ).toBe(snapshot.systemPrompt);
-    expect(writeFffInstructions(patched)).toBe(patched);
+    expect(await query(fixture, ['custom'], [{ name: 'Read' }])).toEqual([
+      'custom',
+      'environment',
+    ]);
+    expect(snapshot.systemPrompt).toEqual(['old saved prompt']);
+    expect(patched).not.toContain('__tweakccRecordedPrompt');
+    const read = await fixture.$describe(
+      { name: 'Read', prompt: async () => 'Read.', input_schema: {} },
+      {}
+    );
+    expect(read.description).toBe('Read.');
   });
 
   it.each(['auto', 'bypass'])(
-    'corrects current and recorded %s attachment messages',
+    'redirects current and recorded %s attachment searches without repeating the note',
     mode => {
       const fixture = evaluate(writeFffInstructions(PRISTINE)!);
-      for (const variant of ['strict', 'relaxed']) {
-        const text = `${mode}/${variant}: search with grep and find; permission text; edit text.`;
-        const messages = [{ type: 'user', message: { content: text } }];
-        for (const withoutAttachmentHooks of [false, true]) {
-          const rows = [{ attachment: { type: 'auto_mode' }, messages }];
-          const rendered = fixture.$render(rows, TOOLS, undefined, {
-            withoutAttachmentHooks,
-          });
-          expect(rendered[0].message.content).toContain('fff files');
-          expect(rendered[0].message.content).toContain(
-            'permission text; edit text.'
-          );
-          expect(messages[0].message.content).toBe(text);
-          expect(fixture.$render(rows, [{ name: 'Read' }], undefined)[0]).toBe(
-            messages[0]
-          );
-        }
+      const text = `${mode}: search with grep and find; permission text; edit text.`;
+      const messages = [{ type: 'user', message: { content: text } }];
+      for (const withoutAttachmentHooks of [false, true]) {
+        const rows = [{ attachment: { type: 'auto_mode' }, messages }];
+        const rendered = fixture.$render(rows, TOOLS, undefined, {
+          withoutAttachmentHooks,
+        });
+        expect(rendered[0].message.content).toBe(
+          `${mode}: search following the Bash tool description; permission text; edit text.`
+        );
+        expect(messages[0].message.content).toBe(text);
+        expect(fixture.$render(rows, [{ name: 'Read' }], undefined)[0]).toBe(
+          messages[0]
+        );
       }
     }
   );
 
-  it('leaves restoration and disabled feature behavior in pristine source', async () => {
-    const saved = { systemPrompt: ['saved'] };
-    const patched = evaluate(writeFffInstructions(PRISTINE)!);
-    expect(await query(patched, ['base'], TOOLS, saved)).toContain(
-      FFF_PROJECT_GUIDANCE
+  it('preserves pristine serializer behavior with the feature disabled', async () => {
+    const fixture = evaluate(PRISTINE);
+    const tool = {
+      name: 'Bash',
+      prompt: async () => 'Native Bash.',
+      input_schema: {},
+    };
+    expect((await fixture.$describe(tool, {})).description).toBe(
+      'Native Bash.'
     );
-    const restored = evaluate(PRISTINE);
-    expect(await query(restored, ['base'], TOOLS, saved)).toEqual([
-      'saved',
-      'environment',
-    ]);
-    expect(saved).toEqual({ systemPrompt: ['saved'] });
     expect(PRISTINE).not.toContain('__tweakccFff');
   });
 
@@ -291,46 +368,32 @@ describe('fff scoped instruction patch', () => {
     const guidance = 'Synthetic `code` ${placeholder} \\ "quoted" é text.';
     const patched = writeFffInstructions(PRISTINE, guidance)!;
     expect(patched).not.toContain('é');
-    expect(await query(evaluate(patched), ['custom'])).toEqual([
-      'custom',
-      'environment',
-      guidance,
-    ]);
+    const result = await evaluate(patched).$describe(
+      { name: 'Bash', prompt: async () => 'Native.', input_schema: {} },
+      {}
+    );
+    expect(result.description).toBe('Native.\n\n' + guidance);
     expect(writeFffInstructions(patched, guidance)).toBe(patched);
   });
 
-  it('bounds parser scopes across braces in strings, regexes, and templates', () => {
+  it('bounds the renderer parser across braces in strings, regexes, and templates', () => {
     const source = PRISTINE.replace(
-      API_SITE,
-      'let $braces="}",$regex=/[{}]/,$template=`${"}"}`;' + API_SITE
+      RENDER_SITE,
+      'let $braces="}",$regex=/[{}]/,$template=`${"}"}`;' + RENDER_SITE
     );
     expect(writeFffInstructions(source)).not.toBeNull();
   });
 
   it.each([
-    ['missing API scope', PRISTINE.replace(API, '')],
-    ['missing context scope', PRISTINE.replace(CONTEXT, '')],
+    ['missing serializer', PRISTINE.replace(SERIALIZER, '')],
+    ['duplicate serializer', PRISTINE + SERIALIZER],
+    [
+      'changed serializer',
+      PRISTINE.replace('$entry?.description??', '$entry.description??'),
+    ],
     ['missing renderer scope', PRISTINE.replace(RENDER, '')],
-    ['ambiguous API scope', PRISTINE + ';' + API],
-    ['ambiguous context scope', PRISTINE + CONTEXT],
     ['ambiguous renderer scope', PRISTINE + RENDER],
-    ['missing API initializer', PRISTINE.replace(API_SITE, '')],
-    ['missing context initializer', PRISTINE.replace(CONTEXT_SITE, '')],
     ['missing renderer initializer', PRISTINE.replace(RENDER_SITE, '')],
-    [
-      'neighboring API initializer',
-      PRISTINE.replace(API_SITE, '') +
-        ';function $neighbor(){' +
-        API_SITE +
-        '}',
-    ],
-    [
-      'neighboring context initializer',
-      PRISTINE.replace(CONTEXT_SITE, '') +
-        ';function $neighbor(){' +
-        CONTEXT_SITE +
-        '}',
-    ],
     [
       'neighboring renderer initializer',
       PRISTINE.replace(RENDER_SITE, '') +
@@ -339,30 +402,8 @@ describe('fff scoped instruction patch', () => {
         '}',
     ],
     [
-      'nested API initializer',
-      PRISTINE.replace(API_SITE, 'function $nested(){' + API_SITE + '}'),
-    ],
-    [
-      'nested context initializer',
-      PRISTINE.replace(
-        CONTEXT_SITE,
-        'function $nested(){' + CONTEXT_SITE + '}'
-      ),
-    ],
-    [
       'nested renderer initializer',
       PRISTINE.replace(RENDER_SITE, 'function $nested(){' + RENDER_SITE + '}'),
-    ],
-    [
-      'ambiguous API initializer',
-      PRISTINE.replace(API_SITE, '{' + API_SITE + '}{' + API_SITE + '}'),
-    ],
-    [
-      'ambiguous context initializer',
-      PRISTINE.replace(
-        CONTEXT_SITE,
-        '{' + CONTEXT_SITE + '}{' + CONTEXT_SITE + '}'
-      ),
     ],
     [
       'ambiguous renderer initializer',
