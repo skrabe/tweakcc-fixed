@@ -8,15 +8,6 @@
       "SEARCH_TOOL_NAMES": "Value is the tool-name list \"<Read>, <Glob>, and <Grep>\" (or \"<Read>, `find`, and `grep`\" with embedded search tools). Renders `Use Read, Glob, and Grep for local CLAUDE.md and `.claude/` references.` (or `Use Read, `find`, and `grep` for …`), pristine step 7 reworded into a complete imperative."
     }
   },
-  "agent-prompt-summarization-no-tools-guard": {
-    "bodyHash": "bdc466481a52",
-    "pristineHash": "00a56291676b",
-    "valueHash": "4589f08ef6fa",
-    "reviewed": "2026-10-07 (CC 2.1.292)",
-    "tokens": {
-      "SUMMARY_REPLY_SHAPE_DESCRIPTION": "Value is \"an <analysis> block followed by a <summary> block\" or, on the lean/short/capped summary paths, \"a <summary> block\" (tQt is exported and called with either, so the resolver also keeps an unknown branch). Renders `Your response is an <analysis> block followed by a <summary> block.` or `Your response is a <summary> block.`, reworded from \"Your entire response must be plain text: …\". Both read whole, and the shape is still predicated of the response."
-    }
-  },
   "system-reminder-cloud-review-launch-note": {
     "bodyHash": "39e7bf684884",
     "pristineHash": "4986b369b135",
@@ -101,10 +92,10 @@
   "tool-description-webfetch-private-url-warning": {
     "bodyHash": "aaec1af6eb21",
     "pristineHash": "aadf5e927382",
-    "valueHash": "aa818db050c8",
-    "reviewed": "2026-10-25 (CC 2.1.310)",
+    "valueHash": "22b7e74a908f",
+    "reviewed": "2026-11-04 (CC 2.1.318)",
     "tokens": {
-      "WEBFETCH_OBSERVABLE_ACTION_NOTE": "Value is \"\" or a whole paragraph about which URLs WebFetch may fetch, ending in a blank line. It leads the description exactly as in pristine; the override only cut the IMPORTANT paragraph that followed it, so the block fn output now follows the note directly."
+      "WEBFETCH_OBSERVABLE_ACTION_NOTE": "Value is a runtime paragraph (opaque to the resolver since 2.1.318) about which URLs WebFetch may fetch, or \"\". It leads the description exactly as in pristine; the override only cut the IMPORTANT paragraph that followed it, so the block fn output now follows the note directly."
     }
   },
   "system-prompt-harness-instructions-3": {
@@ -126,12 +117,12 @@
     }
   },
   "system-prompt-post-compaction-continue": {
-    "bodyHash": "6b9b44874427",
-    "pristineHash": "ddb24f20775b",
-    "valueHash": "b7818e4690f5",
-    "reviewed": "2026-11-03 (CC 2.1.317)",
+    "bodyHash": "91b903a64348",
+    "pristineHash": "aa764f15ee67",
+    "valueHash": "b478468f6aa0",
+    "reviewed": "2026-11-04 (CC 2.1.318)",
     "tokens": {
-      "SYSTEM_PROMPT_POST_COMPACTION_CONTINUE_VAR_0": "Value is the constant \"Continue the conversation from where it left off\". The override ends it with a full stop instead of pristine's \"without asking the user any further questions\" clause, so it renders as a whole sentence before \"Resume directly …\"."
+      "SYSTEM_PROMPT_POST_COMPACTION_CONTINUE_VAR_1": "Value is the constant \"Continue the conversation from where it left off\" (2.1.318 moved it from the first slot to the second, after the summary-header slot and a newline). The override ends it with a full stop instead of pristine's \"without asking the user any further questions\" clause, so it renders as a whole sentence before \"Resume directly …\"."
     }
   }
 }
