@@ -93,6 +93,18 @@ describe('writeSessionMemory', () => {
     expect(() => new Function(out!)).not.toThrow();
   });
 
+  it('neutralizes the CC 2.1.317 inline extractor gate', () => {
+    const v317 =
+      'function lut(){if(Y8e()!==null)return!0;if(!v("tengu_passport_quail",!1))return!1;return!he()||v("tengu_slate_thimble",!1)}' +
+      'async function sr(p,T){let A=Y8e(),I=A!==null;if(!I&&!v("tengu_passport_quail",!1)&&!Xt())return;if(!I&&!wp())return;await Oe(p)}';
+    const out = writeSessionMemory(v317);
+    expect(out).not.toBeNull();
+    expect(out).toContain('function lut(){return!0}');
+    expect(out).toContain('if(!I&&!1&&!Xt())return;if(!I&&!wp())return;');
+    expect(out).not.toContain('tengu_passport_quail');
+    expect(() => new Function(out!)).not.toThrow();
+  });
+
   it('treats a modern build (gates already promoted) as a clean no-op', () => {
     // CC >= ~2.1.152: none of the flag literals / anchors are present, but the
     // session-search UI event path exists, so every sub-patch no-ops and the
