@@ -220,6 +220,12 @@ describe('inlineBlobOverrides: applyInlineBlobOverrides (integration)', () => {
     expect(good.results[0].applied).toBe(true);
     const rendered = new Function(`${good.content};return f()`)();
     expect(rendered).toBe('Use the `y` tool.');
+    // An escaped backtick inside a kept nested slot is not the body's own.
+    const nested =
+      'function f(){return`Use the ${H?`run ${X} via \\`bash\\``:""} tool.`}';
+    write('Use the ${H?`run ${X} via \\`bash\\``:""} tool, now.');
+    const kept = await applyInlineBlobOverrides(nested);
+    expect(kept.results[0].applied).toBe(true);
   });
 
   // Root cause A: the agent-launch shape. The override has MORE top-level
