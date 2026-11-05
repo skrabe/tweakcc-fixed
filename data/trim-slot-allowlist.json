@@ -353,10 +353,10 @@
     }
   },
   "agent-prompt-conversation-summarization": {
-    "bodyHash": "d4cea362c80d",
-    "reviewed": "2026-11-04 (CC 2.1.318)",
+    "bodyHash": "638d043305bc",
+    "reviewed": "2026-11-05 (CC 2.1.318)",
     "tokens": {
-      "AGENT_PROMPT_CONVERSATION_SUMMARIZATION_VAR_0": "The body carries its own summary contract: what the next window already has, a length rule scaled to the remaining work, and the items to keep (user requests and exact constraints, decisions and ruled-out approaches, work state, next step). Anthropic's analysis-instructions block (an unconditional slot since 2.1.318) would add a full-code-snippet chronological walk that the length rule replaces. Its security note is not lost: the compaction builder appends it whenever the template lacks it. VAR_1, the user-message attribution guard, is interpolated and stays live, and the body still names <analysis>, so the builder keeps the analysis-then-summary reply shape."
+      "AGENT_PROMPT_CONVERSATION_SUMMARIZATION_VAR_0": "The body carries its own analysis steps (walk the conversation in order, mark which user messages still bind, check whether the last reply already answered, play the next window forward, copy exact strings) and its own sectioned summary contract, so Anthropic's analysis-instructions slot (an unconditional slot since 2.1.318, a chronological walk demanding full code snippets) would duplicate it. A blind replay of six real compactions ranked this body above both the stock prompt and the previous override. The slot's security note is not lost: the compaction builder appends it whenever the template lacks it. VAR_1, the user-message attribution guard, is interpolated and stays live, and the body still names <analysis>, so the builder keeps the analysis-then-summary reply shape."
     }
   },
   "agent-prompt-recent-message-summarization": {
