@@ -5,12 +5,13 @@
 //   node tools/appendVerdicts.mjs <data/file.json> <rows.json> [--replace]
 //
 // <rows.json> is an object keyed like the target ({key: row}) or an array of
-// rows that each carry a `key`, `hash` or `id` field naming their key (that
-// field is dropped from the stored row when it only served as the key). A key
+// rows that each carry an explicit `key` (dropped from the stored row). The key
+// is never inferred from `id` or `hash`: in these files those fields often name
+// something else (a slot row's `id` is a prompt id, its key a hash). A key
 // already in the target is refused unless --replace, so a review is never
-// overwritten by accident. The result is written through prettier with the
-// repo's config, which is what lint-staged would produce on commit, so the diff
-// holds only the new rows.
+// overwritten by accident. New keys are spliced in before the closing brace and
+// formatted with prettier; existing lines are left byte for byte, so the diff
+// holds only the new rows. --replace rewrites the whole file through prettier.
 //
 // Exit: 0 written · 1 refused (duplicate key or bad row) · 2 usage/IO error.
 
@@ -19,28 +20,44 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as prettier from 'prettier';
 
-const KEY_FIELDS = ['key', 'hash', 'id'];
-
 export const normalizeRows = rows => {
   if (Array.isArray(rows)) {
     const out = {};
     const errors = [];
     rows.forEach((row, i) => {
-      const field = KEY_FIELDS.find(f => typeof row?.[f] === 'string');
-      if (!field) {
-        errors.push(`row ${i} has no key, hash or id`);
+      if (typeof row?.key !== 'string' || row.key === '') {
+        errors.push(`row ${i} has no "key" field`);
         return;
       }
-      const k = row[field];
-      if (k in out) errors.push(`row ${i} repeats key ${k}`);
-      const rest = { ...row };
-      if (field === 'key') delete rest.key;
-      out[k] = rest;
+      if (row.key in out) errors.push(`row ${i} repeats key ${row.key}`);
+      const { key, ...rest } = row;
+      out[key] = rest;
     });
     return { rows: out, errors };
   }
   if (rows && typeof rows === 'object') return { rows, errors: [] };
   return { rows: {}, errors: ['rows must be an object or an array'] };
+};
+
+// Insert `rows` (all new keys) before the target's closing brace, keeping
+// every existing byte. Returns null when the text does not end in `}`.
+export const spliceRows = async (text, rows, prettierOptions) => {
+  const close = text.lastIndexOf('}');
+  if (close === -1 || text.slice(close + 1).trim() !== '') return null;
+  const head = text.slice(0, close).replace(/\s*$/, '');
+  const empty = head.endsWith('{');
+  const entries = Object.entries(rows).map(
+    ([k, v]) => `${JSON.stringify(k)}: ${JSON.stringify(v, null, 2)}`
+  );
+  const formatted = await prettier.format(`{${entries.join(',\n')}}`, {
+    ...prettierOptions,
+    parser: 'json',
+  });
+  const inner = formatted
+    .trim()
+    .slice(1, -1)
+    .replace(/^\n|\n$/g, '');
+  return `${head}${empty ? '' : ','}\n${inner}\n}\n`;
 };
 
 export const mergeRows = (target, rows, { replace = false } = {}) => {
@@ -85,10 +102,19 @@ const main = async () => {
     process.exit(1);
   }
   const options = (await prettier.resolveConfig(targetPath)) ?? {};
-  const text = await prettier.format(JSON.stringify(merged, null, 2), {
-    ...options,
-    filepath: targetPath,
-  });
+  const original = fs.readFileSync(targetPath, 'utf8');
+  const text =
+    (!clash.length && (await spliceRows(original, rows, options))) ||
+    (await prettier.format(JSON.stringify(merged, null, 2), {
+      ...options,
+      filepath: targetPath,
+    }));
+  if (JSON.stringify(JSON.parse(text)) !== JSON.stringify(merged)) {
+    console.error(
+      'appendVerdicts: merged text does not round-trip; nothing written'
+    );
+    process.exit(2);
+  }
   fs.writeFileSync(targetPath, text);
   const added = Object.keys(rows).length - clash.length;
   console.log(

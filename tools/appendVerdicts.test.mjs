@@ -9,19 +9,17 @@ import { mergeRows, normalizeRows } from './appendVerdicts.mjs';
 const tool = path.join(import.meta.dirname, 'appendVerdicts.mjs');
 
 describe('appendVerdicts', () => {
-  it('keys array rows by key, hash or id and drops a bare key field', () => {
+  it('keys array rows only by an explicit key', () => {
     const { rows, errors } = normalizeRows([
       { key: 'k1', verdict: 'glue' },
-      { hash: 'h1', verdict: 'catalogue' },
-      { id: 'some-id', verdict: 'not-model-facing' },
+      { key: 'h1', hash: 'other', id: 'some-id', verdict: 'catalogue' },
     ]);
     expect(errors).toEqual([]);
     expect(rows).toEqual({
       k1: { verdict: 'glue' },
-      h1: { hash: 'h1', verdict: 'catalogue' },
-      'some-id': { id: 'some-id', verdict: 'not-model-facing' },
+      h1: { hash: 'other', id: 'some-id', verdict: 'catalogue' },
     });
-    expect(normalizeRows([{ verdict: 'x' }]).errors).toHaveLength(1);
+    expect(normalizeRows([{ id: 'x', hash: 'y' }]).errors).toHaveLength(1);
   });
 
   it('refuses an existing key unless replacing', () => {
@@ -46,5 +44,19 @@ describe('appendVerdicts', () => {
     expect(JSON.parse(after).c).toEqual({ verdict: 'glue' });
     const again = spawnSync('node', [tool, target, rows], { encoding: 'utf8' });
     expect(again.status).toBe(1);
+  });
+
+  it('leaves escaped characters in existing rows untouched', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'append-'));
+    const target = path.join(dir, 'allow.json');
+    const before = '{\n  "a": {\n    "why": "x \\u2014 y"\n  }\n}\n';
+    fs.writeFileSync(target, before);
+    const rows = path.join(dir, 'rows.json');
+    fs.writeFileSync(rows, JSON.stringify([{ key: 'b', why: 'z' }]));
+    const r = spawnSync('node', [tool, target, rows], { encoding: 'utf8' });
+    expect(r.status).toBe(0);
+    const after = fs.readFileSync(target, 'utf8');
+    expect(after).toContain('"why": "x \\u2014 y"');
+    expect(JSON.parse(after)).toEqual({ a: { why: 'x — y' }, b: { why: 'z' } });
   });
 });
