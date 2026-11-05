@@ -345,6 +345,57 @@ describe('inlineBlobOverrides: applyInlineBlobOverrides (integration)', () => {
     expect(out).not.toContain('AAA');
   });
 
+  it('refuses a raw-passthrough array override whose slots no longer line up with the binary', async () => {
+    clearOverrides();
+    writeOverride(
+      'inline-sys.md',
+      [
+        '<!--',
+        "name: 'Inline blob: sys'",
+        'description: x',
+        'inlineBlobAnchor: \'[$\\w]+=\\["All text you output"\'',
+        'inlineBlobKind: array',
+        "inlineBlobRawPassthrough: 'true'",
+        'injectionGate: always on',
+        'ccVersion: 2.1.317',
+        '-->',
+        '"All text you output",itp(e,"standard"),uMy(),"tail"',
+      ].join('\n')
+    );
+    // The binary gained `...n?[HQe]:[]` before the hooks call, so a positional
+    // remap of the 3-slot override would turn uMy() into n().
+    const content =
+      'function O(e,n){let r=["All text you output",Bdn(e,"standard"),...n?[HQe]:[],spr(),"tail"];return r}';
+    const { content: out, results } = await applyInlineBlobOverrides(content);
+    expect(results[0].applied).toBe(false);
+    expect(results[0].failed).toBe(true);
+    expect(results[0].details).toContain('slot 3 uMy is a call');
+    expect(out).toBe(content);
+  });
+
+  it('allows a raw-passthrough array override that drops trailing slots', async () => {
+    clearOverrides();
+    writeOverride(
+      'inline-save.md',
+      [
+        '<!--',
+        "name: 'Inline blob: save'",
+        'description: x',
+        'inlineBlobAnchor: \'\\["## How to save"\'',
+        'inlineBlobKind: array',
+        "inlineBlobRawPassthrough: 'true'",
+        'injectionGate: always on',
+        'ccVersion: 2.1.317',
+        '-->',
+        '"## How to save",...Gwe,"- short"',
+      ].join('\n')
+    );
+    const content = 'x=["## How to save",...o3t,`- ${nr}`,...qn];';
+    const { content: out, results } = await applyInlineBlobOverrides(content);
+    expect(results[0].applied).toBe(true);
+    expect(out).toContain('["## How to save",...o3t,"- short"]');
+  });
+
   // memory-types-dynamic shape: the stale minified names (Fu5/lL8) live INSIDE
   // template-literal `${...}` array elements. The remap must recurse into the
   // interpolations and rewrite them to the pristine's platform-specific names

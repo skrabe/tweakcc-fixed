@@ -634,6 +634,36 @@ const remapArrayIdentifiers = (body: string, pristineIds: string[]): string => {
   return out;
 };
 
+type IdRef = { name: string; start: number; end: number };
+
+const slotShape = (text: string, ref: IdRef): string => {
+  const spread = text.slice(Math.max(0, ref.start - 3), ref.start) === '...';
+  let i = ref.end;
+  while (i < text.length && /\s/.test(text[i])) i++;
+  const next = text[i] ?? '';
+  const use = next === '(' ? 'call' : next === '[' || next === '.' ? next : '';
+  return (spread ? 'spread ' : '') + (use || 'value');
+};
+
+const findMisalignedSlot = (
+  body: string,
+  overrideRefs: IdRef[],
+  pristine: string,
+  pristineRefs: IdRef[]
+): string | null => {
+  if (overrideRefs.length > pristineRefs.length) {
+    return `override has ${overrideRefs.length} slots, binary has ${pristineRefs.length}`;
+  }
+  for (let k = 0; k < overrideRefs.length; k++) {
+    const want = slotShape(pristine, pristineRefs[k]);
+    const got = slotShape(body, overrideRefs[k]);
+    if (want !== got) {
+      return `slot ${k + 1} ${overrideRefs[k].name} is a ${got} but binary ${pristineRefs[k].name} is a ${want}`;
+    }
+  }
+  return null;
+};
+
 const encodeAsTemplateLiteral = (
   text: string,
   escapeNonAscii: boolean
@@ -826,9 +856,29 @@ export const applyInlineBlobOverrides = async (
         // array carries — these names are minifier output and differ
         // between Mac and Linux native builds.
         const pristineArrayBody = content.slice(lb + 1, end - 1);
-        const pristineIds = extractArrayIdentifiers(pristineArrayBody).map(
-          r => r.name
+        const pristineRefs = extractArrayIdentifiers(pristineArrayBody);
+        const pristineIds = pristineRefs.map(r => r.name);
+        // Positional remap is only sound while each override slot lines up with
+        // a binary slot used the same way. A new element in the binary's array
+        // shifts every later slot, so `hooks()` could bind to an unrelated
+        // variable and crash at runtime instead of failing here. Overrides may
+        // still drop trailing slots on purpose.
+        const misaligned = findMisalignedSlot(
+          body,
+          extractArrayIdentifiers(body),
+          pristineArrayBody,
+          pristineRefs
         );
+        if (misaligned) {
+          results.push({
+            filename,
+            name: frontmatter.name,
+            applied: false,
+            failed: true,
+            details: `identifier slots misaligned with the binary (${misaligned}); binary slots: ${pristineIds.join(', ')} — realign the override`,
+          });
+          continue;
+        }
         const remappedBody = remapArrayIdentifiers(body, pristineIds);
         // The raw-passthrough body is verbatim JS (array elements that may carry
         // `${expr}` interpolations or nested templates), so it can't be string-
