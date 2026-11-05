@@ -4926,5 +4926,280 @@
     "verdict": "glue",
     "text": "[copy source: created",
     "reason": "label replacement for an ownership marker in classifier input"
+  },
+  "fd6eccc1603bc3a9": {
+    "promptId": "data-plugin-error-marketplace-ignored-see-debug-log",
+    "label": "DATA_PLUGIN_ERROR_MARKETPLACE_IGNORED_SEE_DEBUG_LOG_VAR_0",
+    "verdict": "catalogue",
+    "id": "data-plugin-error-marketplace-added-but-ignored",
+    "name": "Data: Plugin error — marketplace added but ignored",
+    "desc": "States that a named marketplace is added but ignored, the head of the plugin error whose tail points to the debug log or names the hidden reason.",
+    "reason": "@4752069: case \"marketplace-not-found\" builds n=`Marketplace ${Ze(e.marketplace)} is added but ignored` and returns `${n} (see the debug log)` (this host, slot 0) when no hidden reason is recorded, else `${n}. ${reason}. ${hidden}.`. The host body is only the debug-log tail; this clause is the whole assertion of the error (the marketplace is configured but not in effect), and no catalogued prompt holds it.",
+    "text": " is added but ignored"
+  },
+  "b9fd444044e96d1f": {
+    "promptId": "data-plugin-error-dependency-unsatisfied",
+    "label": "DATA_PLUGIN_ERROR_DEPENDENCY_UNSATISFIED_VAR_2",
+    "verdict": "catalogue",
+    "id": "data-plugin-error-dependency-disabled-enable-or-remove",
+    "name": "Data: Plugin error — dependency disabled, enable it or remove it",
+    "desc": "Says a plugin dependency is disabled and tells the reader to enable it or remove the dependency.",
+    "reason": "@4754380: case \"dependency-unsatisfied\" sets r=e.reason===\"not-enabled\"?\"disabled — enable it or remove the dependency\":`not installed — …`, returned as `Dependency \"${Ze(e.dependency)}\" is ${r}` (this host, slot 1). The not-enabled arm carries the remedy instruction (enable it or remove the dependency); not in the catalogue.",
+    "text": "disabled — enable it or remove the dependency"
+  },
+  "c84e1762690c5135": {
+    "promptId": "data-plugin-error-dependency-unsatisfied",
+    "label": "DATA_PLUGIN_ERROR_DEPENDENCY_UNSATISFIED_VAR_2",
+    "verdict": "catalogue",
+    "id": "data-plugin-error-dependency-not-installed-check-marketplace",
+    "name": "Data: Plugin error — dependency not installed, check its marketplace",
+    "desc": "Says a plugin dependency is not installed and tells the reader to run the install command, or check that its marketplace is added.",
+    "reason": "@4754554: tail quasi of the not-installed arm of r in case \"dependency-unsatisfied\" (`not installed — ${synced}${n?`run \\`${n}\\`, or `:\"\"}check that its marketplace is added`), returned into `Dependency \"${…}\" is ${r}` (this host, slot 1). It carries the remedy (run the install command or check the marketplace is added); not in the catalogue.",
+    "text": "check that its marketplace is added"
+  },
+  "4849816f021c4117": {
+    "promptId": "system-prompt-project-thread-reply-marker-ambiguity-tail",
+    "label": "SYSTEM_PROMPT_PROJECT_THREAD_REPLY_MARKER_AMBIGUITY_TAIL_VAR_0",
+    "verdict": "catalogue",
+    "id": "system-prompt-project-thread-reply-marker-notice-not-ambiguous",
+    "name": "System Prompt: Project thread reply marker — notice and messages not ambiguous",
+    "desc": "States that the harness notice and the same person's earlier messages under the marker do not make a reply ambiguous (variant without background reports).",
+    "reason": "@9243395: else arm of p=r?\"neither that notice, those reports nor those messages make it ambiguous. …\":\"neither that notice nor those messages make it ambiguous\", interpolated as `: ${p}. ${l}, so where they ask…` (this host, slot 0). Its r-arm is already catalogued as system-prompt-project-thread-reply-marker-reports-not-ambiguous; this arm states the same consent constraint for sessions without reports and is invisible to overrides.",
+    "text": "neither that notice nor those messages make it ambiguous"
+  },
+  "f7c52d4887d2e7a9": {
+    "promptId": "tool-description-bash-git-committing-changes",
+    "label": "TOOL_DESCRIPTION_BASH_GIT_COMMITTING_CHANGES_VAR_4",
+    "verdict": "catalogue",
+    "id": "tool-description-bash-git-commit-example-stdin-heredoc",
+    "name": "Tool Description: Bash git committing — stdin heredoc commit example",
+    "desc": "The git commit -F - heredoc command form the Bash tool description shows for passing a commit message when the stdin-heredoc form is required.",
+    "reason": "@11559508: Ee=ne?`git commit -F - <<'EOF'\\nCommit message here.${…}\\nEOF`:…, with ne=$ls() @11559495, interpolated as slot 4 of the Bash git-committing section. It is the exact commit command form the model is told to reproduce when $ls() holds; the Bash variant is not catalogued (only the skill/PowerShell examples are).",
+    "text": "git commit -F - <<'EOF'\nCommit message here."
+  },
+  "4fbf197da9115046": {
+    "promptId": "tool-description-bash-git-committing-changes",
+    "label": "TOOL_DESCRIPTION_BASH_GIT_COMMITTING_CHANGES_VAR_4",
+    "verdict": "catalogue",
+    "id": "tool-description-bash-git-commit-example-cat-heredoc",
+    "name": "Tool Description: Bash git committing — cat heredoc commit example",
+    "desc": "The git commit -m \"$(cat <<'EOF' …)\" command form the Bash tool description shows for passing a multi-line commit message.",
+    "reason": "@11559581: else arm of Ee (`git commit -m \"$(cat <<'EOF'\\n   Commit message here.${…}\\n   EOF\\n   )\"`), slot 4 of the Bash git-committing section when $ls() is false. Exact command form the model reproduces; the Bash variant is not catalogued.",
+    "text": "git commit -m \"$(cat <<'EOF'\n   Commit message here."
+  },
+  "56860549e7699258": {
+    "promptId": "system-prompt-post-compaction-continue",
+    "label": "SYSTEM_PROMPT_POST_COMPACTION_CONTINUE_VAR_1",
+    "verdict": "catalogue",
+    "id": "system-prompt-post-compaction-continue-from-where-left-off",
+    "name": "System Prompt: Post-compaction — continue from where it left off",
+    "desc": "Opening instruction of the post-compaction continuation telling the model to continue the conversation from where it left off.",
+    "reason": "@12232938: module const fcn, read @12234661 as `${h}\\n${fcn} without asking the user any further questions. …` (this host, slot 1). It is the instruction itself (continue the conversation). Note the const is also read by $ur @12233451 (lastIndexOf(`\\n\\n${fcn}`) with lZe) to strip this continuation from a transcript, so the override must replace it at the const so both reads stay aligned.",
+    "text": "Continue the conversation from where it left off"
+  },
+  "3fd80a9833d69d9f": {
+    "promptId": "tool-result-tool-unavailable-still-listed-no-one-to-answer",
+    "promptIds": [
+      "tool-result-tool-unavailable-still-listed-switched-off",
+      "tool-result-tool-unavailable-still-listed-disconnected"
+    ],
+    "label": "TOOL_RESULT_TOOL_UNAVAILABLE_STILL_LISTED_NO_ONE_TO_ANSWER_VAR_1",
+    "verdict": "catalogue",
+    "id": "tool-result-tool-unavailable-still-listed-clause",
+    "name": "Tool Result: Tool unavailable — still listed for this conversation",
+    "desc": "Clause stating that an unavailable tool is still listed for this conversation, shared by the no-one-to-answer, switched-off and disconnected tool errors.",
+    "reason": "@11782944: module const Xee=\"is still listed for this conversation\", read in all three hosts @14092720/@14092886/@14092999 as `. ${e} ${Xee}…` (slot 1). It is the assertion that the tool is still in the model's tool list despite the No-such-tool error, which the hosts' instructions build on. Also read by regex Fon @11783067 (`^<tool_use_error>Error: No such tool available: ([\\w-]+)\\. \\1 ${Xee}`), so replace it at the const, never only at a host.",
+    "text": "is still listed for this conversation"
+  },
+  "5d4ff0d52c9e9f01": {
+    "promptId": "system-reminder-mcp-tools-routed-through-repl-count",
+    "promptIds": ["system-reminder-mcp-tools-routed-through-repl-list"],
+    "label": "SYSTEM_REMINDER_MCP_TOOLS_ROUTED_THROUGH_REPL_COUNT_VAR_1",
+    "verdict": "catalogue",
+    "id": "system-reminder-mcp-tools-routed-through-repl-not-directly-callable",
+    "name": "System Reminder: MCP tools routed through REPL — not directly callable",
+    "desc": "States that previously announced MCP tools are not directly callable in this session (REPL routing, tool search on).",
+    "reason": "@15238414: vn=w?\"not directly callable\":\"not searchable or directly callable\", interpolated as `…MCP tools are ${vn} in this session…` in both the count and list hosts (meta-message sink @15245193, model). It is the constraint on how the model may reach these tools.",
+    "text": "not directly callable"
+  },
+  "d481b91c78d2c23a": {
+    "promptId": "system-reminder-mcp-tools-routed-through-repl-count",
+    "promptIds": ["system-reminder-mcp-tools-routed-through-repl-list"],
+    "label": "SYSTEM_REMINDER_MCP_TOOLS_ROUTED_THROUGH_REPL_COUNT_VAR_1",
+    "verdict": "catalogue",
+    "id": "system-reminder-mcp-tools-routed-through-repl-not-searchable-or-callable",
+    "name": "System Reminder: MCP tools routed through REPL — not searchable or directly callable",
+    "desc": "States that previously announced MCP tools are neither searchable nor directly callable in this session (REPL routing).",
+    "reason": "@15238438: else arm of vn in the same ternary, interpolated into both routed-through-REPL hosts (meta-message sink @15245193, model). Constraint: the tools can neither be searched for nor called directly.",
+    "text": "not searchable or directly callable"
+  },
+  "a58152a2b3d4a68e": {
+    "promptId": "tool-result-agent-safeguards-stopped-do-not-do-work",
+    "label": "TOOL_RESULT_AGENT_SAFEGUARDS_STOPPED_DO_NOT_DO_WORK_VAR_0",
+    "verdict": "catalogue",
+    "id": "tool-result-agent-safeguards-stopped-this-agent",
+    "name": "Tool Result: Agent safeguards stopped — opening",
+    "desc": "Opening of the parent-agent note saying safeguards stopped the subagent (automatic model switching available).",
+    "reason": "@18602262: s=kSr()&&J1()?\"Safeguards stopped this agent.\":\"Safeguards stopped this agent, and automatic model switching is off.\" in ir(), returned as `${s} ${r} Don't do the agent's work yourself…` (this host, slot 0). The other arm is catalogued as tool-result-agent-safeguards-stopped-model-switching-off; this arm is the same opening for when switching is on, and is invisible to overrides.",
+    "text": "Safeguards stopped this agent."
+  },
+  "072f1df277122ceb": {
+    "promptId": "tool-result-agent-safeguards-stopped-do-not-do-work",
+    "label": "TOOL_RESULT_AGENT_SAFEGUARDS_STOPPED_DO_NOT_DO_WORK_VAR_1",
+    "verdict": "catalogue",
+    "id": "tool-result-agent-safeguards-stopped-pass-message-to-user",
+    "name": "Tool Result: Agent safeguards stopped — pass the message to the user",
+    "desc": "Tells the parent agent to pass the safeguards message on to the user.",
+    "reason": "@18602668: r=y&&n?\"For a legitimate task you can start a new agent… Otherwise pass the message above on to the user.\":\"Pass the message above on to the user.\" in ir(), slot 1 of this host. The cyber arm is catalogued as tool-result-agent-safeguards-stopped-cyber-guidance; this default arm is a direct instruction to relay the message.",
+    "text": "Pass the message above on to the user."
+  },
+  "e0336de30090d6d6": {
+    "promptId": "slash-command-code-review-prompt-assembly",
+    "label": "SLASH_COMMAND_CODE_REVIEW_PROMPT_ASSEMBLY_VAR_2",
+    "verdict": "glue",
+    "reason": "@20537617: wn=h?`Review target: \\`${h}\\`\\n\\n`:\"\", interpolated as slot 2 of the code-review prompt assembly. Field label before the interpolated review target; the review instructions are in the other slots.",
+    "text": "Review target: `"
+  },
+  "54a874cfacfb3b74": {
+    "promptId": "tool-result-bash-builtin-gh-git-clone-host-form",
+    "label": "TOOL_RESULT_BASH_BUILTIN_GH_GIT_CLONE_HOST_FORM_VAR_0",
+    "verdict": "glue",
+    "reason": "@23062481: h=t===AK?\"the repository's GitHub Enterprise host\":t.join(\" or \") in $e(), rendered as `# <host>: github.com or ${h}`. Noun phrase naming the host value when no explicit hosts are known; the clone command form is host text.",
+    "text": "the repository's GitHub Enterprise host"
+  },
+  "242d50f1f965bf7b": {
+    "promptId": "slash-command-project-set-until-restart",
+    "promptIds": [
+      "slash-command-project-saved-in-local-settings",
+      "slash-command-project-set-save-failed"
+    ],
+    "label": "SLASH_COMMAND_PROJECT_SET_UNTIL_RESTART_VAR_0",
+    "verdict": "catalogue",
+    "id": "slash-command-project-session-now-names-project",
+    "name": "Slash Command: /project — session now names the Project",
+    "desc": "States that this session now names the given claude.ai Project for usage reports, the opening of every /project set result.",
+    "reason": "@26168056: p=`This session now names claude.ai Project ${c} for usage reports`, interpolated at slot 0 of all three /project results (`${p}, until Claude Code restarts. …`, `${p}. Saved in ${a}…`, `${p}, until … Couldn't save it…`); trace @26168657 local-command-text, model. It is the head assertion of each result, parallel to the catalogued slash-command-project-status-named.",
+    "text": "This session now names claude.ai Project "
+  },
+  "b91850d5de2798f3": {
+    "promptId": "tool-result-bash-worktree-guard-unset-name-shell-rewrites",
+    "label": "TOOL_RESULT_BASH_WORKTREE_GUARD_UNSET_NAME_SHELL_REWRITES_VAR_3",
+    "verdict": "glue",
+    "reason": "@26188321: u=a===i.token?`'${a}'`:`'${a}', which contains '${i.token}'` in cs(), slot 3 of this host. Joins the quoted value and the shell-set token; the instruction is host text.",
+    "text": "', which contains '"
+  },
+  "5bdc2235efde5f23": {
+    "promptId": "data-compaction-summary-repl-bindings-none",
+    "promptIds": [
+      "data-compaction-summary-repl-bindings-unnamed-count",
+      "data-compaction-summary-repl-bindings-listed"
+    ],
+    "label": "DATA_COMPACTION_SUMMARY_REPL_BINDINGS_NONE_VAR_0",
+    "verdict": "catalogue",
+    "id": "data-compaction-summary-repl-state-kept",
+    "name": "Data: Compaction summary — REPL VM state kept",
+    "desc": "Opening clause of the compaction note telling the model its REPL VM state was kept across the compaction.",
+    "reason": "@26737029: module const i, read @26737460/@26737521/@26737627 as the head of all three r() returns (`${i}; no bindings…`, `${i}. ${n} binding…`, `${i}. These bindings are still defined…`). It is the assertion the model acts on (REPL VM state survived compaction). Also read by regex c @26737106 (`^${i}(?:…)$`) that re-parses the note, so replace it at the const.",
+    "text": "Your REPL VM state was kept across this compaction"
+  },
+  "693b0da6533bf6de": {
+    "promptId": "tool-result-email-file-reference-duplicate-spelling",
+    "label": "TOOL_RESULT_EMAIL_FILE_REFERENCE_DUPLICATE_SPELLING_VAR_1",
+    "verdict": "glue",
+    "reason": "@28031394: k=h===void 0?\"has\":`its ${h} attachment has` in the fields_missing case, slot 1 (`but ${k} one ${T} under two spellings`). Subject connective naming which attachment; the remedy is host text.",
+    "text": " attachment has"
+  },
+  "11b2f261500822ea": {
+    "promptId": "tool-result-email-file-reference-fields-missing",
+    "label": "TOOL_RESULT_EMAIL_FILE_REFERENCE_FIELDS_MISSING_VAR_1",
+    "verdict": "glue",
+    "reason": "@28031779: x=g===\"\"?`${k} ${h===void 0?\"an argument\":\"a field\"} with an empty name twice`:…, slot 1 (`but ${x}, ${f} Fix that…`). States which field is duplicated; same ruling as the MCP twin \"has an argument with an empty name twice\" (glue).",
+    "text": " with an empty name twice"
+  },
+  "9f7d3a9f39518732": {
+    "promptId": "tool-result-repl-background-still-running",
+    "label": "TOOL_RESULT_REPL_BACKGROUND_STILL_RUNNING_VAR_0",
+    "verdict": "catalogue",
+    "id": "tool-result-repl-background-did-not-finish-within",
+    "name": "Tool Result: REPL background — did not finish within the timeout",
+    "desc": "Still-running note sentence saying the command did not finish within its timeout or the stated maximum.",
+    "reason": "@33712540: g=s?\"The user moved the command to the background.\":`The command did not finish within ${h}.` in dl(), slot 0 of `[still running] ${g} It was NOT killed…`. The other arm is catalogued as tool-result-repl-background-moved-by-user and h as tool-result-repl-background-timeout-maximum-clause; this arm (why the command went to the background) is invisible to overrides.",
+    "text": "The command did not finish within "
+  },
+  "b934d93ab41989e7": {
+    "promptId": "tool-result-repl-stopped-at-limit-waiting-calls",
+    "label": "TOOL_RESULT_REPL_STOPPED_AT_LIMIT_WAITING_CALLS_VAR_1",
+    "verdict": "glue",
+    "reason": "@33745323: m=n.length===1?`the ${c} call was waiting`:`${c} calls were waiting` in ps(), slot 1 (`${s} while ${m} to run, perhaps for your permission`). Plural agreement over the interpolated tool names.",
+    "text": " calls were waiting"
+  },
+  "05bcc598b00d72d6": {
+    "promptId": "tool-result-repl-global-overwrite",
+    "label": "TOOL_RESULT_REPL_GLOBAL_OVERWRITE_VAR_0",
+    "verdict": "catalogue",
+    "id": "tool-result-repl-global-overwrite-name-single",
+    "name": "Tool Result: REPL global overwrite — single name",
+    "desc": "Names the one global the script would overwrite and says it is already a global here.",
+    "reason": "@33747682: in class gs, r=n.length===1?`${n[0]}, which is already a global here`:`… which are already globals here`, slot 0 of the REPL global-overwrite refusal. The plural arm is catalogued as tool-result-repl-global-overwrite-names-list; this singular arm states the same fact for one name and is invisible to overrides.",
+    "text": ", which is already a global here"
+  },
+  "0af743860a187970": {
+    "promptId": "tool-result-repl-call-args-bigint",
+    "promptIds": [
+      "tool-result-repl-call-args-circular",
+      "tool-result-repl-call-args-too-deep",
+      "tool-result-repl-call-args-too-large",
+      "tool-result-repl-call-args-stringify-threw"
+    ],
+    "label": "TOOL_RESULT_REPL_CALL_ARGS_BIGINT_VAR_1",
+    "verdict": "glue",
+    "reason": "@33763907: s=r===void 0?\"its arguments\":r.length>Ar?`its argument \\`${…}\\` (name cut to ${Ar} characters)`:`its argument \\`${r}\\`` in Ys(), slot 1/2 of the five call-args refusals. Subject noun phrase naming the offending argument; the remedies are host text.",
+    "text": "its argument `"
+  },
+  "bba5feb5ccdeb8a3": {
+    "promptId": "tool-result-repl-call-args-bigint",
+    "promptIds": [
+      "tool-result-repl-call-args-circular",
+      "tool-result-repl-call-args-too-deep",
+      "tool-result-repl-call-args-too-large",
+      "tool-result-repl-call-args-stringify-threw"
+    ],
+    "label": "TOOL_RESULT_REPL_CALL_ARGS_BIGINT_VAR_1",
+    "verdict": "glue",
+    "reason": "@33763932: middle quasi of the long-name arm of s in Ys() (`… (name cut to ${Ar} characters)`). Truncation label on the interpolated argument name.",
+    "text": "` (name cut to "
+  },
+  "bf8c21abff7dd729": {
+    "promptId": "tool-result-poll-status-evals-settled-detail",
+    "promptIds": [
+      "tool-result-poll-status-evals-still-pending",
+      "tool-result-poll-status-evals-pending"
+    ],
+    "label": "TOOL_RESULT_POLL_STATUS_EVALS_SETTLED_DETAIL_VAR_2",
+    "verdict": "glue",
+    "reason": "@36317722: s=a===0?\"\":`; ${a} more ${…} that haven't started` in h(), appended into the three poll-status hosts. Overflow count tail after the listed evals; the Poll-again instruction is host text.",
+    "text": " that haven't started"
+  },
+  "7fdc9f6e2896598a": {
+    "promptId": "tool-result-poll-status-evals-settled-detail",
+    "promptIds": [
+      "tool-result-poll-status-evals-still-pending",
+      "tool-result-poll-status-evals-pending"
+    ],
+    "label": "TOOL_RESULT_POLL_STATUS_EVALS_SETTLED_DETAIL_VAR_2",
+    "verdict": "glue",
+    "reason": "@36317686: singular arm of a===1?\"eval has calls\":\"evals have calls\" inside s in h(). Agreement word for the overflow count.",
+    "text": "eval has calls"
+  },
+  "94a6b7a20d63cd68": {
+    "promptId": "tool-result-poll-status-evals-settled-detail",
+    "promptIds": [
+      "tool-result-poll-status-evals-still-pending",
+      "tool-result-poll-status-evals-pending"
+    ],
+    "label": "TOOL_RESULT_POLL_STATUS_EVALS_SETTLED_DETAIL_VAR_2",
+    "verdict": "glue",
+    "reason": "@36317703: plural arm of the same ternary inside s in h(). Agreement word for the overflow count.",
+    "text": "evals have calls"
   }
 }

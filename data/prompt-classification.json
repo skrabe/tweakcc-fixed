@@ -10773,7 +10773,12 @@
     "desc": "Judge prompt asking the model to grade a coding agent's output against a stated criterion"
   },
   "40550ccce6a6cf83a76e70561fe99bcbbbf78dd6": { "facing": "ui" },
-  "40582a03b104dbd0d1c252f905466d1bde81ea24": { "facing": "internal" },
+  "40582a03b104dbd0d1c252f905466d1bde81ea24": {
+    "facing": "model",
+    "id": "tool-result-repl-context-reset-poisoned-global-lead",
+    "name": "Tool Result: REPL context reset (poisoned global) — lead",
+    "desc": "Opening half of the REPL error when a non-configurable global poisoned the context: the error message, then that the context was reset and the code should be rerun."
+  },
   "405840a6a409bea405080346f29215a0e5b2812b": {
     "facing": "model",
     "id": "tool-result-lsp-notification-server-unavailable",
@@ -96111,12 +96116,7 @@
   "3e3f3d5a1dc86e09c06c5ab66bb5e126f1b41d83": { "facing": "internal" },
   "042cd8ec2e4bcbd3dbfefcc99904d213de88dac3": { "facing": "internal" },
   "19b4cd55228faa5dc064ff5ab6e83a581a605797": { "facing": "internal" },
-  "04a9e276fef9f0ff9ef28f4ad594ce12403574da": {
-    "facing": "model",
-    "id": "system-gcp-path-env-var-invalid-characters",
-    "name": "System: GCP path env var invalid characters",
-    "desc": "API client error when a Vertex/Google Cloud env var used in the request path has characters other than letters, digits, hyphens and underscores."
-  },
+  "04a9e276fef9f0ff9ef28f4ad594ce12403574da": { "facing": "internal" },
   "0d2f059674831d16e5dfd5e7697550e0edef1519": { "facing": "internal" },
   "f6fc4ec70c269ce87a3dbab5ed05bb4f072e19ef": {
     "facing": "model",
@@ -108043,7 +108043,12 @@
   "ca21d2b4eb9cfe88b8fa199c3362cce6e079e5f7": { "facing": "internal" },
   "91c4a8b6419203dfddaa74c0f23331fb846d741b": { "facing": "internal" },
   "5b0167c5f574534d03eaf1d7d0a56725cf428522": { "facing": "ui" },
-  "e98a2790e96e1c9b5db419c7d3b1f2b7fc65ec95": { "facing": "ui" },
+  "e98a2790e96e1c9b5db419c7d3b1f2b7fc65ec95": {
+    "facing": "model",
+    "id": "data-plugin-error-dependency-not-installed-check-marketplace",
+    "name": "Data: Plugin error — dependency not installed, check its marketplace",
+    "desc": "Says a plugin dependency is not installed and tells the reader to run the install command, or check that its marketplace is added."
+  },
   "78e69ac9a4ba46015ee49df1047ff102003fbb34": { "facing": "ui" },
   "16cebab9cf21139bc413a93aa9d51e32b93f09e3": { "facing": "ui" },
   "4ff41e70ec88fe7435824f614ed5f0c039e2e3ca": { "facing": "ui" },
@@ -144774,7 +144779,12 @@
     "name": "Slash command: /project set until restart",
     "desc": "/project result when the Project is set for this session only, with how to keep it."
   },
-  "43068e30782fd9966057677a0b35c4772f8cb34a": { "facing": "internal" },
+  "43068e30782fd9966057677a0b35c4772f8cb34a": {
+    "facing": "model",
+    "id": "tool-result-repl-wall-clock-limit-ms",
+    "name": "Tool result: REPL wall-clock limit figure",
+    "desc": "Wall-clock limit in milliseconds ('${SDn()} ms') appended to the REPL stop notice 'The wall clock stopped this script's code N times: a turn took more than X.'"
+  },
   "181ce3dd0e28000a1f7d06175776c6ff0427abb5": {
     "facing": "model",
     "id": "tool-result-repl-context-reset-poisoned-global",

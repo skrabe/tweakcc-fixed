@@ -58565,6 +58565,22 @@
       "version": "2.1.281"
     },
     {
+      "name": "Tool Result: REPL context reset (poisoned global) — lead",
+      "id": "tool-result-repl-context-reset-poisoned-global-lead",
+      "description": "Opening half of the REPL error when a non-configurable global poisoned the context: the error message, then that the context was reset and the code should be rerun.",
+      "pieces": [
+        "${",
+        ".message}. The REPL context was reset — rerun your code; "
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_REPL_CONTEXT_RESET_POISONED_GLOBAL_LEAD_VAR_0"
+      },
+      "version": "2.1.318"
+    },
+    {
       "name": "Tool result: DesignSync file name has unusable characters",
       "id": "tool-result-design-file-name-unusable-characters",
       "description": "DesignSync error saying claude.ai/design drops '#', '?' and invisible characters from file names, leaving no usable name for the listed paths, and telling the model to rename them or leave them out of a delete.",
@@ -66154,6 +66170,22 @@
         "0": "TOOL_RESULT_BASH_DECLARE_AUTOLOAD_FLAGS_TOO_COMPLEX_VAR_0"
       },
       "version": "2.1.218"
+    },
+    {
+      "name": "Tool Result: REPL global overwrite — single name",
+      "id": "tool-result-repl-global-overwrite-name-single",
+      "description": "Names the one global the script would overwrite and says it is already a global here.",
+      "pieces": [
+        "${",
+        "[0]}, which is already a global here"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_REPL_GLOBAL_OVERWRITE_NAME_SINGLE_VAR_0"
+      },
+      "version": "2.1.318"
     },
     {
       "name": "Eval grader: agent output text",
@@ -77000,22 +77032,6 @@
         "1": "TOOL_PARAMETER_AGENT_NAME_ADDRESSABLE_VAR_1"
       },
       "version": "2.1.294"
-    },
-    {
-      "name": "System: GCP path env var invalid characters",
-      "id": "system-gcp-path-env-var-invalid-characters",
-      "description": "API client error when a Vertex/Google Cloud env var used in the request path has characters other than letters, digits, hyphens and underscores.",
-      "pieces": [
-        "${",
-        "} may only contain letters, digits, hyphens, and underscores — "
-      ],
-      "identifiers": [
-        0
-      ],
-      "identifierMap": {
-        "0": "SYSTEM_GCP_PATH_ENV_VAR_INVALID_CHARACTERS_VAR_0"
-      },
-      "version": "2.1.291"
     },
     {
       "name": "Agent Prompt: Schedule local MCP server limitation",
@@ -122480,6 +122496,17 @@
       "version": "2.1.310"
     },
     {
+      "name": "System Prompt: Post-compaction — continue from where it left off",
+      "id": "system-prompt-post-compaction-continue-from-where-left-off",
+      "description": "Opening instruction of the post-compaction continuation telling the model to continue the conversation from where it left off.",
+      "pieces": [
+        "Continue the conversation from where it left off"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.318"
+    },
+    {
       "name": "Tool Result: Hook rewrite — tell user to turn off hook",
       "id": "tool-result-auto-mode-hook-rewrite-tell-user-turn-off",
       "description": "Tail clause telling Claude to continue other tasks and tell the user auto mode could not check the call because a hook or plugin changes it",
@@ -130556,6 +130583,17 @@
         "darwin"
       ],
       "version": "2.1.296"
+    },
+    {
+      "name": "Data: Plugin error — dependency disabled, enable it or remove it",
+      "id": "data-plugin-error-dependency-disabled-enable-or-remove",
+      "description": "Says a plugin dependency is disabled and tells the reader to enable it or remove the dependency.",
+      "pieces": [
+        "disabled — enable it or remove the dependency"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.318"
     },
     {
       "name": "/mcp: server disabled",
@@ -145295,6 +145333,38 @@
       "version": "2.1.206"
     },
     {
+      "name": "Tool Description: Bash git committing — stdin heredoc commit example",
+      "id": "tool-description-bash-git-commit-example-stdin-heredoc",
+      "description": "The git commit -F - heredoc command form the Bash tool description shows for passing a commit message when the stdin-heredoc form is required.",
+      "pieces": [
+        "git commit -F - <<'EOF'\nCommit message here.${",
+        ".replace(\"   \",\"\")}\nEOF"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_DESCRIPTION_BASH_GIT_COMMIT_EXAMPLE_STDIN_HEREDOC_VAR_0"
+      },
+      "version": "2.1.318"
+    },
+    {
+      "name": "Tool Description: Bash git committing — cat heredoc commit example",
+      "id": "tool-description-bash-git-commit-example-cat-heredoc",
+      "description": "The git commit -m \"$(cat <<'EOF' …)\" command form the Bash tool description shows for passing a multi-line commit message.",
+      "pieces": [
+        "git commit -m \"$(cat <<'EOF'\n   Commit message here.${",
+        "}\n   EOF\n   )\""
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_DESCRIPTION_BASH_GIT_COMMIT_EXAMPLE_CAT_HEREDOC_VAR_0"
+      },
+      "version": "2.1.318"
+    },
+    {
       "name": "Tool Result: Worktree Isolation — Git Could Not Be Run",
       "id": "tool-result-worktree-isolation-git-unrunnable",
       "description": "Reason clause for refusing a worktree because git could not be run to resolve it.",
@@ -154374,6 +154444,17 @@
       "version": "2.1.295"
     },
     {
+      "name": "Tool Result: Tool unavailable — still listed for this conversation",
+      "id": "tool-result-tool-unavailable-still-listed-clause",
+      "description": "Clause stating that an unavailable tool is still listed for this conversation, shared by the no-one-to-answer, switched-off and disconnected tool errors.",
+      "pieces": [
+        "is still listed for this conversation"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.318"
+    },
+    {
       "name": "Artifact Asset Uploaded URL Unreadable",
       "id": "tool-result-artifact-asset-uploaded-url-unreadable",
       "description": "upload_asset tool_result clause when the record's copy of the stored asset url is unreadable.",
@@ -162593,6 +162674,25 @@
       "version": "2.1.317"
     },
     {
+      "name": "Data: Plugin error — marketplace added but ignored",
+      "id": "data-plugin-error-marketplace-added-but-ignored",
+      "description": "States that a named marketplace is added but ignored, the head of the plugin error whose tail points to the debug log or names the hidden reason.",
+      "pieces": [
+        "Marketplace ${",
+        "(",
+        ".marketplace)} is added but ignored"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "DATA_PLUGIN_ERROR_MARKETPLACE_ADDED_BUT_IGNORED_VAR_0",
+        "1": "DATA_PLUGIN_ERROR_MARKETPLACE_ADDED_BUT_IGNORED_VAR_1"
+      },
+      "version": "2.1.318"
+    },
+    {
       "name": "Data: Plugin error — marketplace not found",
       "id": "data-plugin-error-marketplace-not-found",
       "description": "Plugin load error text for a marketplace that is not found, used inside the managed-plugin hooks-unknown cause reported by /model",
@@ -167942,6 +168042,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.296"
+    },
+    {
+      "name": "System Prompt: Project thread reply marker — notice and messages not ambiguous",
+      "id": "system-prompt-project-thread-reply-marker-notice-not-ambiguous",
+      "description": "States that the harness notice and the same person's earlier messages under the marker do not make a reply ambiguous (variant without background reports).",
+      "pieces": [
+        "neither that notice nor those messages make it ambiguous"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.318"
     },
     {
       "name": "System Prompt: Project thread reply marker reports not ambiguous",
@@ -173600,6 +173711,17 @@
       "version": "2.1.273"
     },
     {
+      "name": "System Reminder: MCP tools routed through REPL — not directly callable",
+      "id": "system-reminder-mcp-tools-routed-through-repl-not-directly-callable",
+      "description": "States that previously announced MCP tools are not directly callable in this session (REPL routing, tool search on).",
+      "pieces": [
+        "not directly callable"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.318"
+    },
+    {
       "name": "Tool Result: Served FetchAttachment not first party",
       "id": "tool-result-served-fetch-attachment-not-first-party",
       "description": "Summary that download is not permitted on this API provider",
@@ -173785,6 +173907,32 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.312"
+    },
+    {
+      "name": "Data: Plugin error — dependency not installed, check its marketplace",
+      "id": "data-plugin-error-dependency-not-installed-check-marketplace",
+      "description": "Says a plugin dependency is not installed and tells the reader to run the install command, or check that its marketplace is added.",
+      "pieces": [
+        "not installed — ${",
+        ".sameNameSyncedPlugin===void 0?\"\":`${",
+        "(",
+        ".sameNameSyncedPlugin)}; `}${",
+        "?`run \\`${",
+        "}\\`, or `:\"\"}check that its marketplace is added"
+      ],
+      "identifiers": [
+        0,
+        1,
+        0,
+        2,
+        2
+      ],
+      "identifierMap": {
+        "0": "DATA_PLUGIN_ERROR_DEPENDENCY_NOT_INSTALLED_CHECK_MARKETPLACE_VAR_0",
+        "1": "DATA_PLUGIN_ERROR_DEPENDENCY_NOT_INSTALLED_CHECK_MARKETPLACE_VAR_1",
+        "2": "DATA_PLUGIN_ERROR_DEPENDENCY_NOT_INSTALLED_CHECK_MARKETPLACE_VAR_2"
+      },
+      "version": "2.1.318"
     },
     {
       "name": "Tool Result: Self-hosted runner not logged in",
@@ -174812,6 +174960,17 @@
         "0": "TOOL_RESULT_ARTIFACT_QUICKSTART_NOT_SAVED_STILL_ON_ARTIFACT_VAR_0"
       },
       "version": "2.1.274"
+    },
+    {
+      "name": "System Reminder: MCP tools routed through REPL — not searchable or directly callable",
+      "id": "system-reminder-mcp-tools-routed-through-repl-not-searchable-or-callable",
+      "description": "States that previously announced MCP tools are neither searchable nor directly callable in this session (REPL routing).",
+      "pieces": [
+        "not searchable or directly callable"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.318"
     },
     {
       "name": "PushNotification skipped (user present)",
@@ -182621,6 +182780,17 @@
         "1": "TOOL_PARAMETER_MEMORY_WRITE_IF_VERSION_VAR_1"
       },
       "version": "2.1.224"
+    },
+    {
+      "name": "Tool Result: Agent safeguards stopped — pass the message to the user",
+      "id": "tool-result-agent-safeguards-stopped-pass-message-to-user",
+      "description": "Tells the parent agent to pass the safeguards message on to the user.",
+      "pieces": [
+        "Pass the message above on to the user."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.318"
     },
     {
       "name": "Tool Description: Save task files arguments",
@@ -200410,6 +200580,17 @@
       "version": "2.1.318"
     },
     {
+      "name": "Tool Result: Agent safeguards stopped — opening",
+      "id": "tool-result-agent-safeguards-stopped-this-agent",
+      "description": "Opening of the parent-agent note saying safeguards stopped the subagent (automatic model switching available).",
+      "pieces": [
+        "Safeguards stopped this agent."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.318"
+    },
+    {
       "name": "Agent Prompt: You Should Know Explain Simpler Words Direction",
       "id": "agent-prompt-you-should-know-explain-simpler-words-direction",
       "description": "Length and style direction for the You-should-know explainer rewrite when the user asks for simpler words: the same content said more plainly, at most 100 words.",
@@ -217634,6 +217815,22 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.268"
+    },
+    {
+      "name": "Tool Result: REPL background — did not finish within the timeout",
+      "id": "tool-result-repl-background-did-not-finish-within",
+      "description": "Still-running note sentence saying the command did not finish within its timeout or the stated maximum.",
+      "pieces": [
+        "The command did not finish within ${",
+        "}."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_REPL_BACKGROUND_DID_NOT_FINISH_WITHIN_VAR_0"
+      },
+      "version": "2.1.318"
     },
     {
       "name": "Windows sandbox loopback mode changed",
@@ -241711,6 +241908,22 @@
       "version": "2.1.295"
     },
     {
+      "name": "Slash Command: /project — session now names the Project",
+      "id": "slash-command-project-session-now-names-project",
+      "description": "States that this session now names the given claude.ai Project for usage reports, the opening of every /project set result.",
+      "pieces": [
+        "This session now names claude.ai Project ${",
+        "} for usage reports"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_PROJECT_SESSION_NOW_NAMES_PROJECT_VAR_0"
+      },
+      "version": "2.1.318"
+    },
+    {
       "name": "Tool Result: Artifact — no store-write tool, tell the user",
       "id": "tool-result-artifact-no-store-write-tool-tell-user",
       "description": "Branch of the declared-store write guidance for a session that serves no store-write call at all: it instructs the model to say so to the user rather than attempt a write.",
@@ -263811,6 +264024,17 @@
         "1": "TOOL_RESULT_MEMORY_WRITE_NOT_SAVED_SHARED_LEAD_VAR_1"
       },
       "version": "2.1.246"
+    },
+    {
+      "name": "Data: Compaction summary — REPL VM state kept",
+      "id": "data-compaction-summary-repl-state-kept",
+      "description": "Opening clause of the compaction note telling the model its REPL VM state was kept across the compaction.",
+      "pieces": [
+        "Your REPL VM state was kept across this compaction"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.318"
     },
     {
       "name": "Computer-use Next Display-Scope Prompt Explain Tail",
