@@ -955,6 +955,22 @@ export const applyInlineBlobOverrides = async (
         continue;
       }
 
+      // A template body is plain text: the encoder escapes every backtick and
+      // backslash itself. A body written with a backslash before a backtick
+      // gets that backslash escaped too, and the model reads a stray `\`
+      // before every code span.
+      if (/\\`/.test(body.replace(/\$\{[^}]*\}/g, ''))) {
+        results.push({
+          filename,
+          name: frontmatter.name,
+          applied: false,
+          failed: true,
+          details:
+            'body escapes a backtick; template bodies are plain text, write ` not \\`',
+        });
+        continue;
+      }
+
       const remappedBody = remapTemplateInterpolations(body, pristineExprs);
 
       replacement = encodeAsTemplateLiteral(remappedBody, escapeNonAscii);
