@@ -4,6 +4,12 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
+// A git hook exports GIT_INDEX_FILE and GIT_DIR; inherited, they point the
+// fixture's git at the real repository's index.
+const env = Object.fromEntries(
+  Object.entries(process.env).filter(([k]) => !k.startsWith('GIT_'))
+);
+
 const directories = [];
 afterEach(() => {
   for (const directory of directories.splice(0)) {
@@ -20,7 +26,7 @@ const fixture = (upstreamVersion = '2.1.317') => {
     fs.writeFileSync(file, text);
   };
   const git = (...args) =>
-    execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();
+    execFileSync('git', args, { cwd: root, encoding: 'utf8', env }).trim();
   git('init', '--quiet');
   git('config', 'user.name', 'README test');
   git('config', 'user.email', 'test@example.invalid');
@@ -62,6 +68,7 @@ const fixture = (upstreamVersion = '2.1.317') => {
       {
         cwd: root,
         encoding: 'utf8',
+        env,
         timeout: 10_000,
       }
     );
