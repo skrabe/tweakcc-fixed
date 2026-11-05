@@ -1,3 +1,4 @@
+import { findClosingBracket } from './helpers';
 import { showDiff } from './index';
 
 export const ROUTER_TURN_STATUS_RUNTIME = `
@@ -61,12 +62,17 @@ export const writeComplexityRouterTurnStatus = (
   ]
     .reverse()
     .find(q => {
+      // Only a generator whose body encloses the request site; the alias
+      // test then reads that body alone.
+      const open = q.index! + q[0].length - 1;
+      if (findClosingBracket(oldFile, open, oldFile.length) < request.index!)
+        return false;
       const options = q[2] ?? q[3];
       return (
         options === request[5] ||
         new RegExp(
           `[,{]${escapeId(request[5])}=[$\\w]+===${escapeId(options)}\\.fallbackModel\\?${escapeId(options)}:\\{\\.\\.\\.${escapeId(options)},`
-        ).test(oldFile.slice(q.index, request.index))
+        ).test(oldFile.slice(open, request.index))
       );
     });
   const renderPrefix = oldFile.slice(

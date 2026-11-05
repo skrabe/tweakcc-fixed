@@ -24,6 +24,7 @@
 // --apply (returns null).
 
 import { debug } from '../utils';
+import { findClosingBracket } from './helpers';
 import { showDiff } from './index';
 
 const HEADER_PHRASE =
@@ -38,41 +39,6 @@ const UP_TO_NOTE = `${NOTE_MARKER} at your request, not a context overflow: it c
 // [1] the isCompactSummary…summarizeMetadata tail, [2] the direction var.
 const REWIND_TAIL_RE =
   /\}\),(isCompactSummary:!0,\.\.\.[$\w]+\.length>0\?\{summarizeMetadata:\{messagesSummarized:[$\w]+\.length,userContext:[$\w]+,direction:([$\w]+)\}\})/;
-
-// Index of the bracket closing the one opened at `open`, or -1. Skips string
-// and template literals (with `${…}` nesting) so braces inside them don't count.
-const findClosingBracket = (
-  src: string,
-  open: number,
-  limit: number
-): number => {
-  const stack: string[] = [];
-  for (let i = open; i < limit; i++) {
-    const ch = src[i];
-    const top = stack[stack.length - 1];
-    if (top === '`') {
-      if (ch === '\\') i++;
-      else if (ch === '`') stack.pop();
-      else if (ch === '$' && src[i + 1] === '{') {
-        stack.push('${');
-        i++;
-      }
-      continue;
-    }
-    if (ch === '"' || ch === "'") {
-      for (i++; i < limit && src[i] !== ch; i++) if (src[i] === '\\') i++;
-      continue;
-    }
-    if (ch === '`') stack.push('`');
-    else if (ch === '{' || ch === '(' || ch === '[') stack.push(ch);
-    else if (ch === '}' || ch === ')' || ch === ']') {
-      const want = ch === '}' ? ['{', '${'] : ch === ')' ? ['('] : ['['];
-      if (!want.includes(stack.pop() ?? '')) return -1;
-      if (stack.length === 0) return i;
-    }
-  }
-  return -1;
-};
 
 // Method 1 (CC >= 2.1.318): the spread helper call whose options object holds
 // nested objects, e.g. ...Yte(Qt,{…,...ae()&&Ni()&&{replBindingsKept:…},…}).
