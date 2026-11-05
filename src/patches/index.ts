@@ -273,7 +273,7 @@ const PATCH_DEFINITIONS = [
     name: 'Honest rewind summary header',
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
-      'Label a rewind summary as a deliberate rewind instead of the misleading "ran out of context" header',
+      'Note after a rewind summary that it came from a deliberate rewind, not a context overflow',
     modelFacing: true,
   },
   {
