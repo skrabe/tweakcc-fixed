@@ -6,6 +6,10 @@ import * as path from 'node:path';
 import { Box, Text, useInput } from 'ink';
 import { useCallback, useEffect, useState } from 'react';
 
+import {
+  fetchLatestBridgeVersion,
+  isNewerVersion,
+} from '@/browserBridgeUpdate';
 import { CONFIG_DIR } from '@/config';
 
 import { SelectInput, SelectItem } from './SelectInput';
@@ -168,10 +172,24 @@ export const BrowserBridgeView = ({ onBack }: { onBack: () => void }) => {
   useEffect(() => {
     refresh();
   }, [refresh]);
+  const [latest, setLatest] = useState<string | null>(null);
+  useEffect(() => {
+    let live = true;
+    void fetchLatestBridgeVersion().then(v => {
+      if (live) setLatest(v);
+    });
+    return () => {
+      live = false;
+    };
+  }, []);
 
   const socketUp = fs.existsSync(SOCK);
   const installed = !!state;
   const legacyName = installed && !state.mcpName;
+  const updateTo =
+    installed && latest && isNewerVersion(latest, state.version)
+      ? latest
+      : null;
 
   const goInstall = () => {
     setScope('global');
@@ -613,9 +631,11 @@ export const BrowserBridgeView = ({ onBack }: { onBack: () => void }) => {
   else {
     actions.push({
       name: 'Reinstall / Repair',
-      desc: legacyName
-        ? 'update: renames the MCP server so the Claude desktop app keeps it'
-        : 're-run setup with current or new options',
+      desc: updateTo
+        ? `update to v${updateTo}: pulls the latest bridge and re-runs setup`
+        : legacyName
+          ? 'update: renames the MCP server so the Claude desktop app keeps it'
+          : 're-run setup with current or new options',
     });
     actions.push({
       name: 'Uninstall',
@@ -658,7 +678,13 @@ export const BrowserBridgeView = ({ onBack }: { onBack: () => void }) => {
         </Text>
         <Text> Browsers found .... {detected().join(', ') || 'none'}</Text>
       </Box>
-      {legacyName && (
+      {updateTo && (
+        <Text color="yellow">
+          Update available: v{state?.version} → v{updateTo}. Choose Reinstall,
+          then reload the extension in your browser.
+        </Text>
+      )}
+      {legacyName && !updateTo && (
         <Text color="yellow">
           Update available: this install&apos;s MCP server name is dropped by
           the Claude desktop app. Reinstall to fix it.
