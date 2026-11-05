@@ -24,7 +24,10 @@
 // (see below) that resolves what each slot actually is and catches the opposite
 // direction too — an override reading a call slot as a bare value.
 //
-// Usage: node tools/auditCallSlots.mjs [prompts.json] [set-dir ...]
+// Usage: node tools/auditCallSlots.mjs [prompts.json] [--set=<dir> | set-dir ...]
+//          [--ids=<file of ids, one per line>]
+// Same flag shapes as checkTrimSlots and checkFactCoverage; --ids limits the
+// audit to those prompt ids.
 // Exits non-zero on any shape disagreement, and 2 if it could not run at all.
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
@@ -50,6 +53,27 @@ const newestJson = () => {
   }
 };
 const parsed = parseOverrideArgs(process.argv.slice(2));
+const idsArg = parsed.rest.find(a => a.startsWith('--ids='));
+parsed.rest = parsed.rest.filter(a => a !== idsArg);
+const unknown = parsed.rest.filter(a => a.startsWith('--'));
+if (unknown.length) {
+  console.error(`call-slot audit: unknown flag ${unknown.join(', ')}`);
+  process.exit(2);
+}
+let onlyIds = null;
+if (idsArg) {
+  try {
+    onlyIds = new Set(
+      fs
+        .readFileSync(idsArg.slice('--ids='.length), 'utf8')
+        .split(/\s+/)
+        .filter(Boolean)
+    );
+  } catch (e) {
+    console.error(`call-slot audit: SKIPPED — ids file unreadable (${e.message}).`);
+    process.exit(2);
+  }
+}
 const extraDirs = parsed.rest.slice(1);
 if (extraDirs.length) {
   parsed.explicit.push(...extraDirs);
@@ -127,6 +151,7 @@ for (const { dir, name, f } of files) {
   // Only named-prompt overrides map to the JSON. inline-* / system-reminder-* use
   // other surfaces (positional remap / registry) and aren't in prompts JSON.
   if (!(id in callsById)) continue;
+  if (onlyIds && !onlyIds.has(id)) continue;
   const raw = fs.readFileSync(`${dir}/${f}`, 'utf8');
   const body = (raw.match(/^<!--[\s\S]*?-->\n?([\s\S]*)$/) || [, raw])[1];
   // Distinct vars the override CALLS: ${VAR( ... — VAR immediately followed by `(`
@@ -171,5 +196,5 @@ if (findings.length) {
   process.exit(1);
 }
 console.log(
-  `call-slot audit: 0 (every override interpolation matches its pristine slot shape; ${files.length} file(s) across ${overrideDirs.length} set(s))`
+  `call-slot audit: 0 (every override interpolation matches its pristine slot shape; ${onlyIds ? `${files.filter(x => onlyIds.has(x.f.slice(0, -3))).length} of ` : ''}${files.length} file(s) across ${overrideDirs.length} set(s))`
 );
