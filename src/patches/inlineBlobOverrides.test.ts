@@ -191,6 +191,43 @@ describe('inlineBlobOverrides: applyInlineBlobOverrides (integration)', () => {
     expect(out).not.toContain('When the conversation grows long, wrap up');
   });
 
+  it('refuses a template body that escapes its own backticks', async () => {
+    const write = (body: string) => {
+      clearOverrides();
+      writeOverride(
+        'inline-code.md',
+        [
+          '<!--',
+          "name: 'Inline blob: code'",
+          'description: x',
+          'inlineBlobAnchor: "`Use the "',
+          'inlineBlobKind: template',
+          'injectionGate: always on',
+          'ccVersion: 2.1.318',
+          '-->',
+          body,
+        ].join('\n')
+      );
+    };
+    const content = 'function f(){return`Use the \\`x\\` tool.`}';
+    write('Use the \\`y\\` tool.');
+    const bad = await applyInlineBlobOverrides(content);
+    expect(bad.results[0].applied).toBe(false);
+    expect(bad.results[0].details).toContain('escapes a backtick');
+    expect(bad.content).toBe(content);
+    write('Use the `y` tool.');
+    const good = await applyInlineBlobOverrides(content);
+    expect(good.results[0].applied).toBe(true);
+    const rendered = new Function(`${good.content};return f()`)();
+    expect(rendered).toBe('Use the `y` tool.');
+    // An escaped backtick inside a kept nested slot is not the body's own.
+    const nested =
+      'function f(){return`Use the ${H?`run ${X} via \\`bash\\``:""} tool.`}';
+    write('Use the ${H?`run ${X} via \\`bash\\``:""} tool, now.');
+    const kept = await applyInlineBlobOverrides(nested);
+    expect(kept.results[0].applied).toBe(true);
+  });
+
   // Root cause A: the agent-launch shape. The override has MORE top-level
   // ${...} slots than the pristine, so its NESTED `${cond?`…${K9}…`}` is left
   // verbatim by the positional top-level remap. ${K9} is stale (binary binds

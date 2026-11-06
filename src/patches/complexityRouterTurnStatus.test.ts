@@ -72,6 +72,28 @@ describe('router completed-turn status', () => {
     expect(() => new vm.Script(patched)).not.toThrow();
   });
 
+  it('prefers the enclosing generator over an earlier one with trailing params', () => {
+    const early = 'async function*early(x,n,r,s,g,V,w){yield V}' + fixture288;
+    const patched = writeComplexityRouterTurnStatus(early)!;
+    expect(patched).not.toBeNull();
+    expect(patched).toContain(
+      'globalThis.__tweakccRouterRecordTurn?.(e,V,__tweakccResolved'
+    );
+    expect(patched).not.toContain('__tweakccRouterRecordTurn?.(x,');
+  });
+
+  it('never binds an earlier generator that does not enclose the request site', () => {
+    // The enclosing signature drifted out of the shape regex; an unrelated
+    // earlier generator whose sixth param shares the options name must not win.
+    const drifted =
+      'async function*far(t,n,r,s,g,b){yield b}' +
+      fixture288.replace(
+        'async function*query(e,n,r,s,g,{modelFacts:h,...b}){',
+        'async function*query(e,n,r,s,g,{modelFacts:h,...b}={}){'
+      );
+    expect(writeComplexityRouterTurnStatus(drifted)).toBeNull();
+  });
+
   it('patches the 2.1.295 shape: four-parameter duration factory without a budget argument', () => {
     const patched = writeComplexityRouterTurnStatus(fixture295)!;
     expect(patched).not.toBeNull();

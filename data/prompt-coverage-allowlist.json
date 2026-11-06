@@ -493,5 +493,120 @@
     "verdict": "not-model-facing",
     "version": "2.1.314",
     "why": "Template assigned to Ui @11773965 in g$ (chunk with the cloud-session bundle builder); Ui is read only by e.onBundleNotice on the launch path without an environmentId. Every onBundleNotice handler is ui (the --remote launcher writes it to stderr; session openers pass it to host streams); model-invoked callers of g$ set none."
+  },
+  "data-sdk-startup-failure-reason-codes": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "chunk-nxc9btm2 (module 119 SDK schema) describe() on the startup-failure reason enum; already cached internal. SDK/host control-protocol schema, never sent as a prompt or tool schema"
+  },
+  "data-sdk-result-request-build-detail-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the @internal result-message field (cli.js zod result schema, chunk-nxc9btm2). Timing telemetry for SDK hosts on stdout JSON"
+  },
+  "data-sdk-result-process-turn-states-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the @internal result-message field, SDK stdout schema for hosts; not a tool schema, not read by the model"
+  },
+  "data-sdk-result-tool-schema-build-detail-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the @internal result-message timing field, SDK stdout schema"
+  },
+  "data-sdk-get-settings-policy-origins-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() inside the get_settings control_response schema (cached internal literal); control-protocol reply to the host, not a model message"
+  },
+  "data-sdk-result-message-normalization-detail-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the @internal result-message timing field, SDK stdout schema"
+  },
+  "data-thin-client-diff-dialog-no-diff-reason-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() in the thin-client diff-response schema (cached internal); host protocol, no model route"
+  },
+  "data-sdk-warning-model-restriction-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the system/informational SDK event field (@internal); the model never sees the stdout event schema"
+  },
+  "data-self-named-extra-ca-certificate-warning": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "selfNamed message in we @2242379, a startup notice object routed to the terminal/host warning list (cached ui); not a model message"
+  },
+  "data-sdk-ui-attach-draws-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the ui_attach control_request field (@internal); SDK/remote-surface protocol schema"
+  },
+  "data-self-hosted-runner-control-plane-idle-release-notice": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "h() runner log line '[runner:session] ... idle limit ... from Anthropic's control plane' in onServerIdleLimit (cached ui); self-hosted-runner operator log, stderr only"
+  },
+  "data-sdk-user-message-ultrathink-typed-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the SDK user-message schema field (@internal); input-protocol schema for hosts"
+  },
+  "data-sdk-model-fallback-api-refusal-cyber-verification-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the system/model_refusal_fallback SDK event field (@internal); stdout event schema"
+  },
+  "data-sdk-result-credential-expires-at-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the result schema field (cached internal); SDK stdout schema"
+  },
+  "data-self-named-ca-certificate-drop-debug-guidance": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "t(`CA certs: Dropped the certificate ...`) debug-log call in the CA loader (cached internal); debug log only"
+  },
+  "data-sdk-system-init-ultrathink-typed-raises-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the system/init SDK event field (@internal); the field value is set at 19285713 into the init frame for hosts, the description is schema only"
+  },
+  "data-sdk-ui-invalidate-instances-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the system/ui_invalidate SDK event field (@internal)"
+  },
+  "data-mcp-server-status-urlhost-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the mcp status schema field (@internal) in the control_response; host protocol, not an MCP tool result"
+  },
+  "data-sdk-read-file-lossy-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the read_file control_response schema (cached internal); host file-read protocol, not the Read tool"
+  },
+  "data-sdk-initialize-response-hook-on-failure-supported-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the initialize control_response schema (cached internal); SDK handshake, host only"
+  },
+  "data-pending-elicitation-requests-initialization-response": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the initialize response field (cached internal); host protocol"
+  },
+  "data-sdk-ui-invalidate-event": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the system/ui_invalidate event schema (@internal); push to remote surfaces"
+  },
+  "data-ultrathink-availability-session-initialization": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the system/init SDK event field (@internal); value only informs hosts whether to color the word"
   }
 }

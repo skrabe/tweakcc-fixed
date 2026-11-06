@@ -1,3 +1,4 @@
+import * as acorn from 'acorn';
 import { escapeIdent } from '.';
 
 const TWEAKCC_MODULE_MARK = '/*@@TWEAKCC_MODULE:';
@@ -425,4 +426,35 @@ export const findBoxComponent = (fileContents: string): string | undefined => {
     'patch: findBoxComponent: failed to find Box component (neither ink-box createElement nor displayName found)'
   );
   return undefined;
+};
+
+// Index of the bracket closing the one opened at `open`, or -1 when it does
+// not close before `limit`. Uses acorn's tokenizer, so strings, template
+// literals (with `${…}` nesting), regex literals and comments are skipped
+// exactly as the engine would read them.
+export const findClosingBracket = (
+  src: string,
+  open: number,
+  limit: number
+): number => {
+  const closes: Record<string, string> = { '{': '}', '(': ')', '[': ']' };
+  if (!closes[src[open]]) return -1;
+  const stack: string[] = [];
+  try {
+    for (const tok of acorn.tokenizer(src.slice(open, limit), {
+      ecmaVersion: 'latest',
+      allowHashBang: false,
+    })) {
+      const label = tok.type.label;
+      if (label === '{' || label === '${' || label === '(' || label === '[') {
+        stack.push(label === '${' ? '{' : label);
+      } else if (label === '}' || label === ')' || label === ']') {
+        if (closes[stack.pop() ?? ''] !== label) return -1;
+        if (stack.length === 0) return open + tok.start;
+      }
+    }
+  } catch {
+    return -1;
+  }
+  return -1;
 };

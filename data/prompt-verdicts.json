@@ -84494,5 +84494,90 @@
     "verdict": "pristine-keep",
     "version": "2.1.318",
     "why": "Strongest cut: wipe on the grounds that the Remote Control relay notes cover it. It fails because none of them is emitted in ezr's workflow tool_result, so none co-renders. This is an input-provenance control, which the LCC rule keeps, and it opens with slot uv."
+  },
+  "data-compaction-summary-repl-state-kept": {
+    "verdict": "pristine-keep",
+    "version": "2.1.318",
+    "why": "Strongest cut would be a wipe, but the literal is const i in the bundle and is interpolated into a RegExp (^${i}(?:; no bindings...)) that parses the note: text something outside the prompt depends on, frozen. It is also the only statement that REPL state survived. Rule stopped: external-dependency/frozen literal, unique."
+  },
+  "data-plugin-error-dependency-disabled-enable-or-remove": {
+    "verdict": "pristine-keep",
+    "version": "2.1.318",
+    "why": "Strongest cut: wipe because the parent says the dependency is unsatisfied. But the parent slot VAR_2 resolves to this text, so wiping removes the only statement that the dependency is disabled and the remedy (enable or remove). The sentence is also an enumeration of two remedies (tripwire, frozen). No co-rendering carrier states it. Rule stopped: unique content plus tripwire."
+  },
+  "data-plugin-error-marketplace-added-but-ignored": {
+    "verdict": "pristine-keep",
+    "version": "2.1.318",
+    "why": "Strongest cut: merge into the sibling tail ids. Both tails in the bundle are built from this head (n=...is added but ignored), so it is the only place that distinguishes ignored registrations from not-found ones; wiping loses the diagnosis. Slots must be preserved and no carrier covers the claim. Rule stopped: unique."
+  },
+  "slash-command-project-session-now-names-project": {
+    "verdict": "pristine-keep",
+    "version": "2.1.318",
+    "why": "Strongest cut: cover with slash-command-project-status-named. It renders only for the status command, never alongside a set result, so there is no co-render. The set confirmation is the only confirmation that the change took effect. Rule stopped: no co-rendering carrier."
+  },
+  "system-prompt-post-compaction-continue-from-where-left-off": {
+    "verdict": "pristine-keep",
+    "version": "2.1.318",
+    "why": "Strongest cut: wipe as redundant with the resume prompt or as a model default. The resume prompt is a separate emission that does not co-render in the compaction continuation, and MODEL_DEFAULT cannot be shown for both models (both stop early). The bundle holds it as const fcn, likely concatenated or matched elsewhere. Rule stopped: no proven carrier."
+  },
+  "system-prompt-project-thread-reply-marker-notice-not-ambiguous": {
+    "verdict": "pristine-keep",
+    "version": "2.1.318",
+    "why": "Strongest cut: wipe-merge into the reports variant. It is the alternative arm, so it cannot cover this one. The clause is a consent/ambiguity rule (tripwire: 'neither...nor', 'ambiguous' is a policy claim) and is the load-bearing close of the sentence in the no-reports case. Rule stopped: exclusive arm, tripwire."
+  },
+  "system-reminder-mcp-tools-routed-through-repl-not-directly-callable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.318",
+    "why": "Strongest cut: wipe-merge into the sibling arm. It is an exclusive arm, and the two differ on whether tool search is on (directly callable vs searchable), so the sibling says something wrong in this branch. Slot-fills a sentence in the parent. Rule stopped: exclusive arm, unique."
+  },
+  "system-reminder-mcp-tools-routed-through-repl-not-searchable-or-callable": {
+    "verdict": "pristine-keep",
+    "version": "2.1.318",
+    "why": "Strongest cut: merge with the sibling arm. The arms differ in meaning (searchable vs not, tool search off), they are alternatives, and nothing else states that the tools are neither searchable nor callable. Rule stopped: exclusive arm, unique."
+  },
+  "tool-description-bash-git-commit-example-cat-heredoc": {
+    "verdict": "pristine-keep",
+    "version": "2.1.318",
+    "why": "Strongest cut: wipe because the examples are known. The command is a literal executable form (tripwire: command/path string) that is the Bash tool's only example for this arm; the sibling is an alternative and quick-* prompts are different agents. Rule stopped: tripwire, no co-render."
+  },
+  "tool-description-bash-git-commit-example-stdin-heredoc": {
+    "verdict": "pristine-keep",
+    "version": "2.1.318",
+    "why": "Strongest cut: wipe because the REPL description and the bash-version refusal show the same form. Those are different emissions (REPL is deferred, the refusal fires only on error), so co-render is not proven; the Bash description's own example is the only copy, and it is a command literal (tripwire). Rule stopped: tripwire, no proven carrier."
+  },
+  "tool-result-agent-safeguards-stopped-pass-message-to-user": {
+    "verdict": "pristine-keep",
+    "version": "2.1.318",
+    "why": "Strongest cut: wipe-merge into the cyber guidance's closing sentence. That is the alternative arm; in this branch the model gets only this line, and nothing else tells it to relay the message. Rule stopped: exclusive arm, unique."
+  },
+  "tool-result-agent-safeguards-stopped-this-agent": {
+    "verdict": "pristine-keep",
+    "version": "2.1.318",
+    "why": "Strongest cut: merge into the sibling arm. It is the alternative; this arm is chosen when automatic switching is on, and the statement that safeguards stopped the agent is the head of the note and nowhere else. Rule stopped: exclusive arm, unique."
+  },
+  "tool-result-repl-background-did-not-finish-within": {
+    "verdict": "pristine-keep",
+    "version": "2.1.318",
+    "why": "Strongest cut: wipe because the still-running note implies the timeout. The parent says the command is still running and not killed, but not why; the REPL description carriers are deferred (co-render not proven). The slot (timeout/maximum) carries a number. Rule stopped: unique, no proven carrier."
+  },
+  "tool-result-repl-context-reset-poisoned-global-lead": {
+    "verdict": "pristine-keep",
+    "version": "2.1.318",
+    "why": "Strongest cut: trim 'rerun your code;'. The sentence crosses the boundary into the neighbour 'global state ... starts fresh.', so it must be cut whole across both ids or not at all, and opensWithSlot=true (the message slot). The clause also gives the rerun instruction, covered by no co-rendering carrier (globalthis-changed is an alternate branch). Rule stopped: fragment boundary, tripwire (ordering 'then'/rerun), opensWithSlot."
+  },
+  "tool-result-repl-global-overwrite-name-single": {
+    "verdict": "pristine-keep",
+    "version": "2.1.318",
+    "why": "Strongest cut: wipe since the parent already says it would overwrite the name. The parent's slot VAR_0 resolves to this fragment, which contributes the name and 'already a global here'; wiping drops the name from the error. It opens with a slot (opensWithSlot) and is a slot-filled value. Rule stopped: unique, slot dependency."
+  },
+  "tool-result-tool-unavailable-still-listed-clause": {
+    "verdict": "pristine-keep",
+    "version": "2.1.318",
+    "why": "Strongest cut: wipe. The literal is const Xee and is interpolated into a RegExp (^<tool_use_error>Error: No such tool available: ... \\1 ${Xee}) that detects the error, so it is bundle-matched text (frozen), and it is the only statement of the condition. Rule stopped: matched literal, unique."
+  },
+  "data-plugin-error-dependency-not-installed-check-marketplace": {
+    "verdict": "pristine-keep",
+    "version": "2.1.318",
+    "why": "Strongest cut: wipe. Fails: it is the not-installed arm of the dependency-unsatisfied plugin error and the only text naming its remedy (run the install command, or check that the marketplace is added); its sibling arm (disabled — enable it or remove the dependency) is exclusive and never co-renders, and no other carrier states it. No slop to trim."
   }
 }

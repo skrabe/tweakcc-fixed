@@ -8,6 +8,7 @@
 // site). Unique prompt IDs: distinct ids among them. Patches: entries in
 // PATCH_DEFINITIONS.
 import fs from 'node:fs';
+import * as prettier from 'prettier';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -138,9 +139,15 @@ if (!re.test(readme)) {
   console.error('README coverage table not found');
   process.exit(1);
 }
+// The refresh hint below the table names the version it was generated for.
+const refreshRe = /(node tools\/readmeStats\.mjs )\d+\.\d+\.\d+( --write)/;
+const next = readme
+  .replace(re, `<!-- coverage:start -->\n\n${block}\n\n<!-- coverage:end -->`)
+  .replace(refreshRe, `$1${version}$2`);
+const options = (await prettier.resolveConfig(readmePath)) ?? {};
 fs.writeFileSync(
   readmePath,
-  readme.replace(re, `<!-- coverage:start -->\n${block}\n<!-- coverage:end -->`)
+  await prettier.format(next, { ...options, filepath: readmePath })
 );
 console.log(
   `README coverage table: CC ${version}, upstream ${upstreamVersion}`

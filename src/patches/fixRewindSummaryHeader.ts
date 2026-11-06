@@ -7,70 +7,38 @@
 //    of context. The summary below covers the earlier portion of the conversation."
 // That's a lie for a rewind — nothing ran out of context; the user deliberately
 // rewound and asked to carry a summary forward. The header is built inside a
-// shared helper (jR_) used by all summary paths, so we rewrite it ONLY at the
-// rewind call site, which is the one tagged with `summarizeMetadata.direction`
-// ("from" | "up_to"). The direction var is in scope there, so the new header is
+// shared helper used by all summary paths, so we act ONLY at the rewind call
+// site, which is the one tagged with `summarizeMetadata.direction`
+// ("from" | "up_to"). The direction var is in scope there, so the note is
 // direction-aware. Auto/manual compaction is untouched.
+//
+// The header itself stays verbatim and the correction is appended after the
+// summary: the transcript renderer, the tool-name parser and the share
+// redactor all find a summary by that exact header text, and the redactor
+// would let a rewind summary through in saved API requests without it.
 //
 // Futureproofing: anchors key on stable English property names
 // (isCompactSummary / summarizeMetadata / messagesSummarized / direction) and
 // capture every minified identifier, so version-to-version renames don't break
-// it. The runtime swap matches the stable opening phrase (tolerant of
-// second-sentence drift). If the call site or that phrase is gone, the patch
-// FAILS LOUD at --apply (returns null) rather than silently reverting to the
-// misleading header.
+// it. If the call site or the header phrase is gone, the patch FAILS LOUD at
+// --apply (returns null).
 
 import { debug } from '../utils';
+import { findClosingBracket } from './helpers';
 import { showDiff } from './index';
 
 const HEADER_PHRASE =
   'This session is being continued from a previous conversation that ran out of context';
 
-// Concise, honest, direction-aware replacements (no $ / no " to stay literal).
-const FROM_HEADER =
-  'This session was rewound to an earlier point at your request, not a context overflow. The summary below captures the later work you chose to carry forward; the messages above are intact.';
-const UP_TO_HEADER =
-  'This session was rewound at your request, not a context overflow. The summary below covers the earlier portion up to your selected point; the recent messages are kept intact.';
+// Concise, honest, direction-aware notes (no $ / no " to stay literal).
+const NOTE_MARKER = 'This summary comes from a rewind';
+const FROM_NOTE = `${NOTE_MARKER} at your request, not a context overflow: it captures the later work you chose to carry forward, and the messages above are intact.`;
+const UP_TO_NOTE = `${NOTE_MARKER} at your request, not a context overflow: it covers the earlier portion up to your selected point, and the recent messages are kept intact.`;
 
 // The rewind-site tail: `}),isCompactSummary:!0,...<J>.length>0?{summarizeMetadata:{…,direction:<T>}}`.
 // [1] the isCompactSummary…summarizeMetadata tail, [2] the direction var.
 const REWIND_TAIL_RE =
   /\}\),(isCompactSummary:!0,\.\.\.[$\w]+\.length>0\?\{summarizeMetadata:\{messagesSummarized:[$\w]+\.length,userContext:[$\w]+,direction:([$\w]+)\}\})/;
-
-// Index of the bracket closing the one opened at `open`, or -1. Skips string
-// and template literals (with `${…}` nesting) so braces inside them don't count.
-const findClosingBracket = (
-  src: string,
-  open: number,
-  limit: number
-): number => {
-  const stack: string[] = [];
-  for (let i = open; i < limit; i++) {
-    const ch = src[i];
-    const top = stack[stack.length - 1];
-    if (top === '`') {
-      if (ch === '\\') i++;
-      else if (ch === '`') stack.pop();
-      else if (ch === '$' && src[i + 1] === '{') {
-        stack.push('${');
-        i++;
-      }
-      continue;
-    }
-    if (ch === '"' || ch === "'") {
-      for (i++; i < limit && src[i] !== ch; i++) if (src[i] === '\\') i++;
-      continue;
-    }
-    if (ch === '`') stack.push('`');
-    else if (ch === '{' || ch === '(' || ch === '[') stack.push(ch);
-    else if (ch === '}' || ch === ')' || ch === ']') {
-      const want = ch === '}' ? ['{', '${'] : ch === ')' ? ['('] : ['['];
-      if (!want.includes(stack.pop() ?? '')) return -1;
-      if (stack.length === 0) return i;
-    }
-  }
-  return -1;
-};
 
 // Method 1 (CC >= 2.1.318): the spread helper call whose options object holds
 // nested objects, e.g. ...Yte(Qt,{…,...ae()&&Ni()&&{replBindingsKept:…},…}).
@@ -124,7 +92,7 @@ export const writeFixRewindSummaryHeader = (file: string): string | null => {
   }
 
   if (!match || match.index === undefined) {
-    if (file.includes('.replace(/This session is being continued')) {
+    if (file.includes(NOTE_MARKER)) {
       debug(
         'patch: fixRewindSummaryHeader: already applied in this CC build — no-op'
       );
@@ -144,14 +112,11 @@ export const writeFixRewindSummaryHeader = (file: string): string | null => {
   }
 
   const [, jrCall, metaTail, dirVar] = match;
-  // Replace the whole header line (stable phrase + remainder up to the blank line).
   const spread = match[0].startsWith('...');
-  const headerRe =
-    '/This session is being continued from a previous conversation that ran out of context\\.[^\\n]*/';
-  const headerSwap = `${dirVar}==="up_to"?${JSON.stringify(UP_TO_HEADER)}:${JSON.stringify(FROM_HEADER)}`;
+  const note = `"\\n\\n"+(${dirVar}==="up_to"?${JSON.stringify(UP_TO_NOTE)}:${JSON.stringify(FROM_NOTE)})`;
   const replacement = spread
-    ? `...(($rw)=>({...$rw,content:$rw.content.replace(${headerRe},${headerSwap})}))(${jrCall}),${metaTail}`
-    : `content:${jrCall}.replace(${headerRe},${headerSwap}),${metaTail}`;
+    ? `...(($rw)=>({...$rw,content:$rw.content+${note}}))(${jrCall}),${metaTail}`
+    : `content:${jrCall}+${note},${metaTail}`;
   const newFile =
     file.slice(0, match.index) +
     replacement +

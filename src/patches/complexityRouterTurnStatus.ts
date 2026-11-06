@@ -1,3 +1,4 @@
+import { findClosingBracket } from './helpers';
 import { showDiff } from './index';
 
 export const ROUTER_TURN_STATUS_RUNTIME = `
@@ -46,31 +47,34 @@ export const writeComplexityRouterTurnStatus = (
   }
   const requestPrefix = oldFile.slice(0, request.index);
   const escapeId = (id: string) => id.replace(/\$/g, '\\$');
-  // 2.1.285+: the generator aliases its options param to a local
-  // (`D=b===h.fallbackModel?h:{...h,fallbackModel:b}`) and the request site
-  // reads that alias. The alias is the options object for the record call.
-  const findQuery = (pattern: RegExp) => {
-    const query = [...requestPrefix.matchAll(pattern)].at(-1);
-    const options = query ? (query[2] ?? query[3]) : undefined;
-    if (!query || !options) return undefined;
-    const aliased =
-      options === request[5] ||
-      new RegExp(
-        `[,{]${escapeId(request[5])}=[$\\w]+===${escapeId(options)}\\.fallbackModel\\?${escapeId(options)}:\\{\\.\\.\\.${escapeId(options)},`
-      ).test(oldFile.slice(query.index, request.index));
-    return aliased ? query : undefined;
-  };
-  // Method 1 (2.1.317+): trailing params follow the options param
-  // (`{modelFacts:F,...REST},W`).
-  // Method 2 (2.1.288+): the options param is the last one, destructured as
-  // `{modelFacts:F,...REST}`; REST is the options object the alias spreads.
-  const query =
-    findQuery(
-      /function\*[$\w]+\(([$\w]+),[$\w]+,[$\w]+,[$\w]+,[$\w]+,(?:([$\w]+)|\{(?:[$\w]+:[$\w]+,)*\.\.\.([$\w]+)\})(?:,[$\w]+)+\)\{/g
-    ) ??
-    findQuery(
-      /function\*[$\w]+\(([$\w]+),[$\w]+,[$\w]+,[$\w]+,[$\w]+,(?:([$\w]+)|\{(?:[$\w]+:[$\w]+,)*\.\.\.([$\w]+)\})\)\{/g
-    );
+  // The request site sits in the main-query generator: its first param is the
+  // message list, its sixth the options object, either bare or (2.1.288+)
+  // destructured as `{modelFacts:F,...REST}` with REST the options; 2.1.317+
+  // adds trailing params. 2.1.285+ aliases the options to a local
+  // (`D=b===h.fallbackModel?h:{...h,fallbackModel:b}`) that the request site
+  // reads. Candidates are tried nearest first, so a nested generator without
+  // the alias is skipped and an earlier generator elsewhere never wins over
+  // the enclosing one.
+  const query = [
+    ...requestPrefix.matchAll(
+      /function\*[$\w]+\(([$\w]+),[$\w]+,[$\w]+,[$\w]+,[$\w]+,(?:([$\w]+)|\{(?:[$\w]+:[$\w]+,)*\.\.\.([$\w]+)\})(?:,[$\w]+)*\)\{/g
+    ),
+  ]
+    .reverse()
+    .find(q => {
+      // Only a generator whose body encloses the request site; the alias
+      // test then reads that body alone.
+      const open = q.index! + q[0].length - 1;
+      if (findClosingBracket(oldFile, open, oldFile.length) < request.index!)
+        return false;
+      const options = q[2] ?? q[3];
+      return (
+        options === request[5] ||
+        new RegExp(
+          `[,{]${escapeId(request[5])}=[$\\w]+===${escapeId(options)}\\.fallbackModel\\?${escapeId(options)}:\\{\\.\\.\\.${escapeId(options)},`
+        ).test(oldFile.slice(open, request.index))
+      );
+    });
   const renderPrefix = oldFile.slice(
     Math.max(0, renderer.index! - 7000),
     renderer.index

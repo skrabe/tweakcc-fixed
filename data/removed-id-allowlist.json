@@ -7056,5 +7056,12 @@
     "verdict": "archived",
     "version": "2.1.318",
     "why": "Renamed to data-attribution-project-setting, whose ID clause now also accepts chan_ ids; the new id takes pristine. The override matched old pristine; archived to ~/.tweakcc/orphans-removed-for-2.1.318/."
+  },
+  "system-gcp-path-env-var-invalid-characters": {
+    "verdict": "archived",
+    "facing": "internal",
+    "hash": "04a9e276fef9f0ff9ef28f4ad594ce12403574da",
+    "version": "2.1.318",
+    "why": "Ruled internal (weekly 2026-11-05): the check throws while the API client is built for the Google Cloud provider, before any request, so the message never reaches the model; its second half was already internal. The override equalled pristine."
   }
 }

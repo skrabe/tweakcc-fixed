@@ -1,31 +1,4 @@
 {
-  "09dd2518dd9ceca5": {
-    "at": 1238312,
-    "model": {
-      "818805f7e2fb4f9f017362c3b2e048706fa6a4ac": "Write to ${} failed (${()??}) after the target was truncate…",
-      "bc12c98a4609ff3705d02da2f6b3c17fd2136ef7": "Write verification failed: ${} is ${.size} bytes on disk, e…"
-    },
-    "position": 0,
-    "reviews": [
-      {
-        "arms": {
-          "2220fe6c47461a449273ebae1fad338b80fba387": {
-            "facing": "internal",
-            "preview": "assertDirChainReal: dir must be strictly inside base (rel: …"
-          },
-          "40017dc5c4c75d70166dc4f4044be5f251391d45": {
-            "facing": "internal",
-            "preview": "refusing to read fd ${}: not a pipe or socket"
-          },
-          "94680577d432046d6853ccaf8211f03b173e4604": {
-            "facing": "internal",
-            "preview": "refusing to read ${}: content exceeds ${} byte limit"
-          }
-        },
-        "why": "x is a generic TelemetrySafeError in the fs utilities. The model arms are thrown by writeTextContent pPe (2153315) and writeFileAndFlush (2158311, 2161430), which the Write/Edit tools call, so they become tool errors. The internal arms are bounded reads of credential/token files and inherited fds: r8e (2151470) and hOs (2151798), called by token loaders W0t (2554625), the /dev/fd readers (2556318, 2557898) and L (2562229), which turn failures into a token miss or log. The 31863265 caller catches. assertDirChainReal (2150231) is an invariant (callers pass a dir inside base)."
-      }
-    ]
-  },
   "1834170eef726568": {
     "at": 9019745,
     "model": {
@@ -205,6 +178,55 @@
       }
     ]
   },
+  "21c54ef534021507": {
+    "at": 7580368,
+    "model": {
+      "0d24144c04f1079f76ee957be07d2ac61facfdb5": "sandbox: the task output directory chain under the temp roo…",
+      "63e3b33526e050e829d55272796ec47fcc322d56": "Claude Code did not run this command: it could not look up …",
+      "ae3172a2eaf7b76302d756e37ac72d650616aac1": "The sandbox has lost its configuration, or its record of wh…"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "2b517db9c8d7d501bfaa1505e98bf1073a6edfa5": {
+            "facing": "internal",
+            "preview": "sandbox: failed to open /proc/self/exe for the embedded app…"
+          }
+        },
+        "why": "x is the generic error class. The model arm is bP()'s guard (6317236), thrown into sandboxed Bash command execution (cne/une). The internal arm is in jus (6217849), which returns early unless lL() is true. lL() is `function lL(){return!1}`, so the /proc/self/exe failure can never be thrown in this build."
+      },
+      {
+        "arms": {
+          "63e3b33526e050e829d55272796ec47fcc322d56": {
+            "facing": "model",
+            "preview": "Claude Code did not run this command: it could not look up …"
+          },
+          "a69ec699b57347de0b44e248abb16b6239412a59": {
+            "facing": "internal",
+            "preview": "[Sandbox] ${}: ${} could not be checked when the sandbox co…"
+          },
+          "ae3172a2eaf7b76302d756e37ac72d650616aac1": {
+            "facing": "model",
+            "preview": "The sandbox has lost its configuration, or its record of wh…"
+          },
+          "b2e3c7c500e12e6cfc7ec90d06bf49ad785aeec7": {
+            "facing": "internal",
+            "preview": "[Sandbox] ${}: could not move the planted ${} aside (the re…"
+          },
+          "bceecf7ba7bc27f70574e3d21d24519bc7945eef": {
+            "facing": "internal",
+            "preview": "[Sandbox] ${}: could not move the planted ${} aside (the re…"
+          },
+          "d6dbbd99998c07eb0c9c81bf67add5ed46a8842a": {
+            "facing": "internal",
+            "preview": "[Sandbox] ${}: the planted ${} could not be moved aside or …"
+          }
+        },
+        "why": "A is the generic error class. The two new model arms are thrown by ude @7579410 (Windows sandbox added-folder deny lookup 7580368, lost configuration 7579678), called from nde @7569455 on the sandboxed Bash command path (XEe wrapWithSandboxArgv 13249911); the trace shows tool-throw [model] sinks at 26983599 and 15053343, the same route as the carried bP()/Uw task-output-dir guard (7570297, thrown by the same nde at 7569500). The four '[Sandbox] ...' internal arms are post-command scrub notices (rV @7515551, Mce @7442650 w/I closures @7442767/@7443233): built into A and passed to TP()/b()/t() debug logging (traces end in debug-log sinks 7370634/7370618/7444518/7443473), never thrown into command execution."
+      }
+    ]
+  },
   "261819c5b6b5dba4": {
     "at": 12935943,
     "model": {
@@ -234,6 +256,381 @@
           }
         },
         "why": "sae (9288293) returns {ok:false, reason, message}, and its callers route the message differently. The worktree-creation Cke callers with no options (10336462-10365026) throw Vp(message) into the EnterWorktree (16927708) and Agent-isolation (16608455) tool errors, so those arms are model. The two arms that stay non-model need flags only resume callers pass. \"is its own repository and nothing vouches…\" needs requireWitnessForSelfOwningPins (parked-agent resume, 29822241), which only logs pin-is-own-launch-tree messages and throws oF without them (internal). \"sits under the directory this resume ran from…\" needs declineSelfOwningPinUnderLiveRoot. Its other caller is session-resume GXo (17331102) → eOe/Bgt → Gt(…,\"warning\") informational (30556828, 38421941), which is dropped from the API, or wpn → stderr (35959033) (ui)."
+      }
+    ]
+  },
+  "289b71a9b3e89b8b": {
+    "at": 15067992,
+    "model": {
+      "009c459bc25680ee7382ed452e9d25748fc52648": "Could not vouch for ${} after its dependency install, and t…",
+      "010fe25f50de04a22e2fa79b095513530bde2dc8": "Failed to write marketplace catalog: ${(.error)}",
+      "02d35217c7671344cb8361796d08737c12d64efb": "${()}\nThe retry over SSH failed too: ${()}\nCheck the reposi…",
+      "08dc06b67f0cd39e0afc141c4579054ed2418233": "Server \"${.name}\" is the account memory server; its resourc…",
+      "096e1e937e66ef5d2d912bfc046a4789240e6a61": "Failed to list the staged plugin copy (${(.error)}); retry …",
+      "0b95e56dfa48a8b87697d941236cf69f5efb7553": "Plugin path is not a directory: ${}",
+      "0bf9d47faff9df238a9e3c575df94dd2d44ec563": "PDF extraction directory disappeared before readback: ${}",
+      "151d78d4cdfcbb314a63875f92ec6313711e81ec": "Could not archive ${} ${}: its staged tree was replaced bef…",
+      "15ec8c4a79addf38fd23ddc2f2ba1418cdb40dbf": "Failed to probe ${}: ${()}",
+      "16bfdeeaeb1b31d0f003c24f5a5e375362e2ba43": "Cloud session ${} has shown an unanswered MCP server questi…",
+      "1b11c7f5d1dc0a73b319073fbe8a364c5b9fba1f": "Could not link ${} ${}: another session is recorded as usin…",
+      "1c7fd2dfb2b34e10a483bfd504d556338abe8e57": "PDF extraction handed over no page names: ${}",
+      "1cd40f8b8935d62f2b01d7ec1ed25c78afc272dd": "Could not prepare ${} for its ${} (it could not be examined…",
+      "1ded63bae2cbaaeb46620e82122675979b28df72": "Onboarding guide unavailable: status ${.status}",
+      "223d6b448dd1059f2cd0b830b1793016c3be858e": "MCP server \"${}\" was not called: the plugin that provides i…",
+      "24ece801a52c6349f8eb06fd12891aeccfcd04c5": "Cannot add marketplace \"${(,64)}\": Claude Code cannot insta…",
+      "252aade464c62330238e0c819b72a27df36eb870": "installed_plugins.json was not changed: it holds records un…",
+      "25de3e54220d90ca5c041e1afafafc21f6a3c913": "Can't read .mcp.json: it isn't a regular file or is larger …",
+      "26339bb35fa6004c0d9cd416423dc65fc940582a": "Failed to list extracted PDF pages: ${.code} (${})",
+      "279a89198258d018db5887550ee90b638e4aa164": "Could not prepare the plugin cache folder of ${}: the stora…",
+      "2c14f5a68503d89ad10fa50b40eca8aea06cfbe9": "Server \"${.name}\" is the Artifacts MCP server; Claude Code …",
+      "2d56c187c1eda9fd0f4555ea7ecb62bac88a559c": "Server \"${.name}\" does not support resources",
+      "2f96ce44766b8db276abb9a7c6408ca8fd1da46d": "Could not ${} ${} ${}: a link sits at its cache path and co…",
+      "3133a2dafc2cb81a1aef1fa43cd5596139c8e193": "Cannot install ${(,120)}: ${}",
+      "341b65a22f15b0939e28e4ffe3088d30d5d0ea16": "Plugin archive from ${(.url)} contained no plugin files. Th…",
+      "3950b8a267e332619f019f55cd448b67c5997f0b": "Plugin tree at ${} could not be made symlink-free (${.readO…",
+      "3bd3066481c128710a53172265970d395212aaa0": "Cannot fetch marketplace ${(())}: the directory it would us…",
+      "3da346dbed4d17aba516ea1ba4a9c24a498e5afb": "Refusing to copy ${}: it resolves somewhere other than its …",
+      "3e560e7e62b3a03d694854a323fd09d879906476": "Could not re-screen ${} after its dependency install (the c…",
+      "414ee3b562f22e1e4551ee93206c19a65cd4fdb4": "Server \"${.name}\" is not connected",
+      "43882207d662c8570893e55f0c58dc70fa733e40": "Could not prepare ${} for its dependency install (this sess…",
+      "440fdb1275001895b49f4ef6074beb873585a1f9": "Plugin archive from ${(.url)} has no plugin content at its …",
+      "45137f323ffb4cd5c7e81678ee12043bce131ac0": "Cannot read this as an image: ${} is a pipe or a device, no…",
+      "45dfa120aedc3aa32a0bdda0054969ccf53ddb84": "Cannot add this marketplace: ${.cause}; ${[.kind]}.",
+      "46ea1d15aa686d924cd471cac0c6978ae70ec6f9": "File is too large to read as an image (the limit is ${()}):…",
+      "49e9fffd974611cb44623ce3864b8e888abfe59b": "Could not ${} ${} ${}: a link sits at its archive path and …",
+      "4b04048bb36b61111058ec88d90ac4f1805d1ff2": "'${()}'. ${?`Run \\`${}\\``:\"Remove the entry\"} and re-add it.",
+      "4c241157fd8217aa3af17ab10bf291e042972a4c": "Cannot add marketplace ${()}: the name is reserved for the …",
+      "513a75267d559bf6a0b5ff32c27ed929052f510d": "Failed to save installed_plugins.json: ${}",
+      "5171151717fad6b176b4bb13bb8e8bb2371ec566": "Cannot add marketplace ${()}: names starting with \"${}\" are…",
+      "545996e46e3c0c69f500dd73ccef9a1d49a98779": "Failed to write marketplace manifest: ${(.error)}",
+      "55a6c3f478d1417366704ee0ecf20a9f24f51df7": "form instead — {\"command\": \"<executable>\", \"args\": ",
+      "5907c278e72d7bb989006c74ed7da34d4f918345": "$CLAUDE_PLUGIN_OPTION_<KEY> from the hook's environment.",
+      "5a5690db6f8b7c3932323390a166552e6a359a4a": "Refusing to copy ${}: it is no longer a directory (swapped …",
+      "5e850d441d8d92f9c33c4fed935a094e650ac67d": "Could not install dependencies for ${} ${}: its staged tree…",
+      "5f6b6d73be502366b86d21259876ed635b55be30": "Plugin archive from ${(.url)} was not installed: its market…",
+      "6080721bb3f8e4229d7ab4864c41d6f097824e83": "Failed to move the new marketplace clone into place at ${}.…",
+      "62bbd264853c2c02fbdda80ac64c607c9f790483": "installed_plugins.json cannot be read, and it was not chang…",
+      "6861661f9698062995dbcd9910b7a30f4d37a1e0": "Unknown hook decision type: ${.decision}. Valid types are: …",
+      "68c60856fe5dee25d63a035f338b1b856050fccc": "Cannot fetch this marketplace: its clone directory name ${(…",
+      "6d160bc72c7ae50e709dfa43dce0e8a3699cdf9a": "Cloud session ${} is waiting for input that nothing on this…",
+      "707a86c78f93e38702c757ee33d36ebc110d1d4a": "Unknown skill: ${.name}",
+      "72340f9bd849a0768005bb6eb5f93f32fd288f39": "[\"${user_config.KEY}\", ...]} — or read ",
+      "734707d04fd380e7b2a94e6ee8795ed4465650eb": "Can't use the marketplace name ${()}: the registered market…",
+      "7565380718fb45de0a4839eab21d045018a9eab0": "Cannot install into ${}: ${} is a symbolic link, and the pl…",
+      "7761f2c2f59af85dd1bc9cb177dfc3bf1cade6cb": "Refusing to copy ${}: its target is no longer what it resol…",
+      "78fa53baaa7dcd6206c78d4ad473d76337d8ea3b": "SHA pin verification failed: expected ${} to be ${}, got ${…",
+      "7af173c29e79b0c9c82d1e581ae42aa8bbbaf2ed": "Could not examine the plugin directory of ${} (${()}); retr…",
+      "83f3ec4851cd4668ce3d516fe96b2e622e1ceb72": "MCP server \"${}\" ${}${()}. If other Claude Code processes u…",
+      "8542123ba74d5939cee5c3a2b516fe9c4b5bbba8": "Cannot add MCP server: your organization's managed settings…",
+      "8de9eda649b39623aefbf47101cc711b7d70316d": "Unknown hook permissionDecision type: ${.hookSpecificOutput…",
+      "8ff4b530043fe06c086f7a086cb40a57743260da": "Could not publish ${} ${}: its staged tree was replaced bef…",
+      "92777172545a442f0eb950910cd630c038adbdee": "Marketplaces can't be fetched in this session, because it c…",
+      "933e8fb5b54069d64d97fccd139630b5115ef040": "Hook returned incorrect event name: expected '${}' but got …",
+      "981b910da005bd9610995062e40fd9dcb35bd1f4": "Cannot add MCP server: enterprise MCP configuration is acti…",
+      "9cf61d48648fa924c0a524023d5352ddd381554b": "Failed to clean up a leftover marketplace staging directory…",
+      "9d77a16927602afc52b93494196d54b44fdd5145": "Could not prepare ${} for its ${}: it is no longer a plain …",
+      "9f25d68289795922ff75152fab00f0647b42c56f": "Refusing to copy ${(,.name)}: it is no longer a directory a…",
+      "a10161c896b7d70c5e08ee43cd54fe741828dd41": "WorktreeCreate hook failed: ${.join(\"; \")}",
+      "a29d3a882e037af0257378898e40d980c397f9cb": "Marketplace name ${(.name)} is not a plain directory name; …",
+      "a379a14c86c64ecfadfb129585b92986d5528916": "Marketplace \"${}\" is registered from an untrusted source: $…",
+      "a46da90f9cd257dd0ea8b3327335ee3673841573": "Failed to move the staged plugin into ${}: ${()}",
+      "a5e9578b6898c9ab81c0e86382aa024ca11b8c08": "Failed to read cached marketplace: the backend returned no …",
+      "a6972a77b74f2cfb76549fbc854fd494314a627a": "Extracted PDF page disappeared during read: ${.join(,)}",
+      "aa1a8f68e9969fe0c0803b28257191adc07ed88f": "File has an image extension but its content is not a valid …",
+      "aaff822d527e6ee0d5bbb23709626e087d87cd37": "Failed to move the existing marketplace directory aside. Pl…",
+      "ad53cfa1e5533c5bc695c3cf0f4f300a9933af89": "Failed to read extracted PDF page: ${.error.code} (${.join(…",
+      "ad89e4e73e22be5ded9335a63d7e5cea5c946bb6": "Cannot add marketplace \"${(,64)}\": Claude Code reserves thi…",
+      "ade7d8c6877311fb6cde8b176d4e6688cc1d0b2e": "Agent type '${}' could not be loaded from its plugin, and $…",
+      "b0cf55c54ba1c071464ef6b007d6de9decd7a8e6": "Failed to read cached marketplace: ${(.error)}",
+      "b2783dc4c507e95411cc649b26dbb18c7a4071c3": "Hook from ${?`plugin ${}`:\"a plugin\"} references \\${user_co…",
+      "baaf2030d9af2a37f5b0e75ded34f3bd7c2fa227": "Failed to list plugin cache dir: ${()}",
+      "bf2d912109f507cc229e5efd4cf3f810bac89fc5": "Could not publish ${} ${}: another session is recorded as u…",
+      "c12f1f003df11c70c094e791bd5516ded1f1a95f": "Could not publish ${} ${}: a link sits at its cache path an…",
+      "cc69a1130ab6ace02067564312a0f42749eb834f": "This plugin's marketplace entry is invalid: ${.error}",
+      "cc9b8032af787b8f84fc3430d41911d7d6113c7f": "Could not prepare ${} for its dependency install (the conve…",
+      "d0c1a3d82fce32e4f09de16ce9d290f47016df34": "Failed to clone marketplace repository: ${.stderr}",
+      "d32a1ddbf2c904181404131644a09f9ed550587c": "Nothing to change once the invisible characters are removed…",
+      "d4b6ec725a6c95a8cbd031337f61416c150b3c58": "\"${(.name,120)}\" was not installed: its ${} listing names n…",
+      "da8fb01daa15adf7942016a2c83581ab66eff2cc": "Reading full PDFs is not supported with this model. Use a n…",
+      "dbee0600e91da6062ab63d5ee0d87c65b2e65e6a": "WebFetch cannot fetch localhost or other hostnames without …",
+      "e06fad637df0bdbb783b7ac878040e6a262b2b7a": "MCP server \"${}\" may not have been ${}${()}: ${} could not …",
+      "e1c43852f46793c7c1ca32b9f5094424fdea597d": "\"${(.name,120)}\" was not installed: the repository address …",
+      "e62d0c42d0a852cfd522df3bac21ba5f81601f91": "Could not publish ${} ${} into the plugin cache (${()}); re…",
+      "eb04416fe8bbddfaddb285c5c9be54fbf2598ac2": "Could not empty ${}: the storage layer refused the version …",
+      "ec8a3a858bd5d247a31f21f9c1f9bb0bf1ff45c2": "Plugin archive from ${(.url)} does not contain the componen…",
+      "ee86b64c8293747f5ab402ff26cbf02ad209794e": "Could not replace the marketplace directory at ${} because …",
+      "efb2d5e0a072c066ea425fe12134d214188c3df4": "Failed to finalize marketplace cache. Please manually delet…",
+      "f1db7f4baddf9bf70a7e516fe83e6180d8814220": "Plugin ${}: failed to read manifest file at ${}.\n\nRead erro…",
+      "f24f082b27ac8ee9c36fd5909e6efec093dc4362": "WebFetch on claude-code-server needs the CCR web-fetch proxy",
+      "f4db03db23a774f3546f200f8c28f00c943f2e11": "Failed to save marketplace configuration: ${(.error)}",
+      "ff5abf4204e6e89606b950331c14dcc92af020f0": "Marketplace '${()}' has a corrupted installLocation (${()})…"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "0a833cc4440ceea9715d3731f6b364e4349f8e1e": {
+            "facing": "ui",
+            "preview": "The ${} isn't available in this session"
+          },
+          "0e311ab854253b3004f009030347cec8817d03ec": {
+            "facing": "internal",
+            "preview": "git-destructive-target parse failed: ${()}"
+          },
+          "1aa64b9725680d1741fe7bd27583031dd080e59e": {
+            "facing": "ui",
+            "preview": "${} The known_marketplaces.json entry named \"${()}\" could n…"
+          },
+          "1e084305777fc1b41af340af01d808d36f606c53": {
+            "facing": "internal",
+            "preview": "poll event rejected: element kind \"${.kind}\" does not match…"
+          },
+          "24106906e6f723bbc529748ce6a6f1a188d66e47": {
+            "facing": "internal",
+            "preview": "ENOENT: no such file or directory, open (transcript stream)"
+          },
+          "2a8fef7374cd8214500def35a1f6c42d21f14d9a": {
+            "facing": "internal",
+            "preview": "A foreground agent was not moved to the background: this pr…"
+          },
+          "2b7e9d3ade29ad1e2e89e4b5da0ec7f1175002dd": {
+            "facing": "internal",
+            "preview": "transcript storage move failed (${()})"
+          },
+          "35b2e6df1e8c7fb7b225588f3116114a99d4774f": {
+            "facing": "internal",
+            "preview": "removal through the storage interface failed: ${()}"
+          },
+          "3758f020c23f5810514bbf936dcc1c28c1899458": {
+            "facing": "ui",
+            "preview": "Auto-update can't be turned off for ${}: its plugins follow…"
+          },
+          "4519bd6187bd94c0de7a1b101edb19850431ec08": {
+            "facing": "internal",
+            "preview": "poll event rejected: ${.ok?\"declaration is for another kind…"
+          },
+          "453bbc61a66cc8f04abaebbed4c08e2831cc7ddd": {
+            "facing": "ui",
+            "preview": "Cannot add MCP server \"${}\": type \"claudeai-proxy\" is used …"
+          },
+          "469faeea509b4edb1aa6a5b61307e9b28f7803c6": {
+            "facing": "ui",
+            "preview": "Hooks file read failed at ${} for plugin ${}: ${.detail}"
+          },
+          "4788b16721bb6b3f22caa643e3e25bbc404c8c6c": {
+            "facing": "internal",
+            "preview": "ENOENT: no such file or directory, stat '${}'"
+          },
+          "4bf0ae091c0cc44df864549fa36e335b4b1dd987": {
+            "facing": "ui",
+            "preview": "Cannot add MCP server \"${}\": type \"${.type}\" servers are re…"
+          },
+          "53ed42fe687cfe5d24581cd5c35d4e26c447a5eb": {
+            "facing": "ui",
+            "preview": "${} Nothing was deleted, and the known_marketplaces.json en…"
+          },
+          "6175767bcbb4cb28a660a574c686eaddb5378136": {
+            "facing": "internal",
+            "preview": "sync-owned path probe failed: ${()}"
+          },
+          "6572452660d7c881bc9d9d826b3c49926674bd3b": {
+            "facing": "internal",
+            "preview": "poll event rejected: a group holds 1 to ${} events, none of…"
+          },
+          "68cf01d1dcaed4b2a617236f72f04f6a62487301": {
+            "facing": "internal",
+            "preview": "poll event rejected: the group's fields are ${} bytes as se…"
+          },
+          "7233ca1ea60f60b9086a7739ff5cc4c763e32c7d": {
+            "facing": "internal",
+            "preview": "poll event rejected: envelope is ${} bytes after nonce stam…"
+          },
+          "736c5afc45dcbbbba642f441e8560bfc98221ed9": {
+            "facing": "internal",
+            "preview": "installed_plugins.json: ${()}"
+          },
+          "763d976953e4e43dc327dc6f342c7a12c6f4be7c": {
+            "facing": "internal",
+            "preview": "poll event rejected: kind \"${.kind}\" is reserved for a trus…"
+          },
+          "767ffb01cc3f47477f4163b233b8529fdd42d6ef": {
+            "facing": "ui",
+            "preview": "Plugin directory ${} was removed ${===\"before\"?\"before it c…"
+          },
+          "7e7109f9aa661d87d0fafd6b028efc84d07c5f93": {
+            "facing": "internal",
+            "preview": "transcript storage folder creation failed (${()})"
+          },
+          "866685434d11978980eefadb3b3713d26879a71f": {
+            "facing": "ui",
+            "preview": "Marketplace '${}' is hosted on claude.ai and not declared i…"
+          },
+          "8e15cdad67fed91aa01aabae0189e57d3ccd3c94": {
+            "facing": "internal",
+            "preview": "poll event rejected: ${.reason}"
+          },
+          "8e7a2ff8eb072e10605854621f6d264931e10bdd": {
+            "facing": "internal",
+            "preview": "poll event rejected: envelope is ${} bytes (cap ${(.kind)})"
+          },
+          "8ec59464009aa465e6ac1c670c32f786cf39ab13": {
+            "facing": "internal",
+            "preview": "shell output moved or replaced before it could be stored ($…"
+          },
+          "986ddd9a80188257fe520c6f99d1e62676348446": {
+            "facing": "internal",
+            "preview": "poll event rejected: invalid kind (a lowercase letter, then…"
+          },
+          "99759ca97291132decb0fb370497e790865ce1cc": {
+            "facing": "internal",
+            "preview": "sync-owned path probe: unexpected answer ${(?.)}"
+          },
+          "9d9419fd8750992c9b2660e3ee3c2ed78c040697": {
+            "facing": "internal",
+            "preview": "poll event rejected: the group is ${} bytes after nonce sta…"
+          },
+          "aab86d648bbb9ff9eb6e240d310041e84c0d390b": {
+            "facing": "ui",
+            "preview": "${.length>0?`Turned off ${()}. `:\"\"}Could not turn off ${}:…"
+          },
+          "b66f1f6ad17ea703536654454745c9d47bed76f7": {
+            "facing": "ui",
+            "preview": "Compaction unavailable: your model policy only allows ${()}…"
+          },
+          "c4ce07b4c7b85c68500bf640c9173401f996ade0": {
+            "facing": "internal",
+            "preview": "A background launch rule's admitMove() threw, and the agent…"
+          },
+          "c8b91445ccab58304dc0883bee4996102a9f12f9": {
+            "facing": "internal",
+            "preview": "Plugin ${}: failed to read manifest file at ${}.\n\nRead erro…"
+          },
+          "cdca0a45bb638f34d88347dea2cd5baaa7120f96": {
+            "facing": "internal",
+            "preview": "placement through the storage interface failed: ${(.error)}"
+          },
+          "d456622b7a732d29a01bcb772735550797e71eca": {
+            "facing": "ui",
+            "preview": "${} is built in and not declared in any settings scope. Omi…"
+          },
+          "dc247d8dc297c569df363e96b63057861821c649": {
+            "facing": "ui",
+            "preview": "Plugin directory ${} could not be ${===\"before\"?\"checked be…"
+          },
+          "dc561096b2d15f71e02003420c1a9f6385953897": {
+            "facing": "internal",
+            "preview": "Refusing to swap in a staged copy: it is no longer the ${} …"
+          },
+          "e389b72a18b318cac1fea4f8874b383b9e5ac01e": {
+            "facing": "internal",
+            "preview": "destructive-target-scope parse failed: ${()}"
+          },
+          "e4f4bd2340662d8436a08efb92e8c5f886a42cdc": {
+            "facing": "internal",
+            "preview": "poll event rejected: ${} events already queued"
+          },
+          "e74d39faa50493a5e84ca4bc0ddb3f100d20f6dc": {
+            "facing": "internal",
+            "preview": "EISDIR: not a regular file (${(.error)})"
+          },
+          "eb0ff3762e87544656d4174adb8b3cd49e921a89": {
+            "facing": "ui",
+            "preview": "monitors file not found at ${}"
+          },
+          "f8980e67a180d38af5a2279ba5aeb22bf5e56518": {
+            "facing": "ui",
+            "preview": "Plugin directory ${} was replaced while it was being loaded"
+          },
+          "f9d5d2018f62ccbd54784a7ff9086e67e827436c": {
+            "facing": "ui",
+            "preview": "The list of installed plugins (installed_plugins.json) coul…"
+          },
+          "fd5231e521103bd7f5c7e50fd7cdb67e0116c2ad": {
+            "facing": "internal",
+            "preview": "poll event rejected: the queue holds at most ${} events (${…"
+          },
+          "fdd4ab13513f7f77490373c6a297cd8bb84c1263": {
+            "facing": "internal",
+            "preview": "onlyIfExists stat failed (${()}) — append withheld"
+          },
+          "ff5dd8942be617884d725f3364ad97e284d75b6b": {
+            "facing": "internal",
+            "preview": "transcript storage append failed (${()})"
+          }
+        },
+        "why": "x is chunk-886tf6ja's generic TelemetrySafeError thrown across chunk-sfn1dbxq. After the corrections the model arms are tool and slash-command errors: Read/WebFetch/MCP/Skill/hook throws and plugin install, import and marketplace throws that reach /plugin, /import or /plugin update output (Ck 40513124, /import 22720650, vi 19073700). The remaining ui arms belong to other paths: the plugin loader (ZQe/FEn 12678571-12679015 via WEn/pEn; monitors and hooks-file reads caught into the plugin error list at 12645332/12642968; the v5 manifest read variant only via wne/GEn load paths), the /plugin Marketplaces and Errors tabs (Qze remove errors → setError/ge at 40374298/40525675, Svt toggle → Ct at 40380393, $es auto-update toggle), CLI-only --scope removes (12393026/12393245), claude mcp add CLI checks in h2 (10767489/10767721; /import's converters never build those transport types), and partial or auto compaction (Eon via Lir/ees). The internal arms are logged with c()/t() (12864203, 9586780, 9582757, 8832224/8832747), caught as ENOENT or by storage callers (13225011, 13118849, 13186817-13188562, 12454078, 12404252), dead or caught-and-recorded in DV ($e at CIe 8943242), J('warn')-logged sync-owned probes (8867413), or poll-event rejections returned to the poll producer (settleDropped 8819588)."
+      },
+      {
+        "arms": {
+          "223d6b448dd1059f2cd0b830b1793016c3be858e": {
+            "facing": "model",
+            "preview": "MCP server \"${}\" was not called: the plugin that provides i…"
+          },
+          "45137f323ffb4cd5c7e81678ee12043bce131ac0": {
+            "facing": "model",
+            "preview": "Cannot read this as an image: ${} is a pipe or a device, no…"
+          },
+          "46ea1d15aa686d924cd471cac0c6978ae70ec6f9": {
+            "facing": "model",
+            "preview": "File is too large to read as an image (the limit is ${()}):…"
+          }
+        },
+        "why": "223d6b44 model: Jlt @11829028 is thrown by Ut @39571333/@39572755 and ao @39764480/@39765902; Ut is awaited in the MCP tool call Be @39588738 (call @39591835) and @39594674 ('MCP tool call' context), so the throw leaves the MCP tool's call() and becomes an is_error tool_result. Model. | 45137f32 model: HOn @13039157 -> qXr @13038857 -> lmo @13039912, which is called from Read's YOn @13029382 without a catch, so the throw becomes Read's is_error tool_result. Model. | 46ea1d15 model: Same HOn @13039370 -> qXr -> lmo -> Read YOn @13029382 route, uncaught, so it becomes an is_error tool_result. Model."
+      },
+      {
+        "arms": {
+          "08dc06b67f0cd39e0afc141c4579054ed2418233": {
+            "facing": "model",
+            "preview": "Server \"${.name}\" is the account memory server; its resourc…"
+          },
+          "2d56c187c1eda9fd0f4555ea7ecb62bac88a559c": {
+            "facing": "model",
+            "preview": "Server \"${.name}\" does not support resources"
+          },
+          "414ee3b562f22e1e4551ee93206c19a65cd4fdb4": {
+            "facing": "model",
+            "preview": "Server \"${.name}\" is not connected"
+          },
+          "92777172545a442f0eb950910cd630c038adbdee": {
+            "facing": "model",
+            "preview": "Marketplaces can't be fetched in this session, because it c…"
+          }
+        },
+        "why": "R is the TelemetrySafeError class. 414ee3b5/2d56c187 are dCr (13341121) and 08dc06b6 is sDn (13341799), called from the ReadMcpResource/ListMcpResources tools' call() (18157287, 18161687), so they become tool errors. 92777172 is czn (13686852), thrown from Rlt (13694347, marketplace add) and gfs (13749072, refresh) when the session is diskless, reaching /plugin marketplace output like the carried marketplace-write model arms."
+      },
+      {
+        "arms": {
+          "2c14f5a68503d89ad10fa50b40eca8aea06cfbe9": {
+            "facing": "model",
+            "preview": "Server \"${.name}\" is the Artifacts MCP server; Claude Code …"
+          }
+        },
+        "why": "R is TelemetrySafeError. The new Artifacts-MCP arm is ERr @13066327, the same resource-refusal route as the carried 'Server ... does not support resources' and 'account memory server' arms (called from the ReadMcpResource/ListMcpResources tools' call()), so it becomes an is_error tool result. The internal arm remains the CCR listener log."
+      },
+      {
+        "arms": {
+          "1ded63bae2cbaaeb46620e82122675979b28df72": {
+            "facing": "model",
+            "preview": "Onboarding guide unavailable: status ${.status}"
+          },
+          "4404ea77a5699acb74551a302c10a021829692ca": {
+            "facing": "internal",
+            "preview": "poll event rejected: only an in-process REPL eval-settle ev…"
+          },
+          "5907c278e72d7bb989006c74ed7da34d4f918345": {
+            "facing": "model",
+            "preview": "$CLAUDE_PLUGIN_OPTION_<KEY> from the hook's environment."
+          },
+          "83f3ec4851cd4668ce3d516fe96b2e622e1ceb72": {
+            "facing": "model",
+            "preview": "MCP server \"${}\" ${}${()}. If other Claude Code processes u…"
+          },
+          "88496b4912fe4879bea0e2f33acb021d02ce0b75": {
+            "facing": "internal",
+            "preview": "poll event rejected: only an in-process REPL result or stat…"
+          }
+        },
+        "why": "R is the generic TelemetrySafeError (carried review e0a1df99). Model: 1ded Pfi @11888287 'Onboarding guide unavailable' is thrown inside the onboarding-guide tool call (call @19119117, caught at 19119507 and returned as tool data, trace tool-result-content [model] @19121261); 5907 is the plugin-hook ${user_config.*} shell-form refusal in eW @13632586, thrown on the hook-run path (13698443) like the carried hook throws; 83f3 is Pjn @13996829 (MCP config not saved/removed) thrown from DOe @14027868 under B3/EZr, reached via /import converters (25551409-25588756 throws) like the carried /import write arms. Internal: 88496b49 and 4404ea77 are Sl @10646815 poll-event rejections called from sa/$a and Ux @41009150, where the failure is replied to the SDK poll producer (n.reply error) and logged, the same settleDropped route the carried review names."
       }
     ]
   },
@@ -435,24 +832,6 @@
       }
     ]
   },
-  "3fe03bb2a2846b51": {
-    "at": 6863704,
-    "model": {
-      "0d24144c04f1079f76ee957be07d2ac61facfdb5": "sandbox: the task output directory chain under the temp roo…"
-    },
-    "position": 0,
-    "reviews": [
-      {
-        "arms": {
-          "2b517db9c8d7d501bfaa1505e98bf1073a6edfa5": {
-            "facing": "internal",
-            "preview": "sandbox: failed to open /proc/self/exe for the embedded app…"
-          }
-        },
-        "why": "x is the generic error class. The model arm is bP()'s guard (6317236), thrown into sandboxed Bash command execution (cne/une). The internal arm is in jus (6217849), which returns early unless lL() is true. lL() is `function lL(){return!1}`, so the /proc/self/exe failure can never be thrown in this build."
-      }
-    ]
-  },
   "4945e29d37be7707": {
     "at": 46626117,
     "model": {
@@ -475,7 +854,7 @@
     ]
   },
   "4d06c628271ce7c1": {
-    "at": 14469514,
+    "at": 15284982,
     "model": {
       "22cbfc9405a370f7dc5901b1a4da174fbfffee1a": "${}: surface module ${.split(\"/\").join()} ",
       "466777501251e1f5211c19f5ad66e6cb13f91281": "${} event ${}: ${}",
@@ -539,10 +918,6 @@
           "22f6899e0882a0c902263acbad2e44c4714ead7b": {
             "facing": "internal",
             "preview": "$.audio.speak: ${}"
-          },
-          "2b62e1866f92b78503b5f2761ed845b43169688e": {
-            "facing": "internal",
-            "preview": "${}: $.tool.call: ${.name} does not accept \\`consent\\` in t…"
           },
           "2f7c4127a90b774e7447a35fdc83485e44fe4aa0": {
             "facing": "internal",
@@ -1044,6 +1419,15 @@
           }
         },
         "why": "He is HooksError. cc57d851 is thrown by Gxe (13148627), the admission check of host $.<api> calls (Lit 13148627-13149400, TPe), so it is a $-API refusal returned to the calling plugin's code and reported via hookFailed, like the carried internal 'plugin ${}, which provides $.${}, is not admitted yet' arm in the same group; the model arms are dispatch rejections."
+      },
+      {
+        "arms": {
+          "11190a890943cc05be446c7ea9bbf0be74c6ec40": {
+            "facing": "internal",
+            "preview": "${}: $.prompt.submit: ${}"
+          }
+        },
+        "why": "He is the generic HooksError. The internal arm '${}: $.prompt.submit: ${}' is Nxo @10855140's Promise.reject when _ye() (the origin/admission check) refuses the call (@10855766), the same $.prompt.submit argument rejections beside it (ui arm 'takes { text }', internal 'takes text alone', '/ would run a command'). Nxo is only the host op run:Nut('prompt.submit') (caller 14210707) answering a plugin's $.prompt.submit call, so the rejection goes back to the calling plugin's hook code, like the carried $.<api> refusal arms. It is not the host event dispatch that the model arms use."
       }
     ]
   },
@@ -1264,7 +1648,7 @@
     ]
   },
   "81a09643e7142b1c": {
-    "at": 7325758,
+    "at": 5897328,
     "model": {
       "c100be11eb431ed852cb854c845587f6841e2a1e": "Output does not match required schema: ${.message}"
     },
@@ -1272,32 +1656,12 @@
     "reviews": [
       {
         "arms": {
-          "3559fada435579307336c5dd347c34a363b61be7": {
+          "80f1bd92512bc6e94a5bd3e8b20af41361d69ea2": {
             "facing": "internal",
-            "preview": "invalid poll event child: <${}> on kind ${}"
-          },
-          "4414ea575a30b9953f45f658b55ea408e874bd7f": {
-            "facing": "internal",
-            "preview": "verbatim poll event body breaks envelope"
-          },
-          "57d324b8bc86d3cf220104082ef30b3c5ee512a6": {
-            "facing": "internal",
-            "preview": "invalid poll event attribute: ${}"
-          },
-          "7457c80ba4f8062690c3e120fd0fc4c72640c928": {
-            "facing": "internal",
-            "preview": "poll event: pass content or children, not both"
-          },
-          "fae96bc64edaa54c4dc446c0c71555d599ea8e6f": {
-            "facing": "internal",
-            "preview": "invalid poll event kind: ${.stringify()}"
-          },
-          "feb7d45b13a3641838f503e83cb2a6b5fd117952": {
-            "facing": "internal",
-            "preview": "poll event discarded undelivered: ${}"
+            "preview": "REPL mode's engine check failed (${}); REPL mode is ${?\"kep…"
           }
         },
-        "why": "x is the generic error class. The model arm is the StructuredOutput tool's input validation thrown inside its call (6820964). The internal arms build or settle poll-event envelopes: Mfr (6793028), the element-envelope builder (6792xxx) and w9's settleDropped (6801041). Those errors go back to the poll-event producer (pollEvent.settleDropped, 8819588), not into the conversation."
+        "why": "A is the generic error class. The model arm 'Output does not match required schema' is thrown at 5894858 inside the StructuredOutput tool's call() (5892904, tool-throw [model] per trace), so it becomes an is_error tool_result. The internal arm is REPL mode's engine check in we @5897052: its message s is built there, passed to t(s,{level:'error'}) and the c() telemetry, then wrapped in a(new A(s,...)) for reporting only (traces show debug-log sinks only). Never returned to the model."
       }
     ]
   },
@@ -1950,6 +2314,27 @@
       }
     ]
   },
+  "a141f3bc00ba5df9": {
+    "at": 19116159,
+    "model": {
+      "18b06475c299682f97ba9393635c19203107b16a": "No view's shared state is held right now, so there is nothi…",
+      "36283aeaa7c5b16a6e2df07dcee12015da2fcea4": "What these views shared is too large to return. If you need…",
+      "41709d00caea6239d80bb91a817dc39acd223178": "The view shared more than could be sent with the user's mes…",
+      "b7e1e561b2b940d86520305923a6d97e59769e05": "No held view has that view id. Call again without the view …"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "100f9043e11d2fecd6d63ac75f647883949f3fe2": {
+            "facing": "internal",
+            "preview": "${}${}"
+          }
+        },
+        "why": "The unreviewed arm '${}${}' has no literal text: it is Re(`${Y}${H}`.trim()) at 19114650 in the MCP-app view-state result builder (Re @19112800 returns {blocks:[{type:'text',text}],isError}), assembled from the 'too large to return' / 'ask the user to describe it' sentences that are the group's own model arms. So the route is the same tool result; the arm carries no text of its own, so its internal ruling has no wording to catalogue (like the carried d166a987 '${}${}' arm). No wrong verdict that changes any text."
+      }
+    ]
+  },
   "ace52307cc689fe8": {
     "at": 34031446,
     "model": {
@@ -2071,6 +2456,42 @@
           }
         },
         "why": "m(desc,[[needle,replacement]]) (32760899) runs t=t.replace(n,f) per pair and emits only the result via e.describe(t). All seven composite arms are ARTIFACTS: each is one [needle,replacement] pair joined with \\n (32762270, 32762344, 32762414, 32776514, 32777361, 32777480), and needle and replacement are never emitted joined, so they are internal (0e1a70c7 and 5dfaab8f corrected from model). The model arms are the replacement leaves that land in the tool schema descriptions; the internal leaves are the db_op-spelled needles that are only searched for."
+      }
+    ]
+  },
+  "ad1ddd98babc97c7": {
+    "at": 1323556,
+    "model": {
+      "54ba98b804e34a37019319505e3563c13022babf": "Write to ${} failed (${()??}) ${?\"and another writer has re…",
+      "bc12c98a4609ff3705d02da2f6b3c17fd2136ef7": "Write verification failed: ${} is ${.size} bytes on disk, e…"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "2220fe6c47461a449273ebae1fad338b80fba387": {
+            "facing": "internal",
+            "preview": "assertDirChainReal: dir must be strictly inside base (rel: …"
+          },
+          "40017dc5c4c75d70166dc4f4044be5f251391d45": {
+            "facing": "internal",
+            "preview": "refusing to read fd ${}: not a pipe or socket"
+          },
+          "94680577d432046d6853ccaf8211f03b173e4604": {
+            "facing": "internal",
+            "preview": "refusing to read ${}: content exceeds ${} byte limit"
+          }
+        },
+        "why": "x is a generic TelemetrySafeError in the fs utilities. The model arms are thrown by writeTextContent pPe (2153315) and writeFileAndFlush (2158311, 2161430), which the Write/Edit tools call, so they become tool errors. The internal arms are bounded reads of credential/token files and inherited fds: r8e (2151470) and hOs (2151798), called by token loaders W0t (2554625), the /dev/fd readers (2556318, 2557898) and L (2562229), which turn failures into a token miss or log. The 31863265 caller catches. assertDirChainReal (2150231) is an invariant (callers pass a dir inside base)."
+      },
+      {
+        "arms": {
+          "54ba98b804e34a37019319505e3563c13022babf": {
+            "facing": "model",
+            "preview": "Write to ${} failed (${()??}) ${?\"and another writer has re…"
+          }
+        },
+        "why": "x is the generic TelemetrySafeError in the fs utilities (same callee as carried 09dd2518). The new model arm 'Write to ${} failed (...) ${replaced|truncated}' is thrown by me/ue (writeFileAndFlush @1323556, writeFileSyncAndFlush @1319865) via jx @1320223, whose Write path x_t @1314408 is awaited uncaught up to a throw at 38941736 and the 25557354-25591433 throws, so it becomes the Write/Edit tool error, like its carried sibling 'Write verification failed' arm. The internal arms are bounded reads and invariants caught elsewhere; the settings/config callers qr @1737707, Ba @3523398 and writeTarget @8312082 only compare or debug-log it. Model."
       }
     ]
   },
@@ -2661,359 +3082,6 @@
           }
         },
         "why": "x is the generic error in plugin-fetch chunk-x1hnhzq0. The composite arm (corrected to model) is the literal+literal head of the one message rus (6853867) throws when a marketplace-catalog redirect is refused; rus is the beforeRedirect of S7e (beforeRedirect:rus(...), 12369521), whose axios failure is rethrown as that x by nio (6865111) and propagates through b7e (12373227) to /plugin marketplace add/update (12383987, 12416447) local_command output, the same route as its already-model leaves a7e00639/b78b1406. The ui arms are the consent-gated plugin-source-command and directory texts (6839262-6846621 under tus 6850103, and yt/sn 6861904-6862968) that the model route never reaches, as in the existing review."
-      }
-    ]
-  },
-  "e0a1df99171893bd": {
-    "at": 14634205,
-    "model": {
-      "009c459bc25680ee7382ed452e9d25748fc52648": "Could not vouch for ${} after its dependency install, and t…",
-      "010fe25f50de04a22e2fa79b095513530bde2dc8": "Failed to write marketplace catalog: ${(.error)}",
-      "02d35217c7671344cb8361796d08737c12d64efb": "${()}\nThe retry over SSH failed too: ${()}\nCheck the reposi…",
-      "08dc06b67f0cd39e0afc141c4579054ed2418233": "Server \"${.name}\" is the account memory server; its resourc…",
-      "096e1e937e66ef5d2d912bfc046a4789240e6a61": "Failed to list the staged plugin copy (${(.error)}); retry …",
-      "0b95e56dfa48a8b87697d941236cf69f5efb7553": "Plugin path is not a directory: ${}",
-      "0bf9d47faff9df238a9e3c575df94dd2d44ec563": "PDF extraction directory disappeared before readback: ${}",
-      "151d78d4cdfcbb314a63875f92ec6313711e81ec": "Could not archive ${} ${}: its staged tree was replaced bef…",
-      "15ec8c4a79addf38fd23ddc2f2ba1418cdb40dbf": "Failed to probe ${}: ${()}",
-      "16bfdeeaeb1b31d0f003c24f5a5e375362e2ba43": "Cloud session ${} has shown an unanswered MCP server questi…",
-      "1b11c7f5d1dc0a73b319073fbe8a364c5b9fba1f": "Could not link ${} ${}: another session is recorded as usin…",
-      "1c7fd2dfb2b34e10a483bfd504d556338abe8e57": "PDF extraction handed over no page names: ${}",
-      "1cd40f8b8935d62f2b01d7ec1ed25c78afc272dd": "Could not prepare ${} for its ${} (it could not be examined…",
-      "223d6b448dd1059f2cd0b830b1793016c3be858e": "MCP server \"${}\" was not called: the plugin that provides i…",
-      "24ece801a52c6349f8eb06fd12891aeccfcd04c5": "Cannot add marketplace \"${(,64)}\": Claude Code cannot insta…",
-      "252aade464c62330238e0c819b72a27df36eb870": "installed_plugins.json was not changed: it holds records un…",
-      "25de3e54220d90ca5c041e1afafafc21f6a3c913": "Can't read .mcp.json: it isn't a regular file or is larger …",
-      "26339bb35fa6004c0d9cd416423dc65fc940582a": "Failed to list extracted PDF pages: ${.code} (${})",
-      "279a89198258d018db5887550ee90b638e4aa164": "Could not prepare the plugin cache folder of ${}: the stora…",
-      "2c14f5a68503d89ad10fa50b40eca8aea06cfbe9": "Server \"${.name}\" is the Artifacts MCP server; Claude Code …",
-      "2d56c187c1eda9fd0f4555ea7ecb62bac88a559c": "Server \"${.name}\" does not support resources",
-      "2f96ce44766b8db276abb9a7c6408ca8fd1da46d": "Could not ${} ${} ${}: a link sits at its cache path and co…",
-      "3133a2dafc2cb81a1aef1fa43cd5596139c8e193": "Cannot install ${(,120)}: ${}",
-      "341b65a22f15b0939e28e4ffe3088d30d5d0ea16": "Plugin archive from ${(.url)} contained no plugin files. Th…",
-      "3950b8a267e332619f019f55cd448b67c5997f0b": "Plugin tree at ${} could not be made symlink-free (${.readO…",
-      "3bd3066481c128710a53172265970d395212aaa0": "Cannot fetch marketplace ${(())}: the directory it would us…",
-      "3da346dbed4d17aba516ea1ba4a9c24a498e5afb": "Refusing to copy ${}: it resolves somewhere other than its …",
-      "3e560e7e62b3a03d694854a323fd09d879906476": "Could not re-screen ${} after its dependency install (the c…",
-      "414ee3b562f22e1e4551ee93206c19a65cd4fdb4": "Server \"${.name}\" is not connected",
-      "43882207d662c8570893e55f0c58dc70fa733e40": "Could not prepare ${} for its dependency install (this sess…",
-      "440fdb1275001895b49f4ef6074beb873585a1f9": "Plugin archive from ${(.url)} has no plugin content at its …",
-      "45137f323ffb4cd5c7e81678ee12043bce131ac0": "Cannot read this as an image: ${} is a pipe or a device, no…",
-      "45dfa120aedc3aa32a0bdda0054969ccf53ddb84": "Cannot add this marketplace: ${.cause}; ${[.kind]}.",
-      "46ea1d15aa686d924cd471cac0c6978ae70ec6f9": "File is too large to read as an image (the limit is ${()}):…",
-      "470b35fa5ade0c888d884426991378e062dcd09a": "MCP server \"${}\" ${}${()}. If that file is read-only or pro…",
-      "49e9fffd974611cb44623ce3864b8e888abfe59b": "Could not ${} ${} ${}: a link sits at its archive path and …",
-      "4b04048bb36b61111058ec88d90ac4f1805d1ff2": "'${()}'. ${?`Run \\`${}\\``:\"Remove the entry\"} and re-add it.",
-      "4c241157fd8217aa3af17ab10bf291e042972a4c": "Cannot add marketplace ${()}: the name is reserved for the …",
-      "513a75267d559bf6a0b5ff32c27ed929052f510d": "Failed to save installed_plugins.json: ${}",
-      "5171151717fad6b176b4bb13bb8e8bb2371ec566": "Cannot add marketplace ${()}: names starting with \"${}\" are…",
-      "545996e46e3c0c69f500dd73ccef9a1d49a98779": "Failed to write marketplace manifest: ${(.error)}",
-      "55a6c3f478d1417366704ee0ecf20a9f24f51df7": "form instead — {\"command\": \"<executable>\", \"args\": ",
-      "5a5690db6f8b7c3932323390a166552e6a359a4a": "Refusing to copy ${}: it is no longer a directory (swapped …",
-      "5e850d441d8d92f9c33c4fed935a094e650ac67d": "Could not install dependencies for ${} ${}: its staged tree…",
-      "5f6b6d73be502366b86d21259876ed635b55be30": "Plugin archive from ${(.url)} was not installed: its market…",
-      "6080721bb3f8e4229d7ab4864c41d6f097824e83": "Failed to move the new marketplace clone into place at ${}.…",
-      "62bbd264853c2c02fbdda80ac64c607c9f790483": "installed_plugins.json cannot be read, and it was not chang…",
-      "6861661f9698062995dbcd9910b7a30f4d37a1e0": "Unknown hook decision type: ${.decision}. Valid types are: …",
-      "68c60856fe5dee25d63a035f338b1b856050fccc": "Cannot fetch this marketplace: its clone directory name ${(…",
-      "6d160bc72c7ae50e709dfa43dce0e8a3699cdf9a": "Cloud session ${} is waiting for input that nothing on this…",
-      "707a86c78f93e38702c757ee33d36ebc110d1d4a": "Unknown skill: ${.name}",
-      "72340f9bd849a0768005bb6eb5f93f32fd288f39": "[\"${user_config.KEY}\", ...]} — or read ",
-      "734707d04fd380e7b2a94e6ee8795ed4465650eb": "Can't use the marketplace name ${()}: the registered market…",
-      "7565380718fb45de0a4839eab21d045018a9eab0": "Cannot install into ${}: ${} is a symbolic link, and the pl…",
-      "7761f2c2f59af85dd1bc9cb177dfc3bf1cade6cb": "Refusing to copy ${}: its target is no longer what it resol…",
-      "78fa53baaa7dcd6206c78d4ad473d76337d8ea3b": "SHA pin verification failed: expected ${} to be ${}, got ${…",
-      "7af173c29e79b0c9c82d1e581ae42aa8bbbaf2ed": "Could not examine the plugin directory of ${} (${()}); retr…",
-      "8542123ba74d5939cee5c3a2b516fe9c4b5bbba8": "Cannot add MCP server: your organization's managed settings…",
-      "8de9eda649b39623aefbf47101cc711b7d70316d": "Unknown hook permissionDecision type: ${.hookSpecificOutput…",
-      "8ff4b530043fe06c086f7a086cb40a57743260da": "Could not publish ${} ${}: its staged tree was replaced bef…",
-      "92777172545a442f0eb950910cd630c038adbdee": "Marketplaces can't be fetched in this session, because it c…",
-      "933e8fb5b54069d64d97fccd139630b5115ef040": "Hook returned incorrect event name: expected '${}' but got …",
-      "958c6236a410d1c0a6433c31cad9dc071dd5bba9": "$CLAUDE_PLUGIN_OPTION_<KEY> from the hook's environment. Co…",
-      "981b910da005bd9610995062e40fd9dcb35bd1f4": "Cannot add MCP server: enterprise MCP configuration is acti…",
-      "9cf61d48648fa924c0a524023d5352ddd381554b": "Failed to clean up a leftover marketplace staging directory…",
-      "9d77a16927602afc52b93494196d54b44fdd5145": "Could not prepare ${} for its ${}: it is no longer a plain …",
-      "9f25d68289795922ff75152fab00f0647b42c56f": "Refusing to copy ${(,.name)}: it is no longer a directory a…",
-      "a10161c896b7d70c5e08ee43cd54fe741828dd41": "WorktreeCreate hook failed: ${.join(\"; \")}",
-      "a29d3a882e037af0257378898e40d980c397f9cb": "Marketplace name ${(.name)} is not a plain directory name; …",
-      "a379a14c86c64ecfadfb129585b92986d5528916": "Marketplace \"${}\" is registered from an untrusted source: $…",
-      "a46da90f9cd257dd0ea8b3327335ee3673841573": "Failed to move the staged plugin into ${}: ${()}",
-      "a5e9578b6898c9ab81c0e86382aa024ca11b8c08": "Failed to read cached marketplace: the backend returned no …",
-      "a6972a77b74f2cfb76549fbc854fd494314a627a": "Extracted PDF page disappeared during read: ${.join(,)}",
-      "aa1a8f68e9969fe0c0803b28257191adc07ed88f": "File has an image extension but its content is not a valid …",
-      "aaff822d527e6ee0d5bbb23709626e087d87cd37": "Failed to move the existing marketplace directory aside. Pl…",
-      "ad53cfa1e5533c5bc695c3cf0f4f300a9933af89": "Failed to read extracted PDF page: ${.error.code} (${.join(…",
-      "ad89e4e73e22be5ded9335a63d7e5cea5c946bb6": "Cannot add marketplace \"${(,64)}\": Claude Code reserves thi…",
-      "ade7d8c6877311fb6cde8b176d4e6688cc1d0b2e": "Agent type '${}' could not be loaded from its plugin, and $…",
-      "b0cf55c54ba1c071464ef6b007d6de9decd7a8e6": "Failed to read cached marketplace: ${(.error)}",
-      "b2783dc4c507e95411cc649b26dbb18c7a4071c3": "Hook from ${?`plugin ${}`:\"a plugin\"} references \\${user_co…",
-      "baaf2030d9af2a37f5b0e75ded34f3bd7c2fa227": "Failed to list plugin cache dir: ${()}",
-      "bf2d912109f507cc229e5efd4cf3f810bac89fc5": "Could not publish ${} ${}: another session is recorded as u…",
-      "c12f1f003df11c70c094e791bd5516ded1f1a95f": "Could not publish ${} ${}: a link sits at its cache path an…",
-      "cc69a1130ab6ace02067564312a0f42749eb834f": "This plugin's marketplace entry is invalid: ${.error}",
-      "cc9b8032af787b8f84fc3430d41911d7d6113c7f": "Could not prepare ${} for its dependency install (the conve…",
-      "d0c1a3d82fce32e4f09de16ce9d290f47016df34": "Failed to clone marketplace repository: ${.stderr}",
-      "d32a1ddbf2c904181404131644a09f9ed550587c": "Nothing to change once the invisible characters are removed…",
-      "d4b6ec725a6c95a8cbd031337f61416c150b3c58": "\"${(.name,120)}\" was not installed: its ${} listing names n…",
-      "da8fb01daa15adf7942016a2c83581ab66eff2cc": "Reading full PDFs is not supported with this model. Use a n…",
-      "dbee0600e91da6062ab63d5ee0d87c65b2e65e6a": "WebFetch cannot fetch localhost or other hostnames without …",
-      "e06fad637df0bdbb783b7ac878040e6a262b2b7a": "MCP server \"${}\" may not have been ${}${()}: ${} could not …",
-      "e1c43852f46793c7c1ca32b9f5094424fdea597d": "\"${(.name,120)}\" was not installed: the repository address …",
-      "e62d0c42d0a852cfd522df3bac21ba5f81601f91": "Could not publish ${} ${} into the plugin cache (${()}); re…",
-      "eb04416fe8bbddfaddb285c5c9be54fbf2598ac2": "Could not empty ${}: the storage layer refused the version …",
-      "ec8a3a858bd5d247a31f21f9c1f9bb0bf1ff45c2": "Plugin archive from ${(.url)} does not contain the componen…",
-      "ee86b64c8293747f5ab402ff26cbf02ad209794e": "Could not replace the marketplace directory at ${} because …",
-      "efb2d5e0a072c066ea425fe12134d214188c3df4": "Failed to finalize marketplace cache. Please manually delet…",
-      "f1db7f4baddf9bf70a7e516fe83e6180d8814220": "Plugin ${}: failed to read manifest file at ${}.\n\nRead erro…",
-      "f24f082b27ac8ee9c36fd5909e6efec093dc4362": "WebFetch on claude-code-server needs the CCR web-fetch proxy",
-      "f4db03db23a774f3546f200f8c28f00c943f2e11": "Failed to save marketplace configuration: ${(.error)}",
-      "ff5abf4204e6e89606b950331c14dcc92af020f0": "Marketplace '${()}' has a corrupted installLocation (${()})…"
-    },
-    "position": 0,
-    "reviews": [
-      {
-        "arms": {
-          "0a833cc4440ceea9715d3731f6b364e4349f8e1e": {
-            "facing": "ui",
-            "preview": "The ${} isn't available in this session"
-          },
-          "0e311ab854253b3004f009030347cec8817d03ec": {
-            "facing": "internal",
-            "preview": "git-destructive-target parse failed: ${()}"
-          },
-          "1aa64b9725680d1741fe7bd27583031dd080e59e": {
-            "facing": "ui",
-            "preview": "${} The known_marketplaces.json entry named \"${()}\" could n…"
-          },
-          "1e084305777fc1b41af340af01d808d36f606c53": {
-            "facing": "internal",
-            "preview": "poll event rejected: element kind \"${.kind}\" does not match…"
-          },
-          "24106906e6f723bbc529748ce6a6f1a188d66e47": {
-            "facing": "internal",
-            "preview": "ENOENT: no such file or directory, open (transcript stream)"
-          },
-          "2a8fef7374cd8214500def35a1f6c42d21f14d9a": {
-            "facing": "internal",
-            "preview": "A foreground agent was not moved to the background: this pr…"
-          },
-          "2b7e9d3ade29ad1e2e89e4b5da0ec7f1175002dd": {
-            "facing": "internal",
-            "preview": "transcript storage move failed (${()})"
-          },
-          "35b2e6df1e8c7fb7b225588f3116114a99d4774f": {
-            "facing": "internal",
-            "preview": "removal through the storage interface failed: ${()}"
-          },
-          "3758f020c23f5810514bbf936dcc1c28c1899458": {
-            "facing": "ui",
-            "preview": "Auto-update can't be turned off for ${}: its plugins follow…"
-          },
-          "4519bd6187bd94c0de7a1b101edb19850431ec08": {
-            "facing": "internal",
-            "preview": "poll event rejected: ${.ok?\"declaration is for another kind…"
-          },
-          "453bbc61a66cc8f04abaebbed4c08e2831cc7ddd": {
-            "facing": "ui",
-            "preview": "Cannot add MCP server \"${}\": type \"claudeai-proxy\" is used …"
-          },
-          "469faeea509b4edb1aa6a5b61307e9b28f7803c6": {
-            "facing": "ui",
-            "preview": "Hooks file read failed at ${} for plugin ${}: ${.detail}"
-          },
-          "4788b16721bb6b3f22caa643e3e25bbc404c8c6c": {
-            "facing": "internal",
-            "preview": "ENOENT: no such file or directory, stat '${}'"
-          },
-          "4bf0ae091c0cc44df864549fa36e335b4b1dd987": {
-            "facing": "ui",
-            "preview": "Cannot add MCP server \"${}\": type \"${.type}\" servers are re…"
-          },
-          "53ed42fe687cfe5d24581cd5c35d4e26c447a5eb": {
-            "facing": "ui",
-            "preview": "${} Nothing was deleted, and the known_marketplaces.json en…"
-          },
-          "6175767bcbb4cb28a660a574c686eaddb5378136": {
-            "facing": "internal",
-            "preview": "sync-owned path probe failed: ${()}"
-          },
-          "6572452660d7c881bc9d9d826b3c49926674bd3b": {
-            "facing": "internal",
-            "preview": "poll event rejected: a group holds 1 to ${} events, none of…"
-          },
-          "68cf01d1dcaed4b2a617236f72f04f6a62487301": {
-            "facing": "internal",
-            "preview": "poll event rejected: the group's fields are ${} bytes as se…"
-          },
-          "7233ca1ea60f60b9086a7739ff5cc4c763e32c7d": {
-            "facing": "internal",
-            "preview": "poll event rejected: envelope is ${} bytes after nonce stam…"
-          },
-          "736c5afc45dcbbbba642f441e8560bfc98221ed9": {
-            "facing": "internal",
-            "preview": "installed_plugins.json: ${()}"
-          },
-          "763d976953e4e43dc327dc6f342c7a12c6f4be7c": {
-            "facing": "internal",
-            "preview": "poll event rejected: kind \"${.kind}\" is reserved for a trus…"
-          },
-          "767ffb01cc3f47477f4163b233b8529fdd42d6ef": {
-            "facing": "ui",
-            "preview": "Plugin directory ${} was removed ${===\"before\"?\"before it c…"
-          },
-          "7e7109f9aa661d87d0fafd6b028efc84d07c5f93": {
-            "facing": "internal",
-            "preview": "transcript storage folder creation failed (${()})"
-          },
-          "866685434d11978980eefadb3b3713d26879a71f": {
-            "facing": "ui",
-            "preview": "Marketplace '${}' is hosted on claude.ai and not declared i…"
-          },
-          "8e15cdad67fed91aa01aabae0189e57d3ccd3c94": {
-            "facing": "internal",
-            "preview": "poll event rejected: ${.reason}"
-          },
-          "8e7a2ff8eb072e10605854621f6d264931e10bdd": {
-            "facing": "internal",
-            "preview": "poll event rejected: envelope is ${} bytes (cap ${(.kind)})"
-          },
-          "8ec59464009aa465e6ac1c670c32f786cf39ab13": {
-            "facing": "internal",
-            "preview": "shell output moved or replaced before it could be stored ($…"
-          },
-          "986ddd9a80188257fe520c6f99d1e62676348446": {
-            "facing": "internal",
-            "preview": "poll event rejected: invalid kind (a lowercase letter, then…"
-          },
-          "99759ca97291132decb0fb370497e790865ce1cc": {
-            "facing": "internal",
-            "preview": "sync-owned path probe: unexpected answer ${(?.)}"
-          },
-          "9d9419fd8750992c9b2660e3ee3c2ed78c040697": {
-            "facing": "internal",
-            "preview": "poll event rejected: the group is ${} bytes after nonce sta…"
-          },
-          "aab86d648bbb9ff9eb6e240d310041e84c0d390b": {
-            "facing": "ui",
-            "preview": "${.length>0?`Turned off ${()}. `:\"\"}Could not turn off ${}:…"
-          },
-          "b66f1f6ad17ea703536654454745c9d47bed76f7": {
-            "facing": "ui",
-            "preview": "Compaction unavailable: your model policy only allows ${()}…"
-          },
-          "c4ce07b4c7b85c68500bf640c9173401f996ade0": {
-            "facing": "internal",
-            "preview": "A background launch rule's admitMove() threw, and the agent…"
-          },
-          "c8b91445ccab58304dc0883bee4996102a9f12f9": {
-            "facing": "internal",
-            "preview": "Plugin ${}: failed to read manifest file at ${}.\n\nRead erro…"
-          },
-          "cdca0a45bb638f34d88347dea2cd5baaa7120f96": {
-            "facing": "internal",
-            "preview": "placement through the storage interface failed: ${(.error)}"
-          },
-          "d456622b7a732d29a01bcb772735550797e71eca": {
-            "facing": "ui",
-            "preview": "${} is built in and not declared in any settings scope. Omi…"
-          },
-          "dc247d8dc297c569df363e96b63057861821c649": {
-            "facing": "ui",
-            "preview": "Plugin directory ${} could not be ${===\"before\"?\"checked be…"
-          },
-          "dc561096b2d15f71e02003420c1a9f6385953897": {
-            "facing": "internal",
-            "preview": "Refusing to swap in a staged copy: it is no longer the ${} …"
-          },
-          "e389b72a18b318cac1fea4f8874b383b9e5ac01e": {
-            "facing": "internal",
-            "preview": "destructive-target-scope parse failed: ${()}"
-          },
-          "e4f4bd2340662d8436a08efb92e8c5f886a42cdc": {
-            "facing": "internal",
-            "preview": "poll event rejected: ${} events already queued"
-          },
-          "e74d39faa50493a5e84ca4bc0ddb3f100d20f6dc": {
-            "facing": "internal",
-            "preview": "EISDIR: not a regular file (${(.error)})"
-          },
-          "eb0ff3762e87544656d4174adb8b3cd49e921a89": {
-            "facing": "ui",
-            "preview": "monitors file not found at ${}"
-          },
-          "f8980e67a180d38af5a2279ba5aeb22bf5e56518": {
-            "facing": "ui",
-            "preview": "Plugin directory ${} was replaced while it was being loaded"
-          },
-          "f9d5d2018f62ccbd54784a7ff9086e67e827436c": {
-            "facing": "ui",
-            "preview": "The list of installed plugins (installed_plugins.json) coul…"
-          },
-          "fd5231e521103bd7f5c7e50fd7cdb67e0116c2ad": {
-            "facing": "internal",
-            "preview": "poll event rejected: the queue holds at most ${} events (${…"
-          },
-          "fdd4ab13513f7f77490373c6a297cd8bb84c1263": {
-            "facing": "internal",
-            "preview": "onlyIfExists stat failed (${()}) — append withheld"
-          },
-          "ff5dd8942be617884d725f3364ad97e284d75b6b": {
-            "facing": "internal",
-            "preview": "transcript storage append failed (${()})"
-          }
-        },
-        "why": "x is chunk-886tf6ja's generic TelemetrySafeError thrown across chunk-sfn1dbxq. After the corrections the model arms are tool and slash-command errors: Read/WebFetch/MCP/Skill/hook throws and plugin install, import and marketplace throws that reach /plugin, /import or /plugin update output (Ck 40513124, /import 22720650, vi 19073700). The remaining ui arms belong to other paths: the plugin loader (ZQe/FEn 12678571-12679015 via WEn/pEn; monitors and hooks-file reads caught into the plugin error list at 12645332/12642968; the v5 manifest read variant only via wne/GEn load paths), the /plugin Marketplaces and Errors tabs (Qze remove errors → setError/ge at 40374298/40525675, Svt toggle → Ct at 40380393, $es auto-update toggle), CLI-only --scope removes (12393026/12393245), claude mcp add CLI checks in h2 (10767489/10767721; /import's converters never build those transport types), and partial or auto compaction (Eon via Lir/ees). The internal arms are logged with c()/t() (12864203, 9586780, 9582757, 8832224/8832747), caught as ENOENT or by storage callers (13225011, 13118849, 13186817-13188562, 12454078, 12404252), dead or caught-and-recorded in DV ($e at CIe 8943242), J('warn')-logged sync-owned probes (8867413), or poll-event rejections returned to the poll producer (settleDropped 8819588)."
-      },
-      {
-        "arms": {
-          "223d6b448dd1059f2cd0b830b1793016c3be858e": {
-            "facing": "model",
-            "preview": "MCP server \"${}\" was not called: the plugin that provides i…"
-          },
-          "45137f323ffb4cd5c7e81678ee12043bce131ac0": {
-            "facing": "model",
-            "preview": "Cannot read this as an image: ${} is a pipe or a device, no…"
-          },
-          "46ea1d15aa686d924cd471cac0c6978ae70ec6f9": {
-            "facing": "model",
-            "preview": "File is too large to read as an image (the limit is ${()}):…"
-          }
-        },
-        "why": "223d6b44 model: Jlt @11829028 is thrown by Ut @39571333/@39572755 and ao @39764480/@39765902; Ut is awaited in the MCP tool call Be @39588738 (call @39591835) and @39594674 ('MCP tool call' context), so the throw leaves the MCP tool's call() and becomes an is_error tool_result. Model. | 45137f32 model: HOn @13039157 -> qXr @13038857 -> lmo @13039912, which is called from Read's YOn @13029382 without a catch, so the throw becomes Read's is_error tool_result. Model. | 46ea1d15 model: Same HOn @13039370 -> qXr -> lmo -> Read YOn @13029382 route, uncaught, so it becomes an is_error tool_result. Model."
-      },
-      {
-        "arms": {
-          "08dc06b67f0cd39e0afc141c4579054ed2418233": {
-            "facing": "model",
-            "preview": "Server \"${.name}\" is the account memory server; its resourc…"
-          },
-          "2d56c187c1eda9fd0f4555ea7ecb62bac88a559c": {
-            "facing": "model",
-            "preview": "Server \"${.name}\" does not support resources"
-          },
-          "414ee3b562f22e1e4551ee93206c19a65cd4fdb4": {
-            "facing": "model",
-            "preview": "Server \"${.name}\" is not connected"
-          },
-          "92777172545a442f0eb950910cd630c038adbdee": {
-            "facing": "model",
-            "preview": "Marketplaces can't be fetched in this session, because it c…"
-          }
-        },
-        "why": "R is the TelemetrySafeError class. 414ee3b5/2d56c187 are dCr (13341121) and 08dc06b6 is sDn (13341799), called from the ReadMcpResource/ListMcpResources tools' call() (18157287, 18161687), so they become tool errors. 92777172 is czn (13686852), thrown from Rlt (13694347, marketplace add) and gfs (13749072, refresh) when the session is diskless, reaching /plugin marketplace output like the carried marketplace-write model arms."
-      },
-      {
-        "arms": {
-          "03fc89ac928733911fe25f9d9b903f91e7981511": {
-            "facing": "internal",
-            "preview": "the listener for a dropped CCR turn id threw: ${()}"
-          },
-          "2c14f5a68503d89ad10fa50b40eca8aea06cfbe9": {
-            "facing": "model",
-            "preview": "Server \"${.name}\" is the Artifacts MCP server; Claude Code …"
-          }
-        },
-        "why": "R is TelemetrySafeError. The new Artifacts-MCP arm is ERr @13066327, the same resource-refusal route as the carried 'Server ... does not support resources' and 'account memory server' arms (called from the ReadMcpResource/ListMcpResources tools' call()), so it becomes an is_error tool result. The internal arm remains the CCR listener log."
       }
     ]
   },
