@@ -298,6 +298,33 @@ describe('selected-lines-in-ide reminder shape handling', () => {
     expect(result).toContain('selected_lines_in_ide:(e)=>[]');
   });
 
+  // 2.1.319: the content slot is a multi-argument wrapper call that also takes
+  // the attachment and its filename.
+  const MOCK_SELECTED_2_1_319 =
+    'selected_lines_in_ide:(e)=>mu([Ie({content:`The user selected the lines ' +
+    '${e.lineStart} to ${e.lineEnd} from ${nf(e.filename)}:\n' +
+    '${wce(mpo(e.content),e,e.filename)}\n\nThis may or may not be related ' +
+    'to the current task.`,isMeta:!0})])';
+
+  it('round-trips the 2.1.319 multi-argument content wrapper', () => {
+    expect(
+      selectedLines.apply(MOCK_SELECTED_2_1_319, SELECTED_LINES_BODY, false)
+    ).toBe(MOCK_SELECTED_2_1_319);
+  });
+
+  it('maps an edited body onto the 2.1.319 shape and re-applies idempotently', () => {
+    const custom = 'SEL ${H.filename} ${H.lineStart}-${H.lineEnd}:\n${q}';
+    const once = selectedLines.apply(MOCK_SELECTED_2_1_319, custom, false);
+    expect(once).toContain(
+      'content:`SEL ${nf(e.filename)} ${e.lineStart}-${e.lineEnd}:\n' +
+        '${wce(mpo(e.content),e,e.filename)}`'
+    );
+    expect(selectedLines.apply(once!, custom, false)).toBe(once);
+    expect(selectedLines.apply(MOCK_SELECTED_2_1_319 + ';', custom, true)).toBe(
+      'selected_lines_in_ide:(e)=>[];'
+    );
+  });
+
   it('still rewrites the <=2.1.185 truncating shape via the fallback', () => {
     const result = selectedLines.apply(
       MOCK_SELECTED_OLD_2_1_185,

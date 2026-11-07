@@ -685,11 +685,16 @@ const patchPickerEffortRow = (
     return file;
   }
 
+  // CC >= 2.1.319 also returns on the "more models" row:
+  //   if(as===void 0||as.disabled===!0||as.value===ig)return;
   const adjust =
-    /(=[$\w]+\(\(([$\w]+)\)=>\{let ([$\w]+)=[$\w]+\(\),([$\w]+)=[$\w]+\.find\(\(([$\w]+)\)=>\5\.value===\3\);if\(\4===void 0\|\|\4\.disabled===!0\)return;)(let ([$\w]+)=[$\w]+\(\3\);if\(!\7\.supportsEffort\)return;)/;
+    /(=[$\w]+\(\(([$\w]+)\)=>\{let ([$\w]+)=[$\w]+\(\),([$\w]+)=[$\w]+\.find\(\(([$\w]+)\)=>\5\.value===\3\);if\(\4===void 0\|\|\4\.disabled===!0(?:\|\|\4\.value===[$\w]+)?\)return;)(let ([$\w]+)=[$\w]+\(\3\);if\(!\7\.supportsEffort\)return;)/;
   const display =
     /(([$\w]+)!==void 0&&![$\w]+&&[$\w]+\([$\w]+,\{marginBottom:1,flexDirection:"column",children:)([$\w]+\?)/;
   const unsupporteds = [
+    // CC >= 2.1.319: dimmed, no subtle color.
+    //   r(n,{dimColor:!0,children:[e(QW,{effort:void 0})," ","Effort not supported",…
+    /([$\w]+)\(([$\w]+),\{dimColor:!0,children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," ","Effort not supported"/,
     // CC >= 2.1.312: the label undims and its leading space is its own child.
     //   r(n,{color:"subtle",dimColor:!1,children:[e(Gj,{effort:void 0})," ",
     //   "Effort not supported",…
@@ -698,8 +703,12 @@ const patchPickerEffortRow = (
     /([$\w]+)\(([$\w]+),\{color:"subtle",children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," Effort not supported"/,
   ];
   const commits = [
-    // CC >= 2.1.284: ultracode left the effort scale for its own session flag,
-    // so the commit no longer guards the level against it.
+    // CC >= 2.1.319: the commit first returns on the "more models" row.
+    //   function ws(gs){if(gs===ig)return;let Yn=nk(gs),as=tr(),Bs=Dn(),
+    //   wr=Yn&&as!==void 0?Nse(as,Yn):as;l("tengu_model_command_menu_effort",…
+    /(function ([$\w]+)\(([$\w]+)\)\{if\(\3===[$\w]+\)return;)(let ([$\w]+)=[$\w]+\(\3\),(?:[$\w]+=[$\w]+\(\),)*[$\w]+=\5&&([$\w]+)!==void 0\?[$\w]+\(\6,\5\):\6;[$\w]+\("tengu_model_command_menu_effort")/,
+    // CC 2.1.284 - 2.1.318: ultracode left the effort scale for its own session
+    // flag, so the commit no longer guards the level against it.
     //   function ir(es){let ss=wy(es),Cs=nn(),ws=Yo(),Is=ss&&Cs!==void 0?
     //   zV(Cs,ss):Cs;i("tengu_model_command_menu_effort",…
     /(function ([$\w]+)\(([$\w]+)\)\{)(let ([$\w]+)=[$\w]+\(\3\),(?:[$\w]+=[$\w]+\(\),)*[$\w]+=\5&&([$\w]+)!==void 0\?[$\w]+\(\6,\5\):\6;[$\w]+\("tengu_model_command_menu_effort")/,

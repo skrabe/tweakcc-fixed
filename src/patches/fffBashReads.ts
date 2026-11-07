@@ -37,18 +37,35 @@ export const writeFffBashReads = (
     return null;
   }
   if (file.includes('export RG_FFF_VIEWER_DIR=')) return file;
-  const pattern =
-    /;([$\w]+)\.push\((?:[$\w]+\?[$\w]+\(\):)?`eval \$\{([$\w]+)\}`\),\1\.push\(`pwd -P >\| /g;
-  const matches = [...file.matchAll(pattern)];
-  if (matches.length !== 1 || matches[0].index === undefined) {
+  const methods: Array<{ pattern: RegExp; parts: number }> = [
+    // CC 2.1.319+: `let E=c?f():\`eval ${x}\`,P=\`pwd -P >| ...\`,J=[...A,E,P].join(" && ")`
+    {
+      pattern:
+        /;let ([$\w]+)=(?:[$\w]+\?[$\w]+\(\):)?`eval \$\{[$\w]+\}`,([$\w]+)=`pwd -P >\| [^;`]*`,[$\w]+=\[\.\.\.([$\w]+),\1,\2\]\.join\(" && "\)/g,
+      parts: 3,
+    },
+    {
+      pattern:
+        /;([$\w]+)\.push\((?:[$\w]+\?[$\w]+\(\):)?`eval \$\{([$\w]+)\}`\),\1\.push\(`pwd -P >\| /g,
+      parts: 1,
+    },
+  ];
+  let found: { index: number; parts: string } | null = null;
+  for (const { pattern, parts } of methods) {
+    const matches = [...file.matchAll(pattern)];
+    if (matches.length === 1 && matches[0].index !== undefined) {
+      found = { index: matches[0].index, parts: matches[0][parts] };
+      break;
+    }
+  }
+  if (found === null) {
     console.error(
       'patch: fffBashReads: failed to find unique Bash command evaluation'
     );
     return null;
   }
-  const match = matches[0];
-  const start = match.index!;
-  const insertion = `${match[1]}.push(${escapeNonAscii(JSON.stringify(fffViewerSetup(directory, wrapper)))});`;
+  const start = found.index;
+  const insertion = `${found.parts}.push(${escapeNonAscii(JSON.stringify(fffViewerSetup(directory, wrapper)))});`;
   const updated = file.slice(0, start + 1) + insertion + file.slice(start + 1);
   showDiff(file, updated, insertion, start + 1, start + 1);
   return updated;
