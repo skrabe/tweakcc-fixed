@@ -2259,7 +2259,7 @@ const NEW_PROMPT_ASSIGNMENTS = [
   // identical sites, so its fingerprint was a collision and got dropped from
   // the fuzzy index; 2.1.172 is back to one (grown) site.
   // 2.1.319 split the heading into its own constant; the bare heading takes
-  // its cache id, so only the full prompt may claim this one.
+  // its own -heading id from the cache, so only the full prompt may claim this.
   {
     matcher: t =>
       t.startsWith('# Claude in Chrome browser automation') &&
