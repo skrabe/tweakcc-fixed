@@ -101,7 +101,15 @@ const slotExpr = (
   const m = template.match(
     new RegExp(`\\$\\{((?:[$\\w]+\\()*${param}\\.${prop}\\)*(?:\\?\\?"")?)\\}`)
   );
-  return m ? m[1] : null;
+  if (m) return m[1];
+  // 2.1.319 passes the prop to a multi-argument wrapper:
+  // `${wce(mpo(e.content),e,e.filename)}`. Take the one call-shaped
+  // interpolation that references the prop; more than one is ambiguous.
+  const ref = new RegExp(`(?:^|[^$\\w.])${param}\\.${prop}(?![$\\w])`);
+  const calls = interpolations(template).filter(
+    x => /^[$\w]+\(.*\)(?:\?\?"")?$/s.test(x) && ref.test(x)
+  );
+  return calls.length === 1 ? calls[0] : null;
 };
 
 // A placeholder the override body may contain, and how to recover the
@@ -2008,8 +2016,10 @@ const SELECTED_LINES_INJECTION: ReminderInjection = {
   apply(content, body, isSuppressed) {
     // Method 1 (2.1.186+): direct arrow, the selected-text slot inlined as a
     // call (`${dpm(e.content)}`) rather than a local var, and from 2.1.234 the
-    // filename slot wrapped in the reminder escaper. Matched on the registry
-    // key and code shape only, so a reworded body does not break it.
+    // filename slot wrapped in the reminder escaper. 2.1.319 wraps the content
+    // slot again in a multi-argument call (`${wce(mpo(e.content),e,e.filename)}`),
+    // which slotExpr resolves as the whole interpolation. Matched on the
+    // registry key and code shape only, so a reworded body does not break it.
     if (simpleEntryPattern('selected_lines_in_ide').test(content)) {
       return applySimpleEntry(
         content,

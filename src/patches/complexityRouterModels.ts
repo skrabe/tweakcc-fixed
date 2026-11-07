@@ -33,7 +33,7 @@ const replace = (
 
 const patchEffortControls = (file: string): string | null => {
   const adjust =
-    /(=[$\w]+\(\(([$\w]+)\)=>\{let ([$\w]+)=[$\w]+\(\),([$\w]+)=[$\w]+\.find\(\(([$\w]+)\)=>\5\.value===\3\);if\(\4===void 0\|\|\4\.disabled===!0\)return;)/;
+    /(=[$\w]+\(\(([$\w]+)\)=>\{let ([$\w]+)=[$\w]+\(\),([$\w]+)=[$\w]+\.find\(\(([$\w]+)\)=>\5\.value===\3\);if\(\4===void 0\|\|\4\.disabled===!0(?:\|\|\4\.value===[$\w]+)?\)return;)/;
   let result = replace(
     file,
     adjust,
@@ -44,6 +44,8 @@ const patchEffortControls = (file: string): string | null => {
   const display =
     /(([$\w]+)!==void 0&&![$\w]+&&[$\w]+\([$\w]+,\{marginBottom:1,flexDirection:"column",children:)/;
   const texts = [
+    // CC >= 2.1.319: dimmed, no subtle color.
+    /([$\w]+)\(([$\w]+),\{dimColor:!0,children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," ","Effort not supported"/,
     // CC >= 2.1.312: `dimColor:!1` and a separate `" "` child.
     /([$\w]+)\(([$\w]+),\{color:"subtle",dimColor:!1,children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," ","Effort not supported"/,
     /([$\w]+)\(([$\w]+),\{color:"subtle",children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," Effort not supported"/,
@@ -68,8 +70,10 @@ const patchEffortControls = (file: string): string | null => {
   );
   if (result === null) return null;
   const commits = [
-    // CC >= 2.1.284: ultracode is a session flag, no longer an effort level the
-    // commit has to guard against.
+    // CC >= 2.1.319: `if(sel===MORE)return;` opens the commit.
+    /(function ([$\w]+)\(([$\w]+)\)\{if\(\3===[$\w]+\)return;)((?:if\(\3==="fableplan"\)\{[$\w]+\(\3,void 0\);return\})?let ([$\w]+)=[$\w]+\(\3\),(?:[$\w]+=[$\w]+\(\),)*[$\w]+=\5&&([$\w]+)!==void 0\?[$\w]+\(\6,\5\):\6;[$\w]+\("tengu_model_command_menu_effort")/,
+    // CC 2.1.284 - 2.1.318: ultracode is a session flag, no longer an effort
+    // level the commit has to guard against.
     /(function ([$\w]+)\(([$\w]+)\)\{)((?:if\(\3==="fableplan"\)\{[$\w]+\(\3,void 0\);return\})?let ([$\w]+)=[$\w]+\(\3\),(?:[$\w]+=[$\w]+\(\),)*[$\w]+=\5&&([$\w]+)!==void 0\?[$\w]+\(\6,\5\):\6;[$\w]+\("tengu_model_command_menu_effort")/,
     // CC 2.1.281 - 2.1.283.
     /(function ([$\w]+)\(([$\w]+)\)\{)((?:if\(\3==="fableplan"\)\{[$\w]+\(\3,void 0\);return\})?let ([$\w]+)=[$\w]+\(\3\),(?:[$\w]+=[$\w]+\(\),)*[$\w]+=\5&&([$\w]+)!==void 0&&\6!=="ultracode"\?[$\w]+\(\6,\5\):\6;[$\w]+\("tengu_model_command_menu_effort")/,

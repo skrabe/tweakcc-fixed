@@ -3,14 +3,14 @@
 Patch Claude Code's prompts, UI and tools. A fork of [Piebald's tweakcc](https://github.com/Piebald-AI/tweakcc) with fff filename search, effort routing, Fable planning and editable runtime reminders.
 
 [![npm](https://img.shields.io/npm/v/tweakcc-fixed?color=cb3837&label=npm&style=flat-square)](https://www.npmjs.com/package/tweakcc-fixed)
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-2.1.318-d97757?style=flat-square)](https://github.com/anthropics/claude-code)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-2.1.319-d97757?style=flat-square)](https://github.com/anthropics/claude-code)
 [![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 
 [Install](#install) · [Fork additions](#fork-additions) · [Prompt editing](#prompt-editing) · [Build from source](#build-from-source)
 
 ## Install
 
-Requires Node.js 20+ and pnpm. Supports npm and native Claude Code installations; the tested target is 2.1.318.
+Requires Node.js 20+ and pnpm. Supports npm and native Claude Code installations; the tested target is 2.1.319.
 
 ```sh
 pnpm dlx tweakcc-fixed@latest            # open the settings UI
@@ -47,15 +47,15 @@ Upstream provides the themes, spinners, thinking text, toolsets, subagent model 
 
 |                           | tweakcc-fixed | upstream |
 | ------------------------- | :-----------: | :------: |
-| Prompt sites (CC 2.1.318) |    16,811     |  1,101   |
-| Unique prompt IDs         |    15,583     |  1,101   |
+| Prompt sites (CC 2.1.319) |    17,229     |  1,134   |
+| Unique prompt IDs         |    15,993     |  1,134   |
 | Patches                   |      82       |    61    |
 
-Same Claude Code 2.1.318 catalogue, compared with [upstream bd1687ef](https://github.com/Piebald-AI/tweakcc/tree/bd1687efa4e3ddc247c20328d230819779d9c2e1). Counts describe source inventory; active prompts depend on model, tools and settings.
+Same Claude Code 2.1.319 catalogue, compared with [upstream 00dbaf9d](https://github.com/Piebald-AI/tweakcc/tree/00dbaf9d0cfbb32d7e9b9e2c93d04a118d63be10). Counts describe source inventory; active prompts depend on model, tools and settings.
 
 <!-- coverage:end -->
 
-Refresh this table from a checkout with `git fetch upstream main`, then `node tools/readmeStats.mjs 2.1.318 --write`. The command requires the same Claude Code catalogue version on both sides.
+Refresh this table from a checkout with `git fetch upstream main`, then `node tools/readmeStats.mjs 2.1.319 --write`. The command requires the same Claude Code catalogue version on both sides.
 
 ## Prompt editing
 

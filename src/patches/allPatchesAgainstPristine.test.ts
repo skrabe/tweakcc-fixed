@@ -496,6 +496,9 @@ const EXPECTED_NOOP: Partial<Record<PatchId, string>> = {
     'CC >= 2.1.83 accepts any agent model string (no enum/includes gate)',
   'conversation-title':
     'CC ships /rename natively (name:"rename",aliases:["name"])',
+  'lean-memory-types':
+    'CC >= 2.1.319 removed the tengu_ochre_finch compact memory-types list ' +
+    'and its skill; only the verbose <types> prompt remains',
 };
 
 type Outcome = 'applied' | 'no-op' | 'null';

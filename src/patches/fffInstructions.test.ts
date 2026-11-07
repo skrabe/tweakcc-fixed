@@ -351,6 +351,30 @@ describe('fff scoped instruction patch', () => {
     }
   );
 
+  it('binds the 2.1.319 renderer without a tools default and with a fifth parameter', () => {
+    const render319 = RENDER.replace(
+      'function $render($rows,$visible=[],$model,$config)',
+      'function $render($rows,$visible,$model,$config,$extra)'
+    );
+    expect(render319).not.toBe(RENDER);
+    const source = PRISTINE.replace(RENDER, render319);
+    const patched = writeFffInstructions(source)!;
+    expect(patched).not.toBeNull();
+    expect(patched).toContain('__tweakccFffAutoMode');
+    expect(patched).toContain('.attachment,$visible,"');
+    const fixture = evaluate(patched);
+    const text = 'auto: search with grep and find; permission text.';
+    const messages = [{ type: 'user', message: { content: text } }];
+    const rows = [{ attachment: { type: 'auto_mode' }, messages }];
+    expect(fixture.$render(rows, TOOLS, undefined)[0].message.content).toBe(
+      'auto: search following the Bash tool description; permission text.'
+    );
+    expect(fixture.$render(rows, [{ name: 'Read' }], undefined)[0]).toBe(
+      messages[0]
+    );
+    expect(writeFffInstructions(patched)).toBe(patched);
+  });
+
   it('preserves pristine serializer behavior with the feature disabled', async () => {
     const fixture = evaluate(PRISTINE);
     const tool = {

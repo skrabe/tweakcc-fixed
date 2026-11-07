@@ -301,6 +301,12 @@ export const writeFffInstructions = (
   guidance = FFF_BASH_GUIDANCE
 ): string | null => {
   const renderer =
+    // CC 2.1.319+: the tools parameter lost its `=[]` default, a fifth
+    // parameter follows, and the fold assignment ends the statement.
+    readScope(
+      file,
+      /(?:^|[;}])function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+)\)\{\2=([$\w]+)\(\2,\5\?\.accountMemoryWithheld,([$\w]+)\(\(\)=>\3\)\);let /g
+    ) ??
     // CC 2.1.299+: the fold assignment continues with `,rows=next(rows);`.
     readScope(
       file,

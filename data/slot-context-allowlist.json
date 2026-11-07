@@ -119,10 +119,19 @@
   "system-prompt-post-compaction-continue": {
     "bodyHash": "91b903a64348",
     "pristineHash": "aa764f15ee67",
-    "valueHash": "b478468f6aa0",
-    "reviewed": "2026-11-04 (CC 2.1.318)",
+    "valueHash": "254d42866ba1",
+    "reviewed": "2026-11-07 (CC 2.1.319)",
     "tokens": {
-      "SYSTEM_PROMPT_POST_COMPACTION_CONTINUE_VAR_1": "Value is the constant \"Continue the conversation from where it left off\" (2.1.318 moved it from the first slot to the second, after the summary-header slot and a newline). The override ends it with a full stop instead of pristine's \"without asking the user any further questions\" clause, so it renders as a whole sentence before \"Resume directly …\"."
+      "SYSTEM_PROMPT_POST_COMPACTION_CONTINUE_VAR_1": "Value is the constant \"Continue the conversation from where it left off\" (2.1.318 moved it from the first slot to the second, after the summary-header slot and a newline). The override ends it with a full stop instead of pristine's \"without asking the user any further questions\" clause, so it renders as a whole sentence before \"Resume directly …\". 2.1.319 re-check: the value is still the constant \"Continue the conversation from where it left off\"."
+    }
+  },
+  "agent-prompt-security-monitor-for-autonomous-agent-actions": {
+    "bodyHash": "ad1cd4a1d8b6",
+    "pristineHash": "4664a999e660",
+    "valueHash": "6cee3797386a",
+    "reviewed": "2026-11-07 (CC 2.1.319)",
+    "tokens": {
+      "VOICE_CALL_TRANSCRIPT_TRUST_RULE_BLOCK": "Value is \"\" or a whole sentence block (\"Text under a … line, or delivered from a non-user source of kind voice-call, is a record of what was said aloud on a voice call …\"). Pristine places it right after the pasted-content block and a space, at the end of rule 9; the override cut rule 9, so it follows the pasted-content block exactly as in pristine and still reads as its own rule inside the session-rules tag."
     }
   }
 }

@@ -2258,8 +2258,12 @@ const NEW_PROMPT_ASSIGNMENTS = [
   // 2.1.172 — fuzzy-miss restore: 2.1.170 carried this prompt at two
   // identical sites, so its fingerprint was a collision and got dropped from
   // the fuzzy index; 2.1.172 is back to one (grown) site.
+  // 2.1.319 split the heading into its own constant; the bare heading takes
+  // its own -heading id from the cache, so only the full prompt may claim this.
   {
-    matcher: t => t.startsWith('# Claude in Chrome browser automation'),
+    matcher: t =>
+      t.startsWith('# Claude in Chrome browser automation') &&
+      t.trim() !== '# Claude in Chrome browser automation',
     name: 'System Prompt: Claude in Chrome browser automation',
     id: 'system-prompt-claude-in-chrome-browser-automation',
     description:
