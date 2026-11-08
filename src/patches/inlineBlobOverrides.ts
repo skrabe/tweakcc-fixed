@@ -742,12 +742,17 @@ export interface InlineBlobApplyResult {
   replaced?: string;
 }
 
+export type WrittenRegion = { start: number; end: number; filename: string };
+
 export const applyInlineBlobOverrides = async (
   content: string,
   // Restrict the run to a single override file. The apply preflight uses this
   // to measure ONE override's claimed span against the pristine binary through
   // the real resolution path, instead of re-deriving the boundary walkers.
-  options?: { only?: string }
+  // `written` carries Guard 4's record of the regions earlier overrides wrote
+  // across calls, so a caller applying one file per call (the preflight) sees
+  // the same refusals as a single run over every file.
+  options?: { only?: string; written?: WrittenRegion[] }
 ): Promise<{ content: string; results: InlineBlobApplyResult[] }> => {
   const escapeNonAscii = detectUnicodeEscaping(content);
   if (escapeNonAscii) {
@@ -771,7 +776,7 @@ export const applyInlineBlobOverrides = async (
 
   const results: InlineBlobApplyResult[] = [];
   // Regions earlier overrides wrote, in current-content coordinates.
-  const written: Array<{ start: number; end: number; filename: string }> = [];
+  const written: WrittenRegion[] = options?.written ?? [];
   for (const filename of candidates.sort()) {
     const fullPath = path.join(SYSTEM_PROMPTS_DIR, filename);
     let raw: string;

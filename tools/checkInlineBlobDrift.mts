@@ -14,6 +14,7 @@ import fs from 'node:fs';
 import { diffWords } from 'diff';
 import { applyInlineBlobOverrides } from '../src/patches/inlineBlobOverrides';
 import { SYSTEM_PROMPTS_DIR } from '../src/config';
+import { normalizeLiteralNames } from './lib/normalizeLiteralNames.mjs';
 
 const args = process.argv.slice(2);
 const [prevPath, curPath] = args.filter(a => !a.startsWith('--'));
@@ -24,20 +25,24 @@ if (!prevPath || !curPath) {
   process.exit(2);
 }
 const showDiff = args.includes('--diff');
+const log = console.log;
 
-// Minified names differ between versions and platforms: blank the name opening
-// every slot or spread, every bare array element, and every short token
-// carrying a capital, digit, `$` or `_`.
-export const normalize = (text: string): string =>
-  text
-    .replace(/(\$\{|\.\.\.)[\w$]+/g, '$1_')
-    .replace(/(?<=[[,])[\w$]{1,4}(?=[,\]])/g, '_')
-    .replace(/(?<![\w$])(?=[\w$]*[A-Z0-9_$])[\w$]{1,4}(?![\w$])/g, '_');
+// Minified names differ between versions and platforms; prose must not.
+const normalize = (text: string): string => normalizeLiteralNames(text);
 
 const resolve = async (content: string, file: string) => {
-  const { results } = await applyInlineBlobOverrides(content, { only: file });
-  const r = results[0];
-  return r?.applied ? r.replaced! : `UNRESOLVED: ${r?.details ?? 'no result'}`;
+  console.log = () => {};
+  try {
+    const { results } = await applyInlineBlobOverrides(content, {
+      only: file,
+    });
+    const r = results[0];
+    return r?.applied
+      ? r.replaced!
+      : `UNRESOLVED: ${r?.details ?? 'no result'}`;
+  } finally {
+    console.log = log;
+  }
 };
 
 const prev = fs.readFileSync(prevPath, 'utf8');
@@ -47,13 +52,10 @@ const files = fs
   .filter(n => n.startsWith('inline-') && n.endsWith('.md'))
   .sort();
 
-const log = console.log;
 const findings: string[] = [];
 for (const file of files) {
-  console.log = () => {};
   const before = await resolve(prev, file);
   const after = await resolve(cur, file);
-  console.log = log;
   if (after.startsWith('UNRESOLVED')) {
     findings.push(`UNRESOLVED ${file}: ${after.slice(12)}`);
   } else if (before.startsWith('UNRESOLVED')) {

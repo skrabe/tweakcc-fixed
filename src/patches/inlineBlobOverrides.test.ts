@@ -34,6 +34,7 @@ import {
   parseFrontmatter,
   minifiedInterpNames,
   introducedMinifiedSlots,
+  type WrittenRegion,
 } from './inlineBlobOverrides';
 
 const writeOverride = (name: string, contents: string) => {
@@ -498,6 +499,27 @@ describe('inlineBlobOverrides: applyInlineBlobOverrides (integration)', () => {
     expect(by['inline-b.md'].details).toContain('inline-a.md');
     expect(by['inline-c.md'].applied).toBe(true);
     expect(out).toBe('x="When to access: first";y="third body";');
+  });
+
+  it('refuses the same overlap across per-file calls sharing written regions', async () => {
+    clearOverrides();
+    stringOverride('inline-a.md', '"When to access', 'When to access: first');
+    stringOverride('inline-b.md', '"When to access', 'second body');
+    const content = 'x="When to access memories.";';
+    const written: WrittenRegion[] = [];
+    const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const a = await applyInlineBlobOverrides(content, {
+      only: 'inline-a.md',
+      written,
+    });
+    const b = await applyInlineBlobOverrides(a.content, {
+      only: 'inline-b.md',
+      written,
+    });
+    errSpy.mockRestore();
+    expect(a.results[0].applied).toBe(true);
+    expect(b.results[0].failed).toBe(true);
+    expect(b.content).toBe('x="When to access: first";');
   });
 
   it('lands two overrides sharing an anchor on successive copies', async () => {
