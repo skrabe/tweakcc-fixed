@@ -86805,5 +86805,45 @@
     "verdict": "pristine-keep",
     "version": "2.1.319",
     "why": "Strongest cut: drop the cause sentence 'The filesystem may have silently kept only part of the write, or another process may have changed the file.' It fails because the sentence is an enumeration of two causes (tripwire) and is the only diagnosis the model gets. The same-tool Write description and schema co-render but do not say it."
+  },
+  "tool-result-mcp-connector-file-client-sends-no-files-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.319",
+    "why": "Strongest cut: wipe. It fails because the fragment is the reason clause spliced into the not-called refusal; emptied, the refusal ends on a bare colon and the model cannot tell the user why no file was sent."
+  },
+  "tool-result-mcp-connector-file-files-not-spoken-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.319",
+    "why": "Strongest cut: wipe. It fails because it is the only statement that this connector's connection takes no files, which the not-called refusal asks the model to relay."
+  },
+  "tool-result-mcp-connector-file-no-upload-place-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.319",
+    "why": "Strongest cut: wipe. It fails because it is the only statement that this connector has no place to receive files, the reason the model relays."
+  },
+  "tool-result-mcp-connector-file-no-upload-for-argument-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.319",
+    "why": "Strongest cut: wipe. It fails because it is the default reason clause and names the argument; without it the refusal carries no cause."
+  },
+  "tool-result-mcp-connector-upload-allow-given-at-terminal-prompt": {
+    "verdict": "pristine-keep",
+    "version": "2.1.319",
+    "why": "Strongest cut: wipe. It fails because it states the rule that a file send needs an Allow given at the approval prompt, the only explanation for refusing a hook- or substitute-approved call."
+  },
+  "tool-result-mcp-transport-not-connected": {
+    "verdict": "pristine-keep",
+    "version": "2.1.319",
+    "why": "Strongest cut: wipe. It fails because two words are the whole error text a disconnected MCP transport returns; nothing else tells the model the server dropped."
+  },
+  "tool-result-permission-deny-path-lands-outside-dir": {
+    "verdict": "pristine-keep",
+    "version": "2.1.319",
+    "why": "Strongest cut: wipe. It fails because it is the clause naming where the path actually lands and the allowed root, the only facts in the deny message that let the model choose another path."
+  },
+  "tool-result-worktree-isolation-checkout-fallback-label": {
+    "verdict": "pristine-keep",
+    "version": "2.1.319",
+    "why": "Strongest cut: wipe. It fails because it is a two-word noun phrase standing in for a path the refusal will not print; emptied, the sentence loses its object."
   }
 }

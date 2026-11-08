@@ -5245,5 +5245,56 @@
     ],
     "label": "TOOL_RESULT_PROPOSESKILLS_EDIT_TEXT_REPEATED_VAR_0",
     "reason": "joins the occurs-more-than-once / is-not clause to the interpolated skill name in y @36604787"
+  },
+  "eaa7707ea90aea9c": {
+    "text": "sending files to a connector takes an Allow given ",
+    "verdict": "catalogue",
+    "promptId": "tool-result-mcp-connector-upload-hook-approved",
+    "promptIds": ["tool-result-mcp-connector-upload-substitute-approved"],
+    "label": "TOOL_RESULT_MCP_CONNECTOR_UPLOAD_HOOK_APPROVED_VAR_0",
+    "id": "tool-result-mcp-connector-upload-allow-given-at-terminal-prompt",
+    "name": "Tool Result: MCP connector upload — Allow must be given at the terminal prompt",
+    "desc": "Clause l in Hpi @44610374 giving the rule behind a no-file-sent refusal when a PermissionRequest hook or a substitute approver approved the call: sending files to a connector takes an Allow given at Claude Code's prompt in a terminal.",
+    "reason": "states the approval condition the model relays to the user; shared by the hook-approved and substitute-approved refusals"
+  },
+  "ab5082663ac171a0": {
+    "text": "Claude Code cannot send a file to a connector in this session",
+    "verdict": "catalogue",
+    "promptId": "tool-result-mcp-connector-file-not-called-reason",
+    "label": "TOOL_RESULT_MCP_CONNECTOR_FILE_NOT_CALLED_REASON_VAR_1",
+    "id": "tool-result-mcp-connector-file-client-sends-no-files-reason",
+    "name": "Tool Result: MCP connector file client sends no files reason",
+    "desc": "Reason fragment (client_sends_no_files) saying Claude Code cannot send a file to a connector in this session, so the tool was not called.",
+    "reason": "the reason the model is told and must relay to the user"
+  },
+  "662077c7fc54e193": {
+    "text": "this connector's connection does not take files",
+    "verdict": "catalogue",
+    "promptId": "tool-result-mcp-connector-file-not-called-reason",
+    "label": "TOOL_RESULT_MCP_CONNECTOR_FILE_NOT_CALLED_REASON_VAR_1",
+    "id": "tool-result-mcp-connector-file-files-not-spoken-reason",
+    "name": "Tool Result: MCP connector file connection takes no files reason",
+    "desc": "Reason fragment (files_not_spoken) saying this connector's connection does not take files, so the tool was not called.",
+    "reason": "the reason the model is told and must relay to the user"
+  },
+  "8342c9cb8cf0fc1f": {
+    "text": "Claude Code cannot send files to this connector",
+    "verdict": "catalogue",
+    "promptId": "tool-result-mcp-connector-file-not-called-reason",
+    "label": "TOOL_RESULT_MCP_CONNECTOR_FILE_NOT_CALLED_REASON_VAR_1",
+    "id": "tool-result-mcp-connector-file-no-upload-place-reason",
+    "name": "Tool Result: MCP connector file no upload place reason",
+    "desc": "Reason fragment (no_upload_place) saying Claude Code cannot send files to this connector, so the tool was not called.",
+    "reason": "the reason the model is told and must relay to the user"
+  },
+  "3f5119b41135ceb9": {
+    "text": "Claude Code does not upload a file for ",
+    "verdict": "catalogue",
+    "promptId": "tool-result-mcp-connector-file-not-called-reason",
+    "label": "TOOL_RESULT_MCP_CONNECTOR_FILE_NOT_CALLED_REASON_VAR_1",
+    "id": "tool-result-mcp-connector-file-no-upload-for-argument-reason",
+    "name": "Tool Result: MCP connector file no upload for argument reason",
+    "desc": "Default reason fragment saying Claude Code does not upload a file for the named argument now, so the tool was not called.",
+    "reason": "the default reason the model is told and must relay to the user"
   }
 }

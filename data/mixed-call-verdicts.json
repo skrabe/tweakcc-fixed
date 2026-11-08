@@ -737,6 +737,28 @@
       }
     ]
   },
+  "317d73e2074d1a54": {
+    "at": 19619676,
+    "model": {
+      "d94dc839fc5ac18ae60c9a96faa6a8b2e4b0aa7b": "Worktree not removed; the session is still in it. ${===\"unk…"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "03428a3f9f43a372a6dd346fd8281ca60b569b98": {
+            "facing": "internal",
+            "preview": "feedback draft listing failed: ${(.error)}"
+          },
+          "1b0afe8293fbc698105228f35960bf950fcac2fe": {
+            "facing": "internal",
+            "preview": "feedback draft delete failed: ${(.error)}"
+          }
+        },
+        "why": "The callee is a generic Error constructor shared by the module: the worktree-not-removed message is thrown from the ExitWorktree tool call and returned as its tool error, while the feedback-draft listing and delete failures are thrown inside the SDK feedback-draft helpers and end in telemetry and debug logging."
+      }
+    ]
+  },
   "3616277fa46d12a9": {
     "at": 26010544,
     "model": {
