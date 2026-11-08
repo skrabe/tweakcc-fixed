@@ -736,6 +736,10 @@ export interface InlineBlobApplyResult {
   failed: boolean;
   skipped?: boolean;
   details: string;
+  // The literal this override replaced, as it stood in the content it was
+  // spliced into (pristine text when run with `only`). The drift gate compares
+  // it across versions.
+  replaced?: string;
 }
 
 export const applyInlineBlobOverrides = async (
@@ -1154,6 +1158,7 @@ export const applyInlineBlobOverrides = async (
       applied: true,
       failed: false,
       details: status,
+      replaced: before.slice(startOfBlob, endOfBlob),
     });
   }
 
