@@ -1,271 +1,10 @@
 {
-  "1834170eef726568": {
-    "at": 9019745,
-    "model": {
-      "36365543cf9aa33bbfb83e4683a0f86dfef986f8": "Please convert the image to PNG, JPEG, GIF, or WebP.",
-      "3b255a065730af835a090735b87f151460429ecd": "Unable to resize image — image processing is unavailable an…",
-      "3d6e0b435a4d1c924bca92956a75e23707d40120": "Unable to send image — it is ${()} in base64, over the API'…",
-      "7394ffe4e1c2e3e8df5fe4d9493442987247a1d7": "Unable to resize image (${()} raw, ${()} base64). The image…",
-      "9e76c0d0e1ad44e72b907442ee3a5372c73e4905": "Unable to resize image — dimensions exceed the ${}x${}px li…",
-      "a51f84650af948948d26293dc6320c8a9815a8d3": "Unable to resize image — could not verify image dimensions …",
-      "d2a309892c2d532244f9a3e52232e500533909b7": "Unable to resize image — image processing is unavailable an…",
-      "e5c93c3483b0f9c4fd27c1682faf991aba5fa2de": "Unable to send image — at ${.width}x${.height}px it is over…",
-      "eaa3f03625a38845dd545cda76913bcb0c249b13": "Unable to resize image — ${}, and ${}, so it cannot be sent…",
-      "ee2b3ff06c103d41408f4ac15ac0e3ada622264f": "Image file is empty (0 bytes)"
-    },
-    "position": 0,
-    "reviews": [
-      {
-        "arms": {
-          "27627a6488341893ffe0fe1bb3f60be962bc6c95": {
-            "facing": "internal",
-            "preview": "Unable to compress image (${(.length)}) to fit within ${()}…"
-          },
-          "a03f1cd46264bb996572898df0111531c71fbbc2": {
-            "facing": "internal",
-            "preview": "Unable to compress image (${(.length)}) to fit within ${()}…"
-          }
-        },
-        "why": "eO is ImageResizeError. The model arms (and the corrected base64-limit arm) are thrown by WNe's resize path (8192621-8196865) and reach the model as unprocessable-image text (8197856). The two 'Unable to compress image' arms are thrown only by T_r (8202611, 8202711), and every T_r caller catches them: the Read tool's mys catch logs and falls back to a 400px JPEG (12151738), gys sits in try{}catch{} (28656121), and the session-serving Pe logs (28447788)."
-      },
-      {
-        "arms": {
-          "3b255a065730af835a090735b87f151460429ecd": {
-            "facing": "model",
-            "preview": "Unable to resize image — image processing is unavailable an…"
-          }
-        },
-        "why": "eO is ImageResizeError. The new model arm is a real one-string message: \"Unable to resize image — image processing is unavailable…\"+\"Please convert…\" thrown as one eO in WNe's catch path (8196056, inside WNe 8192537) when K1() cannot read header dimensions; the caller at 8197856 catches eO and returns h.message as the unprocessable-image result the model reads. The internal arms remain the \"Unable to compress image\" throws in T_r (8202611, 8202711), which every T_r caller catches (12151738, 28656121, 28447788)."
-      },
-      {
-        "arms": {
-          "3d6e0b435a4d1c924bca92956a75e23707d40120": {
-            "facing": "model",
-            "preview": "Unable to send image — it is ${()} in base64, over the API'…"
-          },
-          "e5c93c3483b0f9c4fd27c1682faf991aba5fa2de": {
-            "facing": "model",
-            "preview": "Unable to send image — at ${.width}x${.height}px it is over…"
-          }
-        },
-        "why": "eO is ImageResizeError. The two new arms are thrown in the same catch path of m2e (9011800-9013100) as the carried model arms ('Unable to resize image ...'); the callers catch eO and return its message as the unprocessable-image text the model reads (9014799 O(_.message,'resize_error'), S5o 10896927 errorDetails, 12662850 rethrow). Internal 'Unable to compress image' arms stay with T_r callers that all catch."
-      }
-    ]
-  },
-  "184c92ea25e554fe": {
-    "at": 6998948,
-    "model": {
-      "328c1476bf5771c999a32db85bfe0682ea229306": "${}: your organization's settings haven't been read, so it …",
-      "411fcc65a6ad7ec7b5b6613a418b2c7e042bef87": "${}: your organization's managed settings disable marketpla…",
-      "5d8d4d7fdbe1b06773d05feb33f333de4b052c18": "${}: headersHelper not run — ${}. The marketplace was not f…",
-      "5efaa7218dafae414a6fb2a02d7f3c6ceb9d35c4": "and this marketplace's headersHelper is not declared in man…",
-      "71573f6ee6feaee6aa211a7d0190bba3537fa1fb": "A tool server doesn't run a plugin's command on its own. Th…",
-      "879bf59359564445ba81751f46d5278753a36985": "${}: a tool server doesn't run a marketplace's headersHelpe…",
-      "953c98989e771ba8f0d78e49a1006d00c0e4eb28": "and in this session a declaration in managed settings does …",
-      "e86df59697c217f037ecf79a5ea118414c1ac11b": "${} is installed by running a command on this machine (\\`${…"
-    },
-    "position": 0,
-    "reviews": [
-      {
-        "arms": {
-          "0221a1ad0e10124061684321193fc765a99f63eb": {
-            "facing": "ui",
-            "preview": "${}'s marketplace changed the command that installs it, or …"
-          },
-          "208b5765818a4f55807c4bccdee88ba14a39d252": {
-            "facing": "ui",
-            "preview": "A link in the staged farm is not in canonical form; refusin…"
-          },
-          "281316649d6715eec2155479ace6ee5d06d94aef": {
-            "facing": "ui",
-            "preview": "The link farm points at a producer reached through a link t…"
-          },
-          "424b3b66aa3d533bd800a6587e1c3259cfea0e85": {
-            "facing": "ui",
-            "preview": "Plugin source command \\`${}\\` printed \\`${(,200)}\\`, a netw…"
-          },
-          "5e4dc0c75c797cec60fb949dff226658e3c9567a": {
-            "facing": "ui",
-            "preview": "${}'s marketplace entry now installs it by running a comman…"
-          },
-          "61998e1b474cacf144ecf89c628533231337f8b7": {
-            "facing": "ui",
-            "preview": "${}'s marketplace entry changed while it was being installe…"
-          },
-          "7b7c237aef4dc0c3a226a19573ef5731744ed419": {
-            "facing": "ui",
-            "preview": "The link farm points at a producer that now resolves to a n…"
-          },
-          "8abcf8d465a2020f64ac8e6ab86b7a9ee5509025": {
-            "facing": "ui",
-            "preview": "Plugin source command \\`${}\\` printed \\`${(,200)}\\`, which …"
-          },
-          "9ba5e03853f296aece8af53102cbc06ba701f3aa": {
-            "facing": "ui",
-            "preview": "A link in the staged farm could not be read (${((),120)}); …"
-          },
-          "a7c8f4309644914ad23d1f7cb39cb9a4fb489d8b": {
-            "facing": "ui",
-            "preview": "Plugin source command printed the working directory or one …"
-          },
-          "b12fcb5d7da9ed64ab9fbe4758ef89bbebebfa29": {
-            "facing": "ui",
-            "preview": "The link-farm marker is not a small regular file; refusing …"
-          },
-          "ba5268571525ee0eb2478fefb94f8bf76e3a17e2": {
-            "facing": "ui",
-            "preview": "A top-level entry of the plugin directory its command produ…"
-          },
-          "d2bb8748b554360defab8ee315f01bb8e915a70c": {
-            "facing": "ui",
-            "preview": "A top-level entry of the plugin directory (${(,100)}) point…"
-          },
-          "dde51518cf8fe50d4e9f0fea90e6d65479cf52c9": {
-            "facing": "ui",
-            "preview": "Plugin source command \\`${}\\` printed a path that resolves …"
-          }
-        },
-        "why": "Ql is the plugin command-source refusal, and its message reaches the model only where the caller joins it into slash-command output. Bulk /plugin install xu() (40336943) sends XEt's error to setResult/setError, which become onComplete (model); dependency installs there carry consent {kind:'none'} (Si 12581230), which raises the model 'not been reviewed yet' arm (6845230). The single-plugin Ru() passes consent kind 'shown' and shows failures through setInstallError C(U.error) (40339572), which is UI-only. Update XYe/vi uses 'recorded' consent (19082278) and /plugin update reports failure through ve('Failed to update: ...') (40465836), also UI. The network-path and link-farm refusals need the source command to run, and xu skips command-source entries before XEt. After the headersHelper correction the remaining ui arms all sit on those UI-only routes."
-      },
-      {
-        "arms": {
-          "328c1476bf5771c999a32db85bfe0682ea229306": {
-            "facing": "model",
-            "preview": "${}: your organization's settings haven't been read, so it …"
-          },
-          "411fcc65a6ad7ec7b5b6613a418b2c7e042bef87": {
-            "facing": "model",
-            "preview": "${}: your organization's managed settings disable marketpla…"
-          },
-          "5efaa7218dafae414a6fb2a02d7f3c6ceb9d35c4": {
-            "facing": "model",
-            "preview": "and this marketplace's headersHelper is not declared in man…"
-          },
-          "71573f6ee6feaee6aa211a7d0190bba3537fa1fb": {
-            "facing": "model",
-            "preview": "A tool server doesn't run a plugin's command on its own. Th…"
-          },
-          "879bf59359564445ba81751f46d5278753a36985": {
-            "facing": "model",
-            "preview": "${}: a tool server doesn't run a marketplace's headersHelpe…"
-          },
-          "953c98989e771ba8f0d78e49a1006d00c0e4eb28": {
-            "facing": "model",
-            "preview": "and in this session a declaration in managed settings does …"
-          }
-        },
-        "why": "328c1476 model: hWn @6997420 (marketplace headersHelper gate) throws new Yl (extends x, @6980616). It runs from ZMt @7002807, awaited inside Cuo @13452490 during an install; Cuo's .catch in Mi @13485932 returns only CMe/a6/B7t and rethrows Yl; z7t @13488236 rethrows unless the plugin is a force-included dependency; mtt @19838520 rethrows; wk @42274182 (rendered by Ns in the /plugin command, Cc @42295567) catches and returns `${te.cross} ${d(C)}`, which Ns passes to onComplete(Wn(A)) @42274305: a local-jsx onDone without display:\"skip\" -> model. trace @6997933 proves that local-jsx-ondone [model] sink /plugin @42274310. Same route as the cached-model sibling 5d8d4d7 (remote_policy_unconsented arm thrown two statements later in hWn). The other packet offsets 5161226 (/goal hooks text) and 6993430 (bnn archive text) are different strings that merely share wording; the arm's own literal is @6998225. | 411fcc65 model: hWn @6997420 (marketplace headersHelper gate) throws new Yl (extends x, @6980616). It runs from ZMt @7002807, awaited inside Cuo @13452490 during an install; Cuo's .catch in Mi @13485932 returns only CMe/a6/B7t and rethrows Yl; z7t @13488236 rethrows unless the plugin is a force-included dependency; mtt @19838520 rethrows; wk @42274182 (rendered by Ns in the /plugin command, Cc @42295567) catches and returns `${te.cross} ${d(C)}`, which Ns passes to onComplete(Wn(A)) @42274305: a local-jsx onDone without display:\"skip\" -> model. trace @6997933 proves that local-jsx-ondone [model] sink /plugin @42274310. Same route as the cached-model sibling 5d8d4d7 (remote_policy_unconsented arm thrown two statements later in hWn). | 5efaa721 model: hWn @6997420 (marketplace headersHelper gate) throws new Yl (extends x, @6980616). It runs from ZMt @7002807, awaited inside Cuo @13452490 during an install; Cuo's .catch in Mi @13485932 returns only CMe/a6/B7t and rethrows Yl; z7t @13488236 rethrows unless the plugin is a force-included dependency; mtt @19838520 rethrows; wk @42274182 (rendered by Ns in the /plugin command, Cc @42295567) catches and returns `${te.cross} ${d(C)}`, which Ns passes to onComplete(Wn(A)) @42274305: a local-jsx onDone without display:\"skip\" -> model. trace @6997933 proves that local-jsx-ondone [model] sink /plugin @42274310. Same route as the cached-model sibling 5d8d4d7 (remote_policy_unconsented arm thrown two statements later in hWn). | 879bf593 model: hWn @6997420 (marketplace headersHelper gate) throws new Yl (extends x, @6980616). It runs from ZMt @7002807, awaited inside Cuo @13452490 during an install; Cuo's .catch in Mi @13485932 returns only CMe/a6/B7t and rethrows Yl; z7t @13488236 rethrows unless the plugin is a force-included dependency; mtt @19838520 rethrows; wk @42274182 (rendered by Ns in the /plugin command, Cc @42295567) catches and returns `${te.cross} ${d(C)}`, which Ns passes to onComplete(Wn(A)) @42274305: a local-jsx onDone without display:\"skip\" -> model. trace @6997933 proves that local-jsx-ondone [model] sink /plugin @42274310. Same route as the cached-model sibling 5d8d4d7 (remote_policy_unconsented arm thrown two statements later in hWn). | 953c9898 model: hWn @6997420 (marketplace headersHelper gate) throws new Yl (extends x, @6980616). It runs from ZMt @7002807, awaited inside Cuo @13452490 during an install; Cuo's .catch in Mi @13485932 returns only CMe/a6/B7t and rethrows Yl; z7t @13488236 rethrows unless the plugin is a force-included dependency; mtt @19838520 rethrows; wk @42274182 (rendered by Ns in the /plugin command, Cc @42295567) catches and returns `${te.cross} ${d(C)}`, which Ns passes to onComplete(Wn(A)) @42274305: a local-jsx onDone without display:\"skip\" -> model. trace @6997933 proves that local-jsx-ondone [model] sink /plugin @42274310. Same route as the cached-model sibling 5d8d4d7 (remote_policy_unconsented arm thrown two statements later in hWn). | 71573f6e model: CPs @6986864 throws new Yl(...) when Pl() (tool-server daemon). CPs is called only from qlt @13544480 case \"command\" @13546020, which Cuo @13452490 awaits; from there the propagation is identical to the headersHelper arms: Mi's .catch @13487072 rethrows non-CMe/a6/B7t, z7t @13488236 rethrows, mtt @19838520 rethrows, and wk @42274182 turns it into `${te.cross} ${d(C)}` for Ns's onComplete @42274305 (local-jsx onDone of /plugin, no display:\"skip\") -> model. trace @6986914 stops at the dynamic .catch callback @13487072 (and otherwise reaches only the ui install dialog @15766356), so this model route is from the hand trace above; the ui arms of the group (link-farm/source-command path refusals) are thrown later in CPs's po() callback but would ride the same wk route."
-      }
-    ]
-  },
-  "1ab6b858df0df67b": {
-    "at": 7354438,
-    "model": {
-      "2c851e4a4f5f3efac707c11a67d64f4eb18b171f": "materializeWorkTree: with fetchesFrom, the arguments must b…",
-      "634181bb01bdecdb09efc1ea32cbd6708f19343d": "programs.buildInvocation must return the environment it was…",
-      "90322d65d6702d019c306879d31c7333c61aba35": "programs.buildInvocation must return an absolute path to a …"
-    },
-    "position": 0,
-    "reviews": [
-      {
-        "arms": {
-          "725cd8789fc064cfe8034ea65306751d882a0224": {
-            "facing": "internal",
-            "preview": "gitInOwnWorkTree runs reads only, not git ${??\"(no subcomma…"
-          }
-        },
-        "why": "725cd878 internal: w$n @7352282 throws new x(...) only when the subcommand found by De() is not in Kt={diff,format-patch,log,show} @7352552. Its three callers fix the subcommand: X @7373778 prepends Se=[\"--no-optional-locks\",\"-c\",\"diff.relative=false\",\"diff\",...] (@7369511; De skips the -c value and lands on \"diff\"), and tlr @23346444/@23349414 pass [...vn,\"diff\",...]. So the throw is an unreachable programmer-invariant guard; trace @7352364 has only open throw edges via tlr/pKe and debug-log sinks, no model sink. The model arms of the group are Jt/qt @7354069 checks on embedder-supplied programs.buildInvocation/fetchesFrom input, which can fire."
-      }
-    ]
-  },
-  "21c54ef534021507": {
-    "at": 7580368,
-    "model": {
-      "0d24144c04f1079f76ee957be07d2ac61facfdb5": "sandbox: the task output directory chain under the temp roo…",
-      "63e3b33526e050e829d55272796ec47fcc322d56": "Claude Code did not run this command: it could not look up …",
-      "ae3172a2eaf7b76302d756e37ac72d650616aac1": "The sandbox has lost its configuration, or its record of wh…"
-    },
-    "position": 0,
-    "reviews": [
-      {
-        "arms": {
-          "2b517db9c8d7d501bfaa1505e98bf1073a6edfa5": {
-            "facing": "internal",
-            "preview": "sandbox: failed to open /proc/self/exe for the embedded app…"
-          }
-        },
-        "why": "x is the generic error class. The model arm is bP()'s guard (6317236), thrown into sandboxed Bash command execution (cne/une). The internal arm is in jus (6217849), which returns early unless lL() is true. lL() is `function lL(){return!1}`, so the /proc/self/exe failure can never be thrown in this build."
-      },
-      {
-        "arms": {
-          "63e3b33526e050e829d55272796ec47fcc322d56": {
-            "facing": "model",
-            "preview": "Claude Code did not run this command: it could not look up …"
-          },
-          "a69ec699b57347de0b44e248abb16b6239412a59": {
-            "facing": "internal",
-            "preview": "[Sandbox] ${}: ${} could not be checked when the sandbox co…"
-          },
-          "ae3172a2eaf7b76302d756e37ac72d650616aac1": {
-            "facing": "model",
-            "preview": "The sandbox has lost its configuration, or its record of wh…"
-          },
-          "b2e3c7c500e12e6cfc7ec90d06bf49ad785aeec7": {
-            "facing": "internal",
-            "preview": "[Sandbox] ${}: could not move the planted ${} aside (the re…"
-          },
-          "bceecf7ba7bc27f70574e3d21d24519bc7945eef": {
-            "facing": "internal",
-            "preview": "[Sandbox] ${}: could not move the planted ${} aside (the re…"
-          },
-          "d6dbbd99998c07eb0c9c81bf67add5ed46a8842a": {
-            "facing": "internal",
-            "preview": "[Sandbox] ${}: the planted ${} could not be moved aside or …"
-          }
-        },
-        "why": "A is the generic error class. The two new model arms are thrown by ude @7579410 (Windows sandbox added-folder deny lookup 7580368, lost configuration 7579678), called from nde @7569455 on the sandboxed Bash command path (XEe wrapWithSandboxArgv 13249911); the trace shows tool-throw [model] sinks at 26983599 and 15053343, the same route as the carried bP()/Uw task-output-dir guard (7570297, thrown by the same nde at 7569500). The four '[Sandbox] ...' internal arms are post-command scrub notices (rV @7515551, Mce @7442650 w/I closures @7442767/@7443233): built into A and passed to TP()/b()/t() debug logging (traces end in debug-log sinks 7370634/7370618/7444518/7443473), never thrown into command execution."
-      }
-    ]
-  },
-  "261819c5b6b5dba4": {
-    "at": 12935943,
-    "model": {
-      "10bf1ed6b9dc1309ee7a81aa514d319cfa2f6eb1": "Refusing to use ${} as an isolation worktree: ${}, so its g…",
-      "2933d9a02ec174d58c01aed729294b37df40b94e": "Refusing to use ${} as an isolation worktree: it contains t…",
-      "3996b4fbbbd23e2d4112042b4cb8676e42fd5a21": "Refusing to use ${} as an isolation worktree: its git metad…",
-      "443a7dfabf5f99a99f4bb31d92205c663e72beea": "Refusing to use ${} as an isolation worktree: it is the che…",
-      "525eb58aa281cf5badc4f54ec6fc790246aaecca": "This resume was started from inside ${}, which is its own r…",
-      "72c9e5af5f5f9d52bd774a72bda224a2137aeee5": "Refusing to use ${} as an isolation worktree: it uses anoth…",
-      "79b798e99a88e968a4bef79737c1157b39b55464": "Refusing to use ${} as an isolation worktree: its git direc…",
-      "8d93fccf07055301065f393b76596a5edd263914": "The worktree ${} contains the directory this resume ran fro…",
-      "a4982ff67e744f8fac6624978e14269e6ee2091d": "This resume was started from inside ${} (or a directory it …",
-      "ae96aedfa8215455e005586644363a6f3eb042e2": "Refusing to use ${} as an isolation worktree: git resolves …",
-      "ef86b8ea46955e1345aa6ed44f9e93a80cb56303": "This resume was started from inside ${}, a non-git director…"
-    },
-    "position": 0,
-    "reviews": [
-      {
-        "arms": {
-          "8f6d8eced11de16ce74a33e1cb830496c4c21e70": {
-            "facing": "ui",
-            "preview": "The worktree ${} sits under the directory this resume ran f…"
-          },
-          "c836b34d71cba4b6ea31514cf8e914e70c221017": {
-            "facing": "internal",
-            "preview": "The worktree ${} is its own repository and nothing vouches …"
-          }
-        },
-        "why": "sae (9288293) returns {ok:false, reason, message}, and its callers route the message differently. The worktree-creation Cke callers with no options (10336462-10365026) throw Vp(message) into the EnterWorktree (16927708) and Agent-isolation (16608455) tool errors, so those arms are model. The two arms that stay non-model need flags only resume callers pass. \"is its own repository and nothing vouches…\" needs requireWitnessForSelfOwningPins (parked-agent resume, 29822241), which only logs pin-is-own-launch-tree messages and throws oF without them (internal). \"sits under the directory this resume ran from…\" needs declineSelfOwningPinUnderLiveRoot. Its other caller is session-resume GXo (17331102) → eOe/Bgt → Gt(…,\"warning\") informational (30556828, 38421941), which is dropped from the API, or wpn → stderr (35959033) (ui)."
-      }
-    ]
-  },
-  "289b71a9b3e89b8b": {
-    "at": 15067992,
+  "15d57c5564a437a7": {
+    "at": 15373551,
     "model": {
       "009c459bc25680ee7382ed452e9d25748fc52648": "Could not vouch for ${} after its dependency install, and t…",
       "010fe25f50de04a22e2fa79b095513530bde2dc8": "Failed to write marketplace catalog: ${(.error)}",
       "02d35217c7671344cb8361796d08737c12d64efb": "${()}\nThe retry over SSH failed too: ${()}\nCheck the reposi…",
-      "08dc06b67f0cd39e0afc141c4579054ed2418233": "Server \"${.name}\" is the account memory server; its resourc…",
       "096e1e937e66ef5d2d912bfc046a4789240e6a61": "Failed to list the staged plugin copy (${(.error)}); retry …",
       "0b95e56dfa48a8b87697d941236cf69f5efb7553": "Plugin path is not a directory: ${}",
       "0bf9d47faff9df238a9e3c575df94dd2d44ec563": "PDF extraction directory disappeared before readback: ${}",
@@ -282,8 +21,6 @@
       "25de3e54220d90ca5c041e1afafafc21f6a3c913": "Can't read .mcp.json: it isn't a regular file or is larger …",
       "26339bb35fa6004c0d9cd416423dc65fc940582a": "Failed to list extracted PDF pages: ${.code} (${})",
       "279a89198258d018db5887550ee90b638e4aa164": "Could not prepare the plugin cache folder of ${}: the stora…",
-      "2c14f5a68503d89ad10fa50b40eca8aea06cfbe9": "Server \"${.name}\" is the Artifacts MCP server; Claude Code …",
-      "2d56c187c1eda9fd0f4555ea7ecb62bac88a559c": "Server \"${.name}\" does not support resources",
       "2f96ce44766b8db276abb9a7c6408ca8fd1da46d": "Could not ${} ${} ${}: a link sits at its cache path and co…",
       "3133a2dafc2cb81a1aef1fa43cd5596139c8e193": "Cannot install ${(,120)}: ${}",
       "341b65a22f15b0939e28e4ffe3088d30d5d0ea16": "Plugin archive from ${(.url)} contained no plugin files. Th…",
@@ -291,7 +28,6 @@
       "3bd3066481c128710a53172265970d395212aaa0": "Cannot fetch marketplace ${(())}: the directory it would us…",
       "3da346dbed4d17aba516ea1ba4a9c24a498e5afb": "Refusing to copy ${}: it resolves somewhere other than its …",
       "3e560e7e62b3a03d694854a323fd09d879906476": "Could not re-screen ${} after its dependency install (the c…",
-      "414ee3b562f22e1e4551ee93206c19a65cd4fdb4": "Server \"${.name}\" is not connected",
       "43882207d662c8570893e55f0c58dc70fa733e40": "Could not prepare ${} for its dependency install (this sess…",
       "440fdb1275001895b49f4ef6074beb873585a1f9": "Plugin archive from ${(.url)} has no plugin content at its …",
       "45137f323ffb4cd5c7e81678ee12043bce131ac0": "Cannot read this as an image: ${} is a pipe or a device, no…",
@@ -579,33 +315,12 @@
       },
       {
         "arms": {
-          "08dc06b67f0cd39e0afc141c4579054ed2418233": {
-            "facing": "model",
-            "preview": "Server \"${.name}\" is the account memory server; its resourc…"
-          },
-          "2d56c187c1eda9fd0f4555ea7ecb62bac88a559c": {
-            "facing": "model",
-            "preview": "Server \"${.name}\" does not support resources"
-          },
-          "414ee3b562f22e1e4551ee93206c19a65cd4fdb4": {
-            "facing": "model",
-            "preview": "Server \"${.name}\" is not connected"
-          },
           "92777172545a442f0eb950910cd630c038adbdee": {
             "facing": "model",
             "preview": "Marketplaces can't be fetched in this session, because it c…"
           }
         },
         "why": "R is the TelemetrySafeError class. 414ee3b5/2d56c187 are dCr (13341121) and 08dc06b6 is sDn (13341799), called from the ReadMcpResource/ListMcpResources tools' call() (18157287, 18161687), so they become tool errors. 92777172 is czn (13686852), thrown from Rlt (13694347, marketplace add) and gfs (13749072, refresh) when the session is diskless, reaching /plugin marketplace output like the carried marketplace-write model arms."
-      },
-      {
-        "arms": {
-          "2c14f5a68503d89ad10fa50b40eca8aea06cfbe9": {
-            "facing": "model",
-            "preview": "Server \"${.name}\" is the Artifacts MCP server; Claude Code …"
-          }
-        },
-        "why": "R is TelemetrySafeError. The new Artifacts-MCP arm is ERr @13066327, the same resource-refusal route as the carried 'Server ... does not support resources' and 'account memory server' arms (called from the ReadMcpResource/ListMcpResources tools' call()), so it becomes an is_error tool result. The internal arm remains the CCR listener log."
       },
       {
         "arms": {
@@ -631,11 +346,307 @@
           }
         },
         "why": "R is the generic TelemetrySafeError (carried review e0a1df99). Model: 1ded Pfi @11888287 'Onboarding guide unavailable' is thrown inside the onboarding-guide tool call (call @19119117, caught at 19119507 and returned as tool data, trace tool-result-content [model] @19121261); 5907 is the plugin-hook ${user_config.*} shell-form refusal in eW @13632586, thrown on the hook-run path (13698443) like the carried hook throws; 83f3 is Pjn @13996829 (MCP config not saved/removed) thrown from DOe @14027868 under B3/EZr, reached via /import converters (25551409-25588756 throws) like the carried /import write arms. Internal: 88496b49 and 4404ea77 are Sl @10646815 poll-event rejections called from sa/$a and Ux @41009150, where the failure is replied to the SDK poll producer (n.reply error) and logged, the same settleDropped route the carried review names."
+      },
+      {
+        "arms": {
+          "2330c7a7f402318cb7d6019c0636d8c938a66a16": {
+            "facing": "internal",
+            "preview": "The connector block's check failed in count_only: ${ instan…"
+          },
+          "ea34eb21468a10a28c4376a104daaef89eab51b5": {
+            "facing": "internal",
+            "preview": "memory head read failed: ${(.error)}"
+          }
+        },
+        "why": "x is the generic TelemetrySafeError. The two new internal arms never leave a log or a caught path: EYt @14317275 passes the 'connector block check failed in count_only' error to the logger and telemetry in its catch (trace sink debug-log), and 'memory head read failed' @11616993 is thrown inside the $Xo memory-scan callback whose failures are collected and skipped, not returned to the model; the carried review's tool-error model arms are unaffected."
+      }
+    ]
+  },
+  "1834170eef726568": {
+    "at": 9873316,
+    "model": {
+      "36365543cf9aa33bbfb83e4683a0f86dfef986f8": "Please convert the image to PNG, JPEG, GIF, or WebP.",
+      "3b255a065730af835a090735b87f151460429ecd": "Unable to resize image — image processing is unavailable an…",
+      "3d6e0b435a4d1c924bca92956a75e23707d40120": "Unable to send image — it is ${()} in base64, over the API'…",
+      "7394ffe4e1c2e3e8df5fe4d9493442987247a1d7": "Unable to resize image (${()} raw, ${()} base64). The image…",
+      "9e76c0d0e1ad44e72b907442ee3a5372c73e4905": "Unable to resize image — dimensions exceed the ${}x${}px li…",
+      "a51f84650af948948d26293dc6320c8a9815a8d3": "Unable to resize image — could not verify image dimensions …",
+      "d2a309892c2d532244f9a3e52232e500533909b7": "Unable to resize image — image processing is unavailable an…",
+      "e5c93c3483b0f9c4fd27c1682faf991aba5fa2de": "Unable to send image — at ${.width}x${.height}px it is over…",
+      "eaa3f03625a38845dd545cda76913bcb0c249b13": "Unable to resize image — ${}, and ${}, so it cannot be sent…",
+      "ee2b3ff06c103d41408f4ac15ac0e3ada622264f": "Image file is empty (0 bytes)"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "27627a6488341893ffe0fe1bb3f60be962bc6c95": {
+            "facing": "internal",
+            "preview": "Unable to compress image (${(.length)}) to fit within ${()}…"
+          },
+          "a03f1cd46264bb996572898df0111531c71fbbc2": {
+            "facing": "internal",
+            "preview": "Unable to compress image (${(.length)}) to fit within ${()}…"
+          }
+        },
+        "why": "eO is ImageResizeError. The model arms (and the corrected base64-limit arm) are thrown by WNe's resize path (8192621-8196865) and reach the model as unprocessable-image text (8197856). The two 'Unable to compress image' arms are thrown only by T_r (8202611, 8202711), and every T_r caller catches them: the Read tool's mys catch logs and falls back to a 400px JPEG (12151738), gys sits in try{}catch{} (28656121), and the session-serving Pe logs (28447788)."
+      },
+      {
+        "arms": {
+          "3b255a065730af835a090735b87f151460429ecd": {
+            "facing": "model",
+            "preview": "Unable to resize image — image processing is unavailable an…"
+          }
+        },
+        "why": "eO is ImageResizeError. The new model arm is a real one-string message: \"Unable to resize image — image processing is unavailable…\"+\"Please convert…\" thrown as one eO in WNe's catch path (8196056, inside WNe 8192537) when K1() cannot read header dimensions; the caller at 8197856 catches eO and returns h.message as the unprocessable-image result the model reads. The internal arms remain the \"Unable to compress image\" throws in T_r (8202611, 8202711), which every T_r caller catches (12151738, 28656121, 28447788)."
+      },
+      {
+        "arms": {
+          "3d6e0b435a4d1c924bca92956a75e23707d40120": {
+            "facing": "model",
+            "preview": "Unable to send image — it is ${()} in base64, over the API'…"
+          },
+          "e5c93c3483b0f9c4fd27c1682faf991aba5fa2de": {
+            "facing": "model",
+            "preview": "Unable to send image — at ${.width}x${.height}px it is over…"
+          }
+        },
+        "why": "eO is ImageResizeError. The two new arms are thrown in the same catch path of m2e (9011800-9013100) as the carried model arms ('Unable to resize image ...'); the callers catch eO and return its message as the unprocessable-image text the model reads (9014799 O(_.message,'resize_error'), S5o 10896927 errorDetails, 12662850 rethrow). Internal 'Unable to compress image' arms stay with T_r callers that all catch."
+      }
+    ]
+  },
+  "184c92ea25e554fe": {
+    "at": 8042684,
+    "model": {
+      "328c1476bf5771c999a32db85bfe0682ea229306": "${}: your organization's settings haven't been read, so it …",
+      "411fcc65a6ad7ec7b5b6613a418b2c7e042bef87": "${}: your organization's managed settings disable marketpla…",
+      "5d8d4d7fdbe1b06773d05feb33f333de4b052c18": "${}: headersHelper not run — ${}. The marketplace was not f…",
+      "5efaa7218dafae414a6fb2a02d7f3c6ceb9d35c4": "and this marketplace's headersHelper is not declared in man…",
+      "71573f6ee6feaee6aa211a7d0190bba3537fa1fb": "A tool server doesn't run a plugin's command on its own. Th…",
+      "879bf59359564445ba81751f46d5278753a36985": "${}: a tool server doesn't run a marketplace's headersHelpe…",
+      "953c98989e771ba8f0d78e49a1006d00c0e4eb28": "and in this session a declaration in managed settings does …",
+      "e86df59697c217f037ecf79a5ea118414c1ac11b": "${} is installed by running a command on this machine (\\`${…"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "0221a1ad0e10124061684321193fc765a99f63eb": {
+            "facing": "ui",
+            "preview": "${}'s marketplace changed the command that installs it, or …"
+          },
+          "208b5765818a4f55807c4bccdee88ba14a39d252": {
+            "facing": "ui",
+            "preview": "A link in the staged farm is not in canonical form; refusin…"
+          },
+          "281316649d6715eec2155479ace6ee5d06d94aef": {
+            "facing": "ui",
+            "preview": "The link farm points at a producer reached through a link t…"
+          },
+          "424b3b66aa3d533bd800a6587e1c3259cfea0e85": {
+            "facing": "ui",
+            "preview": "Plugin source command \\`${}\\` printed \\`${(,200)}\\`, a netw…"
+          },
+          "5e4dc0c75c797cec60fb949dff226658e3c9567a": {
+            "facing": "ui",
+            "preview": "${}'s marketplace entry now installs it by running a comman…"
+          },
+          "61998e1b474cacf144ecf89c628533231337f8b7": {
+            "facing": "ui",
+            "preview": "${}'s marketplace entry changed while it was being installe…"
+          },
+          "7b7c237aef4dc0c3a226a19573ef5731744ed419": {
+            "facing": "ui",
+            "preview": "The link farm points at a producer that now resolves to a n…"
+          },
+          "8abcf8d465a2020f64ac8e6ab86b7a9ee5509025": {
+            "facing": "ui",
+            "preview": "Plugin source command \\`${}\\` printed \\`${(,200)}\\`, which …"
+          },
+          "9ba5e03853f296aece8af53102cbc06ba701f3aa": {
+            "facing": "ui",
+            "preview": "A link in the staged farm could not be read (${((),120)}); …"
+          },
+          "a7c8f4309644914ad23d1f7cb39cb9a4fb489d8b": {
+            "facing": "ui",
+            "preview": "Plugin source command printed the working directory or one …"
+          },
+          "b12fcb5d7da9ed64ab9fbe4758ef89bbebebfa29": {
+            "facing": "ui",
+            "preview": "The link-farm marker is not a small regular file; refusing …"
+          },
+          "ba5268571525ee0eb2478fefb94f8bf76e3a17e2": {
+            "facing": "ui",
+            "preview": "A top-level entry of the plugin directory its command produ…"
+          },
+          "d2bb8748b554360defab8ee315f01bb8e915a70c": {
+            "facing": "ui",
+            "preview": "A top-level entry of the plugin directory (${(,100)}) point…"
+          },
+          "dde51518cf8fe50d4e9f0fea90e6d65479cf52c9": {
+            "facing": "ui",
+            "preview": "Plugin source command \\`${}\\` printed a path that resolves …"
+          }
+        },
+        "why": "Ql is the plugin command-source refusal, and its message reaches the model only where the caller joins it into slash-command output. Bulk /plugin install xu() (40336943) sends XEt's error to setResult/setError, which become onComplete (model); dependency installs there carry consent {kind:'none'} (Si 12581230), which raises the model 'not been reviewed yet' arm (6845230). The single-plugin Ru() passes consent kind 'shown' and shows failures through setInstallError C(U.error) (40339572), which is UI-only. Update XYe/vi uses 'recorded' consent (19082278) and /plugin update reports failure through ve('Failed to update: ...') (40465836), also UI. The network-path and link-farm refusals need the source command to run, and xu skips command-source entries before XEt. After the headersHelper correction the remaining ui arms all sit on those UI-only routes."
+      },
+      {
+        "arms": {
+          "328c1476bf5771c999a32db85bfe0682ea229306": {
+            "facing": "model",
+            "preview": "${}: your organization's settings haven't been read, so it …"
+          },
+          "411fcc65a6ad7ec7b5b6613a418b2c7e042bef87": {
+            "facing": "model",
+            "preview": "${}: your organization's managed settings disable marketpla…"
+          },
+          "5efaa7218dafae414a6fb2a02d7f3c6ceb9d35c4": {
+            "facing": "model",
+            "preview": "and this marketplace's headersHelper is not declared in man…"
+          },
+          "71573f6ee6feaee6aa211a7d0190bba3537fa1fb": {
+            "facing": "model",
+            "preview": "A tool server doesn't run a plugin's command on its own. Th…"
+          },
+          "879bf59359564445ba81751f46d5278753a36985": {
+            "facing": "model",
+            "preview": "${}: a tool server doesn't run a marketplace's headersHelpe…"
+          },
+          "953c98989e771ba8f0d78e49a1006d00c0e4eb28": {
+            "facing": "model",
+            "preview": "and in this session a declaration in managed settings does …"
+          }
+        },
+        "why": "328c1476 model: hWn @6997420 (marketplace headersHelper gate) throws new Yl (extends x, @6980616). It runs from ZMt @7002807, awaited inside Cuo @13452490 during an install; Cuo's .catch in Mi @13485932 returns only CMe/a6/B7t and rethrows Yl; z7t @13488236 rethrows unless the plugin is a force-included dependency; mtt @19838520 rethrows; wk @42274182 (rendered by Ns in the /plugin command, Cc @42295567) catches and returns `${te.cross} ${d(C)}`, which Ns passes to onComplete(Wn(A)) @42274305: a local-jsx onDone without display:\"skip\" -> model. trace @6997933 proves that local-jsx-ondone [model] sink /plugin @42274310. Same route as the cached-model sibling 5d8d4d7 (remote_policy_unconsented arm thrown two statements later in hWn). The other packet offsets 5161226 (/goal hooks text) and 6993430 (bnn archive text) are different strings that merely share wording; the arm's own literal is @6998225. | 411fcc65 model: hWn @6997420 (marketplace headersHelper gate) throws new Yl (extends x, @6980616). It runs from ZMt @7002807, awaited inside Cuo @13452490 during an install; Cuo's .catch in Mi @13485932 returns only CMe/a6/B7t and rethrows Yl; z7t @13488236 rethrows unless the plugin is a force-included dependency; mtt @19838520 rethrows; wk @42274182 (rendered by Ns in the /plugin command, Cc @42295567) catches and returns `${te.cross} ${d(C)}`, which Ns passes to onComplete(Wn(A)) @42274305: a local-jsx onDone without display:\"skip\" -> model. trace @6997933 proves that local-jsx-ondone [model] sink /plugin @42274310. Same route as the cached-model sibling 5d8d4d7 (remote_policy_unconsented arm thrown two statements later in hWn). | 5efaa721 model: hWn @6997420 (marketplace headersHelper gate) throws new Yl (extends x, @6980616). It runs from ZMt @7002807, awaited inside Cuo @13452490 during an install; Cuo's .catch in Mi @13485932 returns only CMe/a6/B7t and rethrows Yl; z7t @13488236 rethrows unless the plugin is a force-included dependency; mtt @19838520 rethrows; wk @42274182 (rendered by Ns in the /plugin command, Cc @42295567) catches and returns `${te.cross} ${d(C)}`, which Ns passes to onComplete(Wn(A)) @42274305: a local-jsx onDone without display:\"skip\" -> model. trace @6997933 proves that local-jsx-ondone [model] sink /plugin @42274310. Same route as the cached-model sibling 5d8d4d7 (remote_policy_unconsented arm thrown two statements later in hWn). | 879bf593 model: hWn @6997420 (marketplace headersHelper gate) throws new Yl (extends x, @6980616). It runs from ZMt @7002807, awaited inside Cuo @13452490 during an install; Cuo's .catch in Mi @13485932 returns only CMe/a6/B7t and rethrows Yl; z7t @13488236 rethrows unless the plugin is a force-included dependency; mtt @19838520 rethrows; wk @42274182 (rendered by Ns in the /plugin command, Cc @42295567) catches and returns `${te.cross} ${d(C)}`, which Ns passes to onComplete(Wn(A)) @42274305: a local-jsx onDone without display:\"skip\" -> model. trace @6997933 proves that local-jsx-ondone [model] sink /plugin @42274310. Same route as the cached-model sibling 5d8d4d7 (remote_policy_unconsented arm thrown two statements later in hWn). | 953c9898 model: hWn @6997420 (marketplace headersHelper gate) throws new Yl (extends x, @6980616). It runs from ZMt @7002807, awaited inside Cuo @13452490 during an install; Cuo's .catch in Mi @13485932 returns only CMe/a6/B7t and rethrows Yl; z7t @13488236 rethrows unless the plugin is a force-included dependency; mtt @19838520 rethrows; wk @42274182 (rendered by Ns in the /plugin command, Cc @42295567) catches and returns `${te.cross} ${d(C)}`, which Ns passes to onComplete(Wn(A)) @42274305: a local-jsx onDone without display:\"skip\" -> model. trace @6997933 proves that local-jsx-ondone [model] sink /plugin @42274310. Same route as the cached-model sibling 5d8d4d7 (remote_policy_unconsented arm thrown two statements later in hWn). | 71573f6e model: CPs @6986864 throws new Yl(...) when Pl() (tool-server daemon). CPs is called only from qlt @13544480 case \"command\" @13546020, which Cuo @13452490 awaits; from there the propagation is identical to the headersHelper arms: Mi's .catch @13487072 rethrows non-CMe/a6/B7t, z7t @13488236 rethrows, mtt @19838520 rethrows, and wk @42274182 turns it into `${te.cross} ${d(C)}` for Ns's onComplete @42274305 (local-jsx onDone of /plugin, no display:\"skip\") -> model. trace @6986914 stops at the dynamic .catch callback @13487072 (and otherwise reaches only the ui install dialog @15766356), so this model route is from the hand trace above; the ui arms of the group (link-farm/source-command path refusals) are thrown later in CPs's po() callback but would ride the same wk route."
+      }
+    ]
+  },
+  "1ab6b858df0df67b": {
+    "at": 8390456,
+    "model": {
+      "2c851e4a4f5f3efac707c11a67d64f4eb18b171f": "materializeWorkTree: with fetchesFrom, the arguments must b…",
+      "634181bb01bdecdb09efc1ea32cbd6708f19343d": "programs.buildInvocation must return the environment it was…",
+      "90322d65d6702d019c306879d31c7333c61aba35": "programs.buildInvocation must return an absolute path to a …"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "725cd8789fc064cfe8034ea65306751d882a0224": {
+            "facing": "internal",
+            "preview": "gitInOwnWorkTree runs reads only, not git ${??\"(no subcomma…"
+          }
+        },
+        "why": "725cd878 internal: w$n @7352282 throws new x(...) only when the subcommand found by De() is not in Kt={diff,format-patch,log,show} @7352552. Its three callers fix the subcommand: X @7373778 prepends Se=[\"--no-optional-locks\",\"-c\",\"diff.relative=false\",\"diff\",...] (@7369511; De skips the -c value and lands on \"diff\"), and tlr @23346444/@23349414 pass [...vn,\"diff\",...]. So the throw is an unreachable programmer-invariant guard; trace @7352364 has only open throw edges via tlr/pKe and debug-log sinks, no model sink. The model arms of the group are Jt/qt @7354069 checks on embedder-supplied programs.buildInvocation/fetchesFrom input, which can fire."
+      }
+    ]
+  },
+  "1e641f3c6279963b": {
+    "at": 5850278,
+    "model": {
+      "08dc06b67f0cd39e0afc141c4579054ed2418233": "Server \"${.name}\" is the account memory server; its resourc…",
+      "2c14f5a68503d89ad10fa50b40eca8aea06cfbe9": "Server \"${.name}\" is the Artifacts MCP server; Claude Code …",
+      "2d56c187c1eda9fd0f4555ea7ecb62bac88a559c": "Server \"${.name}\" does not support resources",
+      "414ee3b562f22e1e4551ee93206c19a65cd4fdb4": "Server \"${.name}\" is not connected"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "08dc06b67f0cd39e0afc141c4579054ed2418233": {
+            "facing": "model",
+            "preview": "Server \"${.name}\" is the account memory server; its resourc…"
+          },
+          "2d56c187c1eda9fd0f4555ea7ecb62bac88a559c": {
+            "facing": "model",
+            "preview": "Server \"${.name}\" does not support resources"
+          },
+          "414ee3b562f22e1e4551ee93206c19a65cd4fdb4": {
+            "facing": "model",
+            "preview": "Server \"${.name}\" is not connected"
+          }
+        },
+        "why": "R is the TelemetrySafeError class. 414ee3b5/2d56c187 are dCr (13341121) and 08dc06b6 is sDn (13341799), called from the ReadMcpResource/ListMcpResources tools' call() (18157287, 18161687), so they become tool errors. 92777172 is czn (13686852), thrown from Rlt (13694347, marketplace add) and gfs (13749072, refresh) when the session is diskless, reaching /plugin marketplace output like the carried marketplace-write model arms."
+      },
+      {
+        "arms": {
+          "2c14f5a68503d89ad10fa50b40eca8aea06cfbe9": {
+            "facing": "model",
+            "preview": "Server \"${.name}\" is the Artifacts MCP server; Claude Code …"
+          }
+        },
+        "why": "R is TelemetrySafeError. The new Artifacts-MCP arm is ERr @13066327, the same resource-refusal route as the carried 'Server ... does not support resources' and 'account memory server' arms (called from the ReadMcpResource/ListMcpResources tools' call()), so it becomes an is_error tool result. The internal arm remains the CCR listener log."
+      },
+      {
+        "arms": {
+          "04a9e276fef9f0ff9ef28f4ad594ce12403574da": {
+            "facing": "internal",
+            "preview": "${} may only contain letters, digits, hyphens, and undersco…"
+          },
+          "3f47541f0bf490bb1a6c31e464e1d46602a93e33": {
+            "facing": "internal",
+            "preview": "the early ask for a sender's address threw: ${()}"
+          },
+          "bcb21abef3e65b21981b266f2bac72fadc0dff74": {
+            "facing": "internal",
+            "preview": "it is interpolated into the claude.googleapis.com request p…"
+          }
+        },
+        "why": "R is the generic TelemetrySafeError. The model arms are the ReadMcpResource/ListMcpResources refusals thrown from the tools' call() and become is_error tool_results. The three internal arms never reach a tool call: Id @5850261 (the early sender-address ask, called from Lbs/V1i/K1i catch blocks) only passes the error to the logger, and un @5835586 validates ANTHROPIC_GOOGLE_CLOUD_* env values while tU @5856418 builds the API client, a startup/API-client failure shown to the user, not a tool result."
+      }
+    ]
+  },
+  "21c54ef534021507": {
+    "at": 7709953,
+    "model": {
+      "0d24144c04f1079f76ee957be07d2ac61facfdb5": "sandbox: the task output directory chain under the temp roo…",
+      "63e3b33526e050e829d55272796ec47fcc322d56": "Claude Code did not run this command: it could not look up …",
+      "ae3172a2eaf7b76302d756e37ac72d650616aac1": "The sandbox has lost its configuration, or its record of wh…"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "2b517db9c8d7d501bfaa1505e98bf1073a6edfa5": {
+            "facing": "internal",
+            "preview": "sandbox: failed to open /proc/self/exe for the embedded app…"
+          }
+        },
+        "why": "x is the generic error class. The model arm is bP()'s guard (6317236), thrown into sandboxed Bash command execution (cne/une). The internal arm is in jus (6217849), which returns early unless lL() is true. lL() is `function lL(){return!1}`, so the /proc/self/exe failure can never be thrown in this build."
+      },
+      {
+        "arms": {
+          "63e3b33526e050e829d55272796ec47fcc322d56": {
+            "facing": "model",
+            "preview": "Claude Code did not run this command: it could not look up …"
+          },
+          "a69ec699b57347de0b44e248abb16b6239412a59": {
+            "facing": "internal",
+            "preview": "[Sandbox] ${}: ${} could not be checked when the sandbox co…"
+          },
+          "ae3172a2eaf7b76302d756e37ac72d650616aac1": {
+            "facing": "model",
+            "preview": "The sandbox has lost its configuration, or its record of wh…"
+          },
+          "b2e3c7c500e12e6cfc7ec90d06bf49ad785aeec7": {
+            "facing": "internal",
+            "preview": "[Sandbox] ${}: could not move the planted ${} aside (the re…"
+          },
+          "bceecf7ba7bc27f70574e3d21d24519bc7945eef": {
+            "facing": "internal",
+            "preview": "[Sandbox] ${}: could not move the planted ${} aside (the re…"
+          },
+          "d6dbbd99998c07eb0c9c81bf67add5ed46a8842a": {
+            "facing": "internal",
+            "preview": "[Sandbox] ${}: the planted ${} could not be moved aside or …"
+          }
+        },
+        "why": "A is the generic error class. The two new model arms are thrown by ude @7579410 (Windows sandbox added-folder deny lookup 7580368, lost configuration 7579678), called from nde @7569455 on the sandboxed Bash command path (XEe wrapWithSandboxArgv 13249911); the trace shows tool-throw [model] sinks at 26983599 and 15053343, the same route as the carried bP()/Uw task-output-dir guard (7570297, thrown by the same nde at 7569500). The four '[Sandbox] ...' internal arms are post-command scrub notices (rV @7515551, Mce @7442650 w/I closures @7442767/@7443233): built into A and passed to TP()/b()/t() debug logging (traces end in debug-log sinks 7370634/7370618/7444518/7443473), never thrown into command execution."
       }
     ]
   },
   "2a6e79f6de548b82": {
-    "at": 23781102,
+    "at": 26004193,
     "model": {
       "0c15ce4583e6f5e507f5228f10011b88f676d98f": "Cloud settings forwarding is not available right now; nothi…",
       "78bc6e6637e285748bf9d7952f9aae35d602aae5": "Fast mode was not enabled: the model changed while PreModel…",
@@ -656,7 +667,7 @@
     ]
   },
   "2aeab1f7fabdfa2b": {
-    "at": 37514719,
+    "at": 41559569,
     "model": {
       "aa8ddc31c762c36fa312f835db53db3137533aff": "\"${()}\" was disabled while reconnecting",
       "c3941c5edd965b204032584d8c9b912be6335a97": "\"${()}\" was disabled while enabling"
@@ -708,7 +719,7 @@
     ]
   },
   "31787af53b603c73": {
-    "at": 42267515,
+    "at": 45214889,
     "model": {
       "8972578e4ea40c3dd61ab08d5f2781058fd812a0": "MCP server \"${}\" task for tool \"${}\" ${.error.kind===\"cance…",
       "bbc044f837f3e3c6a4dd1f707aafbbd3d4884ea2": "MCP server \"${}\": the answer stream for tool \"${}\" ended wi…"
@@ -727,7 +738,7 @@
     ]
   },
   "3616277fa46d12a9": {
-    "at": 23787469,
+    "at": 26010544,
     "model": {
       "64db84ed7b3640470ebaf9873eaae4f35526c6f5": "a plugin's hook changed the value; this command writes only…"
     },
@@ -757,7 +768,7 @@
     ]
   },
   "39d0ed9719d55b85": {
-    "at": 12974174,
+    "at": 13560623,
     "model": {
       "3716a3ddd4f08822728a7148ec941f50424cb5b4": "Shell command permission check failed for pattern \"${}\" (de…",
       "66630a9c0f4453b5ae1ad8012f77ad0950586706": "This skill, command or hook and the arguments filled into i…",
@@ -789,7 +800,7 @@
     ]
   },
   "3ed16726373c3a72": {
-    "at": 4524670,
+    "at": 4784698,
     "model": {
       "457d58ee991911a2c00e40fbbf077682509fea8d": "${}: no ${} handler",
       "c9fb22d3afaf9b32223422d38dcb6ce0ec8d7dfd": "environment ${} is not loaded"
@@ -833,7 +844,7 @@
     ]
   },
   "4945e29d37be7707": {
-    "at": 46626117,
+    "at": 50535514,
     "model": {
       "4e2489b5b3422dfcf225949621035467add27548": "Didn't install the Claude Code extension in ${}${?` because…",
       "b6a09daf7ed1aae6591b346cdd1c53554d966788": "Installed the Claude Code extension in ${}.",
@@ -853,8 +864,118 @@
       }
     ]
   },
+  "4cf5395c0b895935": {
+    "at": 14134532,
+    "model": {
+      "0780ddc4dd58363a005ca8b0ec0748b0f5f6f9da": "Cannot enter worktree: ${} is a UNC network path.",
+      "0b91370c8a6aa972eac57d0a42210fc9b32ffbb2": "Cannot create agent worktree: not in a git repository and n…",
+      "11d071084c5be1280529e125ad4ee3aa0d2e3ce4": "The .git in ${()} points to a bare repository, so Claude Co…",
+      "14607a97357ff6e3c234c689fbf7893b16e43afe": "Worktree directory does not exist at ${} after creation. ",
+      "151519f12f0d62af8d0e661924c3cbb1fc48f3be": "Cannot create a worktree: not in a git repository and no Wo…",
+      "18dba3d6ab0651e269843768e29116e6d1cc14ee": "${} Nothing was removed: the checkout was written wherever …",
+      "1c745b3335c2469fab4e59f2a0026dfd0a938457": "Cannot enter worktree: ${}: ${()}",
+      "2b9e7fa02b6a7717a2b6f01a2e6683d6011e7914": "Cannot enter worktree: ${} resolves to a network automount …",
+      "3ba9b4aa8d5981237dc22be1e98012b1da5aaeab": "Cannot enter worktree: ${} is not a linked worktree of ${}.",
+      "3fd778699e0955c8c787d22943040e801c00bd79": "Cannot enter worktree: the current working directory ${} is…",
+      "4202293ca8369067dc2dc36c31d558dba277f531": "worktree \"${}\" already exists at ${()} but cannot be reused…",
+      "440a124103f6234e795bc279f7cea16b42c9c063": "Cannot create ${}: worktree isolation is unavailable in a s…",
+      "4416ad087819bb79d33093837452d2ab916d9ff7": "The worktree directory at ${()} belongs to a different repo…",
+      "57bcfe3045cdbf1e6e94b39b3f86752d9bc0ab5d": "Cannot create ${}: worktree isolation is unavailable in thi…",
+      "5e9d096caf3118107b8227a95393517eb123f3e4": "hook emit a normalized (dot-free) absolute path and retry.",
+      "6a95f8995861018eb37e1a724c5f0357fe404fb3": "Cannot enter worktree: ${} does not exist, so ${} cannot be…",
+      "782b05bdbf83eede9546fddb4f64135352d1d7a7": "Cannot use the WorktreeCreate hook's worktree: the hook emi…",
+      "87e1a4cbd35bed338bacad52da1521dc8f7fba8e": "Cannot enter an existing worktree: the current directory is…",
+      "8dd2fc07634e84d4bfe2d4ed8d62e649837d539e": "WorktreeCreate hook returned a path that is not a directory…",
+      "99bfd3aec85c1bb84a7ed544c9bb8d74fd30a3a6": "Cannot enter worktree: the current working directory ${} is…",
+      "a8037243b456c648876e00f87fcf59b306bfe209": "branch \"${}\" already exists, so the numbered name \"${}\" cou…",
+      "a9e37244c432bb719432e1d7cdc02c69455f4d85": "Refusing to launch agent in parent repo — check for concurr…",
+      "ab143a4057dcf67d5beb63acf227cd092d094463": "is a symlink. ",
+      "afb4b1bf637a97066807a14011b09035cb0a4898": "The folder ${()} is a leftover worktree whose .git file poi…",
+      "b4ecbb2205973ad5525169e4e7e687ff7a5edf3f": "Cannot use the WorktreeCreate hook's worktree: ${.component…",
+      "b90247dc7f0f50670ea4925bf57781ad9518c1d9": "A repository-committed symlink below the checkout root coul…",
+      "c18eb311c8efdb8e2b61a78548e3550166500a07": "Cannot enter worktree: ${} is marked prunable by git (its d…",
+      "c51aeaf00d327d693b9d48b3ae957dea28e3d8de": "Cannot enter worktree: ${} is not under ${}. Switching from…",
+      "c5f5a834124015d19c27905d474820299bc4e7a4": "Cannot enter worktree: ${} resolves to a UNC network path (…",
+      "c7267ddee4684549679fd19171c8801e0b0363e4": "no name from \"${}\" to \"${(,)}\" could be used for a new work…",
+      "d1e13f280b2c063e9ddb16b77372b5f41d5dbe00": "symlink screen cannot verify a dotted spelling — have the ",
+      "df3ae3fbc78e8100d0f35c7c55d3c4f2239ddf34": "could not be verified. ",
+      "e1b03110ccbba8a2be18d3c026ae7ab3e39d7a2f": "Cannot enter worktree: ${} belongs to another running Claud…",
+      "e3ea90e3c89bd802f38f09447057cc566a09b007": "Cannot enter worktree: ${} resolves to ${}; the managed wor…",
+      "e733d8aaaecbd19bd767992801e5c7d20663ed6f": "Cannot enter worktree: ${} is the current working directory.",
+      "f2ab7b3ec8af13df8e170b1728f342bc575f3a0e": "Cannot enter worktree: ${} is a network automount path.",
+      "f44bfcc0a4a6e4bb7199909cb238dba2f9eeea34": "branch \"${}\" for worktree \"${}\" is already checked out else…",
+      "fb88ecd673c2251808cb2e0478b3ac224803fceb": "a worktree named \"${}\" appeared while Claude Code was about…",
+      "ffa38cf6ce43ce28e4d1f190c41361a55080b437": "Cannot enter worktree: ${} is not a registered worktree of …"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "00af3411656c1566bf27a7ebd8f95a715ca6e62e": {
+            "facing": "ui",
+            "preview": "could not be verified"
+          },
+          "08c6247605c1fbe79ab3fdfa666256b281734424": {
+            "facing": "ui",
+            "preview": "the WorktreeCreate hook's worktree path component ${.compon…"
+          },
+          "6cbfbf1ac8bc2c74554fe427cea649f77af6feae": {
+            "facing": "ui",
+            "preview": "is a symlink"
+          },
+          "7fab06abc81307ad39e99e01f5a448970d420fc1": {
+            "facing": "ui",
+            "preview": "verify a dotted spelling; have the hook emit a normalized (…"
+          },
+          "bea0bc5179ba57efa49d1336f0762d256f608396": {
+            "facing": "ui",
+            "preview": " — a repository-committed symlink below the checkout root "
+          },
+          "d591c9353514075278da7acfb066df636d128615": {
+            "facing": "ui",
+            "preview": "could redirect the worktree outside the repository"
+          },
+          "f7c36792f302ca16f7679d728568580a024493b1": {
+            "facing": "ui",
+            "preview": "the WorktreeCreate hook emitted a path with dot segments ($…"
+          }
+        },
+        "why": "Vp is the worktree error class. The model arms are thrown on routes that reach a tool: EnterWorktree (asr 10353725, called from call() 16926463), Agent worktree isolation (Pze/C1t, 10362765, through xo 16608455) and the createWorktree helpers. The 7 ui arms are thrown only inside the --worktree CLI startup path (10392882-10393410), whose catch returns {handled:!1,error:`Error: ${l(Vt)}`} to CLI startup, not to a tool. After the 4 corrections no internal arm remains."
+      },
+      {
+        "arms": {
+          "11d071084c5be1280529e125ad4ee3aa0d2e3ce4": {
+            "facing": "model",
+            "preview": "The .git in ${()} points to a bare repository, so Claude Co…"
+          },
+          "e1b03110ccbba8a2be18d3c026ae7ab3e39d7a2f": {
+            "facing": "model",
+            "preview": "Cannot enter worktree: ${} belongs to another running Claud…"
+          }
+        },
+        "why": "11d07108 model: new df(...) @11364225 in R9e (worktree create); trace @11364225 proves a tool-throw [model] sink @17679473 (EnterWorktree call via @11380953 -> @17680855) besides the CLI --worktree route Noi @11423490 that prints `Error: ${d(Dn)}`. The ui arms of the group are only built in Noi's WorktreeCreate-hook branch, so this arm routes differently. | e1b03110 model: new df(...) @11387268 in e_r (EnterWorktree path resolution), next to the 'marked prunable'/'not a registered worktree' throws; trace @11387268 is resolved with a single tool-throw [model] sink @17679473 (thrown from @17679603 in EnterWorktree's call()), unlike the ui hook-path arms printed by Noi @11423490."
+      },
+      {
+        "arms": {
+          "a8037243b456c648876e00f87fcf59b306bfe209": {
+            "facing": "model",
+            "preview": "branch \"${}\" already exists, so the numbered name \"${}\" cou…"
+          },
+          "c7267ddee4684549679fd19171c8801e0b0363e4": {
+            "facing": "model",
+            "preview": "no name from \"${}\" to \"${(,)}\" could be used for a new work…"
+          },
+          "fb88ecd673c2251808cb2e0478b3ac224803fceb": {
+            "facing": "model",
+            "preview": "a worktree named \"${}\" appeared while Claude Code was about…"
+          }
+        },
+        "why": "Lp is the worktree error class. The three arms are thrown in the numbered-name worktree creation (irt 13050984, create 13057946, Atn 13069274), reached by EnterWorktree's call() (Atn at 18317694) and the agent isolation helpers, i.e. tool errors; 'Call ${r0} again' even names the tool. The CLI --worktree path (39260817, 13114789) passes no slugPick/isBranchNew, which is also why these arms are dormant in 2.1.308 (slugPick is always void 0 at 18317753), so the ui hook-path arms route differently."
+      }
+    ]
+  },
   "4d06c628271ce7c1": {
-    "at": 15284982,
+    "at": 15601090,
     "model": {
       "22cbfc9405a370f7dc5901b1a4da174fbfffee1a": "${}: surface module ${.split(\"/\").join()} ",
       "466777501251e1f5211c19f5ad66e6cb13f91281": "${} event ${}: ${}",
@@ -1431,8 +1552,141 @@
       }
     ]
   },
+  "5697ba7394890e14": {
+    "at": 8939984,
+    "model": {
+      "10bf1ed6b9dc1309ee7a81aa514d319cfa2f6eb1": "Refusing to use ${} as an isolation worktree: ${}, so its g…",
+      "2933d9a02ec174d58c01aed729294b37df40b94e": "Refusing to use ${} as an isolation worktree: it contains t…",
+      "31f8449990c9c623b991553efd76f7fde21e4f4a": "Refusing to use ${} as an isolation worktree: git located i…",
+      "3996b4fbbbd23e2d4112042b4cb8676e42fd5a21": "Refusing to use ${} as an isolation worktree: its git metad…",
+      "443a7dfabf5f99a99f4bb31d92205c663e72beea": "Refusing to use ${} as an isolation worktree: it is the che…",
+      "525eb58aa281cf5badc4f54ec6fc790246aaecca": "This resume was started from inside ${}, which is its own r…",
+      "631775454166e84d3d3965f52fb1bca130f2270a": "Refusing to use ${} as an isolation worktree: it holds no g…",
+      "6dc190b0e991ec363dca72261e8b0773bea7fe45": "Refusing to use ${} as an isolation worktree: ${.host} regi…",
+      "72c9e5af5f5f9d52bd774a72bda224a2137aeee5": "Refusing to use ${} as an isolation worktree: it uses anoth…",
+      "732b08e145d070376ce4b1801597e0433b818057": "Refusing to use ${} as an isolation worktree: ${} or ${()} …",
+      "79b798e99a88e968a4bef79737c1157b39b55464": "Refusing to use ${} as an isolation worktree: its git direc…",
+      "88670fdfecfbd9e89a3b7c3df404214eec585b5b": "Refusing to use ${} as an isolation worktree: it is under $…",
+      "8d93fccf07055301065f393b76596a5edd263914": "The worktree ${} contains the directory this resume ran fro…",
+      "8e52fb7902f93de9041cf4aa8acade2861b4df7a": "Refusing to use ${} as an isolation worktree: the list of l…",
+      "903a8824199f62499b757e5d67863f58beff9dca": "Refusing to use ${} as an isolation worktree: ${.host}'s wo…",
+      "9880bbe0e630b7a68f4b51ccd030e1bd179b77cb": "Refusing to use ${} as an isolation worktree: ${(())} or th…",
+      "9ec31173c02b7ace93a2bf51122df1a79f225d4d": "Refusing to use ${} as an isolation worktree: ${.host} regi…",
+      "a4982ff67e744f8fac6624978e14269e6ee2091d": "This resume was started from inside ${} (or a directory it …",
+      "a68fcba9813e1887553b84945d02c70a92f409d9": "Refusing to use ${} as an isolation worktree: it holds no g…",
+      "ae96aedfa8215455e005586644363a6f3eb042e2": "Refusing to use ${} as an isolation worktree: git resolves …",
+      "b3c588812d6b7c7efa51be81684f715d68429b41": "Refusing to use ${} as an isolation worktree: it is a repos…",
+      "ef86b8ea46955e1345aa6ed44f9e93a80cb56303": "This resume was started from inside ${}, a non-git director…"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "8f6d8eced11de16ce74a33e1cb830496c4c21e70": {
+            "facing": "ui",
+            "preview": "The worktree ${} sits under the directory this resume ran f…"
+          },
+          "c836b34d71cba4b6ea31514cf8e914e70c221017": {
+            "facing": "internal",
+            "preview": "The worktree ${} is its own repository and nothing vouches …"
+          }
+        },
+        "why": "sae (9288293) returns {ok:false, reason, message}, and its callers route the message differently. The worktree-creation Cke callers with no options (10336462-10365026) throw Vp(message) into the EnterWorktree (16927708) and Agent-isolation (16608455) tool errors, so those arms are model. The two arms that stay non-model need flags only resume callers pass. \"is its own repository and nothing vouches…\" needs requireWitnessForSelfOwningPins (parked-agent resume, 29822241), which only logs pin-is-own-launch-tree messages and throws oF without them (internal). \"sits under the directory this resume ran from…\" needs declineSelfOwningPinUnderLiveRoot. Its other caller is session-resume GXo (17331102) → eOe/Bgt → Gt(…,\"warning\") informational (30556828, 38421941), which is dropped from the API, or wpn → stderr (35959033) (ui)."
+      },
+      {
+        "arms": {
+          "31f8449990c9c623b991553efd76f7fde21e4f4a": {
+            "facing": "model",
+            "preview": "Refusing to use ${} as an isolation worktree: git located i…"
+          },
+          "631775454166e84d3d3965f52fb1bca130f2270a": {
+            "facing": "model",
+            "preview": "Refusing to use ${} as an isolation worktree: it holds no g…"
+          },
+          "6dc190b0e991ec363dca72261e8b0773bea7fe45": {
+            "facing": "model",
+            "preview": "Refusing to use ${} as an isolation worktree: ${.host} regi…"
+          },
+          "732b08e145d070376ce4b1801597e0433b818057": {
+            "facing": "model",
+            "preview": "Refusing to use ${} as an isolation worktree: ${} or ${()} …"
+          },
+          "88670fdfecfbd9e89a3b7c3df404214eec585b5b": {
+            "facing": "model",
+            "preview": "Refusing to use ${} as an isolation worktree: it is under $…"
+          },
+          "8e52fb7902f93de9041cf4aa8acade2861b4df7a": {
+            "facing": "model",
+            "preview": "Refusing to use ${} as an isolation worktree: the list of l…"
+          },
+          "903a8824199f62499b757e5d67863f58beff9dca": {
+            "facing": "model",
+            "preview": "Refusing to use ${} as an isolation worktree: ${.host}'s wo…"
+          },
+          "9880bbe0e630b7a68f4b51ccd030e1bd179b77cb": {
+            "facing": "model",
+            "preview": "Refusing to use ${} as an isolation worktree: ${(())} or th…"
+          },
+          "9ec31173c02b7ace93a2bf51122df1a79f225d4d": {
+            "facing": "model",
+            "preview": "Refusing to use ${} as an isolation worktree: ${.host} regi…"
+          },
+          "a68fcba9813e1887553b84945d02c70a92f409d9": {
+            "facing": "model",
+            "preview": "Refusing to use ${} as an isolation worktree: it holds no g…"
+          },
+          "b3c588812d6b7c7efa51be81684f715d68429b41": {
+            "facing": "model",
+            "preview": "Refusing to use ${} as an isolation worktree: it is a repos…"
+          }
+        },
+        "why": "Xa @8913791 returns {ok:false, reason, message} for every one of the new 'Refusing to use ... as an isolation worktree' arms, none gated behind a resume-only flag, so, like the carried model arms of the same callee, the no-option worktree-creation callers throw the message into the EnterWorktree and Agent-isolation tool errors (model); the arms that need the resume flags (the 'This resume...' and 'contains the directory this resume ran from' ones) keep the carried ui/internal routing."
+      }
+    ]
+  },
+  "577bf1bae971f8d8": {
+    "at": 1346303,
+    "model": {
+      "1dd83f7ce2a213aeabf07ac524e853a5a16006cc": "Write to ${} failed (${()??}); ${()}. The new content was p…",
+      "a4713f7872527f4cfbc550fa7ca2eb92f93e11b7": "Write verification failed: ${} does not hold what was writt…",
+      "bc12c98a4609ff3705d02da2f6b3c17fd2136ef7": "Write verification failed: ${} is ${.size} bytes on disk, e…"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "2220fe6c47461a449273ebae1fad338b80fba387": {
+            "facing": "internal",
+            "preview": "assertDirChainReal: dir must be strictly inside base (rel: …"
+          },
+          "40017dc5c4c75d70166dc4f4044be5f251391d45": {
+            "facing": "internal",
+            "preview": "refusing to read fd ${}: not a pipe or socket"
+          },
+          "94680577d432046d6853ccaf8211f03b173e4604": {
+            "facing": "internal",
+            "preview": "refusing to read ${}: content exceeds ${} byte limit"
+          }
+        },
+        "why": "x is a generic TelemetrySafeError in the fs utilities. The model arms are thrown by writeTextContent pPe (2153315) and writeFileAndFlush (2158311, 2161430), which the Write/Edit tools call, so they become tool errors. The internal arms are bounded reads of credential/token files and inherited fds: r8e (2151470) and hOs (2151798), called by token loaders W0t (2554625), the /dev/fd readers (2556318, 2557898) and L (2562229), which turn failures into a token miss or log. The 31863265 caller catches. assertDirChainReal (2150231) is an invariant (callers pass a dir inside base)."
+      },
+      {
+        "arms": {
+          "1dd83f7ce2a213aeabf07ac524e853a5a16006cc": {
+            "facing": "model",
+            "preview": "Write to ${} failed (${()??}); ${()}. The new content was p…"
+          },
+          "a4713f7872527f4cfbc550fa7ca2eb92f93e11b7": {
+            "facing": "model",
+            "preview": "Write verification failed: ${} does not hold what was writt…"
+          }
+        },
+        "why": "x is the generic TelemetrySafeError of the fs utilities. The new model arm 'Write verification failed: ... does not hold what was written' is Jbt @1336768 (same function as the carried size-mismatch arm @1336321), called from the Write tool v7o @11729256, the Edit tool Mjs @15148823 and the notebook edit @15160893 without a catch, so it becomes an is_error tool_result. The 'Write to ... failed ... content preserved' arm is Ae/Ce @1342317/@1346354, reached through pP from Jbt (same route) while the other pP callers (config/settings writes) catch it. The internal arms stay bounded reads and an invariant that only token loaders log."
+      }
+    ]
+  },
   "637731cbe95d67d6": {
-    "at": 5900016,
+    "at": 6627438,
     "model": {
       "04a82211538dc20718c861dacce77abaf2d9c6dd": "output is an unregistered symlink outside any tasks directo…",
       "1b965aac614f85032e0747460cdc1a24119b35ab": "open refused a swapped leaf (${})",
@@ -1476,120 +1730,72 @@
       }
     ]
   },
-  "6bd7e9efdf1323d7": {
-    "at": 13114254,
+  "6667f0b3d3c3b3f9": {
+    "at": 11493449,
     "model": {
-      "027674e155bf621524d0b6701494798e91b462bc": "Failed to create worktree: ${((,\"git's error\"))}",
-      "0780ddc4dd58363a005ca8b0ec0748b0f5f6f9da": "Cannot enter worktree: ${} is a UNC network path.",
-      "0b91370c8a6aa972eac57d0a42210fc9b32ffbb2": "Cannot create agent worktree: not in a git repository and n…",
-      "11d071084c5be1280529e125ad4ee3aa0d2e3ce4": "The .git in ${()} points to a bare repository, so Claude Co…",
-      "14607a97357ff6e3c234c689fbf7893b16e43afe": "Worktree directory does not exist at ${} after creation. ",
-      "151519f12f0d62af8d0e661924c3cbb1fc48f3be": "Cannot create a worktree: not in a git repository and no Wo…",
-      "18dba3d6ab0651e269843768e29116e6d1cc14ee": "${} Nothing was removed: the checkout was written wherever …",
-      "1c745b3335c2469fab4e59f2a0026dfd0a938457": "Cannot enter worktree: ${}: ${()}",
-      "2b9e7fa02b6a7717a2b6f01a2e6683d6011e7914": "Cannot enter worktree: ${} resolves to a network automount …",
-      "3ba9b4aa8d5981237dc22be1e98012b1da5aaeab": "Cannot enter worktree: ${} is not a linked worktree of ${}.",
-      "3fd778699e0955c8c787d22943040e801c00bd79": "Cannot enter worktree: the current working directory ${} is…",
-      "4202293ca8369067dc2dc36c31d558dba277f531": "worktree \"${}\" already exists at ${()} but cannot be reused…",
-      "440a124103f6234e795bc279f7cea16b42c9c063": "Cannot create ${}: worktree isolation is unavailable in a s…",
-      "4416ad087819bb79d33093837452d2ab916d9ff7": "The worktree directory at ${()} belongs to a different repo…",
-      "57bcfe3045cdbf1e6e94b39b3f86752d9bc0ab5d": "Cannot create ${}: worktree isolation is unavailable in thi…",
-      "5e9d096caf3118107b8227a95393517eb123f3e4": "hook emit a normalized (dot-free) absolute path and retry.",
-      "6a95f8995861018eb37e1a724c5f0357fe404fb3": "Cannot enter worktree: ${} does not exist, so ${} cannot be…",
-      "782b05bdbf83eede9546fddb4f64135352d1d7a7": "Cannot use the WorktreeCreate hook's worktree: the hook emi…",
-      "87e1a4cbd35bed338bacad52da1521dc8f7fba8e": "Cannot enter an existing worktree: the current directory is…",
-      "8dd2fc07634e84d4bfe2d4ed8d62e649837d539e": "WorktreeCreate hook returned a path that is not a directory…",
-      "99bfd3aec85c1bb84a7ed544c9bb8d74fd30a3a6": "Cannot enter worktree: the current working directory ${} is…",
-      "a8037243b456c648876e00f87fcf59b306bfe209": "branch \"${}\" already exists, so the numbered name \"${}\" cou…",
-      "a9e37244c432bb719432e1d7cdc02c69455f4d85": "Refusing to launch agent in parent repo — check for concurr…",
-      "ab143a4057dcf67d5beb63acf227cd092d094463": "is a symlink. ",
-      "afb4b1bf637a97066807a14011b09035cb0a4898": "The folder ${()} is a leftover worktree whose .git file poi…",
-      "b4ecbb2205973ad5525169e4e7e687ff7a5edf3f": "Cannot use the WorktreeCreate hook's worktree: ${.component…",
-      "b90247dc7f0f50670ea4925bf57781ad9518c1d9": "A repository-committed symlink below the checkout root coul…",
-      "b903f4249e2c03617e2c0e6211f229c4fca918c3": "Failed to create worktree: ${((,\"git's error\"))} ",
-      "c18eb311c8efdb8e2b61a78548e3550166500a07": "Cannot enter worktree: ${} is marked prunable by git (its d…",
-      "c51aeaf00d327d693b9d48b3ae957dea28e3d8de": "Cannot enter worktree: ${} is not under ${}. Switching from…",
-      "c5f5a834124015d19c27905d474820299bc4e7a4": "Cannot enter worktree: ${} resolves to a UNC network path (…",
-      "c7267ddee4684549679fd19171c8801e0b0363e4": "no name from \"${}\" to \"${(,)}\" could be used for a new work…",
-      "d1e13f280b2c063e9ddb16b77372b5f41d5dbe00": "symlink screen cannot verify a dotted spelling — have the ",
-      "df3ae3fbc78e8100d0f35c7c55d3c4f2239ddf34": "could not be verified. ",
-      "e1b03110ccbba8a2be18d3c026ae7ab3e39d7a2f": "Cannot enter worktree: ${} belongs to another running Claud…",
-      "e3ea90e3c89bd802f38f09447057cc566a09b007": "Cannot enter worktree: ${} resolves to ${}; the managed wor…",
-      "e733d8aaaecbd19bd767992801e5c7d20663ed6f": "Cannot enter worktree: ${} is the current working directory.",
-      "f2ab7b3ec8af13df8e170b1728f342bc575f3a0e": "Cannot enter worktree: ${} is a network automount path.",
-      "f44bfcc0a4a6e4bb7199909cb238dba2f9eeea34": "branch \"${}\" for worktree \"${}\" is already checked out else…",
-      "fb88ecd673c2251808cb2e0478b3ac224803fceb": "a worktree named \"${}\" appeared while Claude Code was about…",
-      "ffa38cf6ce43ce28e4d1f190c41361a55080b437": "Cannot enter worktree: ${} is not a registered worktree of …"
+      "1890feca7a0d4279bcfbe221cb8d00cbbda10b40": "on critical path: ${}",
+      "1962cbb90a2220204ad9787acf66fe210755a759": "on a Windows path this check cannot place: ${}",
+      "1fd3649fe261977fc60c44982ac12483add0699d": "on working directory or its ancestor: ${}",
+      "3087f98a28c69ab69e5604767a3acb8ca6034529": "on statically-unresolvable target: ${}",
+      "411b9185a638ef2ef5d11b0cec9b2b56c0996651": "not ruled out — some nested commands or function substituti…",
+      "473f4f40b665b1ae5b7c199e2b1148d6b1b67ee8": "on possibly-empty variable path${?\" inside command substitu…",
+      "5da1cb6562edc4ce1a3334880253852619d2c5aa": "on possibly-empty variable path${?\" inside command substitu…",
+      "7d4708c9af089378506362d0bf49e367917dd76b": "on possibly-empty variable path: ${} (${}${})",
+      "918e2470094d4103afcc822bd0b136a40920d6a5": "not ruled out — too many command substitutions to analyze (…",
+      "c34ba94f066dcbcb50c4e002f24e251b90315721": "not ruled out — too many nested command substitutions to an…",
+      "d303aefd193b64e3b8e7a1dbbcd6857b08d5363a": "not ruled out — the shell may read this command differently…",
+      "ee67f72cc324ff9d14cc3a15f8b8a5abd954ce46": "on statically-unresolvable target: command substitution out…"
     },
-    "position": 0,
+    "position": 2,
     "reviews": [
       {
         "arms": {
-          "00af3411656c1566bf27a7ebd8f95a715ca6e62e": {
-            "facing": "ui",
-            "preview": "could not be verified"
-          },
-          "08c6247605c1fbe79ab3fdfa666256b281734424": {
-            "facing": "ui",
-            "preview": "the WorktreeCreate hook's worktree path component ${.compon…"
-          },
-          "6cbfbf1ac8bc2c74554fe427cea649f77af6feae": {
-            "facing": "ui",
-            "preview": "is a symlink"
-          },
-          "7fab06abc81307ad39e99e01f5a448970d420fc1": {
-            "facing": "ui",
-            "preview": "verify a dotted spelling; have the hook emit a normalized (…"
-          },
-          "bea0bc5179ba57efa49d1336f0762d256f608396": {
-            "facing": "ui",
-            "preview": " — a repository-committed symlink below the checkout root "
-          },
-          "d591c9353514075278da7acfb066df636d128615": {
-            "facing": "ui",
-            "preview": "could redirect the worktree outside the repository"
-          },
-          "f7c36792f302ca16f7679d728568580a024493b1": {
-            "facing": "ui",
-            "preview": "the WorktreeCreate hook emitted a path with dot segments ($…"
+          "100f9043e11d2fecd6d63ac75f647883949f3fe2": {
+            "facing": "internal",
+            "preview": "${}${}"
           }
         },
-        "why": "Vp is the worktree error class. The model arms are thrown on routes that reach a tool: EnterWorktree (asr 10353725, called from call() 16926463), Agent worktree isolation (Pze/C1t, 10362765, through xo 16608455) and the createWorktree helpers. The 7 ui arms are thrown only inside the --worktree CLI startup path (10392882-10393410), whose catch returns {handled:!1,error:`Error: ${l(Vt)}`} to CLI startup, not to a tool. After the 4 corrections no internal arm remains."
+        "why": "uw(cmd,msg,reason) (11687744) puts its third argument into the dangerous-removal ask's decisionReason, so the ruled 'on …' reasons (now including the working-directory one) are model. The internal arm \"${}${}\" (`${zun}${X}` at 11693579) is a pure interpolation with no literal text of its own. Its content comes from zun='on drive root: ' and the target, so its ruling carries no text."
       },
       {
         "arms": {
-          "11d071084c5be1280529e125ad4ee3aa0d2e3ce4": {
+          "411b9185a638ef2ef5d11b0cec9b2b56c0996651": {
             "facing": "model",
-            "preview": "The .git in ${()} points to a bare repository, so Claude Co…"
+            "preview": "not ruled out — some nested commands or function substituti…"
           },
-          "e1b03110ccbba8a2be18d3c026ae7ab3e39d7a2f": {
+          "918e2470094d4103afcc822bd0b136a40920d6a5": {
             "facing": "model",
-            "preview": "Cannot enter worktree: ${} belongs to another running Claud…"
+            "preview": "not ruled out — too many command substitutions to analyze (…"
           }
         },
-        "why": "11d07108 model: new df(...) @11364225 in R9e (worktree create); trace @11364225 proves a tool-throw [model] sink @17679473 (EnterWorktree call via @11380953 -> @17680855) besides the CLI --worktree route Noi @11423490 that prints `Error: ${d(Dn)}`. The ui arms of the group are only built in Noi's WorktreeCreate-hook branch, so this arm routes differently. | e1b03110 model: new df(...) @11387268 in e_r (EnterWorktree path resolution), next to the 'marked prunable'/'not a registered worktree' throws; trace @11387268 is resolved with a single tool-throw [model] sink @17679473 (thrown from @17679603 in EnterWorktree's call()), unlike the ui hook-path arms printed by Noi @11423490."
+        "why": "cb (10357427) builds the dangerous-removal ask whose decisionReason.reason is `Dangerous ${tool} operation ${r}`; zzt (10490246) returns these asks (10491472 and the nestedSpansOverrun return after it) with these two third arguments exactly like the carried 'on ...' reasons in the same group, which the earlier review ruled model."
       },
       {
         "arms": {
-          "a8037243b456c648876e00f87fcf59b306bfe209": {
+          "d303aefd193b64e3b8e7a1dbbcd6857b08d5363a": {
             "facing": "model",
-            "preview": "branch \"${}\" already exists, so the numbered name \"${}\" cou…"
-          },
-          "c7267ddee4684549679fd19171c8801e0b0363e4": {
-            "facing": "model",
-            "preview": "no name from \"${}\" to \"${(,)}\" could be used for a new work…"
-          },
-          "fb88ecd673c2251808cb2e0478b3ac224803fceb": {
-            "facing": "model",
-            "preview": "a worktree named \"${}\" appeared while Claude Code was about…"
+            "preview": "not ruled out — the shell may read this command differently…"
           }
         },
-        "why": "Lp is the worktree error class. The three arms are thrown in the numbered-name worktree creation (irt 13050984, create 13057946, Atn 13069274), reached by EnterWorktree's call() (Atn at 18317694) and the agent isolation helpers, i.e. tool errors; 'Call ${r0} again' even names the tool. The CLI --worktree path (39260817, 13114789) passes no slugPick/isBranchNew, which is also why these arms are dormant in 2.1.308 (slugPick is always void 0 at 18317753), so the ui hook-path arms route differently."
+        "why": "The new 'not ruled out — the shell may read this command differently…' string is the third argument of RS(\"rm\",…) @11017594, the same dangerous-rm ask builder as the carried 'not ruled out …' and 'on …' arms whose reason lands in the permission ask's decisionReason, so model. The one internal arm is a pure interpolation with no text."
+      },
+      {
+        "arms": {
+          "1962cbb90a2220204ad9787acf66fe210755a759": {
+            "facing": "model",
+            "preview": "on a Windows path this check cannot place: ${}"
+          },
+          "c34ba94f066dcbcb50c4e002f24e251b90315721": {
+            "facing": "model",
+            "preview": "not ruled out — too many nested command substitutions to an…"
+          }
+        },
+        "why": "The two new arms are third arguments of the same dangerous-removal ask builder as the carried 'on ...' and 'not ruled out ...' arms: 'on a Windows path this check cannot place' is the reason argument in CV @11355510, and 'too many nested command substitutions to analyze' is the third argument of hS(\"rm\",...) in B7t @11490763 beside the carried 'too many command substitutions' arm, so each lands in the ask's decisionReason (model) while the internal '${}${}' arm has no text of its own."
       }
     ]
   },
   "6dd9c1379470a268": {
-    "at": 8576779,
+    "at": 9793402,
     "model": {
       "2526db49df2ff951b7591e56488bd82972014657": "[Tasks] Failed to update task ${}: ${.error.code}",
       "2e2e5e8fa3bd6e983e875ded0ee8f4fa0282bb84": "[Tasks] Failed to create task ${}: ${.error.code}",
@@ -1626,7 +1832,7 @@
     ]
   },
   "74953d8bf53e3fab": {
-    "at": 34946485,
+    "at": 36481484,
     "model": {
       "0815691db20ebf1788d8d12c2d038938aeed1b2e": "Send a message to Remote Control session ${.to}? It reaches…",
       "8587a049c27a9956f9fe786512c31b1c21656a45": "Send a message to Remote Control session '${.displayName}'?…",
@@ -1648,7 +1854,7 @@
     ]
   },
   "81a09643e7142b1c": {
-    "at": 5897328,
+    "at": 5378577,
     "model": {
       "c100be11eb431ed852cb854c845587f6841e2a1e": "Output does not match required schema: ${.message}"
     },
@@ -1666,7 +1872,7 @@
     ]
   },
   "844600da59503b79": {
-    "at": 34833810,
+    "at": 36357373,
     "model": {
       "a4adce9cebb33f8a9de8ba2cfd72cb5e2f384900": ". ${===\"subscription\"?\"The subscription\":\"This\"} went to th…"
     },
@@ -1684,7 +1890,7 @@
     ]
   },
   "87a8c00e6388d228": {
-    "at": 8339793,
+    "at": 9438358,
     "model": {
       "139e9843a0e06c2b6cd859dc6c378cd7b2e7b484": "Refusing to send: cannot vet reply target",
       "243fec921ab88752b92b6d9d3cf06be0277bc7bf": "Refusing to send: reply target is a symlink",
@@ -1720,7 +1926,7 @@
     ]
   },
   "8d01477d61ce5e49": {
-    "at": 4507899,
+    "at": 4768039,
     "model": {
       "091159e56eeb43b342e6e23611f601d9a2de5fec": "returned no result",
       "0f06d761fe2d4e96173bc644e68f1a5aa9250e2c": "yielded a chunk with ${}",
@@ -2183,7 +2389,7 @@
     ]
   },
   "90ff3f884da7f042": {
-    "at": 4449651,
+    "at": 4911007,
     "model": {
       "50b18f3d0c7081b82db61d4cc03f335c32f5b55a": "${} refused: the hooks worker is being replaced, and a hook…",
       "f99bf9d9476eea982b7238ba6edd9570914e52bb": "${()}: next refused: the floors handed back are not ones a …"
@@ -2214,113 +2420,13 @@
       }
     ]
   },
-  "928adbfef14f7fbc": {
-    "at": 34421410,
-    "model": {
-      "04faa26f83b747a7250403383a8bb67e622d8f39": "delta_diagram node ids must be unique",
-      "c63c85466296954db10563e2de98f55b7103a177": "a delta_diagram edge names an unknown node id",
-      "c8f31f52e42e9343d4b3ee9dde9d636df10f3e72": "at most one delta_diagram across explainer and visual"
-    },
-    "position": 1,
-    "reviews": [
-      {
-        "arms": {
-          "17faae419cb123fd0421888d090ef5b16a743dd3": {
-            "facing": "internal",
-            "preview": "stamp without live binding"
-          },
-          "19d48e6b834e6776168fadd32284738e845298e6": {
-            "facing": "internal",
-            "preview": "artifact preview: browser ignored host rules"
-          },
-          "351af9e2b5b7dd573a941ec5273f269e3a76cc3d": {
-            "facing": "internal",
-            "preview": "artifact preview: measure before load"
-          },
-          "4282ce7272ea2f9f2c57f0e8600fdec26b1af95f": {
-            "facing": "internal",
-            "preview": "concern body over the first-publish cap"
-          },
-          "46539576926b6c86370e57934b622e45321022ed": {
-            "facing": "internal",
-            "preview": "followups over the first-publish cap"
-          },
-          "472e4f75cec0baa6bf04cf884950b914863c4a8e": {
-            "facing": "internal",
-            "preview": "artifact preview: chrome not found"
-          },
-          "4ea617b230e32d1b75dfa490554401a6c6ae21bb": {
-            "facing": "internal",
-            "preview": "composed page mermaid fence count diverged from delta_diagr…"
-          },
-          "50ba50bdce0246435f2bbf52ab278dae98270e0e": {
-            "facing": "internal",
-            "preview": "artifact preview: wrapper navigation failed"
-          },
-          "52daf37aed671845abbab96765843e4c4b004691": {
-            "facing": "internal",
-            "preview": "pr review payload exceeds the size bound"
-          },
-          "7790d34c942ce6c223140367eb503df954ed7536": {
-            "facing": "internal",
-            "preview": "decisions_state choice outside the positional tokens"
-          },
-          "784f3956f5bf97d7f4163bf4689c244adedb5258": {
-            "facing": "internal",
-            "preview": "composed island derived a disallowed character"
-          },
-          "85b48cb8e3893008ed8b40e4f883fb729719b1f7": {
-            "facing": "internal",
-            "preview": "artifact-pr-review template part could not be derived"
-          },
-          "8c2023a8d9c563af9a2918bba8f147780dd249e8": {
-            "facing": "internal",
-            "preview": "decisions_state names a non-concern id"
-          },
-          "8d158e002bf2c8f47a66c8a5388f5c019e9607b3": {
-            "facing": "internal",
-            "preview": "bottom_line over the first-publish cap"
-          },
-          "8f8de5fbcaee6b635a91f79bfedcbd71f504a819": {
-            "facing": "internal",
-            "preview": "didnt_change over the first-publish cap"
-          },
-          "90459794be39c5c765b1ca6c5314683b984bba9b": {
-            "facing": "internal",
-            "preview": "artifact preview: frame missing"
-          },
-          "d0c23c901dc8f5cf77a301077501cd75f018186c": {
-            "facing": "internal",
-            "preview": "artifact preview: page reloaded during checks"
-          },
-          "dd66ac0ab58e0decb7698d56edacc9f96dff0bd8": {
-            "facing": "internal",
-            "preview": "artifact preview: page server failed to start"
-          },
-          "dfa6effd56d9d980eb893610bd4564229deefebe": {
-            "facing": "internal",
-            "preview": "decisions_state without republish"
-          },
-          "e21cab10e0e0d654c804af06d4b7340f2ca39dcd": {
-            "facing": "internal",
-            "preview": "artifact preview: wrapper script threw"
-          },
-          "fe7a9a39aa1b649a879dee429d9fde487092b0d0": {
-            "facing": "internal",
-            "preview": "composed island failed validation"
-          }
-        },
-        "why": "x(message, telemetryMessage) is a TelemetrySafeError. The internal arms are argument #2 (telemetry labels such as 'stamp without live binding' at 33145933 and 'artifact preview: frame missing' at 33017732), while argument #1 carries the model text. The 3 model arms are model because each is also argument #1 of the same throws (33146057-33146425: `new x(\"delta_diagram node ids must be unique\",\"delta_diagram node ids must be unique\")`), which the artifact PR-review tool returns."
-      }
-    ]
-  },
-  "a141f3bc00ba5df9": {
-    "at": 19116159,
+  "a83389c41cca381b": {
+    "at": 19480459,
     "model": {
       "18b06475c299682f97ba9393635c19203107b16a": "No view's shared state is held right now, so there is nothi…",
       "36283aeaa7c5b16a6e2df07dcee12015da2fcea4": "What these views shared is too large to return. If you need…",
       "41709d00caea6239d80bb91a817dc39acd223178": "The view shared more than could be sent with the user's mes…",
-      "b7e1e561b2b940d86520305923a6d97e59769e05": "No held view has that view id. Call again without the view …"
+      "87c21fd4fde9de66db6f51bec97508d98a021ef4": "No held view has that widget_id. Call again without widget_…"
     },
     "position": 0,
     "reviews": [
@@ -2332,11 +2438,20 @@
           }
         },
         "why": "The unreviewed arm '${}${}' has no literal text: it is Re(`${Y}${H}`.trim()) at 19114650 in the MCP-app view-state result builder (Re @19112800 returns {blocks:[{type:'text',text}],isError}), assembled from the 'too large to return' / 'ask the user to describe it' sentences that are the group's own model arms. So the route is the same tool result; the arm carries no text of its own, so its internal ruling has no wording to catalogue (like the carried d166a987 '${}${}' arm). No wrong verdict that changes any text."
+      },
+      {
+        "arms": {
+          "87c21fd4fde9de66db6f51bec97508d98a021ef4": {
+            "facing": "model",
+            "preview": "No held view has that widget_id. Call again without widget_…"
+          }
+        },
+        "why": "The new arm 'No held view has that widget_id...' is Oe(msg,true) in bo @19479768, the same MCP-app view-state tool-result builder as the carried 'No view's shared state is held' arm, so it is a tool result (model); the internal '${}${}' arm is the concatenation of those model sentences and carries no text of its own."
       }
     ]
   },
   "ace52307cc689fe8": {
-    "at": 34031446,
+    "at": 36294883,
     "model": {
       "031172f40b5ec3640210557d8e413ed1a10336e3": "read only:",
       "26b2a91412034b4b02339f5bd2b78232b908c884": "Required for action",
@@ -2459,44 +2574,26 @@
       }
     ]
   },
-  "ad1ddd98babc97c7": {
-    "at": 1323556,
+  "b67d4bd33009d3a2": {
+    "at": 44626385,
     "model": {
-      "54ba98b804e34a37019319505e3563c13022babf": "Write to ${} failed (${()??}) ${?\"and another writer has re…",
-      "bc12c98a4609ff3705d02da2f6b3c17fd2136ef7": "Write verification failed: ${} is ${.size} bytes on disk, e…"
+      "8157db0f2db0a551f6fe4ec6fa7d89565e552814": "Claude Code could not read the connector's answer because o…"
     },
     "position": 0,
     "reviews": [
       {
         "arms": {
-          "2220fe6c47461a449273ebae1fad338b80fba387": {
+          "2c93597e93eecefb598ae3b0f3bc8f23cee5b8d2": {
             "facing": "internal",
-            "preview": "assertDirChainReal: dir must be strictly inside base (rel: …"
-          },
-          "40017dc5c4c75d70166dc4f4044be5f251391d45": {
-            "facing": "internal",
-            "preview": "refusing to read fd ${}: not a pipe or socket"
-          },
-          "94680577d432046d6853ccaf8211f03b173e4604": {
-            "facing": "internal",
-            "preview": "refusing to read ${}: content exceeds ${} byte limit"
+            "preview": "MCP server sent a WebSocket message over ${/1024/1024} MiB.…"
           }
         },
-        "why": "x is a generic TelemetrySafeError in the fs utilities. The model arms are thrown by writeTextContent pPe (2153315) and writeFileAndFlush (2158311, 2161430), which the Write/Edit tools call, so they become tool errors. The internal arms are bounded reads of credential/token files and inherited fds: r8e (2151470) and hOs (2151798), called by token loaders W0t (2554625), the /dev/fd readers (2556318, 2557898) and L (2562229), which turn failures into a token miss or log. The 31863265 caller catches. assertDirChainReal (2150231) is an invariant (callers pass a dir inside base)."
-      },
-      {
-        "arms": {
-          "54ba98b804e34a37019319505e3563c13022babf": {
-            "facing": "model",
-            "preview": "Write to ${} failed (${()??}) ${?\"and another writer has re…"
-          }
-        },
-        "why": "x is the generic TelemetrySafeError in the fs utilities (same callee as carried 09dd2518). The new model arm 'Write to ${} failed (...) ${replaced|truncated}' is thrown by me/ue (writeFileAndFlush @1323556, writeFileSyncAndFlush @1319865) via jx @1320223, whose Write path x_t @1314408 is awaited uncaught up to a throw at 38941736 and the 25557354-25591433 throws, so it becomes the Write/Edit tool error, like its carried sibling 'Write verification failed' arm. The internal arms are bounded reads and invariants caught elsewhere; the settings/config callers qr @1737707, Ba @3523398 and writeTarget @8312082 only compare or debug-log it. Model."
+        "why": "Ce @44626297 throws the 'could not read the connector's answer' arm from the connector tool-call path and it becomes an is_error tool_result (model), whereas the WebSocket oversize error @44616569 is handed to this.handleError in the transport's onmessage handler, which only reports it to the transport error handler and closes the connection (internal)."
       }
     ]
   },
   "b8ca88388c4a8111": {
-    "at": 1857605,
+    "at": 1947854,
     "model": {
       "4d299b063078151bb266f50af0b4767327d5e99f": "${}: ${}: not readable (${()})",
       "a2ef60963eb1d1d32cb62ff05b19369d5c8b6f58": "${}: ${}: ${} resolves outside the plugin's folder",
@@ -2532,8 +2629,83 @@
       }
     ]
   },
+  "bb36c0369890d716": {
+    "at": 37042716,
+    "model": {
+      "04ed9cdebf63225471648e3fb9e649e9f71077b8": "doc_id is not accepted with db_op \"${}\"",
+      "091973d54a26403f6cdb618938bde0301d7bb916": "\\`writes[${}].op\\` changed after this batch was approved — …",
+      "0c8360fd3d74987d284801e099edc7fa3d054d86": "this read was approved without out_dir, and one was added a…",
+      "10d9ce96ff36db84c11de0f902486ee5a7c307c1": "as_level must be one of ${.map(()=>`'${}'`).join(\", \")}",
+      "112fb55f01a68a2fb31392766bad8d36aa6df2c6": "file_path: could not verify the source file is unchanged si…",
+      "12ef33e56a4273235b0e660b0affad24c85aecd7": "file_path: the path was changed to ${()} ${} (usually by a …",
+      "204c3c0758ac23265677da950babf4a0f6ffc3b9": "writes[${}] was approved to send a local file, and file_pat…",
+      "2375d4c55b118fb7b1425121c7c3ccf7e2cac2ad": "writes[${}] was approved with inline data, and a file_path …",
+      "251bd55aabec9162767f7a974dbaa9e237e3cd25": "file_path: the approval for this publish was already used b…",
+      "25b50565eb2583794f98fc5c3ac5a8d7961198f2": "this write reads back the stored document (a str_replace, o…",
+      "34008cb85c600b89e3f0a4c8eab3973b30db7f7b": "this read was approved to save documents under out_dir, and…",
+      "3fde36143b2ac7af8b8c00e690d8ee0b2ebd3e73": "data and file_path are not accepted with read_db",
+      "42cea79064a8df64d0509cb95e2fbf29c6b5cdc5": "db_op \"${}\" takes only \\`ids\\` — nothing was read",
+      "49306fd93a9b6aedf4599b5664acdb87d004ae83": "db_op \"${}\" requires \\`writes\\` with 1-${} entries",
+      "50695278e69decf7711f9fea2c7886ee913b2c9c": "file_path: the permission check for this publish hit an int…",
+      "513eb16bf80cf2e62b0e6d4ff7f8a40d16126145": "file_path does not hold valid JSON — write_db sends the fil…",
+      "52d5692e63732528d255e7eae61abfc365473612": "file_path: the permission check for this publish did not re…",
+      "54c9df9efe5f382332e041e28fe9b346a5499a81": "out_dir could not be opened for saving (${()??\"unexpected e…",
+      "5d8bf70a5a5f4a51f8e1c53c3da1dbfa44b8a96e": "db_op and collection are required for action \"${.action}\"",
+      "5f60049bcc60a0f878781c200627cea6a471521c": "${}${} serializes to ${} bytes of UTF-8${?\"\":\" after permis…",
+      "63713edd62659e44a4418e98b64e354522d9e228": "file_path: this publish was approved under an earlier Claud…",
+      "685715a08fabc3bc9543c4783a3b55920eaf4056": "out_dir no longer resolves where it did when the save was a…",
+      "6a396be7c578033a032895961c8fe897f5d368ba": "${}data or file_path is required for db_op \"${}\"",
+      "6a8d5f824c4c21d93258fbbe8a48443dfb092f96": "query is not accepted with write_db",
+      "70c2362cad7eb219a7f93d6a833b54e737e48672": "query.cursor is not accepted with query.order_by — an order…",
+      "7791474b88c2493b201d7db759e75ed3cbabc5f0": "this write was approved to send a local file, and file_path…",
+      "782b50e5d6e777c7586131d6d7cab60402851f5c": "db_op \"${()}\" is not a read_db operation",
+      "826036568d1101299cf1192f6f85e8d2f52b7f33": "${}data and file_path are not accepted with db_op \"${}\"",
+      "849d9a4a7b246d66ba15e7afa04a8b4b9a712ddc": "${} addresses a document an earlier entry already writes — …",
+      "8665eb70d0283134b1e61c998d75a5dbaf24382f": "doc_id is required for db_op \"get\"",
+      "8935ee7f6f40ec8fa1c7804f303411eadd36a7d8": "${}: collection must be an odd-depth path of 1-15 segments …",
+      "89ac486dd288f5a705b9c2c83a6bc03cfaa3c2b3": "file_path must hold a JSON object — an array, string, numbe…",
+      "8b1f06dc0479853424a8099e702a82e489714afd": "this batch no longer lists the writes that were approved (e…",
+      "903500c3704bf97958f03ce9de38bb58e55379d6": "`out_dir` no longer names the destination this read was app…",
+      "9a46d8f9951254f4af9ec42a27f2f07119e2e56d": "collection must be an odd-depth path of 1-15 segments and d…",
+      "a044fc6fad4c7e9026ef68b0bc230c816f984329": "`action` or `url` no longer names the database write that w…",
+      "a343fb90e16bf7ff8e6b615e0319203e3e7a4fb7": "writing ${} of the ${.docs.length} returned ${(.docs.length…",
+      "a7f2350c25d96c490985047ffbd6814f861b4686": "${}.op is not a write_db operation",
+      "aa355c039d920005d22718fe69257b9a4ed84784": "query is not accepted with db_op \"get\"",
+      "aa8bd4f573577d02b6b837899156394091323776": "writing under out_dir is blocked by an Edit permission rule…",
+      "b87d5a6d1ab46e46679236f6730cf114e954e4f6": "db_op \"${}\" takes its documents in \\`writes\\` only — top-le…",
+      "b8863b3c92992459565c4a6647c7a6cc2114655a": "this read was approved to save documents under out_dir, and…",
+      "bd902546d8a55d2e5f789295dd8adc7963418d27": "query.where and query.order_by are only accepted with db_op…",
+      "bde771a6bd9052c380f3058d48454281b771bc88": "this batch no longer lists the writes that were approved (e…",
+      "c28a3ce6bc6ea0e01f703ca828512675fc02d998": "doc_id is required for db_op \"${}\"",
+      "c2f4493832507e8d70c8dc25c198ee4b549a1d14": "`action` or `url` no longer names the database read that wa…",
+      "c8d8789c7c633c18e722a37a1cd28c6c85c84ef1": "this write was approved with inline data, and a file_path w…",
+      "d1fcf15281faecb4f26c85950ba60bb70f68affe": "file_path: the approval for this publish cannot be matched …",
+      "d3d606924e49370652dc82b22fae794d98719390": "${}${} must be a JSON-serializable object after permission …",
+      "dac689e4fdeab58fe7fcf268dcd4ccff3408b23e": "this read was approved as a lookup of people's names, and i…",
+      "df176f330fbeefeda46e5c511757a46b2c66a31d": "file_path: the source is a symlink, a hard link, or not a p…",
+      "dfac750865865a74fb29ecc8ca3d73e8681af131": "`file_path` must not contain NUL — nothing was read or sent",
+      "e5c70d9a8dbfa68fa3ba8d1e102e950ec31a9d15": "`db_op` no longer names the database write that was approve…",
+      "ed57527ffd8c58b18e2f118cf1ced25d2f24c5c4": "`if_version` no longer matches the database write that was …",
+      "f480af86c9a8e66c781ead713e572cb50551aeab": "reading file_path is blocked by a Read permission rule — th…",
+      "f55158f35b05baedbbe34b41eba7e2d31e5e6e7a": "db_op \"${()}\" is not a write_db operation",
+      "f56b720d8062c3a24eb0f74c3e9ccf97beb798c2": "${}data and file_path cannot both be given for db_op \"${}\"",
+      "fa34670ac0ea016bdbe20e96565a590805640760": "this write was approved as a batch (or its approval record …"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "37500a788df857575f201c85d20029d011c8d71b": {
+            "facing": "internal",
+            "preview": "${(.slug,)??.message}${(.code,.reason,.slug)}${}${(.code,,,…"
+          }
+        },
+        "why": "All arms are Xe throws inside the artifact tool's call() @37028126, which become is_error tool_results. The one internal arm is the concatenation `${message}${suffix}...` at the db_write error branch (@37042716), whose pieces are server error messages and helper suffixes with no literal text of its own, so its internal ruling catalogues no wording."
+      }
+    ]
+  },
   "bf37d8b09a80a444": {
-    "at": 21024870,
+    "at": 23365617,
     "model": {
       "1208767f1ed835bd43ea8ea5d6ef51c272d14c44": "display-scope tools (screenshot, left_click, type, ...) wil…",
       "129492e4eccea576c09ecdd1f3949a7105589045": "the move ran — take a fresh app_screenshot and act on it di…",
@@ -2591,7 +2763,7 @@
     ]
   },
   "c5260bec43fe26fb": {
-    "at": 17057572,
+    "at": 18862840,
     "model": {
       "17f32d8c65b8d5662f712e54b17d69370ce32295": "the resumed live watch could not connect, so the earlier st…",
       "42891921cccc91964f42397ab18876f10ac00f4e": "the live connection kept failing and reconnecting has stopp…",
@@ -2611,7 +2783,7 @@
     ]
   },
   "c8d12b1e83cd2f75": {
-    "at": 13321131,
+    "at": 14788666,
     "model": {
       "65aef7197cd0b4f89d2c09f2aeca4b13788a9939": "Marketplace \"${}\" was not refreshed: ${(.status)??\"claude.a…",
       "aae1a4f28f93716ae1b4ce922d89ff6a208772c5": "Marketplace \"${}\" was not refreshed: this session can't sav…"
@@ -2662,7 +2834,7 @@
     ]
   },
   "ca115a964461db39": {
-    "at": 35451498,
+    "at": 37777134,
     "model": {
       "00b8125ef2d179a6e7b08f707ccbc09bfacb78cc": "no row at ${} to place in",
       "04e551dbe498e000b200185bdd8f57fd00b7855d": "no row at ${}",
@@ -2705,57 +2877,8 @@
       }
     ]
   },
-  "d166a987728dd317": {
-    "at": 11017594,
-    "model": {
-      "1890feca7a0d4279bcfbe221cb8d00cbbda10b40": "on critical path: ${}",
-      "1fd3649fe261977fc60c44982ac12483add0699d": "on working directory or its ancestor: ${}",
-      "3087f98a28c69ab69e5604767a3acb8ca6034529": "on statically-unresolvable target: ${}",
-      "411b9185a638ef2ef5d11b0cec9b2b56c0996651": "not ruled out — some nested commands or function substituti…",
-      "473f4f40b665b1ae5b7c199e2b1148d6b1b67ee8": "on possibly-empty variable path${?\" inside command substitu…",
-      "5da1cb6562edc4ce1a3334880253852619d2c5aa": "on possibly-empty variable path${?\" inside command substitu…",
-      "7d4708c9af089378506362d0bf49e367917dd76b": "on possibly-empty variable path: ${} (${}${})",
-      "918e2470094d4103afcc822bd0b136a40920d6a5": "not ruled out — too many command substitutions to analyze (…",
-      "d303aefd193b64e3b8e7a1dbbcd6857b08d5363a": "not ruled out — the shell may read this command differently…",
-      "ee67f72cc324ff9d14cc3a15f8b8a5abd954ce46": "on statically-unresolvable target: command substitution out…"
-    },
-    "position": 2,
-    "reviews": [
-      {
-        "arms": {
-          "100f9043e11d2fecd6d63ac75f647883949f3fe2": {
-            "facing": "internal",
-            "preview": "${}${}"
-          }
-        },
-        "why": "uw(cmd,msg,reason) (11687744) puts its third argument into the dangerous-removal ask's decisionReason, so the ruled 'on …' reasons (now including the working-directory one) are model. The internal arm \"${}${}\" (`${zun}${X}` at 11693579) is a pure interpolation with no literal text of its own. Its content comes from zun='on drive root: ' and the target, so its ruling carries no text."
-      },
-      {
-        "arms": {
-          "411b9185a638ef2ef5d11b0cec9b2b56c0996651": {
-            "facing": "model",
-            "preview": "not ruled out — some nested commands or function substituti…"
-          },
-          "918e2470094d4103afcc822bd0b136a40920d6a5": {
-            "facing": "model",
-            "preview": "not ruled out — too many command substitutions to analyze (…"
-          }
-        },
-        "why": "cb (10357427) builds the dangerous-removal ask whose decisionReason.reason is `Dangerous ${tool} operation ${r}`; zzt (10490246) returns these asks (10491472 and the nestedSpansOverrun return after it) with these two third arguments exactly like the carried 'on ...' reasons in the same group, which the earlier review ruled model."
-      },
-      {
-        "arms": {
-          "d303aefd193b64e3b8e7a1dbbcd6857b08d5363a": {
-            "facing": "model",
-            "preview": "not ruled out — the shell may read this command differently…"
-          }
-        },
-        "why": "The new 'not ruled out — the shell may read this command differently…' string is the third argument of RS(\"rm\",…) @11017594, the same dangerous-rm ask builder as the carried 'not ruled out …' and 'on …' arms whose reason lands in the permission ask's decisionReason, so model. The one internal arm is a pure interpolation with no text."
-      }
-    ]
-  },
   "d6d645171eb8c0de": {
-    "at": 6773866,
+    "at": 7488408,
     "model": {
       "076d7aa1216b6907da0f00137ad49e0e7172cabe": "srt-win profile: spawn failed: ${.message}",
       "19312f0ac817ea5a90c390bcaf6826fa536ee60b": "WFP egress fence could not be verified — `srt-win wfp ",
@@ -2984,7 +3107,7 @@
     ]
   },
   "d9b2e737d0883337": {
-    "at": 7000954,
+    "at": 8044690,
     "model": {
       "02195b1aecb48e11e4fbb262e3fcd6832c08fc39": "every hop must satisfy the archive URL policy (${.replace(/…",
       "42ca58b6458d33e37febc8e583af71a0dd453ae0": "Plugin archive integrity check failed for ${}: expected sha…",
@@ -3086,7 +3209,7 @@
     ]
   },
   "eeda48189e528277": {
-    "at": 8112526,
+    "at": 9074556,
     "model": {
       "527880c5d37405e026cff34ebff6f2cf2c1c3961": "${} did not say what became of background command ${}: it i…"
     },
@@ -3094,10 +3217,6 @@
     "reviews": [
       {
         "arms": {
-          "0fdb01555d7bc9b838abb304ba7d1c2bf5eeb1c7": {
-            "facing": "internal",
-            "preview": "Read tool is restricted for this session"
-          },
           "118fb7d932fb312c7f5b6ca2a7160437806acb2a": {
             "facing": "internal",
             "preview": "local entry not statable via storage: ${(.error)}"
@@ -3106,17 +3225,9 @@
             "facing": "internal",
             "preview": "multi-store-sync: local entry not deletable via storage: ${…"
           },
-          "1974ac1e1dff16550e0ec61fab3ecfb83bd240ed": {
-            "facing": "internal",
-            "preview": "alias namespace path not allowed: ${}"
-          },
           "2a032d0e563938e03337170cb0349dde37d06e20": {
             "facing": "internal",
             "preview": "local entry not readable via storage: ${(.error)}"
-          },
-          "45e23fa14a49195e98c24ccfec24606be02e0594": {
-            "facing": "internal",
-            "preview": "backslash in a POSIX spelling: ${}"
           },
           "4dde3d77c8aa32756d646b5ada7d5e1b5b3df4c1": {
             "facing": "internal",
@@ -3126,85 +3237,25 @@
             "facing": "internal",
             "preview": "multi-store-sync: local entry not writable via storage: ${(…"
           },
-          "5a998d790ba3180bd6d1f458071a14ef3afffc22": {
-            "facing": "internal",
-            "preview": "read requires approval: ${}"
-          },
-          "602fad2fc11eb5da0bbf3326ca89a2f370d91c21": {
-            "facing": "internal",
-            "preview": "too many stream-base spellings"
-          },
-          "61c97b519ebdd0956aef038ab339500bebef76c1": {
-            "facing": "internal",
-            "preview": "read not allowed: ${}"
-          },
-          "62596775bb4b08266fae5e31ceed9c50d9e21d62": {
-            "facing": "internal",
-            "preview": "path could not be vetted (symbolic link chain or unreadable…"
-          },
-          "73b623539b19421e7cf9188cccf08cd9231828a1": {
-            "facing": "internal",
-            "preview": "read denied: ${}"
-          },
           "75d79de135e2db34329973e0aa51929b32dea4a3": {
             "facing": "internal",
             "preview": "basis write failed: ${(.error)}"
-          },
-          "7d10998a1b56969e5b829cb7d4ce97b3f30fd564": {
-            "facing": "internal",
-            "preview": "parent-segment spelling not allowed: ${}"
-          },
-          "7fa142dde686d4da9654e46f38d977c39e5bbb1e": {
-            "facing": "internal",
-            "preview": "trailing separator"
           },
           "8779eb304c778683d67d750dccf52878aa812b93": {
             "facing": "internal",
             "preview": "mount walk failed: ${()}"
           },
-          "892cf105e015291c6c4dc450e7bd748671c9a000": {
-            "facing": "internal",
-            "preview": "suspicious path spelling: ${}"
-          },
           "8e87b91ddfe6f5999aeb9bef0321cbc6b1cdb834": {
             "facing": "internal",
             "preview": "manifest create failed: ${(.error)}"
-          },
-          "b41f9c9c798720dadcd38bf277a0c6ce36d187d5": {
-            "facing": "ui",
-            "preview": "path too long"
-          },
-          "bb35f09015862c80f1a1ab04678ff8476bb6e122": {
-            "facing": "internal",
-            "preview": "surrounding whitespace"
-          },
-          "db519b19de685f4b01f4762943797cffd2dd80df": {
-            "facing": "internal",
-            "preview": "kernel or device path, or one of Claude Code's credentials:…"
           },
           "e40a0cec7acea22b53516d34b3ae9f050e0f2702": {
             "facing": "internal",
             "preview": "manifest write failed: ${(.error)}"
           },
-          "ea054e7c63ab39b98874455822a59d311c0540be": {
-            "facing": "internal",
-            "preview": "network path not allowed: ${}"
-          },
-          "ea34eb21468a10a28c4376a104daaef89eab51b5": {
-            "facing": "internal",
-            "preview": "memory head read failed: ${(.error)}"
-          },
           "ec463e6b5f91cf821354ad355528bb721537cc72": {
             "facing": "internal",
             "preview": "multi-store-sync: empty store receipt not removed"
-          },
-          "f8aa7d6174f50270e4b788102f2fab12abdf8632": {
-            "facing": "internal",
-            "preview": "nested percent-encoding: ${}"
-          },
-          "faa404963027cbc9b0e1476075f6e2d844e62e9c": {
-            "facing": "internal",
-            "preview": "network path not allowed: ${()?:}"
           }
         },
         "why": "ea34eb21 internal: QF @7900694 throws inside Promise.allSettled(...).filter(status==='fulfilled'), so a rejected head read is dropped; QF's only caller Lkr @7897642 feeds P9e @7898809 (catch -> telemetry p('memory_scan',...), returns []) and uNo @10223455 (catch -> t('memory index backfill')). Never reaches a tool_result, unlike MRs @8112526 (GetTask background status). | 4dde3d77 internal: OTs @7847662's only caller Z4r @12676228 wraps MTs(OTs(s.file)) in try{}catch{ke=void 0} and returns {held:'unreadable'}; the message text is discarded (Z4r's own caller @12705595 .catch logs t('Hooks: could not judge a hook...')). | 13552004 internal: jS @7650650 is called from LM @7664269 inside try/catch (Ie++), LM->NM->nD @7692167 catch stores {error:d(Z)} in the sync result; background multi-store-sync, no tool_result route. | 59286346 internal: $f @7645117 callers: LM inline @7662284, handleMemory @7667843 (cS @7625691 .catch(R??=_e)), SS @7678851 (in try) -> JM -> $i(sync) -> nD @7692167 try/catch storing d(V) as failureReason:'exception'. Background memory sync only. | 2a032d0e internal: HS @7644649 callers: US @7650173 (try{...}catch{return!1}) and FM's re @7668175 (try{...}); thrown error swallowed inside the memory-sync loop; no model sink. | 118fb7d9 internal: gs @7644267 callers vf/us/US/oc (@7649605/@7649710/@7650090/@7650262) all wrap it in try{}catch{return!1 / {}}, kS @7629120 maps it via .then(()=>!1,G); memory-sync internal. | 8779eb30 internal: _f @7638665 is called only from RM (@7641493/@7643266/@7643501) -> Fi; Fi callers AM @7653462 (catch -> {outcome:'failed',error:d(R)}), FM @7669039 (catch -> t(...basis_unusable walk failed)), XM @7680470 (catch -> t(...)), LM/JM which end in nD @7692167's catch storing error:d(Z). All background sync results, no tool_result. | ec463e6b internal: DS @7637553 callers: $f @7645258 (memory-sync write, ends in nD catch) and LM @7661731 inside try{await DS}catch{return{success:!1,...}}; sync-loop internal. | 75d79de1 internal: Di @7636996: the throw at @7637205 is inside Di's own try whose catch logs t(`multi-store-sync[..]: basis write failed: ${d(r)}`,{level:'warn'}); log only. | 8e87b91d internal: hM @7631606's only caller Wl @7630825; Wl callers LM @7665734 and FM @7669526 use .catch(t(...manifest write failed,{level:'warn'})), nD inline @7691399/@7691865 wrap in try/catch -> telemetry p('team_memory_multistore_conflict'). No model route. | e40a0cec internal: Wl @7631038 throw; same Wl callers (LM @7665734 / FM @7669526 .catch -> t warn, nD @7691399/@7691865 try/catch -> telemetry). The other two literal sites @7665809/@7669573 are themselves those warn log templates. Internal. | 61c97b51 internal: Thrown in Dct @7617814 (read-permission checks @7619470/@7619703). Dct callers: LI @7612825 catch -> t('[chrome file_upload] rejected path') + fixed K_/tS text; its @35135902 -> screen @46303039 catch -> t(...) and undefined ('path_rejected' code); J @46163152/@46163487 catch -> t(...) + I(y,jYr(S)) error code. The message text never reaches the model. | 0fdb0155 internal: Sites @7615465 (ff) and @7619176 (Dct). ff's caller ksi @7610345 catches and returns NI/DI/tS fixed text after t('[chrome file_upload] rejected path (pass-through)'); Dct callers LI/its/J catch likewise (log + fixed text or code). Internal. | db519b19 internal: Dct @7618257 throw; Dct callers LI @7612825 (catch -> fixed K_/tS), screen @46303039 (catch -> undefined), start_task J @46163152 (catch -> code via jYr). Text logged only. | b41f9c9c ui: Sites @7614655 (ff) and @7617867 (Dct) are caught by ksi/LI and swapped for fixed text (internal); @31197290 sits in a t() log line about the uds socket path; @32104569 is ZVt.ENAMETOOLONG, rendered by f1e in the Ink 'Transcript writes are failing' notice (ui). No model route, so non-model is right; keeping ui for the Ink render. | 1974ac1e internal: df @7617598 is called from ff (pass-through, caught by ksi @7610345 -> fixed NI/DI/tS) and from the Dct path (caught by LI/screen/J); logged via t() only. | 602fad2f internal: ff @7616161 stream-base fan-out throw; ff's external caller ksi @7610345 catches -> t(...rejected path (pass-through)) + fixed DI(P) text. Internal. | 7fa142dd internal: The real throw is in ff (/[/\\\\]\\.?$/ test) caught by ksi @7610345 -> fixed text; offsets 950252/950525/1611970/1612144 are substring hits inside the zod 'no doubled or trailing separators' message of pb() (a settings-validation message, not this arm). Internal. | 45e23fa1 internal: ff @7615148 POSIX backslash throw, caught by ksi @7610345 -> t() log + fixed DI/NI text returned as {error}. Internal. | 7d10998a internal: ff @7614937 dot-dot throw, caught by ksi @7610345 and replaced by fixed text. Internal. | f8aa7d61 internal: ff @7614764 nested percent-encoding throw (recursion via ff @7615915), caught at ksi @7610345 -> t() + fixed text. Internal. | bb35f090 internal: ff @7614521 throw caught by ksi @7610345 -> fixed text; the other offset @26613364 is the telemetry 2nd arg 'skill name with surrounding whitespace rejected' (substring). Internal. | 5a998d79 internal: uf @7614333 ask-rule throw, called from ff and Dct, both caught (ksi @7610345 / LI @7612825 / screen / start_task J) and replaced by fixed text or a code. Internal. | 73b62353 internal: uf @7614215 is caught like the other file-upload arms. @17737553 R() builds the bridge read_file error, rethrown at @17739572 to the remote sidebar viewer RPC (readFileForRemote), not a model tool; @2697292 is a zod .describe of that bridge request schema. No model route. | 892cf105 internal: pf @7614034 is called from nS/ff/Dct; all paths end in ksi @7610345 / LI @7612825 / screen @46303039 / start_task J catches that log and return fixed text/codes. Internal. | ea054e7c internal: pf @7613926 / nS @7613457 throws inside Dct/ff; LI @7612825 catch returns {error:H instanceof p9e?tS(b):K_(b)} (fixed text) after t() logging. Internal. | 62596775 internal: nS @7613621 unvettable-path throw, reached from Dct/ff; caught by LI @7612825 / ksi @7610345 -> fixed K_/DI text. Internal. | faa40496 internal: nS @7613457 network-path throw (same template with ternary); caught by LI @7612825 / ksi @7610345 -> fixed text. Internal."
@@ -3212,7 +3263,7 @@
     ]
   },
   "f339e82454150149": {
-    "at": 21030535,
+    "at": 23371282,
     "model": {
       "003c22f3e1c458335750a6491767122f73ec9860": "Call app_screenshot first — app_ax_find searches the elemen…",
       "01c0e5d438ace6e6257137379183124892e39ebc": "\"${()}\" is granted at tier \"read\" — ",
@@ -3463,7 +3514,7 @@
     ]
   },
   "fa476c66f6e21a8d": {
-    "at": 13415684,
+    "at": 14884161,
     "model": {
       "2b17877fb4833a341b8f7341dfeecb1fb1a83fe8": "Could not resolve ${} from the npm registry: the registry d…",
       "2e04840f8ee157b1e0aa9c35c62591b26c6eb0e4": "The npm package was not installed: ${}",
