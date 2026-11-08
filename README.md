@@ -47,8 +47,8 @@ Upstream provides the themes, spinners, thinking text, toolsets, subagent model 
 
 |                           | tweakcc-fixed | upstream |
 | ------------------------- | :-----------: | :------: |
-| Prompt sites (CC 2.1.319) |    17,229     |  1,134   |
-| Unique prompt IDs         |    15,993     |  1,134   |
+| Prompt sites (CC 2.1.319) |    17,247     |  1,134   |
+| Unique prompt IDs         |    16,001     |  1,134   |
 | Patches                   |      82       |    61    |
 
 Same Claude Code 2.1.319 catalogue, compared with [upstream 00dbaf9d](https://github.com/Piebald-AI/tweakcc/tree/00dbaf9d0cfbb32d7e9b9e2c93d04a118d63be10). Counts describe source inventory; active prompts depend on model, tools and settings.
