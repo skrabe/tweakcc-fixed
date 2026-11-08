@@ -466,4 +466,47 @@ describe('inlineBlobOverrides: applyInlineBlobOverrides (integration)', () => {
     expect(out).not.toContain('Fu5');
     expect(out).not.toContain('lL8');
   });
+
+  const stringOverride = (file: string, anchor: string, body: string) =>
+    writeOverride(
+      file,
+      [
+        '<!--',
+        `name: 'Inline blob: ${file}'`,
+        'description: x',
+        `inlineBlobAnchor: '${anchor}'`,
+        'inlineBlobKind: string',
+        'injectionGate: always on',
+        'ccVersion: 2.1.319',
+        '-->',
+        body,
+      ].join('\n')
+    );
+
+  it('refuses a later override whose anchor lands on text an earlier one wrote', async () => {
+    clearOverrides();
+    stringOverride('inline-a.md', '"When to access', 'When to access: first');
+    stringOverride('inline-b.md', '"When to access', 'second body');
+    stringOverride('inline-c.md', '"Other', 'third body');
+    const content = 'x="When to access memories.";y="Other text";';
+    const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const { content: out, results } = await applyInlineBlobOverrides(content);
+    errSpy.mockRestore();
+    const by = Object.fromEntries(results.map(r => [r.filename, r]));
+    expect(by['inline-a.md'].applied).toBe(true);
+    expect(by['inline-b.md'].failed).toBe(true);
+    expect(by['inline-b.md'].details).toContain('inline-a.md');
+    expect(by['inline-c.md'].applied).toBe(true);
+    expect(out).toBe('x="When to access: first";y="third body";');
+  });
+
+  it('lands two overrides sharing an anchor on successive copies', async () => {
+    clearOverrides();
+    stringOverride('inline-a.md', '"Copy', 'one');
+    stringOverride('inline-b.md', '"Copy', 'a longer second body');
+    const content = 'p="Copy text";q="Copy text";';
+    const { content: out, results } = await applyInlineBlobOverrides(content);
+    expect(results.every(r => r.applied)).toBe(true);
+    expect(out).toBe('p="one";q="a longer second body";');
+  });
 });
