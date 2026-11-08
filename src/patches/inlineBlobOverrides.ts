@@ -736,14 +736,23 @@ export interface InlineBlobApplyResult {
   failed: boolean;
   skipped?: boolean;
   details: string;
+  // The literal this override replaced, as it stood in the content it was
+  // spliced into (pristine text when run with `only`). The drift gate compares
+  // it across versions.
+  replaced?: string;
 }
+
+export type WrittenRegion = { start: number; end: number; filename: string };
 
 export const applyInlineBlobOverrides = async (
   content: string,
   // Restrict the run to a single override file. The apply preflight uses this
   // to measure ONE override's claimed span against the pristine binary through
   // the real resolution path, instead of re-deriving the boundary walkers.
-  options?: { only?: string }
+  // `written` carries Guard 4's record of the regions earlier overrides wrote
+  // across calls, so a caller applying one file per call (the preflight) sees
+  // the same refusals as a single run over every file.
+  options?: { only?: string; written?: WrittenRegion[] }
 ): Promise<{ content: string; results: InlineBlobApplyResult[] }> => {
   const escapeNonAscii = detectUnicodeEscaping(content);
   if (escapeNonAscii) {
@@ -766,6 +775,8 @@ export const applyInlineBlobOverrides = async (
   if (candidates.length === 0) return { content, results: [] };
 
   const results: InlineBlobApplyResult[] = [];
+  // Regions earlier overrides wrote, in current-content coordinates.
+  const written: WrittenRegion[] = options?.written ?? [];
   for (const filename of candidates.sort()) {
     const fullPath = path.join(SYSTEM_PROMPTS_DIR, filename);
     let raw: string;
@@ -1102,13 +1113,43 @@ export const applyInlineBlobOverrides = async (
       continue;
     }
 
+    // Guard 4 — overrides apply in sequence, each anchor searched in the
+    // content the earlier ones left behind. Two blobs sharing an anchor land
+    // on successive copies of a literal only when the first rewrite stops the
+    // anchor matching there; when the rewrite keeps the anchor text, the later
+    // file would silently replace the earlier one's text instead. Refuse it.
+    const owner = written.find(w => startOfBlob < w.end && w.start < endOfBlob);
+    if (owner) {
+      const details = `span overlaps the text ${owner.filename} already wrote; two overrides claim one literal — retarget one anchor`;
+      console.error(
+        `patch: inline-blob: "${frontmatter.name}" (${filename}): ${details}. Override not applied.`
+      );
+      results.push({
+        filename,
+        name: frontmatter.name,
+        applied: false,
+        failed: true,
+        details,
+      });
+      continue;
+    }
+
     const before = content;
     content =
       content.slice(0, startOfBlob) + replacement + content.slice(endOfBlob);
+    const delta = replacement.length - (endOfBlob - startOfBlob);
+    for (const w of written)
+      if (w.start >= endOfBlob) {
+        w.start += delta;
+        w.end += delta;
+      }
+    written.push({
+      start: startOfBlob,
+      end: startOfBlob + replacement.length,
+      filename,
+    });
 
-    const origLen = endOfBlob - startOfBlob;
-    const newLen = replacement.length;
-    const charDiff = origLen - newLen;
+    const charDiff = -delta;
     const status =
       charDiff > 0
         ? `${charDiff} fewer chars`
@@ -1122,6 +1163,7 @@ export const applyInlineBlobOverrides = async (
       applied: true,
       failed: false,
       details: status,
+      replaced: before.slice(startOfBlob, endOfBlob),
     });
   }
 

@@ -54068,17 +54068,6 @@
       "version": "2.1.251"
     },
     {
-      "name": "",
-      "id": "",
-      "description": "",
-      "pieces": [
-        "| Managed Agents credentials | Keep secrets host-side"
-      ],
-      "identifiers": [],
-      "identifierMap": {},
-      "version": "2.1.319"
-    },
-    {
       "name": "Tool Result: Artifact diff unchanged line omitted",
       "id": "tool-result-artifact-diff-unchanged-line-omitted",
       "description": "Marks a long unchanged line omitted from the live-page comparison diff.",
@@ -62130,6 +62119,34 @@
       "version": "2.1.312"
     },
     {
+      "name": "Tool Result: permission deny path lands outside directory",
+      "id": "tool-result-permission-deny-path-lands-outside-dir",
+      "description": "Deny message saying the path a request was carried out to (its landing, after links are followed) is outside the allowed directories, followed by the reason",
+      "pieces": [
+        "${",
+        "(",
+        ",",
+        ".landing)}, which is outside ${",
+        "}; ${",
+        ".why}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PERMISSION_DENY_PATH_LANDS_OUTSIDE_DIR_VAR_0",
+        "1": "TOOL_RESULT_PERMISSION_DENY_PATH_LANDS_OUTSIDE_DIR_VAR_1",
+        "2": "TOOL_RESULT_PERMISSION_DENY_PATH_LANDS_OUTSIDE_DIR_VAR_2",
+        "3": "TOOL_RESULT_PERMISSION_DENY_PATH_LANDS_OUTSIDE_DIR_VAR_3",
+        "4": "TOOL_RESULT_PERMISSION_DENY_PATH_LANDS_OUTSIDE_DIR_VAR_4"
+      },
+      "version": "2.1.319"
+    },
+    {
       "name": "Tool Result: Permission Ask Symlink Landing",
       "id": "tool-result-permission-ask-symlink-landing",
       "description": "Sentence appended to a permission ask, and stored as its decision reason, describing where a symlink resolves.",
@@ -67903,7 +67920,7 @@
     {
       "name": "System Prompt: Claude in Chrome browser automation",
       "id": "system-prompt-claude-in-chrome-browser-automation-3",
-      "description": "Opening paragraph of the Claude in Chrome browser-automation system prompt: the heading slot (KAr const) followed by the tool-access sentence that introduces the guidelines",
+      "description": "Opening paragraph of the Claude in Chrome browser-automation system prompt: the heading slot followed by the tool-access sentence that introduces the guidelines",
       "pieces": [
         "${",
         "}\n\nYou have access to browser automation tools (mcp__claude-in-chrome__*) for interacting with web pages in Chrome. Follow these guidelines for effective browser automation."
@@ -119309,6 +119326,28 @@
       "version": "2.1.284"
     },
     {
+      "name": "Tool Result: MCP connector file client sends no files reason",
+      "id": "tool-result-mcp-connector-file-client-sends-no-files-reason",
+      "description": "Reason fragment (client_sends_no_files) saying Claude Code cannot send a file to a connector in this session, so the tool was not called.",
+      "pieces": [
+        "Claude Code cannot send a file to a connector in this session"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.319"
+    },
+    {
+      "name": "Tool Result: MCP connector file no upload place reason",
+      "id": "tool-result-mcp-connector-file-no-upload-place-reason",
+      "description": "Reason fragment (no_upload_place) saying Claude Code cannot send files to this connector, so the tool was not called.",
+      "pieces": [
+        "Claude Code cannot send files to this connector"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.319"
+    },
+    {
       "name": "scan_secrets: permission check failed",
       "id": "tool-result-scan-secrets-permission-check-failed",
       "description": "Refusal: could not check whether the scan may read the folder.",
@@ -119629,6 +119668,22 @@
       "identifierMap": {
         "0": "TOOL_RESULT_MCP_CONNECTOR_FILE_CODE_MODE_USED_REASON_VAR_0",
         "1": "TOOL_RESULT_MCP_CONNECTOR_FILE_CODE_MODE_USED_REASON_VAR_1"
+      },
+      "version": "2.1.319"
+    },
+    {
+      "name": "Tool Result: MCP connector file no upload for argument reason",
+      "id": "tool-result-mcp-connector-file-no-upload-for-argument-reason",
+      "description": "Default reason fragment saying Claude Code does not upload a file for the named argument now, so the tool was not called.",
+      "pieces": [
+        "Claude Code does not upload a file for ${",
+        "} now"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_MCP_CONNECTOR_FILE_NO_UPLOAD_FOR_ARGUMENT_REASON_VAR_0"
       },
       "version": "2.1.319"
     },
@@ -178669,6 +178724,105 @@
       "version": "2.1.210"
     },
     {
+      "name": "Tool Result: MCP transport not connected",
+      "id": "tool-result-mcp-transport-not-connected",
+      "description": "MCP error text when a request is sent over an MCP server transport that is not connected",
+      "pieces": [
+        "Not connected"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.319"
+    },
+    {
+      "name": "Tool Result: MCP transport not connected",
+      "id": "tool-result-mcp-transport-not-connected",
+      "description": "MCP error text when a request is sent over an MCP server transport that is not connected",
+      "pieces": [
+        "Not connected"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.319"
+    },
+    {
+      "name": "Tool Result: MCP transport not connected",
+      "id": "tool-result-mcp-transport-not-connected",
+      "description": "MCP error text when a request is sent over an MCP server transport that is not connected",
+      "pieces": [
+        "Not connected"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.319"
+    },
+    {
+      "name": "Tool Result: MCP transport not connected",
+      "id": "tool-result-mcp-transport-not-connected",
+      "description": "MCP error text when a request is sent over an MCP server transport that is not connected",
+      "pieces": [
+        "Not connected"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.319"
+    },
+    {
+      "name": "Tool Result: MCP transport not connected",
+      "id": "tool-result-mcp-transport-not-connected",
+      "description": "MCP error text when a request is sent over an MCP server transport that is not connected",
+      "pieces": [
+        "Not connected"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.319"
+    },
+    {
+      "name": "Tool Result: MCP transport not connected",
+      "id": "tool-result-mcp-transport-not-connected",
+      "description": "MCP error text when a request is sent over an MCP server transport that is not connected",
+      "pieces": [
+        "Not connected"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.319"
+    },
+    {
+      "name": "Tool Result: MCP transport not connected",
+      "id": "tool-result-mcp-transport-not-connected",
+      "description": "MCP error text when a request is sent over an MCP server transport that is not connected",
+      "pieces": [
+        "Not connected"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.319"
+    },
+    {
+      "name": "Tool Result: MCP transport not connected",
+      "id": "tool-result-mcp-transport-not-connected",
+      "description": "MCP error text when a request is sent over an MCP server transport that is not connected",
+      "pieces": [
+        "Not connected"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.319"
+    },
+    {
+      "name": "Tool Result: MCP transport not connected",
+      "id": "tool-result-mcp-transport-not-connected",
+      "description": "MCP error text when a request is sent over an MCP server transport that is not connected",
+      "pieces": [
+        "Not connected"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.319"
+    },
+    {
       "name": "SendMessage Desktop Delivery Refused",
       "id": "tool-result-send-message-desktop-refused",
       "description": "SendMessage tool_result when Claude Desktop refused delivery, quoting the desktop session id and reason.",
@@ -209368,6 +209522,22 @@
       "version": "2.1.288"
     },
     {
+      "name": "Tool Result: MCP connector upload — Allow must be given at the terminal prompt",
+      "id": "tool-result-mcp-connector-upload-allow-given-at-terminal-prompt",
+      "description": "Clause l in Hpi @44610374 giving the rule behind a no-file-sent refusal when a PermissionRequest hook or a substitute approver approved the call: sending files to a connector takes an Allow given at Claude Code's prompt in a terminal.",
+      "pieces": [
+        "sending files to a connector takes an Allow given ${",
+        "}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_MCP_CONNECTOR_UPLOAD_ALLOW_GIVEN_AT_TERMINAL_PROMPT_VAR_0"
+      },
+      "version": "2.1.319"
+    },
+    {
       "name": "Tool Result: remote tool shared request too large",
       "id": "tool-result-remote-tool-shared-request-too-large-retry",
       "description": "Advises a smaller or flatter input for a too-large refused request, else to tell the user",
@@ -217961,6 +218131,50 @@
         "1": "TOOL_RESULT_MCP_COMPLETE_AUTHENTICATION_STATE_MISMATCH_VAR_1"
       },
       "version": "2.1.269"
+    },
+    {
+      "name": "Tool Result: Worktree isolation checkout fallback label",
+      "id": "tool-result-worktree-isolation-checkout-fallback-label",
+      "description": "Fallback label \"that checkout\" naming the host checkout in a worktree isolation refusal when its path cannot be shown",
+      "pieces": [
+        "that checkout"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.319"
+    },
+    {
+      "name": "Tool Result: Worktree isolation checkout fallback label",
+      "id": "tool-result-worktree-isolation-checkout-fallback-label",
+      "description": "Fallback label \"that checkout\" naming the host checkout in a worktree isolation refusal when its path cannot be shown",
+      "pieces": [
+        "that checkout"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.319"
+    },
+    {
+      "name": "Tool Result: Worktree isolation checkout fallback label",
+      "id": "tool-result-worktree-isolation-checkout-fallback-label",
+      "description": "Fallback label \"that checkout\" naming the host checkout in a worktree isolation refusal when its path cannot be shown",
+      "pieces": [
+        "that checkout"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.319"
+    },
+    {
+      "name": "Tool Result: Worktree isolation checkout fallback label",
+      "id": "tool-result-worktree-isolation-checkout-fallback-label",
+      "description": "Fallback label \"that checkout\" naming the host checkout in a worktree isolation refusal when its path cannot be shown",
+      "pieces": [
+        "that checkout"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.319"
     },
     {
       "name": "Tool Result: Worktree isolation registry fallback label",
@@ -243075,6 +243289,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.314"
+    },
+    {
+      "name": "Tool Result: MCP connector file connection takes no files reason",
+      "id": "tool-result-mcp-connector-file-files-not-spoken-reason",
+      "description": "Reason fragment (files_not_spoken) saying this connector's connection does not take files, so the tool was not called.",
+      "pieces": [
+        "this connector's connection does not take files"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.319"
     },
     {
       "name": "Slash Command: /resume — conversation is from a different directory",

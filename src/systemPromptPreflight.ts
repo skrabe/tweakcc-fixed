@@ -46,7 +46,10 @@ import {
   spanConflicts,
   SpanClaim,
 } from './systemPromptSites';
-import { applyInlineBlobOverrides } from './patches/inlineBlobOverrides';
+import {
+  applyInlineBlobOverrides,
+  type WrittenRegion,
+} from './patches/inlineBlobOverrides';
 import { textAssetVisible } from './nativeTextAssets';
 import { BundleRegions, matchesInRegion } from './virtualBundle';
 import { REMINDER_REGISTRY } from './patches/systemReminderOverrides';
@@ -394,11 +397,13 @@ const claimOverrideSurfaces = async (
   } catch {
     files = [];
   }
+  const written: WrittenRegion[] = [];
   for (const filename of files
     .filter(n => n.startsWith('inline-') && n.endsWith('.md'))
     .sort()) {
     const { content } = await applyInlineBlobOverrides(working, {
       only: filename,
+      written,
     });
     let body = '';
     try {

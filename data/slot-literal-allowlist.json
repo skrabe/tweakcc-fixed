@@ -5191,5 +5191,110 @@
     "verdict": "glue",
     "reason": "@36317703: plural arm of the same ternary inside s in h(). Agreement word for the overflow count.",
     "text": "evals have calls"
+  },
+  "6e39117add64cade": {
+    "text": "This agent called ",
+    "verdict": "glue",
+    "promptId": "tool-result-agent-later-report-refused",
+    "label": "TOOL_RESULT_AGENT_LATER_REPORT_REFUSED_VAR_0",
+    "reason": "subject of the refusal sentence: BAr is `This agent called ${SubagentHandback} again after`, which only names the tool the agent called again; the refusal fact and its consequence are in the catalogued piece after the slot"
+  },
+  "c761de7b8da2a6b0": {
+    "text": " (addressed as ",
+    "verdict": "glue",
+    "promptId": "tool-result-worktree-isolation-unregistered-own-repository",
+    "label": "TOOL_RESULT_WORKTREE_ISOLATION_UNREGISTERED_OWN_REPOSITORY_VAR_2",
+    "reason": "label before an interpolated path; ne is `(addressed as ${path})` and appears only when the spelling differs from the resolved path"
+  },
+  "cd7e19be6dc09bbc": {
+    "text": "Claude Code's notes on the files offered by the tool call ",
+    "verdict": "glue",
+    "promptId": "system-reminder-connector-download-notes-single-call",
+    "label": "SYSTEM_REMINDER_CONNECTOR_DOWNLOAD_NOTES_SINGLE_CALL_VAR_0",
+    "reason": "r1e only labels the tool call id interpolated right after it; the numbering and provenance instructions are in the catalogued piece that follows"
+  },
+  "f94c26b00cfefa5a": {
+    "text": "Claude Code's notes on files offered by connector tool calls whose notes could not follow their own result",
+    "verdict": "glue",
+    "promptId": "system-reminder-connector-download-notes-grouped",
+    "label": "SYSTEM_REMINDER_CONNECTOR_DOWNLOAD_NOTES_GROUPED_VAR_0",
+    "reason": "s1e is the heading line over the grouped note bullets; it labels the list and states no instruction or fact the model acts on"
+  },
+  "56b8245cb5ffb236": {
+    "text": "old_string of edit ",
+    "verdict": "glue",
+    "promptId": "tool-result-proposeskills-edit-text-repeated",
+    "promptIds": [
+      "tool-result-proposeskills-edit-not-found-read-file",
+      "tool-result-proposeskills-edit-absent-no-room",
+      "tool-result-proposeskills-edit-absent-too-long",
+      "tool-result-proposeskills-edit-absent-shown"
+    ],
+    "label": "TOOL_RESULT_PROPOSESKILLS_EDIT_TEXT_REPEATED_VAR_0",
+    "reason": "head of y @36604787: `old_string of edit ${n} ${occurs more than once|is not} in the current SKILL.md of ${h}`; labels the edit number, the problem and the skill are the interpolated parts"
+  },
+  "60816ce38da00f32": {
+    "text": " in the current SKILL.md of ",
+    "verdict": "glue",
+    "promptId": "tool-result-proposeskills-edit-text-repeated",
+    "promptIds": [
+      "tool-result-proposeskills-edit-not-found-read-file",
+      "tool-result-proposeskills-edit-absent-no-room",
+      "tool-result-proposeskills-edit-absent-too-long",
+      "tool-result-proposeskills-edit-absent-shown"
+    ],
+    "label": "TOOL_RESULT_PROPOSESKILLS_EDIT_TEXT_REPEATED_VAR_0",
+    "reason": "joins the occurs-more-than-once / is-not clause to the interpolated skill name in y @36604787"
+  },
+  "eaa7707ea90aea9c": {
+    "text": "sending files to a connector takes an Allow given ",
+    "verdict": "catalogue",
+    "promptId": "tool-result-mcp-connector-upload-hook-approved",
+    "promptIds": ["tool-result-mcp-connector-upload-substitute-approved"],
+    "label": "TOOL_RESULT_MCP_CONNECTOR_UPLOAD_HOOK_APPROVED_VAR_0",
+    "id": "tool-result-mcp-connector-upload-allow-given-at-terminal-prompt",
+    "name": "Tool Result: MCP connector upload — Allow must be given at the terminal prompt",
+    "desc": "Clause l in Hpi @44610374 giving the rule behind a no-file-sent refusal when a PermissionRequest hook or a substitute approver approved the call: sending files to a connector takes an Allow given at Claude Code's prompt in a terminal.",
+    "reason": "states the approval condition the model relays to the user; shared by the hook-approved and substitute-approved refusals"
+  },
+  "ab5082663ac171a0": {
+    "text": "Claude Code cannot send a file to a connector in this session",
+    "verdict": "catalogue",
+    "promptId": "tool-result-mcp-connector-file-not-called-reason",
+    "label": "TOOL_RESULT_MCP_CONNECTOR_FILE_NOT_CALLED_REASON_VAR_1",
+    "id": "tool-result-mcp-connector-file-client-sends-no-files-reason",
+    "name": "Tool Result: MCP connector file client sends no files reason",
+    "desc": "Reason fragment (client_sends_no_files) saying Claude Code cannot send a file to a connector in this session, so the tool was not called.",
+    "reason": "the reason the model is told and must relay to the user"
+  },
+  "662077c7fc54e193": {
+    "text": "this connector's connection does not take files",
+    "verdict": "catalogue",
+    "promptId": "tool-result-mcp-connector-file-not-called-reason",
+    "label": "TOOL_RESULT_MCP_CONNECTOR_FILE_NOT_CALLED_REASON_VAR_1",
+    "id": "tool-result-mcp-connector-file-files-not-spoken-reason",
+    "name": "Tool Result: MCP connector file connection takes no files reason",
+    "desc": "Reason fragment (files_not_spoken) saying this connector's connection does not take files, so the tool was not called.",
+    "reason": "the reason the model is told and must relay to the user"
+  },
+  "8342c9cb8cf0fc1f": {
+    "text": "Claude Code cannot send files to this connector",
+    "verdict": "catalogue",
+    "promptId": "tool-result-mcp-connector-file-not-called-reason",
+    "label": "TOOL_RESULT_MCP_CONNECTOR_FILE_NOT_CALLED_REASON_VAR_1",
+    "id": "tool-result-mcp-connector-file-no-upload-place-reason",
+    "name": "Tool Result: MCP connector file no upload place reason",
+    "desc": "Reason fragment (no_upload_place) saying Claude Code cannot send files to this connector, so the tool was not called.",
+    "reason": "the reason the model is told and must relay to the user"
+  },
+  "3f5119b41135ceb9": {
+    "text": "Claude Code does not upload a file for ",
+    "verdict": "catalogue",
+    "promptId": "tool-result-mcp-connector-file-not-called-reason",
+    "label": "TOOL_RESULT_MCP_CONNECTOR_FILE_NOT_CALLED_REASON_VAR_1",
+    "id": "tool-result-mcp-connector-file-no-upload-for-argument-reason",
+    "name": "Tool Result: MCP connector file no upload for argument reason",
+    "desc": "Default reason fragment saying Claude Code does not upload a file for the named argument now, so the tool was not called.",
+    "reason": "the default reason the model is told and must relay to the user"
   }
 }

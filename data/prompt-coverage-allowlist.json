@@ -608,5 +608,45 @@
     "verdict": "not-model-facing",
     "version": "2.1.318",
     "why": "describe() on the system/init SDK event field (@internal); value only informs hosts whether to color the word"
+  },
+  "data-sdk-result-process-turn-threads-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.319",
+    "why": "chunk-khgpwghf.js SDK control-protocol zod schema (result/success message process_turn_threads field, @internal CPU telemetry) .describe(): host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-mcp-call-check-permissions-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.319",
+    "why": "chunk-khgpwghf.js SDK control-protocol zod schema (mcp_call control request check_permissions field) .describe(): host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-set-has-subscribers-control-request": {
+    "verdict": "not-model-facing",
+    "version": "2.1.319",
+    "why": "chunk-khgpwghf.js SDK control-protocol zod schema (set_has_subscribers control request) .describe(): host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-voice-call-message-origin-schema": {
+    "verdict": "not-model-facing",
+    "version": "2.1.319",
+    "why": "chunk-khgpwghf.js SDK control-protocol zod schema (voice-call message origin; the model sees a separate framing text, not this describe) .describe(): host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-mcp-server-connectorid-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.319",
+    "why": "chunk-khgpwghf.js SDK control-protocol zod schema (SDK MCP server connectorId field) .describe(): host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-gateway-govcloud-upstream-isolation-warning": {
+    "verdict": "not-model-facing",
+    "version": "2.1.319",
+    "why": "chunk-85d4q736.js awe() (called from swe gateway startup): returned warnings go to Cr(\"warn\", ...) which sinks to stdio (stderr/log) for the gateway operator; the gateway process is a proxy and the text is never a tool_result or system reminder."
+  },
+  "data-sdk-can-use-tool-decision-reason-code-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.319",
+    "why": "chunk-khgpwghf.js SDK control-protocol zod schema (can_use_tool request decision_reason_code field and the sibling permission_denied system event) .describe(): host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-gateway-model-policy-overlap-warning": {
+    "verdict": "not-model-facing",
+    "version": "2.1.319",
+    "why": "chunk-85d4q736.js awe() (called from swe gateway startup): returned warnings go to Cr(\"warn\", ...) which sinks to stdio (stderr/log) for the gateway operator; the gateway process is a proxy and the text is never a tool_result or system reminder."
   }
 }
