@@ -1,6 +1,6 @@
 use super::learning::{capture, record_worker, Recording, MAX_OPERANDS};
 use super::options::operands;
-use super::selection::{eligible_mask, recognize, resolve_original, trusted_gnu};
+use super::selection::{eligible_mask, recognize, resolve_original, trusted_gnu, trusted_uutils};
 use super::signals::SignalRelay;
 use super::{Flavor, Viewer};
 use std::ffi::{OsStr, OsString};
@@ -36,7 +36,7 @@ fn parse(viewer: Viewer, flavor: Flavor, values: &[&str]) -> Option<Vec<String>>
         viewer,
         flavor,
         &values.iter().map(OsString::from).collect::<Vec<_>>(),
-        flavor == Flavor::Gnu,
+        flavor != Flavor::Bsd,
     )
     .map(|items| {
         items
@@ -80,6 +80,32 @@ fn viewer_arguments_preserve_option_operands_and_stdin() {
         parse(Viewer::Sed, Flavor::Gnu, &["one", "-e", "1p"]),
         Some(vec!["one".into()])
     );
+    assert_eq!(
+        parse(Viewer::Head, Flavor::Uutils, &["one", "--lines=1K", "-z"]),
+        Some(vec!["one".into()])
+    );
+    assert_eq!(
+        parse(Viewer::Cat, Flavor::Uutils, &["-A", "one", "--show-ends"]),
+        Some(vec!["one".into()])
+    );
+}
+
+#[test]
+fn uutils_is_trusted_only_at_its_packaged_root_owned_path() {
+    let fixture = Fixture::new();
+    let copy = fixture.0.join("cat");
+    fs::write(&copy, b"\x7fELFuutils coreutils").unwrap();
+    let metadata = fs::metadata(&copy).unwrap();
+    assert!(!trusted_uutils(&copy, Viewer::Cat, &metadata));
+    assert_eq!(recognize(&copy, Viewer::Cat), None);
+    let packaged = Path::new("/usr/lib/cargo/bin/coreutils/cat");
+    if let Ok(metadata) = fs::metadata(packaged) {
+        assert!(!trusted_uutils(packaged, Viewer::Sed, &metadata));
+        assert_eq!(
+            recognize(Path::new("/usr/bin/cat"), Viewer::Cat),
+            Some(Flavor::Uutils)
+        );
+    }
 }
 
 #[test]
