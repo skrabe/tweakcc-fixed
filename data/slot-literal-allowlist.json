@@ -3955,26 +3955,6 @@
     "text": "Session now in the cloud: ",
     "reason": "Head quasi of `p=\\`Session now in the cloud: ${o}\\`` at 44715536 in X; p leads every switch return, including the reconnected `${p}\\nNew /remote-control session is active…`. It is the state statement that the session moved."
   },
-  "a750efcd4b0e2ca0": {
-    "promptId": "tool-result-bash-worktree-guard-operand-with-word",
-    "label": "TOOL_RESULT_BASH_WORKTREE_GUARD_OPERAND_WITH_WORD_VAR_0",
-    "verdict": "catalogue",
-    "id": "tool-result-bash-worktree-guard-operand-kubectl-exec-next-to-assembled-input",
-    "name": "Tool Result: Bash Worktree Guard — kubectl/oc exec operand computed next to input assembled at runtime",
-    "desc": "Tells the model that a kubectl/oc exec command was refused because one of its operands is computed at runtime next to input assembled at runtime.",
-    "text": " next to input assembled at runtime",
-    "reason": "In b8e's kubectl/oc exec branch (~12030358) `ke` is bound in the same for-loop to the template `${Mf(n[he].value)} next to input assembled at runtime`, and `Nl(`${e} exec`,`with ${ke}`)` emits it inside the worktree-guard refusal (\"runs kubectl exec with … , so what it runs cannot be shown not to be git\"). It is the refusal reason: a computed operand sits next to runtime-assembled input."
-  },
-  "9f30dd0a3d62516b": {
-    "promptId": "tool-result-bash-worktree-guard-operand-with-word",
-    "label": "TOOL_RESULT_BASH_WORKTREE_GUARD_OPERAND_WITH_WORD_VAR_0",
-    "verdict": "catalogue",
-    "id": "tool-result-bash-worktree-guard-operand-kubectl-exec-descriptor-fed-here",
-    "name": "Tool Result: Bash Worktree Guard — kubectl/oc exec word naming a descriptor fed here",
-    "desc": "Tells the model that a kubectl/oc exec command was refused because an operand names a file descriptor that is fed input in this command.",
-    "text": " naming a descriptor fed here",
-    "reason": "Same loop as a750efcd (~12030426): `ke` is bound to the template `${_e} naming a descriptor fed here` when the input is assembled and the word names a fed descriptor, then emitted via `Nl(`${e} exec`,`with ${ke}`)` in the worktree-guard refusal. It is a distinct refusal reason."
-  },
   "7ead8956f57a91b0": {
     "promptId": "slash-command-plugin-marketplace-error-result",
     "label": "SLASH_COMMAND_PLUGIN_MARKETPLACE_ERROR_RESULT_VAR_0",
@@ -4793,16 +4773,6 @@
     "verdict": "glue",
     "text": "The user sent you ",
     "reason": "opening clause naming the event; the instruction follows in the host sentence"
-  },
-  "ed1e6a9f28d9d772": {
-    "promptId": "tool-result-bash-worktree-guard-shell-filled-variable",
-    "label": "TOOL_RESULT_BASH_WORKTREE_GUARD_SHELL_FILLED_VARIABLE_VAR_3",
-    "verdict": "catalogue",
-    "text": ", so use another variable name",
-    "reason": "tells the model to rename the variable",
-    "id": "tool-result-bash-worktree-guard-use-another-variable-name",
-    "name": "Tool Result: Bash worktree guard — use another variable name",
-    "desc": "Tells the model to pick a different variable name when the guard rejects a shell-filled integer variable."
   },
   "7f1718f1c2469e4e": {
     "promptId": "system-prompt-environment-github-session-proxy",

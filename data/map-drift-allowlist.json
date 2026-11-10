@@ -36,5 +36,9 @@
     "system-prompt-chrome-browser-mcp-tools": "Upstream named these previously generic slots in 2.1.306; the identifiers are unchanged, so each name stays on the same variable. Overrides renamed to match.",
     "system-prompt-claude-in-chrome-deferred-tool-loading": "Upstream named these previously generic slots in 2.1.306; the identifiers are unchanged, so each name stays on the same variable. Overrides renamed to match.",
     "system-prompt-windows-sandbox-localhost-user-alternatives": "Upstream named these previously generic slots in 2.1.306; the identifiers are unchanged, so each name stays on the same variable. Overrides renamed to match."
+  },
+  "2.1.319->2.1.322": {
+    "tool-description-projects": "Upstream turned the local_path size limit into a slot and dropped the home-directory conditional; the two directory slots keep their names by content and VAR_8 now carries the size. The override is realigned to the new pristine.",
+    "system-reminder-auto-mode-no-verdict-after-another-hook-rewrite": "Reused id for the reworded reminder (\"changed by a hook\" became \"changed\"); the two slots are the same classifier and tool name in the same positions and only fell back to generic names. The override is a pristine stub re-synced with the new names."
   }
 }

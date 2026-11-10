@@ -1123,5 +1123,17 @@
     "shape": "concat",
     "excerpt": "Couldn’t add the note. If the box has text, send or clear it, then try again.",
     "why": "Side-note respond plugin: shown only as a ui.toast when the prompt box cannot take the note; never sent to the model."
+  },
+  "312cbda82b136038": {
+    "excerpt": "also . This list adds to the skills listed earlier in this conversation and is not the full list",
+    "note": "captured per-FRAGMENT as of 2.1.322 (the skill_listing renderer picks the pair by addsToEarlier at runtime; the joined form never exists in the bundle); coverage is judged on the fragments, catalogued as system-reminder-skill-listing-adds-to-earlier(-suffix)",
+    "shape": "array",
+    "verdict": "internal"
+  },
+  "f6ef18c4b5bd5032": {
+    "excerpt": "This machine may require organization login enforcement, but the policy file failed to load. Contact your administrator.",
+    "note": "ui: default text of the managed-policy-unreadable error returned by the forced-org-login check; shown to the user at login, never sent to the model.",
+    "shape": "array",
+    "verdict": "ui"
   }
 }
