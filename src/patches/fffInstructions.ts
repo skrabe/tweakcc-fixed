@@ -293,8 +293,15 @@ const readApiScope = (file: string): Scope | null =>
   readScope(file, API_HOOK_LOOP_SCOPE) ??
   readScope(file, API_LOOP_SCOPE) ??
   readScope(file, API_SCOPE);
+// CC 2.1.322+: the context-usage function takes six parameters and its
+// options destructure continues with `originalMessages:` instead of
+// `mainThreadAgentDefinition:`.
+const CONTEXT_SCOPE_2_1_322 =
+  /(?:^|[;}])async function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+)\)\{let\{session:[$\w]+,terminalWidth:[$\w]+,toolUseContext:[$\w]+,originalMessages:[$\w]+,/g;
 const CONTEXT_SCOPE =
   /(?:^|[;}])async function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+)\)\{let\{session:[$\w]+,terminalWidth:[$\w]+,toolUseContext:[$\w]+,mainThreadAgentDefinition:/g;
+const readContextScope = (file: string): Scope | null =>
+  readScope(file, CONTEXT_SCOPE_2_1_322) ?? readScope(file, CONTEXT_SCOPE);
 
 export const writeFffInstructions = (
   file: string,
@@ -415,7 +422,7 @@ export const writeFffInstructions = (
 export const writeFffInstructionHygiene = (file: string): string | null => {
   if (!file.includes('prompt_snapshot')) return file;
   const api = readApiScope(file);
-  const context = readScope(file, CONTEXT_SCOPE);
+  const context = readContextScope(file);
   const marker = '__tweakccFffToolRecords';
   const helper = serialize(normalizeFffRecordedTools, marker);
   const payload = escapeNonAscii(

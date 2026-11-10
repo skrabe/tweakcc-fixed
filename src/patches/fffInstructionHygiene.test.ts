@@ -68,6 +68,18 @@ const PRISTINE_2_1_314 =
   RENDER_2_1_299 +
   SERIALIZER +
   ';var $type="prompt_snapshot";';
+// CC 2.1.322: the context function has six parameters and destructures
+// `originalMessages:` (plus further options) after `toolUseContext:`.
+const CONTEXT_2_1_322 = CONTEXT.replace(
+  ';async function $context($messages,$model,$permissions,$visible,$agents,$details){let{session:$session,terminalWidth:$width,toolUseContext:$current,mainThreadAgentDefinition:$agent}=$details;',
+  ';async function $context($messages,$model,$permissions,$visible,$agents,$details){let{session:$session,terminalWidth:$width,toolUseContext:$current,originalMessages:$original,configuredWindow:$window,detail:$detail="full"}=$details;'
+);
+const PRISTINE_2_1_322 =
+  API_2_1_314 +
+  CONTEXT_2_1_322 +
+  RENDER_2_1_299 +
+  SERIALIZER +
+  ';var $type="prompt_snapshot";';
 const TOOLS = [{ name: 'Bash' }, { name: 'Grep' }, { name: 'Glob' }];
 
 type Entry = {
@@ -350,6 +362,8 @@ describe('fff hygiene native call sites', () => {
     ['2.1.299', PRISTINE_2_1_299, true],
     ['2.1.314', PRISTINE_2_1_314, false],
     ['2.1.314', PRISTINE_2_1_314, true],
+    ['2.1.322', PRISTINE_2_1_322, false],
+    ['2.1.322', PRISTINE_2_1_322, true],
   ] as const)(
     'cleans resumed API/context maps without changing saved records, shape=%s, enabled=%s',
     async (_shape, pristine, enabled) => {
@@ -535,6 +549,30 @@ describe('fff hygiene native call sites', () => {
     expect(loop).toBeGreaterThan(-1);
     expect(site).toBeGreaterThan(loop);
     expect(repaired.indexOf('}yield*$loop()}')).toBeGreaterThan(site);
+  });
+
+  it('scopes the 2.1.322 context selection to the originalMessages context function', () => {
+    expect(PRISTINE_2_1_322).not.toContain('mainThreadAgentDefinition:');
+    const repaired = writeFffInstructionHygiene(PRISTINE_2_1_322)!;
+    expect(repaired).not.toBeNull();
+    const header = repaired.indexOf(
+      'toolUseContext:$current,originalMessages:$original,'
+    );
+    const site = repaired.indexOf('$tools=(function __tweakccFffToolRecords(');
+    const prompt = repaired.indexOf(
+      '$counted=(function __tweakccRecordedPrompt('
+    );
+    const end = repaired.indexOf(
+      'return{systemPrompt:$counted,toolDescriptions:$descriptions'
+    );
+    expect(header).toBeGreaterThan(-1);
+    expect(site).toBeGreaterThan(header);
+    expect(prompt).toBeGreaterThan(site);
+    expect(end).toBeGreaterThan(prompt);
+    expect(repaired).toContain(
+      '$snapshot=$active($rows,$current.options),$tools=(function __tweakccFffToolRecords('
+    );
+    expect(writeFffInstructionHygiene(repaired)).toBe(repaired);
   });
 
   it('does nothing on pristine builds without native prompt snapshots', () => {

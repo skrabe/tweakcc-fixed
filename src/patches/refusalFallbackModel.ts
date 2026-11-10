@@ -663,9 +663,16 @@ const patchReturnOnReplTurnEnd = (file: string): string | null => {
  * the model.
  */
 const patchReturnOnHeadlessTurnEnd = (file: string): string | null => {
-  const turn = file.match(
-    /noteTurnEnded\(([$\w]+),([$\w]+),([$\w]+)\)\{if\(this\.selector\.noteTurnEnded\(\1\),\1\|\|\3\.num_turns>0\)\{/
-  );
+  const turn =
+    // Method 1 (2.1.322+): the delegation is its own statement, and the body
+    // goes on to read the result message's `num_turns` in a later branch
+    file.match(
+      /noteTurnEnded\(([$\w]+),([$\w]+),([$\w]+)\)\{this\.selector\.noteTurnEnded\(\1\);(?=[^{}]*else if\(\3\.num_turns>0\)\{)/
+    ) ??
+    // Method 2: the delegation and the `num_turns` test share one condition
+    file.match(
+      /noteTurnEnded\(([$\w]+),([$\w]+),([$\w]+)\)\{if\(this\.selector\.noteTurnEnded\(\1\),\1\|\|\3\.num_turns>0\)\{/
+    );
   if (!turn || turn.index === undefined) {
     if (
       /noteTurnEnded\([$\w]+,[$\w]+,[$\w]+\)\{try\{let __tweakccN=/.test(file)

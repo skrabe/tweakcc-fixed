@@ -1109,6 +1109,105 @@ const CLAUDEMD_INJECTION: ReminderInjection = {
   },
 };
 
+// Method 1 for skills-listing (2.1.322+). The renderer destructures a delta
+// pair before building content:
+//   let[n,r]=e.addsToEarlier===!0?["also ",". This list adds to …"]:["",""];
+// and both content arms interpolate `${n}`/`${r}`. Anchored on that code shape
+// (key, the `let[a,b]=COND?[…]:[…]` pair, the wrapper calls), never on prose;
+// the content expression is walked structurally. The override replaces only
+// the plain (Skill-tool) arm; the delta declaration, the script-mode condition
+// and the script-mode arm stay verbatim. {{also}} / {{adds_to_earlier_note}}
+// bind to the pair. A body using neither token keeps pristine's plain arm on a
+// delta listing (`addsToEarlier`), so the model is never told a partial list is
+// the full one. Returns undefined when this shape is absent (older build).
+const SKILLS_DELTA_HEAD =
+  /skill_listing:\(([$\w]+)\)=>\{if\(!\1\.content\)return\[\];let\[([$\w]+),([$\w]+)\]=([^;?]{1,200})\?\[(?:"(?:[^"\\]|\\.)*"|,)*\]:\[(?:"(?:[^"\\]|\\.)*"|,)*\];return ([$\w]+)\(\[([$\w]+)\(\{content:/;
+const SKILLS_DELTA_TAIL = ',isMeta:!0})])}';
+
+const applySkillsDelta = (
+  content: string,
+  body: string,
+  isSuppressed: boolean
+): string | null | undefined => {
+  const m = content.match(SKILLS_DELTA_HEAD);
+  if (!m || m.index === undefined) return undefined;
+  const [, argParam, alsoVar, noteVar, addsCond] = m;
+  const exprStart = m.index + m[0].length;
+  const exprEnd = topLevelIndex(content, exprStart, ',');
+  if (!content.startsWith(SKILLS_DELTA_TAIL, exprEnd)) {
+    console.error(
+      'patch: reminder skills-listing: skill_listing content expression has an unexpected shape'
+    );
+    return null;
+  }
+  const end = exprEnd + SKILLS_DELTA_TAIL.length;
+  let replacement: string;
+  if (isSuppressed) {
+    replacement = `skill_listing:(${argParam})=>{return [];}`;
+  } else {
+    const expr = content.slice(exprStart, exprEnd);
+    // `COND?`script arm`:PLAIN` or a bare PLAIN.
+    let scriptPart = '';
+    let plainExpr = expr;
+    const q = topLevelIndex(expr, 0, '?');
+    if (q < expr.length) {
+      const se = expr[q + 1] === '`' ? literalEnd(expr, q + 1) : -1;
+      if (se < 0 || expr[se + 1] !== ':') {
+        console.error(
+          'patch: reminder skills-listing: failed to split the script-mode ternary'
+        );
+        return null;
+      }
+      scriptPart = expr.slice(0, se + 2);
+      plainExpr = expr.slice(se + 2);
+    }
+    // PLAIN is pristine's template, or this patch's own
+    // `(ADDS?`pristine`:`user`)` from an earlier apply (idempotent re-apply).
+    let pristinePlain: string | null = null;
+    if (
+      plainExpr[0] === '`' &&
+      literalEnd(plainExpr, 0) === plainExpr.length - 1
+    ) {
+      pristinePlain = plainExpr;
+    } else if (plainExpr.startsWith(`(${addsCond}?\``)) {
+      const from = addsCond.length + 2;
+      const pe = literalEnd(plainExpr, from);
+      if (pe > 0) pristinePlain = plainExpr.slice(from, pe + 1);
+    }
+    if (pristinePlain === null) {
+      console.error(
+        'patch: reminder skills-listing: failed to find the plain skill_listing arm'
+      );
+      return null;
+    }
+    const names: Record<string, string> = {
+      content: `${argParam}.content`,
+      also: alsoVar,
+      addsToEarlierNote: noteVar,
+    };
+    const userArm =
+      '`' +
+      body.replace(
+        /\$\{H\.(content|also|addsToEarlierNote)\}/g,
+        (_, k: string) => `\${${names[k]}}`
+      ) +
+      '`';
+    const usesDelta = /\$\{H\.(?:also|addsToEarlierNote)\}/.test(body);
+    const plain = usesDelta
+      ? userArm
+      : `(${addsCond}?${pristinePlain}:${userArm})`;
+    replacement =
+      content.slice(m.index, exprStart) +
+      scriptPart +
+      plain +
+      SKILLS_DELTA_TAIL;
+  }
+  const newContent =
+    content.slice(0, m.index) + replacement + content.slice(end);
+  showDiff(content, newContent, replacement, m.index, end);
+  return newContent;
+};
+
 const SKILLS_INJECTION: ReminderInjection = {
   id: 'skills-listing',
   name: 'Skills listing reminder',
@@ -1116,11 +1215,23 @@ const SKILLS_INJECTION: ReminderInjection = {
     'The "The following skills are available..." block. Empty .md body = suppress entirely.',
   placeholders: {
     skill_content: '${H.content}',
+    also: '${H.also}',
+    adds_to_earlier_note: '${H.addsToEarlierNote}',
   },
-  defaultBody: `The following skills are available for use with the Skill tool:
+  previousDefaultBodies: [
+    'The following skills are available for use with the Skill tool:\n\n{{skill_content}}',
+  ],
+  // Mirrors the 2.1.322 plain arm: {{also}} is "also " and
+  // {{adds_to_earlier_note}} is ". This list adds to the skills listed
+  // earlier…" when the listing is a delta on an earlier one, both "" otherwise.
+  defaultBody: `The following skills are {{also}}available for use with the Skill tool{{adds_to_earlier_note}}:
 
 {{skill_content}}`,
   apply(content, body, isSuppressed) {
+    const method1 = applySkillsDelta(content, body, isSuppressed);
+    if (method1 !== undefined) return method1;
+    // Builds before 2.1.322 have no delta listing: the delta tokens render empty.
+    body = body.replace(/\$\{H\.(?:also|addsToEarlierNote)\}/g, '');
     // CC 2.1.318 made `content:` a ternary: a script-mode arm (taken when the
     // model drives tools from a script and does not call Skill directly) that
     // teaches `await tools.Skill({skill: "name"})`, else the plain "available
@@ -1663,6 +1774,45 @@ const TOOL_CALLED_INJECTION: ReminderInjection = {
   defaultBody:
     'Called the {{tool_name}} tool with the following input: {{tool_input}}',
   apply(content, body, isSuppressed) {
+    // Method 1 (2.1.322+, also matches older builds): anchored on the code
+    // shape, not the prose — a two-parameter function returning one meta
+    // message whose template interpolates the first parameter bare and the
+    // second through one or more wrapper calls. 2.1.322 added the closing-tag
+    // escaper around the serializer (`${jen(_(n))}`), which broke the
+    // single-call prose anchor below. {{tool_input}} binds to the whole
+    // wrapped expression, so the escaper stays. Must be unique in the bundle.
+    const shape =
+      /function ([$\w]+)\(([$\w]+),([$\w]+)\)\{return ([$\w]+)\(\{content:`[^`$\\]*\$\{\2\}[^`$\\]*\$\{((?:[$\w]+\()+\3\)+)\}`,isMeta:!0\}\)\}/g;
+    const hits = [...content.matchAll(shape)];
+    if (hits.length === 1 && hits[0].index !== undefined) {
+      const m = hits[0];
+      const [region, fnName, p1, p2, j6Name, inputExpr] = m;
+      const open = (inputExpr.match(/\(/g) ?? []).length;
+      const close = (inputExpr.match(/\)/g) ?? []).length;
+      if (open === close) {
+        const replacement = isSuppressed
+          ? `function ${fnName}(${p1},${p2}){return ${j6Name}({content:"",isMeta:!0})}`
+          : `function ${fnName}(${p1},${p2}){return ${j6Name}({content:\`${body
+              .replace(/\$\{H\}/g, () => `\${${p1}}`)
+              .replace(
+                /\$\{SH\(_\)\}/g,
+                () => `\${${inputExpr}}`
+              )}\`,isMeta:!0})}`;
+        const newContent =
+          content.slice(0, m.index) +
+          replacement +
+          content.slice(m.index! + region.length);
+        showDiff(
+          content,
+          newContent,
+          replacement,
+          m.index!,
+          m.index! + region.length
+        );
+        return newContent;
+      }
+    }
+    // Method 2 (<=2.1.321): prose anchor, single serializer call.
     return findAndReplace(
       content,
       /function ([$\w]+)\(([$\w]+),([$\w]+)\)\{return ([$\w]+)\(\{content:`Called the \$\{\2\} tool with the following input: \$\{([$\w]+)\(\3\)\}`,isMeta:!0\}\)\}/,
@@ -1676,7 +1826,13 @@ const TOOL_CALLED_INJECTION: ReminderInjection = {
           .replace(/\$\{SH\(_\)\}/g, `\${${shName}(${p2})}`);
         return `function ${fnName}(${p1},${p2}){return ${j6Name}({content:\`${bodyForBuild}\`,isMeta:!0})}`;
       },
-      'tool-called'
+      'tool-called',
+      // A suppressed preamble left by an earlier apply.
+      c =>
+        isSuppressed &&
+        /function [$\w]+\([$\w]+,[$\w]+\)\{return [$\w]+\(\{content:"",isMeta:!0\}\)\}/.test(
+          c
+        )
     );
   },
 };
@@ -1862,6 +2018,117 @@ const PDF_REF_INJECTION: ReminderInjection = {
   },
 };
 
+// Method 1 for edited-text-file (2.1.322+, also parses the 2.1.234 shape).
+// 2.1.322 hoists more than the opening sentence:
+//   let n=`Note: ${df(e.filename)} …`,r=fje(e.snippet,e,e.filename),s=typeof r==="string"?jen(r):r;
+// and the snippet branch ends `${s}${s===r?"":`\n${Hvo(e.filename)}`}` — a
+// nested template the flat `(?:[^`\\]|\\.)*` regex of Method 2 cannot span.
+// So the handler is walked structurally: the key and `let NAME=`` open it,
+// the braces are matched, the `let` list is split at top level and kept
+// verbatim, and the `return O([J({content:P.snippet===""?A:B,isMeta:!0})])`
+// tail is checked by code shape. {{snippet}} binds to the snippet branch from
+// its first hoisted-local interpolation to the end (the escaped snippet plus
+// its "not shown exactly as on disk" note); {{changes}} is that branch's tail
+// after the hoisted sentence under pristine's own `snippet===""` test.
+// Returns undefined when the shape is absent so older methods can try.
+const applyEditedTextFileStructural = (
+  content: string,
+  body: string,
+  isSuppressed: boolean
+): string | null | undefined => {
+  const m = content.match(/edited_text_file:\(([$\w]+)\)=>\{let ([$\w]+)=`/);
+  if (!m || m.index === undefined) return undefined;
+  const [, hParam, prefixVar] = m;
+  const open = m.index + m[0].indexOf('{');
+  const close = matchingBrace(content, open);
+  if (close < 0) return undefined;
+  const fnBody = content.slice(open + 1, close);
+  const declEnd = topLevelIndex(fnBody, 4, ';');
+  if (fnBody[declEnd] !== ';') return undefined;
+  const declSrc = fnBody.slice(4, declEnd);
+  const decls = splitTopLevel(declSrc, ',').map(d =>
+    d.match(/^([$\w]+)=([\s\S]+)$/)
+  );
+  if (decls.some(d => d === null)) return undefined;
+  const locals = decls.map(d => d![1]);
+  const prefixTpl = decls[0]![2];
+  if (literalEnd(prefixTpl, 0) !== prefixTpl.length - 1) return undefined;
+  const rest = fnBody.slice(declEnd + 1);
+  const head = rest.match(
+    new RegExp(
+      `^return ([$\\w]+)\\(\\[([$\\w]+)\\(\\{content:${escapeRe(hParam)}\\.snippet===""\\?`
+    )
+  );
+  if (!head) return undefined;
+  const [, o5Name, j6Name] = head;
+  const emptyStart = head[0].length;
+  const emptyEnd = rest[emptyStart] === '`' ? literalEnd(rest, emptyStart) : -1;
+  if (emptyEnd < 0 || rest[emptyEnd + 1] !== ':' || rest[emptyEnd + 2] !== '`')
+    return undefined;
+  const fullEnd = literalEnd(rest, emptyEnd + 2);
+  if (fullEnd < 0 || rest.slice(fullEnd + 1) !== ',isMeta:!0})])')
+    return undefined;
+  const empty = rest.slice(emptyStart, emptyEnd + 1);
+  const full = rest.slice(emptyEnd + 2, fullEnd + 1);
+  const regionEnd = close + 1;
+  const region = content.slice(m.index, regionEnd);
+
+  let replacement: string;
+  if (isSuppressed) {
+    replacement = `edited_text_file:(${hParam})=>[]`;
+  } else {
+    const lead = new RegExp(`^\`\\$\\{${escapeRe(prefixVar)}\\}\\s*`);
+    const changes =
+      lead.test(empty) && lead.test(full)
+        ? `${hParam}.snippet===""?${empty.replace(lead, '`')}:${full.replace(lead, '`')}`
+        : null;
+    // The snippet branch from its first hoisted-local slot (2.1.322's `${s}`)
+    // to the end; on the 2.1.234 shape, the bare `${e.snippet}` slot.
+    let snippet: string | null = null;
+    const tpl = full.slice(1, -1);
+    for (let i = 0; i < tpl.length; i++) {
+      if (tpl[i] === '\\') i++;
+      else if (tpl[i] === '$' && tpl[i + 1] === '{') {
+        const end = matchingBrace(tpl, i + 1);
+        if (end < 0) break;
+        const inner = tpl.slice(i + 2, end);
+        if (inner !== prefixVar && locals.includes(inner)) {
+          snippet = '`' + tpl.slice(i) + '`';
+          break;
+        }
+        i = end;
+      }
+    }
+    snippet ??= slotExpr(region, hParam, 'snippet');
+    const resolved = resolveSlots('edited-text-file', body, [
+      {
+        token: '${H.filename}',
+        expr: slotExpr(prefixTpl, hParam, 'filename'),
+      },
+      { token: '${H.snippet}', expr: snippet, optional: true },
+      { token: '${H.changes}', expr: changes },
+      {
+        token: '${H.readTool}',
+        expr:
+          interpolations(empty.slice(1, -1)).find(
+            x =>
+              /^[$\w]+$/.test(x) &&
+              x !== prefixVar &&
+              x !== hParam &&
+              !locals.includes(x)
+          ) ?? null,
+      },
+    ]);
+    if (resolved === null) return null;
+    // Every hoisted local stays declared: the bound slots reference them.
+    replacement = `edited_text_file:(${hParam})=>{let ${declSrc};return ${emitReminder(o5Name, j6Name, body, resolved)}}`;
+  }
+  const newContent =
+    content.slice(0, m.index) + replacement + content.slice(regionEnd);
+  showDiff(content, newContent, replacement, m.index, regionEnd);
+  return newContent;
+};
+
 const EDITED_TEXT_FILE_INJECTION: ReminderInjection = {
   id: 'edited-text-file',
   previousDefaultBodies: [
@@ -1902,7 +2169,13 @@ const EDITED_TEXT_FILE_INJECTION: ReminderInjection = {
     'Pristine has two branches: with a diff snippet ("Here are the relevant changes (shown with line numbers):" + the snippet) and without one, when the snippet budget ran out ("The changes are not shown here; use <Read> if you need the current content."). ' +
     '{{changes}} is that pristine tail for whichever branch fires; {{snippet}} is the bare snippet (empty on the no-snippet branch, so a line holding only it disappears); {{read_tool}} is the Read tool name.',
   apply(content, body, isSuppressed) {
-    // Method 1 (2.1.234+): the shared opening sentence is hoisted into a local
+    const structural = applyEditedTextFileStructural(
+      content,
+      body,
+      isSuppressed
+    );
+    if (structural !== undefined) return structural;
+    // Method 2 (2.1.234+): the shared opening sentence is hoisted into a local
     // const and both ternary branches interpolate it, and the filename runs
     // through the reminder escaper. Anchored on the key plus the code shape, so
     // the (freely reworded) prose in either branch does not break it.
@@ -1968,7 +2241,7 @@ const EDITED_TEXT_FILE_INJECTION: ReminderInjection = {
       );
       return newContent;
     }
-    // Method 2 (<=2.1.233): both branches spelled out inline, no hoisted const.
+    // Method 3 (<=2.1.233): both branches spelled out inline, no hoisted const.
     // cli.js literal has a real newline before ${H.snippet}.
     return findAndReplace(
       content,

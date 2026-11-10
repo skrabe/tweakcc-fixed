@@ -389,6 +389,44 @@ describe('writePrintToolsFilter', () => {
     ).not.toThrow();
   });
 
+  // CC 2.1.322 dropped the eager array: the print context factory wires the
+  // thunk straight into `tools:` beside `mcpClients:`, and the only
+  // `tools:X,mcpClients:Y,appendSystemPrompt:` use left belongs to an unrelated
+  // `analysisOnly` caller whose X is a parameter, never `X=computeFn(S)`.
+  const direct322 =
+    'function $an(o,m,y){return $rq({tools:o,mcpClients:m,appendSystemPrompt:y,analysisOnly:!0})}' +
+    'let $zh=()=>1,$th=()=>$cf($gs());$hm({x:()=>$th()});let $us=()=>$mk($gs().mcp);' +
+    'let $fm=()=>({session:$e,refreshTools:$th,refreshMcpClients:$us,verbose:1}),' +
+    '$xm=(M)=>({...M,commands:()=>1,tools:$th,mcpClients:$us,answers:2});' +
+    '$en=$lf($xm($fm()));';
+
+  it('filters the thunk alone on the CC 2.1.322 direct-wired print path', () => {
+    const out = writePrintToolsFilter(direct322, TS, 'all')!;
+    expect(out).not.toBeNull();
+    expect(out).toContain(',$th=()=>{let s=$gs();return ((t,s)=>{const p=');
+    expect(out).toContain('})($cf(s),s)};$hm(');
+    // the context factory still hands the (now filtering) thunk to both slots
+    expect(out).toContain('refreshTools:$th,refreshMcpClients:$us,verbose:');
+    expect(out).toContain(',tools:$th,mcpClients:$us,answers:');
+    // the unrelated analysisOnly caller is untouched
+    expect(out).toContain(
+      'return $rq({tools:o,mcpClients:m,appendSystemPrompt:y,analysisOnly:!0})'
+    );
+    expect(() => new Function(out)).not.toThrow();
+  });
+
+  it('is idempotent on the CC 2.1.322 shape', () => {
+    const once = writePrintToolsFilter(direct322, TS, 'all')!;
+    expect(writePrintToolsFilter(once, TS, 'all')).toBe(once);
+  });
+
+  it('still fails when no eager declaration exists and the thunk is not wired', () => {
+    const err = silenceErr();
+    const unwired = direct322.replace(',tools:$th,mcpClients:$us,', ',x:1,');
+    expect(writePrintToolsFilter(unwired, TS, 'all')).toBeNull();
+    err.mockRestore();
+  });
+
   it('returns null when the print tools init is absent', () => {
     const err = silenceErr();
     expect(writePrintToolsFilter('x=1', TS, 'all')).toBeNull();

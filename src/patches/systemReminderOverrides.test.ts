@@ -1647,3 +1647,224 @@ describe('skills-listing reminder script-mode ternary', () => {
     expect(skillsListing.apply(drifted, 'x ${H.content}', false)).toBeNull();
   });
 });
+
+// CC 2.1.322 shapes, copied from the real bundle with synthetic names.
+
+// skill_listing destructures a delta pair (`addsToEarlier`) and both content
+// arms interpolate it.
+const MOCK_SKILLS_2322 =
+  'skill_listing:(q)=>{if(!q.content)return[];let[n,r]=q.addsToEarlier===!0?["also ",". This list adds to the skills listed earlier in this conversation and is not the full list"]:["",""];' +
+  'return Kd([Ce({content:Qa()&&Zb()&&q.callsSkillToolDirectly!==!0?' +
+  '`The following skills are ${n}available; a script loads one with \\`await tools.Skill({skill: "name"})\\`, ' +
+  "and its instructions arrive as a message right after the script's result${r}:\n\n${q.content}`:" +
+  '`The following skills are ${n}available for use with the Skill tool${r}:\n\n${q.content}`,isMeta:!0})])},' +
+  'dynamic_skill:(q)=>[]';
+
+const runSkills = (src: string, script: boolean) => {
+  const start = src.indexOf('skill_listing:');
+  const end = src.indexOf(',dynamic_skill:');
+  const fn = new Function(
+    'Kd',
+    'Ce',
+    'Qa',
+    'Zb',
+    `return ({${src.slice(start, end)}}).skill_listing`
+  )(
+    (x: unknown) => x,
+    (o: { content: string }) => o.content,
+    () => script,
+    () => true
+  ) as (e: Record<string, unknown>) => string[];
+  return (e: Record<string, unknown>) => fn(e)[0];
+};
+
+describe('skills-listing reminder 2.1.322 addsToEarlier shape', () => {
+  it('binds {{also}} / {{adds_to_earlier_note}} and keeps the delta pair and script arm', () => {
+    const out = skillsListing.apply(
+      MOCK_SKILLS_2322,
+      sub(
+        'skills-listing',
+        'Skills {{also}}here{{adds_to_earlier_note}}:\n\n{{skill_content}}'
+      ),
+      false
+    )!;
+    expect(out).toContain(
+      'let[n,r]=q.addsToEarlier===!0?["also ",". This list adds to the skills listed earlier in this conversation and is not the full list"]:["",""];'
+    );
+    expect(out).toContain("right after the script's result${r}:");
+    expect(out).not.toContain('for use with the Skill tool');
+    const plain = runSkills(out, false);
+    expect(plain({ content: 'L' })).toBe('Skills here:\n\nL');
+    expect(plain({ content: 'L', addsToEarlier: true })).toBe(
+      'Skills also here. This list adds to the skills listed earlier in this conversation and is not the full list:\n\nL'
+    );
+    expect(runSkills(out, true)({ content: 'L' })).toContain(
+      'await tools.Skill'
+    );
+    expect(plain({ content: '' })).toBeUndefined();
+  });
+
+  it('a body without the delta tokens keeps pristine wording on a delta listing', () => {
+    const out = skillsListing.apply(
+      MOCK_SKILLS_2322,
+      sub('skills-listing', 'Skills:\n\n{{skill_content}}'),
+      false
+    )!;
+    const plain = runSkills(out, false);
+    expect(plain({ content: 'L' })).toBe('Skills:\n\nL');
+    expect(plain({ content: 'L', addsToEarlier: true })).toBe(
+      'The following skills are also available for use with the Skill tool. This list adds to the skills listed earlier in this conversation and is not the full list:\n\nL'
+    );
+    // Re-applying the same body is a no-op.
+    expect(
+      skillsListing.apply(
+        out,
+        sub('skills-listing', 'Skills:\n\n{{skill_content}}'),
+        false
+      )
+    ).toBe(out);
+  });
+
+  it('suppresses the whole renderer, idempotently', () => {
+    const out = skillsListing.apply(MOCK_SKILLS_2322, '', true);
+    expect(out).toBe('skill_listing:(q)=>{return [];},dynamic_skill:(q)=>[]');
+    expect(skillsListing.apply(out!, '', true)).toBe(out);
+  });
+
+  it('the stock body (current and pre-2.1.322) is a no-op', () => {
+    for (const b of [
+      skillsListing.defaultBody,
+      ...(skillsListing.previousDefaultBodies ?? []),
+    ])
+      expect(
+        skillsListing.apply(MOCK_SKILLS_2322, sub('skills-listing', b), false)
+      ).toBe(MOCK_SKILLS_2322);
+  });
+
+  it('delta tokens render empty on the pre-2.1.322 ternary shape', () => {
+    const out = skillsListing.apply(
+      MOCK_SKILLS_TERNARY,
+      sub(
+        'skills-listing',
+        'S {{also}}x{{adds_to_earlier_note}}: {{skill_content}}'
+      ),
+      false
+    )!;
+    expect(out).toContain(':`S x: ${q.content}`,isMeta:!0');
+  });
+});
+
+const toolCalled = REMINDER_REGISTRY.find(r => r.id === 'tool-called')!;
+
+// 2.1.322 wraps the serializer in the closing-tag escaper.
+const MOCK_TOOL_CALLED_2322 =
+  'function Zz(e,n){return Ce({content:`Called the ${e} tool with the following input: ${esc(ser(n))}`,isMeta:!0})}function Gt(e){return e}';
+
+describe('tool-called reminder 2.1.322 shape', () => {
+  it('binds {{tool_input}} to the whole escaped expression', () => {
+    const out = toolCalled.apply(
+      MOCK_TOOL_CALLED_2322,
+      sub('tool-called', '{{tool_name}}: {{tool_input}}'),
+      false
+    );
+    expect(out).toBe(
+      'function Zz(e,n){return Ce({content:`${e}: ${esc(ser(n))}`,isMeta:!0})}function Gt(e){return e}'
+    );
+  });
+
+  it('suppresses to an empty preamble, idempotently', () => {
+    const out = toolCalled.apply(MOCK_TOOL_CALLED_2322, '', true)!;
+    expect(out).toBe(
+      'function Zz(e,n){return Ce({content:"",isMeta:!0})}function Gt(e){return e}'
+    );
+    expect(toolCalled.apply(out, '', true)).toBe(out);
+  });
+
+  it('still handles the single-call <=2.1.321 shape', () => {
+    expect(
+      toolCalled.apply(
+        'function Zz(e,n){return Ce({content:`Called the ${e} tool with the following input: ${ser(n)}`,isMeta:!0})}',
+        sub('tool-called', '{{tool_name}}/{{tool_input}}'),
+        false
+      )
+    ).toBe('function Zz(e,n){return Ce({content:`${e}/${ser(n)}`,isMeta:!0})}');
+  });
+});
+
+// 2.1.322 hoists the escaped snippet and appends a nested-template note when
+// escaping changed it.
+const EDITED_2322 =
+  "edited_text_file:(e)=>{let n=`Note: ${esc(e.filename)} changed on disk since you last read it. That's usually deliberate.`," +
+  'r=maybe(e.snippet,e,e.filename),s=typeof r==="string"?jx(r):r;' +
+  'return Wa([Mk({content:e.snippet===""?`${n} The changes are not shown here; use ${RD} if you need the current content.`:' +
+  '`${n} Here are the relevant changes (shown with line numbers):\n${s}${s===r?"":`\n${note(e.filename)}`}`,isMeta:!0})])},at_mention_reference:(e)=>1';
+
+const STUBS_2322 = {
+  maybe: (x: string) => x,
+  jx: (x: string) => x.replace('</system-reminder>', '&lt;/system-reminder>'),
+  note: (f: string) => `NOTE ${f}`,
+};
+
+const runEdited2322 = (src: string) => {
+  const start = src.indexOf('edited_text_file:');
+  const end = src.indexOf(',at_mention_reference:');
+  const stubs = { ...STUBS, ...STUBS_2322 };
+  const fn = new Function(
+    ...Object.keys(stubs),
+    `return ({${src.slice(start, end)}}).edited_text_file`
+  )(...Object.values(stubs)) as (e: Record<string, unknown>) => string[];
+  return (e: Record<string, unknown>) => fn(e)[0];
+};
+
+describe('edited-text-file 2.1.322 multi-local shape', () => {
+  it('{{changes}} keeps the escaped snippet and its nested note', () => {
+    const out = editedTextFile.apply(
+      EDITED_2322,
+      sub('edited-text-file', '{{filename}} changed. {{changes}}'),
+      false
+    )!;
+    expect(out).toContain(
+      'r=maybe(e.snippet,e,e.filename),s=typeof r==="string"?jx(r):r;'
+    );
+    const r = runEdited2322(out);
+    expect(r({ filename: 'f', snippet: '' })).toBe(
+      '<f> changed. The changes are not shown here; use Read if you need the current content.'
+    );
+    expect(r({ filename: 'f', snippet: '1 x' })).toBe(
+      '<f> changed. Here are the relevant changes (shown with line numbers):\n1 x'
+    );
+    expect(r({ filename: 'f', snippet: '1 </system-reminder>' })).toBe(
+      '<f> changed. Here are the relevant changes (shown with line numbers):\n1 &lt;/system-reminder>\nNOTE f'
+    );
+  });
+
+  it('{{snippet}} binds to the escaped snippet and drops on the no-snippet branch', () => {
+    const r = runEdited2322(
+      editedTextFile.apply(
+        EDITED_2322,
+        sub(
+          'edited-text-file',
+          '{{filename}} (use {{read_tool}}):\n{{snippet}}'
+        ),
+        false
+      )!
+    );
+    expect(r({ filename: 'f', snippet: '' })).toBe('<f> (use Read):');
+    expect(r({ filename: 'f', snippet: '</system-reminder>' })).toBe(
+      '<f> (use Read):\n&lt;/system-reminder>\nNOTE f'
+    );
+  });
+
+  it('suppresses to [] idempotently; the stock body is a no-op', () => {
+    const out = editedTextFile.apply(EDITED_2322, '', true)!;
+    expect(out).toBe('edited_text_file:(e)=>[],at_mention_reference:(e)=>1');
+    expect(editedTextFile.apply(out, '', true)).toBe(out);
+    expect(
+      editedTextFile.apply(
+        EDITED_2322,
+        sub('edited-text-file', editedTextFile.defaultBody),
+        false
+      )
+    ).toBe(EDITED_2322);
+  });
+});

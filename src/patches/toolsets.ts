@@ -1060,6 +1060,15 @@ export const writePrintToolsFilter = (
   if (csMatch && csMatch.index !== undefined) {
     const thunkVar = csMatch[1];
 
+    // Already patched: the thunk was rewritten to call the filter expression.
+    if (
+      new RegExp(
+        `[,;{ ]${escapeIdent(thunkVar)}=\\(\\)=>\\{let s=[$\\w]+\\(\\);return \\(\\(t,s\\)=>\\{const p=`
+      ).test(oldFile)
+    ) {
+      return oldFile;
+    }
+
     const thunkDeclRe = new RegExp(
       `${escapeIdent(thunkVar)}=\\(\\)=>([$\\w]+)\\(([$\\w]+)\\(\\)\\)`,
       'g'
@@ -1115,26 +1124,47 @@ export const writePrintToolsFilter = (
       thunkDecl.index + thunkReplacement.length
     );
 
-    // Site 2: the eager array the non-SDK branch submits. Identify it by its own
-    // `tools:X,mcpClients:` use site so a same-shaped declaration elsewhere in
-    // the bundle cannot be picked up by accident, then rewrite its declaration.
-    const eagerUse = [
+    // Site 2: the eager array the non-SDK branch submits, if this build still
+    // has one. Each `tools:X,mcpClients:Y,appendSystemPrompt:` use site is a
+    // candidate; only one whose X is declared as `X=computeFn(S)` is the print
+    // path's eager array. Unrelated callers share the use-site shape (CC 2.1.322
+    // has an `analysisOnly` caller passing a parameter), so a candidate with no
+    // such declaration is skipped rather than treated as a failure.
+    const eagerCandidates = [
       ...newFile.matchAll(
         /tools:([$\w]+),mcpClients:([$\w]+),appendSystemPrompt:/g
       ),
     ]
       .map(m => m[1])
-      .find(name => name !== thunkVar);
-    if (eagerUse === undefined) {
+      .filter(name => name !== thunkVar);
+    let eagerUse: string | undefined;
+    let eagerDecl: RegExpMatchArray | null = null;
+    for (const name of eagerCandidates) {
+      eagerDecl = newFile.match(
+        new RegExp(
+          `(?<![$\\w.])${escapeIdent(name)}=${escapeIdent(computeFn)}\\(([$\\w]+)\\)`
+        )
+      );
+      if (eagerDecl) {
+        eagerUse = name;
+        break;
+      }
+    }
+    if (eagerCandidates.length === 0) {
       // Only the lazy branch exists in this build — the thunk covers everything.
       return newFile;
     }
-    const eagerDecl = newFile.match(
-      new RegExp(
-        `${escapeIdent(eagerUse)}=${escapeIdent(computeFn)}\\(([$\\w]+)\\)`
-      )
-    );
-    if (!eagerDecl || eagerDecl.index === undefined) {
+    if (eagerUse === undefined) {
+      // Method 1 — CC >=2.1.322: the eager array is gone. The print context is
+      // built by `X=(M)=>({...M,…,tools:THUNK,mcpClients:MCP,…})`, so the query
+      // engine reads tools only through the thunk patched above. Confirm that
+      // wiring before declaring the eager site absent.
+      const directWiring = new RegExp(
+        `[{,]tools:${escapeIdent(thunkVar)},mcpClients:${escapeIdent(csMatch[2])}[,}]`
+      );
+      if (directWiring.test(newFile)) return newFile;
+    }
+    if (eagerUse === undefined || !eagerDecl || eagerDecl.index === undefined) {
       console.error(
         'patch: toolsets: printToolsFilter: failed to find print tools initialization'
       );

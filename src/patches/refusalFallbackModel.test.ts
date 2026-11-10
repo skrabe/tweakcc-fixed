@@ -503,6 +503,20 @@ describe('writeRefusalFallbackModel: the return', () => {
     );
   });
 
+  it('returns at the end of a headless turn in its 2.1.322 shape', () => {
+    // 2.1.322 makes the delegation its own statement and tests `num_turns` in a
+    // later else-if; copied verbatim from that bundle.
+    const headless =
+      'noteTurnEnded(e,n,r){this.selector.noteTurnEnded(e);let s=n.queryHeldForNextTurn===!0&&typeof n.value==="string"&&r.result===""?n.value.length:0;if(e)this.heldCompletionChars+=s,this.owedCall=void 0;else if(r.num_turns>0){if(this.owedCall!==void 0)g("print_task_notification_coalesce");this.heldCompletionChars=0,this.owedCall=void 0}else if(s>0){this.heldCompletionChars+=s,this.owedCall={workload:n.workload}}}';
+    const input = BUNDLE.replace(HEADLESS, headless);
+    const out = writeRefusalFallbackModel(input, ROUTES);
+    expect(out).not.toBeNull();
+    expect(moduleText(out as string, 1223)).toMatch(
+      /noteTurnEnded\(e,n,r\)\{try\{let __tweakccN=globalThis\.__tweakccRefusalFallbackReturn\?\.\(r\?\.num_turns>0\);[^]*\}\}catch\{\}this\.selector\.noteTurnEnded\(e\);let s=[^]*else if\(r\.num_turns>0\)\{/
+    );
+    expect(writeRefusalFallbackModel(out as string, ROUTES)).toBe(out);
+  });
+
   it('finds the restore and message constructor in their 2.1.288 shapes', () => {
     // 2.1.288 passes the unlatch a reason and gives the constructor an optional
     // highlight; both copied verbatim from that bundle.
