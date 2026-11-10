@@ -93,7 +93,6 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     enableDreamMode: true,
     enableLeanMemoryTypes: false,
     fixSummarizeFromHere: true,
-    fixRewindSummaryHeader: true,
     enableRememberSkill: false,
     tokenCountRounding: null as number | null,
     autoAcceptPlanMode: false,
@@ -114,6 +113,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     attachedBackgroundInteractive: false,
     enableProposeGoal: false,
     maxEffortDefault: false,
+    compactionHighEffort: false,
     autonomousOperationAllModels: false,
     refusalFallbackModel: false,
     refusalFallbackRoutes: {},
@@ -734,30 +734,15 @@ export function MiscView({ onSubmit }: MiscViewProps) {
       },
       {
         id: 'fixSummarizeFromHere',
-        title: 'Fix "Summarize from here"',
+        title: 'Rewind fixes',
         description:
-          'Make "Summarize from here" summarize only the messages after the rewind point instead of the whole conversation.',
+          'Make "Summarize from here" summarize only the messages after the rewind point instead of the whole conversation, and label that summary as a deliberate rewind instead of the misleading "ran out of context" header.',
         getValue: () => settings.misc?.fixSummarizeFromHere ?? true,
         toggle: () => {
           updateSettings(settings => {
             ensureMisc();
             settings.misc!.fixSummarizeFromHere = !(
               settings.misc!.fixSummarizeFromHere ?? true
-            );
-          });
-        },
-      },
-      {
-        id: 'fixRewindSummaryHeader',
-        title: 'Honest rewind summary header',
-        description:
-          'Label a rewind summary as a deliberate rewind (you continued forward, then rewound and chose to carry the summary forward) instead of the misleading "ran out of context" header.',
-        getValue: () => settings.misc?.fixRewindSummaryHeader ?? true,
-        toggle: () => {
-          updateSettings(settings => {
-            ensureMisc();
-            settings.misc!.fixRewindSummaryHeader = !(
-              settings.misc!.fixRewindSummaryHeader ?? true
             );
           });
         },
@@ -922,6 +907,20 @@ export function MiscView({ onSubmit }: MiscViewProps) {
           updateSettings(settings => {
             ensureMisc();
             settings.misc!.maxEffortDefault = !settings.misc!.maxEffortDefault;
+          });
+        },
+      },
+      {
+        id: 'compactionHighEffort',
+        title: 'Compact at high effort',
+        description:
+          'Writes the compaction summary at "high" reasoning effort whatever effort the session uses. At medium effort summaries drop branch tips, rules and traps the next context window needs.',
+        getValue: () => settings.misc?.compactionHighEffort ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.compactionHighEffort =
+              !settings.misc!.compactionHighEffort;
           });
         },
       },

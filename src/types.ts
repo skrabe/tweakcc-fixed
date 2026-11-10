@@ -154,8 +154,8 @@ export interface MiscConfig {
   enableSessionMemory: boolean;
   enableDreamMode: boolean;
   enableLeanMemoryTypes: boolean;
+  /** Both rewind patches: summarize-from-here slicing and the rewind header. */
   fixSummarizeFromHere: boolean;
-  fixRewindSummaryHeader: boolean;
   enableRememberSkill: boolean;
   tokenCountRounding: number | null;
   autoAcceptPlanMode: boolean;
@@ -176,6 +176,7 @@ export interface MiscConfig {
   attachedBackgroundInteractive: boolean;
   enableProposeGoal: boolean;
   maxEffortDefault: boolean;
+  compactionHighEffort: boolean;
   autonomousOperationAllModels: boolean;
   refusalFallbackModel: boolean;
   refusalFallbackRoutes: RefusalFallbackRoutes;

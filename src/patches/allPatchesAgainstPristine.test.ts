@@ -80,6 +80,7 @@ import { writeSuppressNativeInstallerWarning } from './suppressNativeInstallerWa
 import { writeModelAtEffort } from './modelAtEffort';
 import { writeScrollEscapeSequenceFilter } from './scrollEscapeSequenceFilter';
 import { writeMaxEffortDefault } from './maxEffortDefault';
+import { writeCompactionHighEffort } from './compactionHighEffort';
 import { writeAutonomousOperationAllModels } from './autonomousOperationAllModels';
 import { writeRefusalFallbackModel } from './refusalFallbackModel';
 import { writeOutputStyleTurnReminder } from './outputStyleTurnReminder';
@@ -401,6 +402,7 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
   'model-at-effort': c => writeModelAtEffort(c),
   'filter-scroll-escape-sequences': c => writeScrollEscapeSequenceFilter(c),
   'max-effort-default': c => writeMaxEffortDefault(c),
+  'compaction-high-effort': c => writeCompactionHighEffort(c),
   'autonomous-operation-all-models': c => writeAutonomousOperationAllModels(c),
   'refusal-fallback-model': c =>
     writeRefusalFallbackModel(c, {
