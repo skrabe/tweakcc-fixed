@@ -154,8 +154,8 @@ export interface MiscConfig {
   enableSessionMemory: boolean;
   enableDreamMode: boolean;
   enableLeanMemoryTypes: boolean;
+  /** Both rewind patches: summarize-from-here slicing and the rewind header. */
   fixSummarizeFromHere: boolean;
-  fixRewindSummaryHeader: boolean;
   enableRememberSkill: boolean;
   tokenCountRounding: number | null;
   autoAcceptPlanMode: boolean;

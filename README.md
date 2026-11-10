@@ -38,6 +38,7 @@ Defaults below are for a new config. Existing settings are kept.
 | [Responsive mode](src/patches/responsiveMode.ts)                  | Expose the bundled responsive-mode plugin; enable it separately in `/plugin`.                                                                  | Off                     |
 | [Output-style reminders](src/patches/outputStyleTurnReminder.ts)  | Set custom reminder text with `turn-reminder:` in an output style's frontmatter.                                                               | Off                     |
 | [Rewind fixes](src/patches/fixSummarizeFromHere.ts)               | Summarize from the selected rewind point and label deliberate rewinds correctly.                                                               | On                      |
+| [Compact at high effort](src/patches/compactionHighEffort.ts)     | Write the compaction summary at high reasoning effort whatever effort the session uses.                                                        | Off                     |
 
 Empty reminder cleanup always runs. Main also removes empty Environment scaffolding and stale FFF notes from restored prompts.
 

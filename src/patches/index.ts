@@ -1247,7 +1247,7 @@ export const applyCustomization = async (
     },
     'fix-rewind-summary-header': {
       fn: c => writeFixRewindSummaryHeader(c),
-      condition: config.settings.misc?.fixRewindSummaryHeader !== false,
+      condition: config.settings.misc?.fixSummarizeFromHere !== false,
     },
     'statusline-update-throttle': {
       fn: c =>

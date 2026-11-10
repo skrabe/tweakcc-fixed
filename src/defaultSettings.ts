@@ -735,7 +735,6 @@ export const DEFAULT_SETTINGS: Settings = {
     enableDreamMode: false,
     enableLeanMemoryTypes: false,
     fixSummarizeFromHere: true,
-    fixRewindSummaryHeader: true,
     enableRememberSkill: false,
     tokenCountRounding: null,
     autoAcceptPlanMode: false,
