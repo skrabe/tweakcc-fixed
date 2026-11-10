@@ -3,14 +3,14 @@
 Patch Claude Code's prompts, UI and tools. A fork of [Piebald's tweakcc](https://github.com/Piebald-AI/tweakcc) with fff filename search, effort routing, Fable planning and editable runtime reminders.
 
 [![npm](https://img.shields.io/npm/v/tweakcc-fixed?color=cb3837&label=npm&style=flat-square)](https://www.npmjs.com/package/tweakcc-fixed)
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-2.1.319-d97757?style=flat-square)](https://github.com/anthropics/claude-code)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-2.1.322-d97757?style=flat-square)](https://github.com/anthropics/claude-code)
 [![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 
 [Install](#install) · [Fork additions](#fork-additions) · [Prompt editing](#prompt-editing) · [Build from source](#build-from-source)
 
 ## Install
 
-Requires Node.js 20+ and pnpm. Supports npm and native Claude Code installations; the tested target is 2.1.319.
+Requires Node.js 20+ and pnpm. Supports npm and native Claude Code installations; the tested target is 2.1.322.
 
 ```sh
 pnpm dlx tweakcc-fixed@latest            # open the settings UI
