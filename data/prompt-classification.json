@@ -148421,5 +148421,2072 @@
     "name": "Tool Result: MCP transport not connected",
     "desc": "MCP error text when a request is sent over an MCP server transport that is not connected"
   },
-  "f25a45739a9fe7f9c4bdfcec776685574ae7a0a3": { "facing": "internal" }
+  "f25a45739a9fe7f9c4bdfcec776685574ae7a0a3": { "facing": "internal" },
+  "5bc426e3006dedefba0dc34cc1fe0733209583b9": {
+    "facing": "model",
+    "id": "data-task-notification-mod-hot-reload-enabled-held",
+    "name": "Task notification: mod hot-reload enabled but held",
+    "desc": "Task-notification text telling Claude mod hot-reloading was enabled (by the person or the permission mode), but the mods under a given folder are held for /reload-plugins (since loading now would rewrite the prompt cache) and are NOT loaded yet."
+  },
+  "bbd5f52fa0ed98f8a9cfa80b17ac236e27c6d0fa": {
+    "facing": "model",
+    "id": "data-task-notification-mod-hot-reload-enabled-kept-out",
+    "name": "Data: Task notification mod hot-reload enabled, hooks kept out",
+    "desc": "Notification telling Claude that mod hot-reloading was enabled (by the person or the permission mode) but the mods' hooks modules did not load (kept out), with the cause."
+  },
+  "11bf9d0ed27381c2ac3608e4d2fccb84aebd5ea1": {
+    "facing": "model",
+    "id": "data-task-notification-mod-hot-reload-enabled-loaded",
+    "name": "Task notification: mod hot-reload enabled and loaded",
+    "desc": "Task-notification text telling Claude mod hot-reloading was enabled (by the person or the permission mode) and the mods under a given folder loaded, that they reload by themselves as files change, and that the transcript names any mod that failed."
+  },
+  "8a2496ec5e82beb860fb4626646750c1cbc9e8d1": {
+    "facing": "model",
+    "id": "data-task-notification-plugin-dev-mods-load-failed",
+    "name": "Plugin dev mods load-failed notice",
+    "desc": "Task notification: mod hot-reload failed to load; the transcript says why and /reload-plugins tries again."
+  },
+  "19a3071e2d6c5b980541e485cc6c8c09b6e71049": {
+    "facing": "model",
+    "id": "data-task-notification-plugin-dev-mods-unbound",
+    "name": "Plugin dev mods unbound reload notice",
+    "desc": "Task notification telling the model that hot-reloaded plugin mods under a folder did not load because this session cannot reload its plugins (only a restart loads them)."
+  },
+  "cbad6e573e464cfb27fce1e82258912a4d9d19b8": {
+    "facing": "model",
+    "id": "skill-claude-api-trigger",
+    "name": "claude-api skill TRIGGER guidance",
+    "desc": "The TRIGGER activation guidance for the claude-api skill, injected into model context to tell the model when to load it."
+  },
+  "a28d8291cc7a1a738ff64b8b22f75c7f7d56c282": {
+    "facing": "model",
+    "id": "slash-command-usage-remote-session-settings-link",
+    "name": "Slash Command: /usage in cloud session",
+    "desc": "/usage result in a cloud session: plan usage isn't shown in chat; open Settings → Usage on claude.ai"
+  },
+  "06b37189ae11962c0fd74cc9b5ac482878b514f4": {
+    "facing": "model",
+    "id": "system-prompt-git-context-status",
+    "name": "Git context — status block",
+    "desc": "Git context includes configured Git user and worktree status."
+  },
+  "b46eae8529e4fc747256e903ea8e2ff21b1c55c0": {
+    "facing": "model",
+    "id": "system-prompt-saving-skills-propose-as-edits",
+    "name": "System Prompt: Saving skills propose changes as edits",
+    "desc": "Propose-tool clause telling the model to read a skill's current SKILL.md and propose changes as `edits`, each with `old_string` and `new_string`"
+  },
+  "63eee322037ac54b73ab193a8a164ab707c0c379": {
+    "facing": "model",
+    "id": "system-reminder-auto-mode-no-verdict-after-another-hook-rewrite",
+    "name": "System Reminder: Auto mode no verdict after another hook rewrite",
+    "desc": "Advises retrying a tool call separately when another call's change after review invalidated its auto mode review"
+  },
+  "bca35d62a8463d696e7781762a68061339879fe9": {
+    "facing": "model",
+    "id": "system-reminder-connector-download-saved-note",
+    "name": "Connector download note: file saved",
+    "desc": "Note telling the model which offered connector file was downloaded and the path it was saved at in the connector-downloads folder, plus how to view an oversized picture."
+  },
+  "e627f3494666111f75a332c0487200412f650f92": {
+    "facing": "model",
+    "id": "system-reminder-container-restarted-resumable-agents",
+    "name": "System Reminder: Container restarted resumable agents",
+    "desc": "After a container restart, lists the stopped built-in agents that can be resumed by messaging their agent id with the send-message tool, followed by the lost-task note"
+  },
+  "073bbb264d88dea3fe24a23971ff20af282d2ca8": {
+    "facing": "model",
+    "id": "system-reminder-low-disk-space",
+    "name": "System Reminder: Low disk space",
+    "desc": "Resource watchdog reminder that only a little disk space is free on the filesystem holding the working directory, with what to do if room is needed"
+  },
+  "61ce634b9c0b2ee7d52b0518dd7609dfb71d55a4": {
+    "facing": "model",
+    "id": "system-reminder-skill-listing-wrapper-code-mode",
+    "name": "System Reminder: Skill listing wrapper (Code Mode)",
+    "desc": "Code Mode variant of the skill listing wrapper explaining that a script loads a skill with tools.Skill and its instructions arrive after the script result"
+  },
+  "8f44ab7f159012d13f3ab186a8f4800b2cc1599b": {
+    "facing": "model",
+    "id": "system-reminder-voice-call-record-background-framing",
+    "name": "System Reminder: Voice-call record background framing",
+    "desc": "Frames host-supplied voice-call records as unverified background that cannot create requests, answers, or action approvals"
+  },
+  "1f27ea26e12a18530678bea563886d256c639065": {
+    "facing": "model",
+    "id": "system-reminder-workflow-resume-paused",
+    "name": "Workflow resume instruction (paused)",
+    "desc": "Resume-workflow instruction injected into the model context (submitted as a prompt) when a paused workflow is resumed from the TUI."
+  },
+  "a9d055296994642d4a3df3d712be9396ae393739": {
+    "facing": "model",
+    "id": "tool-description-artifact-upload-asset",
+    "name": "Artifact upload_asset action description",
+    "desc": "Dynamic tool description for the Artifact tool's upload_asset action, including list-vs-file wording and the approval-scope clause."
+  },
+  "fc3d0356bd3b069469426b908319f6bfdc86a374": {
+    "facing": "model",
+    "id": "tool-description-end-conversation-deferred-revised-usage",
+    "name": "Tool Description: EndConversation deferred hint (revised usage)",
+    "desc": "Deferred EndConversation hint: tool name, usage clause (sustained abuse after a warning, or on user request), and the ToolSearch load-guidance sentence, now one template"
+  },
+  "5174ee2bb32c6cdabd8c632ffdb51f07cc91a883": {
+    "facing": "model",
+    "id": "tool-result-artifact-asset-store-unavailable",
+    "name": "Asset call failed — store unavailable",
+    "desc": "Artifact asset error arm for a store_unavailable code, defaulting to a retry-once-after-a-short-wait message."
+  },
+  "9943e6ece47f1dbd49be195b2ddb83f26b359977": {
+    "facing": "model",
+    "id": "tool-result-artifact-asset-upload-request-failed",
+    "name": "Tool Result: Artifact asset upload request failed in transit",
+    "desc": "Upload-branch detail for the asset 'request_error' failure, telling the model one retry is safe because a duplicate only costs quota."
+  },
+  "0d45cebd0ab619fe18ddc179d6e080e173da4b3a": {
+    "facing": "model",
+    "id": "tool-result-artifact-describe-type-type-url-not-a-link",
+    "name": "Artifact describe_type type_url Not A Link",
+    "desc": "validateInput notUrlMessage when type_url is not an Artifact type link from list_types."
+  },
+  "ab52ccc22ee0d760e04582b2d0ec3bf1dcd95d0d": {
+    "facing": "model",
+    "id": "tool-result-artifact-design-system-other-organization",
+    "name": "Tool Result: Artifact Design System Other Organization",
+    "desc": "Design-system probe failure: the system is in another of the user's organizations and this login cannot read it."
+  },
+  "8d5bd62a994278f6d18a9b81225b57de8cc26dc7": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-version-fetch-failed",
+    "name": "Artifact read version failed",
+    "desc": "Error when reading an artifact version fails."
+  },
+  "aed5c0971cc4746a813755e74b52f508ab938250": {
+    "facing": "model",
+    "id": "tool-result-artifact-upload-asset-text-file-own-call",
+    "name": "Artifact Upload Asset Text File Own Call",
+    "desc": "List-entry refusal telling the model a CSV/Markdown/JSON/text file must be uploaded alone via file_path."
+  },
+  "852ff6a3ad2eed1cc1a9ef55dabb45e4613d553a": {
+    "facing": "model",
+    "id": "tool-result-artifact-url-not-an-artifact",
+    "name": "Tool Result: Not An Artifact URL",
+    "desc": "validateInput rejection when url is not a parseable artifact link, telling the model how to update versus publish."
+  },
+  "11616335dec97def04c744d9986e1ea1f3982602": {
+    "facing": "model",
+    "id": "tool-result-artifact-url-not-an-artifact-bare",
+    "name": "Tool result: artifact URL not an artifact (bare)",
+    "desc": "Artifact tool error when a url argument does not parse as an artifact URL, thrown by the shared rL helper."
+  },
+  "e6a0bffde183648e80130877e1c3260c7058bff8": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-no-local-check-no-server-verdict",
+    "name": "Tool Result: Auto mode no local check and no server verdict",
+    "desc": "Reports a call was not run because Claude Code no longer checks actions locally and no server verdict covers it"
+  },
+  "3ede08541cbb0675426df29e37c136bb56207203": {
+    "facing": "model",
+    "id": "tool-result-connector-download-offer-summary",
+    "name": "Tool result: connector file offer summary",
+    "desc": "Text block prepended to an MCP connector tool result listing the files the connector offered and pointing to Claude Code's notes in a following system reminder."
+  },
+  "f62b20aa9341f515427cdd70d297cf5cc263a08d": {
+    "facing": "model",
+    "id": "tool-result-edit-multiple-matches",
+    "name": "Multiple matches but replace_all false",
+    "desc": "Edit tool error returned to the model when old_string matches multiple times without replace_all."
+  },
+  "8740cf6d46249aa7e287eda416c0a473f7dc844a": {
+    "facing": "model",
+    "id": "tool-result-mcp-tool-result-arrived-without-text",
+    "name": "MCP tool result arrived without text",
+    "desc": "Error that an MCP tool result arrived without its text, likely too large, telling Claude to check whether it ran and ask for less"
+  },
+  "f0f37f36abf30c08457ffed0c3e271108dfd8441": {
+    "facing": "model",
+    "id": "tool-result-message-delivered-to-user",
+    "name": "Message Delivered Tool Result",
+    "desc": "Model-facing tool_result content confirming a message was delivered to the user; attachment details are appended at the call sites."
+  },
+  "39ffa0773cb610142cd566cbc96c5b2f740cde65": {
+    "facing": "model",
+    "id": "tool-result-remote-tool-approval-changed-call-withdrawn",
+    "name": "Tool Result: Remote tool approval changed call withdrawn",
+    "desc": "Tool result saying an approval edited the remote tool call, which runs only the call it asked about, so nothing ran and the user must be told"
+  },
+  "1efa22a4c2ce603c07d0e1af663ff142e280495d": {
+    "facing": "model",
+    "id": "tool-result-send-message-attachments-desktop-only",
+    "name": "Tool result: Send message attachments desktop only",
+    "desc": "Tells the model which attachments never reached Remote Control viewers and to explain that to the user"
+  },
+  "decdf61698e50c73d5b490d9eea8dc7de3813e6b": {
+    "facing": "model",
+    "id": "tool-result-sendmessage-attachments-not-delivered",
+    "name": "Tool Result: SendMessage attachments not delivered",
+    "desc": "Header of the SendMessage error tool_result telling the model the message reached the user but N attachments failed to upload."
+  },
+  "1679dcea250661fcff696df561de544c95294b8b": {
+    "facing": "model",
+    "id": "tool-result-start-task-attach-name-not-plain",
+    "name": "Tool Result: Start task attach name not plain",
+    "desc": "Refusal to attach a file whose name has a backslash, control or text-direction character, asking to copy or rename it"
+  },
+  "a1727934a4634d0a24f84481f7a13dbf4e1d93ce": {
+    "facing": "model",
+    "id": "tool-result-start-task-file-name-direction-control",
+    "name": "Start task file name direction control",
+    "desc": "Refuses filenames containing a text-direction control character."
+  },
+  "85a3b6f440d8542a8cdb31c20892aaa12a1ebc17": {
+    "facing": "model",
+    "id": "tool-result-subagent-output-unreviewed-security-warning",
+    "name": "Tool Result: Subagent output unreviewed security warning",
+    "desc": "Warns that a subagent's output was not reviewed and must be checked for prompt injection before acting on it"
+  },
+  "adfdbd6914d71d1271c0596635c256424509cf30": {
+    "facing": "model",
+    "id": "tool-result-tool-call-echo",
+    "name": "Tool call echo wrapper",
+    "desc": "Meta message echoing a tool invocation and its input back into the model's context."
+  },
+  "aa7fbdef85dc2d0a5332fb78ef745ab83b1bfe23": {
+    "facing": "model",
+    "id": "tool-result-voice-call-record-short-framing",
+    "name": "Tool Result: Voice-call record short framing",
+    "desc": "Short lead in a VoiceCallRecord tool result saying the block is an unchecked record of what was said aloud on a voice call"
+  },
+  "68d2e27c43a7f9ee829dfcea3fd3d7750a5062c3": {
+    "facing": "model",
+    "id": "system-reminder-task-stopped-by-user",
+    "name": "System Reminder: Task Stopped By User",
+    "desc": "Meta reminder that a background task was stopped."
+  },
+  "904389f764c88f98f586968a386515daa49d201f": {
+    "facing": "model",
+    "id": "slash-command-model-fast-mode-off-suffix",
+    "name": "Slash Command: /model — fast mode turned off",
+    "desc": "Tells the model fast mode was switched off as a side effect of the model change, the sibling state fact to the fast-mode-on notice; now adds a '(/fast turns it on)' hint when fast mode is available."
+  },
+  "2c99733f29dd1b43c8ee8876f67f0dc64987e801": {
+    "facing": "model",
+    "id": "tool-result-connector-file-upload-permission-summary",
+    "name": "Tool Result: Connector file upload permission summary",
+    "desc": "Permission ask message stating how many local files a connector call sends and to which connector (which decides where to store them), followed by the file rows."
+  },
+  "9a9f93e7c472807ddc3f42d917bc415dcb7d396a": {
+    "facing": "model",
+    "id": "tool-description-end-conversation-search-hint",
+    "name": "End-conversation tool search hint",
+    "desc": "searchHint for the deferred end-conversation tool, shown to the model when searching tools."
+  },
+  "bd253ade65a50f8ec9abe00a4ac7547341dab913": {
+    "facing": "model",
+    "id": "system-prompt-fast-mode-environment-note",
+    "name": "System Prompt: Fast Mode Environment Note",
+    "desc": "Environment-section system-prompt fragment describing Fast mode (/fast): faster output on the session model if it supports fast mode, otherwise switches the session to Claude Opus (or a supporting model on Vertex)."
+  },
+  "9aa148b64f57256662ee6f153f51a0883ad9bed7": {
+    "facing": "model",
+    "id": "data-auto-mode-hook-rewrote-input-review-reason",
+    "name": "Data: Auto mode call changed after review reason",
+    "desc": "Reason auto mode gives when a call changed after its review so it could not check what would run"
+  },
+  "5e272884cf9662a7f222c12ae397807a37f62218": { "facing": "internal" },
+  "0e99e0f4d7ed98496399163e8c7c939011023f35": { "facing": "internal" },
+  "ff15e2cc8eae81b64695cccdc21c9c139bee2592": {
+    "facing": "model",
+    "id": "tool-result-session-provider-not-allowed",
+    "name": "Tool Result: Session provider not allowed",
+    "desc": "Error when a delegated session's requests would go to a gateway, custom endpoint or project provider setting instead of Anthropic's API or an allowed cloud provider"
+  },
+  "0c6952926b61a75ad89d2ae0b641bc16c7a5043e": { "facing": "internal" },
+  "55b81d599a7c8194bf9fe3dcd088e128d416ad08": { "facing": "ui" },
+  "29ce3458a9ff8ab49e0154fc65125a1830f48f0c": {
+    "facing": "model",
+    "id": "tool-result-session-project-env-entry-not-allowed",
+    "name": "Tool Result: Session project env entry not allowed",
+    "desc": "Error when a project's .claude settings env entry changes provider, credential, proxy or auto mode settings of a delegated session"
+  },
+  "a431a053ac7960442eb3e278979847fdaa33ed28": { "facing": "internal" },
+  "ee5e530497482eb641f01942c055668a0df192cc": { "facing": "internal" },
+  "d363e730999b31203b556f2119e40fde4839c8a5": { "facing": "ui" },
+  "96a535d554c638cfa72161881b72f3498f5b3fb8": {
+    "facing": "model",
+    "id": "tool-result-upload-timeout-exceeded",
+    "name": "Tool Result: Upload timeout exceeded",
+    "desc": "Timeout detail inside a file upload network error that is reported per file in the SendFile tool result"
+  },
+  "46d093039ecdf042b64a51969d26c5817de79240": {
+    "facing": "model",
+    "id": "system-reminder-brief-last-message-failed",
+    "name": "System Reminder: Brief last message failed",
+    "desc": "Note prepended to the brief-mode enforcement reminder when the last SendUserMessage call failed or was refused"
+  },
+  "82dc51ba481bedbcc24c484bf023dae342dd2210": { "facing": "internal" },
+  "f9170cf2b3ef1c049a4cc9cee1b7fb0c0ad661b4": { "facing": "internal" },
+  "12cde15d2582d3eb19f7226bf791ce696a232501": { "facing": "internal" },
+  "69802c1d35c7df6ae96c37026bcfa541c4a41e64": {
+    "facing": "model",
+    "id": "tool-result-write-partial-read-file-not-written",
+    "name": "Tool Result: Write refused after partial read",
+    "desc": "Write validation error when only the start of the file was read in this session, pointing to the edit tool and its link-target rule"
+  },
+  "d2a97d2d4e82e5f282bf4f4731ae4755cbec8da5": {
+    "facing": "model",
+    "id": "tool-result-write-partial-read-path-unverified",
+    "name": "Tool Result: Write refused, partial-read path unverified",
+    "desc": "Write validation error when only the start of a file was read and the path could not be confirmed to be a different file"
+  },
+  "d40d4b8a2a4fb1d7714f705f85b06d10acd529a1": { "facing": "internal" },
+  "83df886356d55cec003abe76d64d2319f65d87eb": { "facing": "internal" },
+  "c2ec0fd8e4a2bc8905815faf36178e8fc77ae929": { "facing": "internal" },
+  "54638547bd68cd0dacb3ce32714a5bd43f1160b9": {
+    "facing": "model",
+    "id": "tool-result-managed-settings-unread-try-again",
+    "name": "Tool Result: Managed settings unread, try again",
+    "desc": "Closing advice line of the managed-policy-unreadable error telling the user to retry or contact an administrator"
+  },
+  "ef13e5bd792431003d611f0803375cd026936319": {
+    "facing": "model",
+    "id": "tool-result-managed-settings-read-timed-out",
+    "name": "Tool Result: Managed settings read timed out",
+    "desc": "Line in the managed-policy-unreadable error saying the read timed out so settings were not checked"
+  },
+  "6e4abc2f6cdbb0229a8c4bb2e76414d896ce7d40": {
+    "facing": "model",
+    "id": "tool-result-managed-settings-read-unfinished",
+    "name": "Tool Result: Managed settings read did not finish",
+    "desc": "Line in the managed-policy-unreadable error saying the read did not finish so settings were not checked"
+  },
+  "349b3140761a9deb9c97a8c49d06a7808188eb8e": {
+    "facing": "model",
+    "id": "tool-result-managed-policy-unreadable-providers",
+    "name": "Tool Result: Managed policy unreadable for providers",
+    "desc": "Error when managed policy settings that may restrict allowed API providers cannot be read"
+  },
+  "6c6ddc726782d772f353a739a194292da1e3800d": { "facing": "ui" },
+  "070b4b7d407c236e55e58d36a7530f8e55c8740b": {
+    "facing": "model",
+    "id": "slash-command-fast-mode-needs-vertex-region",
+    "name": "Slash Command: Fast mode needs Vertex region",
+    "desc": "/fast unavailability reason on Vertex when the region is not global, us or eu"
+  },
+  "dcb648091d8fa7a99e9a30ba6261e0c733fa94ae": {
+    "facing": "model",
+    "id": "slash-command-fast-mode-unavailable-provider",
+    "name": "Slash Command: Fast mode unavailable on provider",
+    "desc": "/fast unavailability reason when the API provider is not first party"
+  },
+  "b0a3d8ff1628197a6ca405b647a923051335d8bf": { "facing": "internal" },
+  "76d76ca4cdf81fb138c0d64f6824f078b3a41f48": { "facing": "ui" },
+  "396e1fa00eba3f4c1ac0a5736b60a94af5a31cc6": { "facing": "ui" },
+  "06076ce8ded76b88cc479bc05e7c7e78389f9250": { "facing": "internal" },
+  "b0d72abe6faf2a62c9bd012f7f8630ddeec62a69": {
+    "facing": "model",
+    "id": "tool-result-request-failed-status-code",
+    "name": "Tool Result: Request failed with status code",
+    "desc": "HTTP library error for a non-2xx response that surfaces as a tool error"
+  },
+  "0a15e76aee1e0cc63bff525c4bce8de1100402d1": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hook-skips-next",
+    "name": "Slash Command: Plugin validate hook skips next",
+    "desc": "/plugin validate finding when a mod hook never calls next(e) on a shared component, hiding mods drawn beneath it"
+  },
+  "ff09f06c338eb05f3cc5703999cd501bf40090c3": { "facing": "ui" },
+  "9c2eb8713cd569b3d4a1a27e33ad6a3e3119c8fa": { "facing": "ui" },
+  "3048bb952d1d0ccb77ad6068791e8b4782a29bd2": { "facing": "ui" },
+  "3c4206523e31fb2ab5c649576ad36db9d482e781": { "facing": "internal" },
+  "728fa39573d8a2a6b9922850adade7371b9d8851": { "facing": "internal" },
+  "5ab9286cff06671b8ffb474fa617a5fe3645b41f": {
+    "facing": "model",
+    "id": "tool-result-connector-upload-malformed-mixed-input",
+    "name": "Tool Result: Connector upload malformed, mixed input",
+    "desc": "Reason in the connector-upload error when the server asks for uploads together with another input"
+  },
+  "f5c793df31b0511587b47373f0d21bf3043e2181": {
+    "facing": "model",
+    "id": "tool-result-connector-upload-malformed-request-state",
+    "name": "Tool Result: Connector upload malformed request state",
+    "desc": "Reason in the connector-upload error when requestState is missing, empty, not text or over 65,536 characters"
+  },
+  "6c05e1c5f8414facfc16ef732e2ccc72a6775e6a": {
+    "facing": "model",
+    "id": "tool-result-connector-upload-malformed-method",
+    "name": "Tool Result: Connector upload malformed method",
+    "desc": "Reason in the connector-upload error when the upload request lacks the files extension's upload method"
+  },
+  "f30633fc16f46e7530e4930b84a5ae7925778a48": {
+    "facing": "model",
+    "id": "tool-result-connector-upload-malformed-file-id",
+    "name": "Tool Result: Connector upload malformed file id",
+    "desc": "Reason in the connector-upload error when a params.files entry has a missing, empty or non-text fileId"
+  },
+  "622cf9f259b16ee0d35b5330b4e9489d39505313": {
+    "facing": "model",
+    "id": "tool-result-connector-upload-malformed-url-or-path",
+    "name": "Tool Result: Connector upload malformed url or path",
+    "desc": "Reason in the connector-upload error when a params.files entry has both or neither of url and path"
+  },
+  "90945c2581254314fc96bfb6a7228b2c90532b4d": {
+    "facing": "model",
+    "id": "tool-result-connector-upload-malformed-url",
+    "name": "Tool Result: Connector upload malformed url",
+    "desc": "Reason in the connector-upload error when a params.files url is not text, empty or over 4,096 characters"
+  },
+  "a840649b729eb2277b1a81b86a577f0253ae36f1": {
+    "facing": "model",
+    "id": "tool-result-connector-upload-malformed-path",
+    "name": "Tool Result: Connector upload malformed path",
+    "desc": "Reason in the connector-upload error when a params.files path is not text, empty or over 4,096 characters"
+  },
+  "f099fedfea6e886adebf658c0e831a2ba6d0b559": {
+    "facing": "model",
+    "id": "tool-result-connector-upload-malformed-target-method",
+    "name": "Tool Result: Connector upload malformed target method",
+    "desc": "Reason in the connector-upload error when a params.files entry asks for a method other than PUT"
+  },
+  "ddea8ab5632004c31c1a514e03837da453214acb": {
+    "facing": "model",
+    "id": "tool-result-connector-upload-malformed-credentials",
+    "name": "Tool Result: Connector upload malformed credentials",
+    "desc": "Reason in the connector-upload error when a params.files entry's credentials are not omit or include"
+  },
+  "0583e46964ed13cc1b2ee3f9deef894c90fce21f": {
+    "facing": "model",
+    "id": "tool-result-connector-upload-malformed-headers",
+    "name": "Tool Result: Connector upload malformed headers",
+    "desc": "Reason in the connector-upload error when params.files headers are not text values, exceed 32 headers or 4,096 characters"
+  },
+  "a78f235cb166eb3f48a0ff8eea7a05153c106c8f": {
+    "facing": "model",
+    "id": "tool-result-connector-upload-unknown-file",
+    "name": "Tool Result: Connector upload unknown file",
+    "desc": "Reason in the connector-upload error when a fileId is not one of the call's numbered files"
+  },
+  "9e49ece12ba1d9de8df5aecb55f0232602c0e27e": {
+    "facing": "model",
+    "id": "tool-result-connector-upload-repeated-file",
+    "name": "Tool Result: Connector upload repeated file",
+    "desc": "Reason in the connector-upload error when one fileId has more than one params.files entry"
+  },
+  "d1e63cf6a76040bce852be86f6adde27e027dac9": {
+    "facing": "model",
+    "id": "tool-result-mcp-file-upload-not-supported",
+    "name": "Tool Result: MCP file upload not supported",
+    "desc": "Error when a tool call sends files to an MCP server that is not on protocol 2026-07-28 or does not list upload in its file-uploads extension"
+  },
+  "bc96bfc09247845739f7408ed260a33c5b7fc101": { "facing": "internal" },
+  "815305e4236ad0e709fda2f7baf1bbd2fb52ff31": { "facing": "internal" },
+  "51f7b04b6516a63efdde20d00cff1ffbc4357025": { "facing": "internal" },
+  "c3d4fa75663e8e69adf4518e41bad2a17f40e133": { "facing": "internal" },
+  "05eddac07b706c410b51dbf07149bfe01489a28f": { "facing": "internal" },
+  "3e22d8abd43635c11b3c8a8ca8ba634c69ba43a9": { "facing": "internal" },
+  "be7598c88078b38468cf57b68b8d588e98f46ac7": { "facing": "ui" },
+  "96483328661489541868659bc76ae0334a6b2641": {
+    "facing": "model",
+    "id": "system-prompt-artifact-intake-look-appropriateness",
+    "name": "System Prompt: Artifact intake look appropriateness",
+    "desc": "Requires every offered or chosen deck/design look to be clean, professional and free of contentious styling"
+  },
+  "043952529188313b8f99cbb3c5e9a4eeff52f722": {
+    "facing": "model",
+    "id": "tool-result-artifact-ask-first-note-after-intake",
+    "name": "Tool Result: Artifact ask-first note after intake",
+    "desc": "Claude Code note in artifact type results saying intake questions come before a new deck or design and are asked only once"
+  },
+  "32f4ce9a0450cf499148a5a9781717505906cf80": {
+    "facing": "model",
+    "id": "tool-result-artifact-ask-first-scope-new-only",
+    "name": "Tool Result: Artifact ask-first scope new only",
+    "desc": "Clause added to the ask-first note limiting it to a deck or design that does not exist yet"
+  },
+  "5a0de745ae810ee56f3b7a9095b7d85bb49b0ade": {
+    "facing": "model",
+    "id": "data-memory-read-result-stale-file-removed",
+    "name": "Data: Memory read result stale, file removed",
+    "desc": "Marker on a memory_read result whose file no longer appears in the memory listing, asking to re-read before relying on it"
+  },
+  "00b09102aa125847f67eaf8a3e8ed3cbafab894b": {
+    "facing": "model",
+    "id": "system-prompt-artifact-deck-and-design-intake",
+    "name": "System Prompt: Artifact deck and design intake",
+    "desc": "Requires AskUserQuestion before creating a deck or design, with tailored questions, color previews, rules for skipping or ending intake and design-system lookup after selection"
+  },
+  "4a21bc0942b3c48f4a517c38a3bbd13861355e24": {
+    "facing": "model",
+    "id": "system-prompt-artifact-intake-design-system-lookup-tool",
+    "name": "System Prompt: Artifact intake design system lookup via tool",
+    "desc": "Design-system lookup step in artifact intake when the design-system search tool is available"
+  },
+  "ab43076cb676134216230bcbfdc8b80c78ee4d10": {
+    "facing": "model",
+    "id": "system-prompt-artifact-intake-design-system-lookup-quickstart",
+    "name": "System Prompt: Artifact intake design system lookup via quickstart",
+    "desc": "Design-system lookup step in artifact intake that reads the default from the quickstart reply"
+  },
+  "e041afc21d9338b1bca2038e33002cce3ca7373b": { "facing": "internal" },
+  "f32971708d8b69c1d75ef319d07965874f52cf72": { "facing": "ui" },
+  "67afb7c007606bd9ee4a4020b813e6311aa2e8db": {
+    "facing": "model",
+    "id": "skill-frontmatter-compatibility-line",
+    "name": "Skill: Frontmatter compatibility line",
+    "desc": "Passes the skill file's compatibility frontmatter line to Claude alongside the skill content"
+  },
+  "8a235f4719448173ec032b03949b75c54b1425fa": {
+    "facing": "model",
+    "id": "skill-compatibility-local-only-guidance",
+    "name": "Skill: Compatibility local-only guidance",
+    "desc": "Tells Claude how to respond when a skill's compatibility line says it needs the person's own computer or private network"
+  },
+  "d60c9529dd2750bc3ef27f10fea9534c6b6e97a2": { "facing": "internal" },
+  "07aa7ec6cc3e816515ca59c5aba6527b9dd92136": {
+    "facing": "model",
+    "id": "tool-result-bash-agent-proxy-connect-rejected-reason",
+    "name": "Tool Result: Bash agent proxy connect rejected reason",
+    "desc": "Explains that the egress proxy refused a connection, usually because the host is not allowed for the session"
+  },
+  "3541af6b1b4effdfd554b36a2f03746fa5653242": {
+    "facing": "model",
+    "id": "tool-result-bash-agent-proxy-connect-unreachable-reason",
+    "name": "Tool Result: Bash agent proxy connect unreachable reason",
+    "desc": "Explains that an allowed host could not be reached by the egress proxy and that changing allowed domains will not help"
+  },
+  "3ddb1e62ad4f22f5d6569d9c0d7692e598ecc418": { "facing": "internal" },
+  "fbdf46b2af427798bf5825a919f9055340de89f9": {
+    "facing": "model",
+    "id": "system-reminder-media-removed-already-seen",
+    "name": "System Reminder: Media removed already seen",
+    "desc": "Placeholder for a removed image or document Claude has already seen, telling it earlier conclusions still stand"
+  },
+  "d0e0791bd2745c45df61842b6eef1c8f0554271e": {
+    "facing": "model",
+    "id": "system-reminder-media-removed-not-seen",
+    "name": "System Reminder: Media removed not seen",
+    "desc": "Placeholder for media that did not fit in the request, telling Claude to re-fetch it once alone or proceed without it"
+  },
+  "299232b6748a50beea4b83ec13c3b5f598782d2f": {
+    "facing": "model",
+    "id": "system-reminder-media-removed-maybe-seen",
+    "name": "System Reminder: Media removed maybe seen",
+    "desc": "Placeholder for removed media saying any conclusions Claude drew from it still stand"
+  },
+  "4c09551ac342ac2f5f67b39876136f2f2b4695c5": { "facing": "internal" },
+  "3a427297656e2b72571c734fd3b8b88ca512b629": { "facing": "internal" },
+  "29a3768da97bf9e161b9817cb41fa58f13d1f00b": { "facing": "internal" },
+  "9c4674c07c7090ac4ca3d4d611fb4c37f68e7bc0": { "facing": "internal" },
+  "2813356e6f3314997b7adebb9a2fabb40c66f485": { "facing": "internal" },
+  "e7502a21ad69fd7a60bd1ef6567dc24a8f7a3092": { "facing": "internal" },
+  "9e09432bb858911ef6d47b662d94f21f0153b784": {
+    "facing": "model",
+    "id": "tool-result-bash-backup-name-env-dependent-ask",
+    "name": "Tool Result: Bash backup name environment-dependent ask",
+    "desc": "Permission ask message when a command makes a backup whose name depends on the environment because no -S suffix is given"
+  },
+  "5dd558bd24b6310b6f874fa2209d50cc3410ebec": {
+    "facing": "model",
+    "id": "tool-result-mod-call-needs-approval-denied",
+    "name": "Tool Result: Mod call needs approval denied",
+    "desc": "Deny message when a mod's own tool call needs a person's approval it cannot request"
+  },
+  "747cc9af1e07bdacec5ca41e224dc2da90a4cae0": { "facing": "ui" },
+  "ba3aa4627a2fd85701706e8fd82b73e8f193fae2": { "facing": "ui" },
+  "bd6cc34f6f8281b57121f751897122fc22144941": { "facing": "internal" },
+  "6b1edf7142258372dfe608a9715da861bbcd3963": { "facing": "internal" },
+  "0a1bc18e94c6da29e616f64eb92c13f458bcfbee": { "facing": "internal" },
+  "95d9e2b10b8b78a9d7917553a9c9b858079cecfb": {
+    "facing": "model",
+    "id": "system-prompt-git-context-status-filters-off-note",
+    "name": "System Prompt: Git context status filters-off note",
+    "desc": "Notes that the git status was taken with the repository's git filters off so a listed file may be unchanged"
+  },
+  "7d6bf3479d52326609961ea21b196ed3781bf525": { "facing": "internal" },
+  "89393c6ed90d4ad6330176b4f9c379529ca46056": { "facing": "internal" },
+  "da13e579383cde3c59ebe4c15a0793b610e98cfb": { "facing": "internal" },
+  "e667dad2772b8d0140925f39a7292366a200c6c4": { "facing": "internal" },
+  "870ca4600d79de1ac9559b28b244b42957739c52": { "facing": "internal" },
+  "77695d8d7c95d229ba91b384dd848a53140dfa4c": { "facing": "internal" },
+  "6648586477fdf0cd73b8afd68bf7f2574f504717": {
+    "facing": "model",
+    "id": "system-reminder-user-email-identify-only",
+    "name": "System Reminder: User email identify-only",
+    "desc": "Limits use of the user's email address to identifying them and forbids sending it to unrelated services"
+  },
+  "77e476628f742770afa28bcd0428707657f258fb": {
+    "facing": "model",
+    "id": "system-reminder-user-email-private-approval",
+    "name": "System Reminder: User email private with approval",
+    "desc": "Tells Claude to treat the user's email as private and share it externally only with explicit approval"
+  },
+  "5c2b29f345a3991879e7cc6dd0ae678687d7054a": {
+    "facing": "model",
+    "id": "tool-result-path-too-long-validation",
+    "name": "Tool Result: Path too long validation",
+    "desc": "Validation error when a path parameter exceeds the length limit, asking Claude to normalize and resend it"
+  },
+  "69bad8274f2234cc94bcba8ea6036232b5152196": {
+    "facing": "model",
+    "id": "tool-result-skill-file-send-skillmd-not-edits",
+    "name": "Tool Result: Skill file send skillMd not edits",
+    "desc": "Appended note telling Claude to send the change as skillMd rather than edits since the file already has it"
+  },
+  "0b9dc78a807386955c04a9f9d0179e20ac86354d": {
+    "facing": "model",
+    "id": "tool-result-read-image-not-read-again",
+    "name": "Tool Result: Read image not read again",
+    "desc": "Read refusal when Claude keeps re-reading unchanged images in a conversation over the media budget"
+  },
+  "d9c793467962732b46e85f4d47346ea576f18c21": { "facing": "ui" },
+  "6d7afd203f55b5820715722705a8e0cf27b4a291": { "facing": "ui" },
+  "512b323f680f9f1617a36c318f8b7c9f47661651": { "facing": "ui" },
+  "02c812ca30bfaf7fd502256357d4903c1869f447": { "facing": "ui" },
+  "b29b2a1d540db66e67c88f468d446b07f8de6a1b": { "facing": "ui" },
+  "6890d8cf574ead853b464b17c00478c3e2ca0f18": { "facing": "internal" },
+  "151f40d9a175e8700c52d3eb50e9bda605b511e2": { "facing": "internal" },
+  "04ae036acfe08eef6267478f9ca7dd7155684d5c": {
+    "facing": "model",
+    "id": "tool-description-computer-use-selection-card-guidance",
+    "name": "Tool Description: Computer use selection card guidance",
+    "desc": "Tells Claude how to handle a computer-selection card, resume with device tools after selection and respond when the user declines or dismisses it"
+  },
+  "efa9e65e1ffd97a5e139b6abd9adc332e5b5e0cc": {
+    "facing": "model",
+    "id": "tool-result-webfetch-small-model-no-answer",
+    "name": "Tool Result: WebFetch small model no answer",
+    "desc": "WebFetch error when the small fast model that reads the page gave no answer"
+  },
+  "ce11cb7d4c94e5d20a76409677ff3ffb39e6f4ed": {
+    "facing": "model",
+    "id": "system-prompt-user-privacy-outside-services",
+    "name": "System Prompt: User privacy outside services",
+    "desc": "Tells Claude to keep the user's personal details out of requests to outside services unless explicitly asked"
+  },
+  "0cf07b4c198a00cc018a468530df6b1432e9ae8e": {
+    "facing": "model",
+    "id": "system-prompt-ai-development-training-limits",
+    "name": "System Prompt: AI development training limits",
+    "desc": "Advises Fable 5.2 and Mythos 5.2 to check documentation more often for AI-development tasks affected by training limits without refusing the work or recommending another model"
+  },
+  "3af1236fa68b65b65ee500bf94c86c9cb424f462": {
+    "facing": "model",
+    "id": "system-prompt-work-completion-and-direct-editing",
+    "name": "System Prompt: Work completion and direct editing",
+    "desc": "Instructs Claude to work through ordinary obstacles, continue tasks that do not need user input and edit known text inside the working directory without a prior read"
+  },
+  "ae85750e5ff39ec22ce1dcf8cee5f03fd73db6a3": {
+    "facing": "model",
+    "id": "system-prompt-memory-notes-and-feedback-rules",
+    "name": "System Prompt: Memory notes and feedback rules",
+    "desc": "Limits saved memories to lasting guidance that changes future behavior, weighs feedback in context, revisits old cautions and avoids unrequested planning documents"
+  },
+  "efac22b4aa12dfc8975389d0ba0dc4dcccdeac00": {
+    "facing": "model",
+    "id": "system-prompt-guide-agent-no-answer-report-issue",
+    "name": "System Prompt: Guide agent no-answer report issue",
+    "desc": "Tells the guide agent to direct users to report an issue when no answer or feature is found"
+  },
+  "cf91a11d36ab84f5b2659e2de8360c3f5050f7a0": { "facing": "internal" },
+  "c9447252f9b6da59900e14d192d9c1295fc1197c": { "facing": "internal" },
+  "0256a5e6fedcdcdce36a98ea02a3c64ec2ef1a8b": { "facing": "internal" },
+  "a57ed2059f7eef39f324a6f7ebdaeccb9363a1bd": { "facing": "internal" },
+  "92ea25673e9a66d1ab76898163c7ad7e0bd9e131": {
+    "facing": "model",
+    "id": "tool-result-bash-background-callback-window-warning",
+    "name": "Tool Result: Bash background callback window warning",
+    "desc": "Explains when Claude will be called back about a backgrounded command and to wait before replying if it needs the result"
+  },
+  "12356fd178c2abe2c4a4492b47a342e0f48e52b4": {
+    "facing": "model",
+    "id": "tool-result-http-hook-blocked-private-address",
+    "name": "Tool Result: HTTP hook blocked private address",
+    "desc": "Error when an HTTP hook target is not a public address, noting loopback is allowed for local dev"
+  },
+  "48088c9470ee923b22a0361f18a14c6a7694d9c7": {
+    "facing": "model",
+    "id": "tool-result-mcp-tool-hook-tool-blocked",
+    "name": "Tool Result: MCP tool hook tool blocked",
+    "desc": "Error when an mcp_tool hook targets an MCP tool that is blocked in the session"
+  },
+  "0f484f39f918aaa747e0d628fb2f34c3400ffb4b": {
+    "facing": "model",
+    "id": "tool-result-mcp-tool-hook-withheld-no-verdict",
+    "name": "Tool Result: MCP tool hook withheld no verdict",
+    "desc": "Error when an MCP tool hook's answer was withheld so the hook gave no verdict"
+  },
+  "62e124f381fe9e9ce75a3c268205735a60f1b7db": {
+    "facing": "model",
+    "id": "tool-result-mcp-tool-hook-answered-without-text",
+    "name": "Tool Result: MCP tool hook answered without text",
+    "desc": "Slot phrase saying the hook's MCP tool answered without its text because the result was too large"
+  },
+  "a0222c51154198108f93c250cf0039872d087b24": {
+    "facing": "model",
+    "id": "tool-result-mcp-tool-hook-message-too-large",
+    "name": "Tool Result: MCP tool hook message too large",
+    "desc": "Slot phrase saying the hook's MCP tool gave no readable answer because a server message was too large"
+  },
+  "83f0db8a31b62885ec28dc56d01a12e5e201615b": { "facing": "internal" },
+  "b0ab8bb0717a49ee838a772180063efb61022fc4": { "facing": "internal" },
+  "dd62668489611116c9bab12c27ac23f8a8fd4ea8": { "facing": "internal" },
+  "5adacad5cad35c55115a5dc12f2318cdcddcb4af": { "facing": "ui" },
+  "6a6ebb7bce0d3d348c2b857da015f1d393b7b432": { "facing": "internal" },
+  "8b780ac81feaa2c5a67e65e77bf721f3b3438d53": { "facing": "internal" },
+  "58661295ee0d2720ea28b7e34f45bd221813f1c4": { "facing": "internal" },
+  "95c449f02a6ee1e5c4724949d9a66015a3a3819f": { "facing": "internal" },
+  "0004de9b5cbbd27d58b60e0cddd3b3a13395bc8d": { "facing": "ui" },
+  "c2f5f927fe8de0962d142aa57dae6b602c745cc2": { "facing": "ui" },
+  "f45ce7929b40d3e89cb6f276ceb1fc59ca869363": { "facing": "ui" },
+  "524f4e9ee4dc6a275f41946139a37ad564cd5c54": { "facing": "internal" },
+  "4596c1c76e7f6365c2c51192967206afaff4162f": { "facing": "internal" },
+  "65ee299a4dd5b41e25f1f141568d16dcfaf4bdc1": {
+    "facing": "model",
+    "id": "tool-result-delivered-pictures-note",
+    "name": "Tool result: delivered pictures note",
+    "desc": "Text block appended to a tool result whose images are delivered to the user with the reply, telling the model they need no sending."
+  },
+  "1790cffcdc411eb044988e634e9e37fe1cd2fe60": { "facing": "internal" },
+  "66944bcaf211444cdc3da9538d214e7e928f55fb": { "facing": "internal" },
+  "e6fa46a2bcd30a4477734ba98eb9839fadc73f28": {
+    "facing": "model",
+    "id": "tool-result-mcp-oauth-connector-settings-check-stopped-sign-in",
+    "name": "Tool result: MCP sign-in stopped, connector settings uncheckable",
+    "desc": "Error returned when an MCP server's sign-in is stopped because it could not be checked against the organization's connector settings."
+  },
+  "d496810b9100b9bc8314a7fc768902195c308876": { "facing": "internal" },
+  "28f92c420747315d457a1366e77c4b79fb1c1ca9": {
+    "facing": "model",
+    "id": "tool-result-mcp-oauth-connector-list-timed-out",
+    "name": "Tool result: MCP sign-in connector list timed out",
+    "desc": "Error returned when an MCP server's sign-in could not be checked against the organization's connector list in time."
+  },
+  "3cb3b6374e032f96a64e1d8a7c7875c4762d7429": {
+    "facing": "model",
+    "id": "tool-result-mcp-server-turned-off-by-connector-settings",
+    "name": "Tool result: MCP server turned off by connector settings",
+    "desc": "Error telling the model an MCP server is turned off by the organization's claude.ai connector settings and that an admin can change it."
+  },
+  "582712930ecd6590e770e271d407c1b06ac42043": { "facing": "internal" },
+  "409c36c528d1ebb53d31ff872fcda1a2434bb646": {
+    "facing": "model",
+    "id": "tool-result-mcp-chrome-policy-off-nothing-sent",
+    "name": "Tool result: Claude in Chrome policy off, nothing sent",
+    "desc": "MCP error stating nothing was sent to the server because the organization's policy turns Claude in Chrome off."
+  },
+  "ba41dfff1f7835ccf11702f2de4fb404365f273c": {
+    "facing": "model",
+    "id": "tool-result-mcp-chrome-policy-unreadable-nothing-sent",
+    "name": "Tool result: Claude in Chrome policy unreadable, nothing sent",
+    "desc": "MCP error stating nothing was sent because the organization's Claude in Chrome policy could not be read; try again shortly."
+  },
+  "ff3ebd1c602b1d3d5cd7b529e3f0568563129560": { "facing": "internal" },
+  "2af68684c350e3fb945e98ae1007eab8defad40a": { "facing": "internal" },
+  "41f3fe751898f4947ec30a00e7d22fc6dcc3f36e": { "facing": "internal" },
+  "b4f11dabf6aa4ba4284f2fcf3a642c9bccae1c7a": { "facing": "internal" },
+  "903863f5f6298385296654767558eaa35ca55240": { "facing": "internal" },
+  "5cda8baed0d1b28b2e3689d19d562f924782fbbf": { "facing": "internal" },
+  "63564b5ac1c543aafe6f6de366bb64c2e389921c": { "facing": "internal" },
+  "35664f0de0792b5bf0dd004c06cc88bc2b9c9bcf": { "facing": "internal" },
+  "5ccfc8edcff4bd0b9ab94d9fd0431c18610be7e9": { "facing": "internal" },
+  "a0f6d26ab92d392f5252dfc2341dbcbd245bfdef": {
+    "facing": "model",
+    "id": "slash-command-plugin-marketplace-withdraw-cached-folder-unchecked",
+    "name": "Plugin marketplace: cached folder could not be checked",
+    "desc": "Per-folder reason pushed into the list of cached plugin folders that could not be withdrawn: the folder could not be checked."
+  },
+  "bcc9cd8a7b659acae8576cc24248d6b196be7917": { "facing": "internal" },
+  "9d3800073fe06adb1c2acfcff2df86dcfabff01f": {
+    "facing": "model",
+    "id": "slash-command-plugin-marketplace-withdraw-cached-folder-outside-cache",
+    "name": "Plugin marketplace: cached folder resolves outside cache",
+    "desc": "Per-folder reason pushed into the withdraw-failure list: the folder resolves outside the plugin cache."
+  },
+  "834d0186e0823a6a2127f610a5ef3c51bccf4f22": {
+    "facing": "model",
+    "id": "slash-command-plugin-marketplace-withdraw-cached-plugins-failed",
+    "name": "Plugin marketplace: could not withdraw cached plugins",
+    "desc": "Error listing the cached plugin folders of a marketplace that could not be withdrawn."
+  },
+  "d509d183ba2730ec1cc14aeee2f505b440e153f0": { "facing": "internal" },
+  "29dd667423821f43ae5713cb8f6dd4270c1f90c7": {
+    "facing": "model",
+    "id": "slash-command-plugin-marketplace-managed-take-back-source-unreachable",
+    "name": "Plugin marketplace: managed take-back held, source unreachable",
+    "desc": "Error when a managed-settings marketplace standing from another source cannot be taken back because its declared source is unreachable."
+  },
+  "4cee233e62db2aa400eed2813ce92a8242528ec6": { "facing": "internal" },
+  "5865049ec83393568e50db7d1e2972989254e717": {
+    "facing": "model",
+    "id": "slash-command-plugin-marketplace-managed-take-back-install-records-unreadable",
+    "name": "Plugin marketplace: managed take-back held, install records unreadable",
+    "desc": "Error when installed_plugins.json cannot be read so a managed marketplace cannot be taken back from another source."
+  },
+  "8695a5e3d43a5a6b99a4975f27729c4342bbc9a6": { "facing": "internal" },
+  "e1802429f6c948b37c148bd701babee276ea8ce0": { "facing": "internal" },
+  "e87748b6e6ac0a74c4beddc925eca44a2e2706d0": {
+    "facing": "model",
+    "id": "slash-command-plugin-marketplace-withdraw-install-records-unreadable",
+    "name": "Plugin marketplace: withdraw held, install records unreadable",
+    "desc": "Error when installed_plugins.json cannot be read so a marketplace's plugins cannot be withdrawn."
+  },
+  "8955c87d5941210c48a18ab92b8e227189da1f2a": {
+    "facing": "model",
+    "id": "tool-result-notebook-edit-inserted-cell",
+    "name": "Tool result: NotebookEdit inserted cell",
+    "desc": "NotebookEdit result for insert mode naming the inserted cell and its source."
+  },
+  "4b692ce462e7725aea8f00049eb43d67afe35d63": {
+    "facing": "model",
+    "id": "tool-result-bash-turn-abort-output-not-shown",
+    "name": "Tool result: Bash output not shown after turn abort",
+    "desc": "Placeholder stdout for a Bash command backgrounded by a turn abort when its output so far could not be read."
+  },
+  "f651c6fb33747369d8f76f9dad2dc8e96719a6d8": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-server-context-stale-probe-other-organization",
+    "name": "Tool result: auto mode stale-context probe, other organization",
+    "desc": "Clause in an auto-mode denial explaining the looked-up artifact belongs to another of the user's organizations this login cannot open."
+  },
+  "05a86fc42e4940a94ca8dee07a1b26f70548c76d": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-restored-cd-folder-gone",
+    "name": "Auto mode: leading cd folder no longer exists",
+    "desc": "Auto-mode denial when the command begins with a cd to the shell's folder, which no longer exists."
+  },
+  "f91e7065d72c0cac3224a4ed9a964453824c5495": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-restored-cd-reissue-quoted-input",
+    "name": "Auto mode: reissue restored-cd call with quoted input",
+    "desc": "Instruction to reissue the call with exactly the quoted input so auto mode reviews it."
+  },
+  "e1816b50ce5426f940f4abf04f74cdfe3a8e800e": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-no-local-check-reason",
+    "name": "Auto mode: no local check reason clause",
+    "desc": "Reason clause: Claude Code no longer checks actions itself and no server verdict covers this one."
+  },
+  "64d55f65330307177d05683fafa59f9e69a597bc": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-no-verdict-restored-cd-moved",
+    "name": "Auto mode: no verdict, shell moved since review",
+    "desc": "Auto-mode no-verdict reason: the call was reviewed without its leading cd and the shell has moved since."
+  },
+  "681fd6ab65800d54142c1dd2241393a824a519d7": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-restored-cd-denied-again-tell-user",
+    "name": "Auto mode: restored-cd denied again, tell user",
+    "desc": "If denied again, do not retry; tell the user auto mode could not check the call and they can switch out of auto mode."
+  },
+  "85da5dce0452561dbdc843561239910fd2a9784a": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-restored-cd-reissue-with-cd",
+    "name": "Auto mode: reissue command beginning with cd",
+    "desc": "Instruction to reissue the same command beginning with cd to the given folder so auto mode reviews it."
+  },
+  "01ef93467278c15740da9aba483c587a2f59f04c": {
+    "facing": "model",
+    "id": "tool-result-auto-mode-restored-cd-not-a-judgment-wrapper",
+    "name": "Auto mode: restored-cd denial wrapper",
+    "desc": "Template combining the restored-cd reason, the not-a-judgment note and the reissue and denied-again instructions."
+  },
+  "09ee7207437b9830e073dadb39b4611acf267b9f": {
+    "facing": "model",
+    "id": "tool-result-subagent-unreviewed-no-local-review-reason",
+    "name": "Subagent unreviewed: no local review reason",
+    "desc": "Reason clause: Claude Code no longer reviews a subagent's output itself and nothing else reviewed it."
+  },
+  "1106a1c2c9d4ebff892accff861a7bc77bbf746b": { "facing": "internal" },
+  "190edf8eaa1c452aebae8be9770d1a87e953b69a": {
+    "facing": "model",
+    "id": "system-reminder-file-closing-reminder-tags-escaped-note",
+    "name": "File shown with escaped closing reminder tags",
+    "desc": "Meta note that a file's closing system-reminder tags are shown with &lt; instead of < so they cannot end the reminder."
+  },
+  "dc579d7ca8a1945fed364e4bf71f76c6a9fd7933": {
+    "facing": "model",
+    "id": "system-reminder-project-docs-changed-notice",
+    "name": "Project docs changed notice",
+    "desc": "Notice explaining the project_read calls that follow show changes to this chat's project docs, including removed and not_read results."
+  },
+  "7ca201b55022a4aaee8f998cb8b06e3cad6c9da7": {
+    "facing": "model",
+    "id": "system-reminder-unknown-slash-command-claude-ai-new-chat-hint",
+    "name": "Unknown slash command: claude.ai new chat hint",
+    "desc": "Hint that the user may be able to make the wanted item in a new claude.ai or desktop chat via the / menu."
+  },
+  "83db542e2bc0731473d1f9662ce8240b9e8f03c0": {
+    "facing": "model",
+    "id": "system-reminder-unknown-slash-command-fallback-plain-request-skill",
+    "name": "Unknown slash command fallback (skill arm)",
+    "desc": "Fallback telling the model to treat the message as a plain request, including a skill of that name, or say the command is unavailable."
+  },
+  "0e27b40d811b29d1aca081b15da4db3db2a07880": {
+    "facing": "model",
+    "id": "system-reminder-unknown-slash-command-do-not-say-ran",
+    "name": "Unknown slash command: do not say it ran",
+    "desc": "Closing instruction not to claim the unknown command ran."
+  },
+  "0a89280e525c135e2aa5de86f6e5d2c5991395f9": {
+    "facing": "model",
+    "id": "system-reminder-skill-listing-adds-to-earlier-suffix",
+    "name": "Skill listing: adds-to-earlier suffix",
+    "desc": "Suffix noting the skill list adds to skills listed earlier and is not the full list."
+  },
+  "9d9c251ef63b972a8141b7e7ee6fdc357e483be5": {
+    "facing": "model",
+    "id": "system-reminder-skill-listing-wrapper",
+    "name": "Skill listing wrapper",
+    "desc": "Skill listing reminder introducing the skills available for use with the Skill tool."
+  },
+  "682eecf2238ee4d5fc3acaf76fc16c7b008b8687": {
+    "facing": "model",
+    "id": "system-reminder-tools-available-again-definitions-still-apply",
+    "name": "Tools available again (definitions still apply)",
+    "desc": "Delta reminder listing tools available again whose earlier definitions still apply, to call directly."
+  },
+  "fc13890b4a71aea5e765e88237ebdef5e221a28f": {
+    "facing": "model",
+    "id": "system-reminder-mcp-servers-refused-reserved-address",
+    "name": "MCP servers refused: reserved address",
+    "desc": "Reminder listing configured MCP servers Claude Code refuses because their address is reserved, and what to tell the user."
+  },
+  "dfb86b63dad1b4142f9902111a915ff536385fdd": { "facing": "ui" },
+  "4ffffe6c2e83f10182152e57f2735e8fcc6bb2c5": { "facing": "ui" },
+  "9e04fa4eaab4e02233e1bc5e3a18cedf05642d26": { "facing": "ui" },
+  "cd8af045c2bbc35323ae1a248401834ba2df0873": { "facing": "ui" },
+  "a8a1721a883a9f061520bce704db7b7f456044d5": {
+    "facing": "model",
+    "id": "slash-command-bg-gate-user-delegated-session",
+    "name": "Slash Command: /bg gate refuses user-delegated session",
+    "desc": "Tells the model background sessions are unavailable in a user-delegated session and to run the task in the current session"
+  },
+  "dd9aa7f8f833d0b010c3d87c1f8354c674c30567": { "facing": "ui" },
+  "f2eaa04042b8fc864b6c6883833e61565cf6ebe1": { "facing": "ui" },
+  "aeabc6fba8ddd32fb08ef9b273417a259a63cd2c": { "facing": "ui" },
+  "0b9ee0c54c052bae12805eea4d8618eac1fb28c4": { "facing": "internal" },
+  "1c706ea9ec1e0317c2a46ab263fa5389099ac821": {
+    "facing": "model",
+    "id": "tool-result-artifact-read-other-organization",
+    "name": "Tool Result: Artifact in other organization",
+    "desc": "Explains the Artifact belongs to another (or former) organization of the user, not the signed-in one"
+  },
+  "651b4acff368fb849ef4f6a01ecc44d38917392d": {
+    "facing": "model",
+    "id": "tool-result-artifact-other-org-login-remedy",
+    "name": "Tool Result: Artifact other-org /login remedy",
+    "desc": "Clause telling the model the user must run /login into that organization to reach the Artifact"
+  },
+  "a00ef5198a54a9bb4884256c52f1c54a668f16af": {
+    "facing": "model",
+    "id": "tool-result-artifact-other-org-moved-personal-data-hint",
+    "name": "Tool Result: Artifact other-org moved personal data hint",
+    "desc": "Suggests looking for a copy in the organization a personal account's data was moved to"
+  },
+  "20d5b35f38adb9916a1e9da30e1957f05678455e": {
+    "facing": "model",
+    "id": "tool-result-ask-user-question-no-answer-report-rejected",
+    "name": "Tool Result: AskUserQuestion no-answer report rejected",
+    "desc": "Deny message when the app's no-answer report was not accepted; tells the model to ask again if needed"
+  },
+  "48cff3650274dd800adb9b04f511276f0cb69cdd": { "facing": "internal" },
+  "cb44b0d44423494fc22b7bf78b93d0f92e0b3f72": { "facing": "internal" },
+  "46f319fd499144f1c94f8367176847cf836883a1": { "facing": "internal" },
+  "a98f95eabcfbb62e01c3a577eacca8a8f0e4011e": {
+    "facing": "model",
+    "id": "tool-result-workflow-agent-auto-mode-transcript-too-long",
+    "name": "Tool Result: Workflow agent blocked, transcript too long for auto mode",
+    "desc": "Workflow agent was not started because auto mode could not check the prompt over a too-long conversation"
+  },
+  "01058d61dc1ee49eb50b594e93ba83a93d4e797c": {
+    "facing": "model",
+    "id": "tool-result-workflow-agent-auto-mode-check-unavailable",
+    "name": "Tool Result: Workflow agent blocked, auto mode check unavailable",
+    "desc": "Workflow agent was not started because auto mode could not check its prompt just now; retry later"
+  },
+  "a0c98fa96bd4c41387716da4261c2f9f04726f4f": { "facing": "internal" },
+  "551de8a13a3fc6723525d740992775e1295ec1a1": {
+    "facing": "model",
+    "id": "tool-result-agent-stopped-by-user",
+    "name": "Tool Result: Agent stopped by user",
+    "desc": "Tells the model a stopped agent won't be resumed and to treat its work as cancelled"
+  },
+  "6660d45eb80dd3079b7bcc9a552513d848c88780": {
+    "facing": "model",
+    "id": "tool-result-agent-stopped-delivery-dropped",
+    "name": "Tool Result: Agent stopped, delivery dropped",
+    "desc": "Message delivery to an agent was dropped because the agent was stopped meanwhile"
+  },
+  "4e1083bec893e816f037aeca344a2248ea99cd61": {
+    "facing": "model",
+    "id": "system-reminder-workflow-stopped-recovery-resume-call",
+    "name": "System Reminder: Stopped workflow recovery resume call",
+    "desc": "Recovery block saying finished agent calls are saved and giving the resume call to use only if the user asks"
+  },
+  "253e467d483446d98a591f837e616ffa3cdbbfaa": { "facing": "internal" },
+  "33a2806fc96041faf9b98bfa3633922ad596a3f0": { "facing": "internal" },
+  "e7931fcb04a04979292218937342bd040808ab10": {
+    "facing": "model",
+    "id": "tool-result-attachment-name-control-character-remedy",
+    "name": "Tool Result: Attachment name control-character remedy",
+    "desc": "Tells the model to copy/rename a file with control characters in its name or correct the path"
+  },
+  "4de5b1b7dac2e52fd65250cca4a0a27ac799bd88": {
+    "facing": "model",
+    "id": "tool-result-attachment-name-control-character",
+    "name": "Tool Result: Attachment name contains control character",
+    "desc": "Validation refusal: cannot send a file whose name holds a line break, control or direction-changing character"
+  },
+  "7eb5320705c520617a2c70402930f862bd380528": {
+    "facing": "model",
+    "id": "system-reminder-workflow-stopped-no-result-note",
+    "name": "System Reminder: Stopped workflow no-result note",
+    "desc": "Note in a local workflow stop notice that no result will follow unless the user resumes it"
+  },
+  "c000a7886313001da59471844d760f2320a1c9b2": {
+    "facing": "model",
+    "id": "tool-result-taskstop-task-not-found-agent-name-shape",
+    "name": "Tool Result: TaskStop task not found (agent-name-shaped ID)",
+    "desc": "TaskStop error when the given ID is not looked up as an agent name; asks for the task ID"
+  },
+  "02945400a1f634701af3b51327272cedcab0018f": { "facing": "internal" },
+  "118004026e0a35b140187e7f469be9547aa95521": {
+    "facing": "model",
+    "id": "tool-result-mcp-refresh-chrome-policy-off",
+    "name": "Tool Result: MCP refresh refused by Chrome policy",
+    "desc": "MCP refresh result: org policy turns Claude in Chrome off so the server's tools were not refreshed"
+  },
+  "68b9fc1c070b7890cc210da4800ce7d2c727fdb8": {
+    "facing": "model",
+    "id": "tool-result-mcp-refresh-chrome-policy-unreadable",
+    "name": "Tool Result: MCP refresh Chrome policy unreadable",
+    "desc": "MCP refresh result: Chrome policy could not be read so tools were not refreshed; try later"
+  },
+  "6430397695e83fc4ebd002ba4f5ef92abfd90e65": { "facing": "internal" },
+  "f7c43312ad147ea1e9f989171be702e20c868e8d": { "facing": "internal" },
+  "e9740c641e19fd99b7ee6dad738b13e75574266e": { "facing": "internal" },
+  "f7d67a4aa6c8f17fe702a65fb135e10148f5e7ca": { "facing": "ui" },
+  "7a080eef3c7a5e324c0b35a9413455918f17a65b": { "facing": "ui" },
+  "0e5ef4b50f17a22a8b1f5782dc92514ce8ba0b21": { "facing": "internal" },
+  "e3b984e3224fcae3467cc88bfad095a9623489cf": { "facing": "ui" },
+  "ef8d6cc87d2294210c413bd1229fe39db09a86f4": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-page-only-document",
+    "name": "Tool Result: Artifact DB page-only document",
+    "desc": "Write refused because the document is kept by the artifact's own page; read-only via read_db, don't retry"
+  },
+  "dfc7cdcadda2729a5cef7b790ddafbf52439f504": {
+    "facing": "model",
+    "id": "system-reminder-file-backed-artifact-database-write-refusal",
+    "name": "System Reminder: File-backed artifact database write refusal",
+    "desc": "Redirects artifact database writes to project/ files and requires carrying over all earlier content before the first file publication"
+  },
+  "758ce46229f312bdf2ecb331e038318cae0c3b03": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-page-only-unjudged",
+    "name": "Tool Result: Artifact DB page-only unjudged write",
+    "desc": "Server could not tell which documents a write touches; server bug, tell the user"
+  },
+  "3d10bfe2a0aa54597d077a1a870add3a5dfebe47": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-write-refused-unrecognized",
+    "name": "Tool Result: Artifact DB write refused for good",
+    "desc": "Artifact database refused the write permanently; tell the user it could not be saved"
+  },
+  "86140c2fc78dde3a490f44ca58568e11e79ac10d": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-store-read-only",
+    "name": "Tool Result: Artifact DB store read-only",
+    "desc": "Composes the path label with the store-read-only reason for a refused document write"
+  },
+  "7820234b82df147901520f5822ba2b1455f48c31": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-scan-budget",
+    "name": "Tool Result: Artifact DB scan budget exceeded",
+    "desc": "Collection too large to sort; drop query.order_by and page with query.cursor"
+  },
+  "f582969edd8e449c3114f0c6a67029c1c022d5b0": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-batch-store-read-only-unknown-document",
+    "name": "Tool Result: Artifact DB batch read-only unnamed document",
+    "desc": "Label for an unnamed batch document when the server did not say which was read-only"
+  },
+  "41ca1ae3d43255454f44aad110d0a17bbe84381d": {
+    "facing": "model",
+    "id": "tool-result-artifact-db-batch-store-read-only",
+    "name": "Tool Result: Artifact DB batch write store read-only",
+    "desc": "Atomic batch write failed on a read-only document; nothing was written"
+  },
+  "200b239fdec19f75cfa6b5b001d1b168c90b5820": {
+    "facing": "model",
+    "id": "tool-result-artifact-asset-unsupported-type",
+    "name": "Tool Result: Artifact asset unsupported content type",
+    "desc": "Asset upload failed: server/intermediary refused the content type"
+  },
+  "79cb10d3a19c962fc19165889985a75932ecbc75": {
+    "facing": "model",
+    "id": "tool-result-artifact-asset-unsupported-type-detail",
+    "name": "Tool Result: Artifact asset unsupported type default detail",
+    "desc": "Default detail that the content type was refused and a retry will not help"
+  },
+  "a6421d80d5b5052567436e9b7dcbd712b847120f": {
+    "facing": "model",
+    "id": "tool-result-artifact-asset-store-unavailable-detail",
+    "name": "Tool Result: Artifact asset store unavailable default detail",
+    "desc": "Default detail for asset store unavailable with retry advice"
+  },
+  "43b82249d74597549b3168eabb58e6a42da7cec4": {
+    "facing": "model",
+    "id": "tool-result-artifact-asset-store-unavailable-upload-duplicate-note",
+    "name": "Tool Result: Artifact asset upload duplicate note",
+    "desc": "Upload-only note that a timed-out upload may already be stored and a duplicate costs quota"
+  },
+  "ab02b053ea264771ad97a5c0a7e5014653ebbaa0": {
+    "facing": "model",
+    "id": "tool-result-artifact-other-org-unreachable",
+    "name": "Tool Result: Artifact other-org unreachable",
+    "desc": "Composes other-org reason, /login remedy and moved-data hint into the deny clause"
+  },
+  "5fce0a759cbce3bd9c6d245263142648f462d3f8": { "facing": "ui" },
+  "20ddf34ecc2a52a2656fff0f80a70a75d2cc1087": { "facing": "ui" },
+  "c86ecd742ab1d501a04d4d1de877c53222562319": { "facing": "internal" },
+  "db78ff0526a68435d48ea2ab5339df9dcc521f2d": { "facing": "ui" },
+  "bfc8a86d7e807a64652fe1511afc69db5c07905f": { "facing": "ui" },
+  "727e079ebbdff403a3e48e038ee715ec1e67a063": { "facing": "internal" },
+  "a5ee9a9cc46826d16fb550b4d2490bf2e09552b9": { "facing": "ui" },
+  "07402a986bcc7663c65c60eae8628608ce810231": { "facing": "internal" },
+  "91a7fcd9b92e14ef6800f85aef1800ad359128ea": { "facing": "internal" },
+  "12cfad7678b263292a1ce3420d8bbc183c3f060d": { "facing": "internal" },
+  "7a2da613dfc69fa401ff0f1668fc135a30f01628": { "facing": "internal" },
+  "9b7f25a403eaa5ba4c781577a6f0d358a2d3bfef": {
+    "facing": "model",
+    "id": "slash-command-restart-refused-above-max-version",
+    "name": "Slash Command: /restart refused, version on hold",
+    "desc": "Restart refused because the installed version is on hold above the allowed maximum"
+  },
+  "63d37d71174ffa70c489f0be4657ea754088aa2c": { "facing": "internal" },
+  "3024b269088fd7ef104a312ebc042b9dde730620": { "facing": "ui" },
+  "4732764023b09d306b5bb7558ff5c83e05f62cda": { "facing": "ui" },
+  "6d38a8c0a1f2796b1220fb2a6a81a81f30842574": {
+    "facing": "model",
+    "id": "system-reminder-browser-extension-not-connected-alternatives-fallback",
+    "name": "System Reminder: Browser extension not connected alternatives fallback",
+    "desc": "Fallback suggestion when the browser extension is not connected: continue with a cloud browser, web search, or ask the user to do the browser step."
+  },
+  "6d34b59ae0ac5f87e3ff1381f0537b1abb2a2613": {
+    "facing": "model",
+    "id": "tool-result-bash-builtin-gh-jq-filter-failed-after-send",
+    "name": "Tool Result: Bash built-in gh --jq failed after non-GET request was sent",
+    "desc": "Built-in gh api stderr when a non-GET request was sent but --jq could not filter the response, warning that rerunning resends the request."
+  },
+  "39f2083f9b8bd8fb67a708e22ae587885c4dc3fd": {
+    "facing": "model",
+    "id": "tool-result-bash-builtin-gh-jq-filter-compile-failed",
+    "name": "Tool Result: Bash built-in gh --jq filter failed to compile",
+    "desc": "Built-in gh api stderr when the local jq cannot compile the --jq filter; no request was sent."
+  },
+  "36df9c77a3eab4e92e9bdc7697c8fd54f256971e": { "facing": "ui" },
+  "c2974bc1b66e796abdb7c7c5a9808fd473613ae2": {
+    "facing": "model",
+    "id": "system-reminder-connector-download-already-downloaded-note",
+    "name": "System Reminder: Connector download already downloaded note",
+    "desc": "Download note saying an offered file was already downloaded in this conversation, with where it is saved."
+  },
+  "eecc9acd200aad64c63329e30e2a36cfb4de45fc": {
+    "facing": "model",
+    "id": "system-reminder-connector-download-saved-picture-too-large-clause",
+    "name": "System Reminder: Connector download saved picture too large clause",
+    "desc": "Clause added to the saved-file note when the downloaded picture is too large to show, telling how to view it with the read tool or a smaller copy."
+  },
+  "81dbffa8219e940af28ba08f50348190ebf815e8": {
+    "facing": "model",
+    "id": "system-reminder-connector-download-saved-path-tracked-not-removed",
+    "name": "System Reminder: Connector download saved path tracked, not removed",
+    "desc": "Download note when git came to track the saved file during the save and Claude Code could not remove it."
+  },
+  "2f905849dd3dec518c074066663f28a8d3630a5f": { "facing": "ui" },
+  "a0a3eb0d05d389d35026505b735fdac39af6e489": {
+    "facing": "model",
+    "id": "system-reminder-connector-download-repository-not-checkable-not-removed",
+    "name": "System Reminder: Connector download repository not checkable, not removed",
+    "desc": "Download note when the repository around connector-downloads cannot be checked and the saved file could not be removed."
+  },
+  "c1fff65547538f2bfe4890658c3926675df20edf": { "facing": "ui" },
+  "8aef8a353bfb663adbf33196a66639eef085ecb3": {
+    "facing": "model",
+    "id": "system-reminder-connector-download-git-check-failed-not-removed",
+    "name": "System Reminder: Connector download git check failed, not removed",
+    "desc": "Download note when Claude Code could not finish the git-commit check and could not remove the saved file."
+  },
+  "24d398022cc862284ef1e3bd7af1c5dbee9ef236": { "facing": "ui" },
+  "c913c8b6a5b8314a3d3e294863ac0df4d97adb2c": {
+    "facing": "model",
+    "id": "system-reminder-connector-download-path-already-tracked-not-removed",
+    "name": "System Reminder: Connector download path already tracked, not removed",
+    "desc": "Download note when git already tracks the saved path under another spelling and the file could not be removed."
+  },
+  "7b6c8c70ac5a9dc22efd3ef67bee14bb0d897e23": { "facing": "ui" },
+  "514226349180dc8353e7ee0a3ad8ba22c8f45fab": {
+    "facing": "model",
+    "id": "system-reminder-connector-download-record-not-written-not-removed",
+    "name": "System Reminder: Connector download record not written, not removed",
+    "desc": "Download note when Claude Code could not write the connector-download marker record and could not remove the saved file."
+  },
+  "5f8e6f364d65a127479b0cf6e8defdfccf5fcc4c": { "facing": "ui" },
+  "cefb71fd7e2e23244c278796414c7a94104d86ad": {
+    "facing": "model",
+    "id": "system-reminder-connector-download-saved-file-may-remain",
+    "name": "System Reminder: Connector download saved file may remain",
+    "desc": "Clause added to a failed-download note saying the saved file may remain and to tell the person."
+  },
+  "4cb7f0801504f9b8522fb007f59d367b9495bdc1": {
+    "facing": "model",
+    "id": "system-reminder-connector-download-partial-copy-may-remain",
+    "name": "System Reminder: Connector download partial copy may remain",
+    "desc": "Clause added to a failed-download note saying a possibly incomplete copy may remain, must not be used, and the person should be told."
+  },
+  "d15110848c74255c1c67d4091872476188e08edc": {
+    "facing": "model",
+    "id": "system-reminder-connector-download-moved-folder-location",
+    "name": "System Reminder: Connector download moved folder location",
+    "desc": "Location phrase used in leftover-file clauses when the connector-downloads folder was moved or replaced during the download."
+  },
+  "e10e887313ff6c829e1a89752eeadab23297368c": {
+    "facing": "model",
+    "id": "system-reminder-connector-download-refusal-too-large-stated",
+    "name": "System Reminder: Connector download refusal too large (stated)",
+    "desc": "Refusal reason when an offered file's stated size exceeds the download cap."
+  },
+  "a3228a67463814bf572f5bc5dd3cdd595a69a359": {
+    "facing": "model",
+    "id": "system-reminder-connector-download-refusal-over-download-limit",
+    "name": "System Reminder: Connector download refusal over download limit",
+    "desc": "Refusal reason when a downloaded file grew past the download cap."
+  },
+  "9d96cea68ed09293dc34bf6a64a2a87939114855": {
+    "facing": "model",
+    "id": "system-reminder-connector-download-refusal-ran-out-of-time",
+    "name": "System Reminder: Connector download refusal ran out of time",
+    "desc": "Refusal reason when a download did not finish within the time limit, explaining when rerunning helps."
+  },
+  "034d2c02dd88766a04b49fb398e0d9d01e4416a1": { "facing": "ui" },
+  "445f22066aff47e3ef7b90334bc2e7ac1fa1bb29": { "facing": "ui" },
+  "fa310f98f43c117e141f61fb03decba84803af68": { "facing": "ui" },
+  "12124638ad1a726db9a6b608617580f692ad01bd": { "facing": "ui" },
+  "64d9394e9e78c1b03f4a0aaa64bdfcf1621747b6": { "facing": "ui" },
+  "b47477841c2ff87fc5ff67c461bddc85baacab63": {
+    "facing": "model",
+    "id": "system-reminder-connector-download-offered-files-range-not-downloaded",
+    "name": "System Reminder: Connector download offered files range not downloaded",
+    "desc": "Download note saying a range of offered files was not downloaded because of the per-result file cap."
+  },
+  "b33fde0ec8afdea2b76d92db8ed13a420faf1b1c": {
+    "facing": "model",
+    "id": "system-reminder-connector-download-file-not-downloaded",
+    "name": "System Reminder: Connector download file not downloaded",
+    "desc": "Download note naming an offered file that was not downloaded and the reason."
+  },
+  "28173b94b6a4d8b5ca37455de99b0fbfc089e5c9": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-pr-as-merged-unavailable",
+    "name": "Slash Command: /ultrareview PR-as-merged unavailable",
+    "desc": "Ultrareview result when CLAUDE_CODE_ULTRAREVIEW_PR_AS_MERGED requests the as-merged review that is unavailable; nothing was launched."
+  },
+  "f9f39bbba0d4fd2140531ae6bd005df6284f282b": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-managed-settings-block-findings-hook",
+    "name": "Slash Command: /ultrareview managed settings block findings hook",
+    "desc": "Ultrareview result when managed settings block the hook that sends cloud review findings back; nothing was launched or billed."
+  },
+  "a03b8d50983f26fd3c54afed02984dbe24e84845": {
+    "facing": "model",
+    "id": "slash-command-remote-session-model-change-unavailable",
+    "name": "Slash Command: Remote session model change unavailable",
+    "desc": "Result when /model is run in a remote session where changing the model by command is unavailable."
+  },
+  "407ffb94a29d555a91d5609e782bd645ad9fdc43": {
+    "facing": "model",
+    "id": "slash-command-remote-session-effort-change-unavailable",
+    "name": "Slash Command: Remote session effort change unavailable",
+    "desc": "Result when /effort is run in a remote session where changing effort by command is unavailable."
+  },
+  "2b62eb803061a5d2512ad64f69dba7ae43bbbb7d": {
+    "facing": "model",
+    "id": "slash-command-remote-session-mcp-manage-unavailable",
+    "name": "Slash Command: Remote session MCP management unavailable",
+    "desc": "Result when /mcp is run in a remote session, pointing to the claude.ai Connectors page."
+  },
+  "60363bbfcfae742d22d45066703c8d0045919205": {
+    "facing": "model",
+    "id": "slash-command-remote-session-rename-unavailable",
+    "name": "Slash Command: Remote session rename unavailable",
+    "desc": "Result when /rename is run in a remote session, pointing to the Rename menu item."
+  },
+  "33e1102b61a0aa26983c05056658686634442972": {
+    "facing": "model",
+    "id": "slash-command-remote-session-reload-plugins-auto-pickup",
+    "name": "Slash Command: Remote session reload-plugins auto pickup",
+    "desc": "Result when /reload-plugins is run in a remote session that usually picks up plugin changes on its own."
+  },
+  "355c8bbb81f18aa5a6194810277e34e7e06df07e": {
+    "facing": "model",
+    "id": "slash-command-remote-session-reload-plugins-start-new-session",
+    "name": "Slash Command: Remote session reload-plugins start new session",
+    "desc": "Result when /reload-plugins is run in a remote session, saying to start a new session to use changed plugins."
+  },
+  "4d4af817582f4a4db6c9addfb1b21e34bb5bc34c": {
+    "facing": "model",
+    "id": "slash-command-project-server-set-project",
+    "name": "Slash Command: /project server-set Project",
+    "desc": "/project result when the Project was set by the server and cannot be changed for this session."
+  },
+  "f9b25ed3e0ae981038d04abc29a94f5c27d45b2f": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-word-glob-option",
+    "name": "Tool Result: Bash worktree git word may glob into option",
+    "desc": "Worktree-isolation refusal detail: a word could expand at runtime into a git option that can't be verified."
+  },
+  "c8dabd51650a471d3af513ea3ee4c6889d49e041": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-spell-word-literally",
+    "name": "Tool Result: Bash worktree git spell word literally",
+    "desc": "Worktree-isolation remedy: spell the word out literally and run the command from the worktree."
+  },
+  "e25208c6f4e3649b6b7f0806ee2d0994512d814e": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-reassigns-exported",
+    "name": "Tool Result: Bash worktree git re-assigns exported variable",
+    "desc": "Worktree-isolation refusal detail: the command re-assigns an exported variable, which can append onto its value at runtime."
+  },
+  "81fa9c7285c4bed55d74d04e6617bb1377dd6e8f": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-runs-above-shared-checkout",
+    "name": "Tool Result: Bash worktree git runs above shared checkout",
+    "desc": "Worktree-isolation refusal detail: git runs from above the shared checkout, where its operands can reach it."
+  },
+  "cc1769048959bf4bdfc183b6bf8b4ff82cc87a98": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-option-path-unverifiable",
+    "name": "Tool Result: Bash worktree git option path unverifiable",
+    "desc": "Worktree-isolation refusal detail: a git option is given a path that can't be verified before it runs."
+  },
+  "6f8ae6f789e6efdf86b4d894ac047511571f27f8": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-spell-path-in-full",
+    "name": "Tool Result: Bash worktree git spell path in full",
+    "desc": "Worktree-isolation remedy: spell the path out in full without variables, globs, ~, devices or .., and run it from the worktree."
+  },
+  "22902de1a0a879c6054034ef7d1002190dfcf183": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-option-path-in-shared-checkout",
+    "name": "Tool Result: Bash worktree git option path in shared checkout",
+    "desc": "Worktree-isolation refusal detail: a git option is given a path in the shared checkout where git would write."
+  },
+  "1199302f0dc95529e149dc0c42477034eb7d4a15": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-write-under-worktree-or-scratch",
+    "name": "Tool Result: Bash worktree git write under worktree or scratch",
+    "desc": "Worktree-isolation remedy: write under the worktree or a scratch directory instead."
+  },
+  "16890f4f9c1d7e0491463163c2969c06763dd47c": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-export-names-program",
+    "name": "Tool Result: Bash worktree git export names program",
+    "desc": "Worktree-isolation refusal detail: the command exports a variable naming a program git would run that can't be verified."
+  },
+  "97a93780c6549574bc10cb90ea6b8e667bd9b535": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-run-without-export",
+    "name": "Tool Result: Bash worktree git run without export",
+    "desc": "Worktree-isolation remedy: run git on a line of its own without that export."
+  },
+  "79d4f83b286221b6669ce1102170e0e054dca4d2": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-assign-names-program",
+    "name": "Tool Result: Bash worktree git assignment names program",
+    "desc": "Worktree-isolation refusal detail: the command assigns a variable naming a program git would run that can't be verified."
+  },
+  "fad521bd4aa73edfb4c3549bccb1cdb14a14bc80": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-run-without-assignment",
+    "name": "Tool Result: Bash worktree git run without assignment",
+    "desc": "Worktree-isolation remedy: run git on a line of its own without that assignment."
+  },
+  "8a82e32a0010655385b74411058d44262f45c82a": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-git-hands-text-to-shell",
+    "name": "Tool Result: Bash worktree git hands text to shell",
+    "desc": "Worktree-isolation refusal detail: the command hands text naming git to a shell."
+  },
+  "9bb2c40232e15d48b1a489b0b46f2cd9e5eb1c0f": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-config-pass-with-git-c-remedy",
+    "name": "Tool Result: Bash worktree guard config pass with git -c remedy",
+    "desc": "Worktree guard remedy for a shared-config write: pass the setting for one command with git -c if allowed, or ask the person to set it."
+  },
+  "ca3837f55c27dac93c0bd312a814f1f2489a94f5": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-option-runs-program-detail",
+    "name": "Tool Result: Bash worktree guard option runs program detail",
+    "desc": "Worktree guard detail: an option passed to git runs a program that can't be verified."
+  },
+  "698b0fad45b85d4b5f5469447fca13a1759bfb9a": {
+    "facing": "model",
+    "id": "tool-result-bash-worktree-guard-fast-import-unsafe-features-detail",
+    "name": "Tool Result: Bash worktree guard fast-import unsafe features detail",
+    "desc": "Worktree guard detail: --allow-unsafe-features lets the git fast-import input stream name paths to write."
+  },
+  "145e7124c2dd9f25fc4e69bb5a3d3b95c33ccd01": {
+    "facing": "model",
+    "id": "tool-result-powershell-arg-network-device-path-after-conversion",
+    "name": "Tool Result: PowerShell argument network/device path after conversion",
+    "desc": "Permission ask message when a PowerShell argument could name a network or device path after Windows character conversion."
+  },
+  "d86b3869a676184b35fb7d0c52e730bee6da59b3": {
+    "facing": "model",
+    "id": "tool-result-powershell-arg-unc-path-network-requests",
+    "name": "Tool Result: PowerShell argument UNC path network requests",
+    "desc": "Permission ask message when a PowerShell argument may be read as a UNC network path that could trigger network requests."
+  },
+  "ac184d8455b38a55dc93090c99b7595ac07dd93d": {
+    "facing": "model",
+    "id": "tool-result-tool-call-not-approved-not-run",
+    "name": "Tool Result: Tool call not approved, not run",
+    "desc": "Error returned when an inner permission prompt raised inside a tool call is not approved, so the tool did not run."
+  },
+  "4d9b8ce8b4a7c7812287da8fc1bd2430d351511d": { "facing": "internal" },
+  "c1320d819400f0d51a7f74900ed4465e883f4374": { "facing": "internal" },
+  "d2f2e46f23f5a698e8c7e61638985be0a3fc5eef": { "facing": "internal" },
+  "98fda6bec27928e5da6b11496d643a72495f358a": { "facing": "internal" },
+  "9198e241240b54836f77c5be3ab22bf29b40eef8": { "facing": "internal" },
+  "73ddf51f6ab9dbb4d8f2de2a3787ea22795e38d0": { "facing": "internal" },
+  "0c3c99a876f6af98c58cf79a567b8c1739fde58d": { "facing": "internal" },
+  "2aca9b87be1e0e0c1d2d9855d1e084020cf92c4b": { "facing": "internal" },
+  "1de98e7f9e2afbd4f8f6d37043c4d672df445000": { "facing": "internal" },
+  "8caaa48f787f882f632a08e45d1744687a9f6c94": { "facing": "internal" },
+  "fce6adcfd78129f0da22cf973b8e3caf410e38ec": { "facing": "internal" },
+  "776c5089311a4229a0b854906ab2e468bad47d8e": { "facing": "internal" },
+  "88162947fac1deb44979097b1d5edf1fb79c250c": { "facing": "internal" },
+  "ff7939d0a06e42674e846964768021d1d8be5716": { "facing": "internal" },
+  "29f068f922e680a76094f09b46489776bf4f357a": { "facing": "internal" },
+  "e2bfe0f39578cc78abac5aada25d9187b2d26d7b": { "facing": "internal" },
+  "d57223cfe1e6346cf9584e8f169d7687371dd6aa": { "facing": "internal" },
+  "5eaae4d5904f1aeb6fa18cdcabd298108cd6d92e": { "facing": "internal" },
+  "e1bcaa2d059c17b015d8dbfb3cb39f48c1aa1849": { "facing": "ui" },
+  "4750cbf8a4da10d0baad8bdd7a9b209242fbe42b": { "facing": "ui" },
+  "aa990083c11147b6cd2ab30cb18be304b0ac0dcc": { "facing": "ui" },
+  "40d2e34cd85ffedb31d8ea018d2112ecd622d95d": { "facing": "internal" },
+  "38340dcc016fdf59037cde25be94f7e7b43562bf": { "facing": "internal" },
+  "06c44a495365244ce82d3d5409ea7e753e7e1727": { "facing": "ui" },
+  "0a06bb6b6d90418c9bbae0b4f3fde1112042aff6": { "facing": "ui" },
+  "09e2900a2ea02af0e6274116aa8e7844707bd84c": { "facing": "internal" },
+  "0f912f4b5c7d9b7646891067545d3136c99c3814": { "facing": "internal" },
+  "f2c0b451c3b3d56b38edfc2fa875f4ca65ee7575": { "facing": "internal" },
+  "cde1dc5bf5d48f058febcc57aa66bf915b9185dd": { "facing": "internal" },
+  "09d376d5c3d199af3e9b79929f82ae8b2bc4592e": { "facing": "ui" },
+  "7af68a898496ca7b798bcca040434283cbaefadf": { "facing": "ui" },
+  "207b5c508ac240724253ce60c008e0410cb655b5": { "facing": "internal" },
+  "53430d26ea0953d18d82e4b03e5aa6c8e5bca73e": { "facing": "ui" },
+  "bf46c91386c6a988875cbf9fcec1386f8ef98c46": { "facing": "ui" },
+  "874865630e2c07b1eb0c692b6b5ee69daaa347af": { "facing": "ui" },
+  "8897e47e757ccf8fa7b7545b1b8b5bd1fa3d31a0": { "facing": "ui" },
+  "a457a451a7c7c28ea847bf205f3c77b8d46c2004": { "facing": "ui" },
+  "7e74b82d86c504eb53c3c2a4d7a4131fa309a886": { "facing": "ui" },
+  "6d1086f6ba3c091de7bc7a1a0a0615e8dba2221c": { "facing": "ui" },
+  "e4f236af9415037ff9bc4798fa0456d14ca7878a": { "facing": "ui" },
+  "dfcac35f787676dbfe5e9d75fa3208b59513d97b": { "facing": "ui" },
+  "f56c594ecdd03c6a90ec52dc2e0d8e23c2b1b0cc": { "facing": "ui" },
+  "e48e73b12e3218b52b5cda4881a84b3eec3afc9f": { "facing": "ui" },
+  "9ba2ce0eb8c5d4dafbb5afc2a4a691d31badcd32": { "facing": "internal" },
+  "0db7bbc1b7681bd4ab51e05bdd662da1a18a0ce6": { "facing": "ui" },
+  "305aa6d39ab946e17df20eb332ef1f4a3d9ddc23": { "facing": "ui" },
+  "9f46a5114adbe995061240349e9c4be3879a52ca": { "facing": "ui" },
+  "fc0b5ed91abd12083307c323ab508eeb809c10c8": { "facing": "ui" },
+  "65af202af916ee9a064e70ec58f0024b4d43c601": { "facing": "ui" },
+  "da75cf2f15f955f2ad4023c3023d53bed9a66321": { "facing": "ui" },
+  "eb5244d5a899a2c983ac9f67826620a54c546d7f": { "facing": "ui" },
+  "718f1c86d0ae3999b829e0fddceed7aa929a6273": { "facing": "ui" },
+  "14c2c5278992c1f0256e04368808bdb55aaf0c48": { "facing": "ui" },
+  "e263cce5ed9c631628ca8463b804f08d5ac2d38b": { "facing": "ui" },
+  "772599127577b386f90d25402ff361a26b241c3a": { "facing": "internal" },
+  "f1241ef2145ce603a8b0b312738006e1337d1554": { "facing": "internal" },
+  "f866279fad4a2c9b1e117b6c435ed83ef1e686f8": { "facing": "internal" },
+  "5bc03ae81bc0ce69def37ac35375c7a806e7da6c": { "facing": "internal" },
+  "09569f50c4a085f713d5da0df628c6fcee7105a0": { "facing": "internal" },
+  "374d93adc18169922399b197d76dcfdf7ebc53a2": { "facing": "internal" },
+  "64827df2e8327cc63b51b27fc19ce70e65640710": { "facing": "internal" },
+  "2f92389920eb045209c6f5ae69284dc7d7897410": { "facing": "internal" },
+  "0668f391d42fab373d0ada91192c64c293f27f03": { "facing": "internal" },
+  "568124e987c1bfb1f6bfbc9c5b66b39ddcf08ea2": { "facing": "internal" },
+  "d0e380e3dd66eb383a3ab3e9ca9488583c3dbbe5": { "facing": "ui" },
+  "b5dc0c459d9d262cba61b61ba8e20b417b78b764": { "facing": "internal" },
+  "d3da102c477623baf57eee3f2c75c3a92baf4f5e": {
+    "facing": "model",
+    "id": "tool-permission-ask-which-computer-for-chat",
+    "name": "Tool permission: ask which computer for this chat",
+    "desc": "Permission ask message for choosing which of the user's computers to use for the chat; becomes the tool_result on decline"
+  },
+  "4a10475bbf99d1c90c1e101b2547f14bec4ea7c7": { "facing": "internal" },
+  "cf9fec89ba7150fd1e2cac9859c4010abad8a6f2": {
+    "facing": "model",
+    "id": "tool-result-project-if-version-ignored-note",
+    "name": "Tool result: project if_version ignored note",
+    "desc": "Note added to the project tool result that if_version is unavailable in this session and was ignored"
+  },
+  "aca5c5e004a2ca17c7b5a667ed4bf32431bb80e0": {
+    "facing": "model",
+    "id": "tool-result-project-write-localpath-session-over-cap",
+    "name": "Tool result: project_write local_path over cap",
+    "desc": "project_write error when the local_path file is too large to upload by path and too long to send as content; tells the model to tell the user"
+  },
+  "5990ca1d3c80c23f450b5e5fc4aa26d82c183231": {
+    "facing": "model",
+    "id": "tool-result-project-write-if-version-mismatch",
+    "name": "Tool result: project_write if_version mismatch",
+    "desc": "project_write refusal when if_version does not name the last copy of the doc shown in this conversation; tells the model to project_read and write again without if_version."
+  },
+  "e042db71f700b757663be24c3288096508482986": {
+    "facing": "model",
+    "id": "tool-result-project-write-doc-changed-reread-and-rewrite-file",
+    "name": "Tool result: project_write doc changed (file variant)",
+    "desc": "project_write refusal when the doc changed since last read; tells the model to project_read, re-save the file and repeat the write, or tell the user."
+  },
+  "5b2049412a40cfc1773dfc9ee2c4b47f6ff50800": {
+    "facing": "model",
+    "id": "tool-result-project-write-doc-changed-reread-and-retry",
+    "name": "Tool result: project_write doc changed",
+    "desc": "project_write refusal when the doc changed since last read; tells the model to project_read, edit the returned text and write again."
+  },
+  "97946b555bbf6774b0d6ed09b77b69f0877eae81": {
+    "facing": "model",
+    "id": "tool-result-project-write-change-check-unavailable",
+    "name": "Tool result: project_write cannot check for changes",
+    "desc": "project_write refusal when the session cannot check whether the doc changed; forbids delete-to-rewrite and tells the model to inform the user."
+  },
+  "b9823bc092437d09e15141d8dd5a23b9e3ce13e4": {
+    "facing": "model",
+    "id": "data-inter-session-message-artifact-content-relay-note",
+    "name": "Inter-session message: relayed Artifact content note",
+    "desc": "Note appended to a message sent to another Claude session when the sender handled Artifact content by other people; tells the receiver to treat it as data."
+  },
+  "835470ea18bfecb3c974cc9a63cf65729e3ee2bb": {
+    "facing": "model",
+    "id": "data-inter-session-message-remote-control-relay-note",
+    "name": "Inter-session message: relayed Remote Control text note",
+    "desc": "Note appended to a message sent to another Claude session when the sender handled text from a Remote Control session; tells the receiver to treat it as data."
+  },
+  "e62f76f7d4e0fdc659f05e239e7b1b5dd0e2a84e": {
+    "facing": "model",
+    "id": "tool-result-send-message-agent-stopped",
+    "name": "Tool result: SendMessage agent not resumed",
+    "desc": "SendMessage result when the target agent was stopped/evicted and not resumed; treat its work as cancelled."
+  },
+  "ff31f68573273fc9c4c6ef0c109daf5587b229d3": {
+    "facing": "model",
+    "id": "tool-result-proposeskills-name-of-anthropic-skill",
+    "name": "Tool result: ProposeSkills name is an Anthropic skill",
+    "desc": "Validation message when a proposed new skill name matches an Anthropic-provided skill."
+  },
+  "03db6144480a361ee78db76a6da7f6b5de1f008c": {
+    "facing": "model",
+    "id": "tool-result-design-write-reserved-paths",
+    "name": "Tool result: design write reserved paths",
+    "desc": "Error when write_files targets reserved paths (CLAUDE.md, CLAUDE.local.md, .claude/)."
+  },
+  "2a9affeca88e9645f77158616127cf63379848d3": {
+    "facing": "model",
+    "id": "tool-result-design-delete-reserved-paths",
+    "name": "Tool result: design delete reserved paths",
+    "desc": "Error when delete_files targets reserved paths (CLAUDE.md, CLAUDE.local.md, .claude/)."
+  },
+  "1102daca441d37d6879d763c97717280e018d7b8": {
+    "facing": "model",
+    "id": "tool-result-design-project-write-grant-approval",
+    "name": "Permission ask: ClaudeDesign project write grant",
+    "desc": "Approval message for granting durable write access to a ClaudeDesign project; becomes the tool_result on decline."
+  },
+  "0f4c2ed798d607d10d9b562e04d9dfba4b294e05": { "facing": "ui" },
+  "ea56a29b014c6f18d398ed8c774da1bf1d28fee7": {
+    "facing": "model",
+    "id": "tool-result-artifact-open-other-org",
+    "name": "Tool result: artifact open in other org",
+    "desc": "Error when action open targets an artifact in another organization."
+  },
+  "92d6d43961c675c0f361eef325292bbe5b3beb6c": {
+    "facing": "model",
+    "id": "tool-description-artifact-upload-asset-approval-scope-clause",
+    "name": "Tool description: upload_asset approval scope clause",
+    "desc": "Inner clause of the upload_asset description explaining what approving covers."
+  },
+  "cb9ea342677342a83303297cad1f97b69575519c": {
+    "facing": "model",
+    "id": "tool-result-artifact-asset-uploaded-xlsx-note",
+    "name": "Tool result: uploaded .xlsx note",
+    "desc": "Note appended to an asset upload result for .xlsx files about download-only serving and sharing limits."
+  },
+  "5394afe2cc8bc7c5b053c22b79f525bcaeec66ae": {
+    "facing": "model",
+    "id": "tool-result-artifact-upload-asset-xlsx-retry-copies",
+    "name": "Tool result: .xlsx upload error copies",
+    "desc": "Suffix on a failed .xlsx upload error telling the model to delete extra stored copies after a retry."
+  },
+  "080b87ddb4692a7fb1cb7bc7099707ec5276a69f": { "facing": "ui" },
+  "0c11bb96bc6d0e490adee3fc26122bef5a398977": { "facing": "internal" },
+  "307ae587b90fb810b423fb0c72014ba86862b33b": { "facing": "internal" },
+  "2e237f18cfdf6fd187fee15d207aa2a1e804d5aa": { "facing": "internal" },
+  "cceadb2bcbf687408ca85971bf0d7c7cc0b92d86": { "facing": "ui" },
+  "02a266eb4718d523ebe471468a78bcc3ec5ea063": { "facing": "ui" },
+  "ebd728c14de48c3f301efda9d73f9067d984190c": { "facing": "ui" },
+  "40a1e58ad33726d80abedd0b9e759dbab6ed96f6": { "facing": "ui" },
+  "4105a4f0da0f4b9be17938f7bd2fe48810d6c739": { "facing": "ui" },
+  "7eee42219f2586a1ba0970bc09ab1b1c74294ce4": { "facing": "ui" },
+  "4a73f071e26f8a2e6accf9ae6daa5e394a3d55d5": { "facing": "ui" },
+  "04bfbcf362e4d421d260b835e8243b026591b9c0": { "facing": "ui" },
+  "3448afca8d958fed7634e05b9d1b5fe266185d1c": { "facing": "ui" },
+  "f13f7d27d808c00899758262d87883c9acf0f140": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-replies-user-only-guard",
+    "name": "Task notification: artifact replies user-only guard",
+    "desc": "Sentence in the restart notice telling the model not to publish or re-enable replies itself."
+  },
+  "ece366e50c8f2e4077880217197773b97fbb9087": {
+    "facing": "model",
+    "id": "data-task-notification-artifact-replies-stopped-at-restart",
+    "name": "Task notification: artifact replies stopped at restart",
+    "desc": "Task notification that comment replies on artifacts stopped at restart."
+  },
+  "1d62cb4ce3271b00c8d9e1fcf3c6ad2e5db6f0b2": { "facing": "internal" },
+  "5a314b9aa2faf761f496bb0012731bb90dbd683e": {
+    "facing": "model",
+    "id": "tool-result-file-send-ask-destination-line",
+    "name": "Permission ask: file send destination line",
+    "desc": "Line naming the destination that decides where sent files are stored."
+  },
+  "5f2e77fc9696b6124e44e530c47169817f7dd298": { "facing": "ui" },
+  "9270e4a5d390c05ead47ef0efbd69581503ea47a": { "facing": "ui" },
+  "91e73eca1667ed2420f31a731770826560cc28be": { "facing": "internal" },
+  "df394b6fce7c62ac63253f3e015a29dad37373d8": {
+    "facing": "model",
+    "id": "data-task-notification-carried-scheduled-prompts-not-rearmed",
+    "name": "Task notification: carried scheduled prompts not re-armed",
+    "desc": "Failed task notification that carried scheduled prompts were not re-armed in the background session."
+  },
+  "037be6b9645fefb810b8101ebdeeadbc277fda7d": { "facing": "ui" },
+  "6f0c1a9f7d50cf05862f69955c8923503f8d3eb9": {
+    "facing": "model",
+    "id": "data-task-notification-workflow-paused-by-user",
+    "name": "Task notification: workflow paused by user",
+    "desc": "Task notification body saying a paused workflow task is not running until resumed from /workflows."
+  },
+  "2d177b49eaeed6222ecf86b96a1cd38fb04dce81": { "facing": "ui" },
+  "ae4ce96ea67779de87449e5b328babf41d286624": { "facing": "internal" },
+  "868133bb0037149c89c051d74b1506275ced681d": { "facing": "internal" },
+  "39c22c3705bb8484437ac084a780b24e55785fc4": {
+    "facing": "model",
+    "id": "system-reminder-stopped-tasks-lost-unnamed-no-message",
+    "name": "System reminder: unnamed stopped tasks lost",
+    "desc": "Clause saying stopped tasks not named by the note are lost."
+  },
+  "55de7bf844ee274b2f6529fbfc886cb22be1921d": {
+    "facing": "model",
+    "id": "system-reminder-approval-request-closed-continue-earlier-turn",
+    "name": "System reminder: closed approval request, continue earlier turn",
+    "desc": "Meta prompt telling the model to resume an earlier turn whose approval was closed by an automatic message."
+  },
+  "2daade5dd1a77bbd1e8cd5a5ceb54d8b3cb6b1a8": { "facing": "internal" },
+  "f5a1e7d1b98fbb96ff12600e152371f72e86dd7c": { "facing": "internal" },
+  "a93fdbcc2cef2365a93f92f80787984091293233": { "facing": "internal" },
+  "b9ba5a5a486a5830ffb7f16a9fb8674306c6e42c": { "facing": "ui" },
+  "2078111e885eb18e6441a37867b9120af44fef5b": { "facing": "ui" },
+  "da1cbe47344e1e9fc4ba768ab95246ba2a5ac7a2": { "facing": "ui" },
+  "2cdacf736f5f51d67cc6f34bc3ead1a55cd46b49": {
+    "facing": "model",
+    "id": "data-user-message-attached-note-untrusted",
+    "name": "User message attached note framing",
+    "desc": "Framing for a note attached to the person's message, marking it as background they did not write."
+  },
+  "5d0e7d5fdf621c5797586130c573cf8cf9776577": {
+    "facing": "model",
+    "id": "tool-result-privacy-email-user-agent-refusal",
+    "name": "Hook denial: email with User-Agent",
+    "desc": "Deny reason from the privacy builtin hook for a shell call holding the account email and a User-Agent."
+  },
+  "b777609c7afb2f2f26fe4299a2dd95a811d076c3": { "facing": "ui" },
+  "676918ca3788c7aac42f5e20e6dec938a1707062": {
+    "facing": "model",
+    "id": "skill-claude-code-help-recent-releases",
+    "name": "Claude Code help: recent releases",
+    "desc": "Recent release notes section of the claude-code help skill."
+  },
+  "95b4fcde09a627fab68874015e243400a94db79b": {
+    "facing": "model",
+    "id": "tool-result-mcp-oauth-redirect-guard-cross-origin",
+    "name": "Tool Result: MCP OAuth redirect guard (cross-origin)",
+    "desc": "Error thrown when an MCP OAuth request is redirected to another origin; reaches the model inside the MCP authenticate tool's 'Failed to start OAuth flow' result."
+  },
+  "5e78b4fa20590a0b9f53182738709a881a60d591": {
+    "facing": "model",
+    "id": "tool-result-mcp-oauth-redirect-guard-too-many-redirects",
+    "name": "Tool Result: MCP OAuth redirect guard (too many redirects)",
+    "desc": "Error thrown when an MCP OAuth request is redirected too many times; reaches the model inside the MCP authenticate tool's 'Failed to start OAuth flow' result."
+  },
+  "3180cff2ac4e0b0c160773d3696033b69b9d1e59": {
+    "facing": "model",
+    "id": "tool-result-mcp-oauth-connector-check-failed",
+    "name": "Tool Result: MCP OAuth connector check failed",
+    "desc": "Error thrown when a plugin/agent MCP server cannot be checked against the organization's connector settings, stopping sign-in; surfaces in the MCP authenticate tool's failure result."
+  },
+  "1b5e770a92b0c54acaa68004bde35b52769d98a9": { "facing": "internal" },
+  "9f231625b7ddb682188278f7eb73f702fa63aa66": { "facing": "internal" },
+  "6045d1314602278b42d210c78678a15e3d213064": { "facing": "internal" },
+  "1cd573e14b57eaea3698df6e0591c1df431e7323": { "facing": "internal" },
+  "2a3c486a1a5a14576da199e1205a64305fb2021a": { "facing": "ui" },
+  "fda371a08da732a5b4df24971c88c56f20fb765c": { "facing": "ui" },
+  "f31eb93442320e0ab3107ee0511caa1bead48dbe": { "facing": "ui" },
+  "f62c116078099c84ca39ca31f670f2d6766662e4": { "facing": "ui" },
+  "fe912c6b159085e63815533a0851784c75e91ebb": { "facing": "ui" },
+  "edfc7a0e55b2cddb09213487e175b899678c422e": { "facing": "ui" },
+  "7712f72502254a549588873553d27cea80561151": { "facing": "ui" },
+  "2047d72af0a0cd998c8d212c08f80d358f8f1820": { "facing": "ui" },
+  "a4650ac0ed04c040dca6302006b3f900daa21a98": {
+    "facing": "model",
+    "id": "tool-result-artifact-quickstart-start-kit-other-org",
+    "name": "Tool Result: Artifact quickstart start kit other-org",
+    "desc": "Reason clause in the quickstart start-kit notSaved tool result when the artifact belongs to another or a former organization of the user."
+  },
+  "96a58237fabe111dd23e87123da7779cd45953a0": {
+    "facing": "model",
+    "id": "slash-command-privacy-settings-signed-in-account",
+    "name": "Slash Command: /privacy-settings signed-in account note",
+    "desc": "/privacy-settings output line naming the account Claude Code is signed in as and asking to switch on claude.ai if it differs."
+  },
+  "e13dcee7292f40fd9ade79d71024e3b32b429c8b": {
+    "facing": "model",
+    "id": "slash-command-privacy-settings-fetch-failed",
+    "name": "Slash Command: /privacy-settings fetch failed",
+    "desc": "/privacy-settings result when privacy settings cannot be fetched, pointing to the claude.ai data-privacy page."
+  },
+  "b95a714ec8285f23d497123d433464b9c9c920ef": {
+    "facing": "model",
+    "id": "slash-command-privacy-settings-opening-browser",
+    "name": "Slash Command: /privacy-settings opening browser",
+    "desc": "/privacy-settings output line giving the privacy URL and saying the browser is being opened."
+  },
+  "4ed8e99f56d7af0d823205e583778525d1e38842": {
+    "facing": "model",
+    "id": "slash-command-privacy-settings-review-on-web",
+    "name": "Slash Command: /privacy-settings review heading",
+    "desc": "/privacy-settings first output line telling the user to review privacy settings on claude.ai."
+  },
+  "7d37996048fa258d2d062f88cbb54c87af7cc90a": {
+    "facing": "model",
+    "id": "slash-command-privacy-settings-open-link",
+    "name": "Slash Command: /privacy-settings open link",
+    "desc": "/privacy-settings output line asking to open the privacy URL in a browser when none can be launched."
+  },
+  "46805e0d772aa2eadb416eb257d88950caf6ac03": { "facing": "ui" },
+  "b4db5e3eb9beffdf73c529187abc19e446341249": { "facing": "internal" },
+  "6ff1ca8e1ed4a1640d6a7af40038108ebfb8efdc": { "facing": "internal" },
+  "1d64e29caa5d95c9e2e8d58a6741acdb939715f9": { "facing": "internal" },
+  "0b000c1ca1facfaea8e68918c98b59448fc35ed0": { "facing": "internal" },
+  "1086039efc88013e56f1648903c09628998902d2": { "facing": "internal" },
+  "7c11ed55baeabf6b1418d36188a966a8d491a886": { "facing": "internal" },
+  "92629b222e12673a483593684217e5422f71cff5": { "facing": "internal" },
+  "cebab96a5467e88f59eb4a239b1a7d8e120ae622": { "facing": "internal" },
+  "4746e0994c418f5fc7c48599c3d3cb9dbcd80674": { "facing": "internal" },
+  "52fa3d25986909f498281e056a784c56fbcd7aa5": { "facing": "internal" },
+  "a96761b4be3fc4699f503533ace0258ed6e54a6a": { "facing": "internal" },
+  "edfa3485d85c7d094af612e0cfc2a9e346f15525": { "facing": "internal" },
+  "82c42a9597504691800c3df051cdae369f396d50": { "facing": "internal" },
+  "03d9aac06dad602ef14f22b82fa65bcaa016ad8f": {
+    "facing": "model",
+    "id": "tool-result-mcp-connector-file-policy-denied-reason",
+    "name": "Tool Result: MCP connector file policy denied reason",
+    "desc": "Reason clause for policy_denied in the connector file-policy refusal tool results (organization policy doesn't allow sending files to claude.ai connectors)."
+  },
+  "5c3594907014592383f39279a6d04bd8c3baac34": { "facing": "internal" },
+  "8734e7b72a3c71fcb7624e57d490a3aedd841bca": {
+    "facing": "model",
+    "id": "tool-result-mcp-connector-upload-sealed-connector-not-allowed",
+    "name": "Tool Result: MCP connector upload sealed connector not allowed",
+    "desc": "Upload refusal when the connector's settings are kept under the organization's own encryption key, so file uploads aren't available."
+  },
+  "acae840cfd881dfe127807d47f3652684ca55505": {
+    "facing": "model",
+    "id": "tool-result-mcp-connector-upload-storage-not-connected",
+    "name": "Tool Result: MCP connector upload storage not connected",
+    "desc": "Upload refusal when the connection to the connector's storage ended before setup, so no file data went."
+  },
+  "ac2e4d83204018686b8d983db4c93ef1d8c8afbe": {
+    "facing": "model",
+    "id": "tool-result-mcp-connector-upload-tool-policy-not-allowed",
+    "name": "Tool Result: MCP connector upload tool policy not allowed",
+    "desc": "Upload refusal when org settings or the user's role don't allow sending files to the connector's tool, or the upload service couldn't check them."
+  },
+  "4fa5bb2267887d674a47f0e32b432d2efcbc3002": {
+    "facing": "model",
+    "id": "tool-result-mcp-connector-upload-blocked-by-anthropic",
+    "name": "Tool Result: MCP connector upload blocked by Anthropic",
+    "desc": "Upload refusal when Anthropic doesn't allow sending files to this connector or couldn't confirm the org may reach it."
+  },
+  "8f3d2013425ad8c46b6e53436a8e0c22c66e0f4b": {
+    "facing": "model",
+    "id": "tool-result-mcp-connector-upload-answer-not-actionable",
+    "name": "Tool Result: MCP connector upload answer not actionable",
+    "desc": "Upload error naming a known connector answer code that Claude Code cannot act on."
+  },
+  "2d7e9469af1b5b5a0c29eac92990742afb3db280": { "facing": "internal" },
+  "e2bf151b390444f4ab495563ce3d246fb3ea1c77": { "facing": "internal" },
+  "39693de8d594c2f3cca1b8ede9753df7ad2785fb": { "facing": "internal" },
+  "4c77ae2bee90c7b93a7313f947fb8f6e453f7609": { "facing": "internal" },
+  "03bab57cd9cdee89570e76ec37c38ddedc60bc6a": { "facing": "internal" },
+  "be9ec8c9c0303547b6896acb6896509e24f10d79": { "facing": "internal" },
+  "4957b73e319c091ee6f5a11a1e7af049bd73a942": {
+    "facing": "model",
+    "id": "tool-result-hook-not-run-path-not-absolute",
+    "name": "Tool Result: hook not run, path not absolute",
+    "desc": "Notice that a hook was not run because the tool input's path could not be made absolute; becomes the PreToolUse/PermissionRequest deny reason ('The call is refused.') or the hook's blocking stderr."
+  },
+  "8347df25f75b84ddefa7e0e84d88c4a12302206a": { "facing": "internal" },
+  "5529748929b3de17d1831998f6a70adc2ff3920a": {
+    "facing": "model",
+    "id": "data-claude-code-d-ts",
+    "name": "Data: claude-code.d.ts",
+    "desc": "Claude Code plugin API declarations written as the plugin-authoring skill file types/claude-code.d.ts, which SKILL.md points the model to as the API reference (also used for type-checking)."
+  },
+  "f255bbfe8e8ff80d65ada5e41e5902f143589e68": {
+    "facing": "model",
+    "id": "data-pane-test-tsx",
+    "name": "Data: pane.test.tsx",
+    "desc": "Example test file (pane.test.tsx) extracted with the plugin-authoring skill, which points the model at it as the model for mod tests."
+  },
+  "267a454dabfe6c492ee96eed6312a5e6daeddda2": {
+    "facing": "model",
+    "id": "data-reference",
+    "name": "Data: reference",
+    "desc": "Long-form plugin/mod API reference (reference.md) extracted with the plugin-authoring skill and pointed to by its SKILL.md."
+  },
+  "a0d613ae80357215be1dcd7db984af7eb6632a3c": {
+    "facing": "model",
+    "id": "skill-plugin-authoring",
+    "name": "Skill: plugin-authoring",
+    "desc": "Bundled plugin-authoring skill — Make a mod: a change to Claude's own interface or behaviour, such as a live pane or panel, a band above the prompt, a status line, a toast, a slash command, or a hook on tool calls or prompts. Use to make, change or debug a mod or its hooks module."
+  },
+  "218af666f2f094fff848b34a4063f5242342eafa": {
+    "facing": "model",
+    "id": "data-claude-api-reference-csharp",
+    "name": "Data: Claude API reference — C#",
+    "desc": "claude-api skill reference file (Claude API reference — C#) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "f9e3fd2d54d03c7f54be13f2013cf89d79aa7908": {
+    "facing": "model",
+    "id": "data-claude-api-reference-curl",
+    "name": "Data: Claude API reference — cURL",
+    "desc": "claude-api skill reference file (Claude API reference — cURL) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "2d65a3e92e60f8fa40ca8925c36842cb6ff2b438": {
+    "facing": "model",
+    "id": "data-claude-api-reference-go",
+    "name": "Data: Claude API reference — Go",
+    "desc": "claude-api skill reference file (Claude API reference — Go) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "6ec007c1a414ad21ea423d00790238fb0aa06492": {
+    "facing": "model",
+    "id": "data-claude-api-reference-java",
+    "name": "Data: Claude API reference — Java",
+    "desc": "claude-api skill reference file (Claude API reference — Java) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "493195edd91e328a56b36a045f83b80c90998a35": {
+    "facing": "model",
+    "id": "data-claude-api-reference-php",
+    "name": "Data: Claude API reference — PHP",
+    "desc": "claude-api skill reference file (Claude API reference — PHP) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "f3e1c3bd2dcd068fe8e55f75fbde8722439ea3a9": {
+    "facing": "model",
+    "id": "data-batches-api-reference-python",
+    "name": "Data: Message Batches API reference — Python",
+    "desc": "claude-api skill reference file (Message Batches API reference — Python) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "d0f0b8d50d1df1be5d9cb1cb12a24afd152f19a0": {
+    "facing": "model",
+    "id": "data-claude-api-reference-python",
+    "name": "Data: Claude API reference — Python",
+    "desc": "claude-api skill reference file (Claude API reference — Python) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "cfbca05dca7982e1726f903351fc8de8470554cb": {
+    "facing": "model",
+    "id": "data-streaming-reference-python",
+    "name": "Data: Streaming reference — Python",
+    "desc": "claude-api skill reference file (Streaming reference — Python) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "43f214ff2807552813b8cb7ce5727a681ca5ee9f": {
+    "facing": "model",
+    "id": "data-tool-use-reference-python",
+    "name": "Data: Tool use reference — Python",
+    "desc": "claude-api skill reference file (Tool use reference — Python) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "6a97501cdd1749de5213f1d9eb58f6d89e08afd0": {
+    "facing": "model",
+    "id": "data-claude-api-reference-ruby",
+    "name": "Data: Claude API reference — Ruby",
+    "desc": "claude-api skill reference file (Claude API reference — Ruby) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "7a6542a03975491b5fa205ef0ab81d7a57ba8404": {
+    "facing": "model",
+    "id": "skill-building-llm-powered-applications-with-claude",
+    "name": "Skill: Building LLM-powered applications with Claude",
+    "desc": "Main prompt body of the claude-api skill (building LLM-powered applications with Claude), injected at skill invocation."
+  },
+  "0c9603121e42be78cf4266c81734c99efaafedac": {
+    "facing": "model",
+    "id": "data-cost-optimization",
+    "name": "Data: cost-optimization",
+    "desc": "claude-api skill reference file (cost-optimization) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "95096b0401f4cd17e50903c63f53b3273bca006c": {
+    "facing": "model",
+    "id": "data-http-error-codes-reference",
+    "name": "Data: HTTP error codes reference",
+    "desc": "claude-api skill reference file (HTTP error codes reference) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "377128ce1997ab8390c7f669d6f908383aa9b022": {
+    "facing": "model",
+    "id": "data-live-documentation-sources",
+    "name": "Data: Live documentation sources",
+    "desc": "claude-api skill list of platform.claude.com doc URLs and SDK repositories to WebFetch, with fallback strategy"
+  },
+  "47666dec59ca5022f3139a0041ee2d9363e04930": {
+    "facing": "model",
+    "id": "data-managed-agents-endpoint-reference",
+    "name": "Data: Managed Agents endpoint reference",
+    "desc": "Comprehensive reference for Managed Agents API endpoints, SDK methods, request/response schemas, error handling, and rate limits"
+  },
+  "fcf39f1110989d35fdbccaa918f48a638d860304": {
+    "facing": "model",
+    "id": "data-managed-agents-events-and-steering",
+    "name": "Data: Managed Agents events and steering",
+    "desc": "claude-api skill reference file (Managed Agents events and steering) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "913de6b2cb92b0fe45c79bbe93ce40fbbf292ce6": {
+    "facing": "model",
+    "id": "data-managed-agents-multiagent",
+    "name": "Data: managed-agents-multiagent",
+    "desc": "claude-api skill reference file (managed-agents-multiagent) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "fb71e32769e17a1040bc1fd9f2e1173128f4b127": {
+    "facing": "model",
+    "id": "data-message-threads",
+    "name": "Data: Message threads",
+    "desc": "claude-api skill reference file (shared/message-threads.md) on Messages API message threads, which the skill tells the model to Read before writing thread code."
+  },
+  "61572af8ce499fcfe48b67127405c8d039da7e3a": {
+    "facing": "model",
+    "id": "skill-model-migration-guide",
+    "name": "Skill: Model migration guide",
+    "desc": "The claude-api skill's model-migration reference (shared/model-migration.md), read by `/claude-api migrate`: per-model breaking changes, behavioral shifts and migration checklists."
+  },
+  "c77616d3712e687c79f8518eb83f0665428b7feb": {
+    "facing": "model",
+    "id": "data-claude-model-catalog",
+    "name": "Data: Claude model catalog",
+    "desc": "claude-api skill reference file (Claude model catalog) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "ea2ae5a15edf682c7764dc3de42733800b5f0490": {
+    "facing": "model",
+    "id": "data-platform-availability",
+    "name": "Data: platform-availability",
+    "desc": "claude-api skill reference file (platform-availability) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "83e2336b1425cab08e728ef2644643167597f243": {
+    "facing": "model",
+    "id": "data-preserved-thinking-migration",
+    "name": "Data: preserved-thinking-migration",
+    "desc": "claude-api skill reference file (preserved-thinking-migration) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "96f8cc38be94791710de14ad80333b3bcebf15e0": {
+    "facing": "model",
+    "id": "data-causes",
+    "name": "Data: causes",
+    "desc": "claude-api skill reference file (causes) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "928969d8ee2c9b9a2aa1cc1dac790b9bd63dabb2": {
+    "facing": "model",
+    "id": "skill-prompt-audit",
+    "name": "Skill: Prompt audit",
+    "desc": "claude-api skill reference file (Prompt audit) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "d876eb80aa78aed924b96061513df29793cc0876": {
+    "facing": "model",
+    "id": "data-prompt-caching",
+    "name": "Data: prompt-caching",
+    "desc": "claude-api skill reference file (prompt-caching) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "3cc2a43a2d385aff2e271aa224a71af775d8869d": {
+    "facing": "model",
+    "id": "data-tool-use-concepts",
+    "name": "Data: Tool use concepts",
+    "desc": "claude-api skill reference file (Tool use concepts) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "e2b24e3bfd5f1034b9092013b8b6b6433c890260": {
+    "facing": "model",
+    "id": "data-message-batches-api-typescript",
+    "name": "Data: Message Batches API — TypeScript",
+    "desc": "claude-api skill reference file (Message Batches API — TypeScript) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "34faab57a0ca6bbc2179a9e88b9f213c35a1d602": {
+    "facing": "model",
+    "id": "data-claude-api-reference-typescript",
+    "name": "Data: Claude API reference — TypeScript",
+    "desc": "claude-api skill reference file (Claude API reference — TypeScript) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "e39777adda06e7259545513dd9fe404f9ad587c2": {
+    "facing": "model",
+    "id": "data-streaming-reference-typescript",
+    "name": "Data: Streaming reference — TypeScript",
+    "desc": "claude-api skill reference file (Streaming reference — TypeScript) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "5ab7a395b53c66c75b32461af49bcf8de044ad08": {
+    "facing": "model",
+    "id": "data-tool-use-reference-typescript",
+    "name": "Data: Tool use reference — TypeScript",
+    "desc": "claude-api skill reference file (Tool use reference — TypeScript) inlined as <doc> or extracted for the model to Read when the skill's Reading Guide points to it."
+  },
+  "0436834f4095c7e32b05d3c9895af65458e37acd": {
+    "facing": "model",
+    "id": "skill-artifact-design",
+    "name": "Skill: artifact-design",
+    "desc": "Bundled artifact-design skill — Design guidance and fundamentals for Artifacts."
+  },
+  "4f38f965abf7cff4b146ae997723f45b92b49e87": {
+    "facing": "model",
+    "id": "data-data-visualization-choosing-a-form",
+    "name": "Data: Data visualization choosing a form",
+    "desc": "data-visualization reference (references/choosing-a-form.md) the skill tells the model to Read."
+  },
+  "3dba728fb45e4bd31c0c708ad7d368ca4b043817": { "facing": "internal" },
+  "d1270db884060f9165dd4387897c81bee2224a93": {
+    "facing": "model",
+    "id": "system-reminder-skill-listing-adds-to-earlier",
+    "name": "System Reminder: skill listing adds to earlier list",
+    "desc": "Join of the \"also \" lead and the trailing note inserted into the skill_listing attachment when addsToEarlier is true, telling the model this listing extends skills listed earlier and is not the full list."
+  },
+  "6d7b7be2f9c58083665ce698e43b18efd6bf4eb4": {
+    "facing": "model",
+    "id": "tool-result-attachment-name-control-character-remedy-file-name",
+    "name": "Tool Result: attachment file_name control-character remedy",
+    "desc": "Tells the model to give an attachment file_name without control characters when the given name contains them."
+  },
+  "1dcbcdda4362bb9a46c5474c459c252fe8184122": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-cannot-launch",
+    "name": "Slash Command: /ultrareview cannot launch",
+    "desc": "Reports that /ultrareview cannot launch, followed by the ineligibility reasons."
+  },
+  "d13ece8393f6f9ba59747fc6d9d9922aeb09a0c7": {
+    "facing": "model",
+    "id": "slash-command-privacy-settings-dialog-dismissed",
+    "name": "Slash Command: /privacy-settings dialog dismissed",
+    "desc": "Reports that the privacy settings dialog was dismissed without changes."
+  },
+  "4ed09a595096cd2e63c8ef8e5f555fbcaaf1f173": { "facing": "internal" }
 }

@@ -407,8 +407,8 @@
     }
   },
   "data-message-batches-api-typescript": {
-    "bodyHash": "57e3625212b5",
-    "reviewed": "2026-11-04 (CC 2.1.317)",
+    "bodyHash": "9fa12508c2ff",
+    "reviewed": "2026-11-10 (CC 2.1.322; re-keyed after realign, same cut)",
     "tokens": {
       "result.result.message.content": "This is an escaped interpolation inside a TypeScript documentation example, not a live Claude Code prompt-builder binding. The new example retains result.result.message.content as code, narrows all text blocks and joins them before text.slice(0, 100), replacing the unsafe content[0].text assumption. No runtime slot is lost."
     }
@@ -419,6 +419,13 @@
     "tokens": {
       "TOOL_DESCRIPTION_SNOOZE_DELAY_AND_REASON_GUIDANCE_VAR_1": "Removed the comparison with the different CronCreate sentinel. This ScheduleWakeup body retains its actual dynamic sentinel in VAR_0; the co-rendered prompt schema also specifies the exact dynamic sentinel. CronCreate guidance is unchanged.",
       "TOOL_DESCRIPTION_SNOOZE_DELAY_AND_REASON_GUIDANCE_VAR_2": "Removed the repeated tool name in that same CronCreate comparison. The offered tool name remains ScheduleWakeup in the tool schema; stop, required fields and dynamic-loop prompt contracts remain in the description and schema."
+    }
+  },
+  "system-prompt-fast-mode-environment-note": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-11-10 (CC 2.1.322)",
+    "tokens": {
+      "SYSTEM_PROMPT_FAST_MODE_ENVIRONMENT_NOTE_VAR_0": "Deliberate wipe carried from the reworded note: the whole fast-mode environment note is suppressed, so its vertex/Opus slot goes with it."
     }
   }
 }
