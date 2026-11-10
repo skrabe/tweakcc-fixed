@@ -81,7 +81,7 @@ export const writeAutonomousOperationAllModels = (
       debug(
         'patch: autonomousOperationAllModels: model-family gate already flipped — skipping'
       );
-      return oldFile;
+      return writeFinishingWorkAllModels(oldFile);
     }
     // The model-family predicate still references these ids but in a new shape.
     if (/"claude-fable-5"/.test(oldFile)) {
@@ -112,5 +112,46 @@ export const writeAutonomousOperationAllModels = (
     match.index,
     match.index + fullMatch.length
   );
+  return writeFinishingWorkAllModels(newFile);
+};
+
+const FINISHING_WORK = '"finishing_work_guidance"';
+const FINISHING_WORK_MARKER = `==${FINISHING_WORK})return!0;`;
+
+// CC 2.1.322 gates the "# Finishing work" system-prompt section on a model
+// capability (fable_5_2_prompt_bundle), not on the model-family predicate
+// above, so the family flip alone leaves Opus without it. The capability
+// resolver sits right after the Set that lists it:
+//   ot=new Set([…,"finishing_work_guidance",…]),…;function vT(e,n,r,s){if(s!==void 0)return s;let d=vb(n,e,r);if(d!==void 0)return d;let h=…
+// Answer true for finishing_work_guidance once the caller override and the
+// CLAUDE_CODE_MODEL_CAPABILITIES lookup have both declined, so an explicit
+// `-finishing_work_guidance` in that env still wins.
+const writeFinishingWorkAllModels = (file: string): string => {
+  if (file.includes(FINISHING_WORK_MARKER)) return file;
+  const setAt = file.search(/new Set\(\[[^\]]*"finishing_work_guidance"/);
+  if (setAt === -1) {
+    debug(
+      'patch: autonomousOperationAllModels: no finishing_work_guidance capability in this CC build — skipping that step'
+    );
+    return file;
+  }
+  const resolver =
+    /function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+),([$\w]+)\)\{if\(\5!==void 0\)return \5;let ([$\w]+)=[$\w]+\(\3,\2,\4\);if\(\6!==void 0\)return \6;/y;
+  const window = file.slice(setAt, setAt + 2000);
+  const fnAt = window.search(
+    /function [$\w]+\([$\w]+,[$\w]+,[$\w]+,[$\w]+\)\{if\(/
+  );
+  resolver.lastIndex = fnAt;
+  const m = fnAt === -1 ? null : resolver.exec(window);
+  if (!m) {
+    console.error(
+      'patch: autonomousOperationAllModels: failed to find the capability resolver next to finishing_work_guidance'
+    );
+    return file;
+  }
+  const at = setAt + fnAt + m[0].length;
+  const inject = `if(${m[2]}${FINISHING_WORK_MARKER}`;
+  const newFile = file.slice(0, at) + inject + file.slice(at);
+  showDiff(file, newFile, inject, at, at);
   return newFile;
 };
