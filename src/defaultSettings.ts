@@ -756,6 +756,7 @@ export const DEFAULT_SETTINGS: Settings = {
     attachedBackgroundInteractive: false,
     enableProposeGoal: false,
     maxEffortDefault: false,
+    compactionHighEffort: false,
     autonomousOperationAllModels: false,
     refusalFallbackModel: false,
     refusalFallbackRoutes: {},

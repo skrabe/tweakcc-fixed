@@ -114,6 +114,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     attachedBackgroundInteractive: false,
     enableProposeGoal: false,
     maxEffortDefault: false,
+    compactionHighEffort: false,
     autonomousOperationAllModels: false,
     refusalFallbackModel: false,
     refusalFallbackRoutes: {},
@@ -922,6 +923,20 @@ export function MiscView({ onSubmit }: MiscViewProps) {
           updateSettings(settings => {
             ensureMisc();
             settings.misc!.maxEffortDefault = !settings.misc!.maxEffortDefault;
+          });
+        },
+      },
+      {
+        id: 'compactionHighEffort',
+        title: 'Compact at high effort',
+        description:
+          'Writes the compaction summary at "high" reasoning effort whatever effort the session uses. At medium effort summaries drop branch tips, rules and traps the next context window needs.',
+        getValue: () => settings.misc?.compactionHighEffort ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.compactionHighEffort =
+              !settings.misc!.compactionHighEffort;
           });
         },
       },

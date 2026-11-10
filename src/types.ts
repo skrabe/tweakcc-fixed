@@ -176,6 +176,7 @@ export interface MiscConfig {
   attachedBackgroundInteractive: boolean;
   enableProposeGoal: boolean;
   maxEffortDefault: boolean;
+  compactionHighEffort: boolean;
   autonomousOperationAllModels: boolean;
   refusalFallbackModel: boolean;
   refusalFallbackRoutes: RefusalFallbackRoutes;
