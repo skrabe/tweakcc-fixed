@@ -184,22 +184,41 @@ const patchSite = (file: string, site: Site, p: Predicates): string | null => {
 
 const KEY_FIELD = 'unattendedBg';
 
+const KEY_METHODS: RegExp[] = [
+  /(waitForMcpServersDeclared:[$\w]+\(\))(,unattendedBg:[^,}]*\(\))?(?=,(?!unattendedBg:)[^;]*?\},[$\w]+=this\.toolPoolCache;)/,
+  /(waitForMcpServersDeclared:[$\w]+\(\))(,unattendedBg:[^}]*)?(?=\},[$\w]+=this\.toolPoolCache;)/,
+];
+
+const COMPARE_PREFIX =
+  '(function [$\\w]+\\(([$\\w]+),([$\\w]+)\\)\\{return \\2\\.toolPermissionContext===\\3\\.toolPermissionContext[^}]*?&&\\2\\.waitForMcpServersDeclared===\\3\\.waitForMcpServersDeclared)(&&\\2\\.unattendedBg===\\3\\.unattendedBg)?';
+
+const COMPARE_METHODS: RegExp[] = [
+  new RegExp(`${COMPARE_PREFIX}(?=&&(?!\\2\\.unattendedBg===)[^}]*\\})`),
+  new RegExp(`${COMPARE_PREFIX}(?=\\})`),
+];
+
+const firstMatch = (file: string, methods: RegExp[]) => {
+  for (const method of methods) {
+    const match = file.match(method);
+    if (match && match.index !== undefined) return match;
+  }
+  return null;
+};
+
 /**
  * The tool pool's cache key gains the unattended predicate's answer:
- *   computeToolPool(h,E,D){let L={toolPermissionContext:...,
- *     waitForMcpServersDeclared:xWe()},Q=this.toolPoolCache;
- *     if(Q!==null&&hbt(Q.key,L))return Q.result;...
+ *   computeToolPool(h,P,D){let H={toolPermissionContext:...,
+ *     waitForMcpServersDeclared:N_t(),toolListRevision:tDr(),...{}},
+ *     ee=this.toolPoolCache;if(ee!==null&&ZHt(ee.key,H))return ee.result;...
  * and the key comparison compares it:
- *   function hbt(h,E){return h.toolPermissionContext===E.toolPermissionContext
- *     &&...&&h.waitForMcpServersDeclared===E.waitForMcpServersDeclared}
+ *   function ZHt(h,P){return h.toolPermissionContext===P.toolPermissionContext
+ *     &&...&&h.waitForMcpServersDeclared===P.waitForMcpServersDeclared
+ *     &&h.toolListRevision===P.toolListRevision&&!0}
+ * Before 2.1.325 both ended at waitForMcpServersDeclared.
  */
 const patchToolPoolKey = (file: string): string | null => {
-  const key = file.match(
-    /(waitForMcpServersDeclared:[$\w]+\(\))(,unattendedBg:[^}]*)?(\},[$\w]+=this\.toolPoolCache;)/
-  );
-  const compare = file.match(
-    /function [$\w]+\(([$\w]+),([$\w]+)\)\{return \1\.toolPermissionContext===\2\.toolPermissionContext[^}]*?&&\1\.waitForMcpServersDeclared===\2\.waitForMcpServersDeclared(&&\1\.unattendedBg===\2\.unattendedBg)?\}/
-  );
+  const key = firstMatch(file, KEY_METHODS);
+  const compare = firstMatch(file, COMPARE_METHODS);
   if (
     !key ||
     key.index === undefined ||
@@ -211,13 +230,14 @@ const patchToolPoolKey = (file: string): string | null => {
     );
     return null;
   }
-  if (key[2] && compare[3]) return file;
-  const [h, e] = [compare[1], compare[2]];
+  if (key[2] && compare[4]) return file;
+  const [h, e] = [compare[2], compare[3]];
   const keyAt = key.index + key[1].length;
+  const keyText = `,${KEY_FIELD}:${BRIDGE}()`;
   const edits: [number, string][] = [
-    [keyAt, `,${KEY_FIELD}:${BRIDGE}()`],
+    [keyAt, keyText],
     [
-      compare.index + compare[0].length - 1,
+      compare.index + compare[1].length,
       `&&${h}.${KEY_FIELD}===${e}.${KEY_FIELD}`,
     ],
   ];
@@ -226,7 +246,7 @@ const patchToolPoolKey = (file: string): string | null => {
   for (const [at, text] of edits.sort((x, y) => y[0] - x[0])) {
     newFile = newFile.slice(0, at) + text + newFile.slice(at);
   }
-  showDiff(file, newFile, edits[0][1], keyAt, keyAt);
+  showDiff(file, newFile, keyText, keyAt, keyAt);
   return newFile;
 };
 

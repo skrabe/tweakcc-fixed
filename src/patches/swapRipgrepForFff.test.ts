@@ -267,6 +267,33 @@ describe('swapRipgrepForFff', () => {
     }
   });
 
+  it('binds the 2.1.325 renderer with a leading let and a split destructure', () => {
+    const render325 = INSTRUCTIONS.replace(
+      'function fffRender($rows,$visible=[],$model,$config){',
+      'function fffRender($rows,$visible,$model,$config,$extra){let $mark=$model===void 0?void 0:$markOf($model);'
+    ).replace(
+      '$rendered=$result.messages,{isKnownType:$known,recordedRole:$role}=$result;',
+      '$rendered=$result.messages;let{isKnownType:$known,recordedRole:$role}=$result;'
+    );
+    expect(render325).not.toContain('$visible=[]');
+    expect(render325).toContain('$result.messages;let{isKnownType:');
+    const source = BASE.replace(INSTRUCTIONS, render325);
+    const patched = writeSwapRipgrepForFff(source, WRAPPER)!;
+    expect(patched).not.toBeNull();
+    expect(patched).toContain('$rendered=(function __tweakccFffAutoMode(');
+    expect(patched).toContain('})($result.messages,$row.attachment,$visible,"');
+    expect(patched).toContain(
+      ';let{isKnownType:$known,recordedRole:$role}=$result;'
+    );
+    expect(patched).toContain(
+      '{let $mark=$model===void 0?void 0:$markOf($model);$rows=$fold('
+    );
+    expect(patched).toContain('function __tweakccFffDescription');
+    expect(hasFffShellIntegration(patched, WRAPPER)).toBe(true);
+    expect(() => new Function(patched)).not.toThrow();
+    expect(writeSwapRipgrepForFff(patched, WRAPPER)).toBe(patched);
+  });
+
   it('refuses legacy interception instead of leaving native searches redirected', () => {
     const error = vi.spyOn(console, 'error').mockImplementation(() => {});
     try {

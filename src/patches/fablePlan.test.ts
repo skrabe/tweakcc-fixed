@@ -901,6 +901,72 @@ describe('writeFablePlan', () => {
     expect(resolve('sonnet', plan)).toBe('claude-opus-5');
   });
 
+  it('applies against the CC 2.1.325 parameter-destructured resolver', () => {
+    // 2.1.325: the resolver destructures `setting` in its parameter list and
+    // never calls the getter; callers pass `setting:GETTER()`.
+    const resolver251 =
+      'function hp(e){let{permissionMode:t,mainLoopModel:r,exceeds200kTokens:o=!1}=e;' +
+      'if(t!=="plan")return r;let u=lf(),d=qde(u);if(d===null)return r;return r}';
+    const resolver325 =
+      'function lf(){return SEL}' +
+      'function hp(e){return YQt({permissionMode:e.mode,setting:lf(),mainLoopModel:e.model}).model}' +
+      'function qde(e){if(e==="opusplan"||e==="opusplan[1m]")return"opus";return null}' +
+      'function YQt({permissionMode:t,mainLoopModel:r,exceeds200kTokens:o=!1,setting:u}){' +
+      'if(t!=="plan")return{model:r,clampWarning:null};let d=qde(u);' +
+      'if(d===null||d==="opus"&&o)return{model:r,clampWarning:null};return{model:"claude-opus-5",clampWarning:null}}';
+    const src = cli251.replace(resolver251, resolver325);
+    expect(src).toContain(resolver325);
+    const out = writeFablePlan(src, config());
+    expect(out).not.toBeNull();
+    expect(out).toContain(
+      'globalThis.__tweakccFablePlanModelFor=(m)=>m==="plan"&&lf()==="fableplan"?Ot("fable"):void 0;' +
+        'function YQt({permissionMode:t,mainLoopModel:r,exceeds200kTokens:o=!1,setting:u}){' +
+        'if(t!=="plan")return{model:r,clampWarning:null};' +
+        'if(u==="fableplan")return{model:Ot("fable"),clampWarning:null};let d=qde(u);'
+    );
+    expect(writeFablePlan(out!, config())).toBe(out);
+
+    const resolve = vm.runInNewContext(
+      `var SEL="opus";function Ot(a){return "model:"+a}` +
+        `${out!.slice(out!.indexOf('function lf('), out!.indexOf('function xs('))}` +
+        `;(sel,args)=>{SEL=sel;return [YQt(args).model,globalThis.__tweakccFablePlanModelFor(args.permissionMode)]}`
+    ) as (
+      sel: string,
+      args: { permissionMode: string; mainLoopModel: string; setting?: string }
+    ) => [string, string | undefined];
+    const plan = { permissionMode: 'plan', mainLoopModel: 'claude-opus-5' };
+    expect(resolve('fableplan', { ...plan, setting: 'fableplan' })).toEqual([
+      'model:fable',
+      'model:fable',
+    ]);
+    expect(
+      resolve('fableplan', {
+        ...plan,
+        permissionMode: 'default',
+        setting: 'fableplan',
+      })
+    ).toEqual(['claude-opus-5', undefined]);
+    expect(resolve('opus', { ...plan, setting: 'opus' })).toEqual([
+      'claude-opus-5',
+      undefined,
+    ]);
+  });
+
+  it('fails loudly when no CC 2.1.325 resolver call names the getter', () => {
+    const resolver251 =
+      'function hp(e){let{permissionMode:t,mainLoopModel:r,exceeds200kTokens:o=!1}=e;' +
+      'if(t!=="plan")return r;let u=lf(),d=qde(u);if(d===null)return r;return r}';
+    const src = cli251.replace(
+      resolver251,
+      'function YQt({permissionMode:t,mainLoopModel:r,exceeds200kTokens:o=!1,setting:u}){' +
+        'if(t!=="plan")return{model:r,clampWarning:null};return{model:r,clampWarning:null}}'
+    );
+    expect(writeFablePlan(src, config())).toBeNull();
+    expect(console.error).toHaveBeenCalledWith(
+      expect.stringContaining('failed to find the selected-alias getter')
+    );
+  });
+
   it('is idempotent on the CC 2.1.251 shape', () => {
     const once = writeFablePlan(cli251, config())!;
     const twice = writeFablePlan(once, config())!;

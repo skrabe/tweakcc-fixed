@@ -12,6 +12,17 @@ const EXPAND_FN =
 
 const CHUNK = PLUGIN_CALLER + ';' + SKILL_CALLER + ';' + EXPAND_FN;
 
+// Real CC 2.1.325 excerpts (prompt-shell check block and own-skill caller).
+const CHECK_325 =
+  'if(ot.behavior!=="allow"){t(`Shell command permission check failed for command in ${r}: ${xe}. Error: ${ot.message}`);let Nt=ot.decisionReason?.type==="asyncAgent"?ot.decisionReason.ask?.decisionReason:ot.decisionReason;if(tt&&yt&&(Nt?.type==="other"||Nt?.type==="subcommandResults"))throw new yx(`Couldn\'t run \\`${xe}\\` for ${r}. This folder or one above it looks like a bare git repository that may not be yours, and git can run commands named in a repository\'s files. If you trust this folder, allow the git commands this needs, for example with /permissions, and try again.`);if(jo(Xe.session))throw t(`prompt shell permission denial: ${ot.message||"Permission denied"}`,{level:"error"}),new yx(`Shell command permission check failed for pattern "${Ae}" (detail withheld on this connection)`);let ln=Nt?.type==="subcommandResults"?[...Nt.reasons.values()][0]?.decisionReason:Nt,Ht=ln?.type==="other"&&ln.bashMissKind==="git-untrusted-checkout"?ln.reason:ot.message;throw new yx(`Shell command permission check failed for pattern "${Ae}": ${Ht||"Permission denied"}`)}';
+const CALLER_325 =
+  'ous(st,Ne)&&PRe())to=YG(to);else if(rus(st))to=await C1e(to,{...fo,getAppState:VB(fo,mo())},`/${e}`,Mt);if(tt&&!Xe)to=`${aus(tt)}\n\n${to}`';
+const CHUNK_325 =
+  'async function C1e(e,n,r,s,h){if(n.options.readOnlySkillLoad)return YG(e,BJe);let y=e;' +
+  CHECK_325 +
+  'n0(E.name);};' +
+  CALLER_325;
+
 describe('writeSkipSkillShellValidation', () => {
   it('marks only the own-skill call and lets "ask" through for it', () => {
     const result = writeSkipSkillShellValidation(CHUNK);
@@ -40,6 +51,67 @@ describe('writeSkipSkillShellValidation', () => {
     );
     expect(result).toContain(
       'if(Me.behavior!=="allow"&&!(n.tweakccOwnSkill&&Me.behavior==="ask")){'
+    );
+  });
+
+  it('keeps the bare-repo guard live for own skills (CC 2.1.325)', () => {
+    const result = writeSkipSkillShellValidation(CHUNK_325);
+
+    expect(result).not.toBeNull();
+    expect(result).toContain(
+      'else if(rus(st))to=await C1e(to,{tweakccOwnSkill:!0,...fo,getAppState:VB(fo,mo())}'
+    );
+    expect(result).toContain(
+      'if(ot.behavior!=="allow")tweakccAsk:{t(`Shell command permission check failed for command in'
+    );
+    expect(result).toContain(
+      'try again.`);if(n.tweakccOwnSkill&&ot.behavior==="ask")break tweakccAsk;if(jo(Xe.session))throw'
+    );
+    expect(result).toContain(
+      'if(tt&&yt&&(Nt?.type==="other"||Nt?.type==="subcommandResults"))throw new yx(`Couldn\'t run'
+    );
+    expect(writeSkipSkillShellValidation(result!)).toBe(result);
+
+    const block = result!.slice(
+      result!.indexOf('if(ot.behavior!=="allow")'),
+      result!.indexOf('n0(E.name)')
+    );
+    const run = new Function(
+      'n',
+      'ot',
+      'tt',
+      'yt',
+      'r',
+      'xe',
+      'Ae',
+      'Xe',
+      't',
+      'jo',
+      'yx',
+      `${block}return "ran";`
+    );
+    const exec = (own: boolean, behavior: string, bareRepo: boolean) =>
+      run(
+        own ? { tweakccOwnSkill: true } : {},
+        { behavior, message: 'm', decisionReason: { type: 'other' } },
+        bareRepo,
+        behavior === 'ask',
+        '/s',
+        'git status',
+        '!`git status`',
+        { session: {} },
+        () => {},
+        () => false,
+        Error
+      );
+
+    expect(exec(true, 'ask', false)).toBe('ran');
+    expect(() => exec(true, 'ask', true)).toThrow('bare git repository');
+    expect(() => exec(true, 'deny', false)).toThrow(
+      'Shell command permission check failed for pattern'
+    );
+    expect(() => exec(false, 'ask', false)).toThrow(
+      'Shell command permission check failed for pattern'
     );
   });
 

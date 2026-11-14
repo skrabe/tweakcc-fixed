@@ -165,8 +165,52 @@ const patchPlanResolver = (
   config: FablePlanConfig,
   aliasToModel: string
 ): string | null => {
-  // Method -2 — CC >= 2.1.311: a caller may hand the resolver the selected
-  // alias as `setting`, and the getter is only the fallback:
+  // Method -3 — CC >= 2.1.325: the resolver destructures its argument in the
+  // parameter list and never calls the getter; every caller passes
+  // `setting:GETTER()` (or a context's `getPlanModeSetting?.()`):
+  //   function gat({permissionMode:e,mainLoopModel:n,exceeds200kTokens:r=!1,setting:s}){
+  //     if(e!=="plan")return{model:n,clampWarning:null};let h=H_e(s);…
+  // The answer keys on `setting` as handed, like upstream's own pairings, and
+  // MODEL_FOR takes the getter from a same-module call of the resolver.
+  const patternParam =
+    /(function ([$\w]+)\(\{permissionMode:([$\w]+),mainLoopModel:([$\w]+),exceeds200kTokens:[$\w]+=!1,setting:([$\w]+)\}\)\{)(if\(\3!=="plan"\)return\{model:\4,clampWarning:null\};)/;
+  const matchParam = file.match(patternParam);
+  if (matchParam && matchParam.index !== undefined) {
+    const at = matchParam.index;
+    const resolver = escapeIdent(matchParam[2]);
+    const callPattern = new RegExp(
+      `[^$\\w.]${resolver}\\(\\{permissionMode:[^{}]*?,setting:([$\\w]+)\\(\\),`,
+      'g'
+    );
+    const getter = [...file.matchAll(callPattern)]
+      .map(m => m[1])
+      .find(name => boundInModule(file, at, name));
+    if (!getter) {
+      console.error(
+        'patch: fablePlan: failed to find the selected-alias getter at a plan-mode resolver call'
+      );
+      return null;
+    }
+    if (!boundInModule(file, at, aliasToModel)) {
+      console.error(
+        `patch: fablePlan: ${aliasToModel} is not in scope at the plan-mode model resolver`
+      );
+      return null;
+    }
+    const planModel = `${aliasToModel}("${config.planModel}")`;
+    const replacement =
+      `${MODEL_FOR}=(m)=>m==="plan"&&${getter}()==="${ALIAS}"?` +
+      `${planModel}:void 0;` +
+      `${matchParam[1]}${matchParam[6]}` +
+      `if(${matchParam[5]}==="${ALIAS}")return{model:${planModel},clampWarning:null};`;
+    const newFile =
+      file.slice(0, at) + replacement + file.slice(at + matchParam[0].length);
+    showDiff(file, newFile, replacement, at, at + matchParam[0].length);
+    return newFile;
+  }
+
+  // Method -2 — CC 2.1.311 - 2.1.324: a caller may hand the resolver the
+  // selected alias as `setting`, and the getter is only the fallback:
   //   let h=e.setting===void 0?b_():e.setting,y=Kse(h);
   // The answer keys on that resolved alias, after the whole declaration.
   const patternSetting =

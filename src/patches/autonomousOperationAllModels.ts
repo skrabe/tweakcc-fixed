@@ -126,6 +126,9 @@ const FINISHING_WORK_MARKER = `==${FINISHING_WORK})return!0;`;
 // Answer true for finishing_work_guidance once the caller override and the
 // CLAUDE_CODE_MODEL_CAPABILITIES lookup have both declined, so an explicit
 // `-finishing_work_guidance` in that env still wins.
+// CC 2.1.325 inverted the lookup check: an undefined answer now returns the
+// model default directly and a defined one falls through to telemetry:
+//   function LR(e,n,r,s){if(s!==void 0)return s;let u=yw(n,e,r);if(u===void 0)return M(e,n,r);…
 const writeFinishingWorkAllModels = (file: string): string => {
   if (file.includes(FINISHING_WORK_MARKER)) return file;
   const setAt = file.search(/new Set\(\[[^\]]*"finishing_work_guidance"/);
@@ -135,14 +138,27 @@ const writeFinishingWorkAllModels = (file: string): string => {
     );
     return file;
   }
-  const resolver =
-    /function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+),([$\w]+)\)\{if\(\5!==void 0\)return \5;let ([$\w]+)=[$\w]+\(\3,\2,\4\);if\(\6!==void 0\)return \6;/y;
   const window = file.slice(setAt, setAt + 2000);
   const fnAt = window.search(
     /function [$\w]+\([$\w]+,[$\w]+,[$\w]+,[$\w]+\)\{if\(/
   );
-  resolver.lastIndex = fnAt;
-  const m = fnAt === -1 ? null : resolver.exec(window);
+  const resolver325 =
+    /function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+),([$\w]+)\)\{if\(\5!==void 0\)return \5;let ([$\w]+)=[$\w]+\(\3,\2,\4\);(?=if\(\6===void 0\)return [$\w]+\(\2,\3,\4\);)/y;
+  const resolver322 =
+    /function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+),([$\w]+)\)\{if\(\5!==void 0\)return \5;let ([$\w]+)=[$\w]+\(\3,\2,\4\);if\(\6!==void 0\)return \6;/y;
+  let m: RegExpExecArray | null = null;
+  let inject = '';
+  if (fnAt !== -1) {
+    resolver325.lastIndex = fnAt;
+    m = resolver325.exec(window);
+    if (m) {
+      inject = `if(${m[6]}===void 0&&${m[2]}${FINISHING_WORK_MARKER}`;
+    } else {
+      resolver322.lastIndex = fnAt;
+      m = resolver322.exec(window);
+      if (m) inject = `if(${m[2]}${FINISHING_WORK_MARKER}`;
+    }
+  }
   if (!m) {
     console.error(
       'patch: autonomousOperationAllModels: failed to find the capability resolver next to finishing_work_guidance'
@@ -150,7 +166,6 @@ const writeFinishingWorkAllModels = (file: string): string => {
     return file;
   }
   const at = setAt + fnAt + m[0].length;
-  const inject = `if(${m[2]}${FINISHING_WORK_MARKER}`;
   const newFile = file.slice(0, at) + inject + file.slice(at);
   showDiff(file, newFile, inject, at, at);
   return newFile;
