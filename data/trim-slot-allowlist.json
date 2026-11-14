@@ -322,8 +322,8 @@
     }
   },
   "tool-description-workflow": {
-    "bodyHash": "9ae6e7f000ee",
-    "reviewed": "2026-09-02 (CC 2.1.258)",
+    "bodyHash": "cbc36362b1fa",
+    "reviewed": "2026-11-15 (CC 2.1.325)",
     "tokens": {
       "d.key": "Not a runtime slot: a backslash-escaped `\\${d.key}` inside the example workflow script (literal JS shown to the model). The example was cut because the workflow-authoring skill carries worked examples.",
       "f.title": "Not a runtime slot: a backslash-escaped `\\${d.key}` inside the example workflow script (literal JS shown to the model). The example was cut because the workflow-authoring skill carries worked examples.",
@@ -370,8 +370,7 @@
     "bodyHash": "e4cae0560c5a",
     "reviewed": "2026-09-16 (CC 2.1.273)",
     "tokens": {
-      "TOOL_DESCRIPTION_ARTIFACT_WATCHING_UNAVAILABLE_VAR_0": "Whole-sentence deletion takes its slots with it: the lead sentence duplicated tool-parameter-artifact-action-watch-unavailable, which co-renders on the same tool schema (Zu joins hw(commentsOn, watchRail); the action.describe concatenates yr(n,c) and case 'none' is this arm). Confirmed by the stage-3 adversarial pass.",
-      "TOOL_DESCRIPTION_ARTIFACT_WATCHING_UNAVAILABLE_VAR_1": "Second slot of the same deleted lead sentence (VAR_1() is N2e(), the function yr interpolates on the co-rendering parameter). The never-claim-a-watch sentence, the status/unwatch sentence and ${VAR_2} are all kept verbatim."
+      "TOOL_DESCRIPTION_ARTIFACT_WATCHING_UNAVAILABLE_VAR_0": "Whole-sentence deletion takes its slots with it: the lead sentence duplicated tool-parameter-artifact-action-watch-unavailable, which co-renders on the same tool schema (Zu joins hw(commentsOn, watchRail); the action.describe concatenates yr(n,c) and case 'none' is this arm). Confirmed by the stage-3 adversarial pass."
     }
   },
   "tool-result-account-skills-send-complete-skill": {
@@ -426,6 +425,14 @@
     "reviewed": "2026-11-10 (CC 2.1.322)",
     "tokens": {
       "SYSTEM_PROMPT_FAST_MODE_ENVIRONMENT_NOTE_VAR_0": "Deliberate wipe carried from the reworded note: the whole fast-mode environment note is suppressed, so its vertex/Opus slot goes with it."
+    }
+  },
+  "system-prompt-avoiding-unnecessary-sleep-commands-part-of-powershell-tool-description": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-11-15 (CC 2.1.325)",
+    "tokens": {
+      "CAN_YIELD": "Suppressed fragment (PowerShell sleep guidance, wiped since 2.1.314). CC 2.1.325 added a yield-dependent wait-on-background-work line to it; that same instruction and its gate reach the model through tool-description-background-monitor-streaming-events, which keeps both slots.",
+      "DOES_SESSION_STOP_AFTER_REPLY": "Suppressed fragment (PowerShell sleep guidance, wiped since 2.1.314). CC 2.1.325 added a yield-dependent wait-on-background-work line to it; that same instruction and its gate reach the model through tool-description-background-monitor-streaming-events, which keeps both slots."
     }
   }
 }
