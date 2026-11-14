@@ -27,10 +27,12 @@
 // ```
 //
 // Patch 2 - let "ask" through for marked calls in whe(). Since CC 2.1.325 the
-// bare-git-repository throw comes first and stays live for own skills:
+// bare-git-repository throw comes first and stays live for own skills, and an
+// ask whose reason (or any subcommand reason) is a git-untrusted-checkout
+// refusal still throws:
 // ```diff
 // -if(ot.behavior!=="allow"){t(`...`);let Nt=...;if(tt&&yt&&(...))throw new yx(`...`);if(jo(...
-// +if(ot.behavior!=="allow")tweakccAsk:{t(`...`);let Nt=...;if(tt&&yt&&(...))throw new yx(`...`);if(n.tweakccOwnSkill&&ot.behavior==="ask")break tweakccAsk;if(jo(...
+// +if(ot.behavior!=="allow")tweakccAsk:{t(`...`);let Nt=...;if(tt&&yt&&(...))throw new yx(`...`);if(n.tweakccOwnSkill&&ot.behavior==="ask"&&!(<Nt or its subcommand reasons>).some(<git-untrusted-checkout>))break tweakccAsk;if(jo(...
 // ```
 // Before 2.1.325:
 // ```diff
@@ -52,11 +54,12 @@ const findBareRepoGuardedCheck = (
     String.raw`if\(([$\w]+)\.behavior!=="allow"\)\{([$\w]+\(\`Shell command permission check failed[\s\S]{0,600}?if\([$\w]+&&[$\w]+&&\(([$\w]+)\?\.type==="other"\|\|\3\?\.type==="subcommandResults"\)\)throw new [$\w]+\(\`(?:\\[\s\S]|[^\`\\])*\`\);)`
   ).exec(body);
   if (!match) return null;
-  const resultVar = match[1];
+  const [, resultVar, block, reasonVar] = match;
+  const untrustedCheckout = `(${reasonVar}?.type==="subcommandResults"?[...${reasonVar}.reasons.values()].map(tweakccR=>tweakccR?.decisionReason):[${reasonVar}]).some(tweakccR=>tweakccR?.type==="other"&&tweakccR.bashMissKind==="git-untrusted-checkout")`;
   return {
     start: match.index,
     end: match.index + match[0].length,
-    text: `if(${resultVar}.behavior!=="allow")tweakccAsk:{${match[2]}if(${ctxVar}.tweakccOwnSkill&&${resultVar}.behavior==="ask")break tweakccAsk;`,
+    text: `if(${resultVar}.behavior!=="allow")tweakccAsk:{${block}if(${ctxVar}.tweakccOwnSkill&&${resultVar}.behavior==="ask"&&!${untrustedCheckout})break tweakccAsk;`,
   };
 };
 

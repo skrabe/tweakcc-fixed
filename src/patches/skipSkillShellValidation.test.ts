@@ -65,7 +65,7 @@ describe('writeSkipSkillShellValidation', () => {
       'if(ot.behavior!=="allow")tweakccAsk:{t(`Shell command permission check failed for command in'
     );
     expect(result).toContain(
-      'try again.`);if(n.tweakccOwnSkill&&ot.behavior==="ask")break tweakccAsk;if(jo(Xe.session))throw'
+      'try again.`);if(n.tweakccOwnSkill&&ot.behavior==="ask"&&!(Nt?.type==="subcommandResults"?[...Nt.reasons.values()].map(tweakccR=>tweakccR?.decisionReason):[Nt]).some(tweakccR=>tweakccR?.type==="other"&&tweakccR.bashMissKind==="git-untrusted-checkout"))break tweakccAsk;if(jo(Xe.session))throw'
     );
     expect(result).toContain(
       'if(tt&&yt&&(Nt?.type==="other"||Nt?.type==="subcommandResults"))throw new yx(`Couldn\'t run'
@@ -90,10 +90,15 @@ describe('writeSkipSkillShellValidation', () => {
       'yx',
       `${block}return "ran";`
     );
-    const exec = (own: boolean, behavior: string, bareRepo: boolean) =>
+    const exec = (
+      own: boolean,
+      behavior: string,
+      bareRepo: boolean,
+      decisionReason: unknown = { type: 'other' }
+    ) =>
       run(
         own ? { tweakccOwnSkill: true } : {},
-        { behavior, message: 'm', decisionReason: { type: 'other' } },
+        { behavior, message: 'm', decisionReason },
         bareRepo,
         behavior === 'ask',
         '/s',
@@ -113,6 +118,41 @@ describe('writeSkipSkillShellValidation', () => {
     expect(() => exec(false, 'ask', false)).toThrow(
       'Shell command permission check failed for pattern'
     );
+
+    const untrusted = {
+      type: 'other',
+      reason: 'Git would use a repository that Claude Code cannot match',
+      bashMissKind: 'git-untrusted-checkout',
+    };
+    const plain = { type: 'other', reason: 'Contains simple_expansion' };
+    expect(() => exec(true, 'ask', false, untrusted)).toThrow(
+      'Git would use a repository that Claude Code cannot match'
+    );
+    expect(exec(true, 'ask', false, plain)).toBe('ran');
+    expect(
+      exec(true, 'ask', false, {
+        type: 'subcommandResults',
+        reasons: new Map([
+          ['echo a', { behavior: 'ask', decisionReason: plain }],
+          ['echo b', { behavior: 'ask', decisionReason: plain }],
+        ]),
+      })
+    ).toBe('ran');
+    expect(() =>
+      exec(true, 'ask', false, {
+        type: 'subcommandResults',
+        reasons: new Map([
+          ['echo a', { behavior: 'ask', decisionReason: plain }],
+          ['git status', { behavior: 'ask', decisionReason: untrusted }],
+        ]),
+      })
+    ).toThrow('Shell command permission check failed for pattern');
+    expect(() =>
+      exec(true, 'ask', false, {
+        type: 'asyncAgent',
+        ask: { decisionReason: untrusted },
+      })
+    ).toThrow('Git would use a repository that Claude Code cannot match');
   });
 
   it('returns null for modules without the prompt-shell check', () => {

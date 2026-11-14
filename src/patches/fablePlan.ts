@@ -84,6 +84,11 @@ const MODEL_FOR = 'globalThis.__tweakccFablePlanModelFor';
 // with the context's permission layers applied, the same value `uM` is given).
 const MODE_KEY = '__tweakccPermissionMode';
 
+// Set beside MODE_KEY where the plan-mode resolver takes `setting` from its
+// caller (CC >= 2.1.325): the request context's own plan-mode setting, which
+// side and forked contexts clear. Absent, MODEL_FOR asks the session getter.
+const SETTING_KEY = '__tweakccPlanModeSetting';
+
 const MODULE_MARK = '/*@@TWEAKCC_MODULE:';
 
 // The bundle module enclosing `at`; the whole file on a single-module bundle.
@@ -160,6 +165,9 @@ const patchAliasWhitelist = (file: string): string | null => {
  * Also defines `MODEL_FOR` beside the resolver, at module scope, so the effort
  * lookup can ask the same question without reaching names it cannot see.
  */
+const PLAN_SETTING_PARAM =
+  /(function ([$\w]+)\(\{permissionMode:([$\w]+),mainLoopModel:([$\w]+),exceeds200kTokens:[$\w]+=!1,setting:([$\w]+)\}\)\{)(if\(\3!=="plan"\)return\{model:\4,clampWarning:null\};)/;
+
 const patchPlanResolver = (
   file: string,
   config: FablePlanConfig,
@@ -170,11 +178,10 @@ const patchPlanResolver = (
   // `setting:GETTER()` (or a context's `getPlanModeSetting?.()`):
   //   function gat({permissionMode:e,mainLoopModel:n,exceeds200kTokens:r=!1,setting:s}){
   //     if(e!=="plan")return{model:n,clampWarning:null};let h=H_e(s);…
-  // The answer keys on `setting` as handed, like upstream's own pairings, and
-  // MODEL_FOR takes the getter from a same-module call of the resolver.
-  const patternParam =
-    /(function ([$\w]+)\(\{permissionMode:([$\w]+),mainLoopModel:([$\w]+),exceeds200kTokens:[$\w]+=!1,setting:([$\w]+)\}\)\{)(if\(\3!=="plan"\)return\{model:\4,clampWarning:null\};)/;
-  const matchParam = file.match(patternParam);
+  // The answer keys on `setting` as handed, like upstream's own pairings.
+  // MODEL_FOR keys on the request context's setting when splice 9 attached it,
+  // else on the getter taken from a same-module call of the resolver.
+  const matchParam = file.match(PLAN_SETTING_PARAM);
   if (matchParam && matchParam.index !== undefined) {
     const at = matchParam.index;
     const resolver = escapeIdent(matchParam[2]);
@@ -199,7 +206,7 @@ const patchPlanResolver = (
     }
     const planModel = `${aliasToModel}("${config.planModel}")`;
     const replacement =
-      `${MODEL_FOR}=(m)=>m==="plan"&&${getter}()==="${ALIAS}"?` +
+      `${MODEL_FOR}=(m,s)=>m==="plan"&&(s&&"${SETTING_KEY}"in s?s.${SETTING_KEY}:${getter}())==="${ALIAS}"?` +
       `${planModel}:void 0;` +
       `${matchParam[1]}${matchParam[6]}` +
       `if(${matchParam[5]}==="${ALIAS}")return{model:${planModel},clampWarning:null};`;
@@ -258,7 +265,7 @@ const patchPlanResolver = (
   const planModel = `${aliasToModel}("${config.planModel}")`;
   // Like opusplan, every plan-mode request goes to the planning model while
   // the alias is selected, whatever model it was handed. The effort lookup
-  // asks the same question through MODEL_FOR, so the two always agree.
+  // asks the same question through MODEL_FOR, which reads the same getter.
   const modelFor =
     `${MODEL_FOR}=(m)=>m==="plan"&&${getter}()==="${ALIAS}"?` +
     `${planModel}:void 0;`;
@@ -450,7 +457,7 @@ const patchEffortLookup = (
   file: string
 ): { file: string; resolver: string | undefined; block: boolean } | null => {
   const key = (state: string): string =>
-    `${MODEL_FOR}?.(${state}.${MODE_KEY}??${state}.toolPermissionContext?.mode)??`;
+    `${MODEL_FOR}?.(${state}.${MODE_KEY}??${state}.toolPermissionContext?.mode,${state})??`;
   // The function whose `inherit` arm this is (for splice 9 to find its
   // callers) and its model parameter, which must lead the key expression.
   const resolverAt = (
@@ -571,7 +578,8 @@ const ROUTED = 'routed';
 const patchEffortContext = (
   file: string,
   resolver: string | undefined,
-  required: boolean
+  required: boolean,
+  planSetting: boolean
 ): string | null => {
   const fail = (what: string): string | null => {
     if (!required) {
@@ -612,6 +620,11 @@ const patchEffortContext = (
   const spawn = /model:([$\w]+),effortState:([$\w]+)[,}]/g;
   const inScope = (at: number, ...names: string[]): boolean =>
     names.every(n => boundInModule(file, at, n));
+  const setting = (c: string, guard?: string): string => {
+    if (!planSetting) return '';
+    const pair = `${SETTING_KEY}:${c}.options?.getPlanModeSetting?.()`;
+    return guard ? `,...${guard}&&{${pair}}` : `,${pair}`;
+  };
 
   const found = { a: 0, b: 0, c: 0 };
   for (const c of file.matchAll(wrapped)) {
@@ -621,7 +634,7 @@ const patchEffortContext = (
     edits.push([
       c.index,
       c.index + c[0].length,
-      `${c[1]}{...${c[2]}.getAppState?.()??{},${MODE_KEY}:${c[2]}.getAppState?${de}(${c[2]}).mode:void 0},`,
+      `${c[1]}{...${c[2]}.getAppState?.()??{},${MODE_KEY}:${c[2]}.getAppState?${de}(${c[2]}).mode:void 0${setting(c[2], `${c[2]}.getAppState`)}},`,
     ]);
   }
   for (const c of file.matchAll(perRequest)) {
@@ -630,7 +643,7 @@ const patchEffortContext = (
     edits.push([
       c.index,
       c.index + c[0].length,
-      `${c[1]}{...${c[2]}.getAppState(),${MODE_KEY}:${de}(${c[2]}).mode},${c[3]}(${c[2]})`,
+      `${c[1]}{...${c[2]}.getAppState(),${MODE_KEY}:${de}(${c[2]}).mode${setting(c[2])}},${c[3]}(${c[2]})`,
     ]);
   }
   for (const c of file.matchAll(optional)) {
@@ -639,7 +652,7 @@ const patchEffortContext = (
     edits.push([
       c.index,
       c.index + c[0].length,
-      `${c[1]}{...${c[2]}?.getAppState?.()??{},${MODE_KEY}:${c[2]}?.getAppState?${de}(${c[2]}).mode:void 0},`,
+      `${c[1]}{...${c[2]}?.getAppState?.()??{},${MODE_KEY}:${c[2]}?.getAppState?${de}(${c[2]}).mode:void 0${setting(`${c[2]}?`, `${c[2]}?.getAppState`)}},`,
     ]);
   }
   for (const c of file.matchAll(spawn)) {
@@ -910,6 +923,7 @@ export const writeFablePlan = (
   if (!whitelisted) return null;
   file = whitelisted;
 
+  const planSetting = PLAN_SETTING_PARAM.test(file);
   const planned = patchPlanResolver(file, config, resolved.resolver);
   if (!planned) return null;
   file = planned;
@@ -928,7 +942,12 @@ export const writeFablePlan = (
 
   // Required where the lookup has its 2.1.291 shape, which is where the
   // per-request caller is known; older shapes keep the session's mode.
-  const contexted = patchEffortContext(file, efforted.resolver, efforted.block);
+  const contexted = patchEffortContext(
+    file,
+    efforted.resolver,
+    efforted.block,
+    planSetting
+  );
   if (!contexted) return null;
   file = contexted;
 
