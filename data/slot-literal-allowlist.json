@@ -4659,17 +4659,6 @@
     "name": "Data: Compaction — \"Tool result left out\" marker prefix",
     "desc": "Opening words of the bracketed line that stands in for a tool result left out of the summary request. The compaction instruction quotes the same words so the summarizer can recognise the line."
   },
-  "980a18b67b513daa": {
-    "promptId": "data-compaction-refused-call-left-out-marker",
-    "promptIds": ["system-prompt-compaction-omitted-tool-result-handling"],
-    "label": "REFUSED_OR_STOPPED_CALL_MARKER_PREFIX",
-    "verdict": "catalogue",
-    "text": "[Refused or stopped call:",
-    "reason": "Catalogue is right. TXe @11886581 has 3 refs: its definition, the Srn instruction @11886738 and the refused-marker builder dor @11892222. No startsWith/includes matcher, so the instruction and the marker share one const and an override stays consistent. The proposed id nearly collides with the existing data-compaction-refused-call-left-out-marker (the whole line). Use a -prefix id in that family.",
-    "id": "data-compaction-refused-call-marker-prefix",
-    "name": "Data: Compaction — \"Refused or stopped call\" marker prefix",
-    "desc": "Opening words of the bracketed line that stands in for a refused or stopped call's text left out of the summary request. The compaction instruction quotes the same words so the summarizer can recognise the line."
-  },
   "7878d40ad63c9275": {
     "promptId": "data-compaction-summary-left-out-results-note",
     "label": "DATA_COMPACTION_SUMMARY_LEFT_OUT_RESULTS_NOTE_VAR_2",
