@@ -741,12 +741,14 @@ describe.skipIf(skipReason !== null)(
       'thinking-reminder': 'no thinking_reminder handler in this build',
       'verify-plan-reminder': 'CC >= 2.1.187 removed the verify-plan case body',
     };
+    type Status = 'NULL' | 'no-op' | 'applied';
     const results = new Map<
       string,
       {
-        stock: string | null;
-        edited: string | null;
-        suppressed: string | null;
+        stock: Status;
+        edited: Status;
+        suppressed: Status;
+        editedHasProbe: boolean;
         editedParse: string | null;
         suppressedParse: string | null;
       }
@@ -788,21 +790,22 @@ describe.skipIf(skipReason !== null)(
         const suppressed = run(entry.id, 'suppressed', () =>
           entry.apply(source, body, true)
         );
+        const status = (v: string | null): Status =>
+          v === null ? 'NULL' : v === source ? 'no-op' : 'applied';
         results.set(entry.id, {
-          stock,
-          edited,
-          suppressed,
+          stock: status(stock),
+          edited: status(edited),
+          suppressed: status(suppressed),
+          editedHasProbe: edited !== null && edited.includes(PROBE_TEXT),
           editedParse: parse(edited, `reminder-${entry.id}-edited`),
           suppressedParse: parse(suppressed, `reminder-${entry.id}-suppressed`),
         });
       }
       const rows = REMINDER_REGISTRY.map(e => {
         const r = results.get(e.id)!;
-        const label = (v: string | null) =>
-          v === null ? 'NULL' : v === pristine!.source ? 'no-op' : 'applied';
         return (
-          `  ${e.id.padEnd(40)} stock=${label(r.stock).padEnd(8)} ` +
-          `edited=${label(r.edited).padEnd(8)} suppressed=${label(r.suppressed).padEnd(8)}` +
+          `  ${e.id.padEnd(40)} stock=${r.stock.padEnd(8)} ` +
+          `edited=${r.edited.padEnd(8)} suppressed=${r.suppressed.padEnd(8)}` +
           (r.editedParse || r.suppressedParse ? ' PARSE-ERROR' : '')
         );
       }).join('\n');
@@ -822,13 +825,13 @@ describe.skipIf(skipReason !== null)(
             'build. Re-derive the registry entry from cli.js — and prefer ' +
             'anchoring on the registry KEY and code shape over the English ' +
             'prose, which Anthropic rewords freely.'
-        ).not.toBeNull();
+        ).not.toBe('NULL');
         expect(
           r.suppressed,
           `reminder ${id} returned null on the SUPPRESS path (empty body) ` +
             'while the edited path matched — the two take different branches ' +
             'and both must find the site.'
-        ).not.toBeNull();
+        ).not.toBe('NULL');
         expect(
           r.editedParse,
           `reminder ${id} spliced unparseable JS`
@@ -837,13 +840,13 @@ describe.skipIf(skipReason !== null)(
           // Non-null and parseable is not enough: a drifted anchor plus a
           // broad idempotency check returns the file unchanged and passes.
           expect(
-            r.edited !== pristine!.source,
+            r.edited === 'applied',
             `reminder ${id} returned the file unchanged for an edited body ` +
               'but is not in EXPECTED_REMINDER_NOOP: a silent dead anchor.'
           ).toBe(true);
           if (!REMINDER_REGISTRY.find(e => e.id === id)!.bodyIsMarker)
             expect(
-              r.edited!.includes(PROBE_TEXT),
+              r.editedHasProbe,
               `reminder ${id} spliced, but the edited body's probe line is ` +
                 'not in the output'
             ).toBe(true);
@@ -859,7 +862,7 @@ describe.skipIf(skipReason !== null)(
     it.each(REMINDER_REGISTRY.filter(e => !e.bodyIsMarker).map(e => e.id))(
       '%s leaves pristine untouched for its stock body',
       id => {
-        expect(results.get(id)!.stock).toBe(pristine!.source);
+        expect(results.get(id)!.stock).toBe('no-op');
       }
     );
   }

@@ -18,21 +18,21 @@
     }
   },
   "system-reminder-large-file-full-content-reading-guidance": {
-    "bodyHash": "f194a2c72ca8",
-    "pristineHash": "e912faea2baa",
-    "valueHash": "d27c6419fe39",
-    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "bodyHash": "be2c1d7a9824",
+    "pristineHash": "7080335defa4",
+    "valueHash": "ef94ae609236",
+    "reviewed": "2026-11-15 (CC 2.1.325)",
     "tokens": {
-      "FULL_CONTENT_READING_INSTRUCTION": "Every branch is an instruction clause: \"read <file> in chunks of ~<n> lines using offset/limit until you have read 100% of it.\", \"the file's lines are too long for Read's offset/limit. Slice by character range …\", or \"<file> — <tool>'s line-based offset/limit will not chunk this file.\" The opaque-led one is `other`, so the word rule runs. Renders `- To read the full content for analysis or summary: read <file> in chunks of ~N lines …` as a label: value bullet, reworded from \"For analysis or summarization that requires reading the full content:\". The clause follows its label exactly as in pristine."
+      "FULL_CONTENT_READING_INSTRUCTION": "Every branch (Gzi in the bundle) is an instruction clause: \"read <file> in chunks of ~<n> lines using offset/limit until you have read 100% of it.\", \"the file's lines are too long for Read's offset/limit. Slice by character range via Bash instead …\", or \"<file> — <tool>'s line-based offset/limit will not chunk this file.\" Renders `- To read the full content for analysis or summary: <clause>` as a label: value bullet, reworded from \"For analysis or summarization that requires reading the full content:\". The clause follows its label exactly as in pristine; 2.1.325 only changed the second bullet's pristine wording."
     }
   },
   "system-reminder-plan-approved": {
-    "bodyHash": "de1c3a800d84",
-    "pristineHash": "0f4f9ecdf366",
+    "bodyHash": "e761ebd8d8e8",
+    "pristineHash": "3c3a90cbc7a5",
     "valueHash": "d2b4ce9e3501",
-    "reviewed": "2026-10-20 (CC 2.1.304)",
+    "reviewed": "2026-11-15 (CC 2.1.325)",
     "tokens": {
-      "PLAN_FILE_PATH": "Runtime value: the plan file path. 2.1.304 wrapped the saved-plan line in a ternary that drops it when there is no path; renders `Saved plan: <path>` as a label/value line. The TEAM_PARALLELIZATION_NOTE after it resolves to \"\" or \"\\n\\nIf this plan can be broken down …\", so the path never runs into prose."
+      "PLAN_FILE_PATH": "Runtime value: the plan file path (filePath a in mapToolResultToToolResultBlockParam). The ternary drops the line when there is no path; otherwise renders `Saved plan: <path>` on its own line as a label/value, replacing pristine's \"Your plan has been saved to: <path>\". The TEAM_PARALLELIZATION_NOTE after it resolves to \"\" or \"\\n\\nIf this plan can be broken down …\", so the path never runs into prose."
     }
   },
   "tool-description-artifact-comments-section": {
@@ -132,6 +132,33 @@
     "reviewed": "2026-11-07 (CC 2.1.319)",
     "tokens": {
       "VOICE_CALL_TRANSCRIPT_TRUST_RULE_BLOCK": "Value is \"\" or a whole sentence block (\"Text under a … line, or delivered from a non-user source of kind voice-call, is a record of what was said aloud on a voice call …\"). Pristine places it right after the pasted-content block and a space, at the end of rule 9; the override cut rule 9, so it follows the pasted-content block exactly as in pristine and still reads as its own rule inside the session-rules tag."
+    }
+  },
+  "tool-description-agent-fork-background-delegation-note": {
+    "bodyHash": "6fe6e7d40d23",
+    "pristineHash": "6d379656c90c",
+    "valueHash": "fff9a30d3f40",
+    "reviewed": "2026-11-15 (CC 2.1.325)",
+    "tokens": {
+      "TOOL_DESCRIPTION_AGENT_FORK_BACKGROUND_DELEGATION_NOTE_VAR_0": "Value is wn = \"\" or \" To wait on background work, call Yield.\" (` ${d2t}`, d2t a module constant), a whole space-led sentence. It follows the full stop of \"Subagents notify you on completion.\" exactly where pristine places it after \"…when one completes.\", so it renders as its own sentence; the following \"Until then, …\" sentence is independent and still refers to completion."
+    }
+  },
+  "tool-description-task-background-subagent-notification": {
+    "bodyHash": "a5fdfb5692fb",
+    "pristineHash": "99aec0bf81e7",
+    "valueHash": "c59974104f91",
+    "reviewed": "2026-11-15 (CC 2.1.325)",
+    "tokens": {
+      "TOOL_DESCRIPTION_TASK_BACKGROUND_SUBAGENT_NOTIFICATION_VAR_0": "Value is wn = \"\" or \" To wait on background work, call Yield.\" (` ${d2t}`), a whole space-led sentence. It follows the full stop of the kept first sentence, as in pristine; the override deliberately cut the \"Never fabricate …\" sentence after it, so the bullet renders `- Subagents run in the background; you'll be notified when one completes. To wait on background work, call Yield.`"
+    }
+  },
+  "agent-prompt-summarization-no-tools-guard": {
+    "bodyHash": "43091594015a",
+    "pristineHash": "3f254771fcb5",
+    "valueHash": "c97c19219b65",
+    "reviewed": "2026-11-15 (CC 2.1.325)",
+    "tokens": {
+      "TEXT_ONLY_CRITICAL_HEADING": "Value is the module constant wIn = \"CRITICAL: Respond with TEXT ONLY\". It still opens the body, so the literal another prompt quotes (I5r: the text from \"${wIn}\" through the end of this message) still renders first and verbatim. Renders `CRITICAL: Respond with TEXT ONLY, no tool calls — you already have the context you need. Your response is a <summary> block.`: the heading leads a complete sentence; only pristine's \". Do NOT call any tools.\" and bullet list were folded into the trailing clause."
     }
   }
 }

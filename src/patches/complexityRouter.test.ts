@@ -145,6 +145,20 @@ const OW_SHAPE =
 
 const FILE_OW = FILE_YT.replace(YT_SHAPE, OW_SHAPE);
 
+// CC 2.1.325: the resolver accepts a model object or name and binds the name
+// first; every lookup, the DEFAULT and NORM take that bound name. Excerpt from
+// the pristine darwin 2.1.325 resolver + its tail-called normalizer.
+const JH_SHAPE =
+  'function Jh(e,n,{turnEffort:r,hookEffortValue:s,carriedEffort:f=D(N_e(e))}={}){if(!Ab(e))return;' +
+  'let d=N_e(e),c=Ee(d)!==null;if(s!==void 0){let L=typeof s==="number"&&c?g0(s):s;return Tmn(L,d)}' +
+  'let m=tb();' +
+  'if(m===null&&!c)return;let h=Wjr(d,f),v=m??(m===null?h:void 0)??r??n??h;' +
+  'if(typeof v==="number"&&c)v=g0(v);return Tmn(v,d)}' +
+  'function Tmn(e,n){let r=e;if(typeof r==="string"&&nT(r))r=gce(r,n);' +
+  'if(r==="max"&&!Uge(n))r="high";if(r==="xhigh"&&!JKe(n))r="high";return r}';
+
+const FILE_JH = FILE_YT.replace(YT_SHAPE, JH_SHAPE);
+
 const cfg = (
   over: Partial<ComplexityRouterConfig> = {}
 ): ComplexityRouterConfig => ({
@@ -471,6 +485,30 @@ describe('writeComplexityRouter', () => {
     expect(r).toContain(
       'await __tweakccRouterClassify(E,t,r.options.mainLoopModel);'
     );
+  });
+
+  it('wraps the CC 2.1.325 resolver on its bound model name', () => {
+    expect(FILE_JH).toContain(JH_SHAPE);
+    const out = writeComplexityRouter(FILE_JH, cfg());
+    expect(out).not.toBeNull();
+    const r = out as string;
+    expect(r).toContain(
+      'if(s!==void 0){let L=typeof s==="number"&&c?g0(s):s;return Tmn(L,d)}let m=tb();var __request=arguments[3];'
+    );
+    expect(r).toContain('if(__selected===d&&__st.baseline===void 0)');
+    expect(r).toContain('let __twkRE=__selected===d?__st.effort:void 0;');
+    expect(r).toContain(
+      'if(__twkRE&&m==null&&r==null&&(n==null||n===__st.baseline))'
+    );
+    expect(r).toContain('if(__twkRE==="max"&&!Uge(d))__twkRE="high";');
+    expect(r).toContain('if(__twkRE==="xhigh"&&!JKe(d))__twkRE="high";');
+    expect(r).toContain(
+      'if(m===null&&!c)return;let h=Wjr(d,f),v=m??(m===null?h:void 0)??r??n??h;if(typeof v==="number"&&c)v=g0(v);return Tmn(v,d)}'
+    );
+    expect(r).toContain(
+      'await __tweakccRouterClassify(E,t,r.options.mainLoopModel);'
+    );
+    expect(writeComplexityRouter(r, cfg())).toBe(r);
   });
 
   it('wraps the CC 2.1.288 resolver with the carriedEffort option', () => {

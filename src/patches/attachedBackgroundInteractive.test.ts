@@ -54,6 +54,17 @@ const TOOL_POOL =
   'function hbt(h,E){return h.toolPermissionContext===E.toolPermissionContext&&h.mcpTools===E.mcpTools&&h.githubRepo===E.githubRepo' +
   '&&h.workspaceRestricted===E.workspaceRestricted&&h.waitForMcpServersDeclared===E.waitForMcpServersDeclared}';
 
+// 2.1.325: the key and its comparison gained fields after
+// waitForMcpServersDeclared, and the key ends in a spread.
+const TOOL_POOL_325 =
+  'class Ae{toolPoolCache=null;computeToolPool(h,P,D){let H={toolPermissionContext:h.toolPermissionContext,mcpTools:h.mcp.tools,' +
+  'githubRepo:ntr(),workspaceRestricted:bC(),waitForMcpServersDeclared:N_t(),toolListRevision:tDr(),...{}},ee=this.toolPoolCache;' +
+  'if(ee!==null&&ZHt(ee.key,H))return ee.result;' +
+  'return this.toolPoolCache={key:H,result:ENt(h)},this.toolPoolCache.result}}' +
+  'function ZHt(h,P){return h.toolPermissionContext===P.toolPermissionContext&&h.mcpTools===P.mcpTools&&h.githubRepo===P.githubRepo' +
+  '&&h.workspaceRestricted===P.workspaceRestricted&&h.waitForMcpServersDeclared===P.waitForMcpServersDeclared' +
+  '&&h.toolListRevision===P.toolListRevision&&!0}';
+
 const FIXTURE =
   mark(135, 'chunk-9dpf1mt6') +
   DEFINING +
@@ -70,6 +81,8 @@ const FIXTURE =
   mark(1700, 'chunk-8kvgr3rw') +
   TOOL_POOL;
 
+const FIXTURE_325 = FIXTURE.replace(TOOL_POOL, TOOL_POOL_325);
+
 const BRIDGE = 'globalThis.__tweakccUnattendedBg';
 
 describe('writeAttachedBackgroundInteractive', () => {
@@ -83,38 +96,47 @@ describe('writeAttachedBackgroundInteractive', () => {
     );
   });
 
-  it('assembles the pool again when the predicate changes, and only then', () => {
-    const out = writeAttachedBackgroundInteractive(FIXTURE)!;
-    const engine = out.slice(out.indexOf('class Ae{'));
-    let built = 0;
-    let unattended = true;
-    const g = globalThis as Record<string, unknown>;
-    g.__tweakccUnattendedBg = () => unattended;
-    const make = new Function(
-      'ENt',
-      'uQt',
-      'AR',
-      'xWe',
-      `${engine};return Ae;`
+  it('keys the 2.1.325 tool pool cache on the unattended predicate', () => {
+    const out = writeAttachedBackgroundInteractive(FIXTURE_325)!;
+    expect(out).toContain(
+      `waitForMcpServersDeclared:N_t(),unattendedBg:${BRIDGE}(),toolListRevision:tDr(),...{}},ee=this.toolPoolCache;`
     );
-    const Engine = make(
-      () => ({ n: ++built }),
-      () => 'repo',
-      () => false,
-      () => false
+    expect(out).toContain(
+      '&&h.waitForMcpServersDeclared===P.waitForMcpServersDeclared&&h.unattendedBg===P.unattendedBg&&h.toolListRevision===P.toolListRevision&&!0}'
     );
-    const engineInstance = new Engine();
-    const state = { toolPermissionContext: {}, mcp: { tools: [] } };
-    engineInstance.computeToolPool(state);
-    engineInstance.computeToolPool(state);
-    expect(built).toBe(1);
-    unattended = false;
-    engineInstance.computeToolPool(state);
-    expect(built).toBe(2);
-    engineInstance.computeToolPool(state);
-    expect(built).toBe(2);
-    delete g.__tweakccUnattendedBg;
+    expect(writeAttachedBackgroundInteractive(out)).toBe(out);
   });
+
+  it.each([
+    ['2.1.294', () => FIXTURE, ['ENt', 'uQt', 'AR', 'xWe']],
+    ['2.1.325', () => FIXTURE_325, ['ENt', 'ntr', 'bC', 'N_t', 'tDr']],
+  ])(
+    '%s: assembles the pool again when the predicate changes, and only then',
+    (_v, fixture, names) => {
+      const out = writeAttachedBackgroundInteractive(fixture())!;
+      const engine = out.slice(out.indexOf('class Ae{'));
+      let built = 0;
+      let unattended = true;
+      const g = globalThis as Record<string, unknown>;
+      g.__tweakccUnattendedBg = () => unattended;
+      const make = new Function(...names, `${engine};return Ae;`);
+      const Engine = make(
+        () => ({ n: ++built }),
+        ...names.slice(1).map(() => () => false)
+      );
+      const engineInstance = new Engine();
+      const state = { toolPermissionContext: {}, mcp: { tools: [] } };
+      engineInstance.computeToolPool(state);
+      engineInstance.computeToolPool(state);
+      expect(built).toBe(1);
+      unattended = false;
+      engineInstance.computeToolPool(state);
+      expect(built).toBe(2);
+      engineInstance.computeToolPool(state);
+      expect(built).toBe(2);
+      delete g.__tweakccUnattendedBg;
+    }
+  );
 
   it('moves each background-only gate to the unattended predicate', () => {
     const out = writeAttachedBackgroundInteractive(FIXTURE);

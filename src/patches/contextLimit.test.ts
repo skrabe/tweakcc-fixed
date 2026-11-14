@@ -4,6 +4,15 @@ import { writeContextLimit } from './contextLimit';
 const OVERRIDE = '(+process.env.CLAUDE_CODE_CONTEXT_LIMIT||200000)';
 
 describe('writeContextLimit', () => {
+  it('overrides BOTH 200000 constants in the CC >=2.1.325 shape (two 1e6)', () => {
+    const input =
+      'q=1;var bat=200000,cD=200000,S1=1e6,E1=1e6,v1=32000,w1=128000;function uD(){}';
+    const out = writeContextLimit(input);
+    expect(out).toBe(
+      `q=1;var bat=${OVERRIDE},cD=${OVERRIDE},S1=1e6,E1=1e6,v1=32000,w1=128000;function uD(){}`
+    );
+  });
+
   it('overrides BOTH 200000 constants in the CC >=2.1.305 shape (1e6 in slot 3)', () => {
     const input =
       'q=1;var MCe=200000,c6=200000,n0=1e6,sE=32000,r0=128000;function JR(){}';

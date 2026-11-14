@@ -88,7 +88,7 @@ const EFFORT_CALLER_291 =
   'function bln({agentDefinition:e,isFork:t,model:r,effortState:n,inheritedLayers:s}){let l=Cz(n),i=Qk(n,r);return i}';
 
 const KEY_291 =
-  'let d=globalThis.__tweakccFablePlanModelFor?.(e.__tweakccPermissionMode??e.toolPermissionContext?.mode)' +
+  'let d=globalThis.__tweakccFablePlanModelFor?.(e.__tweakccPermissionMode??e.toolPermissionContext?.mode,e)' +
   '??n??e.mainLoopModelForSession??e.mainLoopModel??dl();';
 
 // A runnable 2.1.291-shaped bundle: every site the patch needs, as code that
@@ -140,6 +140,18 @@ const RUNNABLE_317 = RUNNABLE_291.replace(
 ).replace(
   'function p(e){return e.options.mainLoopModel}',
   'function p(e){return e.options?.mainLoopModel}'
+);
+
+// CC >= 2.1.325: the plan-mode resolver takes `setting` from its caller, and
+// side and forked contexts pass `getPlanModeSetting:void 0`.
+const RUNNABLE_325 = RUNNABLE_317.replace(
+  'function am(e){return Hcr(e).model}',
+  'function am(e){return Hcr({permissionMode:e.permissionMode,setting:wy(),mainLoopModel:e.mainLoopModel}).model}'
+).replace(
+  'function Hcr(e){let{permissionMode:n,mainLoopModel:r,exceeds200kTokens:s=!1}=e;' +
+    'if(n!=="plan")return{model:r,clampWarning:null};let g=wy(),',
+  'function Hcr({permissionMode:n,mainLoopModel:r,exceeds200kTokens:s=!1,setting:g}){' +
+    'if(n!=="plan")return{model:r,clampWarning:null};let '
 );
 
 type Runtime = {
@@ -205,7 +217,7 @@ describe('writeFablePlan', () => {
     // ask fableplan's answer for this request's permission mode first.
     const out = writeFablePlan(cli + EFFORT_LOOKUP, config())!;
     expect(out).toContain(
-      'return Z(e.settingsEffortTable,globalThis.__tweakccFablePlanModelFor?.(e.__tweakccPermissionMode??e.toolPermissionContext?.mode)??n??e.mainLoopModelForSession??'
+      'return Z(e.settingsEffortTable,globalThis.__tweakccFablePlanModelFor?.(e.__tweakccPermissionMode??e.toolPermissionContext?.mode,e)??n??e.mainLoopModelForSession??'
     );
     // tweakcc no longer pins its own levels or shadows the effort resolver
     expect(out).not.toContain('__tweakccFablePlanEffort');
@@ -218,7 +230,7 @@ describe('writeFablePlan', () => {
   it('keys the effort lookup through the CC 2.1.280 inverted table guard', () => {
     const out = writeFablePlan(cli + EFFORT_LOOKUP_280, config())!;
     expect(out).toContain(
-      'return Z(e.settingsEffortTable,globalThis.__tweakccFablePlanModelFor?.(e.__tweakccPermissionMode??e.toolPermissionContext?.mode)??n??e.mainLoopModelForSession??'
+      'return Z(e.settingsEffortTable,globalThis.__tweakccFablePlanModelFor?.(e.__tweakccPermissionMode??e.toolPermissionContext?.mode,e)??n??e.mainLoopModelForSession??'
     );
     // The guard itself is left exactly as CC wrote it.
     expect(out).toContain('if(se(e.settingsEffortTable))');
@@ -276,6 +288,55 @@ describe('writeFablePlan', () => {
     expect(out).toContain('function Cz(e){return Qk(e,dl())}');
     expect(out.split('__tweakccPermissionMode:').length - 1).toBe(2);
     expect(writeFablePlan(out, config())).toBe(out);
+  });
+
+  it('keys CC 2.1.325 effort on the context plan-mode setting the resolver gets', () => {
+    expect(RUNNABLE_325).toContain('setting:g}){');
+    const out = writeFablePlan(RUNNABLE_325, config())!;
+    expect(out).not.toBeNull();
+    expect(out).toContain(
+      'Qk(odt({...e.getAppState?.()??{},__tweakccPermissionMode:e.getAppState?de(e).mode:void 0,' +
+        '...e.getAppState&&{__tweakccPlanModeSetting:e.options?.getPlanModeSetting?.()}},'
+    );
+    expect(writeFablePlan(out, config())).toBe(out);
+    const rt = vm.runInNewContext(`${out};({setSel,bh,yd,Hcr})`) as Runtime & {
+      Hcr: (args: {
+        permissionMode: string;
+        mainLoopModel: string;
+        setting?: string;
+      }) => { model: string };
+    };
+    const state = {
+      toolPermissionContext: { mode: 'plan' },
+      settingsEffortTable: {
+        default: 'medium',
+        byModel: { 'claude-fable-5': 'max', 'claude-opus-5': 'low' },
+      },
+    };
+    const ctx = (getPlanModeSetting: (() => string) | undefined) => ({
+      getAppState: () => state,
+      options: { mainLoopModel: 'claude-opus-5', getPlanModeSetting },
+      permissionLayers: [],
+    });
+    const route = (setting: string | undefined) =>
+      rt.Hcr({
+        permissionMode: 'plan',
+        mainLoopModel: 'claude-opus-5',
+        setting,
+      }).model;
+    // Main context: the resolver gets fableplan, so effort is Fable's.
+    expect(route('fableplan')).toBe('claude-fable-5');
+    expect(rt.bh(ctx(() => 'fableplan'))).toBe('max');
+    // Side or forked context: no setting, so the resolver keeps the
+    // context's model and effort must follow it, not the session getter.
+    expect(route(undefined)).toBe('claude-opus-5');
+    expect(rt.bh(ctx(undefined))).toBe('low');
+    // A context naming another alias does not get Fable either.
+    expect(rt.bh(ctx(() => 'opus'))).toBe('low');
+    // No request context (hook input without one): the session getter.
+    expect(rt.yd({}, '/', 'plan')).toBe(undefined);
+    rt.setSel('opus');
+    expect(rt.bh(ctx(() => 'fableplan'))).toBe('max');
   });
 
   it('routes CC 2.1.317 effort through the filter, picked model and all', () => {
@@ -681,7 +742,7 @@ describe('writeFablePlan', () => {
         'if(lf()==="fableplan")return{model:Ot("fable"),clampWarning:null};let u=lf(),'
     );
     expect(out).toContain(
-      'settingsEffortTable,globalThis.__tweakccFablePlanModelFor?.(e.__tweakccPermissionMode??e.toolPermissionContext?.mode)??n??'
+      'settingsEffortTable,globalThis.__tweakccFablePlanModelFor?.(e.__tweakccPermissionMode??e.toolPermissionContext?.mode,e)??n??'
     );
     expect(writeFablePlan(out!, config())).toBe(out);
   });
@@ -899,6 +960,78 @@ describe('writeFablePlan', () => {
       'claude-opus-5'
     );
     expect(resolve('sonnet', plan)).toBe('claude-opus-5');
+  });
+
+  it('applies against the CC 2.1.325 parameter-destructured resolver', () => {
+    // 2.1.325: the resolver destructures `setting` in its parameter list and
+    // never calls the getter; callers pass `setting:GETTER()`.
+    const resolver251 =
+      'function hp(e){let{permissionMode:t,mainLoopModel:r,exceeds200kTokens:o=!1}=e;' +
+      'if(t!=="plan")return r;let u=lf(),d=qde(u);if(d===null)return r;return r}';
+    const resolver325 =
+      'function lf(){return SEL}' +
+      'function hp(e){return YQt({permissionMode:e.mode,setting:lf(),mainLoopModel:e.model}).model}' +
+      'function qde(e){if(e==="opusplan"||e==="opusplan[1m]")return"opus";return null}' +
+      'function YQt({permissionMode:t,mainLoopModel:r,exceeds200kTokens:o=!1,setting:u}){' +
+      'if(t!=="plan")return{model:r,clampWarning:null};let d=qde(u);' +
+      'if(d===null||d==="opus"&&o)return{model:r,clampWarning:null};return{model:"claude-opus-5",clampWarning:null}}';
+    const src = cli251.replace(resolver251, resolver325);
+    expect(src).toContain(resolver325);
+    const out = writeFablePlan(src, config());
+    expect(out).not.toBeNull();
+    expect(out).toContain(
+      'globalThis.__tweakccFablePlanModelFor=(m,s)=>m==="plan"&&(s&&"__tweakccPlanModeSetting"in s?s.__tweakccPlanModeSetting:lf())==="fableplan"?Ot("fable"):void 0;' +
+        'function YQt({permissionMode:t,mainLoopModel:r,exceeds200kTokens:o=!1,setting:u}){' +
+        'if(t!=="plan")return{model:r,clampWarning:null};' +
+        'if(u==="fableplan")return{model:Ot("fable"),clampWarning:null};let d=qde(u);'
+    );
+    expect(writeFablePlan(out!, config())).toBe(out);
+
+    const resolve = vm.runInNewContext(
+      `var SEL="opus";function Ot(a){return "model:"+a}` +
+        `${out!.slice(out!.indexOf('function lf('), out!.indexOf('function xs('))}` +
+        `;(sel,args)=>{SEL=sel;return [YQt(args).model,globalThis.__tweakccFablePlanModelFor(args.permissionMode,"setting"in args?{__tweakccPlanModeSetting:args.setting}:undefined)]}`
+    ) as (
+      sel: string,
+      args: { permissionMode: string; mainLoopModel: string; setting?: string }
+    ) => [string, string | undefined];
+    const plan = { permissionMode: 'plan', mainLoopModel: 'claude-opus-5' };
+    expect(resolve('fableplan', { ...plan, setting: 'fableplan' })).toEqual([
+      'model:fable',
+      'model:fable',
+    ]);
+    expect(
+      resolve('fableplan', {
+        ...plan,
+        permissionMode: 'default',
+        setting: 'fableplan',
+      })
+    ).toEqual(['claude-opus-5', undefined]);
+    expect(resolve('opus', { ...plan, setting: 'opus' })).toEqual([
+      'claude-opus-5',
+      undefined,
+    ]);
+    // A context that hands no setting gets neither Fable nor Fable's effort,
+    // even while the session has fableplan selected.
+    expect(resolve('fableplan', { ...plan, setting: undefined })).toEqual([
+      'claude-opus-5',
+      undefined,
+    ]);
+  });
+
+  it('fails loudly when no CC 2.1.325 resolver call names the getter', () => {
+    const resolver251 =
+      'function hp(e){let{permissionMode:t,mainLoopModel:r,exceeds200kTokens:o=!1}=e;' +
+      'if(t!=="plan")return r;let u=lf(),d=qde(u);if(d===null)return r;return r}';
+    const src = cli251.replace(
+      resolver251,
+      'function YQt({permissionMode:t,mainLoopModel:r,exceeds200kTokens:o=!1,setting:u}){' +
+        'if(t!=="plan")return{model:r,clampWarning:null};return{model:r,clampWarning:null}}'
+    );
+    expect(writeFablePlan(src, config())).toBeNull();
+    expect(console.error).toHaveBeenCalledWith(
+      expect.stringContaining('failed to find the selected-alias getter')
+    );
   });
 
   it('is idempotent on the CC 2.1.251 shape', () => {

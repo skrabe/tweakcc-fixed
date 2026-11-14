@@ -308,6 +308,12 @@ export const writeFffInstructions = (
   guidance = FFF_BASH_GUIDANCE
 ): string | null => {
   const renderer =
+    // CC 2.1.325+: a `let` derived from the third parameter precedes the
+    // fold assignment.
+    readScope(
+      file,
+      /(?:^|[;}])function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+),([$\w]+)(?:,[$\w]+)*\)\{let [$\w]+=\4===void 0\?void 0:[$\w]+\(\4\);\2=([$\w]+)\(\2,\5\?\.accountMemoryWithheld,([$\w]+)\(\(\)=>\3\)\);let /g
+    ) ??
     // CC 2.1.319+: the tools parameter lost its `=[]` default, a fifth
     // parameter follows, and the fold assignment ends the statement.
     readScope(
@@ -388,10 +394,12 @@ export const writeFffInstructions = (
   const sites = [
     descriptionSite,
     renderer &&
-      selectSite(
+      // CC 2.1.325+: the declaration ends after `.messages` and the
+      // `isKnownType`/`recordedRole` destructure moved to a later statement.
+      (selectSite(
         file,
         renderer,
-        /([$\w]+)=([$\w]+)\?\.withoutAttachmentHooks\?([$\w]+)\(([$\w]+),([$\w]+)\):([$\w]+)\(\4,\5,([$\w]+)\),([$\w]+)=\1\.messages,\{isKnownType:([$\w]+),recordedRole:([$\w]+)\}=\1/g,
+        /([$\w]+)=([$\w]+)\?\.withoutAttachmentHooks\?([$\w]+)\(([$\w]+),([$\w]+)\):([$\w]+)\(\4,\5,([$\w]+)\),([$\w]+)=\1\.messages;/g,
         '__tweakccFffAutoMode',
         autoHelper,
         guidance,
@@ -400,7 +408,20 @@ export const writeFffInstructions = (
           args: [`${match[4]}.attachment`, renderer.header[3]],
         }),
         8
-      ),
+      ) ??
+        selectSite(
+          file,
+          renderer,
+          /([$\w]+)=([$\w]+)\?\.withoutAttachmentHooks\?([$\w]+)\(([$\w]+),([$\w]+)\):([$\w]+)\(\4,\5,([$\w]+)\),([$\w]+)=\1\.messages,\{isKnownType:([$\w]+),recordedRole:([$\w]+)\}=\1/g,
+          '__tweakccFffAutoMode',
+          autoHelper,
+          guidance,
+          match => ({
+            original: `${match[1]}.messages`,
+            args: [`${match[4]}.attachment`, renderer.header[3]],
+          }),
+          8
+        )),
   ];
   if (sites.some(site => site === null)) {
     console.error(
