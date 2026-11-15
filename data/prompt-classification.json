@@ -10503,7 +10503,12 @@
   "3e7ade4ec3e82c2b2cf03605595509ae079a9966": { "facing": "internal" },
   "3e7b38eff75ef7d201bb2ba7e9c7caa68f8662f6": { "facing": "internal" },
   "3e812370688b6d057e636719de75399c9e962eec": { "facing": "ui" },
-  "3e823ce6b3c343724404c9eaced9cf1fe52f59fa": { "facing": "ui" },
+  "3e823ce6b3c343724404c9eaced9cf1fe52f59fa": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-repo-too-large",
+    "name": "Slash Command: /ultrareview repo too large",
+    "desc": "Tells the user the repository is too large to bundle for ultrareview and to push a PR and review it by number instead."
+  },
   "3e86c2183114d65c4fcd80bbecd8f2edde6dbd33": {
     "facing": "model",
     "id": "tool-result-artifact-type-lock-read-note",
@@ -19358,7 +19363,12 @@
   },
   "73a03fca77078475b9ef452078e4bea36bda25f6": { "facing": "internal" },
   "73a2f90d79737457b82afe3fb6e1465b72154b4a": { "facing": "ui" },
-  "73a34666489538e9fa0dd29b692b4a995f5aaa05": { "facing": "ui" },
+  "73a34666489538e9fa0dd29b692b4a995f5aaa05": {
+    "facing": "model",
+    "id": "slash-command-privacy-settings-help-improve-set-read-back",
+    "name": "Slash Command: /privacy-settings — model training setting read back",
+    "desc": "/privacy-settings result reporting the 'Help improve our AI models' value read back from the account after the settings dialog."
+  },
   "73a82cd75e03304fff8e8af2f1b565c423c4611a": { "facing": "ui" },
   "73ad85c1b816a2fe0fb017294ed3b0d163ad8c64": {
     "facing": "model",
@@ -20603,12 +20613,7 @@
   "7ba0090fd4bf515fbd97e22fe4e226cdaced7d93": { "facing": "ui" },
   "7ba8d72876e4f145ece611a334987f6928a7dc54": { "facing": "ui" },
   "7bae3f3f0643d5925c4c100b1d3c1ec686596b5f": { "facing": "ui" },
-  "7bb3feb49c6b9a3db997cc3ad4400139b909f86d": {
-    "facing": "model",
-    "id": "slash-command-plugin-eval-error",
-    "name": "Slash Command: /plugin eval — evaluation error",
-    "desc": "Bare cross-glyph error line. /plugin eval returns it when running the evaluations threw, and /plugin install when installing threw. The CLI uses the same bare template."
-  },
+  "7bb3feb49c6b9a3db997cc3ad4400139b909f86d": { "facing": "ui" },
   "7bb9106f646517023af4dc18837542042f067bac": { "facing": "internal" },
   "7bbce2173e5f54141ed06e38f67ece8e40f7d1f1": {
     "facing": "model",
@@ -24615,7 +24620,12 @@
   },
   "92b2b9d091e0c854a04de5a5af8468ea3896560a": { "facing": "internal" },
   "92b5297acf9432d378efa50923ab1596b29db933": { "facing": "ui" },
-  "92b61710c2e0f66513746be198bcee54b5bb90ee": { "facing": "ui" },
+  "92b61710c2e0f66513746be198bcee54b5bb90ee": {
+    "facing": "model",
+    "id": "slash-command-ultrareview-cloud-session-start-failed",
+    "name": "Slash Command: /ultrareview could not start the cloud session",
+    "desc": "Reports that /ultrareview could not start the cloud review session, with the reason."
+  },
   "92ba64c8b58359034738059a8d69cded35e23f8e": { "facing": "internal" },
   "92bca8be692a1cb0aeadd8c2c561a28970ce11c1": { "facing": "internal" },
   "92c00323151c5107611ac69497b224b84517551a": { "facing": "internal" },
@@ -153190,18 +153200,8 @@
     "desc": "Why-text for denies under permissions.blockWritesOutsideWorkingDirectories, without the add-dir advice."
   },
   "ab5b2c9b09cc289eedb0837b9c620e50f7a4d1ab": { "facing": "ui" },
-  "21f896fca72f6deb4903650c05fecc2b41e937b9": {
-    "facing": "model",
-    "id": "data-sandbox-profile-grant-cancelled-lead",
-    "name": "Data: sandbox profile grant cancelled (lead)",
-    "desc": "Lead fragment of the srt_win_cancelled error when the Windows profile grant was cancelled."
-  },
-  "2c192fae435f0a5249fe17d19396f07b7be12a71": {
-    "facing": "model",
-    "id": "data-sandbox-profile-grant-cancelled-mid",
-    "name": "Data: sandbox profile grant cancelled (mid)",
-    "desc": "Middle fragment of the srt_win_cancelled message: recorded as incomplete, run again or remove it."
-  },
+  "21f896fca72f6deb4903650c05fecc2b41e937b9": { "facing": "internal" },
+  "2c192fae435f0a5249fe17d19396f07b7be12a71": { "facing": "internal" },
   "a6cd0b9848f43d688c51b02b1f2ae3a96b7dbf45": { "facing": "internal" },
   "eec64a14160ba670c7caba8ebec99e29c0c1780e": { "facing": "internal" },
   "e1963e4b68e4364812a6bdcda4ecb5d337db6c98": {
@@ -158467,8 +158467,18 @@
   "b4c4a06626768c71af76ae202127c9a74a3201a6": { "facing": "internal" },
   "895148e8a2a4a27cd5c1fea36016c8592549091c": { "facing": "ui" },
   "e502569cdffac703975ef635e3cc384e812ad43f": { "facing": "internal" },
-  "84f9dd128e8ec9f6c14fc9c45ebc1e8e2d322f87": { "facing": "internal" },
-  "3ebc16aa5990c094b3277309cdadfd496031ee16": { "facing": "internal" },
+  "84f9dd128e8ec9f6c14fc9c45ebc1e8e2d322f87": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-engine-create-hook-matcher",
+    "name": "Slash Command: /plugin validate engine.create hook has a matcher",
+    "desc": "Construct named in the /plugin validate error when the engine.create hook registration carries a matcher."
+  },
+  "3ebc16aa5990c094b3277309cdadfd496031ee16": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-engine-create-key-written-twice",
+    "name": "Slash Command: /plugin validate engine.create key written twice",
+    "desc": "Construct named in the /plugin validate error when the engine.create hook's returned object writes one key twice."
+  },
   "2b668f0fd18454a8a5a69316581654c92113ec6d": {
     "facing": "model",
     "id": "tool-result-mcp-tool-call-requires-approval",
@@ -158481,18 +158491,78 @@
     "name": "Tool result: MCP approval denied",
     "desc": "Tool result returned when the approval for a named remote MCP tool call was denied."
   },
-  "c756232b947255aa484bc9435e49a3c4d12861e3": { "facing": "internal" },
-  "c1e3831177ab9da226c3d80f2875372bbae3e883": { "facing": "internal" },
-  "05d8287ac832b32e7641fccac03066b537723f9f": { "facing": "internal" },
-  "7ebee88897e241d313698fd9c36df0a550043962": { "facing": "internal" },
-  "2b1f6d6721f5e17f58758c1b9a7531aef94651c7": { "facing": "internal" },
-  "098b926c3c0f9c187e1a307419727a1c32321d71": { "facing": "internal" },
-  "1057bdc5d859fb8e211118bd75c6a33d1122bddb": { "facing": "internal" },
-  "391f3178dae5fd339c5ea93578d02da71ca6b8eb": { "facing": "internal" },
-  "698ed5963c08524e02d58bf8e6a46485ad8ebfec": { "facing": "internal" },
-  "e9f24241addc0355a58926e4ed6f313f8b90bd3e": { "facing": "internal" },
-  "bfc52790bb486d52c642136ab396ac39799e0efb": { "facing": "internal" },
-  "20e886fb9a91542baf10d241c68ecc37a88bed32": { "facing": "internal" },
+  "c756232b947255aa484bc9435e49a3c4d12861e3": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-hooks-telemetry-note",
+    "name": "Slash Command: /plugin validate hooks telemetry note",
+    "desc": "Plugin validate note naming the telemetry a hooks module reports."
+  },
+  "c1e3831177ab9da226c3d80f2875372bbae3e883": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-advice-note",
+    "name": "Slash Command: /plugin validate advice note",
+    "desc": "Plugin validate advice line about a hooks module, with where it applies."
+  },
+  "05d8287ac832b32e7641fccac03066b537723f9f": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-answers-own-command-note",
+    "name": "Slash Command: /plugin validate answers-its-own-command note",
+    "desc": "Plugin validate note listing a hook registration that answers its own command."
+  },
+  "7ebee88897e241d313698fd9c36df0a550043962": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-gating-hook-note",
+    "name": "Slash Command: /plugin validate gating hook note",
+    "desc": "Plugin validate note listing each gating hook with or without a .catch handler."
+  },
+  "2b1f6d6721f5e17f58758c1b9a7531aef94651c7": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-uses-break-prompt-cache-note",
+    "name": "Slash Command: /plugin validate breakPromptCache note",
+    "desc": "Plugin validate note that the hooks module uses breakPromptCache."
+  },
+  "098b926c3c0f9c187e1a307419727a1c32321d71": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-types-declares-state-label",
+    "name": "Slash Command: /plugin validate types declares state",
+    "desc": "Plugin validate note label listing the state keys a types file declares."
+  },
+  "1057bdc5d859fb8e211118bd75c6a33d1122bddb": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-types-declares-on-dollar-label",
+    "name": "Slash Command: /plugin validate types declares on $",
+    "desc": "Plugin validate note label listing the $ members a types file declares."
+  },
+  "391f3178dae5fd339c5ea93578d02da71ca6b8eb": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-surface-modules-label",
+    "name": "Slash Command: /plugin validate surface modules",
+    "desc": "Plugin validate note label listing a hooks module's surface modules."
+  },
+  "698ed5963c08524e02d58bf8e6a46485ad8ebfec": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-state-reads-label",
+    "name": "Slash Command: /plugin validate state reads",
+    "desc": "Plugin validate note label listing the state a hooks module reads."
+  },
+  "e9f24241addc0355a58926e4ed6f313f8b90bd3e": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-state-writes-label",
+    "name": "Slash Command: /plugin validate state writes",
+    "desc": "Plugin validate note label listing the state a hooks module writes."
+  },
+  "bfc52790bb486d52c642136ab396ac39799e0efb": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-env-reads-label",
+    "name": "Slash Command: /plugin validate env reads",
+    "desc": "Plugin validate note label listing the environment variables a hooks module reads."
+  },
+  "20e886fb9a91542baf10d241c68ecc37a88bed32": {
+    "facing": "model",
+    "id": "slash-command-plugin-validate-env-writes-label",
+    "name": "Slash Command: /plugin validate env writes",
+    "desc": "Plugin validate note label listing the environment variables a hooks module writes."
+  },
   "750616518329941a4679b3fecbae8c9a8318983a": { "facing": "ui" },
   "5663b2991f58b3b4f1277d2e6fb1cc826ccfef32": { "facing": "ui" },
   "d29e3c2f9426dc198359026a9dc4d841d4ab8195": { "facing": "internal" },

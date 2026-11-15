@@ -656,5 +656,38 @@
     "verdict": "glue",
     "note": "Fjo @18552090 calls fXn(n,r,\"comment events unsupported\") when a Claude Doc registered without comment events; fXn @18552826 queues sn({…event:`@Claude comments on the Claude Doc ${n} … its comment wake was not registered (${r}).…`}) as a task-notification (model). The literal is the parenthesised reason code, the same slot the other call fills with `${l}: ${b}`; the instruction (read the comments yourself, do not claim to be subscribed) is host text.",
     "text": "comment events unsupported"
+  },
+  "767340d6ccb0133f": {
+    "promptId": "tool-result-bash-sandbox-mxc-setting-unsupported",
+    "builder": "n",
+    "param": "r",
+    "text": "COMMAND_NOT_SUPPORTED",
+    "verdict": "not-a-slot",
+    "note": "not-a-slot: XI @7798306 is the bundled SOCKS5 server's reply helper (`if(e.command!==\"connect\")return n(\"COMMAND_NOT_SUPPORTED\")`); the argument is a reply-status key looked up in Yx and written to the socket as a byte (`Buffer.from([5,Yx[e],…])`). It never becomes text. The gate attributed it to the sandbox-mxc builder n because fnByName is last-wins across modules"
+  },
+  "9c79da1855242956": {
+    "promptId": "tool-description-invoke-skill",
+    "promptIds": ["tool-description-skill-invoke-packaged-instructions"],
+    "builder": "KLn",
+    "param": "e",
+    "text": "a listing from the system",
+    "verdict": "glue",
+    "note": "KLn @13571798 builds the Skill tool description (`Available skills appear in ${e} with one-line descriptions.`); the argument only names where the listing is (sibling R7r passes `a system-reminder listing`). The instruction (call the tool first, exact name from the listing) is host text"
+  },
+  "e3a9d16e69a42eb1": {
+    "promptId": "tool-result-worktree-create-unexpected-file-found",
+    "builder": "jys",
+    "param": "n",
+    "text": "Cannot create worktree.",
+    "verdict": "glue",
+    "note": "jys @15024564 starts the refusal with `${n} Found an unexpected file, ${path}, after git ran…`; n is the leading label of the message (`Cannot create worktree.`), the remedy (what to check, what not to run) is host text"
+  },
+  "9bb5cfa2820150ff": {
+    "promptId": "tool-result-sendmessage-paused-automatic-loop",
+    "builder": "w",
+    "param": "t",
+    "text": "Remote Control and cloud sessions",
+    "verdict": "glue",
+    "note": "w @20744445 builds `Not delivered: … Sending to ${t} is paused until your user's next prompt starts a turn in this session.`; t only names the target (sibling call passes `sessions on this machine`); the constraint is host text"
   }
 }
