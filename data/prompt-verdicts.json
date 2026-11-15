@@ -7722,9 +7722,9 @@
     "why": "Verified on every axis. (a) Current state: python os.path.exists confirms no system-prompt-exited-auto-mode.md in system-prompts-opus-5 (nor via the ~/.tweakcc/system-prompts symlink), so pristine applies today and this trim creates the override. (b) Not shadowed: I scanned every .md frontmatter in the opus-5 set for a shadows: list naming this id — none. (c) Placeholders intact: catalogue entry i"
   },
   "system-prompt-fable-5-model-identity-2": {
-    "verdict": "pristine-keep",
-    "version": "2.1.257",
-    "why": "Unique Fable 5 (not 5.1) identity and the only deployed copy of https://www.anthropic.com/news/claude-fable-5-mythos-5. Empty 5.1 identity cannot carry these frozen facts. Conditional model-identity is not a disuse wipe. Slop check: Identity facts plus a question-gated URL. Mild 'Claude can direct them' hedging, but the sentence is tripwire-frozen (only, URL, two-model contrast). No CAPS theater or anti-laziness. Duplicate check: system-prompt-fable-5-model-identity is empty in both opus-5 and fable-5-1, so it covers nothing. The Fable/Mythos URL appears only in this id. Model-picker taglines do not state shared weights, dual-use vs approved-orgs, or the news URL."
+    "verdict": "wipe-merge",
+    "version": "2.1.325",
+    "why": "Fable 5 identity paragraph, blanked in the Opus 5.5 pass like the other Fable identity overrides: the environment block already names the model. Supersedes the 2.1.257 keep."
   },
   "system-prompt-fast-mode-environment-note": {
     "verdict": "pristine-keep",
