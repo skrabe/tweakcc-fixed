@@ -1873,13 +1873,19 @@ describe('edited-text-file 2.1.322 multi-local shape', () => {
 
   it('still reports failure for an unrecognised pristine shape', () => {
     const err = vi.spyOn(console, 'error').mockImplementation(() => {});
-    expect(
-      editedTextFile.apply(
-        'edited_text_file:(e)=>Wa([Mk({content:e.snippet===""?`a`:`b`,isMeta:!0})])',
-        sub('edited-text-file', '{{filename}}'),
-        false
-      )
-    ).toBeNull();
+    for (const src of [
+      'edited_text_file:(e)=>Wa([Mk({content:e.snippet===""?`a`:`b`,isMeta:!0})])',
+      'edited_text_file:(e)=>Wa([Mk({content:e.snippet!==""?`a`:`b`,isMeta:!0})])',
+      'edited_text_file:(e)=>Wa([Mk({content:(e.snippet===""?`a`:`b`),isMeta:!0})])',
+      'edited_text_file:(e)=>{let n=`x`;return Wa([Mk({content:Qz(e,n),isMeta:!0})])}',
+    ])
+      expect(
+        editedTextFile.apply(
+          src,
+          sub('edited-text-file', '{{filename}}'),
+          false
+        )
+      ).toBeNull();
     err.mockRestore();
   });
 

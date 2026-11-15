@@ -2135,11 +2135,21 @@ const isEditedTextFileSpliced = (content: string): boolean => {
   const rest = content.slice(m.index + m[0].length);
   const at = rest.indexOf('({content:');
   if (at < 0) return false;
-  if (rest.startsWith(`${m[1]}.snippet===""?`, at + '({content:'.length))
+  const head = rest.slice(0, at);
+  if (
+    !/^(?:\{let [\s\S]*;return )?(?:\(\(c\)=>c\.trim\(\)===""\?\[\]:)?[$\w]+\(\[[$\w]+$/.test(
+      head
+    )
+  )
     return false;
-  return /^(?:\{let [\s\S]*;return )?(?:\(\(c\)=>c\.trim\(\)===""\?\[\]:)?[$\w]+\(\[[$\w]+$/.test(
-    rest.slice(0, at)
-  );
+  const emitted = (s: string) =>
+    s.startsWith('`') || s.startsWith('((L)=>{let o=[];');
+  const value = rest.slice(at + '({content:'.length);
+  if (head.includes('((c)=>c.trim()===""?[]:')) {
+    const tail = 'c,isMeta:!0})]))(';
+    return value.startsWith(tail) && emitted(value.slice(tail.length));
+  }
+  return emitted(value);
 };
 
 const EDITED_TEXT_FILE_INJECTION: ReminderInjection = {
