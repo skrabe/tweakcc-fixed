@@ -99,6 +99,36 @@ describe('README statistics', () => {
     expect(fs.readFileSync(path.join(root, 'README.md'), 'utf8')).toBe(readme);
   });
 
+  it('takes the catalogue from upstream prompts/X.Y.Z when main lacks it', () => {
+    const { root, run } = fixture('2.1.316');
+    const git = (...args) =>
+      execFileSync('git', args, { cwd: root, encoding: 'utf8', env }).trim();
+    const stash = path.join(root, 'branch-catalogue.json');
+    fs.writeFileSync(
+      stash,
+      JSON.stringify({ prompts: [{ id: 'x' }, { id: 'y' }] })
+    );
+    const base = git('rev-parse', 'refs/remotes/upstream/main');
+    const work = fs.mkdtempSync(path.join(os.tmpdir(), 'readme-stats-br-'));
+    directories.push(work);
+    git('worktree', 'add', '--quiet', '--detach', work, base);
+    const wgit = (...args) =>
+      execFileSync('git', args, { cwd: work, encoding: 'utf8', env }).trim();
+    fs.copyFileSync(
+      stash,
+      path.join(work, 'data/prompts/prompts-2.1.317.json')
+    );
+    wgit('add', '.');
+    wgit('commit', '--quiet', '-m', 'version branch');
+    const branchCommit = wgit('rev-parse', 'HEAD');
+    git('update-ref', 'refs/remotes/upstream/prompts/2.1.317', branchCommit);
+    const result = run();
+    expect(result.status, result.stderr).toBe(0);
+    const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
+    expect(readme).toMatch(/Prompt sites \(CC 2\.1\.317\)\s*\|\s*3\s*\|\s*2/);
+    expect(readme).toContain(`/tree/${branchCommit}`);
+  });
+
   it('rejects duplicate patch IDs rather than inflating coverage', () => {
     const { root, readme, write, run } = fixture();
     write(

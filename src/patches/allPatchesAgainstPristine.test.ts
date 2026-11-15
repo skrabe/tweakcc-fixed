@@ -505,11 +505,7 @@ const EXPECTED_NOOP: Partial<Record<PatchId, string>> = {
 
 // Patches that apply but log an error on the pristine bundle, which the
 // harness reports as "partially applied". Each needs a reason and a backlog fix.
-const EXPECTED_PARTIAL: Partial<Record<PatchId, string>> = {
-  toolsets:
-    'code-split bundles have no React global: step 3 falls back to the text ' +
-    '/toolset command after the shared React lookup logs a failure',
-};
+const EXPECTED_PARTIAL: Partial<Record<PatchId, string>> = {};
 
 type Outcome = 'applied' | 'no-op' | 'null';
 

@@ -124,6 +124,12 @@ const CURATED_IDENTIFIER_MAPS = {
       identifierMap: { 0: 'TOOL_DESCRIPTION_BASH_SANDBOX_TMPDIR_VAR_0' },
     },
   ],
+  'system-reminder-auto-mode-no-verdict-after-another-hook-rewrite': [
+    {
+      identifiers: [0, 1, 1],
+      identifierMap: { 0: 'AUTO_MODE_CLASSIFIER_NAME', 1: 'TOOL_NAME' },
+    },
+  ],
   'system-reminder-plan-mode-workflow': [
     {
       // CC 2.1.299 hoisted the closing NOTE sentence into its own constant, so

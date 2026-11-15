@@ -2493,13 +2493,15 @@ export const writeToolsets = (
   // Step 3: Add toolset component definition (JSX UI). On ESM-split builds
   // React is not a global in the insertion module — skip the component and
   // register a text /toolset command instead.
-  const withUi = writeToolsetComponentDefinition(
-    result,
-    toolsets,
-    defaultToolset,
-    acceptEditsToolset,
-    planModeToolset
-  );
+  const withUi = getReactVar(result)
+    ? writeToolsetComponentDefinition(
+        result,
+        toolsets,
+        defaultToolset,
+        acceptEditsToolset,
+        planModeToolset
+      )
+    : null;
   if (withUi) {
     result = withUi;
   } else {

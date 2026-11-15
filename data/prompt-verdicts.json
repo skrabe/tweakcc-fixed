@@ -7722,9 +7722,9 @@
     "why": "Verified on every axis. (a) Current state: python os.path.exists confirms no system-prompt-exited-auto-mode.md in system-prompts-opus-5 (nor via the ~/.tweakcc/system-prompts symlink), so pristine applies today and this trim creates the override. (b) Not shadowed: I scanned every .md frontmatter in the opus-5 set for a shadows: list naming this id — none. (c) Placeholders intact: catalogue entry i"
   },
   "system-prompt-fable-5-model-identity-2": {
-    "verdict": "pristine-keep",
-    "version": "2.1.257",
-    "why": "Unique Fable 5 (not 5.1) identity and the only deployed copy of https://www.anthropic.com/news/claude-fable-5-mythos-5. Empty 5.1 identity cannot carry these frozen facts. Conditional model-identity is not a disuse wipe. Slop check: Identity facts plus a question-gated URL. Mild 'Claude can direct them' hedging, but the sentence is tripwire-frozen (only, URL, two-model contrast). No CAPS theater or anti-laziness. Duplicate check: system-prompt-fable-5-model-identity is empty in both opus-5 and fable-5-1, so it covers nothing. The Fable/Mythos URL appears only in this id. Model-picker taglines do not state shared weights, dual-use vs approved-orgs, or the news URL."
+    "verdict": "wipe-merge",
+    "version": "2.1.325",
+    "why": "Fable 5 identity paragraph, blanked in the Opus 5.5 pass like the other Fable identity overrides: the environment block already names the model. Supersedes the 2.1.257 keep."
   },
   "system-prompt-fast-mode-environment-note": {
     "verdict": "pristine-keep",
@@ -91105,5 +91105,140 @@
     "verdict": "pristine-keep",
     "version": "2.1.325",
     "why": "The whenToUse line reaches the model only through SHs (`${e.name}: ${e.whenToUse}` in the deferred-tool listing, gated on alwaysListsWhenToUse/tengu_snug_nautilus); the tool's description arrives only via a ToolSearch result, so no description carrier provably co-renders with this line. Strongest cut: wipe-merge into tool-description-request-computer ('Does nothing… Tools whose names start with mcp__remote-devices__… use whichever of them fits'). Fails co-render (DEFERRED), and the stub result renders only after a wasted call. Frozen (mcp__${slot}__ prefix); keep."
+  },
+  "agent-prompt-summarization-text-only-heading": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "Strongest cut: de-CAPS or wipe the heading, since bIn's following '. Do NOT call any tools.' carries the no-tools rule. Fails on the externalRefs rule: wIn is also read at @13323253 in I5r ('the text from \"${wIn}\" through the end of this message'), which names this literal to mark where the system-issued request starts. Rewording or emptying it breaks that marker, and the fragment boundary would leave a dangling '. Do NOT call any tools.'"
+  },
+  "slash-command-plugin-validate-advice-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut possible: the two slots are the advice text and where it applies, the only copy of that validator output. Dropping either slot breaks the identifierMap contract."
+  },
+  "slash-command-plugin-validate-answers-own-command-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No legitimate cut: it is the sole label telling the reader which listed registration answers its own command (fs output via Oe.map). It carries the ${...registration} member slot."
+  },
+  "slash-command-plugin-validate-engine-create-hook-matcher": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut: it is the refuse() argument naming the offending construct when s!==void 0 in crr. It is the only text identifying the error, and the sibling throws are exclusive branches."
+  },
+  "slash-command-plugin-validate-engine-create-key-written-twice": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut: it is the sole message for v.has(ne). It carries the ${U0(ne)} call slot, and no sibling throw renders with it."
+  },
+  "slash-command-plugin-validate-env-reads-label": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut: the Qpe label heads the list of env vars the hooks module reads in fs. Without it the list is unlabelled and cannot be told apart from env writes."
+  },
+  "slash-command-plugin-validate-env-writes-label": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut: it is the only label for the env-writes list in fs output, and emptying it makes the list ambiguous next to env reads."
+  },
+  "slash-command-plugin-validate-gating-hook-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut: it is the sole label stating whether each gating hook has .catch. The neighbour after it is the expression M (registration), not a catalogue id, so no crossing sentence changes. The ternary slot must stay."
+  },
+  "slash-command-plugin-validate-hooks-telemetry-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut: it is the only line naming the telemetry a hooks module reports, emitted at both sites (mve and fs)."
+  },
+  "slash-command-plugin-validate-state-reads-label": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut: it is the sole label for the state-reads list in validate output."
+  },
+  "slash-command-plugin-validate-state-writes-label": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut: it is the sole label for the state-writes list in validate output."
+  },
+  "slash-command-plugin-validate-surface-modules-label": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut: it is the only label for the hooks module's surface-module list."
+  },
+  "slash-command-plugin-validate-types-declares-on-dollar-label": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut: it is the sole Qpe label (Rt @54232085) for the $ members a types file declares, and it carries the path slot."
+  },
+  "slash-command-plugin-validate-types-declares-state-label": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut: it is the sole label for the declared state keys, and it carries the path slot."
+  },
+  "slash-command-plugin-validate-uses-break-prompt-cache-note": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut: it is the only signal in validate output that the module uses breakPromptCache (a ternary-conditional entry). The parameter name is frozen."
+  },
+  "slash-command-privacy-settings-help-improve-set-read-back": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "Strongest cut: wipe as a duplicate of help-improve-set. Fails on the co-render rule: the two strings are emitted by exclusive paths, so this is the only report on its path, and the enum-like setting name is frozen."
+  },
+  "slash-command-ultrareview-base-ref-fetch-failed-fetch-with-git": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut: it is the only remedy on the non-plain-ref arm, spliced into slash-command-ultrareview-base-ref-fetch-failed before ' and try … again', so the phrase must stay to complete that sentence."
+  },
+  "slash-command-ultrareview-base-ref-fetch-failed-run-git-fetch": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut: the git command and its slot are frozen under the tripwire (command/tool name). It completes the spliced fetch-failed sentence, and nothing co-renders a copy."
+  },
+  "slash-command-ultrareview-base-ref-probe-failed-fetch-with-git": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut: it is the sole remedy on its arm and completes 'If it is a branch on origin, ${E};'. 'then'-style ordering ('and try … again') plus the slot are frozen."
+  },
+  "slash-command-ultrareview-base-ref-probe-failed-run-git-fetch-refspec": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut: the refspec is a path/command, frozen under the tripwire. It is the only copy on its arm, and the slot order [0,0,1,0] must be preserved."
+  },
+  "slash-command-ultrareview-cloud-session-start-failed": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "Strongest cut: wipe as covered by the cloud-review-failure reminder. Fails on co-render: that reminder is not emitted with this lco return, and this is the only text carrying the reason slot."
+  },
+  "slash-command-ultrareview-repo-too-large": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut: it is the sole explanation and remedy on the p-null arm. '<PR#>' is a frozen placeholder in a command form."
+  },
+  "system-reminder-media-removed-re-read-warning": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "Strongest cut: drop 'so don't re-read them all'. Fails on fragment boundaries: se ends with the ']' that closes re's '[media removed: request limit.' marker, and it is shared by all three placeholders (PUs, OUs, zwt). It is the only statement of the re-read cost, and no co-rendering carrier covers it."
+  },
+  "tool-result-auto-mode-no-local-check-no-allowed-model-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut: it is the only reason text on the CLAUDE_CODE_USER_DELEGATED_SESSION_DIRECT_API arm, spliced into '${e} was not run: ${ve}…'. The host carries no copy."
+  },
+  "tool-result-bash-worktree-guard-scalar-still-works-list": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut: the enumeration of git commands is frozen under the tripwire, and it is the only copy on the scalar arm."
+  },
+  "tool-result-mcp-connector-upload-ask-user-before-retry": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "Strongest cut: wipe as covered by sibling ask-first text. Fails on co-render: O is appended only in cases whose own text carries no ask-before-retry (put_hash_mismatch, put_busy, put_network, …), and refs show no sibling ask-first text in those cases. It is the only user-consent gate before re-uploading."
+  },
+  "tool-result-subagent-unreviewed-no-verdict-reason": {
+    "verdict": "pristine-keep",
+    "version": "2.1.325",
+    "why": "No cut: it is the only reason text on the delegated-direct-API arm of Tyt, spliced as '${n}' in the host. The host does not repeat it."
   }
 }

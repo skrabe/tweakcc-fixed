@@ -85,19 +85,31 @@ const ours = {
   ),
 };
 
-const upstreamCommit = git('rev-parse', 'upstream/main').trim();
-const upstreamVersions = git(
-  'ls-tree',
-  '--name-only',
-  upstreamCommit,
-  'data/prompts/'
-)
-  .split('\n')
-  .map(l => /prompts-(\d+\.\d+\.\d+)\.json$/.exec(l)?.[1])
-  .filter(Boolean);
-if (!upstreamVersions.includes(version)) {
+const upstreamMain = git('rev-parse', 'upstream/main').trim();
+const hasCatalogue = commit =>
+  git('ls-tree', '--name-only', commit, 'data/prompts/')
+    .split('\n')
+    .some(l => l.endsWith(`/prompts-${version}.json`));
+const versionBranch = (() => {
+  try {
+    return git(
+      'rev-parse',
+      '--verify',
+      '--quiet',
+      `upstream/prompts/${version}`
+    ).trim();
+  } catch {
+    return null;
+  }
+})();
+const upstreamCommit = hasCatalogue(upstreamMain)
+  ? upstreamMain
+  : versionBranch && hasCatalogue(versionBranch)
+    ? versionBranch
+    : null;
+if (!upstreamCommit) {
   console.error(
-    `upstream/main has no exact Claude Code ${version} catalogue; run git fetch upstream main or choose a version present in both repositories`
+    `upstream has no exact Claude Code ${version} catalogue on main or prompts/${version}; run git fetch upstream or choose a version present in both repositories`
   );
   process.exit(1);
 }
@@ -109,7 +121,7 @@ const upstream = {
       `${upstreamCommit}:data/prompts/prompts-${upstreamVersion}.json`
     )
   ),
-  patches: patchCount(git('show', `${upstreamCommit}:src/patches/index.ts`)),
+  patches: patchCount(git('show', `${upstreamMain}:src/patches/index.ts`)),
 };
 
 const fmt = n => n.toLocaleString('en-US');

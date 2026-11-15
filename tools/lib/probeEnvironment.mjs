@@ -1,7 +1,11 @@
-export const probeModelEnvironmentArgs = (env = process.env) =>
-  env.ANTHROPIC_MODEL === undefined
-    ? []
-    : ['-e', `ANTHROPIC_MODEL=${env.ANTHROPIC_MODEL}`.replace(/;$/, '\\;')];
+const tmuxEnvArg = (name, value) => ['-e', `${name}=${value}`.replace(/;$/, '\\;')];
+
+export const probeModelEnvironmentArgs = (env = process.env) => {
+  const names = ['ANTHROPIC_MODEL', ...(env.PROBE_ENV ?? '').split(/[\s,]+/).filter(Boolean)];
+  return [...new Set(names)]
+    .filter(name => env[name] !== undefined)
+    .flatMap(name => tmuxEnvArg(name, env[name]));
+};
 
 // The probe's forwarder relays the binary's own OAuth headers to
 // api.anthropic.com, so credentials or a base URL inherited from the host

@@ -648,5 +648,160 @@
     "verdict": "not-model-facing",
     "version": "2.1.319",
     "why": "chunk-85d4q736.js awe() (called from swe gateway startup): returned warnings go to Cr(\"warn\", ...) which sinks to stdio (stderr/log) for the gateway operator; the gateway process is a proxy and the text is never a tool_result or system reminder."
+  },
+  "data-block-file-tool-reads-outside-working-directories-setting": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-gywtf5sd.js Jl() permissions settings zod schema @1093164, property blockFileToolReadsOutsideWorkingDirectories, .describe(\"@internal …\"): CC deletes every properties entry whose own description matches ^@internal (with its subtree) before sending the settings JSON schema via /update-config, so it is absent from data/settings-descriptions/oracle-2.1.325.json (0 @internal descriptions); the remaining sinks are settings validation/compare, never a model request."
+  },
+  "data-sdk-can-use-tool-server-policy-ask-only-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (can_use_tool control request server_policy_ask_only field) .describe() @3067235: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-api-error-type-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (assistant SDK message api_error_type field) .describe() @2776242: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-initialize-sdk-mcp-server-manifests-origin-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (initialize control request sdkMcpServerManifestsOrigin field; cached internal) .describe() @3015042: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-oauth-token-refresh-refused-call-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (oauth_token_refresh control request refused_call field; cached internal) .describe() @3239197: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-teleport-stash-unexpected-entry-refusal": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-wqb2b4v0.js vLe() @13133190 (stash list unexpected entry refusal; cached ui): thrown as vu error from the /teleport auto-stash (hPn/gPn via jvs); jvs's only caller is the teleport dialog's onConfirm (chunk-eef7meah.js K @36508741, \"Stash changes and continue\"), where the error goes to setState and renders as a jsx prop (bundleQuery trace sink jsx-prop [ui]); no tool or model route, never a tool_result or system reminder."
+  },
+  "data-sdk-read-file-offset-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (read_file control request offset field) .describe() @3131440: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-read-file-live-reply-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (read_file control request liveReply field) .describe() @3133509: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-read-file-for-upload-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (read_file control request for_upload field) .describe() @3132488: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-reload-plugins-refuse-if-busy-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (reload_plugins control request refuse_if_busy field; cached internal) .describe() @3189172: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sandbox-unchecked-protected-paths-warning": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-rsqzfbnr.js SS() sandbox config builder, closure pe @8068131: t(`[Sandbox] ${fA().join(\", \")} (among the paths Claude Code itself keeps…`) — bundleQuery trace sink debug-log [internal], cached internal; a startup/debug warning for the user, never placed in a tool_result, system reminder or prompt."
+  },
+  "data-sdk-get-workspace-diff-omitted-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (get_workspace_diff response omitted field; cached internal) .describe() @3145596: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-initialize-response-other-hook-ask-outranks-host-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (initialize response other_hook_ask_outranks_host field) .describe() @3033891: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-stream-event-owed-rows-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (stream_event SDK message owed_rows field) .describe() @2897513: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-teleport-stash-unsafe-ref-file-refusal": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-wqb2b4v0.js RLe() @13130423 (unsafe ref file refusal; cached ui): thrown as vu error from the /teleport auto-stash (hPn/gPn via jvs); jvs's only caller is the teleport dialog's onConfirm (chunk-eef7meah.js K @36508741, \"Stash changes and continue\"), where the error goes to setState and renders as a jsx prop (bundleQuery trace sink jsx-prop [ui]); no tool or model route, never a tool_result or system reminder."
+  },
+  "data-sdk-read-file-requested-path-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (read_file success response requested_path field) .describe() @3137518: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-initialize-response-managed-settings-applied-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (initialize response managed_settings_applied field) .describe() @3035701: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-initialize-managed-settings-parameter": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (initialize control request managedSettings field) .describe() @3023869: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-ui-render-component-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (ui_render control request component field) .describe() @3258715: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-teleport-stash-unsafe-object-store-or-ref-table-refusal": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-wqb2b4v0.js RLe() @13129810 (unsafe object store/ref table refusal; cached ui): thrown as vu error from the /teleport auto-stash (hPn/gPn via jvs); jvs's only caller is the teleport dialog's onConfirm (chunk-eef7meah.js K @36508741, \"Stash changes and continue\"), where the error goes to setState and renders as a jsx prop (bundleQuery trace sink jsx-prop [ui]); no tool or model route, never a tool_result or system reminder."
+  },
+  "data-teleport-stash-ref-without-entries-refusal": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-wqb2b4v0.js _Pn() @13131850 (refs/stash without entries refusal; cached ui): thrown as vu error from the /teleport auto-stash (hPn/gPn via jvs); jvs's only caller is the teleport dialog's onConfirm (chunk-eef7meah.js K @36508741, \"Stash changes and continue\"), where the error goes to setState and renders as a jsx prop (bundleQuery trace sink jsx-prop [ui]); no tool or model route, never a tool_result or system reminder."
+  },
+  "data-sdk-warning-hook-no-verdict-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (system/informational SDK event hook_no_verdict detail field) .describe() @2909142: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-mcp-server-data-flow-server-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (SDK MCP server config dataFlowServer field) .describe() @2655564: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-user-message-retracted-message-uuids-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (user SDK message retracted_message_uuids field) .describe() @2727838: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "tool-parameter-set-cwd-needs-trust-trust-root": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js @3195579: trust_root field of the needs_trust arm of Or(\"status\",[…]).describe(\"@internal Result of a set_cwd request\") — the set_cwd control_response schema, registered in the SDK control-protocol table @3306658 (S(schema,\"client\",…)); set_cwd is a host control request, not a model tool, so this is not a tool parameter description and never reaches a model request; cached internal."
+  },
+  "data-sandbox-linked-worktree-write-denial-warning": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-rsqzfbnr.js SS() sandbox config builder, closure Pt @8086432: t(`[Sandbox] ${St} is, or is inside, a link…write-denied…`) — bundleQuery trace sink debug-log [internal], cached internal; sibling t(...,{level:\"warn\"}) calls in the same builder are user warnings, never a tool_result, system reminder or prompt."
+  },
+  "data-sdk-can-use-tool-plugin-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (can_use_tool control request plugin field) .describe() @3070865: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-plugin-install-system-message": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (system/plugin_install SDK message schema; cached internal; schema registered only via .lazy protocol tables) .describe() @2929531: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-interrupt-spare-background-tasks-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (interrupt control request spare_background_tasks field) .describe() @3052362: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-teleport-stash-index-update-failure-error": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-wqb2b4v0.js hPn() @13123585 (index update failure; passed to vLe as indexRepair, then thrown; cached ui): thrown as vu error from the /teleport auto-stash (hPn/gPn via jvs); jvs's only caller is the teleport dialog's onConfirm (chunk-eef7meah.js K @36508741, \"Stash changes and continue\"), where the error goes to setState and renders as a jsx prop (bundleQuery trace sink jsx-prop [ui]); no tool or model route, never a tool_result or system reminder."
+  },
+  "data-teleport-stash-merge-autostash-refusal": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-wqb2b4v0.js RLe() @13128332 (MERGE_AUTOSTASH refusal; cached ui): thrown as vu error from the /teleport auto-stash (hPn/gPn via jvs); jvs's only caller is the teleport dialog's onConfirm (chunk-eef7meah.js K @36508741, \"Stash changes and continue\"), where the error goes to setState and renders as a jsx prop (bundleQuery trace sink jsx-prop [ui]); no tool or model route, never a tool_result or system reminder."
   }
 }

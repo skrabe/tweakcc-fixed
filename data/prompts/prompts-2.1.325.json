@@ -14225,6 +14225,17 @@
       "version": "2.1.274"
     },
     {
+      "name": "Tool Result: MCP connector upload ask the user before trying again",
+      "id": "tool-result-mcp-connector-upload-ask-user-before-retry",
+      "description": "Closing instruction on connector-upload failure results (when no file was sent): ask the user before trying the upload again.",
+      "pieces": [
+        " Ask the user before trying again."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.325"
+    },
+    {
       "name": "Tool result: block reads outside, add-dir advice clause",
       "id": "tool-result-block-reads-outside-add-dir-advice",
       "description": "Clause appended to the outside-working-directories deny reason asking the user to add the directory with /add-dir or remove the setting.",
@@ -33448,6 +33459,22 @@
       ],
       "identifierMap": {
         "0": "SLASH_COMMAND_PRIVACY_SETTINGS_HELP_IMPROVE_SET_VAR_0"
+      },
+      "version": "2.1.325"
+    },
+    {
+      "name": "Slash Command: /privacy-settings — model training setting read back",
+      "id": "slash-command-privacy-settings-help-improve-set-read-back",
+      "description": "/privacy-settings result reporting the 'Help improve our AI models' value read back from the account after the settings dialog.",
+      "pieces": [
+        "\"Help improve our AI models\" set to ${",
+        "}."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_PRIVACY_SETTINGS_HELP_IMPROVE_SET_READ_BACK_VAR_0"
       },
       "version": "2.1.325"
     },
@@ -76904,8 +76931,8 @@
         1
       ],
       "identifierMap": {
-        "0": "SYSTEM_REMINDER_AUTO_MODE_NO_VERDICT_AFTER_ANOTHER_HOOK_REWRITE_VAR_0",
-        "1": "SYSTEM_REMINDER_AUTO_MODE_NO_VERDICT_AFTER_ANOTHER_HOOK_REWRITE_VAR_1"
+        "0": "AUTO_MODE_CLASSIFIER_NAME",
+        "1": "TOOL_NAME"
       },
       "version": "2.1.322"
     },
@@ -100308,6 +100335,17 @@
       "version": "2.1.317"
     },
     {
+      "name": "Slash Command: /plugin validate engine.create hook has a matcher",
+      "id": "slash-command-plugin-validate-engine-create-hook-matcher",
+      "description": "Construct named in the /plugin validate error when the engine.create hook registration carries a matcher.",
+      "pieces": [
+        "a matcher on the hook"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.325"
+    },
+    {
       "name": "Data: modelPricing setting description (part 6 of 12)",
       "id": "data-settings-model-pricing-description-part-6",
       "description": "Description of the `modelPricing` setting in Claude Code's settings JSON schema. The model reads it through /update-config and settings validation errors; it is also shown to users in the settings help.",
@@ -104939,6 +104977,25 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.206"
+    },
+    {
+      "name": "Slash Command: /plugin validate advice note",
+      "id": "slash-command-plugin-validate-advice-note",
+      "description": "Plugin validate advice line about a hooks module, with where it applies.",
+      "pieces": [
+        "advice: ${",
+        "} (on ${",
+        "})"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_PLUGIN_VALIDATE_ADVICE_NOTE_VAR_0",
+        "1": "SLASH_COMMAND_PLUGIN_VALIDATE_ADVICE_NOTE_VAR_1"
+      },
+      "version": "2.1.325"
     },
     {
       "name": "Slash Command: /advisor — advisor turned off",
@@ -109816,6 +109873,22 @@
       "version": "2.1.322"
     },
     {
+      "name": "Slash Command: /plugin validate answers-its-own-command note",
+      "id": "slash-command-plugin-validate-answers-own-command-note",
+      "description": "Plugin validate note listing a hook registration that answers its own command.",
+      "pieces": [
+        "answers its own command: ${",
+        ".registration}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_PLUGIN_VALIDATE_ANSWERS_OWN_COMMAND_NOTE_VAR_0"
+      },
+      "version": "2.1.325"
+    },
+    {
       "name": "System Prompt: Project thread marker — \"answers nothing above it\" marker text",
       "id": "system-prompt-project-thread-marker-answers-nothing-clause-answers-nothing-label",
       "description": "Marker wording on a thread message that tells the model it answers nothing earlier in the transcript.",
@@ -111714,17 +111787,6 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.308"
-    },
-    {
-      "name": "Data: sandbox profile grant cancelled (mid)",
-      "id": "data-sandbox-profile-grant-cancelled-mid",
-      "description": "Middle fragment of the srt_win_cancelled message: recorded as incomplete, run again or remove it.",
-      "pieces": [
-        "as incomplete — run it again, or remove it with "
-      ],
-      "identifiers": [],
-      "identifierMap": {},
-      "version": "2.1.325"
     },
     {
       "name": "Data: extraKnownMarketplaces.source.(settings).name setting description (part 2 of 3)",
@@ -134751,6 +134813,17 @@
       "version": "2.1.296"
     },
     {
+      "name": "Agent Prompt: summarization text-only heading",
+      "id": "agent-prompt-summarization-text-only-heading",
+      "description": "Heading of the compaction summarizer guard: respond with text only. The note that the summarization request was not a user message quotes the same words to mark where the request begins.",
+      "pieces": [
+        "CRITICAL: Respond with TEXT ONLY"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.325"
+    },
+    {
       "name": "Cron no calendar match",
       "id": "tool-result-cron-no-calendar-match",
       "description": "Cron tool validation error returned to the model when the expression matches no date in the next year.",
@@ -141387,6 +141460,28 @@
       "version": "2.1.296"
     },
     {
+      "name": "Slash Command: /plugin validate env reads",
+      "id": "slash-command-plugin-validate-env-reads-label",
+      "description": "Plugin validate note label listing the environment variables a hooks module reads.",
+      "pieces": [
+        "env reads"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.325"
+    },
+    {
+      "name": "Slash Command: /plugin validate env writes",
+      "id": "slash-command-plugin-validate-env-writes-label",
+      "description": "Plugin validate note label listing the environment variables a hooks module writes.",
+      "pieces": [
+        "env writes"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.325"
+    },
+    {
       "name": "Plugin hook environment not loaded",
       "id": "tool-result-plugin-hook-environment-not-loaded",
       "description": "Error thrown when a plugin hook dispatch looks up an environment that is no longer loaded; reaches the model via permission deny messages and MCP tool errors",
@@ -146589,6 +146684,33 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.319"
+    },
+    {
+      "name": "Slash Command: ultrareview base ref probe failed, fetch with git",
+      "id": "slash-command-ultrareview-base-ref-probe-failed-fetch-with-git",
+      "description": "Remedy telling the model to fetch the base ref from origin with git and try /ultrareview again.",
+      "pieces": [
+        "fetch it from origin with git and try ${",
+        "} again"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_ULTRAREVIEW_BASE_REF_PROBE_FAILED_FETCH_WITH_GIT_VAR_0"
+      },
+      "version": "2.1.325"
+    },
+    {
+      "name": "Slash Command: ultrareview base ref fetch failed, fetch with git",
+      "id": "slash-command-ultrareview-base-ref-fetch-failed-fetch-with-git",
+      "description": "Remedy telling the model to fetch the named branch from origin with git when the base ref could not be fetched.",
+      "pieces": [
+        "Fetch that branch from origin with git"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.325"
     },
     {
       "name": "Artifact Resubmission Refetch-Confirm Clause",
@@ -151815,6 +151937,22 @@
       "version": "2.1.246"
     },
     {
+      "name": "Slash Command: /plugin validate gating hook note",
+      "id": "slash-command-plugin-validate-gating-hook-note",
+      "description": "Plugin validate note listing each gating hook with or without a .catch handler.",
+      "pieces": [
+        "gating hook ${",
+        "?\"with\":\"without\"} .catch: "
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_PLUGIN_VALIDATE_GATING_HOOK_NOTE_VAR_0"
+      },
+      "version": "2.1.325"
+    },
+    {
       "name": "Tool Result: MCP tool hook message too large",
       "id": "tool-result-mcp-tool-hook-message-too-large",
       "description": "Slot phrase saying the hook's MCP tool gave no readable answer because a server message was too large",
@@ -153219,6 +153357,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.296"
+    },
+    {
+      "name": "Tool Result: Bash worktree guard scalar still-works list",
+      "id": "tool-result-bash-worktree-guard-scalar-still-works-list",
+      "description": "Tells the model that git gc and git maintenance run still work here, closing the remedy for a refused scalar command.",
+      "pieces": [
+        "git gc and git maintenance run still work here"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.325"
     },
     {
       "name": "Tool result: Bash worktree guard maintenance still-works list",
@@ -156024,6 +156173,22 @@
         "1": "SYSTEM_REMINDER_DEVICE_HOOKS_ATTACHED_RUNNING_VAR_1"
       },
       "version": "2.1.296"
+    },
+    {
+      "name": "Slash Command: /plugin validate hooks telemetry note",
+      "id": "slash-command-plugin-validate-hooks-telemetry-note",
+      "description": "Plugin validate note naming the telemetry a hooks module reports.",
+      "pieces": [
+        "hooks telemetry for: ${",
+        "}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_PLUGIN_VALIDATE_HOOKS_TELEMETRY_NOTE_VAR_0"
+      },
+      "version": "2.1.325"
     },
     {
       "name": "System Reminder: Device Hooks Paused",
@@ -182837,6 +183002,17 @@
       "version": "2.1.325"
     },
     {
+      "name": "Tool Result: auto mode no local check, no allowed model can check reason",
+      "id": "tool-result-auto-mode-no-local-check-no-allowed-model-reason",
+      "description": "Reason fragment (delegated direct-API session) telling the model that none of the models allowed to check this session's actions can be used here, so the action was not run.",
+      "pieces": [
+        "none of the models allowed to check this session's actions can be used here"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.325"
+    },
+    {
       "name": "Artifact List-By-Type Overflow Empty Page",
       "id": "tool-result-artifact-list-by-type-overflow-empty",
       "description": "Empty list-by-type tool_result when the newest page has nothing readable but older Artifacts may exist.",
@@ -202047,6 +202223,17 @@
       "version": "2.1.322"
     },
     {
+      "name": "System Reminder: media removed re-read warning",
+      "id": "system-reminder-media-removed-re-read-warning",
+      "description": "Closing line of the [media removed: request limit.] placeholder: re-reading pushes out other images and documents and re-sends everything, so the model should not re-read them all.",
+      "pieces": [
+        "Re-reading pushes out others and re-sends everything, so don't re-read them all.]"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.325"
+    },
+    {
       "name": "Tool result: DesignSync re-run finalize_plan with stored names",
       "id": "tool-result-design-rerun-finalize-plan-stored-names",
       "description": "Suffix telling the model to re-run finalize_plan with the full set, naming each file by the name claude.ai/design stores (the one shown first).",
@@ -208005,6 +208192,22 @@
       "version": "2.1.296"
     },
     {
+      "name": "Slash Command: /ultrareview repo too large",
+      "id": "slash-command-ultrareview-repo-too-large",
+      "description": "Tells the user the repository is too large to bundle for ultrareview and to push a PR and review it by number instead.",
+      "pieces": [
+        "Repo is too large. Push a PR and use \\`${",
+        "} <PR#>\\` instead."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_ULTRAREVIEW_REPO_TOO_LARGE_VAR_0"
+      },
+      "version": "2.1.325"
+    },
+    {
       "name": "Auto-mode recon: repo path line",
       "id": "data-auto-mode-recon-repo-path-line",
       "description": "Repo path line of the Repo facts recon section.",
@@ -211076,6 +211279,45 @@
         "0": "SLASH_COMMAND_RESUME_BACKGROUND_SESSION_ATTACH_OR_STOP_VAR_0"
       },
       "version": "2.1.251"
+    },
+    {
+      "name": "Slash Command: ultrareview base ref fetch failed, run git fetch origin",
+      "id": "slash-command-ultrareview-base-ref-fetch-failed-run-git-fetch",
+      "description": "Remedy telling the model to run `git fetch origin <ref>` when the named base ref exists on origin but could not be fetched.",
+      "pieces": [
+        "Run \\`git fetch origin ${",
+        "}\\`"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_ULTRAREVIEW_BASE_REF_FETCH_FAILED_RUN_GIT_FETCH_VAR_0"
+      },
+      "version": "2.1.325"
+    },
+    {
+      "name": "Slash Command: ultrareview base ref probe failed, run git fetch with refspec",
+      "id": "slash-command-ultrareview-base-ref-probe-failed-run-git-fetch-refspec",
+      "description": "Remedy telling the model to run `git fetch origin refs/heads/<ref>:refs/remotes/origin/<ref>` and retry /ultrareview when origin could not be checked for the base ref.",
+      "pieces": [
+        "run \\`git fetch origin refs/heads/${",
+        "}:refs/remotes/origin/${",
+        "}\\` and try ${",
+        "} ${",
+        "} again"
+      ],
+      "identifiers": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_ULTRAREVIEW_BASE_REF_PROBE_FAILED_RUN_GIT_FETCH_REFSPEC_VAR_0",
+        "1": "SLASH_COMMAND_ULTRAREVIEW_BASE_REF_PROBE_FAILED_RUN_GIT_FETCH_REFSPEC_VAR_1"
+      },
+      "version": "2.1.325"
     },
     {
       "name": "Slash Command: /resume Background Session Agents Hint",
@@ -219711,17 +219953,6 @@
       "version": "2.1.305"
     },
     {
-      "name": "Data: sandbox profile grant cancelled (lead)",
-      "id": "data-sandbox-profile-grant-cancelled-lead",
-      "description": "Lead fragment of the srt_win_cancelled error when the Windows profile grant was cancelled.",
-      "pieces": [
-        "srt-win profile grant was cancelled; the grant is recorded "
-      ],
-      "identifiers": [],
-      "identifierMap": {},
-      "version": "2.1.325"
-    },
-    {
       "name": "Profile grant spawn failed",
       "id": "data-sandbox-profile-grant-spawn-failed",
       "description": "srt-win profile grant could not be spawned.",
@@ -220252,6 +220483,17 @@
       "version": "2.1.325"
     },
     {
+      "name": "Slash Command: /plugin validate state reads",
+      "id": "slash-command-plugin-validate-state-reads-label",
+      "description": "Plugin validate note label listing the state a hooks module reads.",
+      "pieces": [
+        "state reads"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.325"
+    },
+    {
       "name": "computer_batch action_summary — state effect only",
       "id": "tool-description-computer-batch-action-summary-effect-only-rule",
       "description": "Shared clause appended to the action_summary field description on computer/form_input/computer_batch/app_batch tool schemas, instructing the model to describe only the concrete effect of the action, with no reasons or secrets.",
@@ -220261,6 +220503,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.284"
+    },
+    {
+      "name": "Slash Command: /plugin validate state writes",
+      "id": "slash-command-plugin-validate-state-writes-label",
+      "description": "Plugin validate note label listing the state a hooks module writes.",
+      "pieces": [
+        "state writes"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.325"
     },
     {
       "name": "Auto-Mode Environment Dispatched Session Prefix",
@@ -221490,6 +221743,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.218"
+    },
+    {
+      "name": "Slash Command: /plugin validate surface modules",
+      "id": "slash-command-plugin-validate-surface-modules-label",
+      "description": "Plugin validate note label listing a hooks module's surface modules.",
+      "pieces": [
+        "surface modules"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.325"
     },
     {
       "name": "Tool Description: Propose Skills (Full)",
@@ -234621,6 +234885,25 @@
       "version": "2.1.265"
     },
     {
+      "name": "Slash Command: /plugin validate engine.create key written twice",
+      "id": "slash-command-plugin-validate-engine-create-key-written-twice",
+      "description": "Construct named in the /plugin validate error when the engine.create hook's returned object writes one key twice.",
+      "pieces": [
+        "the key ${",
+        "(",
+        ")} written twice"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_PLUGIN_VALIDATE_ENGINE_CREATE_KEY_WRITTEN_TWICE_VAR_0",
+        "1": "SLASH_COMMAND_PLUGIN_VALIDATE_ENGINE_CREATE_KEY_WRITTEN_TWICE_VAR_1"
+      },
+      "version": "2.1.325"
+    },
+    {
       "name": "Tool Result: turn-end button label invalid",
       "id": "tool-result-turn-end-button-label-invalid",
       "description": "Validation error naming the button whose label failed checks with the joined reasons, asking for 1-3 plain words",
@@ -240212,6 +240495,17 @@
         "1": "TOOL_RESULT_WEBFETCH_DOMAIN_CHECK_RATE_LIMITED_VAR_1"
       },
       "version": "2.1.286"
+    },
+    {
+      "name": "Tool Result: subagent output unreviewed, safety check gave no verdict reason",
+      "id": "tool-result-subagent-unreviewed-no-verdict-reason",
+      "description": "Reason fragment (delegated direct-API session) in the UNREVIEWED subagent security warning saying the safety check gave no verdict on the subagent's output.",
+      "pieces": [
+        "the safety check gave no verdict on it"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.325"
     },
     {
       "name": "You should know: fragment explainer rationale",
@@ -261255,6 +261549,38 @@
       "version": "2.1.318"
     },
     {
+      "name": "Slash Command: /plugin validate types declares on $",
+      "id": "slash-command-plugin-validate-types-declares-on-dollar-label",
+      "description": "Plugin validate note label listing the $ members a types file declares.",
+      "pieces": [
+        "types ${",
+        "} declares on $"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_PLUGIN_VALIDATE_TYPES_DECLARES_ON_DOLLAR_LABEL_VAR_0"
+      },
+      "version": "2.1.325"
+    },
+    {
+      "name": "Slash Command: /plugin validate types declares state",
+      "id": "slash-command-plugin-validate-types-declares-state-label",
+      "description": "Plugin validate note label listing the state keys a types file declares.",
+      "pieces": [
+        "types ${",
+        "} declares state"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_PLUGIN_VALIDATE_TYPES_DECLARES_STATE_LABEL_VAR_0"
+      },
+      "version": "2.1.325"
+    },
+    {
       "name": "Plugin validate: types must be .d.ts",
       "id": "slash-command-plugin-validate-types-dts-extension",
       "description": "Plugin manifest validation message when the types field does not name a .d.ts declaration file.",
@@ -261613,6 +261939,38 @@
         "0": "SLASH_COMMAND_ULTRAREVIEW_CANNOT_LAUNCH_VAR_0"
       },
       "version": "2.1.322"
+    },
+    {
+      "name": "Slash Command: /ultrareview could not start the cloud session",
+      "id": "slash-command-ultrareview-cloud-session-start-failed",
+      "description": "Reports that /ultrareview could not start the cloud review session, with the reason.",
+      "pieces": [
+        "Ultrareview could not start the cloud session: ${",
+        "}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_ULTRAREVIEW_CLOUD_SESSION_START_FAILED_VAR_0"
+      },
+      "version": "2.1.325"
+    },
+    {
+      "name": "Slash Command: /ultrareview could not start the cloud session",
+      "id": "slash-command-ultrareview-cloud-session-start-failed",
+      "description": "Reports that /ultrareview could not start the cloud review session, with the reason.",
+      "pieces": [
+        "Ultrareview could not start the cloud session: ${",
+        "}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_ULTRAREVIEW_CLOUD_SESSION_START_FAILED_VAR_0"
+      },
+      "version": "2.1.325"
     },
     {
       "name": "Data: Task Notification Ultrareview Stopped",
@@ -265868,6 +266226,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.286"
+    },
+    {
+      "name": "Slash Command: /plugin validate breakPromptCache note",
+      "id": "slash-command-plugin-validate-uses-break-prompt-cache-note",
+      "description": "Plugin validate note that the hooks module uses breakPromptCache.",
+      "pieces": [
+        "uses breakPromptCache"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.325"
     },
     {
       "name": "Tool Result: Artifact Blocked Deny Rule",

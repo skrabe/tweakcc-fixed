@@ -5255,5 +5255,376 @@
     "name": "Tool Result: MCP connector file no upload for argument reason",
     "desc": "Default reason fragment saying Claude Code does not upload a file for the named argument now, so the tool was not called.",
     "reason": "the default reason the model is told and must relay to the user"
+  },
+  "fe2ccf3faec4d275": {
+    "text": "Your session can't run on this machine",
+    "verdict": "glue",
+    "promptId": "tool-result-session-provider-not-allowed",
+    "promptIds": ["tool-result-session-project-env-entry-not-allowed"],
+    "label": "TOOL_RESULT_SESSION_PROVIDER_NOT_ALLOWED_VAR_0",
+    "reason": "yt @1068059 is the shared headline of doi/coi (`${yt}: its requests must go to Anthropic's API … Remove the setting … or ask whoever runs this machine to.`); it only states the condition, the host sentence carries the reason and the remedy"
+  },
+  "7693a89fb42c1462": {
+    "text": "Note: your current working directory is",
+    "verdict": "glue",
+    "promptId": "tool-result-read-file-does-not-exist",
+    "label": "TOOL_RESULT_READ_FILE_DOES_NOT_EXIST_VAR_0",
+    "reason": "aie @1411820: `File does not exist. ${aie}` followed by the cwd; labels the interpolated working directory"
+  },
+  "886769474b21db7f": {
+    "text": "[Subagent hand-back]",
+    "verdict": "glue",
+    "promptId": "tool-result-subagent-handback-frame",
+    "label": "TOOL_RESULT_SUBAGENT_HANDBACK_FRAME_VAR_0",
+    "reason": "SN @2598658 (2 refs: definition and the `_lt` frame template) is the fixed frame token; the host sentence explains what the frame means. No matcher keys on it, nothing for the model to reproduce"
+  },
+  "a3e619d30d258261": {
+    "text": "[media removed: request limit.",
+    "verdict": "glue",
+    "promptId": "system-reminder-media-removed-already-seen",
+    "promptIds": [
+      "system-reminder-media-removed-not-seen",
+      "system-reminder-media-removed-maybe-seen"
+    ],
+    "label": "SYSTEM_REMINDER_MEDIA_REMOVED_ALREADY_SEEN_VAR_0",
+    "reason": "re @6353544, the `[media removed: request limit.` lead marker of the three placeholders; the host sentences carry what the model is told (seen / not seen / maybe seen)"
+  },
+  "48cf6f93cef91437": {
+    "text": "npx @anthropic-ai/sandbox-runtime windows-install",
+    "verdict": "glue",
+    "promptId": "tool-result-bash-sandbox-windows-ca-user-not-provisioned",
+    "promptIds": [
+      "tool-result-bash-sandbox-windows-ca-state-dir-missing",
+      "tool-result-bash-sandbox-windows-user-not-provisioned",
+      "tool-result-bash-sandbox-profile-grant-outdated"
+    ],
+    "label": "TOOL_RESULT_BASH_SANDBOX_WINDOWS_CA_USER_NOT_PROVISIONED_VAR_1",
+    "reason": "Zc @7890906 is the srt install command; every host (`Run \\`${Zc}\\` first.`) is rewritten by VK @7978276 (regexes `[Rr]un \\`npx (?:@anthropic-ai/)?sandbox-runtime windows-install\\`…` → Claude Code's own `Run /sandbox install` remedy) before it reaches the model, and the regexes match this exact string, so it is a fixed token that must not change"
+  },
+  "7c8e633acc9d177c": {
+    "text": "npx sandbox-runtime ",
+    "verdict": "not-a-slot",
+    "promptId": "tool-result-bash-sandbox-windows-self-exec-blocked-despite-permission",
+    "promptIds": [
+      "tool-result-bash-sandbox-windows-self-exec-permission-not-given"
+    ],
+    "label": "TOOL_RESULT_BASH_SANDBOX_WINDOWS_SELF_EXEC_BLOCKED_DESPITE_PERMISSION_VAR_1",
+    "reason": "x @7980399 is VK's rewrite chain; `.replaceAll(\"npx sandbox-runtime \",\"npx @anthropic-ai/sandbox-runtime \")` is a needle string of the replacement, not text in the slot (the replacement text is what renders)"
+  },
+  "d92f57b480a31e0c": {
+    "text": "was ended before it finished",
+    "verdict": "glue",
+    "promptId": "tool-result-bash-sandbox-init-profile-read-access-update-failed",
+    "label": "TOOL_RESULT_BASH_SANDBOX_INIT_PROFILE_READ_ACCESS_UPDATE_FAILED_VAR_0",
+    "reason": "s @8219326: status word of `Bringing the read access to your user profile up to date ${s}.` (siblings `failed`, `failed (exit N)`); the host text carries the retry instruction"
+  },
+  "b229344a2768ab0b": {
+    "text": "upload aborted",
+    "verdict": "glue",
+    "promptId": "tool-result-message-attachment-upload-aborted-note",
+    "label": "TOOL_RESULT_MESSAGE_ATTACHMENT_UPLOAD_ABORTED_NOTE_VAR_0",
+    "reason": "te @9114351 is the upload_error sentinel (`e.upload_error===te`) and the lead of its host line; the host sentence says what to do (send the file again if the user still wants it)"
+  },
+  "88cb8549eed96bcd": {
+    "text": "saved by an earlier background pass of this conversation",
+    "verdict": "glue",
+    "promptId": "system-reminder-memory-listing-additions",
+    "label": "BACKGROUND_MEMORY_SAVE_MARKER",
+    "reason": "jm @9395940 is a marker the host `dv` text defines (`except \"(${jm})\", which marks a file with no listing line`) and the listing appends; one shared const, the explanation is host text"
+  },
+  "8153302d2153706a": {
+    "text": "Disk space is low: ",
+    "verdict": "glue",
+    "promptId": "system-reminder-low-disk-space",
+    "label": "SYSTEM_REMINDER_LOW_DISK_SPACE_VAR_0",
+    "reason": "Yxs @10182083 is the label heading `Disk space is low: ${free} free on the filesystem…`; the instruction (delete only temporary files you made, ask before others) is host text"
+  },
+  "8826afb9a4cc9477": {
+    "text": "they take effect in a new session",
+    "verdict": "glue",
+    "promptId": "data-api-error-1m-context-credits-remedy",
+    "label": "DATA_API_ERROR_1M_CONTEXT_CREDITS_REMEDY_VAR_3",
+    "reason": "_t @12810109 in the 1M-context usage-credits error: timing parenthetical `(…)` after `run <cmd> to turn them on`; the remedy command is the host/slot text"
+  },
+  "b16ef640662201a4": {
+    "text": "they take effect after you restart Claude Code",
+    "verdict": "glue",
+    "promptId": "data-api-error-1m-context-credits-remedy",
+    "label": "DATA_API_ERROR_1M_CONTEXT_CREDITS_REMEDY_VAR_3",
+    "reason": "_t @12810145, other arm of the same ternary; timing parenthetical, not an instruction"
+  },
+  "6b03d1a4df732de1": {
+    "text": "your saved Claude Console API key",
+    "verdict": "glue",
+    "promptId": "data-api-error-claude-ai-login-expired-fallback-no-credit",
+    "promptIds": ["data-api-error-fallback-credential-no-credit-add-funds"],
+    "label": "DATA_API_ERROR_CLAUDE_AI_LOGIN_EXPIRED_FALLBACK_NO_CREDIT_VAR_0",
+    "reason": "q @12815551 names which credential was tried (`Claude Code tried ${q} instead, but it doesn't have enough credit`); a name of something already stated, the remedy is host text"
+  },
+  "34ebe4f176f3b734": {
+    "text": "Login expired · Please run /login",
+    "verdict": "glue",
+    "promptId": "data-api-error-fallback-credential-no-credit-add-funds",
+    "label": "DATA_API_ERROR_FALLBACK_CREDENTIAL_NO_CREDIT_ADD_FUNDS_VAR_0",
+    "reason": "xvn @12790496 is one of the stock auth status lines (siblings Gnn `OAuth token revoked · Please run /login`, pjr `Login reached its time limit · Please run /login` are not catalogued either); shared across many error paths, and the host adds the credit explanation and add-funds link"
+  },
+  "12cc3b88067fa5be": {
+    "text": " characters across ",
+    "verdict": "glue",
+    "promptId": "tool-result-mcp-oversized-result-saved-notice",
+    "label": "TOOL_RESULT_MCP_OVERSIZED_RESULT_SAVED_NOTICE_VAR_0",
+    "reason": "E @13385747: `${n} characters across ${count} lines` size label inside the oversized-result notice"
+  },
+  "d139139c5363d6d5": {
+    "text": "not a public address",
+    "verdict": "glue",
+    "promptId": "tool-result-http-hook-blocked-private-address",
+    "label": "TOOL_RESULT_HTTP_HOOK_BLOCKED_PRIVATE_ADDRESS_VAR_0",
+    "reason": "h @14773204: describes why the address is blocked (`${n} is not a public address`); host sentence carries the rest, loopback allowance included"
+  },
+  "eabb807ef17c2b05": {
+    "text": "an address that HTTP hooks may not reach",
+    "verdict": "glue",
+    "promptId": "tool-result-http-hook-blocked-private-address",
+    "label": "TOOL_RESULT_HTTP_HOOK_BLOCKED_PRIVATE_ADDRESS_VAR_0",
+    "reason": "h @14773227: other arm of the same ternary (`an address that HTTP hooks may not reach`); same reasoning"
+  },
+  "c5f853bf695fc94e": {
+    "text": "stdout overflow",
+    "verdict": "not-a-slot",
+    "promptId": "tool-result-mcp-tool-hook-withheld-no-verdict",
+    "label": "TOOL_RESULT_MCP_TOOL_HOOK_WITHHELD_NO_VERDICT_VAR_1",
+    "reason": "At @14784798: `Et===\"stdout overflow\"` is a closeReason comparison operand in the declarator test; only the `gave no answer that could be read…` arm is rendered into the slot"
+  },
+  "87492b72ce757386": {
+    "text": "http body overflow",
+    "verdict": "not-a-slot",
+    "promptId": "tool-result-mcp-tool-hook-withheld-no-verdict",
+    "label": "TOOL_RESULT_MCP_TOOL_HOOK_WITHHELD_NO_VERDICT_VAR_1",
+    "reason": "At @14784822: `Et===\"http body overflow\"` comparison operand, same as stdout overflow; not rendered"
+  },
+  "7f0157135b2ae0b7": {
+    "text": "The marketplace's version",
+    "verdict": "glue",
+    "promptId": "slash-command-plugin-install-older-version-installed",
+    "label": "SLASH_COMMAND_PLUGIN_INSTALL_OLDER_VERSION_INSTALLED_VAR_1",
+    "reason": "y @15875927 is the subject of `${y} needs Claude Code <range>` (otherwise the rejected version number); a label for the version, nothing to act on"
+  },
+  "27ffe6c843410060": {
+    "text": "The result below",
+    "verdict": "glue",
+    "promptId": "data-task-notification-agent-result-remote-control-relay-note",
+    "label": "DATA_TASK_NOTIFICATION_AGENT_RESULT_REMOTE_CONTROL_RELAY_NOTE_VAR_1",
+    "reason": "wn @16203845: positional reference (`The result below` / `The summary above`) opening `${wn} may relay text marked as coming from a Remote Control session…`; the data-not-instructions rule is host text"
+  },
+  "aaec5a9edd940dcf": {
+    "text": "The shell's directory ",
+    "verdict": "glue",
+    "promptId": "tool-result-resumed-command-approval-shell-directory-not-restored",
+    "promptIds": [
+      "system-reminder-resumed-command-approval-directory-verification-failure"
+    ],
+    "label": "TOOL_RESULT_RESUMED_COMMAND_APPROVAL_SHELL_DIRECTORY_NOT_RESTORED_VAR_1",
+    "reason": "an @20035445: `The shell's directory ${was last reported as|is} ${cwd}.` label sentence head; the deny message that follows carries the instruction"
+  },
+  "ece38738fc345284": {
+    "text": "was last reported as",
+    "verdict": "glue",
+    "promptId": "tool-result-resumed-command-approval-shell-directory-not-restored",
+    "promptIds": [
+      "system-reminder-resumed-command-approval-directory-verification-failure"
+    ],
+    "label": "TOOL_RESULT_RESUMED_COMMAND_APPROVAL_SHELL_DIRECTORY_NOT_RESTORED_VAR_1",
+    "reason": "an @20035503: `was last reported as` arm of the same ternary; label"
+  },
+  "057da28b5ab2b056": {
+    "text": "--settings follows `--` or an option that needs a value. Put it first.",
+    "verdict": "off-route",
+    "promptId": "slash-command-plugin-marketplace-error-result",
+    "label": "SLASH_COMMAND_PLUGIN_MARKETPLACE_ERROR_RESULT_VAR_0",
+    "reason": "E @30889216 in Zc (the `claude remote-control` CLI entry): `v.error ?? (… ? undefined : \"--settings follows …\")` goes to console.error then process.exit(1). Trace: sink console [open], compare [internal]; no model sink. Same mis-attribution to the generic `Error: ${E}` host as the existing 7ead8956f57a91b0 row"
+  },
+  "cdb11a7266e6d081": {
+    "text": "The permission mode turned on",
+    "verdict": "glue",
+    "promptId": "data-task-notification-mod-hot-reload-enabled-loaded",
+    "promptIds": [
+      "data-task-notification-mod-hot-reload-enabled-held",
+      "data-task-notification-mod-hot-reload-enabled-kept-out",
+      "data-task-notification-plugin-dev-mods-unbound",
+      "data-task-notification-plugin-dev-mods-load-failed"
+    ],
+    "label": "DATA_TASK_NOTIFICATION_MOD_HOT_RELOAD_ENABLED_LOADED_VAR_0",
+    "reason": "r @32157584: who turned mod hot-reloading on (`The permission mode turned on` / `The person enabled`), subject of every case sentence in $e; the instruction and state live in the host"
+  },
+  "74f8121514280160": {
+    "text": "The person enabled",
+    "verdict": "glue",
+    "promptId": "data-task-notification-mod-hot-reload-enabled-loaded",
+    "promptIds": [
+      "data-task-notification-mod-hot-reload-enabled-held",
+      "data-task-notification-mod-hot-reload-enabled-kept-out",
+      "data-task-notification-plugin-dev-mods-unbound",
+      "data-task-notification-plugin-dev-mods-load-failed"
+    ],
+    "label": "DATA_TASK_NOTIFICATION_MOD_HOT_RELOAD_ENABLED_LOADED_VAR_0",
+    "reason": "r @32157616: other arm of the same ternary; subject label"
+  },
+  "b63c836b97bd4a75": {
+    "text": "(no text output)",
+    "verdict": "glue",
+    "promptId": "tool-result-send-message-agent-not-resumed-saved-transcript",
+    "promptIds": ["tool-result-send-message-resumed-agent-result"],
+    "label": "TOOL_RESULT_SEND_MESSAGE_AGENT_NOT_RESUMED_SAVED_TRANSCRIPT_VAR_1",
+    "reason": "n @37891638: `Ds(t,…)||\"(no text output)\"` placeholder for an empty agent report inside `Result:\\n\\n${n}`; fixed token"
+  },
+  "f5c3686b54431224": {
+    "text": ", compiled line ",
+    "verdict": "glue",
+    "promptId": "slash-command-plugin-validate-engine-create-hook-outside-form",
+    "label": "SLASH_COMMAND_PLUGIN_VALIDATE_ENGINE_CREATE_HOOK_OUTSIDE_FORM_VAR_1",
+    "reason": "p @54225646: `, compiled line ${n} \\`excerpt\\`` positional join in the hook-form validation error; labels the interpolated line"
+  },
+  "c2a05cac5cb92e96": {
+    "text": "Review and manage your privacy settings at ",
+    "verdict": "glue",
+    "promptId": "slash-command-privacy-settings-review-or-login",
+    "label": "SLASH_COMMAND_PRIVACY_SETTINGS_REVIEW_OR_LOGIN_VAR_0",
+    "reason": "c @56109982: `Review and manage your privacy settings at ${url}`, label for a URL (/privacy-settings output)"
+  },
+  "21ac3c23b145126d": {
+    "text": "it may be there",
+    "verdict": "glue",
+    "promptId": "tool-result-mcp-connector-upload-outcome-unknown",
+    "label": "TOOL_RESULT_MCP_CONNECTOR_UPLOAD_OUTCOME_UNKNOWN_VAR_1",
+    "reason": "H @58998881: `It is not known whether ${h} reached the connector: ${H}, and sending it again may store it twice.` state clause; the instruction (tell the user, do not send again unless asked) is host text"
+  },
+  "9e652c2665ea8e17": {
+    "text": "Re-reading pushes out others and re-sends everything, so don't re-read them all.]",
+    "verdict": "catalogue",
+    "promptId": "system-reminder-media-removed-already-seen",
+    "promptIds": [
+      "system-reminder-media-removed-not-seen",
+      "system-reminder-media-removed-maybe-seen"
+    ],
+    "label": "SYSTEM_REMINDER_MEDIA_REMOVED_ALREADY_SEEN_VAR_1",
+    "id": "system-reminder-media-removed-re-read-warning",
+    "name": "System Reminder: media removed re-read warning",
+    "desc": "Closing line of the [media removed: request limit.] placeholder: re-reading pushes out other images and documents and re-sends everything, so the model should not re-read them all.",
+    "reason": "se @6353580 closes the three media-removed placeholders; tells the model not to re-read all the removed images/documents because re-reading pushes out others and re-sends everything. Trace: text-block [model] sinks"
+  },
+  "dace6840008fe9f1": {
+    "text": "CRITICAL: Respond with TEXT ONLY",
+    "verdict": "catalogue",
+    "promptId": "agent-prompt-summarization-no-tools-guard",
+    "promptIds": ["data-compaction-summary-request-not-user-message-note"],
+    "label": "TEXT_ONLY_CRITICAL_HEADING",
+    "id": "agent-prompt-summarization-text-only-heading",
+    "name": "Agent Prompt: summarization text-only heading",
+    "desc": "Heading of the compaction summarizer guard: respond with text only. The note that the summarization request was not a user message quotes the same words to mark where the request begins.",
+    "reason": "wIn @13322338 heads the compaction no-tools guard (`${wIn}. Do NOT call any tools. …`) and is an instruction on its own (text only); the second host quotes it by const (`the text from \"${wIn}\" through the end of this message`), so an override of this id applies to both. Low confidence: could be read as a heading label"
+  },
+  "290e468c4099e4f5": {
+    "text": "none of the models allowed to check this session's actions can be used here",
+    "verdict": "catalogue",
+    "promptId": "tool-result-auto-mode-no-local-check-no-server-verdict",
+    "label": "TOOL_RESULT_AUTO_MODE_NO_LOCAL_CHECK_NO_SERVER_VERDICT_VAR_1",
+    "id": "tool-result-auto-mode-no-local-check-no-allowed-model-reason",
+    "name": "Tool Result: auto mode no local check, no allowed model can check reason",
+    "desc": "Reason fragment (delegated direct-API session) telling the model that none of the models allowed to check this session's actions can be used here, so the action was not run.",
+    "reason": "ve @16399975: the reason the auto-mode check was not run when the delegated session has no usable checking model; the arm beside it (`Claude Code no longer checks actions itself…`) is already catalogued as tool-result-auto-mode-no-local-check-reason, so overriding one arm and not the other would leave the other deployment mode behind. Reaches the model as the tool result of the denied action"
+  },
+  "d65f73e387d03973": {
+    "text": "the safety check gave no verdict on it",
+    "verdict": "catalogue",
+    "promptId": "tool-result-subagent-output-unreviewed-security-warning",
+    "label": "TOOL_RESULT_SUBAGENT_OUTPUT_UNREVIEWED_SECURITY_WARNING_VAR_2",
+    "id": "tool-result-subagent-unreviewed-no-verdict-reason",
+    "name": "Tool Result: subagent output unreviewed, safety check gave no verdict reason",
+    "desc": "Reason fragment (delegated direct-API session) in the UNREVIEWED subagent security warning saying the safety check gave no verdict on the subagent's output.",
+    "reason": "n @16407485: the reason a subagent's output is UNREVIEWED when the delegated session has no safety check; sibling arm (`Claude Code no longer reviews a subagent's ${e} itself, and nothing else reviewed it`) is catalogued as tool-result-subagent-unreviewed-no-local-review-reason. The warning is spliced onto the subagent result the model reads"
+  },
+  "09e457db325307c6": {
+    "text": "Run `git fetch origin ",
+    "verdict": "catalogue",
+    "promptId": "slash-command-ultrareview-base-ref-fetch-failed",
+    "label": "SLASH_COMMAND_ULTRAREVIEW_BASE_REF_FETCH_FAILED_VAR_1",
+    "id": "slash-command-ultrareview-base-ref-fetch-failed-run-git-fetch",
+    "name": "Slash Command: ultrareview base ref fetch failed, run git fetch origin",
+    "desc": "Remedy telling the model to run `git fetch origin <ref>` when the named base ref exists on origin but could not be fetched.",
+    "reason": "y @27259366: remedy the /ultrareview error gives (`Run \\`git fetch origin ${ref}\\` and try /ultrareview again.`). It is the command to run; trace of the literal shows model sinks (local-command-text, meta-message)"
+  },
+  "d3731792ccb78586": {
+    "text": "Fetch that branch from origin with git",
+    "verdict": "catalogue",
+    "promptId": "slash-command-ultrareview-base-ref-fetch-failed",
+    "label": "SLASH_COMMAND_ULTRAREVIEW_BASE_REF_FETCH_FAILED_VAR_1",
+    "id": "slash-command-ultrareview-base-ref-fetch-failed-fetch-with-git",
+    "name": "Slash Command: ultrareview base ref fetch failed, fetch with git",
+    "desc": "Remedy telling the model to fetch the named branch from origin with git when the base ref could not be fetched.",
+    "reason": "y @27259397: the no-remote arm of the same ternary, `Fetch that branch from origin with git`; the instruction itself"
+  },
+  "e584cfbfd3d352dd": {
+    "text": "run `git fetch origin refs/heads/",
+    "verdict": "catalogue",
+    "promptId": "slash-command-ultrareview-base-ref-probe-failed",
+    "label": "SLASH_COMMAND_ULTRAREVIEW_BASE_REF_PROBE_FAILED_VAR_2",
+    "id": "slash-command-ultrareview-base-ref-probe-failed-run-git-fetch-refspec",
+    "name": "Slash Command: ultrareview base ref probe failed, run git fetch with refspec",
+    "desc": "Remedy telling the model to run `git fetch origin refs/heads/<ref>:refs/remotes/origin/<ref>` and retry /ultrareview when origin could not be checked for the base ref.",
+    "reason": "E @27259784: probe-failed remedy `run \\`git fetch origin refs/heads/<ref>:refs/remotes/origin/<ref>\\` and try /ultrareview <ref> again`; exact command the model must reproduce"
+  },
+  "5c260d30ebcd631c": {
+    "text": "fetch it from origin with git and try ",
+    "verdict": "catalogue",
+    "promptId": "slash-command-ultrareview-base-ref-probe-failed",
+    "label": "SLASH_COMMAND_ULTRAREVIEW_BASE_REF_PROBE_FAILED_VAR_2",
+    "id": "slash-command-ultrareview-base-ref-probe-failed-fetch-with-git",
+    "name": "Slash Command: ultrareview base ref probe failed, fetch with git",
+    "desc": "Remedy telling the model to fetch the base ref from origin with git and try /ultrareview again.",
+    "reason": "E @27259876: the no-remote arm of the same ternary, `fetch it from origin with git and try ${cmd} again`; the instruction itself"
+  },
+  "798988f4bba5ac5f": {
+    "text": "git gc and git maintenance run still work here",
+    "verdict": "catalogue",
+    "promptId": "tool-result-bash-worktree-guard-maintenance-runtime-word-remedy",
+    "promptIds": [
+      "tool-result-bash-worktree-guard-scalar-run-single-task-remedy",
+      "tool-result-bash-worktree-guard-maintenance-leave-to-person-remedy"
+    ],
+    "label": "TOOL_RESULT_BASH_WORKTREE_GUARD_MAINTENANCE_RUNTIME_WORD_REMEDY_VAR_0",
+    "id": "tool-result-bash-worktree-guard-scalar-still-works-list",
+    "name": "Tool Result: Bash worktree guard scalar still-works list",
+    "desc": "Tells the model that git gc and git maintenance run still work here, closing the remedy for a refused scalar command.",
+    "reason": "u @28346085: scalar arm of the permission list the worktree-guard remedies end with (`…; ${u}.`); the git arm (`git gc and git maintenance run, stop, unregister and is-needed still work here`) is already catalogued as tool-result-bash-worktree-guard-maintenance-still-works-list. States what the model may still run; Bash tool result"
+  },
+  "01527bd5b8c6fb46": {
+    "text": "enable it in /plugin",
+    "promptId": "slash-command-plugin-options-disabled-by-default-note",
+    "promptIds": ["slash-command-plugin-options-disabled-note"],
+    "label": "SLASH_COMMAND_PLUGIN_OPTIONS_DISABLED_BY_DEFAULT_NOTE_VAR_1",
+    "verdict": "glue",
+    "reason": "Short enable-command remedy. The same template also renders at a ui-only plugin-suggestion site, so its cached ui verdict vetoes a separate id (quasi veto); the host note's override reaches it."
+  },
+  "1dd08ac149fbe772": {
+    "text": " Ask the user before trying again.",
+    "verdict": "catalogue",
+    "promptId": "tool-result-mcp-connector-upload-bytes-mismatch",
+    "promptIds": [
+      "tool-result-mcp-connector-upload-service-fault",
+      "tool-result-mcp-connector-upload-service-fault-mid-send",
+      "tool-result-mcp-connector-upload-storage-not-connected",
+      "tool-result-mcp-connector-upload-storage-failed",
+      "tool-result-mcp-connector-upload-busy",
+      "tool-result-mcp-connector-upload-too-slow",
+      "tool-result-mcp-connector-upload-not-found",
+      "tool-result-mcp-connector-upload-network",
+      "tool-result-mcp-connector-upload-could-not-send"
+    ],
+    "label": "TOOL_RESULT_MCP_CONNECTOR_UPLOAD_BYTES_MISMATCH_VAR_2",
+    "id": "tool-result-mcp-connector-upload-ask-user-before-retry",
+    "name": "Tool Result: MCP connector upload ask the user before trying again",
+    "desc": "Closing instruction on connector-upload failure results (when no file was sent): ask the user before trying the upload again.",
+    "reason": "O @58998714: ` Ask the user before trying again.` is spliced at the end of ten connector-upload failure results when no file had been sent; a direct instruction to the model (sibling ` Tell the user.` literal is catalogued the same way in the artifact family)"
   }
 }

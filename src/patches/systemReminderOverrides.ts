@@ -2129,6 +2129,29 @@ const applyEditedTextFileStructural = (
   return newContent;
 };
 
+const isEditedTextFileSpliced = (content: string): boolean => {
+  const m = content.match(/edited_text_file:\(([$\w]+)\)=>/);
+  if (!m || m.index === undefined) return false;
+  const rest = content.slice(m.index + m[0].length);
+  const at = rest.indexOf('({content:');
+  if (at < 0) return false;
+  const head = rest.slice(0, at);
+  if (
+    !/^(?:\{let [\s\S]*;return )?(?:\(\(c\)=>c\.trim\(\)===""\?\[\]:)?[$\w]+\(\[[$\w]+$/.test(
+      head
+    )
+  )
+    return false;
+  const emitted = (s: string) =>
+    s.startsWith('`') || s.startsWith('((L)=>{let o=[];');
+  const value = rest.slice(at + '({content:'.length);
+  if (head.includes('((c)=>c.trim()===""?[]:')) {
+    const tail = 'c,isMeta:!0})]))(';
+    return value.startsWith(tail) && emitted(value.slice(tail.length));
+  }
+  return emitted(value);
+};
+
 const EDITED_TEXT_FILE_INJECTION: ReminderInjection = {
   id: 'edited-text-file',
   previousDefaultBodies: [
@@ -2268,7 +2291,9 @@ const EDITED_TEXT_FILE_INJECTION: ReminderInjection = {
         return `edited_text_file:(${hParam})=>${emitReminder(o5Name, j6Name, body, slots)}`;
       },
       'edited-text-file',
-      c => /edited_text_file:\([$\w]+\)=>\[\]/.test(c)
+      c =>
+        /edited_text_file:\([$\w]+\)=>\[\]/.test(c) ||
+        isEditedTextFileSpliced(c)
     );
   },
 };

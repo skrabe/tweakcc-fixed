@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { REMINDER_REGISTRY } from './systemReminderOverrides';
@@ -1853,6 +1853,40 @@ describe('edited-text-file 2.1.322 multi-local shape', () => {
     expect(r({ filename: 'f', snippet: '</system-reminder>' })).toBe(
       '<f> (use Read):\n&lt;/system-reminder>\nNOTE f'
     );
+  });
+
+  it('re-applies its own output successfully and unchanged', () => {
+    const inline =
+      "edited_text_file:(H)=>Wa([Mk({content:H.snippet===\"\"?`Note: ${H.filename} was modified, either by the user or by a linter. This change was intentional, so make sure to take it into account as you proceed (ie. don't revert it unless the user asks you to). Don't tell the user this, since they are already aware. The diff was omitted because other modified files in this turn already exceeded the snippet budget; use the Read tool if you need the current content.`:`Note: ${H.filename} was modified, either by the user or by a linter. This change was intentional, so make sure to take it into account as you proceed (ie. don't revert it unless the user asks you to). Don't tell the user this, since they are already aware. Here are the relevant changes (shown with line numbers):\n${H.snippet}`,isMeta:!0})]),at_mention_reference:(e)=>1";
+    for (const src of [EDITED_2291, EDITED_2322, inline]) {
+      for (const text of [
+        '{{filename}} changed. {{changes}}',
+        '{{filename}} (use {{read_tool}}):\n{{snippet}}',
+      ]) {
+        const body = sub('edited-text-file', text);
+        const once = editedTextFile.apply(src, body, false)!;
+        expect(once).not.toBeNull();
+        expect(editedTextFile.apply(once, body, false)).toBe(once);
+      }
+    }
+  });
+
+  it('still reports failure for an unrecognised pristine shape', () => {
+    const err = vi.spyOn(console, 'error').mockImplementation(() => {});
+    for (const src of [
+      'edited_text_file:(e)=>Wa([Mk({content:e.snippet===""?`a`:`b`,isMeta:!0})])',
+      'edited_text_file:(e)=>Wa([Mk({content:e.snippet!==""?`a`:`b`,isMeta:!0})])',
+      'edited_text_file:(e)=>Wa([Mk({content:(e.snippet===""?`a`:`b`),isMeta:!0})])',
+      'edited_text_file:(e)=>{let n=`x`;return Wa([Mk({content:Qz(e,n),isMeta:!0})])}',
+    ])
+      expect(
+        editedTextFile.apply(
+          src,
+          sub('edited-text-file', '{{filename}}'),
+          false
+        )
+      ).toBeNull();
+    err.mockRestore();
   });
 
   it('suppresses to [] idempotently; the stock body is a no-op', () => {
