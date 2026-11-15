@@ -637,7 +637,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
         id: 'enableContextLimitOverride',
         title: 'Override context limit',
         description:
-          'Replaces the default model context limit with CLAUDE_CODE_CONTEXT_LIMIT env var. Must be exported manually before launching CC, or falls back to 200K.',
+          "Replaces the default model context limit with CLAUDE_CODE_CONTEXT_LIMIT env var. Must be exported manually before launching CC, or falls back to 200K. Applies to every model; CC's own CLAUDE_CODE_MAX_CONTEXT_TOKENS (2.1.325+) covers only models CC does not recognise, or every model when DISABLE_COMPACT is set.",
         getValue: () => settings.misc?.enableContextLimitOverride ?? false,
         toggle: () => {
           updateSettings(settings => {
