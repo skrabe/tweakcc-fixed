@@ -31,6 +31,7 @@ import https from 'node:https';
 import os from 'node:os';
 import path from 'node:path';
 import { probeCommandPrefix, probeModelEnvironmentArgs } from './lib/probeEnvironment.mjs';
+import { isMain } from './lib/isMain.mjs';
 
 const args = process.argv.slice(2);
 const argOf = f => {
@@ -364,5 +365,5 @@ const main = async () => {
   return 0;
 };
 
-if (import.meta.url === `file://${process.argv[1]}`)
+if (isMain(import.meta.url))
   main().then(c => process.exit(c));

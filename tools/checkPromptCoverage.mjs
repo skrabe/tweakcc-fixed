@@ -38,6 +38,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { isMain } from './lib/isMain.mjs';
 
 const DEFAULT_ALLOWLIST = path.join(
   import.meta.dirname,
@@ -220,4 +221,4 @@ const main = () => {
   process.exit(1);
 };
 
-if (import.meta.url === `file://${process.argv[1]}`) main();
+if (isMain(import.meta.url)) main();
