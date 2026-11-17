@@ -34,7 +34,18 @@ const STANDALONE_FIXTURE =
 const IMPORTED_CACHE_FIXTURE =
   'q=1;function bo(){let e=lo(39),[j]=L();if(so){return d(o,{children:["Welcome to Claude Code"," "]})}if(E.terminal==="Apple_Terminal"){return l(oo,{theme:j})}return 1}z=2;';
 
+const HELPER_TERMINAL_FIXTURE =
+  'q=30;function Cke(){let o=E(39),[O]=as();if(P){let c;if(o[0]===k)c=r(n,{color:"claude",children:["Welcome to Claude Code"," "]}),o[0]=c;return c}if(dwt()){let c;if(o[2]!==O)c=e(x,{theme:O,welcomeMessage:"Welcome to Claude Code"}),o[2]=O,o[3]=c;else c=o[3];return c}if(["light","light-daltonized","light-ansi"].includes(O)){return 1}return 2}z=2;';
+
 describe('writeHideStartupBanner', () => {
+  it('injects `return null;` when the terminal check is a helper call (CC >=2.1.326)', () => {
+    const out = writeHideStartupBanner(HELPER_TERMINAL_FIXTURE);
+    expect(out).not.toBeNull();
+    expect(out).toContain('function Cke(){return null;let o=E(39),[O]=as()');
+    expect(out).toContain('welcomeMessage:"Welcome to Claude Code"');
+    expect(writeHideStartupBanner(out!)).toBe(out);
+  });
+
   it('injects `return null;` into the imported-cache startup card (CC >=2.1.246)', () => {
     const out = writeHideStartupBanner(IMPORTED_CACHE_FIXTURE);
     expect(out).not.toBeNull();

@@ -1050,15 +1050,37 @@ export const writePrintToolsFilter = (
   // off the `{session:…,refreshTools:…}` object (one match), read `computeFn`
   // and `getterFn` out of its declaration, then find the eager declaration by
   // `computeFn` and confirm it against its own `tools:` use site.
-  const csPattern =
-    /\{session:[$\w]+,refreshTools:([$\w]+),refreshMcpClients:([$\w]+),verbose:/;
-  const csMatch = oldFile.match(csPattern);
+  // CC 2.1.326 put `admitsMcpTool:(L)=>{…}` between `refreshTools:` and
+  // `refreshMcpClients:`. Its body nests braces, so pin the object by its
+  // `{session:…,refreshTools:X,admitsMcpTool:` head and take the first
+  // `refreshMcpClients:Y,verbose:` after it.
+  const findPrintContext = ():
+    | { index: number; thunkVar: string; mcpVar: string }
+    | undefined => {
+    const head = oldFile.match(
+      /\{session:[$\w]+,refreshTools:([$\w]+),admitsMcpTool:/
+    );
+    if (head && head.index !== undefined) {
+      const tailRe = /refreshMcpClients:([$\w]+),verbose:/g;
+      tailRe.lastIndex = head.index;
+      const tail = tailRe.exec(oldFile);
+      if (tail)
+        return { index: head.index, thunkVar: head[1], mcpVar: tail[1] };
+    }
+    const legacy = oldFile.match(
+      /\{session:[$\w]+,refreshTools:([$\w]+),refreshMcpClients:([$\w]+),verbose:/
+    );
+    if (legacy && legacy.index !== undefined)
+      return { index: legacy.index, thunkVar: legacy[1], mcpVar: legacy[2] };
+    return undefined;
+  };
+  const csMatch = findPrintContext();
   // Method 2 (below) handles every build up to and including CC 2.1.237, where
   // `tools:` and `refreshTools:` still shared one object literal. Fall through
   // rather than failing, so this patch keeps working on the older shape.
   const escapeIdent = (name: string) => name.replace(/\$/g, '\\$');
-  if (csMatch && csMatch.index !== undefined) {
-    const thunkVar = csMatch[1];
+  if (csMatch) {
+    const thunkVar = csMatch.thunkVar;
 
     // Already patched: the thunk was rewritten to call the filter expression.
     if (
@@ -1160,7 +1182,7 @@ export const writePrintToolsFilter = (
       // engine reads tools only through the thunk patched above. Confirm that
       // wiring before declaring the eager site absent.
       const directWiring = new RegExp(
-        `[{,]tools:${escapeIdent(thunkVar)},mcpClients:${escapeIdent(csMatch[2])}[,}]`
+        `[{,]tools:${escapeIdent(thunkVar)},mcpClients:${escapeIdent(csMatch.mcpVar)}[,}]`
       );
       if (directWiring.test(newFile)) return newFile;
     }
@@ -2344,6 +2366,27 @@ export const findModeChange = (
   // `r` is the setState and `e` the requested mode. Everything before this
   // `return` has already rejected an unavailable mode, so injecting there runs
   // only for a mode change that is actually going to happen.
+  // CC 2.1.326 turned the same-mode early return into a block
+  // (`if(i===e){let k=…;return k===…?o:{…}}`), so match the head and the
+  // `return{...o,toolPermissionContext:{...s,mode:e}}})` tail separately and
+  // require the tail to close the same setter arrow.
+  const setterHead =
+    /return ([$\w]+)\(\([$\w]+\)=>\{let ([$\w]+)=[$\w]+\.toolPermissionContext\.mode;if\(\2===([$\w]+)\)/g;
+  for (const head of fileContents.matchAll(setterHead)) {
+    if (head.index === undefined) continue;
+    const modeVar = head[3];
+    const tailRe = new RegExp(
+      `let ([$\\w]+)=[$\\w]+\\(${head[2].replace(/\$/g, '\\$')},${modeVar.replace(/\$/g, '\\$')},[$\\w]+\\.toolPermissionContext\\);return\\{\\.\\.\\.[$\\w]+,toolPermissionContext:\\{\\.\\.\\.\\1,mode:${modeVar.replace(/\$/g, '\\$')}\\}\\}\\}\\)`,
+      'g'
+    );
+    tailRe.lastIndex = head.index + head[0].length;
+    const tail = tailRe.exec(fileContents);
+    if (!tail) continue;
+    const between = fileContents.slice(head.index + head[0].length, tail.index);
+    if (/\bfunction\b|\}\)[,;]/.test(between)) continue;
+    return { index: head.index, modeVar, setStateVar: head[1] };
+  }
+
   const setterPattern =
     /return ([$\w]+)\(\([$\w]+\)=>\{let ([$\w]+)=[$\w]+\.toolPermissionContext\.mode;if\(\2===([$\w]+)\)return [$\w]+;let ([$\w]+)=[$\w]+\(\2,\3,[$\w]+\.toolPermissionContext\);return\{\.\.\.[$\w]+,toolPermissionContext:\{\.\.\.\4,mode:\3\}\}\}\)/;
   const setterMatch = fileContents.match(setterPattern);

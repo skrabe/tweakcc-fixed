@@ -128,13 +128,38 @@ const installFffShell = (file: string, wrapperPath: string): string | null => {
   return updated;
 };
 
+const namesNativeSearchTools = (
+  file: string,
+  glob: string,
+  grep: string
+): boolean =>
+  file.includes(`var ${glob}="Glob";`) && file.includes(`var ${grep}="Grep";`);
+
+const restoreIteratedOmissionSet = (file: string): string | null => {
+  // CC 2.1.326+: `var E=new Set,S=new Set([Glob,Grep]);function F(){if(!a()||!b())return E;let e;for(let n of S){...}return e??S}`
+  const pattern =
+    /(?:^|[;}])var ([$\w]+)=new Set,([$\w]+)=new Set\(\[([$\w]+),([$\w]+)\]\);function [$\w]+\(\)\{(if\(![$\w]+\(\)\|\|![$\w]+\(\)\))?return \1;let [$\w]+;for\(let [$\w]+ of \2\)\{/g;
+  const matches = [...file.matchAll(pattern)].filter(match =>
+    namesNativeSearchTools(file, match[3], match[4])
+  );
+  if (matches.length !== 1 || matches[0].index === undefined) return null;
+  const match = matches[0];
+  if (match[5] === undefined) return file;
+  const start = match.index + match[0].indexOf(match[5]);
+  const end = start + match[5].length;
+  const updated = file.slice(0, start) + file.slice(end);
+  showDiff(file, updated, '', start, end);
+  return updated;
+};
+
 export const restoreNativeSearchTools = (file: string): string | null => {
+  const iterated = restoreIteratedOmissionSet(file);
+  if (iterated !== null) return iterated;
   const pattern =
     /(?:^|[;}])var ([$\w]+)=new Set;var ([$\w]+)=new Set\(\[([$\w]+),([$\w]+)\]\);function ([$\w]+)\(\)\{if\(![$\w]+\(\)\|\|![$\w]+\(\)\)return \1;let ([$\w]+)=([$\w]+),/g;
   const matches = [...file.matchAll(pattern)].filter(
     match =>
-      file.includes(`var ${match[3]}="Glob";`) &&
-      file.includes(`var ${match[4]}="Grep";`) &&
+      namesNativeSearchTools(file, match[3], match[4]) &&
       [match[1], match[2]].includes(match[7])
   );
   if (matches.length !== 1 || matches[0].index === undefined) {
