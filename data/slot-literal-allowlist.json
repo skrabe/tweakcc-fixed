@@ -5626,5 +5626,112 @@
     "name": "Tool Result: MCP connector upload ask the user before trying again",
     "desc": "Closing instruction on connector-upload failure results (when no file was sent): ask the user before trying the upload again.",
     "reason": "O @58998714: ` Ask the user before trying again.` is spliced at the end of ten connector-upload failure results when no file had been sent; a direct instruction to the model (sibling ` Tell the user.` literal is catalogued the same way in the artifact family)"
+  },
+  "fd90832763dcc206": {
+    "promptId": "data-task-notification-monitor-timed-out-stderr-rearm-if-needed",
+    "promptIds": [
+      "data-task-notification-monitor-timed-out-likely-stopped-after-reply"
+    ],
+    "label": "DATA_TASK_NOTIFICATION_MONITOR_TIMED_OUT_STDERR_REARM_IF_NEEDED_VAR_0",
+    "verdict": "catalogue",
+    "text": "Monitor timed out with no events delivered. ",
+    "reason": "states that the timed-out Monitor delivered no events, a fact the model reports on; lead of `u` in lBo @10533883 when stderr was written",
+    "id": "data-task-notification-monitor-timed-out-stderr-rearm-if-needed-no-events-lead",
+    "name": "Data: Monitor timed out — no events delivered",
+    "desc": "Lead of the Monitor time-out notice when the command wrote to stderr: states that the watch timed out without delivering any events."
+  },
+  "7bf435c7b4568166": {
+    "promptId": "tool-result-auto-mode-check-not-run-not-judgment",
+    "label": "TOOL_RESULT_AUTO_MODE_CHECK_NOT_RUN_NOT_JUDGMENT_VAR_1",
+    "verdict": "catalogue",
+    "text": "the server refused the request of auto mode's check",
+    "reason": "request_refused arm of the reason map in tut @12849998; sibling prompt_too_long arm is catalogued as tool-result-auto-mode-check-reason-prompt-too-long",
+    "id": "tool-result-auto-mode-check-not-run-not-judgment-server-refused",
+    "name": "Tool Result: Auto mode check not run — server refused the request",
+    "desc": "Reason a call was not run: the server refused the request for auto mode's check."
+  },
+  "71a81ca24e3bedb5": {
+    "promptId": "tool-result-auto-mode-check-not-run-not-judgment",
+    "label": "TOOL_RESULT_AUTO_MODE_CHECK_NOT_RUN_NOT_JUDGMENT_VAR_1",
+    "verdict": "catalogue",
+    "text": "its input changed after auto mode's check was sent it",
+    "reason": "input_changed arm of the reason map in tut @12850177; sibling prompt_too_long arm is catalogued as tool-result-auto-mode-check-reason-prompt-too-long",
+    "id": "tool-result-auto-mode-check-not-run-not-judgment-input-changed",
+    "name": "Tool Result: Auto mode check not run — input changed after the check was sent",
+    "desc": "Reason a call was not run: its input changed after auto mode's check had been sent it."
+  },
+  "0dafb68fd171460e": {
+    "promptId": "slash-command-send-to-project-could-not-create-the-project",
+    "label": "SLASH_COMMAND_SEND_TO_PROJECT_COULD_NOT_CREATE_THE_PROJECT_VAR_2",
+    "verdict": "catalogue",
+    "text": " No project was created.",
+    "reason": "states the create failed cleanly, so a retry is safe; the other arm of `a` @28040125 warns the server may have created it",
+    "id": "slash-command-send-to-project-could-not-create-the-project-none-created",
+    "name": "Slash Command: /send-to-project — no project was created",
+    "desc": "Tail of the create-failure message stating that no Claude Project was created."
+  },
+  "c298bc87deb7975e": {
+    "promptId": "tool-parameter-mcp-connector-file-path-object-argument",
+    "label": "TOOL_PARAMETER_MCP_CONNECTOR_FILE_PATH_OBJECT_ARGUMENT_VAR_0",
+    "verdict": "catalogue",
+    "text": "an object with the one member \"",
+    "reason": "fMr @30683346 = `an object with the one member \"${I}\"` (I=\"local_file_path\"): the exact argument shape the model must write to send a file",
+    "id": "tool-parameter-mcp-connector-file-path-object-argument-object-shape",
+    "name": "Tool Parameter: MCP connector file argument — one-member object shape",
+    "desc": "Names the argument shape for sending a local file: an object whose one member is \"local_file_path\"."
+  },
+  "e0f6de892b8d4ccd": {
+    "promptId": "slash-command-plugin-validate-hooks-path-case-unchecked",
+    "label": "SLASH_COMMAND_PLUGIN_VALIDATE_HOOKS_PATH_CASE_UNCHECKED_VAR_0",
+    "verdict": "catalogue",
+    "text": " is a link that was not followed to its end",
+    "reason": "why=link arm of `k` @54209095: names why the letter-case comparison was skipped; the other arm is `The directory ${f} could not be listed`",
+    "id": "slash-command-plugin-validate-hooks-path-case-unchecked-unfollowed-link",
+    "name": "Slash Command: Plugin validate — hooks path is an unfollowed link",
+    "desc": "Reason the hooks path case check was skipped: a path component is a link that was not followed to its end."
+  },
+  "b6e6431215497a22": {
+    "promptId": "slash-command-plugin-bulk-install-partial-summary",
+    "label": "SLASH_COMMAND_PLUGIN_BULK_INSTALL_PARTIAL_SUMMARY_VAR_4",
+    "verdict": "catalogue",
+    "text": " The installed plugin is now active.",
+    "reason": "activated arm of `te` @54347717 (one plugin): states no reload is needed, against the `Run /reload-plugins` arm",
+    "id": "slash-command-plugin-bulk-install-partial-summary-one-now-active",
+    "name": "Slash Command: Plugin bulk install partial — the installed plugin is active",
+    "desc": "Partial bulk-install summary tail when the one installed plugin is already active."
+  },
+  "a138fbe2906df097": {
+    "promptId": "slash-command-plugin-bulk-install-partial-summary",
+    "label": "SLASH_COMMAND_PLUGIN_BULK_INSTALL_PARTIAL_SUMMARY_VAR_4",
+    "verdict": "catalogue",
+    "text": " Installed plugins are now active.",
+    "reason": "activated arm of `te` @54347756 (several plugins): states no reload is needed, against the `Run /reload-plugins` arm",
+    "id": "slash-command-plugin-bulk-install-partial-summary-all-now-active",
+    "name": "Slash Command: Plugin bulk install partial — installed plugins are active",
+    "desc": "Partial bulk-install summary tail when the installed plugins are already active."
+  },
+  "cba65e3465452a50": {
+    "promptId": "data-api-error-limit-model-switch-hint",
+    "promptIds": ["data-api-error-group-pool-usage-credits-raise-or-switch"],
+    "label": "DATA_API_ERROR_LIMIT_MODEL_SWITCH_HINT_VAR_0",
+    "verdict": "glue",
+    "text": ". It resets ",
+    "reason": "joiner before the interpolated reset time in `You've hit your ${CNo}. It resets ${a}.` @13306650"
+  },
+  "49f204ac57b7bd1f": {
+    "promptId": "tool-result-powershell-alias-shadows-function-refused",
+    "promptIds": ["tool-result-powershell-alias-shadows-function-reason"],
+    "label": "TOOL_RESULT_POWERSHELL_ALIAS_SHADOWS_FUNCTION_REFUSED_VAR_0",
+    "verdict": "glue",
+    "text": "` is an alias of `",
+    "reason": "joins the two interpolated names in `\\`${name}\\` is an alias of \\`${target}\\`` @30274354; the constraint is the host sentence"
+  },
+  "02187ec8be564bfb": {
+    "promptId": "tool-result-mcp-connector-upload-call-outcome-unknown",
+    "promptIds": ["tool-result-mcp-connector-upload-repeat-outcome-unknown"],
+    "label": "TOOL_RESULT_MCP_CONNECTOR_UPLOAD_CALL_OUTCOME_UNKNOWN_VAR_0",
+    "verdict": "glue",
+    "text": "The error was: \"",
+    "reason": "field label before the interpolated error text in `The error was: \"${B}\". ` @60707020"
   }
 }
