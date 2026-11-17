@@ -83,6 +83,18 @@ const FIXTURE =
 
 const FIXTURE_325 = FIXTURE.replace(TOOL_POOL, TOOL_POOL_325);
 
+// 2.1.326: the goal tools share one gate, and SetGoal's call guard defers to it.
+const PROPOSE_GOAL_326 =
+  'import{ge,dg,Rn}from"/$bunfs/root/chunk-3zn9cw12.js";import{Lt,b}from"/$bunfs/root/chunk-9dpf1mt6.js";' +
+  'function jRs(){return b("tengu_propose_goal",!1)}' +
+  'function Ort(){if(ge()||Rn())return;if(dg())return;if(Lt())return;if(!jRs())return;let e=XQe();return e==="disabled"?void 0:e}' +
+  'var G={isEnabled(){return Ort()!==void 0}},' +
+  'K={isEnabled(){let e=Ort();if(e===void 0)return!1;return M(e),!0},' +
+  'create(e){return{async call({condition:r,ask_user:T}){if(e.agentId)throw Error("SetGoal cannot be used in agent contexts");' +
+  'if(Ort()===void 0&&XQe()!=="disabled")throw d("goal_propose","session_shape"),Error("Goal proposals are only available in interactive local sessions that have /goal.")}}}};';
+
+const FIXTURE_326 = FIXTURE_325.replace(PROPOSE_GOAL, PROPOSE_GOAL_326);
+
 const BRIDGE = 'globalThis.__tweakccUnattendedBg';
 
 describe('writeAttachedBackgroundInteractive', () => {
@@ -153,6 +165,33 @@ describe('writeAttachedBackgroundInteractive', () => {
       `if(${BRIDGE}()||v0e())return!1;if(!Rn("userSettings"))`
     );
     expect(out).toContain(`if(${BRIDGE}())return!1;if(v0e())return!1;if(ZT(`);
+  });
+
+  it('2.1.326: moves the shared goal gate and leaves the delegating guard', () => {
+    const out = writeAttachedBackgroundInteractive(FIXTURE_326)!;
+    expect(out).not.toBeNull();
+    expect(out).toContain(
+      `function Ort(){if(ge()||Rn())return;if(dg())return;if(${BRIDGE}())return;if(!jRs())return;let e=XQe();return e==="disabled"?void 0:e}`
+    );
+    expect(out).toContain(
+      'if(Ort()===void 0&&XQe()!=="disabled")throw d("goal_propose","session_shape")'
+    );
+    expect(out).toContain('var G={isEnabled(){return Ort()!==void 0}}');
+    expect(out).toContain(`function SBt(){return fp()&&!${BRIDGE}()&&!Dt()}`);
+    expect(out).toContain(`${BRIDGE}=Vu;`);
+    expect(writeAttachedBackgroundInteractive(out)).toBe(out);
+  });
+
+  it('2.1.326: fails when the goal gate keeps its old background test', () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const out = writeAttachedBackgroundInteractive(
+      FIXTURE_326.replace('if(Lt())return;if(!jRs())', 'if(!jRs())')
+    );
+    expect(out).toBeNull();
+    expect(errorSpy).toHaveBeenCalledWith(
+      'patch: attachedBackgroundInteractive: failed to find the ProposeGoal isEnabled'
+    );
+    errorSpy.mockRestore();
   });
 
   it('publishes the unattended predicate beside its definition, once', () => {

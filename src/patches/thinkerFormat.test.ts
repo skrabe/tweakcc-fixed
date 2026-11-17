@@ -130,3 +130,29 @@ describe('writeThinkerFormat — CC 2.1.277 suffix prop', () => {
     expect(out).toContain('tail()');
   });
 });
+
+// CC 2.1.326: isResponseHeld sits between isCompacting and compactingHintText,
+// and a sibling spinner sharing pauseStartTimeRef/spinnerSuffix/verbose lies
+// far before the format-bearing function.
+const SIBLING_2326 =
+  'function S1i({pauseStartTimeRef:b,spinnerSuffix:d,verbose:O,columns:v}){}' +
+  'q'.repeat(30000);
+const ANCHOR_2326 =
+  'function Ye({mode:i,pauseStartTimeRef:t,overrideShimmerColor:u,' +
+  'overrideMessage:g,isCompacting:T,isResponseHeld:f,compactingHintText:p,' +
+  'compactingStartTime:C,spinnerSuffix:S,verbose:R,hasActiveTools:w=!1,' +
+  'afterReplyText:v=!1,suffix:W}){let ue=g??P';
+const FORMAT_2326 = ',et=W===G&&BHt.test(ue)?ue:ue+W';
+const FIXTURE_2326 = `pre();${SIBLING_2326};${ANCHOR_2326}${FORMAT_2326};tail()`;
+
+describe('writeThinkerFormat — CC 2.1.326 widened destructure', () => {
+  it('anchors on the format-bearing destructure, not the distant sibling', () => {
+    const out = writeThinkerFormat(FIXTURE_2326, '{}');
+
+    expect(out).not.toBeNull();
+    expect(out).toContain(',et=`${ue}`;tail()');
+    expect(out).not.toContain('BHt.test(ue)');
+    expect(out).toContain('isResponseHeld:f,compactingHintText:p');
+    expect(out).toContain('function S1i({pauseStartTimeRef:b');
+  });
+});

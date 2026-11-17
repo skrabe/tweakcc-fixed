@@ -120,6 +120,40 @@ describe('native search visibility', () => {
     expect(restoreNativeSearchTools(source)).toBe(source);
   });
 
+  it('restores Grep and Glob in the 2.1.326 iterated omission set', () => {
+    const iterated =
+      'var $glob="Glob";var $grep="Grep";' +
+      'var $empty=new Set,$excluded=new Set([$glob,$grep]);' +
+      'function hidden(){if(!searchGate()||!hasBash())return $empty;' +
+      'let $aliases;for(let name of $excluded){let alias=aliasFor(name);' +
+      'if(alias!==void 0)$aliases??=new Set($excluded),$aliases.add(alias.name)}return $aliases??$excluded}';
+    const catalog =
+      ';function catalog(tools){return tools.filter(tool=>!hidden().has(tool.name)).map(tool=>tool.name)}';
+    const evaluate = (code: string) =>
+      new Function(
+        'searchGate',
+        'hasBash',
+        'aliasFor',
+        code + ';return catalog([{name:"Grep"},{name:"Glob"},{name:"Bash"}]);'
+      )(
+        () => true,
+        () => true,
+        () => undefined
+      ) as string[];
+    const source = restoreNativeSearchTools(iterated + catalog)!;
+    expect(evaluate(iterated + catalog)).toEqual(['Bash']);
+    expect(evaluate(source)).toEqual(['Grep', 'Glob', 'Bash']);
+    expect(source).toContain('function hidden(){return $empty;');
+    expect(source).toContain(catalog);
+    expect(restoreNativeSearchTools(source)).toBe(source);
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      expect(restoreNativeSearchTools(iterated + iterated)).toBeNull();
+    } finally {
+      error.mockRestore();
+    }
+  });
+
   it('requires an unambiguous omission set for the actual native tool names', () => {
     const error = vi.spyOn(console, 'error').mockImplementation(() => {});
     try {

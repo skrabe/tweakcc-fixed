@@ -45,6 +45,12 @@ const fixture319 = fixture312
     'el(Text,{dimColor:!0,children:'
   );
 
+// CC 2.1.326 hides the effort glyph behind a compact flag.
+const fixture326 = fixture319.replace(
+  'el(Text,{dimColor:!0,children:[el(Icon,{effort:void 0})," ","Effort not supported"',
+  'el(Text,{dimColor:!0,children:[!compact&&el(Icon,{effort:void 0}),compact?"":" ","Effort not supported"'
+);
+
 function harness(source = fixture) {
   const context = vm.createContext({
     available: [] as { value: string; disabled?: boolean }[],
@@ -219,6 +225,21 @@ describe('effort router model aliases', () => {
     expect(context.applied).toEqual(['fablerouter', undefined]);
     vm.runInContext('commit("opus")', context);
     expect(context.applied).toEqual(['opus', 'max']);
+    expect(writeComplexityRouterModels(result)).toBe(result);
+  });
+
+  it('shows automatic effort with the CC 2.1.326 compact-aware label', () => {
+    expect(fixture326).toContain(
+      '[!compact&&el(Icon,{effort:void 0}),compact?"":" ","Effort not supported"'
+    );
+    const { context, result } = harness(fixture326);
+    expect(result).toContain('compact?"":" ","Effort not supported"');
+    expect(vm.runInContext('display().children', context)).toMatchObject({
+      color: 'subtle',
+      children: 'Automatic effort · currently high',
+    });
+    context.focused = 'opus';
+    expect(vm.runInContext('display().children', context)).toBe('manual');
     expect(writeComplexityRouterModels(result)).toBe(result);
   });
 

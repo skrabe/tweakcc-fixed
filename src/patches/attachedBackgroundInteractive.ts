@@ -19,7 +19,10 @@
 //
 //   1. ProposeGoal: its isEnabled and its call guard (`ve()||$n()||Lt()`).
 //      The tool still needs its `tengu_propose_goal` flag, which is served by
-//      GrowthBook or forced on by the separate propose-goal patch.
+//      GrowthBook or forced on by the separate propose-goal patch. Since
+//      2.1.326 SetGoal, GetGoal and PauseGoal share one gate beside the flag
+//      reader (`if(Lt())return;if(!jRs())return;...`) and the call guard
+//      defers to it, so the gate is the only edit there.
 //   2. The usage-limit auto-resume offer (`autoContinueAtUsageLimit`,
 //      `tengu_marble_heron`): `function SBt(){return fp()&&!Lt()&&!Dt()}`.
 //   3. Its auto-continuation prompt after the limit resets:
@@ -110,9 +113,12 @@ const publishUnattended = (file: string, p: Predicates): string => {
 
 interface Site {
   name: string;
-  // Matches the site patched or unpatched: capture 1 is the text before the
-  // predicate call, capture 2 the callee.
-  pattern: (p: Predicates) => RegExp;
+  // Each matches the site patched or unpatched: capture 1 is the text before
+  // the predicate call, capture 2 the callee. Newest shape first.
+  methods: (p: Predicates) => RegExp[];
+  // A shape in which the site no longer tests the predicate itself but defers
+  // to a gate another site patches.
+  delegated?: RegExp;
 }
 
 const either = (p: Predicates): string =>
@@ -121,51 +127,68 @@ const either = (p: Predicates): string =>
 const SITES: Site[] = [
   {
     name: 'ProposeGoal isEnabled',
-    pattern: p =>
+    methods: p => [
+      new RegExp(
+        `("tengu_propose_goal",!1\\)\\}function [$\\w]+\\(\\)\\{(?:if\\([$\\w()|!]+\\)return;)*?if\\()${either(p)}(\\(\\)\\)return;if\\(![$\\w]+\\(\\)\\)return;let [$\\w]+=[$\\w]+\\(\\);return [$\\w]+==="disabled"\\?void 0:[$\\w]+\\})`
+      ),
       new RegExp(
         `(isEnabled\\(\\)\\{if\\([$\\w]+\\(\\)\\|\\|[$\\w]+\\(\\)\\)return!1;if\\()${either(p)}(\\(\\)\\)return!1;if\\(![$\\w]+\\(\\)\\)return!1;let [$\\w]+=[$\\w]+\\(\\);if\\([$\\w]+==="disabled"\\))`
       ),
+    ],
   },
   {
     name: 'ProposeGoal call guard',
-    pattern: p =>
+    methods: p => [
       new RegExp(
         `(if\\([$\\w]+\\(\\)\\|\\|[$\\w]+\\(\\)\\|\\|)${either(p)}(\\(\\)\\)throw [$\\w]+\\("goal_propose","session_shape"\\))`
       ),
+    ],
+    delegated:
+      /if\([$\w]+\(\)===void 0&&[$\w]+\(\)!=="disabled"\)throw [$\w]+\("goal_propose","session_shape"\)/,
   },
   {
     name: 'usage-limit auto-resume offer',
-    pattern: p =>
+    methods: p => [
       new RegExp(
         `(var [$\\w]+="tengu_marble_heron";(?:(?!/\\*@@TWEAKCC_MODULE:)[^])*?function [$\\w]+\\(\\)\\{return [$\\w]+\\(\\)&&!)${either(p)}(\\(\\)&&![$\\w]+\\(\\)\\})`
       ),
+    ],
   },
   {
     name: 'usage-limit auto-continuation',
-    pattern: p =>
+    methods: p => [
       new RegExp(
         `(function [$\\w]+\\(\\)\\{return [^{}]*?&&!)${either(p)}(\\(\\)\\}function [$\\w]+\\([$\\w]+\\)\\{return [$\\w]+\\(\\)&&[$\\w]+\\([$\\w]+\\)&&[$\\w]+\\.rateLimitType==="five_hour")`
       ),
+    ],
   },
   {
     name: 'outside-read prompt',
-    pattern: p =>
+    methods: p => [
       new RegExp(
         `(if\\()${either(p)}(\\(\\)\\|\\|[$\\w]+\\(\\)\\)return!1;if\\(![$\\w]+\\("userSettings"\\)\\)return!1;return![$\\w]+\\.session\\.outsideReadPrompt)`
       ),
+    ],
   },
   {
     name: 'workflow usage consent prompt',
-    pattern: p =>
+    methods: p => [
       new RegExp(
         `(if\\()${either(p)}(\\(\\)\\)return!1;if\\([$\\w]+\\(\\)\\)return!1;if\\([$\\w]+\\([$\\w]+\\([$\\w]+\\),[$\\w]+\\.options\\.mainLoopModel\\)\\)return!1;return![$\\w]+\\.session\\.workflowUsageConsent)`
       ),
+    ],
   },
 ];
 
 const patchSite = (file: string, site: Site, p: Predicates): string | null => {
-  const match = file.match(site.pattern(p));
+  const match = firstMatch(file, site.methods(p));
   if (!match || match.index === undefined) {
+    if (site.delegated?.test(file)) {
+      debug(
+        `patch: attachedBackgroundInteractive: ${site.name} defers to the gate`
+      );
+      return file;
+    }
     console.error(
       `patch: attachedBackgroundInteractive: failed to find the ${site.name}`
     );

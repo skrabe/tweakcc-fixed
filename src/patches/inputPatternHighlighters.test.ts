@@ -87,6 +87,45 @@ describe('writeInputPatternHighlighters', () => {
     expect(result).toContain(',[a,te]);');
   });
 
+  it('keeps leading literal Text props on the renderer (CC >=2.1.326)', () => {
+    const renderer =
+      'return e(n,{dangerouslyAllowHiddenCharacters:!0,' +
+      'color:Q.highlight?.color,backgroundColor:Q.highlight?.backgroundColor,' +
+      'dimColor:Q.highlight?.dimColor,bold:Q.highlight?.bold,' +
+      'strikethrough:Q.highlight?.strikethrough,' +
+      'children:e(Hn,{children:Q.text})},re)';
+    const file =
+      CHALK_DECL +
+      'let props={inputValue:te,other:1};' +
+      renderer +
+      ';let ranges=z(()=>{let arr=[];if(a&&b&&!c)' +
+      'arr.push({start:s,end:s+l.length,color:"warning",priority:20})},[a]);';
+
+    const result = writeInputPatternHighlighters(file, [
+      baseHighlighter({ name: 'todo', regex: 'TODO', styling: ['bold'] }),
+    ]);
+
+    expect(result).not.toBeNull();
+    expect(result).not.toContain(renderer);
+    expect(result).toContain(
+      'return e(n,{dangerouslyAllowHiddenCharacters:!0,color:(Q.highlight?.style??'
+    );
+    expect(result).toContain(',dimColor:Q.highlight?.dimColor,');
+    expect(result).toContain(
+      'children:e(Hn,{children:(Q.highlight?.style??(typeof Q.highlight?.color==="function"?' +
+        'Q.highlight.color:void 0))?(Q.highlight?.style??(typeof Q.highlight?.color==="function"?' +
+        'Q.highlight.color:void 0))(Q.text):Q.text})},re)'
+    );
+    expect(result).toContain('matchAll(new RegExp("TODO", "g"))');
+
+    const twice = writeInputPatternHighlighters(result as string, [
+      baseHighlighter({ name: 'todo', regex: 'TODO' }),
+    ]);
+    expect(
+      (twice as string).split('dangerouslyAllowHiddenCharacters:!0').length - 1
+    ).toBe(1);
+  });
+
   it('patches the jsx-runtime renderer shape (CC >=2.1.186)', () => {
     const result = writeInputPatternHighlighters(jsxFile, [
       baseHighlighter({ name: 'todo', regex: 'TODO', styling: ['bold'] }),

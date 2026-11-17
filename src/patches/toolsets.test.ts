@@ -420,6 +420,35 @@ describe('writePrintToolsFilter', () => {
     expect(writePrintToolsFilter(once, TS, 'all')).toBe(once);
   });
 
+  // CC 2.1.326 put an `admitsMcpTool` arrow with a block body between
+  // `refreshTools:` and `refreshMcpClients:`, and the thunk now ends its `let`.
+  const admits326 =
+    'function $an(o,m,y){return $rq({tools:o,mcpClients:m,appendSystemPrompt:y,analysisOnly:!0})}' +
+    'let $zh=()=>1,$th=()=>$cf($gs());$hm({x:()=>$th()});let $us=()=>$mk($gs().mcp);' +
+    'let $fm=()=>({session:$e,refreshTools:$th,admitsMcpTool:(L)=>{let X=$q(),o=X&&$v(X);return!o||$b(o,L)},refreshMcpClients:$us,verbose:1}),' +
+    '$xm=(M)=>({...M,commands:()=>1,tools:$th,mcpClients:$us,answers:2});' +
+    '$en=$lf($xm($fm()));';
+
+  it('filters the thunk on the CC 2.1.326 admitsMcpTool print context', () => {
+    const out = writePrintToolsFilter(admits326, TS, 'all')!;
+    expect(out).not.toBeNull();
+    expect(out).toContain(',$th=()=>{let s=$gs();return ((t,s)=>{const p=');
+    expect(out).toContain('})($cf(s),s)};$hm(');
+    expect(out).toContain(
+      '{session:$e,refreshTools:$th,admitsMcpTool:(L)=>{let X=$q(),o=X&&$v(X);return!o||$b(o,L)},refreshMcpClients:$us,verbose:'
+    );
+    expect(out).toContain(',tools:$th,mcpClients:$us,answers:');
+    expect(out).toContain(
+      'return $rq({tools:o,mcpClients:m,appendSystemPrompt:y,analysisOnly:!0})'
+    );
+    expect(() => new Function(out)).not.toThrow();
+  });
+
+  it('is idempotent on the CC 2.1.326 shape', () => {
+    const once = writePrintToolsFilter(admits326, TS, 'all')!;
+    expect(writePrintToolsFilter(once, TS, 'all')).toBe(once);
+  });
+
   it('still fails when no eager declaration exists and the thunk is not wired', () => {
     const err = silenceErr();
     const unwired = direct322.replace(',tools:$th,mcpClients:$us,', ',x:1,');
@@ -502,6 +531,28 @@ describe('findModeChange / writeModeChangeUpdateToolset', () => {
     expect(out).toContain(
       'toolset:process.env.TWEAKCC_TOOLSET_DEFAULT||"de\\"f"'
     );
+  });
+
+  const SETTER326 =
+    'function $sm(h,x,N){let L=$v(h,x.getState().toolPermissionContext);if(!L.ok)return L;let te=L.mode;' +
+    'return N((xe)=>{let De=xe.toolPermissionContext.mode;if(De===te){let Ke=$rc(xe.toolPermissionContext);' +
+    'return Ke===xe.toolPermissionContext?xe:{...xe,toolPermissionContext:Ke}}' +
+    'let Le=$tr(De,te,xe.toolPermissionContext);return{...xe,toolPermissionContext:{...Le,mode:te}}}),' +
+    'setImmediate(()=>{}),{ok:!0}}';
+
+  it('finds the CC 2.1.326 setter with a block same-mode branch', () => {
+    const r = findModeChange(SETTER326)!;
+    expect(r.setStateVar).toBe('N');
+    expect(r.modeVar).toBe('te');
+    expect(SETTER326.slice(r.index)).toMatch(/^return N\(\(xe\)=>\{/);
+    const out = writeModeChangeUpdateToolset(SETTER326, 'd', 'a', 'p')!;
+    expect(out).toContain(
+      'let te=L.mode;if(te==="plan"){N((prev)=>({...prev,toolset:'
+    );
+    expect(out).toContain(
+      'return{...xe,toolPermissionContext:{...Le,mode:te}}})'
+    );
+    expect(() => new Function(out)).not.toThrow();
   });
 
   it('returns null when no mode-change site exists', () => {

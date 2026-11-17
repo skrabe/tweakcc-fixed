@@ -689,5 +689,22 @@
     "text": "Remote Control and cloud sessions",
     "verdict": "glue",
     "note": "w @20744445 builds `Not delivered: … Sending to ${t} is paused until your user's next prompt starts a turn in this session.`; t only names the target (sibling call passes `sessions on this machine`); the constraint is host text"
+  },
+  "eff66d017efc4412": {
+    "promptId": "tool-result-permission-deny-hard-link-write",
+    "promptIds": ["tool-result-permission-hard-link-write-reason"],
+    "builder": "lg",
+    "param": "e",
+    "text": "one of Claude Code’s sign-in files",
+    "verdict": "glue",
+    "note": "Noun phrase naming the hard-link target in `This is a hard link to ${e}, …` via lg(\"one of Claude Code’s sign-in files\") @6205536; the constraint is host text"
+  },
+  "7f4d6947b7150122": {
+    "promptId": "slash-command-plugin-validate-shader-steps-limit",
+    "builder": "fe",
+    "param": "t",
+    "text": "unrolled in all its passes",
+    "verdict": "glue",
+    "note": "Qualifier after the interpolated step count in `this is over ${e} steps ${t}: call less, or loop fewer turns` via fe(i.unrolledInAll,\"unrolled in all its passes\") @30943133; the limit and remedy are host text"
   }
 }

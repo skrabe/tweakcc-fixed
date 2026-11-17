@@ -332,9 +332,11 @@
   },
   "system-prompt-current-claude-models": {
     "bodyHash": "da39a3ee5e6b",
-    "reviewed": "2026-11-05 (CC 2.1.318)",
+    "reviewed": "2026-11-17 (CC 2.1.326)",
     "tokens": {
-      "CLAUDE_MODEL_IDS.join": "Whole prompt suppressed on the user's instruction (2026-09-02): the current-model roster is marketing; the running model is named in # Environment. The slots only enumerate model ids."
+      "CLAUDE_MODEL_IDS.map": "Whole prompt suppressed on the user's instruction (2026-09-02): the current-model roster is marketing; the running model is named in # Environment. The slots only enumerate model names and ids.",
+      "MODEL_ID_COLLECTION": "Whole prompt suppressed on the user's instruction (2026-09-02): the current-model roster is marketing; the running model is named in # Environment. The slots only enumerate model names and ids.",
+      "MODEL_ID": "Whole prompt suppressed on the user's instruction (2026-09-02): the current-model roster is marketing; the running model is named in # Environment. The slots only enumerate model names and ids."
     }
   },
   "system-reminder-artifact-type-instructions-trust-boundary": {
@@ -433,6 +435,13 @@
     "tokens": {
       "CAN_YIELD": "Suppressed fragment (PowerShell sleep guidance, wiped since 2.1.314). CC 2.1.325 added a yield-dependent wait-on-background-work line to it; that same instruction and its gate reach the model through tool-description-background-monitor-streaming-events, which keeps both slots.",
       "DOES_SESSION_STOP_AFTER_REPLY": "Suppressed fragment (PowerShell sleep guidance, wiped since 2.1.314). CC 2.1.325 added a yield-dependent wait-on-background-work line to it; that same instruction and its gate reach the model through tool-description-background-monitor-streaming-events, which keeps both slots."
+    }
+  },
+  "system-reminder-file-truncated": {
+    "bodyHash": "0f75ec4b3879",
+    "reviewed": "2026-11-17 (CC 2.1.326)",
+    "tokens": {
+      "READ_TOOL_NAME": "Still rendered: it sits in the nested template of the rest-cannot-be-read ternary that CC 2.1.326 added, exactly where pristine has it. The checker does not descend into a nested template."
     }
   }
 }

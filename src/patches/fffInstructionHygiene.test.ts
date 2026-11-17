@@ -80,6 +80,19 @@ const PRISTINE_2_1_322 =
   RENDER_2_1_299 +
   SERIALIZER +
   ';var $type="prompt_snapshot";';
+const API_2_1_326 = API_2_1_314.replace(
+  ',$selected=',
+  ',$leading=$state??$fallback(),$selected='
+).replace(
+  ',contextRendering:$routing.rendering,',
+  ',leadingTools:$w=>$leading.leadingTools??($w?[$w]:[]),contextRendering:$routing.rendering,'
+);
+const PRISTINE_2_1_326 =
+  API_2_1_326 +
+  CONTEXT_2_1_322 +
+  RENDER_2_1_299 +
+  SERIALIZER +
+  ';var $type="prompt_snapshot";';
 const TOOLS = [{ name: 'Bash' }, { name: 'Grep' }, { name: 'Glob' }];
 
 type Entry = {
@@ -364,6 +377,8 @@ describe('fff hygiene native call sites', () => {
     ['2.1.314', PRISTINE_2_1_314, true],
     ['2.1.322', PRISTINE_2_1_322, false],
     ['2.1.322', PRISTINE_2_1_322, true],
+    ['2.1.326', PRISTINE_2_1_326, false],
+    ['2.1.326', PRISTINE_2_1_326, true],
   ] as const)(
     'cleans resumed API/context maps without changing saved records, shape=%s, enabled=%s',
     async (_shape, pristine, enabled) => {
@@ -571,6 +586,22 @@ describe('fff hygiene native call sites', () => {
     expect(end).toBeGreaterThan(prompt);
     expect(repaired).toContain(
       '$snapshot=$active($rows,$current.options),$tools=(function __tweakccFffToolRecords('
+    );
+    expect(writeFffInstructionHygiene(repaired)).toBe(repaired);
+  });
+
+  it('selects the 2.1.326 API snapshot past an extra leading-tools declarator', () => {
+    expect(API_2_1_326).toContain(
+      ',$leading=$state??$fallback(),$selected=$choose('
+    );
+    expect(API_2_1_326).toContain('leadingTools:$w=>$leading.leadingTools');
+    const repaired = writeFffInstructionHygiene(PRISTINE_2_1_326)!;
+    expect(repaired).not.toBeNull();
+    expect(repaired).toContain(
+      ',$leading=$state??$fallback(),$selected=(function __tweakccFffToolRecords('
+    );
+    expect(repaired).toContain(
+      'leadingTools:$w=>$leading.leadingTools??($w?[$w]:[]),contextRendering:$routing.rendering,'
     );
     expect(writeFffInstructionHygiene(repaired)).toBe(repaired);
   });

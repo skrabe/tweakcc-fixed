@@ -118,6 +118,15 @@ const COORDINATOR_MODE_2_1_257_MAP = {
 };
 
 const CURATED_IDENTIFIER_MAPS = {
+  'system-reminder-post-compaction-conversation-reread-guidance': [
+    {
+      identifiers: [0, 1],
+      identifierMap: {
+        0: 'READ_CONVERSATION_TOOL_NAME',
+        1: 'CONVERSATION_SEARCH_TOOL_NAME',
+      },
+    },
+  ],
   'tool-description-bash-sandbox-tmpdir': [
     {
       identifiers: [0, 0],

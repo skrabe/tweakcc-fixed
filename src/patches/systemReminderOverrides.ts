@@ -1121,7 +1121,11 @@ const CLAUDEMD_INJECTION: ReminderInjection = {
 // delta listing (`addsToEarlier`), so the model is never told a partial list is
 // the full one. Returns undefined when this shape is absent (older build).
 const SKILLS_DELTA_HEAD =
-  /skill_listing:\(([$\w]+)\)=>\{if\(!\1\.content\)return\[\];let\[([$\w]+),([$\w]+)\]=([^;?]{1,200})\?\[(?:"(?:[^"\\]|\\.)*"|,)*\]:\[(?:"(?:[^"\\]|\\.)*"|,)*\];return ([$\w]+)\(\[([$\w]+)\(\{content:/;
+  /skill_listing:\(([$\w]+)\)=>\{if\(!\1\.content\)return\[\];let\[([$\w]+),([$\w]+)\]=([^;?]{1,200})\?\[(?:"(?:[^"\\]|\\.)*"|,)*\]:\[(?:"(?:[^"\\]|\\.)*"|,)*\]/;
+// 2.1.326 adds `,a=e.shortened===!0?`${e.content}…`:e.content` to the same
+// `let`, and both arms interpolate `${a}` instead of `${e.content}`.
+const SKILLS_LISTED_DECL = /^,([$\w]+)=/;
+const SKILLS_DELTA_RETURN = /^;return ([$\w]+)\(\[([$\w]+)\(\{content:/;
 const SKILLS_DELTA_TAIL = ',isMeta:!0})])}';
 
 const applySkillsDelta = (
@@ -1132,7 +1136,21 @@ const applySkillsDelta = (
   const m = content.match(SKILLS_DELTA_HEAD);
   if (!m || m.index === undefined) return undefined;
   const [, argParam, alsoVar, noteVar, addsCond] = m;
-  const exprStart = m.index + m[0].length;
+  let at = m.index + m[0].length;
+  let listedExpr = `${argParam}.content`;
+  const decl = content.slice(at, at + 64).match(SKILLS_LISTED_DECL);
+  if (decl) {
+    listedExpr = decl[1];
+    at = topLevelIndex(content, at + decl[0].length, ';');
+  }
+  const ret = content.slice(at, at + 256).match(SKILLS_DELTA_RETURN);
+  if (!ret) {
+    console.error(
+      'patch: reminder skills-listing: skill_listing declarations have an unexpected shape'
+    );
+    return null;
+  }
+  const exprStart = at + ret[0].length;
   const exprEnd = topLevelIndex(content, exprStart, ',');
   if (!content.startsWith(SKILLS_DELTA_TAIL, exprEnd)) {
     console.error(
@@ -1181,7 +1199,7 @@ const applySkillsDelta = (
       return null;
     }
     const names: Record<string, string> = {
-      content: `${argParam}.content`,
+      content: listedExpr,
       also: alsoVar,
       addsToEarlierNote: noteVar,
     };

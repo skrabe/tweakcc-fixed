@@ -1754,6 +1754,66 @@ describe('skills-listing reminder 2.1.322 addsToEarlier shape', () => {
   });
 });
 
+// CC 2.1.326 adds a `shortened` content variable to the same `let`; both arms
+// interpolate it instead of `q.content`.
+const MOCK_SKILLS_2326 =
+  'skill_listing:(q)=>{if(!q.content)return[];let[n,r]=q.addsToEarlier===!0?["also ",". This list adds to the skills listed earlier in this conversation and is not the full list"]:["",""],a=q.shortened===!0?`${q.content}\n\nThis list is shortened to save room: some skills are listed by name alone. A skill listed by name alone works like any other.`:q.content;' +
+  'return Kd([Ce({content:Qa()&&Zb()&&q.callsSkillToolDirectly!==!0?' +
+  '`The following skills are ${n}available; a script loads one with \\`await tools.Skill({skill: "name"})\\`, ' +
+  "and its instructions arrive as a message right after the script's result${r}:\n\n${a}`:" +
+  '`The following skills are ${n}available for use with the Skill tool${r}:\n\n${a}`,isMeta:!0})])},' +
+  'dynamic_skill:(q)=>[]';
+
+describe('skills-listing reminder 2.1.326 shortened shape', () => {
+  it('binds {{skill_content}} to the shortened-aware variable and keeps the declaration', () => {
+    const out = skillsListing.apply(
+      MOCK_SKILLS_2326,
+      sub(
+        'skills-listing',
+        'Skills {{also}}here{{adds_to_earlier_note}}:\n\n{{skill_content}}'
+      ),
+      false
+    )!;
+    expect(out).toContain(':["",""],a=q.shortened===!0?`${q.content}');
+    expect(out).toContain("right after the script's result${r}:\n\n${a}`:");
+    expect(out).not.toContain('for use with the Skill tool');
+    const plain = runSkills(out, false);
+    expect(plain({ content: 'L' })).toBe('Skills here:\n\nL');
+    expect(plain({ content: 'L', shortened: true })).toMatch(
+      /^Skills here:\n\nL\n\nThis list is shortened/
+    );
+    expect(runSkills(out, true)({ content: 'L' })).toContain(
+      'await tools.Skill'
+    );
+    expect(
+      skillsListing.apply(
+        out,
+        sub(
+          'skills-listing',
+          'Skills {{also}}here{{adds_to_earlier_note}}:\n\n{{skill_content}}'
+        ),
+        false
+      )
+    ).toBe(out);
+  });
+
+  it('the stock body is a no-op', () => {
+    expect(
+      skillsListing.apply(
+        MOCK_SKILLS_2326,
+        sub('skills-listing', skillsListing.defaultBody),
+        false
+      )
+    ).toBe(MOCK_SKILLS_2326);
+  });
+
+  it('suppresses the whole renderer, idempotently', () => {
+    const out = skillsListing.apply(MOCK_SKILLS_2326, '', true);
+    expect(out).toBe('skill_listing:(q)=>{return [];},dynamic_skill:(q)=>[]');
+    expect(skillsListing.apply(out!, '', true)).toBe(out);
+  });
+});
+
 const toolCalled = REMINDER_REGISTRY.find(r => r.id === 'tool-called')!;
 
 // 2.1.322 wraps the serializer in the closing-tag escaper.

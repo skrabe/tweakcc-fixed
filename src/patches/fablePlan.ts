@@ -590,9 +590,17 @@ const patchEffortContext = (
     return null;
   };
   if (!resolver) return fail('failed to name the per-model effort lookup');
-  const ctxFn =
-    /function ([$\w]+)\(([$\w]+)\)\{let ([$\w]+)=\2\.getAppState\(\)\.toolPermissionContext[,;]/;
-  const ctx = file.match(ctxFn);
+  // CC >= 2.1.326 adds a defaulted flag parameter:
+  //   function ee(e,o=!1){let t=e.getAppState().toolPermissionContext;
+  const ctxFns = [
+    /function ([$\w]+)\(([$\w]+)(?:,[$\w]+=[^,(){}]+)+\)\{let ([$\w]+)=\2\.getAppState\(\)\.toolPermissionContext[,;]/,
+    /function ([$\w]+)\(([$\w]+)\)\{let ([$\w]+)=\2\.getAppState\(\)\.toolPermissionContext[,;]/,
+  ];
+  let ctx: RegExpMatchArray | null = null;
+  for (const ctxFn of ctxFns) {
+    ctx = file.match(ctxFn);
+    if (ctx) break;
+  }
   if (!ctx || ctx.index === undefined) {
     return fail('failed to find the effective permission context function');
   }
@@ -749,7 +757,11 @@ const patchPickerEffortRow = (
   const display =
     /(([$\w]+)!==void 0&&![$\w]+&&[$\w]+\([$\w]+,\{marginBottom:1,flexDirection:"column",children:)([$\w]+\?)/;
   const unsupporteds = [
-    // CC >= 2.1.319: dimmed, no subtle color.
+    // CC >= 2.1.326: the icon and its leading space became conditional.
+    //   r(n,{dimColor:!0,children:[!sn&&e(a$,{effort:void 0}),sn?"":" ",
+    //   "Effort not supported",…
+    /([$\w]+)\(([$\w]+),\{dimColor:!0,children:\[![$\w]+&&[$\w]+\([$\w]+,\{effort:void 0\}\),[$\w]+\?"":" ","Effort not supported"/,
+    // CC 2.1.319 - 2.1.325: dimmed, no subtle color.
     //   r(n,{dimColor:!0,children:[e(QW,{effort:void 0})," ","Effort not supported",…
     /([$\w]+)\(([$\w]+),\{dimColor:!0,children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," ","Effort not supported"/,
     // CC >= 2.1.312: the label undims and its leading space is its own child.

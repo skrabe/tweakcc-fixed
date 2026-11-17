@@ -486,12 +486,21 @@ export const writeFffInstructionHygiene = (file: string): string | null => {
       (selectSite(
         file,
         api,
-        /let\{advisorModel:[$\w]+,advisorDeferred:[$\w]+,advisorActive:[$\w]+\}=[$\w]+,[$\w]+=\(\)=>[^,;{}]+,([$\w]+)=(([$\w]+)\(([$\w]+),([$\w]+),\{options:[$\w]+\.options,querySource:[$\w]+,resumeActive:[$\w]+,stamp:[$\w]+,[\s\S]*?contextRendering:[$\w]+\.rendering(?:,[$\w]+:[$\w]+)*\}\))/g,
+        /let\{advisorModel:[$\w]+,advisorDeferred:[$\w]+,advisorActive:[$\w]+\}=[$\w]+,[$\w]+=\(\)=>[^,;{}]+,(?:[$\w]+=[^,;{}=]+,)+([$\w]+)=(([$\w]+)\(([$\w]+),([$\w]+),\{options:[$\w]+\.options,querySource:[$\w]+,resumeActive:[$\w]+,stamp:[$\w]+,[\s\S]*?contextRendering:[$\w]+\.rendering(?:,[$\w]+:[$\w]+)*\}\))/g,
         marker,
         helper,
         FFF_OWNED_TOOL_GUIDANCE_SUFFIXES,
         match => ({ original: match[2], args: [] })
       ) ??
+        selectSite(
+          file,
+          api,
+          /let\{advisorModel:[$\w]+,advisorDeferred:[$\w]+,advisorActive:[$\w]+\}=[$\w]+,[$\w]+=\(\)=>[^,;{}]+,([$\w]+)=(([$\w]+)\(([$\w]+),([$\w]+),\{options:[$\w]+\.options,querySource:[$\w]+,resumeActive:[$\w]+,stamp:[$\w]+,[\s\S]*?contextRendering:[$\w]+\.rendering(?:,[$\w]+:[$\w]+)*\}\))/g,
+          marker,
+          helper,
+          FFF_OWNED_TOOL_GUIDANCE_SUFFIXES,
+          match => ({ original: match[2], args: [] })
+        ) ??
         selectSite(
           file,
           api,
