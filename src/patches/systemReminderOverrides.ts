@@ -549,6 +549,53 @@ const interpolations = (tpl: string): string[] => {
   return out;
 };
 
+// The `?` at bracket depth 0 that opens a conditional at or after `from`
+// (never `?.` or `??`), or `src.length`.
+const nextTernaryQ = (src: string, from: number): number => {
+  for (let i = from; ; ) {
+    const q = topLevelIndex(src, i, '?');
+    if (q >= src.length || src[q] !== '?') return src.length;
+    if (src[q + 1] === '?' || src[q - 1] === '?') {
+      i = q + 2;
+      continue;
+    }
+    if (src[q + 1] === '.' && !/[0-9]/.test(src[q + 2] ?? '')) {
+      i = q + 2;
+      continue;
+    }
+    return q;
+  }
+};
+
+// A right-nested conditional chain `c1?a1:c2?a2:…:last`, split into its
+// conditions and the final alternate. A plain expression has no conditions.
+const ternaryChain = (expr: string): { conds: string[]; last: string } => {
+  const conds: string[] = [];
+  let rest = expr.trim();
+  for (;;) {
+    const q = nextTernaryQ(rest, 0);
+    if (q >= rest.length) return { conds, last: rest };
+    let depth = 0;
+    let i = q + 1;
+    for (;;) {
+      const nq = nextTernaryQ(rest, i);
+      const nc = topLevelIndex(rest, i, ':');
+      if (nc >= rest.length || rest[nc] !== ':') return { conds, last: rest };
+      if (nq < nc) {
+        depth++;
+        i = nq + 1;
+      } else if (depth > 0) {
+        depth--;
+        i = nc + 1;
+      } else {
+        conds.push(rest.slice(0, q));
+        rest = rest.slice(nc + 1).trim();
+        break;
+      }
+    }
+  }
+};
+
 const escapeRe = (s: string): string =>
   s.replace(/[$.*+?^()[\]{}|\\]/g, '\\$&');
 
@@ -629,6 +676,8 @@ interface PushBuilder {
   // those push expressions verbatim (re-emitted, so a re-splice still sees them).
   tail: string[];
   tailExprs: string[];
+  // The final return's expression as the case body holds it.
+  returnExpr: string;
 }
 
 // The emit at the end of a builder case's final return: pristine's
@@ -744,6 +793,7 @@ const parsePushBuilder = (caseBody: string): PushBuilder | null => {
     ifs,
     tail,
     tailExprs: parts.slice(0, -1),
+    returnExpr: ret.expr,
   };
 };
 
@@ -994,7 +1044,8 @@ const applyBuilderCase = (
   body: string,
   isSuppressed: boolean,
   sampleProp: string,
-  slotsFor: (b: PushBuilder, param: string, caseBody: string) => BuilderSlot[]
+  slotsFor: (b: PushBuilder, param: string, caseBody: string) => BuilderSlot[],
+  keepPristineWhen?: (b: PushBuilder) => string | null
 ): string | null => {
   const { bodyStart, bodyEnd } = found;
   const caseBody = content.slice(bodyStart, bodyEnd);
@@ -1022,7 +1073,15 @@ const applyBuilderCase = (
       ...b.tailExprs,
       emitReminder(b.wrapFn, b.metaFn, body, resolved),
     ].join(',');
-    newBody = `${b.preamble}return ${ret}`;
+    // Arms the override does not speak for keep pristine's own return, ahead
+    // of the rebuilt one; a re-splice finds the guard already in the preamble.
+    const keep = keepPristineWhen?.(b) ?? null;
+    const guard = keep === null ? '' : `if(${keep})return `;
+    const preamble =
+      guard === '' || b.preamble.includes(guard)
+        ? b.preamble
+        : `${b.preamble}${guard}${b.returnExpr};`;
+    newBody = `${preamble}return ${ret}`;
   }
   const newContent =
     content.slice(0, bodyStart) + newBody + content.slice(bodyEnd);
@@ -1866,6 +1925,54 @@ const TOOL_RESULT_INJECTION: ReminderInjection = {
   },
   defaultBody: 'Result of calling the {{tool_name}} tool:\n{{result}}',
   apply(content, body, isSuppressed) {
+    // Method 1 (2.1.328+, also matches older builds): anchored on the code
+    // shape, not the prose — the try that calls
+    // `<tool>.mapToolResultToToolResultBlockParam(…)` and returns one meta
+    // message whose template ends with the result interpolation, followed by
+    // its catch. 2.1.328 routes the result through a wrapper parameter
+    // (`${r(h)}`, `r=(g)=>g` by default), which broke the bare-`${K}` prose
+    // anchor below. {{result}} binds to the whole wrapped expression, and the
+    // catch is kept verbatim so tool-error still finds its own anchor.
+    const shape =
+      /([$\w]+)\.mapToolResultToToolResultBlockParam\([^)]*\);[^`]{0,400}?return ([$\w]+)\(\{content:`((?:[^`\\]|\\.)*)`,isMeta:!0\}\)\}catch\{(return \2\(\{content:`(?:[^`\\]|\\.)*`,isMeta:!0\}\)\})/g;
+    const hits = [...content.matchAll(shape)];
+    if (hits.length === 1 && hits[0].index !== undefined) {
+      const m = hits[0];
+      const [region, toolParam, j6Name, tpl, catchBranch] = m;
+      const slots = interpolations(tpl);
+      const resultExpr = slots[slots.length - 1];
+      if (
+        resultExpr !== undefined &&
+        tpl.endsWith(`\${${resultExpr}}`) &&
+        slots.includes(`${toolParam}.name`)
+      ) {
+        const end = m.index! + region.length;
+        const returnAt =
+          end -
+          catchBranch.length -
+          `return ${j6Name}({content:\`${tpl}\`,isMeta:!0})}catch{`.length;
+        const replacement = isSuppressed
+          ? `return ${j6Name}({content:\`\${${resultExpr}}\`,isMeta:!0})}catch{return ${j6Name}({content:"",isMeta:!0})}`
+          : `return ${j6Name}({content:\`${body
+              .replace(/\$\{H\.name\}/g, () => `\${${toolParam}.name}`)
+              .replace(
+                /\$\{K\}/g,
+                () => `\${${resultExpr}}`
+              )}\`,isMeta:!0})}catch{${catchBranch}`;
+        const newContent =
+          content.slice(0, returnAt) + replacement + content.slice(end);
+        showDiff(content, newContent, replacement, returnAt, end);
+        return newContent;
+      }
+    }
+    if (
+      isSuppressed &&
+      /\.mapToolResultToToolResultBlockParam\([^)]*\);[^`]{0,400}?return ([$\w]+)\(\{content:`\$\{[^`]*\}`,isMeta:!0\}\)\}catch\{return \1\(\{content:"",isMeta:!0\}\)\}/.test(
+        content
+      )
+    )
+      return content;
+    // Method 2 (<=2.1.327): prose anchor, bare result variable.
     return findAndReplace(
       content,
       /return ([$\w]+)\(\{content:`Result of calling the \$\{([$\w]+)\.name\} tool:\n\$\{([$\w]+)\}`,isMeta:!0\}\)\}catch\{return [$\w]+\(\{content:`Result of calling the \$\{\2\.name\} tool: Error`,isMeta:!0\}\)\}/,
@@ -2905,8 +3012,10 @@ const TASK_LIST_REMINDER_INJECTION: ReminderInjection = {
           null;
         const block = segmentFor(b, list);
         // The two tool names are the intro's bare module-scope
-        // interpolations, create then update.
-        const intro = b.locals.get(b.arr) ?? '';
+        // interpolations, create then update. 2.1.328 made the intro a
+        // `statusKeeper` conditional chain; its final alternate is the stock
+        // nudge this override replaces.
+        const intro = ternaryChain(b.locals.get(b.arr) ?? '').last;
         const tools = intro.startsWith('`')
           ? interpolations(intro.slice(1, -1)).filter(
               x => /^[$\w]+$/.test(x) && x !== p && !b.locals.has(x)
@@ -2922,6 +3031,12 @@ const TASK_LIST_REMINDER_INJECTION: ReminderInjection = {
           { token: '${H.taskCreateTool}', expr: tools[0] ?? null },
           { token: '${H.taskUpdateTool}', expr: tools[1] ?? null },
         ];
+      },
+      // Method 1 (2.1.328+): the other `statusKeeper` arms carry how the app
+      // manages task status, not the idle nudge, so they render as pristine.
+      b => {
+        const { conds } = ternaryChain(b.locals.get(b.arr) ?? '');
+        return conds.length > 0 ? conds.map(c => `(${c})`).join('||') : null;
       }
     );
   },

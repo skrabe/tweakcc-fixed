@@ -2029,3 +2029,158 @@ describe('plan-mode-exit reminder shape handling', () => {
     );
   });
 });
+
+const toolResult = REMINDER_REGISTRY.find(r => r.id === 'tool-result')!;
+const toolError = REMINDER_REGISTRY.find(r => r.id === 'tool-error')!;
+
+const TOOL_RESULT_2328 =
+  'function Fmt(e,o,r=(g)=>g){try{let g=e.mapToolResultToToolResultBlockParam(o,"1");if(Array.isArray(g.content)&&g.content.some((y)=>y.type==="image"))return Mk({content:g.content,isMeta:!0});let h=typeof g.content==="string"?g.content:JSON.stringify(g.content);return Mk({content:`Result of calling the ${e.name} tool:\n${r(h)}`,isMeta:!0})}catch{return Mk({content:`Result of calling the ${e.name} tool: Error`,isMeta:!0})}}';
+
+const TOOL_RESULT_2327 =
+  'function Fmt(e,o){try{let g=e.mapToolResultToToolResultBlockParam(o,"1");let K=typeof g.content==="string"?g.content:JSON.stringify(g.content);return Mk({content:`Result of calling the ${e.name} tool:\n${K}`,isMeta:!0})}catch{return Mk({content:`Result of calling the ${e.name} tool: Error`,isMeta:!0})}}';
+
+const runToolResult = (src: string) =>
+  new Function(...Object.keys(STUBS), `${src};return Fmt`)(
+    ...Object.values(STUBS)
+  ) as (
+    tool: Record<string, unknown>,
+    out: unknown,
+    wrap?: (s: string) => string
+  ) => string;
+
+describe('tool-result reminder shape handling', () => {
+  const tool = {
+    name: 'Bash',
+    mapToolResultToToolResultBlockParam: (o: string) => ({ content: o }),
+  };
+  const broken = {
+    name: 'Bash',
+    mapToolResultToToolResultBlockParam: () => {
+      throw new Error('x');
+    },
+  };
+
+  it('2.1.328: binds {{result}} to the wrapped expression and keeps the catch', () => {
+    const out = toolResult.apply(
+      TOOL_RESULT_2328,
+      sub('tool-result', '{{tool_name}} said:\n{{result}}'),
+      false
+    )!;
+    expect(out).toContain('content:`${e.name} said:\n${r(h)}`');
+    expect(out).toContain(
+      'catch{return Mk({content:`Result of calling the ${e.name} tool: Error`,isMeta:!0})}'
+    );
+    const f = runToolResult(out);
+    expect(f(tool, 'ok')).toBe('Bash said:\nok');
+    expect(f(tool, 'ok', s => `<${s}>`)).toBe('Bash said:\n<ok>');
+    expect(f(broken, 'ok')).toBe('Result of calling the Bash tool: Error');
+    expect(
+      toolError.apply(out, sub('tool-error', '{{tool_name}} failed'), false)
+    ).toContain('catch{return Mk({content:`${e.name} failed`,isMeta:!0})}');
+  });
+
+  it('2.1.328: the stock body is a no-op', () => {
+    expect(
+      toolResult.apply(
+        TOOL_RESULT_2328,
+        sub('tool-result', toolResult.defaultBody),
+        false
+      )
+    ).toBe(TOOL_RESULT_2328);
+  });
+
+  it('2.1.328: suppression emits the bare result and is idempotent', () => {
+    const out = toolResult.apply(TOOL_RESULT_2328, '', true)!;
+    expect(out).toContain(
+      'return Mk({content:`${r(h)}`,isMeta:!0})}catch{return Mk({content:"",isMeta:!0})}'
+    );
+    expect(runToolResult(out)(tool, 'ok')).toBe('ok');
+    expect(toolResult.apply(out, '', true)).toBe(out);
+  });
+
+  it('pre-2.1.328 bare-variable shape still applies', () => {
+    const out = toolResult.apply(
+      TOOL_RESULT_2327,
+      sub('tool-result', '{{tool_name}}: {{result}}'),
+      false
+    )!;
+    expect(runToolResult(out)(tool, 'ok')).toBe('Bash: ok');
+  });
+});
+
+const TASK_2328 =
+  'case"task_reminder":{if(!gate())return[];let s=e.content.map((h)=>`#${h.id}. [${h.status}] ${h.subject}`).join(`\n`),' +
+  'g=e.statusKeeper==="app"?`If new work would benefit from tracking progress, add it with ${TC}. ${APPNOTE}\n`:e.statusKeeper==="claude"?`${OFFLINE}\n`:' +
+  "`The task tools haven't been used recently. Consider using ${TC} to add new tasks and ${TU} to update task status.\n`;" +
+  'if(s.length>0)g+=`\n\nHere are the existing tasks:\n\n${s}`;return Wa([Mk({content:g,isMeta:!0})])}/*END*/';
+
+describe('task-list-reminder 2.1.328 statusKeeper arms', () => {
+  const TASKS = [{ id: 1, status: 'pending', subject: 'A' }];
+  const run = (src: string) =>
+    new Function(
+      ...Object.keys(STUBS),
+      'APPNOTE',
+      'OFFLINE',
+      `return (e)=>{switch(e.type){${src.slice(src.indexOf('case"task_reminder"'), src.indexOf('/*END*/'))}}}`
+    )(...Object.values(STUBS), 'App marks status.', 'App offline.') as (
+      e: Record<string, unknown>
+    ) => unknown;
+
+  it('binds the tool names from the stock arm and keeps the other arms pristine', () => {
+    const body =
+      'Use {{task_create_tool}} / {{task_update_tool}}.\n\n{{existing_tasks}}';
+    const out = taskListReminder.apply(
+      TASK_2328,
+      sub('task-list-reminder', body),
+      false
+    )!;
+    expect(out).not.toBeNull();
+    const r = run(out);
+    expect(r({ type: 'task_reminder', content: [] })).toEqual([
+      'Use TaskCreate / TaskUpdate.',
+    ]);
+    expect(r({ type: 'task_reminder', content: TASKS })).toEqual([
+      'Use TaskCreate / TaskUpdate.\n\nHere are the existing tasks:\n\n#1. [pending] A',
+    ]);
+    expect(
+      r({ type: 'task_reminder', statusKeeper: 'app', content: TASKS })
+    ).toEqual([
+      'If new work would benefit from tracking progress, add it with TaskCreate. App marks status.\n\n\nHere are the existing tasks:\n\n#1. [pending] A',
+    ]);
+    expect(
+      r({ type: 'task_reminder', statusKeeper: 'claude', content: [] })
+    ).toEqual(['App offline.\n']);
+  });
+
+  it("the user's {{existing_tasks}}-only override applies and returns [] on an empty list", () => {
+    const out = taskListReminder.apply(
+      TASK_2328,
+      sub('task-list-reminder', '{{existing_tasks}}'),
+      false
+    )!;
+    const r = run(out);
+    expect(r({ type: 'task_reminder', content: [] })).toEqual([]);
+    expect(r({ type: 'task_reminder', content: TASKS })).toEqual([
+      'Here are the existing tasks:\n\n#1. [pending] A',
+    ]);
+  });
+
+  it('stock is a no-op, re-splice is identical, suppression is idempotent', () => {
+    expect(
+      taskListReminder.apply(
+        TASK_2328,
+        sub('task-list-reminder', taskListReminder.defaultBody),
+        false
+      )
+    ).toBe(TASK_2328);
+    const b = sub(
+      'task-list-reminder',
+      'Use {{task_create_tool}}.\n\n{{existing_tasks}}'
+    );
+    const once = taskListReminder.apply(TASK_2328, b, false)!;
+    expect(taskListReminder.apply(once, b, false)).toBe(once);
+    const suppressed = taskListReminder.apply(TASK_2328, '', true)!;
+    expect(suppressed).toContain('case"task_reminder":{return [];}');
+    expect(taskListReminder.apply(suppressed, '', true)).toBe(suppressed);
+  });
+});
