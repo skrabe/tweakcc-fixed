@@ -843,5 +843,45 @@
     "verdict": "not-model-facing",
     "version": "2.1.326",
     "why": "SDK control-protocol schema description read by the host program: host-facing documentation, never in a model request."
+  },
+  "data-sdk-initialize-settings-parameter": {
+    "verdict": "not-model-facing",
+    "version": "2.1.328",
+    "why": "@internal .describe() on the settings field of the SDK initialize control_request schema (@2937399 chunk-20bv8pca.js): control-protocol documentation for SDK hosts, never in a model request."
+  },
+  "data-sdk-initialize-response-settings-applied-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.328",
+    "why": "@internal .describe() on settings_applied in the SDK initialize response schema (@2951269 chunk-20bv8pca.js): control-protocol documentation for SDK hosts, never in a model request."
+  },
+  "data-sdk-read-file-diff-rootid-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.328",
+    "why": "rootId .describe() on the diff_root anchor of the read_file control_request schema (@3052472 chunk-20bv8pca.js, already cached internal); read_file is a host request, not a model tool."
+  },
+  "data-sdk-initialize-disallowedtools-parameter": {
+    "verdict": "not-model-facing",
+    "version": "2.1.328",
+    "why": "@internal .describe() on disallowedTools of the SDK initialize control_request schema (@2938238 chunk-20bv8pca.js): control-protocol documentation for SDK hosts, never in a model request."
+  },
+  "data-server-classifier-instruction-file-retry-warning": {
+    "verdict": "not-model-facing",
+    "version": "2.1.328",
+    "why": "tno @14508362 chunk-56bhcxay.js: [server-classifier] t(...,{level:\"warn\"}) debug/warn log on a 400/413 retry; only the retry tag is returned, the text never reaches a model."
+  },
+  "data-sdk-initialize-host-dropped-env-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.328",
+    "why": "@internal .describe() on host_dropped_env of the SDK system/init message schema (@2785627 chunk-20bv8pca.js): stdout schema documentation for SDK hosts, never in a model request."
+  },
+  "data-self-hosted-runner-disableallhooks-warning": {
+    "verdict": "not-model-facing",
+    "version": "2.1.328",
+    "why": "fp @17921084 chunk-gv1b3n3g.js: [runner:session] line passed to the runner's onStatus log writer y; operator-facing runner output, never in a model request."
+  },
+  "data-sdk-plugin-requiredbyorganization-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.328",
+    "why": "@internal .describe() on requiredByOrganization of the SDK plugin config schema (@2592358 chunk-20bv8pca.js): control-protocol documentation for SDK hosts, never in a model request."
   }
 }

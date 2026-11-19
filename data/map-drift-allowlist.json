@@ -44,5 +44,9 @@
   "2.1.322->2.1.325": {
     "system-reminder-mcp-connector-file-path-refusal": "CC 2.1.325 rewrote this refusal: it no longer lists the allowed folders and instead says only that the file is missing or is not sent, so its slots are new variables (a refusal prefix, the read-block setting names, a multiple-files flag). Names were re-derived from the 2.1.325 binary.",
     "system-reminder-auto-mode-no-verdict-after-another-hook-rewrite": "Curated in the 2026-11-15 weekly: 2.1.322 reworded this reminder and its slots fell back to generic names; restored the classifier-name and tool-name slots its sibling uses, derived from the binary."
+  },
+  "2.1.326->2.1.328": {
+    "skill-code-review-applying-fixes": "CC 2.1.328 hoisted the report-tool ternary into a local and added a bugs-only clause, so slot 0 is now the bugs-only flag and slot 1 the resolved closing sentence. Upstream rebound both slots; names re-derived from the binary. The override must be realigned.",
+    "tool-description-workflow": "CC 2.1.328 moved the opt-in block into a helper called with the same parameter, so SYSTEM_MESSAGE_PHRASE still names the function's parameter, now at slot 1 after the helper. The opt-in text and its Agent tool name are no longer in this template, so the override must be realigned."
   }
 }

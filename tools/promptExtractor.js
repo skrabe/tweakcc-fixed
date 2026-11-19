@@ -469,6 +469,115 @@ const CURATED_IDENTIFIER_MAPS = {
         11: 'OUTPUT_FORMAT_FN',
       },
     },
+    {
+      // CC 2.1.328 Vs(e,o=15): W, o, V, Re (correctness angles A-C), _o
+      // (angles D-E), wo (reuse), Z, ee, se, te, de, Eo (inline gap sweep),
+      // Pe, e, o.
+      identifiers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 1],
+      identifierMap: {
+        0: 'FORMAT_FINDINGS_LIMIT_LABEL_FN',
+        1: 'MAX_FINDINGS',
+        2: 'PHASE_0_GATHER_DIFF',
+        3: 'CORRECTNESS_ANGLES',
+        4: 'EXTRA_CORRECTNESS_ANGLES',
+        5: 'ANGLE_REUSE',
+        6: 'ANGLE_SIMPLIFICATION',
+        7: 'ANGLE_EFFICIENCY',
+        8: 'ANGLE_ALTITUDE',
+        9: 'ANGLE_CONVENTIONS',
+        10: 'CLEANUP_AND_ALTITUDE_CANDIDATES_NOTE',
+        11: 'INLINE_GAP_SWEEP_PHASE',
+        12: 'FORMAT_REVIEW_OUTPUT_WITH_MINIMUM_FINDINGS_FN',
+        13: 'OUTPUT_FORMAT_FN',
+      },
+    },
+  ],
+  // CC 2.1.328 bugs-only tiers. Upstream's maps for these three are shifted
+  // by one or more slots (max-5 put PHASE_0_GATHER_DIFF on the "5+1" flag).
+  // Distinct vars in first-seen order; names follow the sibling tiers above
+  // and agent-prompt-code-review-unavailable-agent-inline-mode.
+  'skill-code-review-effort-max-5': [
+    {
+      // at(e,o)(r,h,g=15): e, o (bugs-only), W, g, V, gt, tt, eo (bugs-only
+      // angles), Zt (ten angles), Ce, de, so, Ws, ao, r, _e.
+      identifiers: [
+        0, 1, 2, 3, 0, 4, 1, 1, 5, 6, 1, 7, 8, 1, 9, 10, 11, 12, 1, 13, 14, 3,
+        1, 15,
+      ],
+      identifierMap: {
+        0: 'EFFORT_LEVEL',
+        1: 'IS_BUGS_ONLY_REVIEW',
+        2: 'FORMAT_FINDINGS_LIMIT_LABEL_FN',
+        3: 'MAX_FINDINGS',
+        4: 'PHASE_0_GATHER_DIFF',
+        5: 'AGENT_TOOL_NAME',
+        6: 'AGENT_UNAVAILABLE_INSTRUCTIONS',
+        7: 'BUGS_ONLY_FINDER_ANGLES_BLOCK',
+        8: 'EXTENDED_FINDER_ANGLES_BLOCK',
+        9: 'CONVENTIONS_CANDIDATES_NOTE_FN',
+        10: 'CLEANUP_AND_ALTITUDE_CANDIDATES_NOTE',
+        11: 'THREE_STATE_VERIFY_PHASE',
+        12: 'GAP_SWEEP_PHASE',
+        13: 'ASSIGN_FINDING_SEVERITY_NOTE',
+        14: 'OUTPUT_FORMAT_FN',
+        15: 'FINDING_SEVERITY_OUTPUT_OPTIONS',
+      },
+    },
+  ],
+  'skill-code-review-effort-max-4': [
+    {
+      // xo(e,o=15): W, o, V, Re, _o, te, Ce, Eo, Pe, e, o, _e.
+      identifiers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 10],
+      identifierMap: {
+        0: 'FORMAT_FINDINGS_LIMIT_LABEL_FN',
+        1: 'MAX_FINDINGS',
+        2: 'PHASE_0_GATHER_DIFF',
+        3: 'CORRECTNESS_ANGLES',
+        4: 'EXTRA_CORRECTNESS_ANGLES',
+        5: 'ANGLE_CONVENTIONS',
+        6: 'CONVENTIONS_CANDIDATES_NOTE_FN',
+        7: 'INLINE_GAP_SWEEP_PHASE',
+        8: 'FORMAT_REVIEW_OUTPUT_WITH_MINIMUM_FINDINGS_FN',
+        9: 'OUTPUT_FORMAT_FN',
+        10: 'FINDING_SEVERITY_OUTPUT_OPTIONS',
+      },
+    },
+  ],
+  'skill-code-review-effort-high-3': [
+    {
+      // So(e,o=10): W, o, V, Re, te, Ce, Pe, e, o, _e.
+      identifiers: [0, 1, 2, 3, 4, 5, 6, 7, 1, 8],
+      identifierMap: {
+        0: 'FORMAT_FINDINGS_LIMIT_LABEL_FN',
+        1: 'MAX_FINDINGS',
+        2: 'PHASE_0_GATHER_DIFF',
+        3: 'CORRECTNESS_ANGLES',
+        4: 'ANGLE_CONVENTIONS',
+        5: 'CONVENTIONS_CANDIDATES_NOTE_FN',
+        6: 'FORMAT_REVIEW_OUTPUT_WITH_MINIMUM_FINDINGS_FN',
+        7: 'OUTPUT_FORMAT_FN',
+        8: 'FINDING_SEVERITY_OUTPUT_OPTIONS',
+      },
+    },
+  ],
+  // CC 2.1.328 ai(e,o) hoisted the report-tool ternary into a local, so the
+  // template's slots are now the bugs-only flag and that resolved sentence.
+  'skill-code-review-applying-fixes': [
+    {
+      identifiers: [0, 1],
+      identifierMap: {
+        0: 'IS_BUGS_ONLY_REVIEW',
+        1: 'FIX_REPORT_CLOSING_INSTRUCTION',
+      },
+    },
+  ],
+  // Q = forkEnabled() && forkAvailable, unchanged since 2.1.326; upstream
+  // renamed it CAN_FORK_CONTEXT. Keep the carried name the override binds.
+  'system-prompt-writing-subagent-prompts': [
+    {
+      identifiers: [0, 0],
+      identifierMap: { 0: 'HAS_SUBAGENT_TYPE' },
+    },
   ],
   'skill-code-review-effort-low-2': [
     {
