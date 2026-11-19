@@ -180,6 +180,7 @@ interface RoutingSites {
   walkerModule: string;
   supplier: string;
   supplierModule: string;
+  wrapper?: string;
 }
 
 const routingSites = (src: string): RoutingSites => {
@@ -192,6 +193,7 @@ const routingSites = (src: string): RoutingSites => {
     walkerModule: moduleHeaderAt(src, walker.index),
     supplier: supplier.name,
     supplierModule: moduleHeaderAt(src, supplier.index),
+    wrapper: supplier.wrapper?.name,
   };
 };
 
@@ -214,7 +216,9 @@ const routerOf = (src: string, sites: RoutingSites): Router => {
   const walk = walkerScope(sites.walker) as (
     e: Record<string, unknown>
   ) => RefusalResult;
-  const supply = supplierScope(sites.supplier) as () => unknown;
+  const supply = sites.wrapper
+    ? (supplierScope(sites.wrapper) as (e: Record<string, unknown>) => unknown)
+    : (supplierScope(sites.supplier) as () => unknown);
   return (flagged, category, usable = model => !REJECTED.has(model)) =>
     walk({
       originalModelCanonical: flagged,
@@ -222,7 +226,10 @@ const routerOf = (src: string, sites: RoutingSites): Router => {
       armedFallbackModel: 'claude-armed-fallback',
       armedTargetIsRefusingModel: false,
       resolveTarget: (model: string) => (usable(model) ? model : undefined),
-      routesOverride: supply(),
+      routesOverride: supply({
+        canonical: flagged,
+        servedRefusalRoutes: undefined,
+      }),
     });
 };
 

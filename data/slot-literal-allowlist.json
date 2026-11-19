@@ -1568,16 +1568,6 @@
     "reason": "a command the model must reproduce verbatim in the branch-transfer review procedure",
     "text": "git -c core.quotePath=true -c diff.relative=false diff --raw --ignore-submodules=none HEAD <sha>"
   },
-  "12678d51d61f58f5": {
-    "verdict": "catalogue",
-    "desc": "Suffix on plugin install/enable results when the plugin was installed but failed to load: points to /plugin for details.",
-    "id": "slash-command-plugin-load-failed-see-plugin",
-    "label": "SLASH_COMMAND_PLUGIN_INSTALL_ALREADY_INSTALLED_VAR_2",
-    "name": "Slash Command: /plugin — plugin could not be loaded",
-    "promptId": "slash-command-plugin-install-already-installed",
-    "reason": "states a failure consequence and where to look (/plugin); identical text also emitted at @33915799",
-    "text": ". The plugin couldn't be loaded — see /plugin for details."
-  },
   "f3a12414757979bd": {
     "promptId": "tool-result-write-refusing-symbolic-link-target",
     "label": "TOOL_RESULT_WRITE_REFUSING_SYMBOLIC_LINK_TARGET_VAR_1",
@@ -5205,17 +5195,6 @@
     "label": "TOOL_RESULT_PROPOSESKILLS_EDIT_TEXT_REPEATED_VAR_0",
     "reason": "joins the occurs-more-than-once / is-not clause to the interpolated skill name in y @36604787"
   },
-  "eaa7707ea90aea9c": {
-    "text": "sending files to a connector takes an Allow given ",
-    "verdict": "catalogue",
-    "promptId": "tool-result-mcp-connector-upload-hook-approved",
-    "promptIds": ["tool-result-mcp-connector-upload-substitute-approved"],
-    "label": "TOOL_RESULT_MCP_CONNECTOR_UPLOAD_HOOK_APPROVED_VAR_0",
-    "id": "tool-result-mcp-connector-upload-allow-given-at-terminal-prompt",
-    "name": "Tool Result: MCP connector upload — Allow must be given at the terminal prompt",
-    "desc": "Clause l in Hpi @44610374 giving the rule behind a no-file-sent refusal when a PermissionRequest hook or a substitute approver approved the call: sending files to a connector takes an Allow given at Claude Code's prompt in a terminal.",
-    "reason": "states the approval condition the model relays to the user; shared by the hook-approved and substitute-approved refusals"
-  },
   "ab5082663ac171a0": {
     "text": "Claude Code cannot send a file to a connector in this session",
     "verdict": "catalogue",
@@ -5733,5 +5712,108 @@
     "verdict": "glue",
     "text": "The error was: \"",
     "reason": "field label before the interpolated error text in `The error was: \"${B}\". ` @60707020"
+  },
+  "001fe05d2d8c240d": {
+    "promptId": "tool-result-agent-ran-again-report-not-delivered",
+    "label": "TOOL_RESULT_AGENT_RAN_AGAIN_REPORT_NOT_DELIVERED_VAR_0",
+    "verdict": "glue",
+    "text": "This agent ran again after its ",
+    "reason": "opening clause gso @5184731 completed by the host sentence; also listed in the later-report-note-forgery detector proses @11134937, so its wording is matched text"
+  },
+  "71c8aaf5d3f49773": {
+    "promptId": "data-api-error-stream-idle-timeout-at-maximum",
+    "label": "DATA_API_ERROR_STREAM_IDLE_TIMEOUT_AT_MAXIMUM_VAR_0",
+    "verdict": "glue",
+    "text": "No data arrived for more than ",
+    "reason": "states the interpolated idle duration in g=`No data arrived for more than ${minutes} minutes.` @13439420; the instruction is the host sentence"
+  },
+  "5a9d613c71938b6f": {
+    "promptId": "data-api-error-stream-idle-proxy-buffering-hint",
+    "label": "DATA_API_ERROR_STREAM_IDLE_PROXY_BUFFERING_HINT_VAR_1",
+    "verdict": "glue",
+    "text": ", and API_TIMEOUT_MS at least as high",
+    "reason": "conditional arm K @13440311 (API_TIMEOUT_MS unset or positive, else empty) tailing the host's set-the-timeout clause"
+  },
+  "e5645b6a6ff30874": {
+    "promptId": "data-api-error-api-timeout-raise-hint",
+    "label": "DATA_API_ERROR_API_TIMEOUT_RAISE_HINT_VAR_1",
+    "verdict": "glue",
+    "text": "the limit in force (600000 by default)",
+    "reason": "conditional arm of K @13440521 naming the value to exceed when API_TIMEOUT_MS is unset; the other arms are the configured number or 300000"
+  },
+  "2df9a746be07ef06": {
+    "promptId": "system-prompt-cross-session-message-attribution-during-compaction",
+    "label": "CROSS_SESSION_SUMMARY_LABEL",
+    "verdict": "glue",
+    "text": "From another session",
+    "reason": "label DEt the host quotes; matched with includes() in compact summaries @13999658, so it must stay verbatim"
+  },
+  "f0c68f6b32f4096f": {
+    "promptId": "system-reminder-status-check-progress-checklist-unchanged",
+    "label": "SYSTEM_REMINDER_STATUS_CHECK_PROGRESS_CHECKLIST_UNCHANGED_VAR_1",
+    "verdict": "glue",
+    "text": " with arguments exactly {\"session_id\":\"@parent\",\"visibility\":\"posted_to_shared_channel\",\"live_status\":\"update\",\"message\":\"…\"}",
+    "reason": "exact call shape Ago @15393218 that gates the reminder via appendSystemPrompt.includes(Ago); a sentinel, must stay verbatim"
+  },
+  "496069b409d70f94": {
+    "promptId": "system-reminder-cross-session-remote-delivery-not-delivered",
+    "label": "SYSTEM_REMINDER_CROSS_SESSION_REMOTE_DELIVERY_NOT_DELIVERED_VAR_3",
+    "verdict": "glue",
+    "text": "No further notice follows.",
+    "reason": "unwatched arm of c @36702313; the watched arm is catalogued as system-reminder-cross-session-remote-delivery-further-notice-watched"
+  },
+  "0e6f699f7fc076a8": {
+    "promptId": "tool-result-project-write-edits-not-usable-here",
+    "promptIds": [
+      "tool-result-project-write-edits-no-text-doc",
+      "tool-result-project-write-edits-under-content-rule",
+      "tool-result-project-write-edits-unchecked-session"
+    ],
+    "label": "TOOL_RESULT_PROJECT_WRITE_EDITS_NOT_USABLE_HERE_VAR_1",
+    "verdict": "glue",
+    "text": "pass the whole new text as content.",
+    "reason": "shared tail ie @43260312 completing each host's `Instead, ` / `To create one, ` clause; names the content parameter"
+  },
+  "26486395e5f04e29": {
+    "promptId": "tool-result-artifact-design-system-readme-index-cards-guidance",
+    "label": "TOOL_RESULT_ARTIFACT_DESIGN_SYSTEM_README_INDEX_CARDS_GUIDANCE_VAR_0",
+    "verdict": "glue",
+    "text": "Its file list has no ",
+    "reason": "label before the interpolated missing card names in u @43773328"
+  },
+  "7c3cc69c8931a465": {
+    "promptId": "tool-result-artifact-file-list-empty",
+    "promptIds": ["tool-result-artifact-file-list-header"],
+    "label": "TOOL_RESULT_ARTIFACT_FILE_LIST_EMPTY_VAR_5",
+    "verdict": "glue",
+    "text": ", an Artifact made from a type",
+    "reason": "conditional arm of U @44284104 (from_type, no type title) describing the artifact in the listing header"
+  },
+  "f21981fbbb2244d7": {
+    "promptId": "system-reminder-repl-mcp-servers-still-connecting",
+    "label": "SYSTEM_REMINDER_REPL_MCP_SERVERS_STILL_CONNECTING_VAR_0",
+    "verdict": "glue",
+    "text": "These MCP servers are still connecting:",
+    "reason": "label y @46418570 before the interpolated server list; the instruction is the host sentence"
+  },
+  "815a5f932b68c5d9": {
+    "promptId": "tool-result-list-agents-mcp-server-connecting-note",
+    "promptIds": [
+      "tool-result-list-agents-service-sessions-isolation-policy-note",
+      "tool-result-list-agents-service-sessions-unlisted-note",
+      "tool-result-list-agents-service-sessions-truncated-note",
+      "tool-result-list-agents-service-sessions-list-failed-note"
+    ],
+    "label": "TOOL_RESULT_LIST_AGENTS_MCP_SERVER_CONNECTING_NOTE_VAR_1",
+    "verdict": "glue",
+    "text": "your user's cloud and Remote Control sessions",
+    "reason": "shared noun phrase b @60330445 naming what each host note is about"
+  },
+  "b06f7badfb2cf482": {
+    "promptId": "tool-result-list-agents-remote-control-off-note",
+    "label": "TOOL_RESULT_LIST_AGENTS_REMOTE_CONTROL_OFF_NOTE_VAR_0",
+    "verdict": "glue",
+    "text": "Cloud sessions and other computers",
+    "reason": "noun-phrase arm of o @60538408 (the other arm is `Other computers`); the rule is the host sentence"
   }
 }

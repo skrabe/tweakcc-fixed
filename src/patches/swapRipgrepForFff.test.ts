@@ -328,6 +328,36 @@ describe('swapRipgrepForFff', () => {
     expect(writeSwapRipgrepForFff(patched, WRAPPER)).toBe(patched);
   });
 
+  it('binds the 2.1.328 renderer whose fold assignment continues with a comma', () => {
+    const render328 = INSTRUCTIONS.replace(
+      'function fffRender($rows,$visible=[],$model,$config){',
+      'function fffRender($rows,$visible,$model,$config,$extra){let $mark=$model===void 0?void 0:$markOf($model);'
+    )
+      .replace(
+        '$memo(()=>$visible));let $output=[];',
+        '$memo(()=>$visible)),$rows=$clear($rows,$config?.accountMemoryClearing).messages,$rows=$tail($rows);let $output=[];'
+      )
+      .replace(
+        '$rendered=$result.messages,{isKnownType:$known,recordedRole:$role}=$result;',
+        '$rendered=$result.messages;let{isKnownType:$known,recordedRole:$role}=$result;'
+      );
+    expect(render328).toContain(
+      '$memo(()=>$visible)),$rows=$clear($rows,$config?.accountMemoryClearing).messages,'
+    );
+    const source = BASE.replace(INSTRUCTIONS, render328);
+    const patched = writeSwapRipgrepForFff(source, WRAPPER)!;
+    expect(patched).not.toBeNull();
+    expect(patched).toContain('$rendered=(function __tweakccFffAutoMode(');
+    expect(patched).toContain('})($result.messages,$row.attachment,$visible,"');
+    expect(patched).toContain(
+      '$memo(()=>$visible)),$rows=$clear($rows,$config?.accountMemoryClearing).messages,$rows=$tail($rows);let $output=[];'
+    );
+    expect(patched).toContain('function __tweakccFffDescription');
+    expect(hasFffShellIntegration(patched, WRAPPER)).toBe(true);
+    expect(() => new Function(patched)).not.toThrow();
+    expect(writeSwapRipgrepForFff(patched, WRAPPER)).toBe(patched);
+  });
+
   it('refuses legacy interception instead of leaving native searches redirected', () => {
     const error = vi.spyOn(console, 'error').mockImplementation(() => {});
     try {

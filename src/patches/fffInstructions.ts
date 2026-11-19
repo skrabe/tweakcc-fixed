@@ -308,6 +308,11 @@ export const writeFffInstructions = (
   guidance = FFF_BASH_GUIDANCE
 ): string | null => {
   const renderer =
+    // CC 2.1.328+: the fold assignment continues with `,rows=clear(rows,...)`.
+    readScope(
+      file,
+      /(?:^|[;}])function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+),([$\w]+)(?:,[$\w]+)*\)\{let [$\w]+=\4===void 0\?void 0:[$\w]+\(\4\);\2=([$\w]+)\(\2,\5\?\.accountMemoryWithheld,([$\w]+)\(\(\)=>\3\)\),\2=[$\w]+\(\2,/g
+    ) ??
     // CC 2.1.325+: a `let` derived from the third parameter precedes the
     // fold assignment.
     readScope(

@@ -278,6 +278,198 @@ describe('writeRefusalFallbackModel: routing', () => {
   });
 });
 
+// 2.1.328 passes the walker a wrapper that asks the supplier first and the
+// served model catalogue's table second. Copied verbatim from the pristine
+// 2.1.328 bundle, where all four sit in one module.
+const WALKER_328 =
+  'function uci(e){let{originalModelCanonical:r,apiRefusalCategory:o}=e,h=e.routesOverride??ou(r),g=o!=null&&Object.hasOwn(h,o)?h[o]:void 0;if(g!==void 0){let y=iu(g),E=cQr(y,e.resolveTarget);if(E!==void 0)return{matched:"category",model:E.model,remainingChain:E.remainingChain,skippedStages:E.skippedStages,chainLength:y.length};return{matched:"none",model:void 0,reason:"mapped_target_unresolvable",skippedStages:y.slice(0,-1),chainLength:y.length}}if(XE()&&!e.armedTargetIsRefusingModel)return{matched:"catch_all",model:e.armedFallbackModel};return{matched:"none",model:void 0,reason:"unmapped"}}';
+const TABLE_328 =
+  'function ou(e){if(Ia(e))return jE;if(e==="claude-opus-5-5"||e==="claude-opus-5-5[1m]")return YE;if(e==="claude-opus-5"||e==="claude-opus-5[1m]")return GE;if(e==="claude-sonnet-5-5"||e==="claude-sonnet-5-5[1m]")return KE;return zE}';
+const CATEGORIES_328 =
+  'function dQr(e){return e==="cyber"||e==="bio"}function WE(e){return e==="frontier_llm"||e==="reasoning_extraction"}function FPe(e){return dQr(e)||WE(e)?e:"other"}';
+const CHAIN_328 =
+  'var qE=3;function iu(e){return(typeof e==="string"?[e]:e).slice(0,qE)}';
+const WRAPPER_328 =
+  'function W7o({canonical:e,servedRefusalRoutes:r}){return pR()??Vm(e,r)}';
+const SUPPLIER_328 = 'function pR(){return}';
+const CALL_SITE_328 =
+  'triedModels:[eXt(ie.model)]}),routesOverride:W7o(gn)}):void 0,Fc=yd!==void 0?yd.model:pd;';
+
+const BUNDLE_328 = [
+  SESSION_STATE,
+  module(128, 'chunk-zfg8t6ef.js', QUEUE),
+  module(
+    372,
+    'chunk-y5weakn8.js',
+    CATEGORIES_328,
+    CHAIN_328,
+    TABLE_328,
+    WALKER_328,
+    WRAPPER_328,
+    SUPPLIER_328,
+    SWITCHED
+  ),
+  module(355, 'chunk-k0q6ndrk.js', MESSAGE, DECOY, CALL_SITE_328),
+  module(
+    565,
+    'chunk-bja7hb37.js',
+    APPLY_REGISTRATION,
+    DROP_REGISTRATION,
+    WRITER
+  ),
+  module(1223, 'chunk-skp01brc.js', HEADLESS),
+  module(1405, 'chunk-cz85x099.js', REPL),
+].join('');
+
+const patched328 = (routes: unknown = ROUTES): string => {
+  const out = writeRefusalFallbackModel(BUNDLE_328, routes);
+  expect(out).not.toBeNull();
+  return out as string;
+};
+
+/**
+ * The patched wrapper and supplier, run with the served table and the shipped
+ * one stubbed, feeding the stock walker as the main loop does.
+ */
+const router328 = (
+  file: string,
+  served: (canonical: string, routes: unknown) => unknown
+) => {
+  const text = moduleText(file, 372);
+  const at = text.indexOf('function W7o(');
+  const end = text.indexOf('globalThis.__tweakccRefusalFallbackLine=', at);
+  const wrapper = new Function('Vm', 'ou', `${text.slice(at, end)};return W7o`)(
+    served,
+    (model: string) => STOCK[model] ?? {}
+  ) as (e: {
+    canonical: string;
+    servedRefusalRoutes: unknown;
+  }) => Record<string, unknown> | undefined;
+  const walker = new Function(
+    'ou',
+    'cQr',
+    'XE',
+    `${CHAIN_328}${text.slice(text.indexOf('function uci('), text.indexOf('function W7o('))};return uci`
+  )(
+    (model: string) => STOCK[model] ?? {},
+    walk,
+    () => false
+  ) as (e: Record<string, unknown>) => {
+    matched: string;
+    model?: string;
+    reason?: string;
+  };
+  return {
+    override: (canonical: string) =>
+      wrapper({ canonical, servedRefusalRoutes: undefined }),
+    route: (
+      flagged: string,
+      category: string,
+      usable: (m: string) => boolean = () => true
+    ) =>
+      walker({
+        originalModelCanonical: flagged,
+        apiRefusalCategory: category,
+        resolveTarget: (m: string) => (usable(m) ? m : undefined),
+        routesOverride: wrapper({
+          canonical: flagged,
+          servedRefusalRoutes: undefined,
+        }),
+      }),
+  };
+};
+
+describe('writeRefusalFallbackModel: the 2.1.328 override wrapper', () => {
+  it('finds the supplier through the wrapper and merges in the wrapper, leaving the walker stock', () => {
+    const out = patched328();
+    const text = moduleText(out, 372);
+    expect(text).toContain(WALKER_328);
+    expect(text).toContain(
+      'function W7o({canonical:e,servedRefusalRoutes:r}){let __tweakccO=pR();if(!__tweakccO||!Object.keys(__tweakccO).length)return Vm(e,r);let __tweakccD=Vm(e,r)??ou(e),'
+    );
+    expect(text).toContain('function pR(){return JSON.parse(');
+    expect(out).toContain(CALL_SITE_328);
+    expect(out).toContain(DECOY);
+  });
+
+  it('returns exactly what stock returns when no route is configured', () => {
+    const served = { bio: [], cyber: 'claude-served-1' };
+    const { override } = router328(patched328({}), () => served);
+    expect(override('claude-fable-5-1')).toBe(served);
+    expect(
+      router328(patched328({}), () => undefined).override('claude-fable-5-1')
+    ).toBeUndefined();
+  });
+
+  it('merges configured routes over the served table, keeping a category the table gives no route', () => {
+    const { override } = router328(
+      patched328({ cyber: 'claude-opus-5-5' }),
+      () => ({
+        bio: [],
+        cyber: 'claude-served-1',
+      })
+    );
+    expect({ ...override('claude-fable-5-1') }).toEqual({
+      bio: [],
+      cyber: ['claude-opus-5-5', 'claude-served-1'],
+    });
+  });
+
+  it('merges over the shipped table when nothing is served, and every walker outcome stays reachable', () => {
+    const { route } = router328(
+      patched328({ cyber: 'claude-opus-5-5', frontier_llm: 'claude-typo' }),
+      () => undefined
+    );
+    expect(route('claude-fable-5-1', 'cyber')).toMatchObject({
+      matched: 'category',
+      model: 'claude-opus-5-5',
+    });
+    expect(
+      route('claude-fable-5-1', 'cyber', m => m !== 'claude-opus-5-5')
+    ).toMatchObject({ matched: 'category', model: 'claude-opus-4-8' });
+    expect(route('claude-fable-5-1', 'bio')).toMatchObject({
+      matched: 'category',
+      model: 'claude-opus-5',
+    });
+    expect(
+      route('claude-fable-5-1', 'frontier_llm', m => m !== 'claude-typo')
+    ).toMatchObject({ matched: 'none', reason: 'mapped_target_unresolvable' });
+    expect(route('claude-fable-5-1', 'reasoning_extraction')).toMatchObject({
+      matched: 'none',
+      reason: 'unmapped',
+    });
+  });
+
+  it('reads the categories and chain length from the 2.1.328 module', () => {
+    const warned = warnings();
+    patched328({ nope: ['a', 'b', 'c', 'd'] });
+    expect(warned()).toEqual([
+      expect.stringContaining('nope is not a refusal category'),
+      expect.stringContaining(
+        'lists 4 models, and Claude Code tries only the first 3'
+      ),
+    ]);
+  });
+
+  it('is idempotent', () => {
+    const once = patched328();
+    expect(writeRefusalFallbackModel(once, ROUTES)).toBe(once);
+  });
+
+  for (const [site, text] of [
+    ['supplier', SUPPLIER_328],
+    ['shipped table', TABLE_328],
+    ['walker', WALKER_328],
+  ] as const) {
+    it(`fails rather than half-patching when the ${site} is absent`, () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+      expect(
+        writeRefusalFallbackModel(BUNDLE_328.replace(text, ''), ROUTES)
+      ).toBeNull();
+    });
+  }
+});
+
 describe('writeRefusalFallbackModel: config validation', () => {
   it('skips a route that is not a model id or a list of them, and says why', () => {
     const warned = warnings();

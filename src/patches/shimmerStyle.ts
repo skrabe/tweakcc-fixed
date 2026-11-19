@@ -86,11 +86,20 @@ export const writeShimmerStyle = (
     const cells = Math.max(1, Math.round(width));
     const left = Math.floor((cells - 1) / 2);
     const right = cells - 1 - left;
+    const windowPatterns = [
+      /let ([$\w]+)=([$\w]+)-1,([$\w]+)=\2\+1(?=[,;][^]{0,1500}?\1>=[$\w]+\|\|\3<0)/,
+      /let ([$\w]+)=([$\w]+)-1,([$\w]+)=\2\+1(?=;if\(\1>=)/,
+    ];
+    const windowPattern = windowPatterns.find(p => p.test(file as string));
+    if (!windowPattern) {
+      console.error('patch: shimmerStyle: failed to find glimmer window');
+      return null;
+    }
     file = replaceFirst(
       file,
-      /let ([$\w]+)=([$\w]+)-1,([$\w]+)=\2\+1;if\(\1>=/,
+      windowPattern,
       ([, start, center, end]) =>
-        `let ${start}=${center}-${left},${end}=${center}+${right};if(${start}>=`
+        `let ${start}=${center}-${left},${end}=${center}+${right}`
     );
     if (!file) return null;
     // Pad the sweep by at least the window width so a wide window still

@@ -80,10 +80,15 @@ export const writeSkipSkillShellValidation = (file: string): string | null => {
   if (!file.includes(FAILURE_MESSAGE)) return null;
   if (file.includes('tweakccOwnSkill')) return file;
 
-  // async function whe(e,n,r,s[,h]){if(n.options.readOnlySkillLoad)...
-  const header = file.match(
-    /async function ([$\w]+)\([$\w]+,([$\w]+)(?:,[$\w]+)*\)\{if\(\2\.options\.readOnlySkillLoad\)/
-  );
+  // 2.1.328+: async function Uze(e,o,r,g,h){if(o=vpe(o),o.options.readOnlySkillLoad)...
+  // Before:   async function whe(e,n,r,s[,h]){if(n.options.readOnlySkillLoad)...
+  const header =
+    file.match(
+      /async function ([$\w]+)\([$\w]+,([$\w]+)(?:,[$\w]+)*\)\{if\(\2=[$\w]+\(\2\),\2\.options\.readOnlySkillLoad\)/
+    ) ??
+    file.match(
+      /async function ([$\w]+)\([$\w]+,([$\w]+)(?:,[$\w]+)*\)\{if\(\2\.options\.readOnlySkillLoad\)/
+    );
   if (!header || header.index === undefined) {
     console.error(
       'patch: skipSkillShellValidation: failed to find prompt-shell expansion function'

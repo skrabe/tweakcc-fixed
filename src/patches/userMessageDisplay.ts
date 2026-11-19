@@ -4,6 +4,7 @@ import {
   findBoxComponent,
   findChalkVar,
   findTextComponent,
+  findTextComponentInModule,
   showDiff,
 } from './index';
 import { UserMessageDisplayConfig } from '../types';
@@ -22,7 +23,6 @@ import { escapeNonAscii } from '../utils';
 export const escapeForTemplateLiteral = (s: string): string =>
   s.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$\{/g, '\\${');
 
-const MODULE_MARK = '/*@@TWEAKCC_MODULE:';
 const USER_PROMPT_ERR = 'No content found in user prompt message';
 
 interface JsxParentBoxMatch {
@@ -34,13 +34,6 @@ interface JsxParentBoxMatch {
   originalBoxAttrs: string;
   childrenKeyword: string;
 }
-
-const moduleSliceAround = (file: string, at: number): string => {
-  const markAt = file.lastIndexOf(MODULE_MARK, at);
-  if (markAt === -1) return file;
-  const next = file.indexOf(MODULE_MARK, markAt + MODULE_MARK.length);
-  return file.slice(markAt, next === -1 ? file.length : next);
-};
 
 /**
  * CC ≥ 2.1.246 ESM-split: jsx/jsxs are imported bindings, so the user-message
@@ -99,18 +92,6 @@ const findImportedJsxUserMessage = (
       childrenKeyword: parent[2],
     };
   }
-};
-
-const findLocalTextComponent = (
-  file: string,
-  at: number,
-  helper: string
-): string | undefined => {
-  const slice = moduleSliceAround(file, at);
-  const re = new RegExp(
-    `(?<![.$\\w])${escapeIdent(helper)}\\(([$\\w]+),\\{color:"text"`
-  );
-  return slice.match(re)?.[1];
 };
 
 const jsxRuntimeMatchToParentBox = (
@@ -535,19 +516,14 @@ export const writeUserMessageDisplay = (
   }
 
   if (importedJsxMatch) {
-    // ESM-split: Text lives in this module as an import (`t` from ink), not
-    // as the globally-first Text function (which is a different module's
-    // binding and would be a ReferenceError if spliced in here).
-    // The global-first Text is only a legitimate fallback on a single-module
-    // bundle. On a code-split one it names a DIFFERENT module's binding, so
-    // splicing it here is a ReferenceError the moment the row renders.
-    const textComponent =
-      findLocalTextComponent(
-        oldFile,
-        importedJsxMatch.index,
-        importedJsxMatch.callExpr
-      ) ??
-      (oldFile.includes(MODULE_MARK) ? undefined : findTextComponent(oldFile));
+    // ESM-split: Text must be the binding this module imports from Ink's
+    // Text chunk. A same-module call with `color:"text"` is not proof: in CC
+    // 2.1.328 the first such call is a glyph-row Box wrapper, and a bare
+    // string child of a Box crashes the render.
+    const textComponent = findTextComponentInModule(
+      oldFile,
+      importedJsxMatch.index
+    );
     if (!textComponent) {
       console.error('patch: userMessageDisplay: failed to find Text component');
       return null;

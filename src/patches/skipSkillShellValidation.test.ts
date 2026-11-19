@@ -155,6 +155,33 @@ describe('writeSkipSkillShellValidation', () => {
     ).toThrow('Git would use a repository that Claude Code cannot match');
   });
 
+  it('finds the expansion function that normalizes its context first (CC 2.1.328)', () => {
+    const check328 = CHECK_325.replaceAll('ot.', 'It.')
+      .replaceAll('Nt', 'gn')
+      .replace('tt&&yt&&', 'tt&&Rt&&');
+    const chunk =
+      'async function Uze(e,o,r,g,h){if(o=vpe(o),o.options.readOnlySkillLoad)return b1(e,qlt);let y=e;' +
+      check328 +
+      'yO(k.name);};' +
+      'oHs(tt,Le)&&oLe())Rn=b1(Rn);else if(rHs(tt))Rn=await Uze(Rn,{...so,getAppState:vG(so,go())},`/${e}`,Rt);if(Je&&!ze)Rn=`${aHs(Je)}\n\n${Rn}`';
+    const result = writeSkipSkillShellValidation(chunk);
+
+    expect(result).not.toBeNull();
+    expect(result).toContain(
+      'else if(rHs(tt))Rn=await Uze(Rn,{tweakccOwnSkill:!0,...so,getAppState:vG(so,go())}'
+    );
+    expect(result).toContain(
+      'if(It.behavior!=="allow")tweakccAsk:{t(`Shell command permission check failed'
+    );
+    expect(result).toContain(
+      'try again.`);if(o.tweakccOwnSkill&&It.behavior==="ask"&&!(gn?.type==="subcommandResults"'
+    );
+    expect(result).toContain(
+      'if(tt&&Rt&&(gn?.type==="other"||gn?.type==="subcommandResults"))throw new yx(`Couldn\'t run'
+    );
+    expect(writeSkipSkillShellValidation(result!)).toBe(result);
+  });
+
   it('returns null for modules without the prompt-shell check', () => {
     expect(writeSkipSkillShellValidation(PLUGIN_CALLER)).toBeNull();
   });

@@ -36,9 +36,15 @@ export const writeComplexityRouterTurnStatus = (
   const request = oldFile.match(
     /([$\w]+)\(\(\)=>(([$\w]+)\(([$\w]+),([$\w]+)\.effortValue,\{turnEffort:\5\.turnEffort,hookEffortValue:\5\.hookEffortValue(?:,carriedEffort:(?!null\})[$\w]+)?\}\))\)/
   );
-  const renderer = oldFile.match(
-    /children:`\$\{([$\w]+)\} for \$\{([$\w]+)\}\$\{([$\w]+)\?` \\xB7 done \$\{\3\}`:""\}`/
-  );
+  // 2.1.328+: the done line is one branch of `PENDING?WAITING:`...``, inside a
+  // children array, instead of a bare `children:` template.
+  const renderer =
+    oldFile.match(
+      /(?<=\?[$\w]+:)`\$\{([$\w]+)\} for \$\{([$\w]+)\}\$\{([$\w]+)\?` \\xB7 done \$\{\3\}`:""\}`/
+    ) ??
+    oldFile.match(
+      /children:`\$\{([$\w]+)\} for \$\{([$\w]+)\}\$\{([$\w]+)\?` \\xB7 done \$\{\3\}`:""\}`/
+    );
   if (!factory || !request || !renderer) {
     console.error(
       'patch: complexityRouter: failed to find turn status anchors'

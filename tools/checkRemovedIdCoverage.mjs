@@ -74,6 +74,7 @@
  *   node tools/checkRemovedIdCoverage.mjs <cli.js> <prev.json> <cur.json> [--update-allowlist]
  */
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
 import path from 'node:path';
 import { parseExpressionAt, tokenizer, tokTypes } from 'acorn';
 import { loadMatcherCore } from './checkBakedIdentifiers.mjs';
@@ -132,8 +133,14 @@ const reconstruct = p => {
 // Only ASCII runs are probeable: everything else escapes in the bundle.
 const isAscii = s => !/[^\x20-\x7e]/.test(s);
 
-const literalRuns = p =>
-  (p.pieces || []).filter(x => typeof x === 'string' && x.length >= WINDOW);
+const literalRuns = p => {
+  const pieces = p.pieces || [];
+  return pieces
+    .map((x, i) =>
+      typeof x === 'string' ? proseOfPiece(x, i, pieces.length) : ''
+    )
+    .filter(x => x.length >= WINDOW);
+};
 
 // A prompt built almost entirely of slots has no run this long and therefore no
 // probe surface at all: every WINDOW pass and `midBodyProbes` come back empty
@@ -299,9 +306,8 @@ const cli = fs.readFileSync(cliPath, 'utf8');
 const prev = readPrompts(prevPath);
 const cur = readPrompts(curPath);
 const core = await loadMatcherCore();
-const coverageBody = body => {
-  let out = '';
-  let cursor = 0;
+const slotSpans = body => {
+  const spans = [];
   for (let i = 0; i < body.length; i++) {
     if (body[i] !== '$' || body[i + 1] !== '{') continue;
     let backslashes = 0;
@@ -320,15 +326,23 @@ const coverageBody = body => {
       }).getToken();
       if (close.type !== tokTypes.braceR) continue;
       const end = expression.end + close.end;
-      out += body.slice(cursor, i);
-      out += core
-        .generalizeExpressionIdentifiers(['${', body.slice(i + 2, end)])
-        .join('');
-      cursor = end;
+      spans.push([i, end]);
       i = end - 1;
     } catch {
       continue;
     }
+  }
+  return spans;
+};
+const coverageBody = body => {
+  let out = '';
+  let cursor = 0;
+  for (const [i, end] of slotSpans(body)) {
+    out += body.slice(cursor, i);
+    out += core
+      .generalizeExpressionIdentifiers(['${', body.slice(i + 2, end)])
+      .join('');
+    cursor = end;
   }
   return out + body.slice(cursor);
 };
@@ -347,6 +361,13 @@ const curBodies = cur
   .filter(p => p.id)
   .map(p => ({
     id: p.id,
+    labels: [
+      ...new Set(
+        (p.identifiers || []).map(
+          i => (p.identifierMap || {})[String(i)] ?? `UNKNOWN_${i}`
+        )
+      ),
+    ],
     body: reconstruct(p),
     coverageBody: coverageBody(reconstruct(p)),
     cooked: cookEscapes(reconstruct(p)),
@@ -357,15 +378,206 @@ const nestedIn = (b, o) =>
   (o.coverageBody.length > b.coverageBody.length &&
     o.coverageBody.includes(b.coverageBody)) ||
   (o.cooked.length > b.cooked.length && o.cooked.includes(b.cooked));
+const { splitModuleBundle } = createRequire(import.meta.url)(
+  './lib/moduleBundle.cjs'
+);
+const bundleSegments = splitModuleBundle(cli) || [{ start: 0, source: cli }];
+const literalIndex = new Map();
+const literalsOfSegment = si => {
+  if (literalIndex.has(si)) return literalIndex.get(si);
+  const { start, source } = bundleSegments[si];
+  const lits = [];
+  const stack = [];
+  try {
+    for (const tok of tokenizer(source, {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      allowHashBang: true,
+      allowReturnOutsideFunction: true,
+      allowImportExportEverywhere: true,
+      allowAwaitOutsideFunction: true,
+    })) {
+      const t = tok.type;
+      const top = stack.at(-1);
+      const s0 = start + tok.start;
+      const s1 = start + tok.end;
+      if (t === tokTypes.backQuote) {
+        if (top && top.depth === null) {
+          stack.pop();
+          lits.push(top.lit);
+        } else {
+          const lit = { chunks: [], parent: top?.lit ?? null };
+          stack.push({ lit, depth: null });
+        }
+      } else if (t === tokTypes.template || t === tokTypes.invalidTemplate) {
+        top?.lit.chunks.push([s0, s1]);
+      } else if (t === tokTypes.dollarBraceL) {
+        if (top) top.depth = 0;
+      } else if (t === tokTypes.string) {
+        lits.push({ chunks: [[s0 + 1, s1 - 1]], parent: top?.lit ?? null });
+      } else if (top && top.depth !== null) {
+        if (t === tokTypes.braceL) top.depth++;
+        else if (t === tokTypes.braceR)
+          top.depth = top.depth === 0 ? null : top.depth - 1;
+      }
+    }
+  } catch {
+    literalIndex.set(si, []);
+    return [];
+  }
+  const index = lits
+    .flatMap(lit => lit.chunks.map(([s0, s1]) => [s0, s1, lit]))
+    .sort((x, y) => x[0] - y[0]);
+  literalIndex.set(si, index);
+  return index;
+};
+const segmentAt = at => {
+  let lo = 0;
+  let hi = bundleSegments.length - 1;
+  while (lo < hi) {
+    const mid = (lo + hi + 1) >> 1;
+    if (bundleSegments[mid].start <= at) lo = mid;
+    else hi = mid - 1;
+  }
+  return lo;
+};
+const literalsAround = (at, len) => {
+  const index = literalsOfSegment(segmentAt(at));
+  let lo = 0;
+  let hi = index.length - 1;
+  let best = -1;
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1;
+    if (index[mid][0] <= at) {
+      best = mid;
+      lo = mid + 1;
+    } else hi = mid - 1;
+  }
+  if (best < 0 || at + len > index[best][1]) return [];
+  const out = [];
+  for (let lit = index[best][2]; lit; lit = lit.parent) out.push(lit);
+  return out;
+};
+const shapeOf = b => {
+  if (b.shape) return b.shape;
+  const chunks = [];
+  const exprs = [];
+  let cursor = 0;
+  for (const [i, end] of slotSpans(b.body)) {
+    chunks.push([cursor, i]);
+    exprs.push([i, end]);
+    cursor = end;
+  }
+  chunks.push([cursor, b.body.length]);
+  const texts = chunks.map(([s0, s1]) => cookEscapes(b.body.slice(s0, s1)));
+  b.shape = { chunks, exprs, texts, fills: new Map() };
+  return b.shape;
+};
+const fillsLiteral = (shape, lit) => {
+  if (shape.fills.has(lit)) return shape.fills.get(lit);
+  const ok =
+    lit.chunks.length === shape.chunks.length &&
+    shape.texts.every((text, k) => {
+      const w = walkForward(cli, lit.chunks[k][0], text, 0);
+      return w.n === text.length && w.j === lit.chunks[k][1];
+    });
+  shape.fills.set(lit, ok);
+  return ok;
+};
+const claimsSite = (b, q, len, lit, at) => {
+  const shape = shapeOf(b);
+  if (!fillsLiteral(shape, lit)) return false;
+  const k = shape.chunks.findIndex(([s0, s1]) => s0 <= q && q + len <= s1);
+  if (k >= 0) {
+    const text = cookEscapes(b.body.slice(shape.chunks[k][0], q));
+    const w = walkForward(cli, lit.chunks[k][0], text, 0);
+    return w.n === text.length && w.j === at;
+  }
+  const e = shape.exprs.findIndex(([s0, s1]) => s0 <= q && q + len <= s1);
+  if (e < 0) return false;
+  const [s0, s1] = shape.exprs[e];
+  const parts = exprParts(b, b.body.slice(s0, q));
+  const tail = exprParts(b, b.body.slice(q + len, s1));
+  const j = walkExpr(lit.chunks[e][1], parts);
+  if (j !== at) return false;
+  return walkExpr(at + len, tail) === lit.chunks[e + 1][0];
+};
+const IDENT = /[$\w]+/y;
+const exprParts = (b, src) => {
+  if (!b.labels.length) return [src];
+  const escaped = b.labels.map(l => l.replace(/[$]/g, '\\$'));
+  return src.split(new RegExp(`(?<![$\\w])(?:${escaped.join('|')})(?![$\\w])`));
+};
+const walkExpr = (j, parts) => {
+  for (let k = 0; k < parts.length; k++) {
+    if (k > 0) {
+      IDENT.lastIndex = j;
+      if (!IDENT.test(cli)) return -1;
+      j = IDENT.lastIndex;
+    }
+    const w = walkForward(cli, j, parts[k], 0);
+    if (w.n !== parts[k].length) return -1;
+    j = w.j;
+  }
+  return j;
+};
+const maxMatching = choices => {
+  const owner = new Map();
+  const assign = (c, seen) => {
+    for (const s of choices[c]) {
+      if (seen.has(s)) continue;
+      seen.add(s);
+      if (!owner.has(s) || assign(owner.get(s), seen)) {
+        owner.set(s, c);
+        return true;
+      }
+    }
+    return false;
+  };
+  let n = 0;
+  for (let c = 0; c < choices.length; c++) if (assign(c, new Set())) n++;
+  return n;
+};
 const namedSites = (run, lines) => {
   const holders = curBodies.filter(b => b.body.includes(run));
-  return holders
-    .filter((b, i) => !holders.some((o, j) => j !== i && nestedIn(b, o)))
-    .reduce(
-      (n, b) =>
-        n + (lines ? countSites(b.body, run, lines) : countOf(b.body, run)),
-      0
-    );
+  if (!holders.length) return 0;
+  const sites = [];
+  for (let i = cli.indexOf(run); i >= 0; i = cli.indexOf(run, i + 1))
+    sites.push({ at: i, lits: literalsAround(i, run.length) });
+  const placed = [];
+  const unplaced = [];
+  for (const b of holders) {
+    const choices = [];
+    for (let q = b.body.indexOf(run); q >= 0; q = b.body.indexOf(run, q + 1)) {
+      choices.push(
+        sites
+          .filter(({ at, lits }) =>
+            lits.some(lit => claimsSite(b, q, run.length, lit, at))
+          )
+          .map(({ at }) => at)
+      );
+    }
+    if (choices.some(c => c.length)) placed.push({ b, choices });
+    else unplaced.push(b);
+  }
+  const counted = lines ? new Set(siteOffsets(cli, run, lines)) : null;
+  const choices = placed.flatMap(({ choices }) =>
+    choices.map(c => (counted ? c.filter(s => counted.has(s)) : c))
+  );
+  return (
+    maxMatching(choices) +
+    unplaced
+      .filter(
+        b =>
+          !holders.some(o => o !== b && nestedIn(b, o)) &&
+          !placed.some(({ b: o }) => nestedIn(o, b))
+      )
+      .reduce(
+        (n, b) =>
+          n + (lines ? countSites(b.body, run, lines) : countOf(b.body, run)),
+        0
+      )
+  );
 };
 // The current id carrying the largest share of `units`, and that share.
 // Testing every unit against every body made this the gate's hot loop (85 s of
@@ -387,10 +599,7 @@ const bodiesHolding = u => {
   const all = [...u.matchAll(WORD)];
   const words = all
     .filter(
-      m =>
-        m.index > 0 &&
-        m.index + m[0].length < u.length &&
-        m[0].length >= 3
+      m => m.index > 0 && m.index + m[0].length < u.length && m[0].length >= 3
     )
     .map(m => m[0]);
   if (!words.length) return null;
@@ -522,7 +731,7 @@ const encodingsOf = ch => {
 
 // How many old-line characters, starting at `off`, the haystack continues from
 // `at` (forward) or ends with before `at` (backward), escape-aware.
-const extendForward = (hay, at, line, off) => {
+const walkForward = (hay, at, line, off) => {
   let n = 0;
   let j = at;
   while (off + n < line.length && j < hay.length) {
@@ -531,8 +740,9 @@ const extendForward = (hay, at, line, off) => {
     j += enc.length;
     n++;
   }
-  return n;
+  return { n, j };
 };
+const extendForward = (hay, at, line, off) => walkForward(hay, at, line, off).n;
 // Walking backward, an escape ending at `j` is real only when the backslash
 // that opens it is not itself escaped (an even run of backslashes before it).
 const escapeOpensAt = (hay, i) => {
@@ -563,25 +773,26 @@ const runAround = (hay, at, line, off) =>
   extendForward(hay, at + WINDOW, line, off + WINDOW);
 
 // Occurrences of `u` in `hay` that continue some old line that holds it.
-const countSites = (hay, u, lines) => {
+const siteOffsets = (hay, u, lines) => {
   const contexts = [];
   for (const line of lines) {
     for (let o = line.indexOf(u); o >= 0; o = line.indexOf(u, o + 1)) {
       contexts.push({ line, off: o });
     }
   }
-  let n = 0;
+  const out = [];
   for (let i = hay.indexOf(u); i >= 0; i = hay.indexOf(u, i + 1)) {
     if (
       contexts.some(
         ({ line, off }) => runAround(hay, i, line, off) >= siteRunMin(line)
       )
     ) {
-      n++;
+      out.push(i);
     }
   }
-  return n;
+  return out;
 };
+const countSites = (hay, u, lines) => siteOffsets(hay, u, lines).length;
 
 // Distinctive units the bundle holds more often than the catalogue and the
 // classify sidecar together. Each catalogue entry is one bundle site, so a

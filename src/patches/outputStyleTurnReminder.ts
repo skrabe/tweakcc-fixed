@@ -71,20 +71,30 @@ const threadCustomStyleTurnReminder = (file: string): string => {
     );
   }
 
-  const mergeEntry =
-    /([$\w]+)\[([$\w]+)\.name\]=\{name:\2\.name,description:\2\.description,prompt:\2\.prompt,source:\2\.source,keepCodingInstructions:\2\.keepCodingInstructions,forceForPlugin:\2\.forceForPlugin\}/;
-  const merge = out.match(mergeEntry);
-  if (merge && merge.index !== undefined) {
-    const u = merge[2];
-    const end = merge.index + merge[0].length;
-    out =
-      out.slice(0, end - 1) +
-      `,turnReminder:${u}.turnReminder` +
-      out.slice(end - 1);
-  } else if (!/forceForPlugin:[$\w]+\.forceForPlugin,turnReminder:/.test(out)) {
-    console.error(
-      'patch: outputStyleTurnReminder: style-table merge shape not found; frontmatter turn-reminder will not thread (fallback reminder still applies)'
-    );
+  const mergeThreaded =
+    /forceForPlugin:([$\w]+)\.forceForPlugin(?:,[$\w]+:\1\.[$\w]+)*?,turnReminder:\1\.turnReminder\}/;
+  const mergeMethods = [
+    /([$\w]+)\[([$\w]+)\.name\]=\{name:\2\.name,description:\2\.description,prompt:\2\.prompt,source:\2\.source,keepCodingInstructions:\2\.keepCodingInstructions,forceForPlugin:\2\.forceForPlugin(?:,(?!turnReminder:)[$\w]+:\2\.[$\w]+)*\}/,
+    /([$\w]+)\[([$\w]+)\.name\]=\{name:\2\.name,description:\2\.description,prompt:\2\.prompt,source:\2\.source,keepCodingInstructions:\2\.keepCodingInstructions,forceForPlugin:\2\.forceForPlugin\}/,
+  ];
+  if (!mergeThreaded.test(out)) {
+    let merge: RegExpMatchArray | null = null;
+    for (const method of mergeMethods) {
+      merge = out.match(method);
+      if (merge) break;
+    }
+    if (merge && merge.index !== undefined) {
+      const u = merge[2];
+      const end = merge.index + merge[0].length;
+      out =
+        out.slice(0, end - 1) +
+        `,turnReminder:${u}.turnReminder` +
+        out.slice(end - 1);
+    } else {
+      console.error(
+        'patch: outputStyleTurnReminder: style-table merge shape not found; frontmatter turn-reminder will not thread (fallback reminder still applies)'
+      );
+    }
   }
 
   return out;
