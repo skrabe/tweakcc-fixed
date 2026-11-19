@@ -218,11 +218,17 @@ describe('writeUserMessageDisplay — CC 2.1.186 JSX runtime', () => {
 
 // CC 2.1.246 ESM-split: jsx/jsxs are imported bindings (`o(Comp,{...})`),
 // not `MOD.jsx(...)`. Verbatim shape from /tmp/cli-2.1.246.js function tM.
-// `o(t,{color:"text"...})` is the same module's Text import; the decoy
-// `function v({color:...})` is what findTextComponent would pick globally
-// and must NOT be spliced (it is a different module's binding).
+// Ink's Text is defined as `v` in its own module, exported as `Tx` and
+// imported here as `t`; splicing `v` would be a ReferenceError.
 const TEXT_FN_DECOY =
   'function v({color:A,backgroundColor:B,dimColor:C=!1,bold:D=!1}){return null}';
+const MARK = (n: number, path: string): string =>
+  `\n/*@@TWEAKCC_MODULE:${n}:${path}@@*/\n`;
+const INK_TEXT_MODULE =
+  MARK(1, '/$bunfs/root/chunk-ink.js') + TEXT_FN_DECOY + ';export{v as Tx};';
+const USER_MODULE_HEAD =
+  MARK(2, '/$bunfs/root/chunk-msg.js') +
+  'import{Tx as t}from"/$bunfs/root/chunk-ink.js";';
 const LOCAL_TEXT_246 = 'o(t,{color:"text",children:"hi"});';
 const USER_MSG_246 =
   'function tM(Ute){let Mm=R(23),{addMargin:Ete,param:vte,timestamp:Ate}=Ute,{text:ls}=vte;' +
@@ -234,7 +240,11 @@ const USER_MSG_246 =
   'zz=o(a,{flexDirection:"column",marginTop:xm,backgroundColor:km,paddingRight:_m,children:Zy}),' +
   'Mm[18]=xm,Mm[19]=km,Mm[20]=_m,Mm[21]=Zy,Mm[22]=zz;else zz=Mm[22];return zz}';
 const FIXTURE_246 =
-  TEXT_FN_DECOY + ';' + CHALK_186 + LOCAL_TEXT_246 + USER_MSG_246;
+  INK_TEXT_MODULE +
+  USER_MODULE_HEAD +
+  CHALK_186 +
+  LOCAL_TEXT_246 +
+  USER_MSG_246;
 
 const REAL_CONFIG: UserMessageDisplayConfig = {
   format: ' > {} ',
@@ -333,5 +343,70 @@ describe('writeUserMessageDisplay — CC 2.1.246 imported jsx helpers', () => {
     expect(out).toContain('typeof wE==="object"');
     expect(out).toContain('wE.head');
     expect(out).toContain('wE.tail');
+  });
+});
+
+// CC 2.1.328: the first same-module call with `color:"text"` is a glyph-row
+// wrapper whose root is a Box (`e(ui,{color:"text",children:o(r,…)})`). The
+// old heuristic spliced `ui` as the Text component, so the formatted message
+// became a bare string child of a Box and Ink threw "Text string … must be
+// rendered inside <Text> component". Text (`r`) is defined and exported
+// under the same name by Ink's chunk and imported as-is.
+const INK_TEXT_FN_328 =
+  'function r(h){let m=k(19),w,C,M,H,I;if(m[0]!==h)({color:C,backgroundColor:w,dimColor:M,bold:I,...H}=h),m[0]=h;return null}';
+const INK_MODULE_328 =
+  MARK(1177, '/$bunfs/root/chunk-5g8qs913.js') +
+  'function g(h){return null}' +
+  INK_TEXT_FN_328 +
+  ';export{Nvt,g,J2t,r,kn};';
+const USER_MSG_328 =
+  'function Sh(d){let O=k(38),{addMargin:l,param:m,timestamp:S,messageId:w}=d,{text:N}=m,G=ch(w),ge=Ge,We=Xe;' +
+  'if(!N){return i(Error("No content found in user prompt message")),null}' +
+  'const ye=l?1:0,xe=ge?void 0:"userMessageBackground",Ke=ge?0:1,Se=ge?S:void 0;let $e;' +
+  'if(O[28]!==G||O[29]!==We||O[30]!==Se||O[31]!==ge)$e=e(cWn,{text:We,useBriefLayout:ge,timestamp:Se,awaitingModel:G}),' +
+  'O[28]=G,O[29]=We,O[30]=Se,O[31]=ge,O[32]=$e;else $e=O[32];let co;' +
+  'if(O[33]!==ye||O[34]!==xe||O[35]!==Ke||O[36]!==$e)' +
+  'co=e(g,{flexDirection:"column",marginTop:ye,backgroundColor:xe,paddingRight:Ke,children:$e}),' +
+  'O[33]=ye,O[34]=xe,O[35]=Ke,O[36]=$e,O[37]=co;else co=O[37];return co}';
+const FIXTURE_328 =
+  INK_MODULE_328 +
+  MARK(2098, '/$bunfs/root/chunk-bjgpjqze.js') +
+  'import{na,Kn,g,r,kn}from"/$bunfs/root/chunk-5g8qs913.js";import{ui}from"/$bunfs/root/chunk-jkpzhr7r.js";' +
+  'function Xa(){let U;U=e(ui,{color:"text",children:o(r,{bold:!0,children:["Compact summary",v]})});return U}' +
+  USER_MSG_328;
+
+describe('writeUserMessageDisplay — CC 2.1.328 imported Text binding', () => {
+  it('wraps the formatted message in the imported Text, not a color:"text" Box wrapper', () => {
+    const out = writeUserMessageDisplay(FIXTURE_328, REAL_CONFIG)!;
+    expect(out).not.toBeNull();
+    const body = out.slice(out.indexOf('function Sh('));
+    expect(body).not.toContain('e(ui,');
+    expect(body).toContain(
+      'paddingX:1,children:e(r,{color:"text",backgroundColor:"rgb(28,32,48)",children:` > ${(typeof We==="object"'
+    );
+    expect(body).toContain(':We)} `})})');
+    expect(body).toContain('co=e(g,{flexDirection:"column",marginTop:ye,');
+    const fnSrc = body.slice(
+      0,
+      body.indexOf('return co}') + 'return co}'.length
+    );
+    expect(() => new Function(`return (${fnSrc})`)).not.toThrow();
+  });
+
+  it('follows an aliased import to the local Text name', () => {
+    const aliased = FIXTURE_328.replace(
+      'import{na,Kn,g,r,kn}from',
+      'import{na,Kn,g,r as Tz,kn}from'
+    );
+    const out = writeUserMessageDisplay(aliased, REAL_CONFIG)!;
+    expect(out).toContain('children:e(Tz,{color:"text"');
+  });
+
+  it('fails instead of guessing when the module does not import Text', () => {
+    const noImport = FIXTURE_328.replace(
+      'import{na,Kn,g,r,kn}from',
+      'import{na,Kn,g,kn}from'
+    );
+    expect(writeUserMessageDisplay(noImport, REAL_CONFIG)).toBeNull();
   });
 });

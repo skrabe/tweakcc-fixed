@@ -1962,3 +1962,70 @@ describe('edited-text-file 2.1.322 multi-local shape', () => {
     ).toBe(EDITED_2322);
   });
 });
+
+const planModeExit = REMINDER_REGISTRY.find(r => r.id === 'plan-mode-exit')!;
+
+const PLAN_EXIT_2328 =
+  'H={plan_mode_exit:(e)=>{let o=e.planExists?` The plan file is located at ${e.planFilePath} if you need to reference it.`:"",r=e.reuseForNextPlan?` It is the one plan file the user is shown. If the user later asks for a plan of different work, call ${TC} first and overwrite this file with the new plan, so that they can read and approve it.`:"";return Wa([Mk({content:`## Exited Plan Mode\n\nYou have exited plan mode. You can now make edits, run tools, and take actions.${o}${r}`,isMeta:!0})])},auto_mode_exit:(e)=>[]}';
+
+const PLAN_EXIT_2326 =
+  'H={plan_mode_exit:(e)=>{let o=e.planExists?` The plan file is located at ${e.planFilePath} if you need to reference it.`:"";return Wa([Mk({content:`## Exited Plan Mode\n\nYou have exited plan mode. You can now make edits, run tools, and take actions.${o}`,isMeta:!0})])},auto_mode_exit:(e)=>[]}';
+
+const runPlanExit = (src: string) => {
+  const handlers = new Function(...Object.keys(STUBS), `let H;${src};return H`)(
+    ...Object.values(STUBS)
+  ) as {
+    plan_mode_exit: (e: Record<string, unknown>) => string[];
+  };
+  return (e: Record<string, unknown>) => handlers.plan_mode_exit(e)[0];
+};
+
+describe('plan-mode-exit reminder shape handling', () => {
+  const TERSE = 'Plan mode exited; edits allowed.{{plan_suffix}}';
+
+  it('2.1.328: keeps every suffix var and the let-list verbatim', () => {
+    const out = planModeExit.apply(
+      PLAN_EXIT_2328,
+      sub('plan-mode-exit', TERSE),
+      false
+    )!;
+    expect(out).not.toBeNull();
+    expect(out).toContain('r=e.reuseForNextPlan?');
+    expect(out).toContain('content:`Plan mode exited; edits allowed.${o}${r}`');
+    expect(out).toContain(',auto_mode_exit:(e)=>[]}');
+    const r = runPlanExit(out);
+    expect(r({ planExists: false, reuseForNextPlan: false })).toBe(
+      'Plan mode exited; edits allowed.'
+    );
+    expect(
+      r({ planExists: true, planFilePath: '/p.md', reuseForNextPlan: true })
+    ).toBe(
+      'Plan mode exited; edits allowed. The plan file is located at /p.md if you need to reference it. It is the one plan file the user is shown. If the user later asks for a plan of different work, call TaskCreate first and overwrite this file with the new plan, so that they can read and approve it.'
+    );
+  });
+
+  it('2.1.328: the stock body is byte-identical to pristine', () => {
+    const stock = sub('plan-mode-exit', planModeExit.defaultBody);
+    expect(planModeExit.apply(PLAN_EXIT_2328, stock, false)).toBe(
+      PLAN_EXIT_2328
+    );
+  });
+
+  it('2.1.328: suppression empties the handler and is idempotent', () => {
+    const out = planModeExit.apply(PLAN_EXIT_2328, '', true)!;
+    expect(out).toBe('H={plan_mode_exit:(e)=>[],auto_mode_exit:(e)=>[]}');
+    expect(planModeExit.apply(out, '', true)).toBe(out);
+  });
+
+  it('pre-2.1.328 single-suffix shape still applies', () => {
+    const out = planModeExit.apply(
+      PLAN_EXIT_2326,
+      sub('plan-mode-exit', TERSE),
+      false
+    )!;
+    expect(out).toContain('content:`Plan mode exited; edits allowed.${o}`');
+    expect(runPlanExit(out)({ planExists: true, planFilePath: '/p.md' })).toBe(
+      'Plan mode exited; edits allowed. The plan file is located at /p.md if you need to reference it.'
+    );
+  });
+});

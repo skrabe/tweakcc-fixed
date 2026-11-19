@@ -68,7 +68,9 @@ export const writeHideStartupBanner = (oldFile: string): string | null => {
     return newFile;
   }
 
-  // Method 1 (CC >= 2.1.326): the Apple_Terminal check moved into a helper
+  // Method 1 (CC >= 2.1.328): the full-logo component was inlined, so the
+  // welcomeMessage prop is gone; key on the light-theme branch instead.
+  // Method 2 (CC >= 2.1.326): the Apple_Terminal check moved into a helper
   // call, so key on the full-logo branch's welcomeMessage prop instead.
   // Method 0 (CC >= 2.1.246): the startup card is still a zero-arg component
   // that owns both "Welcome to Claude Code" and the Apple_Terminal theme
@@ -77,7 +79,11 @@ export const writeHideStartupBanner = (oldFile: string): string | null => {
   // AFTER the compact-welcome `return` — so the older `[^}]{0,500}` lookahead
   // never sees it. Find the zero-arg function whose body contains both
   // literals and early-return null.
-  for (const marker of [`welcomeMessage:${WELCOME}`, 'Apple_Terminal']) {
+  for (const marker of [
+    '["light","light-daltonized","light-ansi"].includes(',
+    `welcomeMessage:${WELCOME}`,
+    'Apple_Terminal',
+  ]) {
     const bodyStart = findWelcomeCardBodyStart(oldFile, marker);
     if (bodyStart !== null) {
       if (oldFile.startsWith('return null;', bodyStart)) {

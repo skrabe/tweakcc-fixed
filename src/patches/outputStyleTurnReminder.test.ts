@@ -111,6 +111,19 @@ describe('frontmatter turn-reminder threading', () => {
     expect(twice.match(/,turnReminder:u\.turnReminder/g)).toHaveLength(1);
   });
 
+  it('threads the merge when it carries extra fields (CC 2.1.328 syncedFolderId)', () => {
+    const merge328 =
+      'for(let K of z)for(let Q of K)y[Q.name]={name:Q.name,description:Q.description,prompt:Q.prompt,source:Q.source,keepCodingInstructions:Q.keepCodingInstructions,forceForPlugin:Q.forceForPlugin,syncedFolderId:Q.syncedFolderId};return y';
+    const file = `var a=1;${RENDERER},critical_system_reminder:(e)=>0;${LOADER};${merge328};var b=2;`;
+    const once = writeOutputStyleTurnReminder(file)!;
+    expect(once).toContain(
+      'y[Q.name]={name:Q.name,description:Q.description,prompt:Q.prompt,source:Q.source,keepCodingInstructions:Q.keepCodingInstructions,forceForPlugin:Q.forceForPlugin,syncedFolderId:Q.syncedFolderId,turnReminder:Q.turnReminder};return y'
+    );
+    const twice = writeOutputStyleTurnReminder(once)!;
+    expect(twice).toBe(once);
+    expect(twice.match(/,turnReminder:Q\.turnReminder/g)).toHaveLength(1);
+  });
+
   it('still patches the renderer when the loader shapes are missing', () => {
     const out = writeOutputStyleTurnReminder(FILE)!;
     expect(out).toContain('outputStyleName_tweakcc');

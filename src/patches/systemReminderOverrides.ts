@@ -2460,6 +2460,27 @@ const PLAN_MODE_EXIT_INJECTION: ReminderInjection = {
   defaultBody:
     '## Exited Plan Mode\n\nYou have exited plan mode. You can now make edits, run tools, and take actions.{{plan_suffix}}',
   apply(content, body, isSuppressed) {
+    // Method 1 (2.1.328+, also the single-suffix shape): conditional suffix vars (planExists,
+    // reuseForNextPlan, ...) precede the return, and the body ends with all of
+    // them. The let-list is re-emitted verbatim and {{plan_suffix}} expands to
+    // the whole suffix run.
+    const multiSuffixShape =
+      /plan_mode_exit:\(([$\w]+)\)=>\{let ((?:[$\w]+=\1\.[$\w]+\?(?:`[^`]*`|"[^"]*"):"",)*[$\w]+=\1\.[$\w]+\?(?:`[^`]*`|"[^"]*"):"";)return ([$\w]+)\(\[([$\w]+)\(\{content:`## Exited Plan Mode\n\nYou have exited plan mode\. You can now make edits, run tools, and take actions\.((?:\$\{[$\w]+\})+)`,isMeta:!0\}\)\]\)\}/;
+    if (multiSuffixShape.test(content)) {
+      return findAndReplace(
+        content,
+        multiSuffixShape,
+        m => {
+          const [, hParam, lets, o5Name, j6Name, suffixes] = m;
+          if (isSuppressed) return `plan_mode_exit:(${hParam})=>[]`;
+          const bodyForBuild = body.replace(/\$\{_\}/g, () => suffixes);
+          return `plan_mode_exit:(${hParam})=>{let ${lets}return ${o5Name}([${j6Name}({content:\`${bodyForBuild}\`,isMeta:!0})])}`;
+        },
+        'plan-mode-exit',
+        c => /plan_mode_exit:\([$\w]+\)=>\[\]/.test(c)
+      );
+    }
+    // Method 2 (<=2.1.326): a single planExists suffix var.
     return findAndReplace(
       content,
       /plan_mode_exit:\(([$\w]+)\)=>\{let ([$\w]+)=\1\.planExists\?` The plan file is located at \$\{\1\.planFilePath\} if you need to reference it\.`:"";return ([$\w]+)\(\[([$\w]+)\(\{content:`## Exited Plan Mode\n\nYou have exited plan mode\. You can now make edits, run tools, and take actions\.\$\{\2\}`,isMeta:!0\}\)\]\)\}/,
