@@ -153,8 +153,54 @@ describe('writeDisableAgentSummaries', () => {
     expect(writeDisableAgentSummaries(file)).toBe(file);
   });
 
-  it('fails when the scheduler shape changes', () => {
-    const broken = FIXTURE.replace('ue=setTimeout(Me,Re)', 'ue=later(Me,Re)');
+  describe('when the scheduler is reshaped', () => {
+    const reshaped = FIXTURE.replace(
+      'function xe(){if(j)return;let we=fe(R.calls),Re=Math.min(Pe<we?we-Pe:we,Pi);Pe+=Re,ue=setTimeout(Me,Re)}',
+      'function xe(){if(j)return;ue=schedule(()=>Me(),fe(R.calls))}' +
+        'function schedule(f,d){return setTimeout(f,d)}'
+    );
+
+    it('patches the timer callback instead', () => {
+      const out = writeDisableAgentSummaries(reshaped);
+      expect(out).toContain(
+        'async function Me(){/*tweakcc:disable-agent-summaries*/return;if(j)return;'
+      );
+      expect(writeDisableAgentSummaries(out!)).toBe(out);
+    });
+
+    it('sends no summary and arms the timer at most once', async () => {
+      const out = writeDisableAgentSummaries(reshaped)!;
+      const send = vi.fn();
+      const timers: (() => unknown)[] = [];
+      const handle = new Function(
+        'setTimeout',
+        'clearTimeout',
+        't',
+        'send',
+        'Pi',
+        `${out};return Ui("a","b",{},{},{});`
+      )(
+        (f: () => unknown) => {
+          timers.push(f);
+          return timers.length;
+        },
+        () => {},
+        () => {},
+        send,
+        30000
+      );
+      await timers[0]?.();
+      expect(send).not.toHaveBeenCalled();
+      expect(timers).toHaveLength(1);
+      expect(() => handle.stop()).not.toThrow();
+    });
+  });
+
+  it('fails when the timer callback cannot be found', () => {
+    const broken = FIXTURE.replace(
+      'async function Me(){',
+      'const Me=async()=>{'
+    );
     expect(writeDisableAgentSummaries(broken)).toBeNull();
   });
 });
