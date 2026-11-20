@@ -4,6 +4,12 @@ import {
   FFF_FEATURE_DESCRIPTION,
   FFF_FEATURE_TITLE,
 } from '../../fffDescription';
+import {
+  EVERYTHING_GLOB_DESCRIPTION,
+  EVERYTHING_GLOB_MISSING_ES,
+  EVERYTHING_GLOB_TITLE,
+} from '../../everythingGlobDescription';
+import { findEsExe } from '../../everythingEs';
 import { Box, Text, useInput } from 'ink';
 import { useContext, useState, useMemo } from 'react';
 import { SettingsContext } from '../App';
@@ -104,6 +110,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     unlockResponsiveMode: false,
     swapRipgrepForFff: false,
     fffLearnFromBashReads: true,
+    useEverythingForGlob: false,
     allowCustomAgentModels: false,
     enableContextLimitOverride: false,
     enableModelCustomizations: true,
@@ -226,6 +233,8 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     }
     return TOKEN_ROUNDING_OPTIONS[newIndex];
   };
+
+  const esExeFound = useMemo(() => findEsExe() !== null, []);
 
   const items: MiscItem[] = useMemo(
     () => [
@@ -547,6 +556,10 @@ export function MiscView({ onSubmit }: MiscViewProps) {
             ensureMisc();
             settings.misc!.swapRipgrepForFff =
               !settings.misc!.swapRipgrepForFff;
+            // both replace Glob's ripgrep, so only one at a time
+            if (settings.misc!.swapRipgrepForFff) {
+              settings.misc!.useEverythingForGlob = false;
+            }
           });
         },
       },
@@ -564,6 +577,30 @@ export function MiscView({ onSubmit }: MiscViewProps) {
           });
         },
       },
+      ...(process.platform === 'win32'
+        ? [
+            {
+              id: 'useEverythingForGlob',
+              title: EVERYTHING_GLOB_TITLE,
+              description: esExeFound
+                ? EVERYTHING_GLOB_DESCRIPTION
+                : `${EVERYTHING_GLOB_MISSING_ES} ${EVERYTHING_GLOB_DESCRIPTION}`,
+              getValue: () => settings.misc?.useEverythingForGlob ?? false,
+              toggle: () => {
+                // turning it off always works, so a config from another machine can be cleared
+                if (!esExeFound && !settings.misc?.useEverythingForGlob) return;
+                updateSettings(settings => {
+                  ensureMisc();
+                  settings.misc!.useEverythingForGlob =
+                    !settings.misc!.useEverythingForGlob;
+                  if (settings.misc!.useEverythingForGlob) {
+                    settings.misc!.swapRipgrepForFff = false;
+                  }
+                });
+              },
+            },
+          ]
+        : []),
       {
         id: 'enableVoiceMode',
         title: 'Enable voice mode (/voice command)',
@@ -1139,7 +1176,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
         },
       },
     ],
-    [settings, updateSettings]
+    [settings, updateSettings, esExeFound]
   );
 
   const totalItems = items.length;
