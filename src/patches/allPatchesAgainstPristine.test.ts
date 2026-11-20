@@ -94,6 +94,7 @@ import { writeResponsiveMode } from './responsiveMode';
 import { writeSessionMemory } from './sessionMemory';
 import { writeSwapRipgrepForFff } from './swapRipgrepForFff';
 import { writeFffBashReads } from './fffBashReads';
+import { writeEverythingGlob } from './everythingGlob';
 import { writeDreamMode } from './dreamMode';
 import { writeLeanMemoryTypes } from './leanMemoryTypes';
 import { writeToolsets } from './toolsets';
@@ -423,6 +424,7 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
   'worktree-mode': c => writeWorktreeMode(c),
   'session-memory': c => writeSessionMemory(c),
   'swap-ripgrep-for-fff': c => writeSwapRipgrepForFff(c, FFF_WRAPPER_PATH),
+  'everything-glob': c => writeEverythingGlob(c, 'C:\\tools\\es.exe'),
   'fff-bash-reads': c => {
     const search = writeSwapRipgrepForFff(c, FFF_WRAPPER_PATH);
     return search === null

@@ -746,6 +746,7 @@ export const DEFAULT_SETTINGS: Settings = {
     unlockResponsiveMode: false,
     swapRipgrepForFff: false,
     fffLearnFromBashReads: true,
+    useEverythingForGlob: false,
     allowCustomAgentModels: false,
     enableContextLimitOverride: false,
     enableModelCustomizations: true,
