@@ -748,6 +748,7 @@ export const DEFAULT_SETTINGS: Settings = {
     fffLearnFromBashReads: true,
     allowCustomAgentModels: false,
     enableContextLimitOverride: false,
+    enableModelContextTokens: false,
     enableModelCustomizations: true,
     enableVoiceMode: false,
     enableVoiceConciseOutput: true,
