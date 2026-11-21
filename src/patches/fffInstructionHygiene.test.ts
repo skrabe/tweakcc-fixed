@@ -93,6 +93,18 @@ const PRISTINE_2_1_326 =
   RENDER_2_1_299 +
   SERIALIZER +
   ';var $type="prompt_snapshot";';
+// CC 2.1.329: a session section is appended to the selected prompt in its
+// own declarator before the merge.
+const API_2_1_329 = API_2_1_326.replace(
+  'let $wire=$identity($merge($selected.systemPrompt,$routing.systemContext)),',
+  'let $sectioned=$section($selected.systemPrompt,$current,$source),$wire=$identity($merge($sectioned,$routing.systemContext)),'
+);
+const PRISTINE_2_1_329 =
+  API_2_1_329 +
+  CONTEXT_2_1_322 +
+  RENDER_2_1_299 +
+  SERIALIZER +
+  ';function $section($prompt){return $prompt}var $type="prompt_snapshot";';
 const TOOLS = [{ name: 'Bash' }, { name: 'Grep' }, { name: 'Glob' }];
 
 type Entry = {
@@ -379,6 +391,8 @@ describe('fff hygiene native call sites', () => {
     ['2.1.322', PRISTINE_2_1_322, true],
     ['2.1.326', PRISTINE_2_1_326, false],
     ['2.1.326', PRISTINE_2_1_326, true],
+    ['2.1.329', PRISTINE_2_1_329, false],
+    ['2.1.329', PRISTINE_2_1_329, true],
   ] as const)(
     'cleans resumed API/context maps without changing saved records, shape=%s, enabled=%s',
     async (_shape, pristine, enabled) => {
