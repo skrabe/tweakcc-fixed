@@ -5815,5 +5815,210 @@
     "verdict": "glue",
     "text": "Cloud sessions and other computers",
     "reason": "noun-phrase arm of o @60538408 (the other arm is `Other computers`); the rule is the host sentence"
+  },
+  "f67b7c2ec871555e": {
+    "promptId": "data-required-anthropic-sign-in-managed-settings-unreadable",
+    "promptIds": [
+      "data-required-anthropic-sign-in-host-provider-refusal",
+      "data-required-anthropic-sign-in-missing-without-organization-setting",
+      "data-required-anthropic-sign-in-unused-without-organization-setting",
+      "data-required-anthropic-sign-in-missing-with-organization-setting",
+      "data-required-anthropic-sign-in-unused-recovery-guidance"
+    ],
+    "label": "DATA_REQUIRED_ANTHROPIC_SIGN_IN_MANAGED_SETTINGS_UNREADABLE_VAR_0",
+    "verdict": "glue",
+    "text": "so Claude Code does not start",
+    "reason": "consequence arm of t @3420589 in jAt (other arm `so this request was not sent`); the remedy is host text"
+  },
+  "6a67944230e3158c": {
+    "promptId": "data-required-anthropic-sign-in-connection-unusable",
+    "promptIds": [
+      "data-required-anthropic-sign-in-rejects-gateway-managed-sessions",
+      "data-required-anthropic-sign-in-organization-has-no-cloud-provider"
+    ],
+    "label": "DATA_REQUIRED_ANTHROPIC_SIGN_IN_CONNECTION_UNUSABLE_VAR_0",
+    "verdict": "glue",
+    "text": "Claude Code does not start.",
+    "reason": "status lead arm of r @3423396 (`Claude Code does not start.`); the cause and remedy are host text"
+  },
+  "6eac2317b6283c38": {
+    "promptId": "data-required-anthropic-sign-in-connection-unusable",
+    "promptIds": [
+      "data-required-anthropic-sign-in-rejects-gateway-managed-sessions",
+      "data-required-anthropic-sign-in-organization-has-no-cloud-provider"
+    ],
+    "label": "DATA_REQUIRED_ANTHROPIC_SIGN_IN_CONNECTION_UNUSABLE_VAR_0",
+    "verdict": "glue",
+    "text": "Claude Code did not start.",
+    "reason": "status lead arm of r @3423426 (`Claude Code did not start.`); the cause and remedy are host text"
+  },
+  "47262d18ba9687a0": {
+    "promptId": "data-plugin-error-repository-refused-no-github-connection",
+    "promptIds": ["data-plugin-error-repository-refused-other"],
+    "label": "DATA_PLUGIN_ERROR_REPOSITORY_REFUSED_NO_GITHUB_CONNECTION_VAR_0",
+    "verdict": "glue",
+    "text": "Anthropic-managed git refused access to ",
+    "reason": "lead clause r @4577377 naming the refused repository; the cause and remedy are host text"
+  },
+  "06d8d1e496935580": {
+    "promptId": "tool-result-read-line-range-too-large",
+    "label": "TOOL_RESULT_READ_LINE_RANGE_TOO_LARGE_VAR_0",
+    "verdict": "glue",
+    "text": "The requested line range contains over",
+    "reason": "sentence lead Kxi @10581375 before the interpolated byte size; the remedy is host text"
+  },
+  "f20238f9b645ad65": {
+    "promptId": "local-command-output-agent-retrying-api-request",
+    "label": "LOCAL_COMMAND_OUTPUT_AGENT_RETRYING_API_REQUEST_VAR_3",
+    "verdict": "glue",
+    "text": ", next try in ",
+    "reason": "separator a @11011810 before the interpolated retry delay"
+  },
+  "718ab4943a92b3e3": {
+    "promptId": "tool-result-exitworktree-removed",
+    "label": "TOOL_RESULT_EXITWORKTREE_REMOVED_VAR_3",
+    "verdict": "glue",
+    "text": " Commits made there remain stored server-side (head changeset ",
+    "reason": "fact clause se @20790347 carrying the interpolated head changeset; no instruction"
+  },
+  "6eec8dca97d9e207": {
+    "promptId": "tool-result-computer-use-app-menu-list-titles-lead",
+    "label": "TOOL_RESULT_COMPUTER_USE_APP_MENU_LIST_TITLES_LEAD_VAR_0",
+    "verdict": "glue",
+    "text": "Top-level menus of ",
+    "reason": "list label arm of _ @26079596 before the interpolated app name"
+  },
+  "a4911238065172cf": {
+    "promptId": "tool-result-computer-use-app-menu-list-titles-lead",
+    "label": "TOOL_RESULT_COMPUTER_USE_APP_MENU_LIST_TITLES_LEAD_VAR_0",
+    "verdict": "glue",
+    "text": "Items under ",
+    "reason": "list label arm of _ @26079625 before the interpolated menu path"
+  },
+  "c23c47d28301fd45": {
+    "promptId": "tool-result-computer-use-app-cgevent-unverified-confirm",
+    "label": "TOOL_RESULT_COMPUTER_USE_APP_CGEVENT_UNVERIFIED_CONFIRM_VAR_0",
+    "verdict": "glue",
+    "text": "nothing reads its effect back",
+    "reason": "reason arm of U @26162158 for an unverified delivery; the confirm instruction is host text"
+  },
+  "ccf2787aec441c83": {
+    "promptId": "tool-result-computer-use-app-cgevent-unverified-confirm",
+    "label": "TOOL_RESULT_COMPUTER_USE_APP_CGEVENT_UNVERIFIED_CONFIRM_VAR_0",
+    "verdict": "glue",
+    "text": "there is no accessibility action for this key",
+    "reason": "reason arm of U @26162222 for an unverified delivery; the confirm instruction is host text"
+  },
+  "0a20ac3f539a1588": {
+    "promptId": "tool-result-computer-use-app-cgevent-unverified-confirm",
+    "label": "TOOL_RESULT_COMPUTER_USE_APP_CGEVENT_UNVERIFIED_CONFIRM_VAR_0",
+    "verdict": "glue",
+    "text": "the accessibility action ",
+    "reason": "reason arm of U @26162271 naming the interpolated accessibility action; the confirm instruction is host text"
+  },
+  "7eb4cbda0504391a": {
+    "promptId": "tool-result-computer-use-app-cgevent-raw-input-unverified",
+    "label": "TOOL_RESULT_COMPUTER_USE_APP_CGEVENT_RAW_INPUT_UNVERIFIED_VAR_0",
+    "verdict": "glue",
+    "text": "a window message to",
+    "reason": "delivery-path label arm of O @26162073 before the interpolated target"
+  },
+  "548942636f02176d": {
+    "promptId": "tool-result-computer-use-app-cgevent-raw-input-unverified",
+    "label": "TOOL_RESULT_COMPUTER_USE_APP_CGEVENT_RAW_INPUT_UNVERIFIED_VAR_0",
+    "verdict": "glue",
+    "text": "raw input on",
+    "reason": "delivery-path label arm of O @26162095 before the interpolated target"
+  },
+  "d1613d5046953e4b": {
+    "promptId": "tool-result-computer-use-app-cgevent-raw-input-unverified",
+    "label": "TOOL_RESULT_COMPUTER_USE_APP_CGEVENT_RAW_INPUT_UNVERIFIED_VAR_8",
+    "verdict": "not-a-slot",
+    "text": "set AXSelectedTextRange",
+    "reason": "`set AXSelectedTextRange` @26161107 is the startsWith() predicate deciding K, not a value K renders"
+  },
+  "8fd861f9a2833f53": {
+    "promptId": "tool-result-computer-use-background-menu-left-to-user",
+    "promptIds": [
+      "tool-result-computer-use-background-menu-already-up",
+      "tool-result-computer-use-background-menu-unknown-window"
+    ],
+    "label": "TOOL_RESULT_COMPUTER_USE_BACKGROUND_MENU_LEFT_TO_USER_VAR_1",
+    "verdict": "glue",
+    "text": "It may be gone again by now.",
+    "reason": "hedge sentence Qn @26165723 appended to background-menu notes; the instructions are host text"
+  },
+  "06be73c8a601713f": {
+    "promptId": "tool-result-artifact-third-party-type-start-only-if-asked",
+    "label": "TOOL_RESULT_ARTIFACT_THIRD_PARTY_TYPE_START_ONLY_IF_ASKED_VAR_0",
+    "verdict": "glue",
+    "text": "[not by Anthropic]",
+    "reason": "marker tVo @45397584 the listing prints beside third-party types; host names it to explain it, and an override would desync it from the listing"
+  },
+  "714ff2d924da94d5": {
+    "promptId": "data-artifact-publish-merged-over-newer-version-changed-paths",
+    "label": "DATA_ARTIFACT_PUBLISH_MERGED_OVER_NEWER_VERSION_CHANGED_PATHS_VAR_2",
+    "verdict": "glue",
+    "text": "read it again (",
+    "reason": "verb-phrase arm of E @45719072 wrapping the interpolated readFile call; the instruction is host text"
+  },
+  "0aff716cee83b680": {
+    "promptId": "tool-result-mcp-resource-skill-gone",
+    "promptIds": ["tool-result-mcp-resource-skill-declined"],
+    "label": "TOOL_RESULT_MCP_RESOURCE_SKILL_GONE_VAR_0",
+    "verdict": "glue",
+    "text": " Claude Code has now asked the server.",
+    "reason": "fact clause _ @46361684 prefixed to MCP skill outcomes; no instruction"
+  },
+  "4b1e38c9c9ee84fc": {
+    "promptId": "tool-result-mcp-skill-per-server-cap",
+    "promptIds": [
+      "tool-result-mcp-skill-not-served-at-address",
+      "tool-result-mcp-skill-get-not-implemented",
+      "tool-result-mcp-skill-get-failed",
+      "tool-result-mcp-skill-relisted-retry",
+      "tool-result-mcp-skill-declined-by-reason",
+      "tool-result-mcp-skill-entry-other-address"
+    ],
+    "label": "TOOL_RESULT_MCP_SKILL_PER_SERVER_CAP_VAR_0",
+    "verdict": "glue",
+    "text": " on MCP server \"",
+    "reason": "label C @46383097 naming the interpolated URI and server"
+  },
+  "629ce2089c0e8a77": {
+    "promptId": "",
+    "label": "PROMPT_VAR_0",
+    "verdict": "glue",
+    "text": "Your work is still here",
+    "reason": "state clause be @47302119 in /ship failure text around the interpolated branch; the next step is host text"
+  },
+  "2658cce9ea17211b": {
+    "promptId": "",
+    "label": "PROMPT_VAR_0",
+    "verdict": "glue",
+    "text": ", and may be staged or committed. ",
+    "reason": "state clause be @47302185 in /ship failure text; the next step is host text"
+  },
+  "98923b4aaf98e30f": {
+    "promptId": "",
+    "label": "PROMPT_VAR_0",
+    "verdict": "glue",
+    "text": ", on the new branch ",
+    "reason": "label be @47302156 before the interpolated branch name"
+  },
+  "50c1f1e9fa70dbe6": {
+    "promptId": "data-steward-watch-checkout-hook-reason",
+    "label": "DATA_STEWARD_WATCH_CHECKOUT_HOOK_REASON_VAR_2",
+    "verdict": "glue",
+    "text": " (its matcher names ",
+    "reason": "matcher label arm of r @47318155 before the interpolated tool list"
+  },
+  "7280b4f480bbf723": {
+    "promptId": "skill-steward-watch-did-not-start",
+    "promptIds": ["skill-steward-review-only"],
+    "label": "SKILL_STEWARD_WATCH_DID_NOT_START_VAR_1",
+    "verdict": "glue",
+    "text": "I can't watch a pull request here: ",
+    "reason": "lead clause of me @47396809 before the interpolated reason"
   }
 }

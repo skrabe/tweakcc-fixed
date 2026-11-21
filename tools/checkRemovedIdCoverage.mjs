@@ -161,6 +161,12 @@ const literalRuns = p => {
 // pass was added. The match engines generalize exactly this shape; here it is
 // cheaper to drop such a piece from the required set than to rebuild a matcher.
 const MINIFIED_BRACKET_KEY = /\[[$\w]{1,3}[.\]-]/;
+// An older extractor split some slot expressions into literal pieces, so a
+// catalogued body can be nothing but code (`.reasonCode??"canvas",`). That code
+// stays in the bundle after the template that held it is gone, which read a
+// removed computer-use fragment as IN-BUNDLE on 2.1.330. A piece with no
+// whitespace that carries an operator or a quote is code, not prose.
+const CODE_PIECE = /^\S*(?:\?\?|&&|\|\||=>|["'`])\S*$/;
 const SHORT_PIECE_MIN = 8;
 const shortRuns = p =>
   (p.pieces || [])
@@ -170,7 +176,8 @@ const shortRuns = p =>
         s.length >= SHORT_PIECE_MIN &&
         isAscii(s) &&
         /[A-Za-z]{3,}/.test(s) &&
-        !MINIFIED_BRACKET_KEY.test(s)
+        !MINIFIED_BRACKET_KEY.test(s) &&
+        !CODE_PIECE.test(s)
     );
 
 // The share of an old body's distinctive units the catalogue must carry for the
@@ -541,9 +548,10 @@ const maxMatching = choices => {
 const namedSites = (run, lines) => {
   const holders = curBodies.filter(b => b.body.includes(run));
   if (!holders.length) return 0;
-  const sites = [];
-  for (let i = cli.indexOf(run); i >= 0; i = cli.indexOf(run, i + 1))
-    sites.push({ at: i, lits: literalsAround(i, run.length) });
+  const sites = cliPositions(run).map(i => ({
+    at: i,
+    lits: literalsAround(i, run.length),
+  }));
   const placed = [];
   const unplaced = [];
   for (const b of holders) {
@@ -772,8 +780,30 @@ const runAround = (hay, at, line, off) =>
   WINDOW +
   extendForward(hay, at + WINDOW, line, off + WINDOW);
 
+const cliPositionCache = new Map();
+const cliPositions = u => {
+  let positions = cliPositionCache.get(u);
+  if (!positions) {
+    positions = [];
+    for (let i = cli.indexOf(u); i >= 0; i = cli.indexOf(u, i + 1))
+      positions.push(i);
+    cliPositionCache.set(u, positions);
+  }
+  return positions;
+};
+const cliSiteCache = new WeakMap();
+
 // Occurrences of `u` in `hay` that continue some old line that holds it.
 const siteOffsets = (hay, u, lines) => {
+  if (hay === cli) {
+    let byUnit = cliSiteCache.get(lines);
+    if (!byUnit) cliSiteCache.set(lines, (byUnit = new Map()));
+    if (!byUnit.has(u)) byUnit.set(u, scanSiteOffsets(hay, u, lines));
+    return byUnit.get(u);
+  }
+  return scanSiteOffsets(hay, u, lines);
+};
+const scanSiteOffsets = (hay, u, lines) => {
   const contexts = [];
   for (const line of lines) {
     for (let o = line.indexOf(u); o >= 0; o = line.indexOf(u, o + 1)) {
@@ -781,7 +811,13 @@ const siteOffsets = (hay, u, lines) => {
     }
   }
   const out = [];
-  for (let i = hay.indexOf(u); i >= 0; i = hay.indexOf(u, i + 1)) {
+  let positions = hay === cli ? cliPositions(u) : null;
+  if (!positions) {
+    positions = [];
+    for (let i = hay.indexOf(u); i >= 0; i = hay.indexOf(u, i + 1))
+      positions.push(i);
+  }
+  for (const i of positions) {
     if (
       contexts.some(
         ({ line, off }) => runAround(hay, i, line, off) >= siteRunMin(line)
@@ -799,12 +835,14 @@ const countSites = (hay, u, lines) => siteOffsets(hay, u, lines).length;
 // surplus is a site carrying the old text that nothing catalogues. Only
 // single-line ASCII units are countable in the bundle (see the header).
 const strayUnits = (probes, lines) =>
-  probes.filter(
-    u =>
-      isAscii(u) &&
-      countSites(cli, u, lines) >
-        namedSites(u, lines) + countSites(sidecarBlob, u, lines)
-  );
+  probes.filter(u => {
+    if (!isAscii(u)) return false;
+    const inBundle = countSites(cli, u, lines);
+    return (
+      inBundle > 0 &&
+      inBundle > namedSites(u, lines) + countSites(sidecarBlob, u, lines)
+    );
+  });
 
 const share = (units, haystack) =>
   units.filter(u => haystack.includes(u)).length / units.length;

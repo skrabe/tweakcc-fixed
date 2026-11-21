@@ -159,6 +159,20 @@ const JH_SHAPE =
 
 const FILE_JH = FILE_YT.replace(YT_SHAPE, JH_SHAPE);
 
+// CC 2.1.330: a forced-effort gate returns NORM("medium",MID) before ENV, ENV
+// reads a per-run override first, and DEFAULT takes the raw MODEL. Excerpt
+// from the pristine darwin 2.1.330 resolver + its tail-called normalizer.
+const GU_SHAPE =
+  'function G_(e,o,{turnEffort:r,hookEffortValue:f,carriedEffort:d=R(kX(e))}={}){if(!zk(e))return;' +
+  'let l=kX(e),g=pe(l)!==null;if(f!==void 0){let M=typeof f==="number"&&g?CN(f):f;return icn(M,l)}' +
+  'if(jM(l))return icn("medium",l);let u=cLe()?.effort??rk();' +
+  'if(u===null&&!g)return;let h=dcn(e,d),v=u??(u===null?h:void 0)??r??o??h;' +
+  'if(typeof v==="number"&&g)v=CN(v);return icn(v,l)}' +
+  'function icn(e,o){let r=e;if(typeof r==="string"&&nk(r))r=gwe(r,o);' +
+  'if(r==="max"&&!BRe(o))r="high";if(r==="xhigh"&&!jat(o))r="high";return r}';
+
+const FILE_GU = FILE_YT.replace(YT_SHAPE, GU_SHAPE);
+
 const cfg = (
   over: Partial<ComplexityRouterConfig> = {}
 ): ComplexityRouterConfig => ({
@@ -485,6 +499,30 @@ describe('writeComplexityRouter', () => {
     expect(r).toContain(
       'await __tweakccRouterClassify(E,t,r.options.mainLoopModel);'
     );
+  });
+
+  it('wraps the CC 2.1.330 resolver after the override-aware ENV read', () => {
+    expect(FILE_GU).toContain(GU_SHAPE);
+    const out = writeComplexityRouter(FILE_GU, cfg());
+    expect(out).not.toBeNull();
+    const r = out as string;
+    expect(r).toContain(
+      'if(jM(l))return icn("medium",l);let u=cLe()?.effort??rk();var __request=arguments[3];'
+    );
+    expect(r).toContain('if(__selected===l&&__st.baseline===void 0)');
+    expect(r).toContain('let __twkRE=__selected===l?__st.effort:void 0;');
+    expect(r).toContain(
+      'if(__twkRE&&u==null&&r==null&&(o==null||o===__st.baseline))'
+    );
+    expect(r).toContain('if(__twkRE==="max"&&!BRe(l))__twkRE="high";');
+    expect(r).toContain('if(__twkRE==="xhigh"&&!jat(l))__twkRE="high";');
+    expect(r).toContain(
+      'if(u===null&&!g)return;let h=dcn(e,d),v=u??(u===null?h:void 0)??r??o??h;if(typeof v==="number"&&g)v=CN(v);return icn(v,l)}'
+    );
+    expect(r).toContain(
+      'await __tweakccRouterClassify(E,t,r.options.mainLoopModel);'
+    );
+    expect(writeComplexityRouter(r, cfg())).toBe(r);
   });
 
   it('wraps the CC 2.1.325 resolver on its bound model name', () => {

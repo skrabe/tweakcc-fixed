@@ -654,11 +654,6 @@
     "version": "2.1.325",
     "why": "chunk-gywtf5sd.js Jl() permissions settings zod schema @1093164, property blockFileToolReadsOutsideWorkingDirectories, .describe(\"@internal …\"): CC deletes every properties entry whose own description matches ^@internal (with its subtree) before sending the settings JSON schema via /update-config, so it is absent from data/settings-descriptions/oracle-2.1.325.json (0 @internal descriptions); the remaining sinks are settings validation/compare, never a model request."
   },
-  "data-sdk-can-use-tool-server-policy-ask-only-field": {
-    "verdict": "not-model-facing",
-    "version": "2.1.325",
-    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (can_use_tool control request server_policy_ask_only field) .describe() @3067235: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
-  },
   "data-sdk-api-error-type-field": {
     "verdict": "not-model-facing",
     "version": "2.1.325",
@@ -883,5 +878,35 @@
     "verdict": "not-model-facing",
     "version": "2.1.328",
     "why": "@internal .describe() on requiredByOrganization of the SDK plugin config schema (@2592358 chunk-20bv8pca.js): control-protocol documentation for SDK hosts, never in a model request."
+  },
+  "data-sdk-get-settings-additional-directory-config-roots-withheld-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.330",
+    "why": "chunk-xfj2cwfv.js get_settings control_response zod schema (additionalDirectoryConfigRootsWithheld) @internal .describe() @3140979: control-protocol reply documentation for the SDK host, consumed only via .lazy schema; not converted via toJSONSchema into any tool schema, not in the settings oracle, never in a model request (same as data-sdk-get-settings-policy-origins-field)."
+  },
+  "data-sdk-get-workspace-diff-new-path-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.330",
+    "why": "chunk-xfj2cwfv.js get_workspace_diff control_response zod schema (newPath; cached internal) .describe() @3059049: host-facing documentation of the stdout/control protocol (the read_file it names is the host control request), not a tool schema, never in a model request (same as data-sdk-get-workspace-diff-omitted-field)."
+  },
+  "data-sdk-get-task-output-agent-message-frames-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.330",
+    "why": "chunk-xfj2cwfv.js get_task_output control_response zod schema (messages.frames; cached internal) .describe() @3132491: host-facing documentation of the SDK control protocol, not converted via toJSONSchema into any tool schema, never in a model request."
+  },
+  "data-additional-directory-config-roots-setting": {
+    "verdict": "not-model-facing",
+    "version": "2.1.330",
+    "why": "chunk-xcgcdx61.js settings zod schema property additionalDirectoryConfigRoots @1289987, .describe(\"@internal …\"): CC strips ^@internal properties before sending the settings JSON schema via /update-config, so it is absent from data/settings-descriptions/oracle-2.1.330.json; remaining sinks are settings parsing, never a model request (same as data-block-file-tool-reads-outside-working-directories-setting)."
+  },
+  "system-reminder-ship-branch-behind-a-cloud-watcher": {
+    "verdict": "not-model-facing",
+    "version": "2.1.330",
+    "why": "chunk-j93j69ny.js ni() @47231603 end.text (word already_own_session, cached ui) returned via jo() to /ship getPromptForCommand, which shows it through V=(Re)=>Qh(appendSystemMessage, lp(text,\"suggestion\")) @47393901, a transcript system message for the user; the model gets only R.say \"The message before this command says why.\". Siblings already_watched / nothing_to_ship are cached ui and uncatalogued."
+  },
+  "data-conversation-resume-requires-active-organization-settings": {
+    "verdict": "not-model-facing",
+    "version": "2.1.330",
+    "why": "chunk-p1ewvgeh.js HSo() @6302186 throws Lx(...) @6303726 (cached ui) when resuming a conversation whose organization settings are not active; caught by the resume paths (iBe callers in Er/q4, session host resume) and printed to stderr/the resume UI before any request; all 13 HSo sibling literals are ui and uncatalogued."
   }
 }

@@ -106,11 +106,20 @@ const patchHelpMenuHeight = (file: string): string | null => {
  *
  * The original divides by 2 again, severely limiting visible items.
  */
+const uncappedCommandsListPattern =
+  /\{commands:[\w$]+\}=[\w$]+,\{headerFocused:[\w$]+,focusHeader:[\w$]+\}=[\w$]+\(\)[^]{0,600}?maxVisibleCount:Infinity,onUpFromFirstItem:/;
+
 const patchCommandsVisibleCount = (file: string): string | null => {
   const pattern = /Math\.max\(1,Math\.floor\(\(([\w$]+)-10\)\/2\)\)/;
   const match = file.match(pattern);
 
   if (!match || match.index === undefined) {
+    if (uncappedCommandsListPattern.test(file)) {
+      debug(
+        'patch: showMoreItemsInSelectMenus: commands list already uncapped (maxVisibleCount:Infinity) — no-op'
+      );
+      return file;
+    }
     return null;
   }
 

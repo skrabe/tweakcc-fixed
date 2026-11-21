@@ -440,7 +440,22 @@ const wrapEffortResolver = (
   //     if(typeof S==="number"&&NUM)S=CONVERT(S);return NORM(S,MID)}
   const patternModelId =
     /(function [$\w]+\(([$\w]+),([$\w]+),\{turnEffort:([$\w]+),hookEffortValue:[$\w]+,carriedEffort:[$\w]+=[$\w]+\([$\w]+\(\2\)\)\}=\{\}\)\{if\(![$\w]+\(\2\)\)return;let ([$\w]+)=[$\w]+\(\2\),[$\w]+=[$\w]+\(\5\)!==null;if\([$\w]+!==void 0\)\{let [$\w]+=typeof [$\w]+==="number"&&[$\w]+\?[$\w]+\([$\w]+\):[$\w]+;return [$\w]+\([$\w]+,\5\)\}let ([$\w]+)=[$\w]+\(\);)if\(\6===null&&![$\w]+\)return;let [$\w]+=[$\w]+\(\5,[$\w]+\),([$\w]+)=\6\?\?\(\6===null\?[$\w]+:void 0\)\?\?\4\?\?\3\?\?[$\w]+;if\(typeof \7==="number"&&[$\w]+\)\7=[$\w]+\(\7\);return ([$\w]+)\(\7,\5\)\}/;
-  const modelIdMatch = file.match(patternModelId);
+  //
+  // CC 2.1.330: a forced-effort gate returns NORM("medium",MID) before ENV is
+  // read, ENV gained a per-run override (`OVERRIDE()?.effort??ENVFN()`) that
+  // the router must yield to like ENV, and DEFAULT takes MODEL instead of MID.
+  // The wrap still rides right after the ENV binding. Same captures as
+  // patternModelId.
+  //   function NAME(MODEL,FALLBACK,{turnEffort:TURN,hookEffortValue:HOOK,carriedEffort:CARRY=k(NAME_OF(MODEL))}={}){
+  //     if(!SUPPORT(MODEL))return;let MID=NAME_OF(MODEL),NUM=NUMERIC(MID)!==null;
+  //     if(HOOK!==void 0){let V=typeof HOOK==="number"&&NUM?CONVERT(HOOK):HOOK;return NORM(V,MID)}
+  //     if(FORCED(MID))return NORM("medium",MID);let ENV=OVERRIDE()?.effort??ENVFN();if(ENV===null&&!NUM)return;
+  //     let DEF=DEFAULT(MODEL,CARRY),S=ENV??(ENV===null?DEF:void 0)??TURN??FALLBACK??DEF;
+  //     if(typeof S==="number"&&NUM)S=CONVERT(S);return NORM(S,MID)}
+  const patternForcedEffort =
+    /(function [$\w]+\(([$\w]+),([$\w]+),\{turnEffort:([$\w]+),hookEffortValue:[$\w]+,carriedEffort:[$\w]+=[$\w]+\([$\w]+\(\2\)\)\}=\{\}\)\{if\(![$\w]+\(\2\)\)return;let ([$\w]+)=[$\w]+\(\2\),[$\w]+=[$\w]+\(\5\)!==null;if\([$\w]+!==void 0\)\{let [$\w]+=typeof [$\w]+==="number"&&[$\w]+\?[$\w]+\([$\w]+\):[$\w]+;return [$\w]+\([$\w]+,\5\)\}(?:if\([$\w]+\(\5\)\)return [$\w]+\("[a-z]+",\5\);)?let ([$\w]+)=[$\w]+\(\)\?\.effort\?\?[$\w]+\(\);)if\(\6===null&&![$\w]+\)return;let [$\w]+=[$\w]+\((?:\2|\5),[$\w]+\),([$\w]+)=\6\?\?\(\6===null\?[$\w]+:void 0\)\?\?\4\?\?\3\?\?[$\w]+;if\(typeof \7==="number"&&[$\w]+\)\7=[$\w]+\(\7\);return ([$\w]+)\(\7,\5\)\}/;
+  const modelIdMatch =
+    file.match(patternForcedEffort) || file.match(patternModelId);
   const modelIdRemapped = modelIdMatch
     ? Object.assign(
         [

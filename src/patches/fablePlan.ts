@@ -624,8 +624,10 @@ const patchEffortContext = (
     `([^$\\w.]${r}\\()([$\\w]+)\\?\\.getAppState\\?\\.\\(\\)\\?\\?\\{\\},`,
     'g'
   );
-  // C — the spawn helper's destructured `model` and `effortState`.
-  const spawn = /model:([$\w]+),effortState:([$\w]+)[,}]/g;
+  // C — the spawn helper's destructured `model` and `effortState`. CC >= 2.1.330
+  // passes `modelFacts` and destructures `{model:a}=o` in the body.
+  const spawn =
+    /(?:modelFacts:([$\w]+)|model:([$\w]+)),effortState:([$\w]+)[,}]/g;
   const inScope = (at: number, ...names: string[]): boolean =>
     names.every(n => boundInModule(file, at, n));
   const setting = (c: string, guard?: string): string => {
@@ -668,22 +670,31 @@ const patchEffortContext = (
     // The call sits in the body of the function this destructuring opens.
     const body = c.index + c[0].length;
     const next = file.indexOf('function ', body);
-    const model = escapeIdent(c[1]);
-    const state = escapeIdent(c[2]);
+    const fnBody = file.slice(body, next === -1 ? undefined : next);
+    let modelName = c[2];
+    if (c[1] !== undefined) {
+      const facts = new RegExp(
+        `[{,]model:([$\\w]+)[,}][^=;]*=${escapeIdent(c[1])}[,;]`
+      ).exec(fnBody);
+      if (!facts) continue;
+      modelName = facts[1];
+    }
+    const model = escapeIdent(modelName);
+    const state = escapeIdent(c[3]);
     // CC >= 2.1.317: `Kl(odt(state,model,picked),model)`; before: `Kl(state,model)`.
     const call = new RegExp(
       `[^$\\w.]${r}\\((?:([$\\w]+)\\(${state},${model},([$\\w]+)\\),${model}|${state},${model})\\)`
-    ).exec(file.slice(body, next === -1 ? undefined : next));
+    ).exec(fnBody);
     if (!call) continue;
     found.c++;
     const at = body + call.index + 1;
-    const routed = `{...${c[2]},${MODE_KEY}:"${ROUTED}"}`;
+    const routed = `{...${c[3]},${MODE_KEY}:"${ROUTED}"}`;
     edits.push([
       at,
       at + call[0].length - 1,
       call[1]
-        ? `${resolver}(${call[1]}(${routed},${c[1]},${call[2]}),${c[1]})`
-        : `${resolver}(${routed},${c[1]})`,
+        ? `${resolver}(${call[1]}(${routed},${modelName},${call[2]}),${modelName})`
+        : `${resolver}(${routed},${modelName})`,
     ]);
   }
 
@@ -757,7 +768,12 @@ const patchPickerEffortRow = (
   const display =
     /(([$\w]+)!==void 0&&![$\w]+&&[$\w]+\([$\w]+,\{marginBottom:1,flexDirection:"column",children:)([$\w]+\?)/;
   const unsupporteds = [
-    // CC >= 2.1.326: the icon and its leading space became conditional.
+    // CC >= 2.1.330: the label became a template literal and the icon is
+    // unconditional again.
+    //   o(r,{dimColor:!0,children:[e(_1,{effort:void 0})," ",
+    //   `Effort not supported${Vr?` for ${Vr}`:""}`]})
+    /([$\w]+)\(([$\w]+),\{dimColor:!0,children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," ",`Effort not supported/,
+    // CC 2.1.326 - 2.1.329: the icon and its leading space became conditional.
     //   r(n,{dimColor:!0,children:[!sn&&e(a$,{effort:void 0}),sn?"":" ",
     //   "Effort not supported",…
     /([$\w]+)\(([$\w]+),\{dimColor:!0,children:\[![$\w]+&&[$\w]+\([$\w]+,\{effort:void 0\}\),[$\w]+\?"":" ","Effort not supported"/,

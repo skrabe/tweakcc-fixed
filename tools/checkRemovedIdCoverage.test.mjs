@@ -126,6 +126,29 @@ describe('checkRemovedIdCoverage: prompts with little literal text', () => {
     );
   });
 
+  it('does not treat a code-only piece as prompt text surviving in the bundle', () => {
+    // CC 2.1.330: the template holding this fragment is gone, but the call it
+    // wrapped is still code in the bundle.
+    const prompt = {
+      id: 'tool-result-fixture-code-only-fragment',
+      version: '2.1.296',
+      pieces: ['${', '(', '.reasonCode??"canvas",', ',', ',', ')}.'],
+      identifiers: [0, 1, 2, 3, 4],
+      identifierMap: { 0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E' },
+    };
+    const out = run(
+      write('cli-code.js', 'Vi=Pn?Ic:Vn(y.reasonCode??"canvas",u,_,it);'),
+      write('prev-code.json', { prompts: [prompt] }),
+      write('cur-code.json', { prompts: [] })
+    );
+    expect(out).not.toMatch(
+      /STILL IN BUNDLE —[\s\S]*tool-result-fixture-code-only-fragment/
+    );
+    expect(out).toMatch(
+      /NO PROBE SURFACE[\s\S]*tool-result-fixture-code-only-fragment/
+    );
+  });
+
   it('still calls a genuinely absent prompt removed', () => {
     const out = run(
       write('cli-gone.js', 'function q(){return "unrelated bundle text"}'),

@@ -12,7 +12,28 @@ const SPAN_318 =
   'Et=b==="up_to"?Ce:e,Tt=Qe+Aft(Et).map((Jn)=>`\n\n${Jn}`).join(""),' +
   'mt=b==="up_to"?{...s,forkContextMessages:Ce}:s,Ot,Qt,Nt=0;for(;;){';
 
+const SPAN_330 =
+  'Bt={preCompactTokenCount:tt,direction:f(k),messagesSummarized:Ee.length},' +
+  'At=k==="up_to"?Ee:e,pt=Et+J9(At).map((Ho)=>`\n\n${Ho}`).join(""),' +
+  'Wt=Qge(g,e),an=k==="up_to"?{...Wt,forkContextMessages:Ee}:Wt,Gt,Jt,En=0;for(;;){';
+
 describe('writeFixSummarizeFromHere', () => {
+  it('2.1.330 shape: collapses both branches, keeps the cache-params wrapper', () => {
+    const out = writeFixSummarizeFromHere(`x;${SPAN_330}y;`);
+    expect(out).toBe(
+      'x;Bt={preCompactTokenCount:tt,direction:f(k),messagesSummarized:Ee.length},' +
+        'At=Ee,pt=Et+J9(At).map((Ho)=>`\n\n${Ho}`).join(""),' +
+        'Wt=Qge(g,e),an={...Wt,forkContextMessages:Ee},Gt,Jt,En=0;for(;;){y;'
+    );
+    expect(out).not.toContain('==="up_to"');
+  });
+
+  it('2.1.330 shape: is idempotent on already-patched input', () => {
+    const once = writeFixSummarizeFromHere(`x;${SPAN_330}y;`);
+    expect(once).not.toBeNull();
+    expect(writeFixSummarizeFromHere(once!)).toBe(once);
+  });
+
   it('2.1.318 shape: collapses both branches, keeps the intermediate expression', () => {
     const out = writeFixSummarizeFromHere(`x;${SPAN_318}y;`);
     expect(out).toBe(
