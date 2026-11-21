@@ -161,6 +161,12 @@ const literalRuns = p => {
 // pass was added. The match engines generalize exactly this shape; here it is
 // cheaper to drop such a piece from the required set than to rebuild a matcher.
 const MINIFIED_BRACKET_KEY = /\[[$\w]{1,3}[.\]-]/;
+// An older extractor split some slot expressions into literal pieces, so a
+// catalogued body can be nothing but code (`.reasonCode??"canvas",`). That code
+// stays in the bundle after the template that held it is gone, which read a
+// removed computer-use fragment as IN-BUNDLE on 2.1.330. A piece with no
+// whitespace that carries an operator or a quote is code, not prose.
+const CODE_PIECE = /^\S*(?:\?\?|&&|\|\||=>|["'`])\S*$/;
 const SHORT_PIECE_MIN = 8;
 const shortRuns = p =>
   (p.pieces || [])
@@ -170,7 +176,8 @@ const shortRuns = p =>
         s.length >= SHORT_PIECE_MIN &&
         isAscii(s) &&
         /[A-Za-z]{3,}/.test(s) &&
-        !MINIFIED_BRACKET_KEY.test(s)
+        !MINIFIED_BRACKET_KEY.test(s) &&
+        !CODE_PIECE.test(s)
     );
 
 // The share of an old body's distinctive units the catalogue must carry for the
