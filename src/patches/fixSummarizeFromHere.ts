@@ -22,6 +22,11 @@
 // part being replaced; the kept messages carry their own markers verbatim.
 // The intermediate expression is reproduced untouched.
 //
+// Since CC 2.1.330 the cache-safe params pass through a wrapper first, and the
+// second ternary spreads the wrapper's result instead of K:
+//   ...,X=...,W=F(K,H),R=T==="up_to"?{...W,forkContextMessages:j}:W,...
+// The wrapper binding is reproduced untouched; R spreads W.
+//
 // Fix: make "from" behave exactly like "up_to" — feed the slice and set the
 // matching forkContextMessages — by collapsing both branches to j:
 //   ...,G=j,[X=...,]R={...K,forkContextMessages:j},...
@@ -33,16 +38,24 @@
 import { debug } from '../utils';
 import { showDiff } from './index';
 
-// Method 1 (CC >= 2.1.318): ternaries separated by the retry-request expression.
+// Method 1 (CC >= 2.1.330): a wrapper over the cache-safe params sits before
+// the second ternary, which spreads the wrapper's result.
 const METHOD1 =
-  /messagesSummarized:([$\w]+)\.length\},([$\w]+)=([$\w]+)==="up_to"\?\1:([$\w]+),(([$\w]+)=[$\w]+\+[$\w]+\(\2\)\.map\(\(([$\w]+)\)=>`(?:\n|\\n){2}\$\{\7\}`\)\.join\(""\)),([$\w]+)=\3==="up_to"\?\{\.\.\.([$\w]+),forkContextMessages:\1\}:\9/;
+  /messagesSummarized:([$\w]+)\.length\},([$\w]+)=([$\w]+)==="up_to"\?\1:([$\w]+),(([$\w]+)=[$\w]+\+[$\w]+\(\2\)\.map\(\(([$\w]+)\)=>`(?:\n|\\n){2}\$\{\7\}`\)\.join\(""\)),(([$\w]+)=[$\w]+\([$\w]+,\4\)),([$\w]+)=\3==="up_to"\?\{\.\.\.\9,forkContextMessages:\1\}:\9/;
 const METHOD1_PATCHED =
+  /messagesSummarized:([$\w]+)\.length\},([$\w]+)=\1,[$\w]+=[$\w]+\+[$\w]+\(\2\)\.map\(\(([$\w]+)\)=>`(?:\n|\\n){2}\$\{\3\}`\)\.join\(""\),([$\w]+)=[$\w]+\([$\w]+,[$\w]+\),[$\w]+=\{\.\.\.\4,forkContextMessages:\1\}/;
+
+// Method 2 (CC 2.1.318-2.1.328): ternaries separated by the retry-request
+// expression.
+const METHOD2 =
+  /messagesSummarized:([$\w]+)\.length\},([$\w]+)=([$\w]+)==="up_to"\?\1:([$\w]+),(([$\w]+)=[$\w]+\+[$\w]+\(\2\)\.map\(\(([$\w]+)\)=>`(?:\n|\\n){2}\$\{\7\}`\)\.join\(""\)),([$\w]+)=\3==="up_to"\?\{\.\.\.([$\w]+),forkContextMessages:\1\}:\9/;
+const METHOD2_PATCHED =
   /messagesSummarized:([$\w]+)\.length\},([$\w]+)=\1,[$\w]+=[$\w]+\+[$\w]+\(\2\)\.map\(\(([$\w]+)\)=>`(?:\n|\\n){2}\$\{\3\}`\)\.join\(""\),[$\w]+=\{\.\.\.[$\w]+,forkContextMessages:\1\}/;
 
-// Method 2 (CC < 2.1.318): the two ternaries are adjacent.
-const METHOD2 =
+// Method 3 (CC < 2.1.318): the two ternaries are adjacent.
+const METHOD3 =
   /messagesSummarized:([$\w]+)\.length\},([$\w]+)=([$\w]+)==="up_to"\?\1:([$\w]+),([$\w]+)=\3==="up_to"\?\{\.\.\.([$\w]+),forkContextMessages:\1\}:\6/;
-const METHOD2_PATCHED =
+const METHOD3_PATCHED =
   /messagesSummarized:([$\w]+)\.length\},([$\w]+)=\1,([$\w]+)=\{\.\.\.([$\w]+),forkContextMessages:\1\}/;
 
 const splice = (
@@ -60,24 +73,37 @@ const splice = (
 export const writeFixSummarizeFromHere = (file: string): string | null => {
   const m1 = file.match(METHOD1);
   if (m1 && m1.index !== undefined) {
-    const [, j, G, , , mid, , , R, K] = m1;
+    const [, j, G, , , mid, , , wrap, W, R] = m1;
     const replacement =
-      `messagesSummarized:${j}.length},${G}=${j},${mid},` +
-      `${R}={...${K},forkContextMessages:${j}}`;
+      `messagesSummarized:${j}.length},${G}=${j},${mid},${wrap},` +
+      `${R}={...${W},forkContextMessages:${j}}`;
     return splice(file, m1.index, m1[0].length, replacement);
   }
 
   const m2 = file.match(METHOD2);
   if (m2 && m2.index !== undefined) {
-    const [, j, G, , , R, K] = m2;
+    const [, j, G, , , mid, , , R, K] = m2;
     const replacement =
-      `messagesSummarized:${j}.length},${G}=${j},` +
+      `messagesSummarized:${j}.length},${G}=${j},${mid},` +
       `${R}={...${K},forkContextMessages:${j}}`;
     return splice(file, m2.index, m2[0].length, replacement);
   }
 
+  const m3 = file.match(METHOD3);
+  if (m3 && m3.index !== undefined) {
+    const [, j, G, , , R, K] = m3;
+    const replacement =
+      `messagesSummarized:${j}.length},${G}=${j},` +
+      `${R}={...${K},forkContextMessages:${j}}`;
+    return splice(file, m3.index, m3[0].length, replacement);
+  }
+
   // Idempotency: already-patched shape (both branches collapsed to the slice).
-  if (METHOD1_PATCHED.test(file) || METHOD2_PATCHED.test(file)) {
+  if (
+    METHOD1_PATCHED.test(file) ||
+    METHOD2_PATCHED.test(file) ||
+    METHOD3_PATCHED.test(file)
+  ) {
     debug(
       'patch: fixSummarizeFromHere: already applied in this CC build — no-op'
     );

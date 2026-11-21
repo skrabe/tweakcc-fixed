@@ -17,6 +17,21 @@ describe('writeDisableCtrlZSuspend', () => {
     );
   });
 
+  it('short-circuits the 2.1.330 props.terminal.handleSuspend shape', () => {
+    const excerpt =
+      'if(Y.kind==="paste"){h.props.dispatchPasteEvent(Y.text,h.pressedAt);continue}' +
+      'if(Y.name==="z"&&Y.ctrl&&mjr()){h.props.terminal.handleSuspend();continue}' +
+      'if(h.handleInput(Y.sequence),Y.name==="wheelup"||Y.name==="wheeldown"){}';
+    const result = writeDisableCtrlZSuspend(excerpt);
+
+    expect(result).toBe(
+      excerpt.replace('if(Y.name==="z"', 'if(!1&&Y.name==="z"')
+    );
+    expect(result).toContain(
+      '{h.props.terminal.handleSuspend();continue}if(h.handleInput(Y.sequence)'
+    );
+  });
+
   it('returns null when the anchor is absent', () => {
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
     expect(writeDisableCtrlZSuspend('if(T.name==="x"){}')).toBeNull();

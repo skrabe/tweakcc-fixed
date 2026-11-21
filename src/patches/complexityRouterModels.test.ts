@@ -51,6 +51,12 @@ const fixture326 = fixture319.replace(
   'el(Text,{dimColor:!0,children:[!compact&&el(Icon,{effort:void 0}),compact?"":" ","Effort not supported"'
 );
 
+// CC 2.1.330 drops the compact flag and builds the label as a template.
+const fixture330 = fixture326.replace(
+  '[!compact&&el(Icon,{effort:void 0}),compact?"":" ","Effort not supported"',
+  '[el(Icon,{effort:void 0})," ",`Effort not supported${hidden?" here":""}`'
+);
+
 function harness(source = fixture) {
   const context = vm.createContext({
     available: [] as { value: string; disabled?: boolean }[],
@@ -234,6 +240,21 @@ describe('effort router model aliases', () => {
     );
     const { context, result } = harness(fixture326);
     expect(result).toContain('compact?"":" ","Effort not supported"');
+    expect(vm.runInContext('display().children', context)).toMatchObject({
+      color: 'subtle',
+      children: 'Automatic effort · currently high',
+    });
+    context.focused = 'opus';
+    expect(vm.runInContext('display().children', context)).toBe('manual');
+    expect(writeComplexityRouterModels(result)).toBe(result);
+  });
+
+  it('shows automatic effort with the CC 2.1.330 template-literal label', () => {
+    expect(fixture330).toContain(
+      '[el(Icon,{effort:void 0})," ",`Effort not supported${hidden?" here":""}`'
+    );
+    const { context, result } = harness(fixture330);
+    expect(result).toContain('" ",`Effort not supported${hidden?" here":""}`');
     expect(vm.runInContext('display().children', context)).toMatchObject({
       color: 'subtle',
       children: 'Automatic effort · currently high',

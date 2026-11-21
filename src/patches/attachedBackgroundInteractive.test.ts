@@ -194,6 +194,23 @@ describe('writeAttachedBackgroundInteractive', () => {
     errorSpy.mockRestore();
   });
 
+  it('2.1.330: moves the workflow consent gate past its multi-model check', () => {
+    const workflow330 =
+      'import{Lt}from"/$bunfs/root/chunk-9dpf1mt6.js";' +
+      'function u(r,o){if(r!==xc)return!1;if(o.options.isNonInteractiveSession)return!1;if(EI(Z(o)))return!1;' +
+      'if(Lt())return!1;if(wst())return!1;if([o.loopModel,mwe(o)].every((e)=>IC(CYe(o),e)))return!1;' +
+      'return!o.session.workflowUsageConsent.isGranted()&&!RMs()}' +
+      'export{u as workflowNeedsUsageConsentPrompt};';
+    const out = writeAttachedBackgroundInteractive(
+      FIXTURE_326.replace(WORKFLOW, workflow330)
+    )!;
+    expect(out).not.toBeNull();
+    expect(out).toContain(
+      `if(EI(Z(o)))return!1;if(${BRIDGE}())return!1;if(wst())return!1;if([o.loopModel,mwe(o)].every((e)=>IC(CYe(o),e)))return!1;return!o.session.workflowUsageConsent.isGranted()&&!RMs()}`
+    );
+    expect(writeAttachedBackgroundInteractive(out)).toBe(out);
+  });
+
   it('publishes the unattended predicate beside its definition, once', () => {
     const out = writeAttachedBackgroundInteractive(FIXTURE)!;
     expect(out).toContain(
