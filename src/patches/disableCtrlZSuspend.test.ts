@@ -30,6 +30,7 @@ describe('writeDisableCtrlZSuspend', () => {
     expect(result).toContain(
       '{h.props.terminal.handleSuspend();continue}if(h.handleInput(Y.sequence)'
     );
+    expect(writeDisableCtrlZSuspend(result!)).toBe(result);
   });
 
   it('returns null when the anchor is absent', () => {

@@ -107,7 +107,7 @@ const patchHelpMenuHeight = (file: string): string | null => {
  * The original divides by 2 again, severely limiting visible items.
  */
 const uncappedCommandsListPattern =
-  /\{commands:[\w$]+\}=[\w$]+,\{headerFocused:[\w$]+,focusHeader:[\w$]+\}=[\w$]+\(\)[^]{0,600}?maxVisibleCount:Infinity/;
+  /\{commands:[\w$]+\}=[\w$]+,\{headerFocused:[\w$]+,focusHeader:[\w$]+\}=[\w$]+\(\)[^]{0,600}?maxVisibleCount:Infinity,onUpFromFirstItem:/;
 
 const patchCommandsVisibleCount = (file: string): string | null => {
   const pattern = /Math\.max\(1,Math\.floor\(\(([\w$]+)-10\)\/2\)\)/;

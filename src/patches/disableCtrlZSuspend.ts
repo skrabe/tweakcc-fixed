@@ -6,6 +6,9 @@ import { showDiff } from './index';
 //   if(T.name==="z"&&T.ctrl&&tYn()){n.handleSuspend();continue}
 // Short-circuit the condition so Ctrl-Z falls through as a normal key.
 export const writeDisableCtrlZSuspend = (oldFile: string): string | null => {
+  if (/if\(!1&&([$\w]+)\.name==="z"&&\1\.ctrl&&/.test(oldFile)) {
+    return oldFile;
+  }
   const patterns = [
     /if\(([$\w]+)\.name==="z"&&\1\.ctrl&&[$\w]+\(\)\)\{[$\w]+\.props\.terminal\.handleSuspend\(\);continue\}/,
     /if\(([$\w]+)\.name==="z"&&\1\.ctrl&&[$\w]+\(\)\)\{[$\w]+\.handleSuspend\(\);continue\}/,
