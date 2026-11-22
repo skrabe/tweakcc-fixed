@@ -550,7 +550,7 @@ describe.skipIf(skipReason !== null)('every patch vs. pristine cli.js', () => {
       const consoleError = console.error;
       console.error = (...args: unknown[]) => {
         errors.push(args.map(String).join(' '));
-        consoleError(...args);
+        if (!EXPECTED_NULL[id]) consoleError(...args);
       };
       try {
         result = INVOCATIONS[id](source);
