@@ -16,7 +16,6 @@ import {
 import { setAppliedHashes, computeMD5Hash } from '../systemPromptHashIndex';
 import { MutableText } from '../mutableText';
 import {
-  findAllPromptPieceMatches,
   foldPromptMatchContent,
   PromptPieceMatcherCatalog,
   PromptMatchSpec,
@@ -576,7 +575,7 @@ export const applySystemPrompts = async (
           const spec = matchSpecs.get(regex);
           const matchedPristine = spec
             ? matchesInRegion(
-                await findAllPromptPieceMatches(spec, pristineContent),
+                await matchCatalog.matchPristine(spec, pristineContent),
                 pristineRegions,
                 Boolean(entry.asset)
               )

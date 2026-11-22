@@ -6,6 +6,7 @@ import {
 
 const MIN_ANCHOR = 12;
 const MAX_OCCURRENCES = 250;
+export const PRISTINE_RESCANS_BEFORE_INDEX = 32;
 
 type MatchToken =
   | { kind: 'literal'; value: string }
@@ -645,6 +646,61 @@ const scanHashedAnchors = (
   }
 };
 
+const foldAsciiCode = (code: number): number =>
+  code >= 65 && code <= 90 ? code + 32 : code;
+
+const foldAsciiCase = (text: string): string =>
+  text.replace(/[A-Z]/g, letter => letter.toLowerCase());
+
+const startsWithFolded = (
+  content: string,
+  folded: string,
+  index: number
+): boolean => {
+  if (index + folded.length > content.length) return false;
+  for (let i = 0; i < folded.length; i++) {
+    if (foldAsciiCode(content.charCodeAt(index + i)) !== folded.charCodeAt(i)) {
+      return false;
+    }
+  }
+  return true;
+};
+
+const scanFoldedHashedAnchors = (
+  content: string,
+  window: number,
+  byHash: Map<number, string[]>,
+  found: Map<string, number[] | null>
+): void => {
+  if (byHash.size === 0 || content.length < window) return;
+  const power = windowPower(window);
+  let hash = 0;
+  for (let i = 0; i < window; i++) {
+    hash =
+      (Math.imul(hash, HASH_BASE) + foldAsciiCode(content.charCodeAt(i))) >>> 0;
+  }
+  const last = content.length - window;
+  for (let index = 0; index <= last; index++) {
+    const candidates = byHash.get(hash);
+    if (candidates) {
+      for (const anchor of candidates) {
+        if (startsWithFolded(content, anchor, index)) {
+          recordOccurrence(found, anchor, index);
+        }
+      }
+    }
+    if (index === last) break;
+    hash =
+      (Math.imul(
+        (hash - Math.imul(foldAsciiCode(content.charCodeAt(index)), power)) >>>
+          0,
+        HASH_BASE
+      ) +
+        foldAsciiCode(content.charCodeAt(index + window))) >>>
+      0;
+  }
+};
+
 const scanTinyAnchor = (
   content: string,
   anchor: string,
@@ -747,6 +803,11 @@ export class PromptPieceMatcherCatalog {
   private anchorOccurrences = new Map<string, number[] | null>();
   private anchorLengthCounts = new Map<number, number>();
   private maxAnchorLength = MIN_ANCHOR;
+  private pristine: {
+    content: string;
+    occurrences: Map<string, number[] | null>;
+  } | null = null;
+  private pristineRescans = 0;
 
   constructor(specs: PromptMatchSpec[]) {
     for (const spec of specs) {
@@ -831,6 +892,57 @@ export class PromptPieceMatcherCatalog {
         sourceString(content)
       ));
     return matches;
+  }
+
+  private pristineOccurrences(content: string): Map<string, number[] | null> {
+    if (this.pristine && this.pristine.content === content) {
+      return this.pristine.occurrences;
+    }
+    const long = new Map<number, string[]>();
+    const short = new Map<number, string[]>();
+    const occurrences = new Map<string, number[] | null>();
+    for (const anchor of this.anchorRegexes.keys()) {
+      const window = hashWindowFor(anchor);
+      const folded = foldAsciiCase(anchor);
+      if (window === 0 || occurrences.has(folded)) continue;
+      occurrences.set(folded, []);
+      addHashedAnchor(window === MIN_ANCHOR ? long : short, folded, window);
+    }
+    scanFoldedHashedAnchors(content, MIN_ANCHOR, long, occurrences);
+    scanFoldedHashedAnchors(content, SHORT_WINDOW, short, occurrences);
+    this.pristine = { content, occurrences };
+    return occurrences;
+  }
+
+  async matchPristine(
+    spec: PromptMatchSpec,
+    content: string
+  ): Promise<RegExpExecArray[]> {
+    const matcher =
+      this.specs.get(spec.regex) === spec
+        ? this.compiled.get(spec.regex)
+        : undefined;
+    const anchor = matcher?.plan?.anchor;
+    if (!matcher || !anchor || hashWindowFor(anchor) === 0) {
+      return findAllPromptPieceMatches(spec, content);
+    }
+    if (
+      this.pristine?.content !== content &&
+      this.pristineRescans < PRISTINE_RESCANS_BEFORE_INDEX
+    ) {
+      this.pristineRescans++;
+      return findAllPromptPieceMatches(spec, content);
+    }
+    const occurrences = this.pristineOccurrences(content).get(
+      foldAsciiCase(anchor)
+    );
+    if (occurrences === undefined) {
+      return findAllPromptPieceMatches(spec, content);
+    }
+    return (
+      tokenMatches(matcher, content, occurrences) ??
+      findAllMatchesWithStackFallback(spec.regex, 'sg', content)
+    );
   }
 
   recordSplice(content: PromptMatchText, splice: PromptMatchSplice): void {
