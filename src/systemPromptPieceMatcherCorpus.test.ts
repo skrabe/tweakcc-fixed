@@ -83,6 +83,7 @@ const expectAgreement = (s: DifferentialTargetSummary) => {
       .map(m => m.detail)
       .join('\n\n')
   ).toEqual([]);
+  expect(s.failures).toEqual([]);
 };
 
 describe.runIf(CORPUS)(
@@ -108,12 +109,11 @@ describe.runIf(CORPUS)(
     );
 
     // The strongest check: the matcher and the regex must agree on the REAL
-    // bundle, not just synthetic haystacks. Gated on the pristine cli.js the
-    // apply writes to ~/.tweakcc every run, so it runs on a maintainer's machine
-    // (and in showtime) but skips in a bare CI checkout rather than passing
-    // vacuously.
+    // bundle, not just synthetic haystacks. It reads the pristine cli.js the
+    // apply writes to ~/.tweakcc every run, and fails when there is none rather
+    // than passing vacuously.
     it(
-      'agrees with the RegExp engine on the real pristine bundle when present',
+      'agrees with the RegExp engine on the real pristine bundle',
       async () => {
         // TWEAKCC_MATCHER_CORPUS_BUNDLE points the differential at a specific
         // bundle — e.g. a Linux cli.js copied from a VPS — so matcher/regex
@@ -122,12 +122,10 @@ describe.runIf(CORPUS)(
         const orig =
           process.env.TWEAKCC_MATCHER_CORPUS_BUNDLE ||
           path.join(os.homedir(), '.tweakcc', 'native-claudejs-orig.js');
-        if (!fs.existsSync(orig)) {
-          console.log(
-            'skip: no ~/.tweakcc/native-claudejs-orig.js — run --apply once to enable the real-bundle differential'
-          );
-          return;
-        }
+        expect(
+          fs.existsSync(orig),
+          `no bundle at ${orig}: set TWEAKCC_MATCHER_CORPUS_BUNDLE or run --apply once; the real-bundle differential must not pass without input`
+        ).toBe(true);
         const { file } = newestPromptsJson();
         // The runner streams progress, so a long run is observably alive and a
         // genuine hang shows where it stopped (vitest itself prints nothing

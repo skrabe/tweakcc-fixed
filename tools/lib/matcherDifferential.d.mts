@@ -15,6 +15,9 @@ export interface DifferentialTargetSummary {
   skippedBuild: number;
   skippedRegex: number;
   cached: number;
+  answered: { token: number; tokenPastCap: number; noAnchor: number };
+  tokenKinds: Record<string, number>;
+  tokenKindsPresent: Record<string, number>;
   mismatches: DifferentialFinding[];
   errors: Array<{ id: string; index: number; message: string }>;
   failures: string[];

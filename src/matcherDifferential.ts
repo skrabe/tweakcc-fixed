@@ -1,6 +1,12 @@
 import { buildSearchRegexFromPieces } from './systemPromptSync';
 import { findAllMatchesWithStackFallback } from './safeRegexMatch';
-import { findAllPromptPieceMatches } from './systemPromptPieceMatcher';
+import {
+  findPromptPieceMatchesAtOccurrences,
+  MAX_ANCHOR_OCCURRENCES,
+  PromptPieceMatcherCatalog,
+  promptAnchorInfo,
+  type PromptMatchSpec,
+} from './systemPromptPieceMatcher';
 
 // One prompt of the matcher/regex differential: the fast piece matcher the
 // apply splices with must return exactly what the reference RegExp returns.
@@ -10,13 +16,36 @@ import { findAllPromptPieceMatches } from './systemPromptPieceMatcher';
 
 export type MatchSignature = Array<string | number | null>;
 
+export const TOKEN_KINDS = [
+  'backslash',
+  'capture',
+  'identifier',
+  'interpolation',
+  'literal',
+  'newline',
+  'non-ascii',
+  'quote',
+] as const;
+
+export type DifferentialAnswer = 'token' | 'token-past-cap' | 'no-anchor';
+
 export type PromptDifferential =
   // buildSearchRegexFromPieces rejected the pieces: nothing to compare.
   | { status: 'skip-build' }
   // The RegExp engine rejected the pattern: not a fair comparison.
   | { status: 'skip-regex' }
-  | { status: 'match'; exercised: boolean }
-  | { status: 'mismatch'; expected: string; actual: string };
+  | {
+      status: 'match';
+      exercised: boolean;
+      answer: DifferentialAnswer;
+      kinds: string[];
+    }
+  | {
+      status: 'mismatch';
+      expected: string;
+      actual: string;
+      answer: DifferentialAnswer;
+    };
 
 export const matchSignature = (m: RegExpExecArray): MatchSignature => [
   m.index,
@@ -41,33 +70,103 @@ export const synthHaystack = (pieces: string[]): string => {
   return out + '\n// trailing filler\n';
 };
 
-// `content` null = the prompt's own synthetic haystack.
+const exactOccurrences = (content: string, anchor: string): number[] => {
+  const found: number[] = [];
+  for (
+    let at = content.indexOf(anchor);
+    at !== -1;
+    at = content.indexOf(anchor, at + 1)
+  ) {
+    found.push(at);
+  }
+  return found;
+};
+
+const specFor = (pieces: string[], version: string): PromptMatchSpec | null => {
+  try {
+    return {
+      regex: buildSearchRegexFromPieces(pieces, version),
+      pieces,
+      version,
+    };
+  } catch {
+    return null;
+  }
+};
+
+// The anchor occurrences the apply's own index finds in `content`, per prompt:
+// exact-case positions, null past the occurrence cap, undefined for a prompt
+// with no anchor or no regex. One catalogue over the whole list, indexed once,
+// exactly as applySystemPrompts and the preflight batch index the bundle.
+export const indexBundleOccurrences = (
+  piecesList: string[][],
+  version: string,
+  content: string
+): Array<number[] | null | undefined> => {
+  const specs = piecesList.map(pieces => specFor(pieces, version));
+  const catalog = new PromptPieceMatcherCatalog(
+    specs.filter((spec): spec is PromptMatchSpec => spec !== null)
+  );
+  catalog.index(content);
+  return specs.map(spec =>
+    spec === null ? undefined : catalog.indexedOccurrences(spec.regex)
+  );
+};
+
+// `content` null = the prompt's own synthetic haystack. `indexed` is the
+// prompt's entry from indexBundleOccurrences; omitted, the occurrences are
+// found here. The token matcher is compared with the regex on every prompt
+// that has an anchor: below the cap on the occurrences the apply answers from,
+// past it on every exact occurrence, where the apply itself asks the regex.
 export const checkPromptDifferential = async (
   pieces: string[],
   version: string,
-  content: string | null
+  content: string | null,
+  indexed?: number[] | null
 ): Promise<PromptDifferential> => {
-  let regex: string;
-  try {
-    regex = buildSearchRegexFromPieces(pieces, version);
-  } catch {
-    return { status: 'skip-build' };
-  }
+  const spec = specFor(pieces, version);
+  if (!spec) return { status: 'skip-build' };
   const haystack = content ?? synthHaystack(pieces);
   let expected: RegExpExecArray[];
   try {
-    expected = await findAllMatchesWithStackFallback(regex, 'sg', haystack);
+    expected = await findAllMatchesWithStackFallback(
+      spec.regex,
+      'sg',
+      haystack
+    );
   } catch {
     return { status: 'skip-regex' };
   }
-  const actual = await findAllPromptPieceMatches(
-    { regex, pieces, version },
-    haystack
-  );
+  const { anchor, tokenKinds } = promptAnchorInfo(spec);
+  if (anchor === null) {
+    return {
+      status: 'match',
+      exercised: expected.length > 0,
+      answer: 'no-anchor',
+      kinds: [],
+    };
+  }
+  const known =
+    indexed === undefined ? exactOccurrences(haystack, anchor) : indexed;
+  const answer: DifferentialAnswer =
+    known !== null && known.length <= MAX_ANCHOR_OCCURRENCES
+      ? 'token'
+      : 'token-past-cap';
+  const actual =
+    findPromptPieceMatchesAtOccurrences(
+      spec,
+      haystack,
+      known ?? exactOccurrences(haystack, anchor)
+    ) ?? [];
   const e = JSON.stringify(expected.map(matchSignature));
   const a = JSON.stringify(actual.map(matchSignature));
-  if (e !== a) return { status: 'mismatch', expected: e, actual: a };
-  return { status: 'match', exercised: expected.length > 0 };
+  if (e !== a) return { status: 'mismatch', expected: e, actual: a, answer };
+  return {
+    status: 'match',
+    exercised: expected.length > 0,
+    answer,
+    kinds: tokenKinds,
+  };
 };
 
 // The text the corpus test has always printed for one mismatching prompt.

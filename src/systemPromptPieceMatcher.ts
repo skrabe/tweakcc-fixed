@@ -7,6 +7,7 @@ import {
 
 const MIN_ANCHOR = 12;
 const MAX_OCCURRENCES = 250;
+export const MAX_ANCHOR_OCCURRENCES = MAX_OCCURRENCES;
 export const PRISTINE_RESCANS_BEFORE_INDEX = 32;
 
 type MatchToken =
@@ -517,16 +518,17 @@ const allOccurrences = (
 const tokenMatches = (
   compiled: CompiledPromptMatcher,
   content: PromptMatchSource,
-  precomputedOccurrences?: number[] | null
+  precomputedOccurrences?: number[] | null,
+  limit = MAX_OCCURRENCES
 ): RegExpExecArray[] | null => {
   if (!compiled.plan) return null;
   const occurrences =
     precomputedOccurrences === undefined
       ? typeof content === 'string'
-        ? allOccurrences(content, compiled.plan.anchor, MAX_OCCURRENCES)
+        ? allOccurrences(content, compiled.plan.anchor, limit)
         : null
       : precomputedOccurrences;
-  if (!occurrences || occurrences.length > MAX_OCCURRENCES) return null;
+  if (!occurrences || occurrences.length > limit) return null;
   const starts = new Set<number>();
   for (const occurrence of occurrences) {
     for (const start of startsForAnchor(
@@ -787,6 +789,33 @@ export const findPromptPieceMatchesByTokens = (
   content: string
 ): RegExpExecArray[] | null => tokenMatches(compileMatcher(spec), content);
 
+export interface PromptAnchorInfo {
+  anchor: string | null;
+  tokenKinds: string[];
+}
+
+export const promptAnchorInfo = (spec: PromptMatchSpec): PromptAnchorInfo => {
+  const compiled = compileMatcher(spec);
+  return {
+    anchor: compiled.plan?.anchor ?? null,
+    tokenKinds: [...new Set(compiled.tokens.map(token => token.kind))].sort(),
+  };
+};
+
+/**
+ * The token matcher over a caller-supplied list of exact, case-sensitive
+ * anchor occurrences, with no occurrence cap: what the indexed apply path
+ * computes below the cap, extended past it so a differential can still compare
+ * the token matcher with the regex there. Null only when the prompt has no
+ * anchor.
+ */
+export const findPromptPieceMatchesAtOccurrences = (
+  spec: PromptMatchSpec,
+  content: string,
+  occurrences: number[]
+): RegExpExecArray[] | null =>
+  tokenMatches(compileMatcher(spec), content, occurrences, Infinity);
+
 export const findAllPromptPieceMatches = async (
   spec: PromptMatchSpec,
   content: string
@@ -878,6 +907,13 @@ export class PromptPieceMatcherCatalog {
         length: content.length,
       });
     }
+  }
+
+  indexedOccurrences(regex: string): number[] | null | undefined {
+    const anchor = this.compiled.get(regex)?.plan?.anchor;
+    return anchor === undefined
+      ? undefined
+      : this.anchorOccurrences.get(anchor);
   }
 
   async matchCurrent(
