@@ -620,7 +620,7 @@
     ]
   },
   "577bf1bae971f8d8": {
-    "at": 1420914,
+    "at": 1802142,
     "model": {
       "1dd83f7ce2a213aeabf07ac524e853a5a16006cc": "Write to ${} failed (${()??}); ${()}. The new content was p…",
       "a4713f7872527f4cfbc550fa7ca2eb92f93e11b7": "Write verification failed: ${} does not hold what was writt…",
@@ -633,14 +633,6 @@
           "2220fe6c47461a449273ebae1fad338b80fba387": {
             "facing": "internal",
             "preview": "assertDirChainReal: dir must be strictly inside base (rel: …"
-          },
-          "40017dc5c4c75d70166dc4f4044be5f251391d45": {
-            "facing": "internal",
-            "preview": "refusing to read fd ${}: not a pipe or socket"
-          },
-          "94680577d432046d6853ccaf8211f03b173e4604": {
-            "facing": "internal",
-            "preview": "refusing to read ${}: content exceeds ${} byte limit"
           }
         },
         "why": "x is a generic TelemetrySafeError in the fs utilities. The model arms are thrown by writeTextContent pPe (2153315) and writeFileAndFlush (2158311, 2161430), which the Write/Edit tools call, so they become tool errors. The internal arms are bounded reads of credential/token files and inherited fds: r8e (2151470) and hOs (2151798), called by token loaders W0t (2554625), the /dev/fd readers (2556318, 2557898) and L (2562229), which turn failures into a token miss or log. The 31863265 caller catches. assertDirChainReal (2150231) is an invariant (callers pass a dir inside base)."
@@ -657,6 +649,27 @@
           }
         },
         "why": "x is the generic TelemetrySafeError of the fs utilities. The new model arm 'Write verification failed: ... does not hold what was written' is Jbt @1336768 (same function as the carried size-mismatch arm @1336321), called from the Write tool v7o @11729256, the Edit tool Mjs @15148823 and the notebook edit @15160893 without a catch, so it becomes an is_error tool_result. The 'Write to ... failed ... content preserved' arm is Ae/Ce @1342317/@1346354, reached through pP from Jbt (same route) while the other pP callers (config/settings writes) catch it. The internal arms stay bounded reads and an invariant that only token loaders log."
+      },
+      {
+        "arms": {
+          "34f91d9e8a83c3ff2f9fd1a1c89df94c8ac53bcd": {
+            "facing": "internal",
+            "preview": "Failed to revoke from legacy settings.local.json at ${}: ${}"
+          },
+          "418c2922f8c789648724fcacb2138f5059c52da4": {
+            "facing": "internal",
+            "preview": "Failed to read legacy settings.local.json at ${}: ${}"
+          },
+          "e2d12f79893d02d00c32e02dfef8c788fb7d8f4f": {
+            "facing": "internal",
+            "preview": "settings storageV5 write failed: ${.error.code}${\"failureCl…"
+          },
+          "f0e259ce6a275ef5be56203499624f0114ef6d51": {
+            "facing": "internal",
+            "preview": "Transform failed against legacy settings.local.json at ${} …"
+          }
+        },
+        "why": "Generic error class A @1802142: the Write-verification and preserved-content arms are thrown from Zhn (file write path) and surface as the Write/Edit tool error the model reads; the legacy settings.local.json arms are built in ji's catch and only logged via t(F.message,{level:'error'}) and returned as {error} to settings plumbing, and the storageV5 arm is thrown from Tl's settings write, never a tool result"
       }
     ]
   },
@@ -2036,331 +2049,12 @@
       }
     ]
   },
-  "750bf52d9332d73f": {
-    "at": 13672274,
-    "model": {
-      "0a5df7a956c119451d366f062e22b0b68d631b1b": "Couldn't check the session's repository",
-      "e784ae37d0fdf9aaf037865fde8440c0e2bd4b61": "Couldn't check out branch '${}': ${.stderr}",
-      "e84f339ed9fc38e065f4a7b290dd0fc0e4dc3a48": "Run claude --teleport ${} from a checkout of ${}.\nThis repo…",
-      "e8d9b2927892874272137a86bf7953956ecb0daa": "Your session has expired for the trusted-device check. Run …",
-      "f8759c894407922ff3520f697e5d4653980d2cea": "This session requires a trusted device, and it still refuse…"
-    },
-    "position": 0,
-    "reviews": [
-      {
-        "arms": {
-          "0983db4295825d00ad4f5c51378155fdb20b1c2f": {
-            "facing": "ui",
-            "preview": "Nothing was stashed: ${} could not be checked for a junctio…"
-          },
-          "1080ae7dd618fc81de8ca5ad5805c8af605a84df": {
-            "facing": "internal",
-            "preview": "Invalid branch name from cloud session: ${}"
-          },
-          "20f7c5451a6c9858d7714c782ca771cbd9d53ade": {
-            "facing": "ui",
-            "preview": "Your changes were stashed (\\`git stash list\\` shows them), …"
-          },
-          "4e8107aa68ecffbce2c100f8926e208608d9f7f5": {
-            "facing": "ui",
-            "preview": "Nothing was stashed: ${} exists, so another git process may…"
-          },
-          "522a0bd51ffcff92601b47b2454d3b057b9c40b9": {
-            "facing": "ui",
-            "preview": "The stash did not finish, so /teleport stopped. Your change…"
-          },
-          "59c46364d5d11c6532261ac051c9e9d3c25a7642": {
-            "facing": "ui",
-            "preview": "Nothing was stashed: \"${}\" is now a folder in place of a tr…"
-          },
-          "5b4a88955e09ac7aad90e32a221e4e9b5b5d58c5": {
-            "facing": "ui",
-            "preview": "Nothing was stashed: ${} (or a folder on the way to it) is …"
-          },
-          "5ebd07d95babbcd7e4ff365ff0c0957ec376539d": {
-            "facing": "ui",
-            "preview": "Nothing was stashed: ${((),200)} is no longer the plain fol…"
-          },
-          "63bc6fc9db9d2cb8891fd7ae609979f0b66b754b": {
-            "facing": "ui",
-            "preview": "The stash did not finish, and ${} If this stash's entry is …"
-          },
-          "6738c1196de8891de3051ff4a69f92830a0ad8be": {
-            "facing": "ui",
-            "preview": "Nothing was stashed: \"${}\" and ${} other ${(,\"path\")} are n…"
-          },
-          "7e1c78fc261b67812dfa33514766d10a34ec0bc9": {
-            "facing": "ui",
-            "preview": "Nothing was stashed: this checkout's index could not be loc…"
-          },
-          "8b912aab68f7a64dd49e60beb88afdbca2f34348": {
-            "facing": "ui",
-            "preview": "Nothing was stashed: this checkout has a MERGE_AUTOSTASH re…"
-          },
-          "a2d459e26b66fd0dbfa8ab63394f008ce781372b": {
-            "facing": "ui",
-            "preview": "Nothing was stashed: ${}: the same file also stands under a…"
-          },
-          "a77b0bb7f309afcd95336901c3d7fd1254b44fb1": {
-            "facing": "ui",
-            "preview": "Your changes were stashed, but ${}. Do that before anything…"
-          },
-          "b57f2b03a76252a303e37754a4898b200b868740": {
-            "facing": "ui",
-            "preview": "Nothing was stashed: the stash works on a private copy of t…"
-          },
-          "c05a0daa3981f99fe15ec7f35d8ae462fe8c2a17": {
-            "facing": "ui",
-            "preview": "Nothing was stashed: this checkout's .git/index is a link (…"
-          },
-          "d6a94046af4f555541f397471547b08fec348cc4": {
-            "facing": "ui",
-            "preview": "Nothing was stashed: git could not read this checkout's ref…"
-          },
-          "dad00d92ebd56ddf57cb1cdd1157b97a37de2d74": {
-            "facing": "ui",
-            "preview": "Nothing was stashed: ${} is a link, has a second name, is n…"
-          },
-          "e0272c68806f15c40e0f241f80990e1718b5339f": {
-            "facing": "ui",
-            "preview": "Nothing was stashed: this checkout's index could not be cop…"
-          },
-          "e105a502014ce6500905d7b4d83e27efdfb9f9e9": {
-            "facing": "ui",
-            "preview": "Nothing was stashed: ${} is a link, could not be read, is n…"
-          },
-          "e497c99e7615d76d2a44fd2c7183b6486907b5c7": {
-            "facing": "ui",
-            "preview": "Your changes were stashed, but ${} ${} Then run /teleport a…"
-          },
-          "e69d873aad8f0d892777b9dd6c047f349d7ff3e6": {
-            "facing": "ui",
-            "preview": "Nothing was stashed: refs/stash is set, but git lists no st…"
-          },
-          "f4078253a20960c13c879ff40c11843bd5b38917": {
-            "facing": "ui",
-            "preview": "Nothing was stashed: git could not say whether this checkou…"
-          },
-          "fc0ee9243988b55b342a5f324ada5872d77f639f": {
-            "facing": "ui",
-            "preview": "You have uncommitted changes. Commit or stash them before u…"
-          },
-          "fd78bed6e6853783a85d93fe3193e0883a3f1550": {
-            "facing": "ui",
-            "preview": "Could not verify this checkout's git repository: ${} has no…"
-          }
-        },
-        "why": "These arms reach only the terminal: the stash refusals come from lFs's helpers, whose only caller K @39123593 shows the error in the stash dialog; Bzn and the invalid-branch error go to Wzn, whose branchError is shown as a system notice (xns); the uncommitted-changes error is from the CLI --teleport path (_pl in f2); the model arms are Ost errors that /teleport hands to onDone as local_command output."
-      },
-      {
-        "arms": {
-          "e8d9b2927892874272137a86bf7953956ecb0daa": {
-            "facing": "model",
-            "preview": "Your session has expired for the trusted-device check. Run …"
-          },
-          "f8759c894407922ff3520f697e5d4653980d2cea": {
-            "facing": "model",
-            "preview": "This session requires a trusted device, and it still refuse…"
-          }
-        },
-        "why": "The trusted-device and expired-session errors are thrown inside the session fetch that /teleport runs, and /teleport hands that error to its completion callback as local command output the model reads; the ui arms of the same error class are thrown on paths rendered only as terminal notices."
-      }
-    ]
-  },
-  "7b81c2f7c4284ddd": {
-    "at": 7098003,
-    "model": {
-      "50b18f3d0c7081b82db61d4cc03f335c32f5b55a": "${} refused: the hooks worker is being replaced, and a hook…",
-      "5442032d3a7267ff7defab34466429f92707f96a": "${()}: ended: a module of the hop is off in this session",
-      "f99bf9d9476eea982b7238ba6edd9570914e52bb": "${()}: next refused: the floors handed back are not ones a …"
-    },
-    "position": 0,
-    "reviews": [
-      {
-        "arms": {
-          "596b766313cc880c91f5f3ef0011c4503c883871": {
-            "facing": "internal",
-            "preview": "${.name}: ${}: not a native module; it runs in a hop"
-          },
-          "720107d1394c39a46abd40a792124bd5b9e67536": {
-            "facing": "internal",
-            "preview": "${}: a hop member is not one of these handlers"
-          }
-        },
-        "why": "He is HooksError. The model arm is the respawn gate st() (6502449): iOn rejects the event dispatch with it while the hooks worker reloads, so the event a tool call or turn triggered fails and the model gets the error. The internal arms are host invariants that only a host bug can trigger: Se's hop-member lookup (6500711) and $o/_o called on a module without native links (6499206, 6500216)."
-      },
-      {
-        "arms": {
-          "f99bf9d9476eea982b7238ba6edd9570914e52bb": {
-            "facing": "model",
-            "preview": "${()}: next refused: the floors handed back are not ones a …"
-          }
-        },
-        "why": "Se (4444508) is called from rHr's next-callback (4445063) and co's stream callback (4445700): when the floors a hop's next.to hands back are not ones the scan leaves, the host rejects that next() call. Ax (4067578) rethrows a rejection from below unchanged (`throw it(ce.error)`), so it becomes the event dispatch's rejection like the carried respawn-gate arm (4449651) and reaches the tool event's 'Error calling tool' tool_result."
-      },
-      {
-        "arms": {
-          "5442032d3a7267ff7defab34466429f92707f96a": {
-            "facing": "model",
-            "preview": "${()}: ended: a module of the hop is off in this session"
-          }
-        },
-        "why": "Ne is HooksError. The new model arm is built @7087185 when a hop module is switched off mid-dispatch: it rejects every pending next() (y(m)) and aborts the dispatch controller with it, so it becomes the event dispatch's rejection, the same route as the carried respawn-gate and next-refused model arms that end in the tool event's result."
-      }
-    ]
-  },
-  "81a09643e7142b1c": {
-    "at": 8978109,
-    "model": {
-      "c100be11eb431ed852cb854c845587f6841e2a1e": "Output does not match required schema: ${.message}"
-    },
-    "position": 0,
-    "reviews": [
-      {
-        "arms": {
-          "80f1bd92512bc6e94a5bd3e8b20af41361d69ea2": {
-            "facing": "internal",
-            "preview": "REPL mode's engine check failed (${}); REPL mode is ${?\"kep…"
-          }
-        },
-        "why": "A is the generic error class. The model arm 'Output does not match required schema' is thrown at 5894858 inside the StructuredOutput tool's call() (5892904, tool-throw [model] per trace), so it becomes an is_error tool_result. The internal arm is REPL mode's engine check in we @5897052: its message s is built there, passed to t(s,{level:'error'}) and the c() telemetry, then wrapped in a(new A(s,...)) for reporting only (traces show debug-log sinks only). Never returned to the model."
-      }
-    ]
-  },
-  "844600da59503b79": {
-    "at": 37874679,
-    "model": {
-      "a4adce9cebb33f8a9de8ba2cfd72cb5e2f384900": ". ${===\"subscription\"?\"The subscription\":\"This\"} went to th…"
-    },
-    "position": 1,
-    "reviews": [
-      {
-        "arms": {
-          "a2d9e97c326c3d98cd83c47ad8619bbbfa39644e": {
-            "facing": "ui",
-            "preview": "; ${===\"subscription\"?\"the subscription\":\"this\"} went to th…"
-          }
-        },
-        "why": "de(e,n,i) appends n to the same-named-sessions note. a8n's '. The subscription/This went to the one this conversation confirmed...' goes into data.message of the SendMessage result (33708077 V into message; 33709124 ie into message), which is the model text. l8n's '; this went to the one confirmed earlier...' goes only into data.display (33708124 K into display; 33709343; 33713015), which is the UI rendering."
-      }
-    ]
-  },
-  "86dcbe170fc5be8b": {
-    "at": 5990126,
-    "model": {
-      "08dc06b67f0cd39e0afc141c4579054ed2418233": "Server \"${.name}\" is the account memory server; its resourc…",
-      "2c14f5a68503d89ad10fa50b40eca8aea06cfbe9": "Server \"${.name}\" is the Artifacts MCP server; Claude Code …",
-      "2d56c187c1eda9fd0f4555ea7ecb62bac88a559c": "Server \"${.name}\" does not support resources",
-      "414ee3b562f22e1e4551ee93206c19a65cd4fdb4": "Server \"${.name}\" is not connected",
-      "aace96d60d9665d917a0df3ed14bd09941d9799b": "Claude Code doesn't read resources of server \"${.name}\" fro…"
-    },
-    "position": 0,
-    "reviews": [
-      {
-        "arms": {
-          "08dc06b67f0cd39e0afc141c4579054ed2418233": {
-            "facing": "model",
-            "preview": "Server \"${.name}\" is the account memory server; its resourc…"
-          },
-          "2d56c187c1eda9fd0f4555ea7ecb62bac88a559c": {
-            "facing": "model",
-            "preview": "Server \"${.name}\" does not support resources"
-          },
-          "414ee3b562f22e1e4551ee93206c19a65cd4fdb4": {
-            "facing": "model",
-            "preview": "Server \"${.name}\" is not connected"
-          }
-        },
-        "why": "R is the TelemetrySafeError class. 414ee3b5/2d56c187 are dCr (13341121) and 08dc06b6 is sDn (13341799), called from the ReadMcpResource/ListMcpResources tools' call() (18157287, 18161687), so they become tool errors. 92777172 is czn (13686852), thrown from Rlt (13694347, marketplace add) and gfs (13749072, refresh) when the session is diskless, reaching /plugin marketplace output like the carried marketplace-write model arms."
-      },
-      {
-        "arms": {
-          "2c14f5a68503d89ad10fa50b40eca8aea06cfbe9": {
-            "facing": "model",
-            "preview": "Server \"${.name}\" is the Artifacts MCP server; Claude Code …"
-          }
-        },
-        "why": "R is TelemetrySafeError. The new Artifacts-MCP arm is ERr @13066327, the same resource-refusal route as the carried 'Server ... does not support resources' and 'account memory server' arms (called from the ReadMcpResource/ListMcpResources tools' call()), so it becomes an is_error tool result. The internal arm remains the CCR listener log."
-      },
-      {
-        "arms": {
-          "04a9e276fef9f0ff9ef28f4ad594ce12403574da": {
-            "facing": "internal",
-            "preview": "${} may only contain letters, digits, hyphens, and undersco…"
-          },
-          "3f47541f0bf490bb1a6c31e464e1d46602a93e33": {
-            "facing": "internal",
-            "preview": "the early ask for a sender's address threw: ${()}"
-          },
-          "bcb21abef3e65b21981b266f2bac72fadc0dff74": {
-            "facing": "internal",
-            "preview": "it is interpolated into the claude.googleapis.com request p…"
-          }
-        },
-        "why": "R is the generic TelemetrySafeError. The model arms are the ReadMcpResource/ListMcpResources refusals thrown from the tools' call() and become is_error tool_results. The three internal arms never reach a tool call: Id @5850261 (the early sender-address ask, called from Lbs/V1i/K1i catch blocks) only passes the error to the logger, and un @5835586 validates ANTHROPIC_GOOGLE_CLOUD_* env values while tU @5856418 builds the API client, a startup/API-client failure shown to the user, not a tool result."
-      },
-      {
-        "arms": {
-          "7dec74ee46c148b2b679f460b219881fd15c5ac5": {
-            "facing": "internal",
-            "preview": "The tools-used header could not be built: ${(().name)??\"Err…"
-          },
-          "aace96d60d9665d917a0df3ed14bd09941d9799b": {
-            "facing": "model",
-            "preview": "Claude Code doesn't read resources of server \"${.name}\" fro…"
-          },
-          "b34fa3b3a5673a84165279ebfb81cea607293c8e": {
-            "facing": "internal",
-            "preview": "Could not compare a model request with what an http.fetch h…"
-          }
-        },
-        "why": "C is the TelemetrySafeError class. The new model arm (subagent/background resource refusal) is returned by rf @5855136 beside the carried 'account memory server' and 'Artifacts' refusals and thrown from the ReadMcpResource/ListMcpResources call() as an is_error tool_result. The two internal arms are built only to be logged: 'tools-used header could not be built' @5990133 and 'Could not compare a model request…' @5945912 (pm's catch) go to a() (the logError import from chunk-mddke2ke), never into a tool call."
-      }
-    ]
-  },
-  "87a8c00e6388d228": {
-    "at": 10265988,
-    "model": {
-      "139e9843a0e06c2b6cd859dc6c378cd7b2e7b484": "Refusing to send: cannot vet reply target",
-      "243fec921ab88752b92b6d9d3cf06be0277bc7bf": "Refusing to send: reply target is a symlink",
-      "93339ecfabc20d0861a638da43f01d7d4ecfa938": "Refusing to connect: not a usable local IPC path (remote/UN…"
-    },
-    "position": 1,
-    "reviews": [
-      {
-        "arms": {
-          "629a1bd75316c33d2fedec13d21ebbb57ca8988c": {
-            "facing": "internal",
-            "preview": "Refusing to send: connected endpoint is not the expected pr…"
-          },
-          "d7c6b20b2e6eb03d5e7c712839e516276154b36b": {
-            "facing": "internal",
-            "preview": "Refusing to send: connected endpoint owner could not be read"
-          },
-          "fb6d585a442b341a3abaf3fff4fa1852061efdfa": {
-            "facing": "internal",
-            "preview": "Refusing to send: connected endpoint identity could not be …"
-          },
-          "fdd53e7dba4ef328f65082dd73c256a83c3dedf4": {
-            "facing": "internal",
-            "preview": "Refusing to send: connected endpoint is a different process…"
-          },
-          "ffa8780238e3353ecff0c2f276031989c261d754": {
-            "facing": "internal",
-            "preview": "Refusing to send: connected endpoint is not owned by this u…"
-          }
-        },
-        "why": "R9 refusals from we() (7776733). The model arms come before the connect: the non-local path check, and the noFollowSymlink reply-target lstat checks. These always run for SendMessage's K8t send (7774137, noFollowSymlink:!0) and are returned as its tool error. The internal arms, including the two corrected here, sit in the `if(d!==void 0&&O()!==\"windows\")` connect block (7777860-7778900), and d=expectPeerPid. Only control sends pass expectPeerPid: the rename notice (7791768), Uce/STt control sends (29959974-30028360) and notify_when_idle (42785143). Those only log or classify the error."
-      }
-    ]
-  },
-  "8d01477d61ce5e49": {
-    "at": 5088727,
+  "71032bbc60ebf02b": {
+    "at": 5066640,
     "model": {
       "091159e56eeb43b342e6e23611f601d9a2de5fec": "returned no result",
       "0f06d761fe2d4e96173bc644e68f1a5aa9250e2c": "yielded a chunk with ${}",
       "2e7228d8fc32d442f04abe32b1283b15ced2a7f0": "${}: next() after it settled",
-      "627d8e5f58096c51c5843b80fc3783b007c0fd22": "returned ${}",
       "8074f5661a475f7abebd4e9ee1ac199af4f3c3d4": "holds a list with a hole or a key",
       "808081e6c36af7646d3387a220109f4d13362c59": "holds what JSON cannot (${typeof })",
       "acb125184474c743769bdc5f66bc4c66c79d55cb": "holds a Proxy or a vm context",
@@ -2841,6 +2535,351 @@
           }
         },
         "why": "The WebAssembly compile refusal is thrown in the plugin worker back into the calling plugin's own API call and reported through the hook-failure path to the terminal, while the model arms of this error class are thrown on tool-event paths whose message becomes a tool result."
+      },
+      {
+        "arms": {
+          "83b1e27b86faf3a667d08a5e6141aec5e370a08b": {
+            "facing": "internal",
+            "preview": "${.name}: ${.expiryText()}"
+          }
+        },
+        "why": "je error class @5066640: the model arms are plugin/mod load and call failures returned to the model; `${e.name}: ${H.expiryText()}` (@4792613, @4962409) is only the abort reason handed to the hook's own AbortController (x.abort/G.abort) when its grant expires — the outcome is reported through hookFailed/Es telemetry and the fallback result, not this text"
+      }
+    ]
+  },
+  "750bf52d9332d73f": {
+    "at": 13672274,
+    "model": {
+      "0a5df7a956c119451d366f062e22b0b68d631b1b": "Couldn't check the session's repository",
+      "e784ae37d0fdf9aaf037865fde8440c0e2bd4b61": "Couldn't check out branch '${}': ${.stderr}",
+      "e84f339ed9fc38e065f4a7b290dd0fc0e4dc3a48": "Run claude --teleport ${} from a checkout of ${}.\nThis repo…",
+      "e8d9b2927892874272137a86bf7953956ecb0daa": "Your session has expired for the trusted-device check. Run …",
+      "f8759c894407922ff3520f697e5d4653980d2cea": "This session requires a trusted device, and it still refuse…"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "0983db4295825d00ad4f5c51378155fdb20b1c2f": {
+            "facing": "ui",
+            "preview": "Nothing was stashed: ${} could not be checked for a junctio…"
+          },
+          "1080ae7dd618fc81de8ca5ad5805c8af605a84df": {
+            "facing": "internal",
+            "preview": "Invalid branch name from cloud session: ${}"
+          },
+          "20f7c5451a6c9858d7714c782ca771cbd9d53ade": {
+            "facing": "ui",
+            "preview": "Your changes were stashed (\\`git stash list\\` shows them), …"
+          },
+          "4e8107aa68ecffbce2c100f8926e208608d9f7f5": {
+            "facing": "ui",
+            "preview": "Nothing was stashed: ${} exists, so another git process may…"
+          },
+          "522a0bd51ffcff92601b47b2454d3b057b9c40b9": {
+            "facing": "ui",
+            "preview": "The stash did not finish, so /teleport stopped. Your change…"
+          },
+          "59c46364d5d11c6532261ac051c9e9d3c25a7642": {
+            "facing": "ui",
+            "preview": "Nothing was stashed: \"${}\" is now a folder in place of a tr…"
+          },
+          "5b4a88955e09ac7aad90e32a221e4e9b5b5d58c5": {
+            "facing": "ui",
+            "preview": "Nothing was stashed: ${} (or a folder on the way to it) is …"
+          },
+          "5ebd07d95babbcd7e4ff365ff0c0957ec376539d": {
+            "facing": "ui",
+            "preview": "Nothing was stashed: ${((),200)} is no longer the plain fol…"
+          },
+          "63bc6fc9db9d2cb8891fd7ae609979f0b66b754b": {
+            "facing": "ui",
+            "preview": "The stash did not finish, and ${} If this stash's entry is …"
+          },
+          "6738c1196de8891de3051ff4a69f92830a0ad8be": {
+            "facing": "ui",
+            "preview": "Nothing was stashed: \"${}\" and ${} other ${(,\"path\")} are n…"
+          },
+          "7e1c78fc261b67812dfa33514766d10a34ec0bc9": {
+            "facing": "ui",
+            "preview": "Nothing was stashed: this checkout's index could not be loc…"
+          },
+          "8b912aab68f7a64dd49e60beb88afdbca2f34348": {
+            "facing": "ui",
+            "preview": "Nothing was stashed: this checkout has a MERGE_AUTOSTASH re…"
+          },
+          "a2d459e26b66fd0dbfa8ab63394f008ce781372b": {
+            "facing": "ui",
+            "preview": "Nothing was stashed: ${}: the same file also stands under a…"
+          },
+          "a77b0bb7f309afcd95336901c3d7fd1254b44fb1": {
+            "facing": "ui",
+            "preview": "Your changes were stashed, but ${}. Do that before anything…"
+          },
+          "b57f2b03a76252a303e37754a4898b200b868740": {
+            "facing": "ui",
+            "preview": "Nothing was stashed: the stash works on a private copy of t…"
+          },
+          "c05a0daa3981f99fe15ec7f35d8ae462fe8c2a17": {
+            "facing": "ui",
+            "preview": "Nothing was stashed: this checkout's .git/index is a link (…"
+          },
+          "d6a94046af4f555541f397471547b08fec348cc4": {
+            "facing": "ui",
+            "preview": "Nothing was stashed: git could not read this checkout's ref…"
+          },
+          "dad00d92ebd56ddf57cb1cdd1157b97a37de2d74": {
+            "facing": "ui",
+            "preview": "Nothing was stashed: ${} is a link, has a second name, is n…"
+          },
+          "e0272c68806f15c40e0f241f80990e1718b5339f": {
+            "facing": "ui",
+            "preview": "Nothing was stashed: this checkout's index could not be cop…"
+          },
+          "e105a502014ce6500905d7b4d83e27efdfb9f9e9": {
+            "facing": "ui",
+            "preview": "Nothing was stashed: ${} is a link, could not be read, is n…"
+          },
+          "e497c99e7615d76d2a44fd2c7183b6486907b5c7": {
+            "facing": "ui",
+            "preview": "Your changes were stashed, but ${} ${} Then run /teleport a…"
+          },
+          "e69d873aad8f0d892777b9dd6c047f349d7ff3e6": {
+            "facing": "ui",
+            "preview": "Nothing was stashed: refs/stash is set, but git lists no st…"
+          },
+          "f4078253a20960c13c879ff40c11843bd5b38917": {
+            "facing": "ui",
+            "preview": "Nothing was stashed: git could not say whether this checkou…"
+          },
+          "fc0ee9243988b55b342a5f324ada5872d77f639f": {
+            "facing": "ui",
+            "preview": "You have uncommitted changes. Commit or stash them before u…"
+          },
+          "fd78bed6e6853783a85d93fe3193e0883a3f1550": {
+            "facing": "ui",
+            "preview": "Could not verify this checkout's git repository: ${} has no…"
+          }
+        },
+        "why": "These arms reach only the terminal: the stash refusals come from lFs's helpers, whose only caller K @39123593 shows the error in the stash dialog; Bzn and the invalid-branch error go to Wzn, whose branchError is shown as a system notice (xns); the uncommitted-changes error is from the CLI --teleport path (_pl in f2); the model arms are Ost errors that /teleport hands to onDone as local_command output."
+      },
+      {
+        "arms": {
+          "e8d9b2927892874272137a86bf7953956ecb0daa": {
+            "facing": "model",
+            "preview": "Your session has expired for the trusted-device check. Run …"
+          },
+          "f8759c894407922ff3520f697e5d4653980d2cea": {
+            "facing": "model",
+            "preview": "This session requires a trusted device, and it still refuse…"
+          }
+        },
+        "why": "The trusted-device and expired-session errors are thrown inside the session fetch that /teleport runs, and /teleport hands that error to its completion callback as local command output the model reads; the ui arms of the same error class are thrown on paths rendered only as terminal notices."
+      }
+    ]
+  },
+  "753d0182e17ce097": {
+    "at": 34493723,
+    "model": {
+      "633626bacf103723a11dd5e9c380c2e0fb15c92d": "${} was added by a tool.list hook, and no tool.run or tool.…"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "f2fae3ccd99c88460204d0fd14465aff266b28f2": {
+            "facing": "internal",
+            "preview": "shouldSkipCustomRedirect: credentials store read failed (${…"
+          }
+        },
+        "why": "Error class A @34493723: the tool.list-hook arm is thrown from an added tool's call() and becomes the tool error the model reads; the shouldSkipCustomRedirect arm is passed to i() (error logger) in x$r's catch, which returns false"
+      }
+    ]
+  },
+  "7b81c2f7c4284ddd": {
+    "at": 7098003,
+    "model": {
+      "50b18f3d0c7081b82db61d4cc03f335c32f5b55a": "${} refused: the hooks worker is being replaced, and a hook…",
+      "5442032d3a7267ff7defab34466429f92707f96a": "${()}: ended: a module of the hop is off in this session",
+      "f99bf9d9476eea982b7238ba6edd9570914e52bb": "${()}: next refused: the floors handed back are not ones a …"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "596b766313cc880c91f5f3ef0011c4503c883871": {
+            "facing": "internal",
+            "preview": "${.name}: ${}: not a native module; it runs in a hop"
+          },
+          "720107d1394c39a46abd40a792124bd5b9e67536": {
+            "facing": "internal",
+            "preview": "${}: a hop member is not one of these handlers"
+          }
+        },
+        "why": "He is HooksError. The model arm is the respawn gate st() (6502449): iOn rejects the event dispatch with it while the hooks worker reloads, so the event a tool call or turn triggered fails and the model gets the error. The internal arms are host invariants that only a host bug can trigger: Se's hop-member lookup (6500711) and $o/_o called on a module without native links (6499206, 6500216)."
+      },
+      {
+        "arms": {
+          "f99bf9d9476eea982b7238ba6edd9570914e52bb": {
+            "facing": "model",
+            "preview": "${()}: next refused: the floors handed back are not ones a …"
+          }
+        },
+        "why": "Se (4444508) is called from rHr's next-callback (4445063) and co's stream callback (4445700): when the floors a hop's next.to hands back are not ones the scan leaves, the host rejects that next() call. Ax (4067578) rethrows a rejection from below unchanged (`throw it(ce.error)`), so it becomes the event dispatch's rejection like the carried respawn-gate arm (4449651) and reaches the tool event's 'Error calling tool' tool_result."
+      },
+      {
+        "arms": {
+          "5442032d3a7267ff7defab34466429f92707f96a": {
+            "facing": "model",
+            "preview": "${()}: ended: a module of the hop is off in this session"
+          }
+        },
+        "why": "Ne is HooksError. The new model arm is built @7087185 when a hop module is switched off mid-dispatch: it rejects every pending next() (y(m)) and aborts the dispatch controller with it, so it becomes the event dispatch's rejection, the same route as the carried respawn-gate and next-refused model arms that end in the tool event's result."
+      }
+    ]
+  },
+  "81a09643e7142b1c": {
+    "at": 8978109,
+    "model": {
+      "c100be11eb431ed852cb854c845587f6841e2a1e": "Output does not match required schema: ${.message}"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "80f1bd92512bc6e94a5bd3e8b20af41361d69ea2": {
+            "facing": "internal",
+            "preview": "REPL mode's engine check failed (${}); REPL mode is ${?\"kep…"
+          }
+        },
+        "why": "A is the generic error class. The model arm 'Output does not match required schema' is thrown at 5894858 inside the StructuredOutput tool's call() (5892904, tool-throw [model] per trace), so it becomes an is_error tool_result. The internal arm is REPL mode's engine check in we @5897052: its message s is built there, passed to t(s,{level:'error'}) and the c() telemetry, then wrapped in a(new A(s,...)) for reporting only (traces show debug-log sinks only). Never returned to the model."
+      }
+    ]
+  },
+  "844600da59503b79": {
+    "at": 37874679,
+    "model": {
+      "a4adce9cebb33f8a9de8ba2cfd72cb5e2f384900": ". ${===\"subscription\"?\"The subscription\":\"This\"} went to th…"
+    },
+    "position": 1,
+    "reviews": [
+      {
+        "arms": {
+          "a2d9e97c326c3d98cd83c47ad8619bbbfa39644e": {
+            "facing": "ui",
+            "preview": "; ${===\"subscription\"?\"the subscription\":\"this\"} went to th…"
+          }
+        },
+        "why": "de(e,n,i) appends n to the same-named-sessions note. a8n's '. The subscription/This went to the one this conversation confirmed...' goes into data.message of the SendMessage result (33708077 V into message; 33709124 ie into message), which is the model text. l8n's '; this went to the one confirmed earlier...' goes only into data.display (33708124 K into display; 33709343; 33713015), which is the UI rendering."
+      }
+    ]
+  },
+  "86dcbe170fc5be8b": {
+    "at": 5990126,
+    "model": {
+      "08dc06b67f0cd39e0afc141c4579054ed2418233": "Server \"${.name}\" is the account memory server; its resourc…",
+      "2c14f5a68503d89ad10fa50b40eca8aea06cfbe9": "Server \"${.name}\" is the Artifacts MCP server; Claude Code …",
+      "2d56c187c1eda9fd0f4555ea7ecb62bac88a559c": "Server \"${.name}\" does not support resources",
+      "414ee3b562f22e1e4551ee93206c19a65cd4fdb4": "Server \"${.name}\" is not connected",
+      "aace96d60d9665d917a0df3ed14bd09941d9799b": "Claude Code doesn't read resources of server \"${.name}\" fro…"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "08dc06b67f0cd39e0afc141c4579054ed2418233": {
+            "facing": "model",
+            "preview": "Server \"${.name}\" is the account memory server; its resourc…"
+          },
+          "2d56c187c1eda9fd0f4555ea7ecb62bac88a559c": {
+            "facing": "model",
+            "preview": "Server \"${.name}\" does not support resources"
+          },
+          "414ee3b562f22e1e4551ee93206c19a65cd4fdb4": {
+            "facing": "model",
+            "preview": "Server \"${.name}\" is not connected"
+          }
+        },
+        "why": "R is the TelemetrySafeError class. 414ee3b5/2d56c187 are dCr (13341121) and 08dc06b6 is sDn (13341799), called from the ReadMcpResource/ListMcpResources tools' call() (18157287, 18161687), so they become tool errors. 92777172 is czn (13686852), thrown from Rlt (13694347, marketplace add) and gfs (13749072, refresh) when the session is diskless, reaching /plugin marketplace output like the carried marketplace-write model arms."
+      },
+      {
+        "arms": {
+          "2c14f5a68503d89ad10fa50b40eca8aea06cfbe9": {
+            "facing": "model",
+            "preview": "Server \"${.name}\" is the Artifacts MCP server; Claude Code …"
+          }
+        },
+        "why": "R is TelemetrySafeError. The new Artifacts-MCP arm is ERr @13066327, the same resource-refusal route as the carried 'Server ... does not support resources' and 'account memory server' arms (called from the ReadMcpResource/ListMcpResources tools' call()), so it becomes an is_error tool result. The internal arm remains the CCR listener log."
+      },
+      {
+        "arms": {
+          "04a9e276fef9f0ff9ef28f4ad594ce12403574da": {
+            "facing": "internal",
+            "preview": "${} may only contain letters, digits, hyphens, and undersco…"
+          },
+          "3f47541f0bf490bb1a6c31e464e1d46602a93e33": {
+            "facing": "internal",
+            "preview": "the early ask for a sender's address threw: ${()}"
+          },
+          "bcb21abef3e65b21981b266f2bac72fadc0dff74": {
+            "facing": "internal",
+            "preview": "it is interpolated into the claude.googleapis.com request p…"
+          }
+        },
+        "why": "R is the generic TelemetrySafeError. The model arms are the ReadMcpResource/ListMcpResources refusals thrown from the tools' call() and become is_error tool_results. The three internal arms never reach a tool call: Id @5850261 (the early sender-address ask, called from Lbs/V1i/K1i catch blocks) only passes the error to the logger, and un @5835586 validates ANTHROPIC_GOOGLE_CLOUD_* env values while tU @5856418 builds the API client, a startup/API-client failure shown to the user, not a tool result."
+      },
+      {
+        "arms": {
+          "7dec74ee46c148b2b679f460b219881fd15c5ac5": {
+            "facing": "internal",
+            "preview": "The tools-used header could not be built: ${(().name)??\"Err…"
+          },
+          "aace96d60d9665d917a0df3ed14bd09941d9799b": {
+            "facing": "model",
+            "preview": "Claude Code doesn't read resources of server \"${.name}\" fro…"
+          },
+          "b34fa3b3a5673a84165279ebfb81cea607293c8e": {
+            "facing": "internal",
+            "preview": "Could not compare a model request with what an http.fetch h…"
+          }
+        },
+        "why": "C is the TelemetrySafeError class. The new model arm (subagent/background resource refusal) is returned by rf @5855136 beside the carried 'account memory server' and 'Artifacts' refusals and thrown from the ReadMcpResource/ListMcpResources call() as an is_error tool_result. The two internal arms are built only to be logged: 'tools-used header could not be built' @5990133 and 'Could not compare a model request…' @5945912 (pm's catch) go to a() (the logError import from chunk-mddke2ke), never into a tool call."
+      }
+    ]
+  },
+  "87a8c00e6388d228": {
+    "at": 10265988,
+    "model": {
+      "139e9843a0e06c2b6cd859dc6c378cd7b2e7b484": "Refusing to send: cannot vet reply target",
+      "243fec921ab88752b92b6d9d3cf06be0277bc7bf": "Refusing to send: reply target is a symlink",
+      "93339ecfabc20d0861a638da43f01d7d4ecfa938": "Refusing to connect: not a usable local IPC path (remote/UN…"
+    },
+    "position": 1,
+    "reviews": [
+      {
+        "arms": {
+          "629a1bd75316c33d2fedec13d21ebbb57ca8988c": {
+            "facing": "internal",
+            "preview": "Refusing to send: connected endpoint is not the expected pr…"
+          },
+          "d7c6b20b2e6eb03d5e7c712839e516276154b36b": {
+            "facing": "internal",
+            "preview": "Refusing to send: connected endpoint owner could not be read"
+          },
+          "fb6d585a442b341a3abaf3fff4fa1852061efdfa": {
+            "facing": "internal",
+            "preview": "Refusing to send: connected endpoint identity could not be …"
+          },
+          "fdd53e7dba4ef328f65082dd73c256a83c3dedf4": {
+            "facing": "internal",
+            "preview": "Refusing to send: connected endpoint is a different process…"
+          },
+          "ffa8780238e3353ecff0c2f276031989c261d754": {
+            "facing": "internal",
+            "preview": "Refusing to send: connected endpoint is not owned by this u…"
+          }
+        },
+        "why": "R9 refusals from we() (7776733). The model arms come before the connect: the non-local path check, and the noFollowSymlink reply-target lstat checks. These always run for SendMessage's K8t send (7774137, noFollowSymlink:!0) and are returned as its tool error. The internal arms, including the two corrected here, sit in the `if(d!==void 0&&O()!==\"windows\")` connect block (7777860-7778900), and d=expectPeerPid. Only control sends pass expectPeerPid: the rename notice (7791768), Uce/STt control sends (29959974-30028360) and notify_when_idle (42785143). Those only log or classify the error."
       }
     ]
   },

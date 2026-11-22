@@ -6020,5 +6020,152 @@
     "verdict": "glue",
     "text": "I can't watch a pull request here: ",
     "reason": "lead clause of me @47396809 before the interpolated reason"
+  },
+  "686caf3929e1a175": {
+    "promptId": "data-task-notification-monitor-timed-out-likely-stopped-after-reply",
+    "promptIds": [
+      "data-task-notification-monitor-timed-out-stderr-rearm-if-needed"
+    ],
+    "label": "DATA_TASK_NOTIFICATION_MONITOR_TIMED_OUT_LIKELY_STOPPED_AFTER_REPLY_VAR_0",
+    "verdict": "catalogue",
+    "id": "data-task-notification-monitor-timed-out-lead",
+    "name": "Data: Monitor timed out — lead",
+    "desc": "Lead of the Monitor time-out notice when its command wrote nothing to stderr: states that the watch timed out.",
+    "text": "Monitor timed out. ",
+    "reason": "plain-arm lead of `u` in Wds @8438798 (the stderr arm `Monitor timed out with no events delivered. ` is already catalogued); states the fact the model reports on"
+  },
+  "5269ae7e8affd670": {
+    "promptId": "tool-result-memory-call-refused-memory-out-of-date",
+    "label": "TOOL_RESULT_MEMORY_CALL_REFUSED_MEMORY_OUT_OF_DATE_VAR_0",
+    "verdict": "glue",
+    "text": ", and others",
+    "reason": "suffix @9221872 appended to the truncated file list L; the refusal is the host sentence"
+  },
+  "915bd04f4943082f": {
+    "promptId": "tool-result-mod-theme-set-image-refused",
+    "label": "TOOL_RESULT_MOD_THEME_SET_IMAGE_REFUSED_VAR_2",
+    "verdict": "catalogue",
+    "id": "tool-result-mod-theme-set-image-size-advice",
+    "name": "Tool Result: Mod theme.set image — resize advice",
+    "desc": "Advice in the theme.set too-big error telling the model how to re-save the image (about 2560 wide, as a JPEG).",
+    "text": "save it about 2560 wide as a JPEG",
+    "reason": "advice @10959072 passed to Xe and rendered as `so ${o.advice}` in the thrown theme.set error; it is the instruction the model follows to fix the image"
+  },
+  "8a6ef36e885fe2d9": {
+    "promptId": "data-api-error-group-pool-usage-credits-raise-or-switch",
+    "promptIds": ["data-api-error-limit-model-switch-hint"],
+    "label": "DATA_API_ERROR_GROUP_POOL_USAGE_CREDITS_RAISE_OR_SWITCH_VAR_0",
+    "verdict": "glue",
+    "text": "You've hit your ",
+    "reason": "leading quasi of `You've hit your ${sss}.` in wfs @13385994; the limit name and the switch instruction are host text"
+  },
+  "dd469b5f3f9fc593": {
+    "promptId": "data-api-error-limit-model-switch-hint",
+    "label": "DATA_API_ERROR_LIMIT_MODEL_SWITCH_HINT_VAR_0",
+    "verdict": "glue",
+    "text": "You've hit your channel's monthly spend limit.",
+    "reason": "names which limit was hit (k in wfs @13386077); no instruction, the /model hint is the host sentence"
+  },
+  "4b03f50d0721e302": {
+    "promptId": "data-api-error-limit-model-switch-hint",
+    "label": "DATA_API_ERROR_LIMIT_MODEL_SWITCH_HINT_VAR_0",
+    "verdict": "glue",
+    "text": "You've hit your monthly spend limit.",
+    "reason": "other arm of k in wfs @13386126; names the limit, no instruction"
+  },
+  "fd56c6ec508ef1a5": {
+    "promptId": "data-api-error-limit-model-switch-hint",
+    "label": "DATA_API_ERROR_LIMIT_MODEL_SWITCH_HINT_VAR_0",
+    "verdict": "glue",
+    "text": " requires usage credits.",
+    "reason": "predicate after the interpolated model name in h @13385963; no instruction"
+  },
+  "c52ca11a2de8cd65": {
+    "promptId": "tool-result-teleport-run-from-checkout-not-in-repo",
+    "label": "TOOL_RESULT_TELEPORT_RUN_FROM_CHECKOUT_NOT_IN_REPO_VAR_2",
+    "verdict": "glue",
+    "text": "\nCouldn't parse your git remote: ",
+    "reason": "label z @14788561 before the raw remote URL; the instruction is the host sentence"
+  },
+  "135b55a7add7477f": {
+    "promptId": "system-reminder-auto-mode-safety-check-unavailable",
+    "label": "SERVER_CHECK_UNAVAILABLE_REASON",
+    "verdict": "glue",
+    "text": "this session's permission rules and auto mode settings are too large to send to it",
+    "reason": "reason clause Pgt @12962970 completing `The check runs on the server, and ${}`; the instructions (finish, tell the user, don't change settings) are host text"
+  },
+  "8d78fff561d1ba72": {
+    "promptId": "tool-description-taskcreate",
+    "label": "DESCRIPTION_FIELD_GUIDANCE",
+    "verdict": "catalogue",
+    "id": "tool-description-taskcreate-description-field",
+    "name": "Tool Description: TaskCreate description field",
+    "desc": "Field note saying the description states what needs to be done.",
+    "text": "**description**: What needs to be done",
+    "reason": "default arm of r in Js @20793792 documenting a tool parameter; its other arm is catalogued as tool-description-taskcreate-description-optional-field"
+  },
+  "95c0643d1e7a1246": {
+    "promptId": "skill-code-review-applying-fixes",
+    "label": "FIX_REPORT_CLOSING_INSTRUCTION",
+    "verdict": "catalogue",
+    "id": "skill-code-review-fix-report-skipped-findings",
+    "name": "Skill: Code review fix — re-report and explain skips",
+    "desc": "Code review --fix instruction to re-report findings with outcomes, then give one line per skipped finding saying why.",
+    "text": "; after the call, give one line per skipped finding saying why.",
+    "reason": "arm of r in bi @21380837 closing the --fix section with an instruction; the other arm is catalogued as skill-code-review-fix-finish-summary"
+  },
+  "f55cbab31b51339c": {
+    "promptId": "slash-command-terminal-setup-iterm2-native-shift-enter",
+    "promptIds": ["slash-command-terminal-setup-terminal-native-shift-enter"],
+    "label": "SLASH_COMMAND_TERMINAL_SETUP_ITERM2_NATIVE_SHIFT_ENTER_VAR_2",
+    "verdict": "catalogue",
+    "id": "slash-command-terminal-setup-shift-enter-no-config-needed",
+    "name": "Slash Command: /terminal-setup no configuration needed",
+    "desc": "/terminal-setup note that Shift+Enter needs no configuration and already adds newlines.",
+    "text": "No configuration needed. Just use Shift+Enter to add newlines.",
+    "reason": "fallback of h in i8l @24647848, the full body of the native-support output when not in tmux; its tmux arm is catalogued as slash-command-terminal-setup-tmux-extended-keys-note"
+  },
+  "b3f29400f68b13af": {
+    "promptId": "data-cross-session-delivery-notice-dropped-inbox",
+    "label": "DATA_CROSS_SESSION_DELIVERY_NOTICE_DROPPED_INBOX_VAR_1",
+    "verdict": "glue",
+    "text": "one of your messages to another session was",
+    "reason": "singular subject n in K @39849801 (same pattern as the allowlisted delivered-notice subjects)"
+  },
+  "ee949e72ec31521c": {
+    "promptId": "data-cross-session-delivery-notice-dropped-inbox",
+    "label": "DATA_CROSS_SESSION_DELIVERY_NOTICE_DROPPED_INBOX_VAR_1",
+    "verdict": "glue",
+    "text": " of your messages to another session were",
+    "reason": "plural variant of the same subject @39849852"
+  },
+  "d6507c845e044ca5": {
+    "promptId": "tool-description-repl-mcp-servers-list",
+    "promptIds": ["system-reminder-repl-mcp-no-server-connected"],
+    "label": "TOOL_DESCRIPTION_REPL_MCP_SERVERS_LIST_VAR_0",
+    "verdict": "glue",
+    "text": "MCP tools:",
+    "reason": "label J @48365642 before the server list (sibling `These MCP servers are still connecting:` is allowlisted glue)"
+  },
+  "c46809b6f7d14e86": {
+    "promptId": "slash-command-goal-paused-status",
+    "label": "SLASH_COMMAND_GOAL_PAUSED_STATUS_VAR_1",
+    "verdict": "glue",
+    "text": "not yet evaluated",
+    "reason": "status fill for r @54065728 in `(${r})` when no turn has run; no instruction"
+  },
+  "49417422964458c6": {
+    "promptId": "slash-command-goal-paused-status",
+    "label": "SLASH_COMMAND_GOAL_PAUSED_STATUS_VAR_2",
+    "verdict": "glue",
+    "text": "\nLast check: ",
+    "reason": "label n @54065808 before the evaluator's last reason"
+  },
+  "44ed2032d073ba3f": {
+    "promptId": "tool-result-list-agents-remote-control-off-note",
+    "label": "TOOL_RESULT_LIST_AGENTS_REMOTE_CONTROL_OFF_NOTE_VAR_0",
+    "verdict": "glue",
+    "text": "Other computers",
+    "reason": "noun-phrase arm of o @63747623; its other arm `Cloud sessions and other computers` is allowlisted glue"
   }
 }
