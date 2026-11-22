@@ -46,7 +46,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DEFAULT_CACHE, scanSiblingArms } from './checkSiblingArms.mjs';
+import { DEFAULT_CACHE, scanSiblingArmsShared } from './checkSiblingArms.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const DEFAULT_ALLOWLIST = path.join(
@@ -417,7 +417,7 @@ async function main() {
   const allowlist = fs.existsSync(allowlistPath)
     ? JSON.parse(fs.readFileSync(allowlistPath, 'utf8'))
     : {};
-  const r = scanSiblingArms(cli, { catalogue, cache });
+  const r = scanSiblingArmsShared(cli, { catalogue, cache });
   const say = opt.json ? console.error : console.log;
   for (const u of r.unparsed)
     console.error(
