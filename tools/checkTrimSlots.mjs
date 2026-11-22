@@ -47,6 +47,7 @@
 //
 // Exit 0 = no findings (or --all), 1 = findings, 2 = could not run.
 
+import * as acorn from 'acorn';
 import crypto from 'node:crypto';
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
@@ -60,7 +61,9 @@ const {
   printAuditedSets,
 } = require('./lib/overrideSets.cjs');
 
-const TOKEN = /\$\{[^}]{0,120}\}|\{\{[^}]{0,80}\}\}/g;
+const FALLBACK_SLOT = /\$\{[^}]{0,120}\}/y;
+const TEMPLATE = /\{\{[^}]{0,80}\}\}/y;
+const TEMPLATES_IN = /\{\{[^}]{0,80}\}\}/g;
 
 // `${...}` can nest a whole ternary, and the naive match then truncates at the
 // first inner `}`. A slot's identity is its opening identifier, so compare on
@@ -73,8 +76,57 @@ export const normalizeToken = tok => {
   return lead ? lead[0] : null;
 };
 
-export const tokensOf = s =>
-  new Set(((s || '').match(TOKEN) || []).map(normalizeToken).filter(Boolean));
+const walk = (node, visit) => {
+  visit(node);
+  for (const value of Object.values(node)) {
+    for (const child of Array.isArray(value) ? value : [value])
+      if (child && typeof child === 'object' && typeof child.type === 'string') walk(child, visit);
+  }
+};
+
+const parseSlot = (s, at) => {
+  let node;
+  try {
+    node = acorn.parseExpressionAt(s, at + 2, { ecmaVersion: 'latest' });
+  } catch {
+    return null;
+  }
+  let end = node.end;
+  while (/\s/.test(s[end] || '')) end++;
+  return s[end] === '}' ? { node, end: end + 1 } : null;
+};
+
+const collectSlot = (s, node, found) => {
+  const leadOf = expr => normalizeToken(`\${${s.slice(expr.start, expr.end)}}`);
+  const add = (set, expr) => {
+    const name = leadOf(expr);
+    if (name) set.add(name);
+  };
+  const addTemplates = text => {
+    for (const m of (text || '').match(TEMPLATES_IN) || []) {
+      const name = normalizeToken(m);
+      if (name) found.templates.add(name);
+    }
+  };
+  add(found.slots, node);
+  walk(node, n => {
+    add(found.refs, n);
+    if (n.type === 'TemplateLiteral') {
+      for (const e of n.expressions) add(found.slots, e);
+      for (const q of n.quasis) addTemplates(q.value.cooked ?? q.value.raw);
+    } else if (n.type === 'ConditionalExpression') {
+      add(found.slots, n.consequent);
+      add(found.slots, n.alternate);
+    } else if (n.type === 'Literal' && typeof n.value === 'string') {
+      addTemplates(n.value);
+    }
+  });
+};
+
+export const tokensOf = s => {
+  const { slots, templates } = scopedTokensOf(s);
+  return new Set([...slots, ...templates]);
+};
 
 // The canonical reconstruction: the `${` and `}` are already in the pieces, so
 // the BARE label is appended, and the map key is identifiers[i] — never i.
@@ -103,15 +155,44 @@ export const isTemplateToken = raw => raw.startsWith('{{');
 
 // Split a body's tokens by scope. Positional `${}` slots are keyed per-file;
 // `{{}}` catalogue templates are keyed set-wide.
-export const scopedTokensOf = s => {
+export const scopedTokensOf = text => {
+  const s = text || '';
   const slots = new Set();
   const templates = new Set();
-  for (const raw of (s || '').match(TOKEN) || []) {
-    const name = normalizeToken(raw);
-    if (!name) continue;
-    (isTemplateToken(raw) ? templates : slots).add(name);
+  const refs = new Set();
+  let i = 0;
+  while (i < s.length) {
+    const slotAt = s.indexOf('${', i);
+    const tplAt = s.indexOf('{{', i);
+    if (slotAt === -1 && tplAt === -1) break;
+    if (slotAt !== -1 && (tplAt === -1 || slotAt < tplAt)) {
+      const parsed = parseSlot(s, slotAt);
+      if (parsed) {
+        collectSlot(s, parsed.node, { slots, templates, refs });
+        i = parsed.end;
+        continue;
+      }
+      FALLBACK_SLOT.lastIndex = slotAt;
+      const m = FALLBACK_SLOT.exec(s);
+      if (m) {
+        const name = normalizeToken(m[0]);
+        if (name) {
+          slots.add(name);
+          refs.add(name);
+        }
+        i = slotAt + m[0].length;
+      } else i = slotAt + 2;
+      continue;
+    }
+    TEMPLATE.lastIndex = tplAt;
+    const m = TEMPLATE.exec(s);
+    if (m) {
+      const name = normalizeToken(m[0]);
+      if (name) templates.add(name);
+      i = tplAt + m[0].length;
+    } else i = tplAt + 1;
   }
-  return { slots, templates };
+  return { slots, templates, refs };
 };
 
 // `setTemplates` is every `{{}}` name still live anywhere in the override set.
@@ -126,7 +207,7 @@ export const lostTokens = (pristineBodies, deployed, setTemplates = null) => {
     for (const t of w.slots) wantSlots.add(t);
     for (const t of w.templates) wantTemplates.add(t);
   }
-  const lost = [...wantSlots].filter(t => !have.slots.has(t));
+  const lost = [...wantSlots].filter(t => !have.slots.has(t) && !have.refs.has(t));
   for (const t of wantTemplates) {
     if (have.templates.has(t)) continue;
     if (setTemplates && setTemplates.has(t)) continue;
