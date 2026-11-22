@@ -110,6 +110,7 @@ import { writeRefusalFallbackModel } from './refusalFallbackModel';
 import { writeOutputStyleTurnReminder } from './outputStyleTurnReminder';
 import { writeAutoModeClassifierModel } from './autoModeClassifierModel';
 import { writeComplexityRouter } from './complexityRouter';
+import { TRACE } from '../perfTrace';
 import { writeComplexityRouterModels } from './complexityRouterModels';
 import { writeFablePlan } from './fablePlan';
 import { writeVoiceMode } from './voiceMode';
@@ -895,6 +896,16 @@ export const applyPatchImplementations = (
     if (result !== null) {
       content = result;
     }
+    if (TRACE) {
+      TRACE.emit('patch', {
+        id: def.id,
+        applied,
+        failed,
+        errors: errors.map(TRACE.clip),
+        len: content.length,
+        h: TRACE.digest(content),
+      });
+    }
 
     results.push({
       id: def.id,
@@ -1040,8 +1051,23 @@ export const applyCustomization = async (
       patchFilter,
     }).catch(error => {
       debug(`system-prompt preflight skipped: ${error}`);
+      if (TRACE) {
+        TRACE.emit('preflight-error', { error: TRACE.clip(String(error)) });
+      }
       return null;
     });
+    if (TRACE) {
+      const trace = TRACE;
+      trace.emit('preflight', {
+        ran: preflight !== null,
+        checked: preflight?.promptsChecked ?? null,
+        sites: preflight?.sitesChecked ?? null,
+        findings: (preflight?.findings ?? []).map(finding => {
+          const line = formatPreflightFinding(finding);
+          return [trace.clip(line), trace.digest(line)];
+        }),
+      });
+    }
     // Errors surface here; advisories do not. The corpus carries ~48 standing
     // cardinality/ownership findings that no single apply can act on, and a
     // recurring wall of yellow is how a real error gets scrolled past. The full
@@ -1086,6 +1112,13 @@ export const applyCustomization = async (
   // ==========================================================================
   const inlineResult = await applyInlineBlobOverrides(content);
   content = inlineResult.content;
+  if (TRACE) {
+    TRACE.emit('phase', {
+      name: 'inline-blob',
+      len: content.length,
+      h: TRACE.digest(content),
+    });
+  }
   const appliedInline = inlineResult.results.filter(r => r.applied);
   const failedInline = inlineResult.results.filter(r => r.failed);
   if (inlineResult.results.length > 0) {
@@ -1118,6 +1151,13 @@ export const applyCustomization = async (
     ccInstInfo.version ?? ''
   );
   content = reminderResult.content;
+  if (TRACE) {
+    TRACE.emit('phase', {
+      name: 'reminders',
+      len: content.length,
+      h: TRACE.digest(content),
+    });
+  }
   for (const r of reminderResult.results) {
     allResults.push({
       id: `reminder:${r.id}`,
@@ -1142,6 +1182,13 @@ export const applyCustomization = async (
     pristineContent
   );
   content = systemPromptsResult.newContent;
+  if (TRACE) {
+    TRACE.emit('phase', {
+      name: 'system-prompts',
+      len: content.length,
+      h: TRACE.digest(content),
+    });
+  }
   const identityOverrideApplied = systemPromptsResult.results.some(
     r =>
       r.applied &&
