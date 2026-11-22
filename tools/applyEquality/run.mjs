@@ -7,6 +7,7 @@ import path from 'node:path';
 import readline from 'node:readline';
 import { fileURLToPath } from 'node:url';
 import { buildEditShapeSet } from './editShapes.mjs';
+import { normalizeLog } from './normalize.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const HOME = os.homedir();
@@ -213,6 +214,7 @@ const REPACK_INPUTS = [
   },
 ];
 const REPACK_TODO = [
+  'TODO: page-crossing growth: on 2.1.330 every writer output keeps one size across same/shrink-1/grow-1/grow-4097/grow-16385 (clearing the bytecode frees slack the growth fits in), so the Mach-O 4 KB / 16 KB page-rounding branches are not yet exercised; add grow shapes sized past that slack per input',
   'TODO: u32 section header input (Mach-O / PE built by Bun < 1.3.4): fabricate with Bun 1.3.3 `bun build --compile` for bun-darwin-x64, bun-darwin-arm64 and bun-windows-x64 (DESIGN-v3 §3 U2b) and add it to REPACK_INPUTS',
   'TODO: legacy ELF overlay input (no .bun section, `---- Bun! ----` trailer at EOF): fabricate with a Bun release that predates the ELF .bun section and add it to REPACK_INPUTS',
 ];
@@ -619,19 +621,6 @@ const materializeSets = (needed, baselineDir) => {
     };
   }
 };
-
-const normalizeLog = (text, macho) =>
-  text
-    .replace(
-      /\/tmp\/tweakcc-native-[A-Za-z0-9]{6}/g,
-      '/tmp/tweakcc-native-XXXXXX'
-    )
-    .replace(/builds\/[0-9a-f]{40}/g, 'builds/SHA')
-    .replace(/-[A-Za-z0-9_-]{8}\.mjs/g, '-HASH.mjs')
-    .replace(/\b\d+(\.\d+)?m?s\b/g, 'Ns')
-    .split('\n')
-    .filter(line => !(macho && /codesign/i.test(line)))
-    .join('\n');
 
 const watchedIds = manifest =>
   manifest
@@ -1365,7 +1354,14 @@ const stageRepack = (summary, baseDir, candDir) => {
             out,
             shape,
           ],
-          env: {},
+          env: {
+            TWEAKCC_ALLOW_CROSS_PLATFORM: '1',
+            TWEAKCC_TARGET_PLATFORM: input.name.startsWith('macho-')
+              ? 'darwin'
+              : input.name.startsWith('pe-')
+                ? 'win32'
+                : 'linux',
+          },
           logFile,
         });
         outputs[side] = out;
@@ -1387,17 +1383,25 @@ const stageRepack = (summary, baseDir, candDir) => {
         meta.baseline.log === meta.candidate.log &&
         (!exists || cmpFiles(outputs.baseline, outputs.candidate));
       const size = exists ? fs.statSync(outputs.candidate).size : null;
+      const rewritten = exists && !cmpFiles(input.file, outputs.candidate);
+      const ok =
+        identical &&
+        meta.baseline.exit === 0 &&
+        meta.candidate.exit === 0 &&
+        (shape === 'same' || rewritten);
       results.push({
         input: input.name,
         shape,
         identical,
-        exit: meta.candidate.exit,
+        ok,
+        inputSize: fs.statSync(input.file).size,
+        rewritten,
         size,
         baseline: meta.baseline,
         candidate: meta.candidate,
       });
       log(
-        `repack ${input.name} ${shape}: ${identical ? 'IDENTICAL' : 'DIFFERENT'} exit ${meta.candidate.exit}${size ? `, ${size} B` : ''}`
+        `repack ${input.name} ${shape}: ${identical ? 'IDENTICAL' : 'DIFFERENT'} exit ${meta.baseline.exit}/${meta.candidate.exit}${size ? `, ${size} B` : ''}${rewritten ? '' : ', output equals input'}${ok ? '' : ' — FAIL'}`
       );
       if (identical || !opts.keep) {
         removeFile(outputs.baseline);
@@ -1406,7 +1410,7 @@ const stageRepack = (summary, baseDir, candDir) => {
     }
   }
   summary.repack = { results, todo: REPACK_TODO };
-  return results.every(r => r.skipped || r.identical);
+  return results.every(r => r.skipped || r.ok);
 };
 
 const stagePerf = (summary, baseDir, candDir) => {
@@ -1565,14 +1569,14 @@ const renderSummary = summary => {
       '',
       '## Repack-only writer inputs',
       '',
-      '| input | shape | result | exit | size (B) |',
-      '|---|---|---|---|---|'
+      '| input | shape | result | exit b/c | input → output (B) | rewritten |',
+      '|---|---|---|---|---|---|'
     );
     for (const r of summary.repack.results)
       lines.push(
         r.skipped
-          ? `| ${r.input} | - | skipped: ${r.skipped} | | |`
-          : `| ${r.input} | ${r.shape} | ${r.identical ? 'identical' : 'DIFFERENT'} | ${r.exit} | ${r.size ?? '-'} |`
+          ? `| ${r.input} | - | skipped: ${r.skipped} | | | |`
+          : `| ${r.input} | ${r.shape} | ${r.ok ? 'identical' : r.identical ? 'FAILED on both sides' : 'DIFFERENT'} | ${r.baseline.exit}/${r.candidate.exit} | ${r.inputSize} → ${r.size ?? '-'} | ${r.rewritten ? 'yes' : 'no'} |`
       );
     lines.push('', ...summary.repack.todo.map(t => `- ${t}`));
   }
