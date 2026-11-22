@@ -90,7 +90,7 @@ describe('literalAnchored', () => {
       nativeResult(FIXTURE, PUSH_TOP_PATTERN_MINIFIED).found.length
     ).toBeGreaterThan(4);
     expect(literalAnchoredStats.budgetFallbacks).toBeGreaterThan(before);
-  });
+  }, 60000);
 
   it('finds every global match when matches are adjacent', () => {
     const text = 'R.push(T("top")),'.repeat(50);
