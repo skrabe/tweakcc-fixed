@@ -18,6 +18,8 @@ import { MutableText } from '../mutableText';
 import {
   findAllPromptPieceMatches,
   foldPromptMatchContent,
+  pristineAnswerFor,
+  PristinePromptAnswers,
   PromptPieceMatcherCatalog,
   PromptMatchSpec,
 } from '../systemPromptPieceMatcher';
@@ -69,6 +71,29 @@ const shadowClobberVerdict = async (
   if (TRACE) TRACE.emit('shadow', { check: 'u1-clobber', id: promptId });
 };
 
+const shadowPristineReuse = async (
+  matchCatalog: PromptPieceMatcherCatalog,
+  spec: PromptMatchSpec,
+  pristineContent: string,
+  reused: RegExpExecArray[],
+  promptId: string
+): Promise<void> => {
+  let fresh: RegExpExecArray[] | null;
+  try {
+    fresh = await matchCatalog.matchPristine(spec, pristineContent);
+  } catch {
+    fresh = null;
+  }
+  if (fresh === null || matchSignature(fresh) !== matchSignature(reused)) {
+    shadowFail('u4-pristine-reuse', {
+      id: promptId,
+      reused: reused.length,
+      fresh: fresh?.length ?? null,
+    });
+  }
+  if (TRACE) TRACE.emit('shadow', { check: 'u4-pristine-reuse', id: promptId });
+};
+
 /**
  * Result of applying system prompts
  */
@@ -95,7 +120,8 @@ export const applySystemPrompts = async (
   // (matched the pristine binary but not the current one → silent skip) from
   // genuine anchor drift (never matched the pristine binary → warn). When
   // omitted, every non-match is treated as drift (pre-existing behavior).
-  pristineContent?: string
+  pristineContent?: string,
+  pristineAnswers?: PristinePromptAnswers | null
 ): Promise<SystemPromptsResult> => {
   // Auto-detect if we should escape non-ASCII characters based on cli.js content
   const shouldEscapeNonAscii = escapeNonAscii ?? detectUnicodeEscaping(content);
@@ -166,6 +192,35 @@ export const applySystemPrompts = async (
     if (current) current.push(regex);
     else expiringMatches.set(index, [regex]);
   }
+  const pristineMatches = async (
+    spec: PromptMatchSpec,
+    pristine: string,
+    promptId: string
+  ): Promise<RegExpExecArray[]> => {
+    const reuse = pristineAnswerFor(
+      pristineAnswers,
+      pristine,
+      patchFilter,
+      spec
+    );
+    if ('declined' in reuse) {
+      if (TRACE) {
+        TRACE.emit('pristine-path', { path: `declined:${reuse.declined}` });
+      }
+      return matchCatalog.matchPristine(spec, pristine);
+    }
+    if (TRACE) TRACE.emit('pristine-path', { path: 'session' });
+    if (SHADOW) {
+      await shadowPristineReuse(
+        matchCatalog,
+        spec,
+        pristine,
+        reuse.matches,
+        promptId
+      );
+    }
+    return reuse.matches;
+  };
   const working = new MutableText(content);
   let contentChanged =
     pristineContent !== undefined && pristineContent !== content;
@@ -642,7 +697,7 @@ export const applySystemPrompts = async (
         try {
           matchedPristine = spec
             ? matchesInRegion(
-                await matchCatalog.matchPristine(spec, pristineContent),
+                await pristineMatches(spec, pristineContent, promptId),
                 pristineRegions,
                 Boolean(entry.asset)
               )

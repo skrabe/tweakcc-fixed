@@ -68,9 +68,11 @@ import { writePatchesAppliedIndication } from './patchesAppliedIndication';
 import { applySystemPrompts } from './systemPrompts';
 import { applyInlineBlobOverrides } from './inlineBlobOverrides';
 import {
+  buildPristineSession,
   formatPreflightFinding,
-  runSystemPromptPreflight,
+  runPreflightChecks,
 } from '../systemPromptPreflight';
+import type { PristinePromptAnswers } from '../systemPromptPieceMatcher';
 import { writeFixLspSupport } from './fixLspSupport';
 import { writeNoGlobalCacheScope } from './globalCacheScope';
 import { writeFixSummarizeFromHere } from './fixSummarizeFromHere';
@@ -1042,20 +1044,26 @@ export const applyCustomization = async (
   // findings would strand an operator mid-bump behind a validator they cannot
   // satisfy without editing overrides, which is how gates end up bypassed.
   // ==========================================================================
+  let pristineAnswers: PristinePromptAnswers | null = null;
   if (ccInstInfo.version) {
     // A preflight that cannot run must not take the apply down with it: it is
     // an advisory pass in front of the real work, not a dependency of it.
-    const preflight = await runSystemPromptPreflight({
+    const preflight = await buildPristineSession({
       pristine: pristineContent,
       version: ccInstInfo.version,
       patchFilter,
-    }).catch(error => {
-      debug(`system-prompt preflight skipped: ${error}`);
-      if (TRACE) {
-        TRACE.emit('preflight-error', { error: TRACE.clip(String(error)) });
-      }
-      return null;
-    });
+    })
+      .then(session => {
+        pristineAnswers = session.answers;
+        return runPreflightChecks(session);
+      })
+      .catch(error => {
+        debug(`system-prompt preflight skipped: ${error}`);
+        if (TRACE) {
+          TRACE.emit('preflight-error', { error: TRACE.clip(String(error)) });
+        }
+        return null;
+      });
     if (TRACE) {
       const trace = TRACE;
       trace.emit('preflight', {
@@ -1179,7 +1187,8 @@ export const applyCustomization = async (
     ccInstInfo.version,
     undefined, // escapeNonAscii - auto-detect
     patchFilter,
-    pristineContent
+    pristineContent,
+    pristineAnswers
   );
   content = systemPromptsResult.newContent;
   if (TRACE) {

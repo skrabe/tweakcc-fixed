@@ -860,6 +860,10 @@ export class PromptPieceMatcherCatalog {
     for (const anchor of this.anchorRegexes.keys()) this.anchors.add(anchor);
   }
 
+  specFor(regex: string): PromptMatchSpec | undefined {
+    return this.specs.get(regex);
+  }
+
   delete(regex: string): void {
     const anchor = this.compiled.get(regex)?.plan?.anchor;
     this.specs.delete(regex);
@@ -1072,6 +1076,60 @@ export class PromptPieceMatcherCatalog {
     return results;
   }
 }
+
+export interface PristinePromptAnswers {
+  pristine: string;
+  patchFilter: string[] | null;
+  answers: Map<
+    string,
+    {
+      spec: PromptMatchSpec;
+      matches: RegExpExecArray[];
+      accepted: Set<string[]>;
+    }
+  >;
+}
+
+export type PristineAnswerDecline =
+  | 'noSession'
+  | 'filtered'
+  | 'specMismatch'
+  | 'buildTimeMismatch';
+
+const sameFilter = (
+  a: string[] | null | undefined,
+  b: string[] | null | undefined
+): boolean => {
+  if (!a || !b) return !a && !b;
+  return a.length === b.length && a.every((id, i) => id === b[i]);
+};
+
+export const pristineAnswerFor = (
+  session: PristinePromptAnswers | null | undefined,
+  pristine: string,
+  patchFilter: string[] | null | undefined,
+  spec: PromptMatchSpec
+): { matches: RegExpExecArray[] } | { declined: PristineAnswerDecline } => {
+  if (!session || session.pristine !== pristine) {
+    return { declined: 'noSession' };
+  }
+  if (!sameFilter(session.patchFilter, patchFilter)) {
+    return { declined: 'filtered' };
+  }
+  const stored = session.answers.get(spec.regex);
+  if (
+    !stored ||
+    stored.spec.regex !== spec.regex ||
+    !stored.accepted.has(spec.pieces) ||
+    stored.spec.version !== spec.version
+  ) {
+    return { declined: 'specMismatch' };
+  }
+  if (stored.spec.buildTime !== spec.buildTime) {
+    return { declined: 'buildTimeMismatch' };
+  }
+  return { matches: stored.matches };
+};
 
 export const findAllPromptPieceMatchesBatch = async (
   specs: PromptMatchSpec[],
