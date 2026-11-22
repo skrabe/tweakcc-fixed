@@ -37,7 +37,13 @@ under the shared apply lock, at one fixed config-dir path.
   --scratch DIR          scratch root (default ~/perf-scratch/applyEquality)
   --lock FILE            apply lock (default ~/perf-scratch/apply.lock)
   --inputs DIR           input binaries (default ~/wk-inputs)
-  --tweakcc DIR          maintained override sets (default ~/.tweakcc)
+  --tweakcc DIR          maintained override sets: lcc is where its
+                         system-prompts and system-reminders resolve to,
+                         staging is skrabe-staging/system-prompts-lcc
+                         (default ~/.tweakcc)
+  --config FILE          tweakcc config.json copied into every sandbox
+                         (default <inputs>/config.json when present, else
+                         <tweakcc>/config.json)
 
 Targets: linux-x64 linux-arm64 darwin-macho darwin-npm
 Sets: lcc staging empty seed1 seed2 seed3 edits filtered`;
@@ -60,6 +66,7 @@ const parseArgs = argv => {
     lock: path.join(HOME, 'perf-scratch', 'apply.lock'),
     inputs: path.join(HOME, 'wk-inputs'),
     tweakcc: path.join(HOME, '.tweakcc'),
+    config: null,
   };
   const list = value => value.split(',').filter(Boolean);
   for (let i = 0; i < argv.length; i++) {
@@ -88,7 +95,14 @@ const parseArgs = argv => {
     else if (arg === '--lock') opts.lock = path.resolve(value());
     else if (arg === '--inputs') opts.inputs = path.resolve(value());
     else if (arg === '--tweakcc') opts.tweakcc = path.resolve(value());
+    else if (arg === '--config') opts.config = path.resolve(value());
     else throw new Error(`unknown option ${arg}\n\n${USAGE}`);
+  }
+  if (!opts.config) {
+    const staged = path.join(opts.inputs, 'config.json');
+    opts.config = fs.existsSync(staged)
+      ? staged
+      : path.join(opts.tweakcc, 'config.json');
   }
   if (!['both', 'candidate', 'none'].includes(opts.trace))
     throw new Error(`--trace must be both, candidate or none`);
@@ -125,7 +139,17 @@ const TARGETS = {
   },
 };
 
-const LCC = path.join(opts.tweakcc, 'lobotomized-claude-code');
+const resolvedSet = name => {
+  const link = path.join(opts.tweakcc, name);
+  return fs.existsSync(link) ? fs.realpathSync(link) : null;
+};
+const LCC_PROMPTS = resolvedSet('system-prompts');
+const LCC_REMINDERS = resolvedSet('system-reminders');
+const STAGING_PROMPTS = path.join(
+  opts.tweakcc,
+  'skrabe-staging',
+  'system-prompts-lcc'
+);
 const SET_NAMES = [
   'lcc',
   'staging',
@@ -407,10 +431,7 @@ const placeTarget = targetName => {
 const prepareCfg = (targetName, set) => {
   removeTree(CFG);
   fs.mkdirSync(CFG, { recursive: true });
-  fs.copyFileSync(
-    path.join(opts.tweakcc, 'config.json'),
-    path.join(CFG, 'config.json')
-  );
+  fs.copyFileSync(opts.config, path.join(CFG, 'config.json'));
   copyTree(set.prompts, path.join(CFG, 'system-prompts'));
   copyTree(set.reminders, path.join(CFG, 'system-reminders'));
   return placeTarget(targetName);
@@ -492,11 +513,17 @@ const stubBody = file => {
 };
 
 const materializeSets = (needed, baselineDir) => {
-  const lccPrompts = path.join(LCC, 'system-prompts-lcc');
-  const lccReminders = path.join(LCC, 'system-reminders');
+  const lccPrompts = LCC_PROMPTS;
+  const lccReminders = LCC_REMINDERS;
+  if (!lccPrompts || !lccReminders)
+    throw new Error(
+      `no maintained lcc set: ${path.join(opts.tweakcc, 'system-prompts')} and system-reminders must exist`
+    );
+  if (needed.includes('staging') && !fs.existsSync(STAGING_PROMPTS))
+    throw new Error(`no staging set at ${STAGING_PROMPTS}`);
   sets.lcc = { prompts: lccPrompts, reminders: lccReminders };
   sets.staging = {
-    prompts: path.join(opts.tweakcc, 'skrabe-staging', 'system-prompts-lcc'),
+    prompts: STAGING_PROMPTS,
     reminders: lccReminders,
   };
   sets.empty = { prompts: null, reminders: null };
@@ -863,6 +890,17 @@ const compareCase = async ({
       `apply exit ${base.time.exit} vs ${cand.time.exit}`
     );
   report.applyExit = cand.time.exit;
+  for (const side of ['baseline', 'candidate']) {
+    const found = fs
+      .readFileSync(path.join(caseDir, side, 'apply.log'), 'utf8')
+      .split('\n')
+      .filter(line => /^Found Claude Code/.test(line));
+    const outside = found.filter(line => !line.includes(`${CFG}${path.sep}`));
+    if (found.length === 0 || outside.length > 0)
+      report.differences.push(
+        `${side} apply did not stay in the sandbox installation: ${found.join(' | ') || 'no "Found Claude Code" line'}`
+      );
+  }
   const normalized = side => {
     const text = normalizeLog(
       fs.readFileSync(path.join(caseDir, side, 'apply.log'), 'utf8'),
@@ -1456,6 +1494,9 @@ const renderSummary = summary => {
       .join(', ')})`
   );
   lines.push(
+    `Host ${summary.host}, node ${summary.node}, config ${summary.config}, lcc ${summary.lcc.prompts}`
+  );
+  lines.push(
     `Trace hook: baseline ${summary.traceHook?.baseline ?? '-'}, candidate ${summary.traceHook?.candidate ?? '-'}`
   );
   if (summary.sets) {
@@ -1561,6 +1602,10 @@ const main = async () => {
     candidate: { ref: opts.candidate, sha: revParse(opts.candidate) },
     stages: opts.stages,
     stageSecs: {},
+    host: os.hostname(),
+    node: process.version,
+    config: opts.config,
+    lcc: { prompts: LCC_PROMPTS, reminders: LCC_REMINDERS },
   };
   log(
     `apply equality ${summary.baseline.sha.slice(0, 10)} vs ${summary.candidate.sha.slice(0, 10)} → ${OUT}`
