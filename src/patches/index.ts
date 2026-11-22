@@ -72,7 +72,10 @@ import {
   runSystemPromptPreflight,
 } from '../systemPromptPreflight';
 import { writeFixLspSupport } from './fixLspSupport';
-import { writeNoGlobalCacheScope } from './globalCacheScope';
+import {
+  pristineIdentityOf,
+  writeNoGlobalCacheScope,
+} from './globalCacheScope';
 import { writeFixSummarizeFromHere } from './fixSummarizeFromHere';
 import { writeFixRewindSummaryHeader } from './fixRewindSummaryHeader';
 import { writeToolsets } from './toolsets';
@@ -954,14 +957,9 @@ const assertNativeBinaryStarts = (binaryPath: string) => {
 // Main Apply Function
 // =============================================================================
 
-export const applyCustomization = async (
-  config: TweakccConfig,
-  ccInstInfo: ClaudeCodeInstallationInfo,
-  patchFilter?: string[] | null
-): Promise<ApplyCustomizationResult> => {
-  let content: string;
-  let clearBytecode = false;
-
+const readClaudeJs = async (
+  ccInstInfo: ClaudeCodeInstallationInfo
+): Promise<{ content: string; clearBytecode: boolean }> => {
   if (ccInstInfo.nativeInstallationPath) {
     // For native installations: restore the binary, then extract to memory
     await restoreNativeBinaryFromBackup(ccInstInfo);
@@ -1000,23 +998,41 @@ export const applyCustomization = async (
       );
     }
 
-    clearBytecode = needsClearBytecode;
-
     const origPath = path.join(CONFIG_DIR, 'native-claudejs-orig.js');
     fsSync.writeFileSync(origPath, claudeJsBuffer);
     debug(`Saved original extracted JS from native to: ${origPath}`);
 
-    content = claudeJsBuffer.toString('utf8');
-  } else {
-    // For NPM installations: restore cli.js from backup, then read it
-    await restoreClijsFromBackup(ccInstInfo);
-
-    if (!ccInstInfo.cliPath) {
-      throw new Error('cliPath is required for NPM installations');
-    }
-
-    content = await fs.readFile(ccInstInfo.cliPath, { encoding: 'utf8' });
+    return {
+      content: claudeJsBuffer.toString('utf8'),
+      clearBytecode: needsClearBytecode,
+    };
   }
+  // For NPM installations: restore cli.js from backup, then read it
+  await restoreClijsFromBackup(ccInstInfo);
+
+  if (!ccInstInfo.cliPath) {
+    throw new Error('cliPath is required for NPM installations');
+  }
+
+  return {
+    content: await fs.readFile(ccInstInfo.cliPath, { encoding: 'utf8' }),
+    clearBytecode: false,
+  };
+};
+
+export const applyCustomization = async (
+  config: TweakccConfig,
+  ccInstInfo: ClaudeCodeInstallationInfo,
+  patchFilter?: string[] | null
+): Promise<ApplyCustomizationResult> => {
+  let content = '';
+  const adopt = <T>(result: { content: string; results: T }): T => {
+    content = result.content;
+    return result.results;
+  };
+  const clearBytecode = await readClaudeJs(ccInstInfo).then(result =>
+    adopt({ content: result.content, results: result.clearBytecode })
+  );
 
   // Collect all patch results
   const allResults: PatchResult[] = [];
@@ -1030,7 +1046,7 @@ export const applyCustomization = async (
   // splice → silent skip) apart from genuine anchor drift (never matched the
   // pristine binary → warn), so consumed-region prompts don't raise spurious
   // "Could not find" noise.
-  const pristineContent = content;
+  let pristineContent: string | null = content;
 
   // ==========================================================================
   // Preflight — the same checks `--validate-system-prompts` runs, against the
@@ -1110,8 +1126,7 @@ export const applyCustomization = async (
   // Running inline-blob overrides first means the named-prompt wipes
   // for content already inside an inline-blob target simply no-op.
   // ==========================================================================
-  const inlineResult = await applyInlineBlobOverrides(content);
-  content = inlineResult.content;
+  const inlineResults = adopt(await applyInlineBlobOverrides(content));
   if (TRACE) {
     TRACE.emit('phase', {
       name: 'inline-blob',
@@ -1119,9 +1134,9 @@ export const applyCustomization = async (
       h: TRACE.digest(content),
     });
   }
-  const appliedInline = inlineResult.results.filter(r => r.applied);
-  const failedInline = inlineResult.results.filter(r => r.failed);
-  if (inlineResult.results.length > 0) {
+  const appliedInline = inlineResults.filter(r => r.applied);
+  const failedInline = inlineResults.filter(r => r.failed);
+  if (inlineResults.length > 0) {
     debug(
       `inlineBlobOverrides: ${appliedInline.length} applied, ${failedInline.length} failed`
     );
@@ -1131,7 +1146,7 @@ export const applyCustomization = async (
       );
     }
   }
-  for (const r of inlineResult.results) {
+  for (const r of inlineResults) {
     allResults.push({
       id: `inline-blob:${r.filename}`,
       name: r.name,
@@ -1146,11 +1161,9 @@ export const applyCustomization = async (
   // ==========================================================================
   // Apply named system prompt customizations AFTER inline-blob overrides.
   // ==========================================================================
-  const reminderResult = await applySystemReminderOverrides(
-    content,
-    ccInstInfo.version ?? ''
+  const reminderResults = adopt(
+    await applySystemReminderOverrides(content, ccInstInfo.version ?? '')
   );
-  content = reminderResult.content;
   if (TRACE) {
     TRACE.emit('phase', {
       name: 'reminders',
@@ -1158,7 +1171,7 @@ export const applyCustomization = async (
       h: TRACE.digest(content),
     });
   }
-  for (const r of reminderResult.results) {
+  for (const r of reminderResults) {
     allResults.push({
       id: `reminder:${r.id}`,
       name: `Reminder: ${r.name} (${r.state})`,
@@ -1174,14 +1187,17 @@ export const applyCustomization = async (
   // Apply system prompts unconditionally, including native installs — this fork's
   // lobotomization patches the prompts inside the Bun bundle (upstream skips native
   // here; we don't, because native prompt overrides are the whole point).
-  const systemPromptsResult = await applySystemPrompts(
+  const systemPromptResults = await applySystemPrompts(
     content,
     ccInstInfo.version,
     undefined, // escapeNonAscii - auto-detect
     patchFilter,
     pristineContent
+  ).then(result =>
+    adopt({ content: result.newContent, results: result.results })
   );
-  content = systemPromptsResult.newContent;
+  const pristineIdentity = pristineIdentityOf(pristineContent);
+  pristineContent = null;
   if (TRACE) {
     TRACE.emit('phase', {
       name: 'system-prompts',
@@ -1189,7 +1205,7 @@ export const applyCustomization = async (
       h: TRACE.digest(content),
     });
   }
-  const identityOverrideApplied = systemPromptsResult.results.some(
+  const identityOverrideApplied = systemPromptResults.some(
     r =>
       r.applied &&
       [
@@ -1199,8 +1215,8 @@ export const applyCustomization = async (
       ].includes(r.id)
   );
 
-  const sortedSystemPromptResults = [...systemPromptsResult.results].sort(
-    (a, b) => a.name.localeCompare(b.name)
+  const sortedSystemPromptResults = [...systemPromptResults].sort((a, b) =>
+    a.name.localeCompare(b.name)
   );
   allResults.push(...sortedSystemPromptResults);
 
@@ -1281,7 +1297,7 @@ export const applyCustomization = async (
     },
     'no-global-cache-scope': {
       fn: c =>
-        writeNoGlobalCacheScope(c, pristineContent, identityOverrideApplied),
+        writeNoGlobalCacheScope(c, pristineIdentity, identityOverrideApplied),
     },
     'fff-instruction-hygiene': {
       fn: c => writeFffInstructionHygiene(c),
@@ -1708,9 +1724,9 @@ export const applyCustomization = async (
   // ==========================================================================
   // Apply all patches
   // ==========================================================================
-  const { content: patchedContent, results: patchResults } =
-    applyPatchImplementations(content, patchImplementations, patchFilter);
-  content = patchedContent;
+  const patchResults = adopt(
+    applyPatchImplementations(content, patchImplementations, patchFilter)
+  );
   allResults.push(...patchResults);
 
   const failedBinaryPatches = patchResults.filter(r => r.failed);
@@ -1740,12 +1756,14 @@ export const applyCustomization = async (
       `Repacking modified claude.js into native installation: ${ccInstInfo.nativeInstallationPath}`
     );
 
+    const modifiedBuffer = Buffer.from(content, 'utf8');
+    content = '';
+
     // Save patched JS for debugging
     const patchedPath = path.join(CONFIG_DIR, 'native-claudejs-patched.js');
-    fsSync.writeFileSync(patchedPath, content, 'utf8');
+    fsSync.writeFileSync(patchedPath, modifiedBuffer);
     debug(`Saved patched JS from native to: ${patchedPath}`);
 
-    const modifiedBuffer = Buffer.from(content, 'utf8');
     const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'tweakcc-native-'));
     const tempBinaryPath = path.join(
       tempDir,
