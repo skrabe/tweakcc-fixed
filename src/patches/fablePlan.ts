@@ -69,6 +69,7 @@ import { FablePlanConfig } from '../types';
 import { debug } from '../utils';
 import { escapeIdent, showDiff } from './index';
 import { runPatchSteps } from './patchSteps';
+import { literalAnchored } from '../literalAnchoredSearch';
 
 const ALIAS = 'fableplan';
 
@@ -736,6 +737,29 @@ const patchEffortContext = (
   return newFile;
 };
 
+export const PICKER_EFFORT_DISPLAY =
+  /(([$\w]+)!==void 0&&![$\w]+&&[$\w]+\([$\w]+,\{marginBottom:1,flexDirection:"column",children:)([$\w]+\?)/;
+export const PICKER_EFFORT_UNSUPPORTEDS = [
+  // CC >= 2.1.330: the label became a template literal and the icon is
+  // unconditional again.
+  //   o(r,{dimColor:!0,children:[e(_1,{effort:void 0})," ",
+  //   `Effort not supported${Vr?` for ${Vr}`:""}`]})
+  /([$\w]+)\(([$\w]+),\{dimColor:!0,children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," ",`Effort not supported/,
+  // CC 2.1.326 - 2.1.329: the icon and its leading space became conditional.
+  //   r(n,{dimColor:!0,children:[!sn&&e(a$,{effort:void 0}),sn?"":" ",
+  //   "Effort not supported",…
+  /([$\w]+)\(([$\w]+),\{dimColor:!0,children:\[![$\w]+&&[$\w]+\([$\w]+,\{effort:void 0\}\),[$\w]+\?"":" ","Effort not supported"/,
+  // CC 2.1.319 - 2.1.325: dimmed, no subtle color.
+  //   r(n,{dimColor:!0,children:[e(QW,{effort:void 0})," ","Effort not supported",…
+  /([$\w]+)\(([$\w]+),\{dimColor:!0,children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," ","Effort not supported"/,
+  // CC >= 2.1.312: the label undims and its leading space is its own child.
+  //   r(n,{color:"subtle",dimColor:!1,children:[e(Gj,{effort:void 0})," ",
+  //   "Effort not supported",…
+  /([$\w]+)\(([$\w]+),\{color:"subtle",dimColor:!1,children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," ","Effort not supported"/,
+  // CC <= 2.1.311.
+  /([$\w]+)\(([$\w]+),\{color:"subtle",children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," Effort not supported"/,
+];
+
 /**
  * Splice 8 — no single effort control on the fableplan row of `/model`.
  *
@@ -766,28 +790,6 @@ const patchPickerEffortRow = (
   //   if(as===void 0||as.disabled===!0||as.value===ig)return;
   const adjust =
     /(=[$\w]+\(\(([$\w]+)\)=>\{let ([$\w]+)=[$\w]+\(\),([$\w]+)=[$\w]+\.find\(\(([$\w]+)\)=>\5\.value===\3\);if\(\4===void 0\|\|\4\.disabled===!0(?:\|\|\4\.value===[$\w]+)?\)return;)(let ([$\w]+)=[$\w]+\(\3\);if\(!\7\.supportsEffort\)return;)/;
-  const display =
-    /(([$\w]+)!==void 0&&![$\w]+&&[$\w]+\([$\w]+,\{marginBottom:1,flexDirection:"column",children:)([$\w]+\?)/;
-  const unsupporteds = [
-    // CC >= 2.1.330: the label became a template literal and the icon is
-    // unconditional again.
-    //   o(r,{dimColor:!0,children:[e(_1,{effort:void 0})," ",
-    //   `Effort not supported${Vr?` for ${Vr}`:""}`]})
-    /([$\w]+)\(([$\w]+),\{dimColor:!0,children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," ",`Effort not supported/,
-    // CC 2.1.326 - 2.1.329: the icon and its leading space became conditional.
-    //   r(n,{dimColor:!0,children:[!sn&&e(a$,{effort:void 0}),sn?"":" ",
-    //   "Effort not supported",…
-    /([$\w]+)\(([$\w]+),\{dimColor:!0,children:\[![$\w]+&&[$\w]+\([$\w]+,\{effort:void 0\}\),[$\w]+\?"":" ","Effort not supported"/,
-    // CC 2.1.319 - 2.1.325: dimmed, no subtle color.
-    //   r(n,{dimColor:!0,children:[e(QW,{effort:void 0})," ","Effort not supported",…
-    /([$\w]+)\(([$\w]+),\{dimColor:!0,children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," ","Effort not supported"/,
-    // CC >= 2.1.312: the label undims and its leading space is its own child.
-    //   r(n,{color:"subtle",dimColor:!1,children:[e(Gj,{effort:void 0})," ",
-    //   "Effort not supported",…
-    /([$\w]+)\(([$\w]+),\{color:"subtle",dimColor:!1,children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," ","Effort not supported"/,
-    // CC <= 2.1.311.
-    /([$\w]+)\(([$\w]+),\{color:"subtle",children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," Effort not supported"/,
-  ];
   const commits = [
     // CC >= 2.1.319: the commit first returns on the "more models" row.
     //   function ws(gs){if(gs===ig)return;let Yn=nk(gs),as=tr(),Bs=Dn(),
@@ -808,10 +810,10 @@ const patchPickerEffortRow = (
   ];
 
   const a = file.match(adjust);
-  const d = file.match(display);
+  const d = literalAnchored.match(file, PICKER_EFFORT_DISPLAY);
   let u: RegExpMatchArray | null = null;
-  for (const unsupported of unsupporteds) {
-    u = file.match(unsupported);
+  for (const unsupported of PICKER_EFFORT_UNSUPPORTEDS) {
+    u = literalAnchored.match(file, unsupported);
     if (u) break;
   }
   let c: RegExpMatchArray | null = null;

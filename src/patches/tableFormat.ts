@@ -3,6 +3,7 @@
 import { debug, verbose } from '../utils';
 import { TableFormat } from '../types';
 import { showDiff } from './index';
+import { literalAnchored } from '../literalAnchoredSearch';
 
 /**
  * Table format patch for the Claude Code CLI.
@@ -85,13 +86,14 @@ const INTER_ROW_SEP_PATTERN_FORMATTED =
 // Patterns to remove T("top") and T("bottom") pushes for clean format
 // Minified: R.push(T("top")),R.push(...  ->  R.push(...
 // We match the R.push(T("top")), prefix and remove it
-const PUSH_TOP_PATTERN_MINIFIED = /([$\w]+)\.push\(([$\w]+)\("top"\)\),/g;
+export const PUSH_TOP_PATTERN_MINIFIED =
+  /([$\w]+)\.push\(([$\w]+)\("top"\)\),/g;
 // Minified: ),R.push(T("bottom")),Math  ->  ),Math
 const PUSH_BOTTOM_PATTERN_MINIFIED =
   /,([$\w]+)\.push\(([$\w]+)\("bottom"\)\),/g;
 
 // Formatted versions
-const PUSH_TOP_PATTERN_FORMATTED =
+export const PUSH_TOP_PATTERN_FORMATTED =
   /([$\w]+)\.push\(\s*([$\w]+)\(\s*"top"\s*\)\s*\)\s*,\s*/g;
 const PUSH_BOTTOM_PATTERN_FORMATTED =
   /,\s*([$\w]+)\.push\(\s*([$\w]+)\(\s*"bottom"\s*\)\s*\)\s*,/g;
@@ -177,14 +179,14 @@ function removeTopBottomPushes(content: string): {
 
   // Remove T("top") push - minified
   const beforeTopMinified = result;
-  result = result.replace(PUSH_TOP_PATTERN_MINIFIED, '');
+  result = literalAnchored.replace(result, PUSH_TOP_PATTERN_MINIFIED, '');
   if (result !== beforeTopMinified) {
     success = true;
   }
 
   // Remove T("top") push - formatted
   const beforeTopFormatted = result;
-  result = result.replace(PUSH_TOP_PATTERN_FORMATTED, '');
+  result = literalAnchored.replace(result, PUSH_TOP_PATTERN_FORMATTED, '');
   if (result !== beforeTopFormatted) {
     success = true;
   }
