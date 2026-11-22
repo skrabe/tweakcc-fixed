@@ -61936,6 +61936,28 @@
       "version": "2.1.246"
     },
     {
+      "name": "Plugin hook error: $.… (…) has no method …",
+      "id": "tool-result-plugin-interface-has-no-method",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.${",
+        "} (${",
+        ".pluginName}) has no method ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_INTERFACE_HAS_NO_METHOD_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_INTERFACE_HAS_NO_METHOD_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_INTERFACE_HAS_NO_METHOD_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "Hooks module: $ noun used other than name/root",
       "id": "slash-command-plugin-validate-hooks-module-dollar-noun-member-misused",
       "description": "Hooks-module validation refusal: a $ noun used other than as .name or .root",
@@ -62032,6 +62054,135 @@
       "version": "2.1.291"
     },
     {
+      "name": "Plugin hook error: $.….…: plugin …, which provides $.…, or its caller … was judged und…",
+      "id": "tool-result-plugin-plugin-provides-caller-was-judged-under-policy-has",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.${",
+        "}.${",
+        "}: plugin ${",
+        "}, which provides $.${",
+        "}, or its caller ${",
+        "} was judged under a policy that has since changed, and is off until judged under the one in force"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        0,
+        3
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_PLUGIN_PROVIDES_CALLER_WAS_JUDGED_UNDER_POLICY_HAS_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_PLUGIN_PROVIDES_CALLER_WAS_JUDGED_UNDER_POLICY_HAS_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_PLUGIN_PROVIDES_CALLER_WAS_JUDGED_UNDER_POLICY_HAS_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_PLUGIN_PROVIDES_CALLER_WAS_JUDGED_UNDER_POLICY_HAS_VAR_3"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: $.audio.play: …",
+      "id": "tool-result-plugin-audio-play-failed",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.audio.play: ${",
+        "}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_AUDIO_PLAY_FAILED_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: $.audio.play: asset must be a path inside the plugin's directory (g…",
+      "id": "tool-result-plugin-audio-play-asset-must-path-inside-plugin-directory",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.audio.play: asset must be a path inside the plugin's directory (got ${",
+        "(",
+        ")})"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_AUDIO_PLAY_ASSET_MUST_PATH_INSIDE_PLUGIN_DIRECTORY_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_AUDIO_PLAY_ASSET_MUST_PATH_INSIDE_PLUGIN_DIRECTORY_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: $.audio.play: clip must be { asset }, { url } or { base64, mime }",
+      "id": "tool-result-plugin-audio-play-clip-must-asset-url-base64-mime",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.audio.play: clip must be { asset }, { url } or { base64, mime }"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: $.audio.play: clip must carry exactly one of asset, url, base64 (go…",
+      "id": "tool-result-plugin-audio-play-clip-must-carry-exactly-one-asset",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.audio.play: clip must carry exactly one of asset, url, base64 (got ${",
+        ".length===0?\"none\":",
+        ".join(\" and \")})"
+      ],
+      "identifiers": [
+        0,
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_AUDIO_PLAY_CLIP_MUST_CARRY_EXACTLY_ONE_ASSET_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: $.audio.play: clip.… must be a non-empty string",
+      "id": "tool-result-plugin-audio-play-clip-must-non-empty-string",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.audio.play: clip.${",
+        "} must be a non-empty string"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_AUDIO_PLAY_CLIP_MUST_NON_EMPTY_STRING_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: $.audio.play: clip.asset must be a string",
+      "id": "tool-result-plugin-audio-play-clip-asset-must-string",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.audio.play: clip.asset must be a string"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: $.audio.play: clip.mime must accompany clip.base64",
+      "id": "tool-result-plugin-audio-play-clip-mime-must-accompany-clip-base64",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.audio.play: clip.mime must accompany clip.base64"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
+    },
+    {
       "name": "Plugin $.audio.play: could not fetch clip",
       "id": "tool-result-plugin-audio-play-fetch-failed",
       "description": "Error prefix thrown to plugin code when $.audio.play cannot fetch the clip URL.",
@@ -62062,6 +62213,106 @@
       "version": "2.1.328"
     },
     {
+      "name": "Plugin hook error: $.audio.play: could not read … in …'s directory:",
+      "id": "tool-result-plugin-audio-play-could-read-directory",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.audio.play: could not read ${",
+        "} in ${",
+        "}'s directory: "
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_AUDIO_PLAY_COULD_READ_DIRECTORY_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_AUDIO_PLAY_COULD_READ_DIRECTORY_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: $.audio.play: options.gain must be a number from 0 to …",
+      "id": "tool-result-plugin-audio-play-options-gain-must-number-from-0",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.audio.play: options.gain must be a number from 0 to ${",
+        "}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_AUDIO_PLAY_OPTIONS_GAIN_MUST_NUMBER_FROM_0_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: $.audio.play: options.shouldLoop must be a boolean",
+      "id": "tool-result-plugin-audio-play-options-shouldloop-must-boolean",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.audio.play: options.shouldLoop must be a boolean"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: $.audio.play: the clip is over … bytes",
+      "id": "tool-result-plugin-audio-play-clip-over-bytes",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.audio.play: the clip is over ${",
+        "} bytes"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_AUDIO_PLAY_CLIP_OVER_BYTES_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: $.audio.play: the plugin has no directory",
+      "id": "tool-result-plugin-audio-play-plugin-has-no-directory",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.audio.play: the plugin has no directory"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: $.audio.play: the plugin has no id",
+      "id": "tool-result-plugin-audio-play-plugin-has-no-id",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.audio.play: the plugin has no id"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: $.audio.speak: …",
+      "id": "tool-result-plugin-audio-speak-failed",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.audio.speak: ${",
+        "}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_AUDIO_SPEAK_FAILED_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "Plugin $.audio.speak: no speech synthesizer",
       "id": "tool-result-plugin-audio-speak-no-synthesizer",
       "description": "Rejection returned to plugin code when $.audio.speak has no speech synthesizer on the platform.",
@@ -62076,6 +62327,69 @@
         "0": "TOOL_RESULT_PLUGIN_AUDIO_SPEAK_NO_SYNTHESIZER_VAR_0"
       },
       "version": "2.1.328"
+    },
+    {
+      "name": "Plugin hook error: $.audio.speak: text must be a non-empty string",
+      "id": "tool-result-plugin-audio-speak-text-must-non-empty-string",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.audio.speak: text must be a non-empty string"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: $.audio.speak: text must be a non-empty string",
+      "id": "tool-result-plugin-audio-speak-text-must-non-empty-string",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.audio.speak: text must be a non-empty string"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: $.audio.speak: voice must be a string when given",
+      "id": "tool-result-plugin-audio-speak-voice-must-string",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.audio.speak: voice must be a string when given"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: $.fs.… (…): a tenant has no disk of its session's",
+      "id": "tool-result-plugin-fs-tenant-has-no-disk-session",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.fs.${",
+        ".event} (${",
+        "}): a tenant has no disk of its session's"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_FS_TENANT_HAS_NO_DISK_SESSION_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_FS_TENANT_HAS_NO_DISK_SESSION_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: $.session.append: this process keeps no conversation to append to",
+      "id": "tool-result-plugin-session-append-no-conversation-unprefixed",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "$.session.append: this process keeps no conversation to append to"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
     },
     {
       "name": "Tool Result: Plugin skill.prompt bad frontmatter",
@@ -68648,6 +68962,25 @@
       "version": "2.1.284"
     },
     {
+      "name": "Plugin hook error: …: next() passed an argument with …",
+      "id": "tool-result-plugin-next-passed-bad-argument",
+      "description": "Error thrown inside a running plugin hook; uncaught, it reaches the model through the mod-under-development failure notice.",
+      "pieces": [
+        "${",
+        ".name}: next() passed an argument with ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_NEXT_PASSED_BAD_ARGUMENT_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_NEXT_PASSED_BAD_ARGUMENT_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "Tool Result: REPL run_in_background unavailable",
       "id": "tool-result-repl-run-in-background-unavailable",
       "description": "REPL inner shell call error saying run_in_background is unavailable and to await with a short timeout instead",
@@ -69006,6 +69339,50 @@
       "version": "2.1.301"
     },
     {
+      "name": "Plugin hook error: …: $.… refused: …",
+      "id": "tool-result-plugin-api-call-refused",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        ".plugin}: $.${",
+        "} refused: ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_API_CALL_REFUSED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_API_CALL_REFUSED_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_API_CALL_REFUSED_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.… refused: …",
+      "id": "tool-result-plugin-api-call-refused",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        ".plugin}: $.${",
+        "} refused: ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_API_CALL_REFUSED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_API_CALL_REFUSED_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_API_CALL_REFUSED_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "Tool Result: Mod host op refused hooks module left",
       "id": "tool-result-mod-host-op-refused-hooks-module-left",
       "description": "Error when a mod's host operation is refused because a hooks module behind the call left the session",
@@ -69025,6 +69402,25 @@
       "version": "2.1.328"
     },
     {
+      "name": "Plugin hook error: …: $.… refused: a hooks module behind the call is not admitted (ops…",
+      "id": "tool-result-plugin-refused-hooks-module-behind-call-admitted-ops-wait",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        ".plugin}: $.${",
+        "} refused: a hooks module behind the call is not admitted (ops wait for the fold and plugin.register)"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_REFUSED_HOOKS_MODULE_BEHIND_CALL_ADMITTED_OPS_WAIT_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_REFUSED_HOOKS_MODULE_BEHIND_CALL_ADMITTED_OPS_WAIT_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "Tool Result: mod host operation refused — hooks module judged under an outdated policy",
       "id": "tool-result-mod-host-op-refused-policy-changed",
       "description": "Error when a mod's host operation is refused because its hooks module was judged under a policy that has since changed and stays off until re-judged.",
@@ -69042,6 +69438,376 @@
         "1": "TOOL_RESULT_MOD_HOST_OP_REFUSED_POLICY_CHANGED_VAR_1"
       },
       "version": "2.1.328"
+    },
+    {
+      "name": "Plugin hook error: …: $.… refused: the hooks module that made the call is no longer lo…",
+      "id": "tool-result-plugin-refused-hooks-module-made-call-no-longer-loaded",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        ".plugin}: $.${",
+        "} refused: the hooks module that made the call is no longer loaded (it was reloaded or removed)"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_REFUSED_HOOKS_MODULE_MADE_CALL_NO_LONGER_LOADED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_REFUSED_HOOKS_MODULE_MADE_CALL_NO_LONGER_LOADED_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.mcp.call: no connected MCP tool \"…\" on a server named \"…\"…",
+      "id": "tool-result-plugin-mcp-call-no-connected-mcp-tool-server-named",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        ".plugin}: $.mcp.call: no connected MCP tool \"${",
+        "}\" on a server named \"${",
+        "}\"${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_MCP_CALL_NO_CONNECTED_MCP_TOOL_SERVER_NAMED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_MCP_CALL_NO_CONNECTED_MCP_TOOL_SERVER_NAMED_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_MCP_CALL_NO_CONNECTED_MCP_TOOL_SERVER_NAMED_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_MCP_CALL_NO_CONNECTED_MCP_TOOL_SERVER_NAMED_VAR_3"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.mcp.call(…, …) refused: …",
+      "id": "tool-result-plugin-mcp-call-refused",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        ".plugin}: $.mcp.call(${",
+        "}, ${",
+        "}) refused: ${",
+        ".deny}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_MCP_CALL_REFUSED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_MCP_CALL_REFUSED_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_MCP_CALL_REFUSED_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_MCP_CALL_REFUSED_VAR_3"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.prompt.compose: …",
+      "id": "tool-result-plugin-prompt-compose-failed",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        ".plugin}: $.prompt.compose: ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_PROMPT_COMPOSE_FAILED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_PROMPT_COMPOSE_FAILED_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.prompt.compose: this process composes no system prompt",
+      "id": "tool-result-plugin-prompt-compose-process-composes-no-system-prompt",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        ".plugin}: $.prompt.compose: this process composes no system prompt"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_PROMPT_COMPOSE_PROCESS_COMPOSES_NO_SYSTEM_PROMPT_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.session.append: this process keeps no conversation to append to",
+      "id": "tool-result-plugin-session-append-process-keeps-no-conversation-append",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        ".plugin}: $.session.append: this process keeps no conversation to append to"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_SESSION_APPEND_PROCESS_KEEPS_NO_CONVERSATION_APPEND_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.ui.notice: … refused:",
+      "id": "tool-result-plugin-ui-notice-refused",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        ".plugin}: $.ui.notice: ${",
+        ".tool_use_id} refused: "
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_UI_NOTICE_REFUSED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_UI_NOTICE_REFUSED_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.wasm.compile refused: …",
+      "id": "tool-result-plugin-wasm-compile-refused",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        ".plugin}: $.wasm.compile refused: ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_WASM_COMPILE_REFUSED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_WASM_COMPILE_REFUSED_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.wasm.compile: …",
+      "id": "tool-result-plugin-wasm-compile-failed-host",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        ".plugin}: $.wasm.compile: ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_WASM_COMPILE_FAILED_HOST_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_WASM_COMPILE_FAILED_HOST_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: …: … (host check)",
+      "id": "tool-result-plugin-api-host-check-refusal",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        ".plugin}: ${",
+        "}: ${",
+        "} (host check)"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_API_HOST_CHECK_REFUSAL_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_API_HOST_CHECK_REFUSAL_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_API_HOST_CHECK_REFUSAL_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: …: … (host check)",
+      "id": "tool-result-plugin-api-host-check-refusal",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        ".plugin}: ${",
+        "}: ${",
+        "} (host check)"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_API_HOST_CHECK_REFUSAL_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_API_HOST_CHECK_REFUSAL_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_API_HOST_CHECK_REFUSAL_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: …: not a loaded plugin",
+      "id": "tool-result-plugin-not-a-loaded-plugin",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        ".plugin}: ${",
+        "}: not a loaded plugin"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_NOT_A_LOADED_PLUGIN_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_NOT_A_LOADED_PLUGIN_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: next.to() names no tier",
+      "id": "tool-result-plugin-next-to-names-no-tier",
+      "description": "Error thrown inside a running plugin hook; uncaught, it reaches the model through the mod-under-development failure notice.",
+      "pieces": [
+        "${",
+        ".plugin}: next.to() names no tier"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_NEXT_TO_NAMES_NO_TIER_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: returned … it did not draw (…#…); a render hook may keep the one…",
+      "id": "tool-result-plugin-render-returned-element-not-drawn",
+      "description": "Refusal of a plugin hook's result by the site's check; reaches the model through the mod-under-development failure notice.",
+      "pieces": [
+        "${",
+        ".plugin}: returned ${",
+        "[",
+        ".type]} it did not draw (${",
+        "(",
+        ")}#${",
+        "}); a render hook may keep the ones next(e) returned, not address another plugin's"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_RENDER_RETURNED_ELEMENT_NOT_DRAWN_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_RENDER_RETURNED_ELEMENT_NOT_DRAWN_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_RENDER_RETURNED_ELEMENT_NOT_DRAWN_VAR_5",
+        "3": "TOOL_RESULT_PLUGIN_RENDER_RETURNED_ELEMENT_NOT_DRAWN_VAR_2",
+        "4": "TOOL_RESULT_PLUGIN_RENDER_RETURNED_ELEMENT_NOT_DRAWN_VAR_3",
+        "5": "TOOL_RESULT_PLUGIN_RENDER_RETURNED_ELEMENT_NOT_DRAWN_VAR_4"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: returned a … in another plugin's hover scope that next(e) did no…",
+      "id": "tool-result-plugin-returned-another-plugin-hover-scope-next-e-did",
+      "description": "Refusal of a plugin hook's result by the site's check; reaches the model through the mod-under-development failure notice.",
+      "pieces": [
+        "${",
+        ".plugin}: returned a ${",
+        "} in another plugin's hover scope that next(e) did not hand it; a render hook may keep the ones next(e) returned and restyle them, not join another plugin's group"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_RETURNED_ANOTHER_PLUGIN_HOVER_SCOPE_NEXT_E_DID_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_RETURNED_ANOTHER_PLUGIN_HOVER_SCOPE_NEXT_E_DID_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: returned a Client it did not draw (…/… …); a render hook may kee…",
+      "id": "tool-result-plugin-returned-client-did-draw-render-hook-may-keep",
+      "description": "Refusal of a plugin hook's result by the site's check; reaches the model through the mod-under-development failure notice.",
+      "pieces": [
+        "${",
+        ".plugin}: returned a Client it did not draw (${",
+        "(",
+        ")}/${",
+        "(",
+        ")} ${",
+        "(",
+        ")}); a render hook may keep the ones next(e) returned and change their props, not which plugin, key or module they name"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        1,
+        3,
+        1,
+        4
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_RETURNED_CLIENT_DID_DRAW_RENDER_HOOK_MAY_KEEP_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_RETURNED_CLIENT_DID_DRAW_RENDER_HOOK_MAY_KEEP_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_RETURNED_CLIENT_DID_DRAW_RENDER_HOOK_MAY_KEEP_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_RETURNED_CLIENT_DID_DRAW_RENDER_HOOK_MAY_KEEP_VAR_3",
+        "4": "TOOL_RESULT_PLUGIN_RETURNED_CLIENT_DID_DRAW_RENDER_HOOK_MAY_KEEP_VAR_4"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: returned a Shader it did not draw; a render hook may keep the on…",
+      "id": "tool-result-plugin-returned-shader-did-draw-render-hook-may-keep",
+      "description": "Refusal of a plugin hook's result by the site's check; reaches the model through the mod-under-development failure notice.",
+      "pieces": [
+        "${",
+        ".plugin}: returned a Shader it did not draw; a render hook may keep the one next(e) returned and change its values, not which plugin or module it names"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_RETURNED_SHADER_DID_DRAW_RENDER_HOOK_MAY_KEEP_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: returned a Shader that next(e) did not hand it, and its source n…",
+      "id": "tool-result-plugin-returned-shader-next-e-did-hand-source-never",
+      "description": "Refusal of a plugin hook's result by the site's check; reaches the model through the mod-under-development failure notice.",
+      "pieces": [
+        "${",
+        ".plugin}: returned a Shader that next(e) did not hand it, and its source never names Shader; name it there so that claude plugin validate lists it"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_RETURNED_SHADER_NEXT_E_DID_HAND_SOURCE_NEVER_VAR_0"
+      },
+      "version": "2.1.330"
     },
     {
       "name": "Tool Result: Mod theme.set image changed by a hook",
@@ -69077,6 +69843,25 @@
         "1": "SLASH_COMMAND_PLUGIN_UPDATE_ALREADY_AT_LATEST_VERSION_VAR_1"
       },
       "version": "2.1.281"
+    },
+    {
+      "name": "Plugin hook error: … provides no interface named …",
+      "id": "tool-result-plugin-interface-not-provided",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        ".pluginName} provides no interface named ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_INTERFACE_NOT_PROVIDED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_INTERFACE_NOT_PROVIDED_VAR_1"
+      },
+      "version": "2.1.330"
     },
     {
       "name": "Slash Command: /plugin Update — Not Checked, Directory Unavailable",
@@ -82890,6 +83675,22 @@
       "version": "2.1.291"
     },
     {
+      "name": "Plugin hook error: … after register() returned: .catch() is for register()",
+      "id": "tool-result-plugin-catch-called-after-register",
+      "description": "Error thrown inside a running plugin hook; uncaught, it reaches the model through the mod-under-development failure notice.",
+      "pieces": [
+        "${",
+        "} after register() returned: .catch() is for register()"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_CATCH_CALLED_AFTER_REGISTER_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "Tool Result: Remote host approval — dated answer arrived too late",
       "id": "tool-result-remote-host-approval-dated-channel-expired",
       "description": "Dated-channel branch of the approval-outside-honoured-window result: the approval arrived the given time after the request was raised, longer than an answer is honoured for.",
@@ -95250,6 +96051,22 @@
       "version": "2.1.300"
     },
     {
+      "name": "Plugin hook error: … that holds a BigInt, which cannot be written out",
+      "id": "tool-result-plugin-holds-bigint-cannot-written-out",
+      "description": "Refusal of a plugin hook's result by the site's check; reaches the model through the mod-under-development failure notice.",
+      "pieces": [
+        "${",
+        "} that holds a BigInt, which cannot be written out"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_HOLDS_BIGINT_CANNOT_WRITTEN_OUT_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "Tool Result: Not An Artifact URL (Claude Design link)",
       "id": "tool-result-artifact-url-not-an-artifact-design-link",
       "description": "Artifact tool validation error when the url is a Claude Design link the Artifact tool cannot open, optionally pointing to the design tool.",
@@ -102310,6 +103127,511 @@
       "version": "2.1.328"
     },
     {
+      "name": "Plugin hook error: …: $.… takes { text } (a string)",
+      "id": "tool-result-plugin-api-takes-text-string",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.${",
+        "} takes { text } (a string)"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_API_TAKES_TEXT_STRING_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_API_TAKES_TEXT_STRING_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.…: the value is … characters, over the … limit",
+      "id": "tool-result-plugin-store-value-over-character-limit",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.${",
+        "}: the value is ${",
+        ".length} characters, over the ${",
+        "} limit"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_STORE_VALUE_OVER_CHARACTER_LIMIT_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_STORE_VALUE_OVER_CHARACTER_LIMIT_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_STORE_VALUE_OVER_CHARACTER_LIMIT_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_STORE_VALUE_OVER_CHARACTER_LIMIT_VAR_3"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.…: value is not JSON data (…)",
+      "id": "tool-result-plugin-store-value-not-json-data-reason",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.${",
+        "}: value is not JSON data (${",
+        "(",
+        ")})"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_STORE_VALUE_NOT_JSON_DATA_REASON_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_STORE_VALUE_NOT_JSON_DATA_REASON_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_STORE_VALUE_NOT_JSON_DATA_REASON_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_STORE_VALUE_NOT_JSON_DATA_REASON_VAR_3"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.…: value is not JSON data (…`})",
+      "id": "tool-result-plugin-store-value-not-json-data",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.${",
+        "}: value is not JSON data (${",
+        "===void 0?\"undefined\":`a ${typeof ",
+        "}`})"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_STORE_VALUE_NOT_JSON_DATA_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_STORE_VALUE_NOT_JSON_DATA_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_STORE_VALUE_NOT_JSON_DATA_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.agent.call options.signal must be an AbortSignal",
+      "id": "tool-result-plugin-agent-call-options-signal-must-abortsignal",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.agent.call options.signal must be an AbortSignal"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_AGENT_CALL_OPTIONS_SIGNAL_MUST_ABORTSIGNAL_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.agent.register takes { name, description, prompt, ... }; name …",
+      "id": "tool-result-plugin-agent-register-takes-name-description-prompt-name-letters",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.agent.register takes { name, description, prompt, ... }; name is letters, digits, _ or - (up to 64)"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_AGENT_REGISTER_TAKES_NAME_DESCRIPTION_PROMPT_NAME_LETTERS_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.agent.register: \"…\" refused: …",
+      "id": "tool-result-plugin-agent-register-refused",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.agent.register: \"${",
+        ".name}\" refused: ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_AGENT_REGISTER_REFUSED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_AGENT_REGISTER_REFUSED_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_AGENT_REGISTER_REFUSED_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.agent.spawn refused: … spawns are running at once",
+      "id": "tool-result-plugin-agent-spawn-refused-spawns-are-running-once",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.agent.spawn refused: ${",
+        "} spawns are running at once"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_AGENT_SPAWN_REFUSED_SPAWNS_ARE_RUNNING_ONCE_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_AGENT_SPAWN_REFUSED_SPAWNS_ARE_RUNNING_ONCE_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.agent.spawn takes { prompt, ... } (a non-empty prompt)",
+      "id": "tool-result-plugin-agent-spawn-takes-prompt-non-empty-prompt",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.agent.spawn takes { prompt, ... } (a non-empty prompt)"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_AGENT_SPAWN_TAKES_PROMPT_NON_EMPTY_PROMPT_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.audio.play options.signal must be an AbortSignal",
+      "id": "tool-result-plugin-audio-play-options-signal-must-abortsignal",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.audio.play options.signal must be an AbortSignal"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_AUDIO_PLAY_OPTIONS_SIGNAL_MUST_ABORTSIGNAL_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.audio.play with shouldLoop needs options.signal: the clip repe…",
+      "id": "tool-result-plugin-audio-play-shouldloop-needs-options-signal-clip-repeats",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.audio.play with shouldLoop needs options.signal: the clip repeats until it aborts"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_AUDIO_PLAY_SHOULDLOOP_NEEDS_OPTIONS_SIGNAL_CLIP_REPEATS_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.audio.play: refused: … plays are going at once",
+      "id": "tool-result-plugin-audio-play-refused-plays-are-going-once",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.audio.play: refused: ${",
+        "} plays are going at once"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_AUDIO_PLAY_REFUSED_PLAYS_ARE_GOING_ONCE_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_AUDIO_PLAY_REFUSED_PLAYS_ARE_GOING_ONCE_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.audio.speak options.signal must be an AbortSignal",
+      "id": "tool-result-plugin-audio-speak-options-signal-must-abortsignal",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.audio.speak options.signal must be an AbortSignal"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_AUDIO_SPEAK_OPTIONS_SIGNAL_MUST_ABORTSIGNAL_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.clock.… takes a function",
+      "id": "tool-result-plugin-clock-takes-function",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.clock.${",
+        "} takes a function"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_CLOCK_TAKES_FUNCTION_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_CLOCK_TAKES_FUNCTION_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.clock.… takes a non-negative number of milliseconds",
+      "id": "tool-result-plugin-clock-takes-non-negative-number-milliseconds",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.clock.${",
+        "} takes a non-negative number of milliseconds"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_CLOCK_TAKES_NON_NEGATIVE_NUMBER_MILLISECONDS_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_CLOCK_TAKES_NON_NEGATIVE_NUMBER_MILLISECONDS_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.command.register takes { name, description, argumentHint?, imm…",
+      "id": "tool-result-plugin-command-register-takes-name-description-argumenthint-immediate-name",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.command.register takes { name, description, argumentHint?, immediate? }; name is letters, digits, _ or - (up to 64)"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_COMMAND_REGISTER_TAKES_NAME_DESCRIPTION_ARGUMENTHINT_IMMEDIATE_NAME_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.command.register: \"/…\" refused: it is the … /…",
+      "id": "tool-result-plugin-command-register-refused-builtin-name",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.command.register: \"/${",
+        ".name}\" refused: it is the ${",
+        "[",
+        "(",
+        ")]} /${",
+        ".name}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        4
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_COMMAND_REGISTER_REFUSED_BUILTIN_NAME_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_COMMAND_REGISTER_REFUSED_BUILTIN_NAME_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_COMMAND_REGISTER_REFUSED_BUILTIN_NAME_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_COMMAND_REGISTER_REFUSED_BUILTIN_NAME_VAR_4",
+        "4": "TOOL_RESULT_PLUGIN_COMMAND_REGISTER_REFUSED_BUILTIN_NAME_VAR_3"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.command.register: \"/…\" refused: the plugin … registered it alr…",
+      "id": "tool-result-plugin-command-register-refused-plugin-registered-already",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.command.register: \"/${",
+        ".name}\" refused: the plugin ${",
+        "} registered it already"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_COMMAND_REGISTER_REFUSED_PLUGIN_REGISTERED_ALREADY_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_COMMAND_REGISTER_REFUSED_PLUGIN_REGISTERED_ALREADY_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_COMMAND_REGISTER_REFUSED_PLUGIN_REGISTERED_ALREADY_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.command.register: … needs a description (what the menu shows)",
+      "id": "tool-result-plugin-command-register-needs-description-what-menu-shows",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.command.register: ${",
+        "} needs a description (what the menu shows)"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_COMMAND_REGISTER_NEEDS_DESCRIPTION_WHAT_MENU_SHOWS_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_COMMAND_REGISTER_NEEDS_DESCRIPTION_WHAT_MENU_SHOWS_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.command.run takes { command, args? } (the command's name witho…",
+      "id": "tool-result-plugin-command-run-takes-command-args-command-name-without",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.command.run takes { command, args? } (the command's name without the slash)"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_COMMAND_RUN_TAKES_COMMAND_ARGS_COMMAND_NAME_WITHOUT_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.command.run: …",
+      "id": "tool-result-plugin-command-run-failed",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.command.run: ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_COMMAND_RUN_FAILED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_COMMAND_RUN_FAILED_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.command.run: no command named /… in this session",
+      "id": "tool-result-plugin-command-run-no-command-named-session",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.command.run: no command named /${",
+        "} in this session"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_COMMAND_RUN_NO_COMMAND_NAMED_SESSION_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_COMMAND_RUN_NO_COMMAND_NAMED_SESSION_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.config.set takes { key, value } (the key as $.config.list name…",
+      "id": "tool-result-plugin-config-set-takes-key-value-key-config-list",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.config.set takes { key, value } (the key as $.config.list names it; the value a boolean, a string, a number or a list of strings)"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_CONFIG_SET_TAKES_KEY_VALUE_KEY_CONFIG_LIST_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.config.set: no /config row with key … ($.config.list names them)",
+      "id": "tool-result-plugin-config-set-no-config-row-key-config-list",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.config.set: no /config row with key ${",
+        ".key} ($.config.list names them)"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_CONFIG_SET_NO_CONFIG_ROW_KEY_CONFIG_LIST_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_CONFIG_SET_NO_CONFIG_ROW_KEY_CONFIG_LIST_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.fs.…: … refused:",
+      "id": "tool-result-plugin-fs-op-refused",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.fs.${",
+        ".event}: ${",
+        ".path} refused: "
+      ],
+      "identifiers": [
+        0,
+        1,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_FS_OP_REFUSED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_FS_OP_REFUSED_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.fs.…(…) failed:",
+      "id": "tool-result-plugin-fs-op-failed",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.fs.${",
+        ".event}(${",
+        ".path}) failed: "
+      ],
+      "identifiers": [
+        0,
+        1,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_FS_OP_FAILED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_FS_OP_FAILED_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "Plugin $.fs.ancestors refused",
       "id": "tool-result-plugin-fs-ancestors-refused",
       "description": "Error thrown to plugin code when $.fs.ancestors is refused for a path; reaches the model as tool_result error text.",
@@ -102332,6 +103654,377 @@
       "version": "2.1.328"
     },
     {
+      "name": "Plugin hook error: …: $.http.fetch takes a URL",
+      "id": "tool-result-plugin-http-fetch-takes-url",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.http.fetch takes a URL"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_HTTP_FETCH_TAKES_URL_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.model.classify takes two or more non-empty labels",
+      "id": "tool-result-plugin-model-classify-takes-two-more-non-empty-labels",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.model.classify takes two or more non-empty labels"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_MODEL_CLASSIFY_TAKES_TWO_MORE_NON_EMPTY_LABELS_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.model.classify: …",
+      "id": "tool-result-plugin-model-classify-failed",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.model.classify: ${",
+        "(",
+        ")}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_MODEL_CLASSIFY_FAILED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_MODEL_CLASSIFY_FAILED_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_MODEL_CLASSIFY_FAILED_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.model.classify: the model answered with no text",
+      "id": "tool-result-plugin-model-classify-model-answered-no-text",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.model.classify: the model answered with no text"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_MODEL_CLASSIFY_MODEL_ANSWERED_NO_TEXT_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.model.complete: …",
+      "id": "tool-result-plugin-model-complete-failed",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.model.complete: ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_MODEL_COMPLETE_FAILED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_MODEL_COMPLETE_FAILED_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.model.complete: effort must be one of low, medium, high, xhigh…",
+      "id": "tool-result-plugin-model-complete-effort-must-one-low-medium-high",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.model.complete: effort must be one of low, medium, high, xhigh, max (got ${",
+        "(",
+        ")})"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_MODEL_COMPLETE_EFFORT_MUST_ONE_LOW_MEDIUM_HIGH_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_MODEL_COMPLETE_EFFORT_MUST_ONE_LOW_MEDIUM_HIGH_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_MODEL_COMPLETE_EFFORT_MUST_ONE_LOW_MEDIUM_HIGH_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.model.complete: maxTokens … is past what … can produce in one …",
+      "id": "tool-result-plugin-model-complete-maxtokens-past-what-can-produce-one",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.model.complete: maxTokens ${",
+        "} is past what ${",
+        "} can produce in one reply (${",
+        "})"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_MODEL_COMPLETE_MAXTOKENS_PAST_WHAT_CAN_PRODUCE_ONE_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_MODEL_COMPLETE_MAXTOKENS_PAST_WHAT_CAN_PRODUCE_ONE_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_MODEL_COMPLETE_MAXTOKENS_PAST_WHAT_CAN_PRODUCE_ONE_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_MODEL_COMPLETE_MAXTOKENS_PAST_WHAT_CAN_PRODUCE_ONE_VAR_3"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.model.complete: maxTokens must be a positive integer (got …)",
+      "id": "tool-result-plugin-model-complete-maxtokens-must-positive-integer",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.model.complete: maxTokens must be a positive integer (got ${",
+        "(",
+        ")})"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_MODEL_COMPLETE_MAXTOKENS_MUST_POSITIVE_INTEGER_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_MODEL_COMPLETE_MAXTOKENS_MUST_POSITIVE_INTEGER_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_MODEL_COMPLETE_MAXTOKENS_MUST_POSITIVE_INTEGER_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.model.complete: model \"…\" is not in this organization's allowlist",
+      "id": "tool-result-plugin-model-complete-model-organization-allowlist",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.model.complete: model \"${",
+        "}\" is not in this organization's allowlist"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_MODEL_COMPLETE_MODEL_ORGANIZATION_ALLOWLIST_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_MODEL_COMPLETE_MODEL_ORGANIZATION_ALLOWLIST_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.model.complete: timeoutMs must be a positive integer of millis…",
+      "id": "tool-result-plugin-model-complete-timeoutms-must-positive-integer-milliseconds",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.model.complete: timeoutMs must be a positive integer of milliseconds (got ${",
+        "(",
+        ")})"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_MODEL_COMPLETE_TIMEOUTMS_MUST_POSITIVE_INTEGER_MILLISECONDS_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_MODEL_COMPLETE_TIMEOUTMS_MUST_POSITIVE_INTEGER_MILLISECONDS_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_MODEL_COMPLETE_TIMEOUTMS_MUST_POSITIVE_INTEGER_MILLISECONDS_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.prompt.compose takes the facts to compose for ({ tools, traits…",
+      "id": "tool-result-plugin-prompt-compose-takes-facts-compose-tools-traits-nothing",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.prompt.compose takes the facts to compose for ({ tools, traits, ... }), or nothing"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_PROMPT_COMPOSE_TAKES_FACTS_COMPOSE_TOOLS_TRAITS_NOTHING_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.prompt.fill",
+      "id": "tool-result-plugin-prompt-fill-refusal",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.prompt.fill "
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_PROMPT_FILL_REFUSAL_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.prompt.paint …",
+      "id": "tool-result-plugin-prompt-paint-refusal",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.prompt.paint ${",
+        "(",
+        ",",
+        ")}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_PROMPT_PAINT_REFUSAL_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_PROMPT_PAINT_REFUSAL_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_PROMPT_PAINT_REFUSAL_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_PROMPT_PAINT_REFUSAL_VAR_3"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.prompt.submit submits a prompt to the model; a text beginning …",
+      "id": "tool-result-plugin-prompt-submit-submits-prompt-model-text-beginning-would",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.prompt.submit submits a prompt to the model; a text beginning with / would run a command as the user; run one with $.command.run({ command })"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_PROMPT_SUBMIT_SUBMITS_PROMPT_MODEL_TEXT_BEGINNING_WOULD_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.prompt.submit takes { asUser } as a boolean",
+      "id": "tool-result-plugin-prompt-submit-takes-asuser-boolean",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.prompt.submit takes { asUser } as a boolean"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_PROMPT_SUBMIT_TAKES_ASUSER_BOOLEAN_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.prompt.submit takes { text } (a non-empty prompt)",
+      "id": "tool-result-plugin-prompt-submit-takes-text-non-empty-prompt",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.prompt.submit takes { text } (a non-empty prompt)"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_PROMPT_SUBMIT_TAKES_TEXT_NON_EMPTY_PROMPT_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.prompt.submit takes { text } (a non-empty prompt)",
+      "id": "tool-result-plugin-prompt-submit-takes-text-non-empty-prompt",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.prompt.submit takes { text } (a non-empty prompt)"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_PROMPT_SUBMIT_TAKES_TEXT_NON_EMPTY_PROMPT_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.prompt.submit takes text alone; attachments cannot be submitted",
+      "id": "tool-result-plugin-prompt-submit-takes-text-alone-attachments-cannot-submitted",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.prompt.submit takes text alone; attachments cannot be submitted"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_PROMPT_SUBMIT_TAKES_TEXT_ALONE_ATTACHMENTS_CANNOT_SUBMITTED_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.prompt.submit: …",
+      "id": "tool-result-plugin-prompt-submit-refused",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.prompt.submit: ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_PROMPT_SUBMIT_REFUSED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_PROMPT_SUBMIT_REFUSED_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.session.compact takes { instructions } (a string) or nothing",
+      "id": "tool-result-plugin-session-compact-takes-instructions-string-nothing",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.session.compact takes { instructions } (a string) or nothing"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_SESSION_COMPACT_TAKES_INSTRUCTIONS_STRING_NOTHING_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "Plugin $.session.compact: compaction failed",
       "id": "tool-result-plugin-session-compact-failed",
       "description": "Error prefix thrown to plugin code when $.session.compact fails to compact the conversation.",
@@ -102348,6 +104041,286 @@
       "version": "2.1.328"
     },
     {
+      "name": "Plugin hook error: …: $.session.compact: a turn is running (…); the conversation compa…",
+      "id": "tool-result-plugin-session-compact-turn-running-conversation-compacts-between-turns",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.session.compact: a turn is running (${",
+        ".turnId}); the conversation compacts between turns, so call it from turn.complete or later"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_SESSION_COMPACT_TURN_RUNNING_CONVERSATION_COMPACTS_BETWEEN_TURNS_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_SESSION_COMPACT_TURN_RUNNING_CONVERSATION_COMPACTS_BETWEEN_TURNS_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.session.compact: compaction is switched off in this session (D…",
+      "id": "tool-result-plugin-session-compact-compaction-switched-off-session-disable-compact",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.session.compact: compaction is switched off in this session (DISABLE_COMPACT), for /compact and plugins alike"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_SESSION_COMPACT_COMPACTION_SWITCHED_OFF_SESSION_DISABLE_COMPACT_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.session.messages …",
+      "id": "tool-result-plugin-session-messages-refusal",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.session.messages ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_SESSION_MESSAGES_REFUSAL_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_SESSION_MESSAGES_REFUSAL_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.session.usage …",
+      "id": "tool-result-plugin-session-usage-refusal",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.session.usage ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_SESSION_USAGE_REFUSAL_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_SESSION_USAGE_REFUSAL_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.settings.read takes { source }, { key } or nothing",
+      "id": "tool-result-plugin-settings-read-takes-source-key-nothing",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.settings.read takes { source }, { key } or nothing"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_SETTINGS_READ_TAKES_SOURCE_KEY_NOTHING_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.state.… takes a reference { plugin, key } (and id for a family…",
+      "id": "tool-result-plugin-state-takes-reference-plugin-key-id-family-member",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.state.${",
+        "} takes a reference { plugin, key } (and id for a family's member)"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_STATE_TAKES_REFERENCE_PLUGIN_KEY_ID_FAMILY_MEMBER_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_STATE_TAKES_REFERENCE_PLUGIN_KEY_ID_FAMILY_MEMBER_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.store.… takes a non-empty string key",
+      "id": "tool-result-plugin-store-takes-non-empty-string-key",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.store.${",
+        "} takes a non-empty string key"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_STORE_TAKES_NON_EMPTY_STRING_KEY_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_STORE_TAKES_NON_EMPTY_STRING_KEY_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.telemetry.log takes an entry ({ to?, event, props? } or a coll…",
+      "id": "tool-result-plugin-telemetry-log-takes-entry-event-props-collector-record",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.telemetry.log takes an entry ({ to?, event, props? } or a collector record)"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_TELEMETRY_LOG_TAKES_ENTRY_EVENT_PROPS_COLLECTOR_RECORD_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.telemetry.mark takes an entry ({ feature, kind, reason?, props…",
+      "id": "tool-result-plugin-telemetry-mark-takes-entry-feature-kind-reason-props",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.telemetry.mark takes an entry ({ feature, kind, reason?, props? })"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_TELEMETRY_MARK_TAKES_ENTRY_FEATURE_KIND_REASON_PROPS_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.tool.call takes the event's input: { tool, ...args }",
+      "id": "tool-result-plugin-tool-call-takes-event-input-tool-args",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.tool.call takes the event's input: { tool, ...args }"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_TOOL_CALL_TAKES_EVENT_INPUT_TOOL_ARGS_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.tool.call: consent, when given, is a string",
+      "id": "tool-result-plugin-tool-call-consent-string",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.tool.call: consent, when given, is a string"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_TOOL_CALL_CONSENT_STRING_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.tool.call: input must be an object",
+      "id": "tool-result-plugin-tool-call-input-must-object",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.tool.call: input must be an object"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_TOOL_CALL_INPUT_MUST_OBJECT_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.tool.call: no tool named \"…\" in this session…",
+      "id": "tool-result-plugin-tool-call-no-tool-named-session",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.tool.call: no tool named \"${",
+        "}\" in this session${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_TOOL_CALL_NO_TOOL_NAMED_SESSION_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_TOOL_CALL_NO_TOOL_NAMED_SESSION_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_TOOL_CALL_NO_TOOL_NAMED_SESSION_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.tool.check takes { tool, input }: the tool's name and its argu…",
+      "id": "tool-result-plugin-tool-check-takes-tool-input-tool-name-arguments",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.tool.check takes { tool, input }: the tool's name and its arguments, an object"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_TOOL_CHECK_TAKES_TOOL_INPUT_TOOL_NAME_ARGUMENTS_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.tool.check: input is the tool's arguments, an object",
+      "id": "tool-result-plugin-tool-check-input-tool-arguments-object",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.tool.check: input is the tool's arguments, an object"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_TOOL_CHECK_INPUT_TOOL_ARGUMENTS_OBJECT_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.tool.check: no tool named \"…\" in this session",
+      "id": "tool-result-plugin-tool-check-no-tool-named-session",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.tool.check: no tool named \"${",
+        "}\" in this session"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_TOOL_CHECK_NO_TOOL_NAMED_SESSION_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_TOOL_CHECK_NO_TOOL_NAMED_SESSION_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "Plugin $.tool.check: no verdict",
       "id": "tool-result-plugin-tool-check-no-verdict",
       "description": "Error thrown to plugin code when the tool container gives no verdict to $.tool.check.",
@@ -102362,6 +104335,362 @@
         "0": "TOOL_RESULT_PLUGIN_TOOL_CHECK_NO_VERDICT_VAR_0"
       },
       "version": "2.1.328"
+    },
+    {
+      "name": "Plugin hook error: …: $.tool.register: \"…\" refused: this session has no built-in tools…",
+      "id": "tool-result-plugin-tool-register-refused-session-has-no-built-tools",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.tool.register: \"${",
+        ".name}\" refused: this session has no built-in tools (--tools \"\"), so it takes none from plugins"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_TOOL_REGISTER_REFUSED_SESSION_HAS_NO_BUILT_TOOLS_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_TOOL_REGISTER_REFUSED_SESSION_HAS_NO_BUILT_TOOLS_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.tool.register: \"…\" refused: this session runs with --bare, whi…",
+      "id": "tool-result-plugin-tool-register-refused-session-runs-bare-takes-tools",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.tool.register: \"${",
+        ".name}\" refused: this session runs with --bare, which takes tools from the plugins its command line names and from no built-in one"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_TOOL_REGISTER_REFUSED_SESSION_RUNS_BARE_TAKES_TOOLS_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_TOOL_REGISTER_REFUSED_SESSION_RUNS_BARE_TAKES_TOOLS_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.tool.register: \"…\" is a reserved MCP server name",
+      "id": "tool-result-plugin-tool-register-reserved-mcp-server-name",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.tool.register: \"${",
+        "}\" is a reserved MCP server name"
+      ],
+      "identifiers": [
+        0,
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_TOOL_REGISTER_RESERVED_MCP_SERVER_NAME_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.tool.register: …",
+      "id": "tool-result-plugin-tool-register",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.tool.register: ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_TOOL_REGISTER_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_TOOL_REGISTER_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.tool.register: the session already has an MCP server named \"…\"…",
+      "id": "tool-result-plugin-tool-register-session-already-has-mcp-server-named",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.tool.register: the session already has an MCP server named \"${",
+        "}\" in its MCP config; registering would replace it"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_TOOL_REGISTER_SESSION_ALREADY_HAS_MCP_SERVER_NAMED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_TOOL_REGISTER_SESSION_ALREADY_HAS_MCP_SERVER_NAMED_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.tool.register: this host cannot add tools at run time (no in-p…",
+      "id": "tool-result-plugin-tool-register-host-cannot-add-tools-run-time",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.tool.register: this host cannot add tools at run time (no in-process MCP server registrar installed)"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_TOOL_REGISTER_HOST_CANNOT_ADD_TOOLS_RUN_TIME_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.turn.abort takes { turnId } (the id turn.start carried)",
+      "id": "tool-result-plugin-turn-abort-takes-turnid-id-turn-start-carried",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.turn.abort takes { turnId } (the id turn.start carried)"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_TURN_ABORT_TAKES_TURNID_ID_TURN_START_CARRIED_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.turn.abort: … is already ending",
+      "id": "tool-result-plugin-turn-abort-already-ending",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.turn.abort: ${",
+        ".turnId} is already ending"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_TURN_ABORT_ALREADY_ENDING_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_TURN_ABORT_ALREADY_ENDING_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.turn.abort: … is not the running turn (…); a hook ends the tur…",
+      "id": "tool-result-plugin-turn-abort-running-turn-hook-ends-turn-turn",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.turn.abort: ${",
+        ".turnId} is not the running turn (${",
+        ".turnId}); a hook ends the turn turn.start told it about"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_TURN_ABORT_RUNNING_TURN_HOOK_ENDS_TURN_TURN_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_TURN_ABORT_RUNNING_TURN_HOOK_ENDS_TURN_TURN_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_TURN_ABORT_RUNNING_TURN_HOOK_ENDS_TURN_TURN_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.turn.abort: no turn is running (asked for …)",
+      "id": "tool-result-plugin-turn-abort-no-turn-running-asked",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.turn.abort: no turn is running (asked for ${",
+        ".turnId})"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_TURN_ABORT_NO_TURN_RUNNING_ASKED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_TURN_ABORT_NO_TURN_RUNNING_ASKED_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.ui.ask takes at most … options (got …)",
+      "id": "tool-result-plugin-ui-ask-takes-most-options",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.ui.ask takes at most ${",
+        "} options (got ${",
+        "})"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_UI_ASK_TAKES_MOST_OPTIONS_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_UI_ASK_TAKES_MOST_OPTIONS_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_UI_ASK_TAKES_MOST_OPTIONS_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.ui.ask takes its options as a list",
+      "id": "tool-result-plugin-ui-ask-takes-options-list",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.ui.ask takes its options as a list"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_UI_ASK_TAKES_OPTIONS_LIST_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.ui.ask takes the question first",
+      "id": "tool-result-plugin-ui-ask-takes-question-first",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.ui.ask takes the question first"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_UI_ASK_TAKES_QUESTION_FIRST_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.ui.ask: no answer (…)",
+      "id": "tool-result-plugin-ui-ask-no-answer",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.ui.ask: no answer (${",
+        "(",
+        ".deny??",
+        ".text??\"\",",
+        ")||\"the dialog was dismissed\"})"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_UI_ASK_NO_ANSWER_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_UI_ASK_NO_ANSWER_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_UI_ASK_NO_ANSWER_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_UI_ASK_NO_ANSWER_VAR_3"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.ui.notify: the channel's write failed",
+      "id": "tool-result-plugin-ui-notify-channel-write-failed",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.ui.notify: the channel's write failed"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_UI_NOTIFY_CHANNEL_WRITE_FAILED_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.ui.resolve …",
+      "id": "tool-result-plugin-ui-resolve-refusal",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.ui.resolve ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_UI_RESOLVE_REFUSAL_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_UI_RESOLVE_REFUSAL_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.wasm.compile takes a literal path, or bytes as an ArrayBuffer …",
+      "id": "tool-result-plugin-wasm-compile-takes-literal-path-bytes-arraybuffer-view",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.wasm.compile takes a literal path, or bytes as an ArrayBuffer or a view of one"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_WASM_COMPILE_TAKES_LITERAL_PATH_BYTES_ARRAYBUFFER_VIEW_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.wasm.compile: …",
+      "id": "tool-result-plugin-wasm-compile-failed",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.wasm.compile: ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_WASM_COMPILE_FAILED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_WASM_COMPILE_FAILED_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: $.wasm.compile: …",
+      "id": "tool-result-plugin-wasm-compile-failed",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: $.wasm.compile: ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_WASM_COMPILE_FAILED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_WASM_COMPILE_FAILED_VAR_1"
+      },
+      "version": "2.1.330"
     },
     {
       "name": "Tool Result: Artifact asset policy denied",
@@ -103110,6 +105439,25 @@
       "version": "2.1.330"
     },
     {
+      "name": "Plugin hook error: …: … is not available in this mode: no session is bound in this pro…",
+      "id": "tool-result-plugin-host-op-unavailable-no-session",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: ${",
+        "} is not available in this mode: no session is bound in this process (the REPL has not mounted and no headless session is built); catch it and carry on"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_HOST_OP_UNAVAILABLE_NO_SESSION_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_HOST_OP_UNAVAILABLE_NO_SESSION_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "Plugin Validate: Hooks Module Not Named Like Code",
       "id": "slash-command-plugin-validate-hooks-module-not-named-like-code",
       "description": "Refusal when a hooks module or one of its imports does not use a code-like filename, surfaced through /plugin validate.",
@@ -103268,6 +105616,25 @@
       "version": "2.1.291"
     },
     {
+      "name": "Plugin hook error: …: … takes a function",
+      "id": "tool-result-plugin-api-takes-a-function",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: ${",
+        "} takes a function"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_API_TAKES_A_FUNCTION_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_API_TAKES_A_FUNCTION_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "/plugin validate: hooks module file not linked",
       "id": "slash-command-plugin-validate-hooks-module-file-not-linked",
       "description": "Validation problem from /plugin validate's hooks module scan when an imported file was not linked",
@@ -103304,6 +105671,112 @@
         "1": "TOOL_RESULT_ARTIFACT_ORG_POLICY_HTTP_403_VAR_1"
       },
       "version": "2.1.280"
+    },
+    {
+      "name": "Plugin hook error: …: …: … refused: a request body of … characters is over the …-chara…",
+      "id": "tool-result-plugin-refused-request-body-characters-over-character-limit",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: ${",
+        "}: ${",
+        ".href} refused: a request body of ${",
+        ".length} characters is over the ${",
+        "}-character limit"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_REFUSED_REQUEST_BODY_CHARACTERS_OVER_CHARACTER_LIMIT_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_REFUSED_REQUEST_BODY_CHARACTERS_OVER_CHARACTER_LIMIT_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_REFUSED_REQUEST_BODY_CHARACTERS_OVER_CHARACTER_LIMIT_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_REFUSED_REQUEST_BODY_CHARACTERS_OVER_CHARACTER_LIMIT_VAR_3",
+        "4": "TOOL_RESULT_PLUGIN_REFUSED_REQUEST_BODY_CHARACTERS_OVER_CHARACTER_LIMIT_VAR_4"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: …: … refused: body of … bytes is over the …-byte limit",
+      "id": "tool-result-plugin-refused-body-bytes-over-byte-limit",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: ${",
+        "}: ${",
+        ".href} refused: body of ${",
+        "} bytes is over the ${",
+        "}-byte limit"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_REFUSED_BODY_BYTES_OVER_BYTE_LIMIT_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_REFUSED_BODY_BYTES_OVER_BYTE_LIMIT_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_REFUSED_BODY_BYTES_OVER_BYTE_LIMIT_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_REFUSED_BODY_BYTES_OVER_BYTE_LIMIT_VAR_3",
+        "4": "TOOL_RESULT_PLUGIN_REFUSED_BODY_BYTES_OVER_BYTE_LIMIT_VAR_4"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: …: …… refused: the body is not an event batch, so it cannot be r…",
+      "id": "tool-result-plugin-refused-body-event-batch-so-cannot-redacted",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: ${",
+        "}: ${",
+        ".origin}${",
+        "} refused: the body is not an event batch, so it cannot be redacted"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_REFUSED_BODY_EVENT_BATCH_SO_CANNOT_REDACTED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_REFUSED_BODY_EVENT_BATCH_SO_CANNOT_REDACTED_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_REFUSED_BODY_EVENT_BATCH_SO_CANNOT_REDACTED_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_REFUSED_BODY_EVENT_BATCH_SO_CANNOT_REDACTED_VAR_3"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: …: …… refused: this session sends no product events",
+      "id": "tool-result-plugin-refused-session-sends-no-product-events",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: ${",
+        "}: ${",
+        ".origin}${",
+        "} refused: this session sends no product events"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_REFUSED_SESSION_SENDS_NO_PRODUCT_EVENTS_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_REFUSED_SESSION_SENDS_NO_PRODUCT_EVENTS_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_REFUSED_SESSION_SENDS_NO_PRODUCT_EVENTS_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_REFUSED_SESSION_SENDS_NO_PRODUCT_EVENTS_VAR_3"
+      },
+      "version": "2.1.330"
     },
     {
       "name": "Plugin URL refused: http or https only",
@@ -103353,6 +105826,25 @@
       "version": "2.1.291"
     },
     {
+      "name": "Plugin hook error: …: …: a body of bytes and compress ride engine requests alone",
+      "id": "tool-result-plugin-body-bytes-compress-ride-engine-requests-alone",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: ${",
+        "}: a body of bytes and compress ride engine requests alone"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_BODY_BYTES_COMPRESS_RIDE_ENGINE_REQUESTS_ALONE_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_BODY_BYTES_COMPRESS_RIDE_ENGINE_REQUESTS_ALONE_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "Plugin validate: module changed while read",
       "id": "slash-command-plugin-validate-module-changed-while-read",
       "description": "Plugin validation error: a module file changed while it was being read.",
@@ -103391,6 +105883,56 @@
       "version": "2.1.299"
     },
     {
+      "name": "Plugin hook error: …: …: could not be given its argument: …",
+      "id": "tool-result-plugin-hook-argument-not-deliverable",
+      "description": "Error thrown inside a running plugin hook; uncaught, it reaches the model through the mod-under-development failure notice.",
+      "pieces": [
+        "${",
+        "}: ${",
+        "}: could not be given its argument: ${",
+        "(",
+        ")}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_HOOK_ARGUMENT_NOT_DELIVERABLE_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_HOOK_ARGUMENT_NOT_DELIVERABLE_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_HOOK_ARGUMENT_NOT_DELIVERABLE_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_HOOK_ARGUMENT_NOT_DELIVERABLE_VAR_3"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: …: more than … redirects from …",
+      "id": "tool-result-plugin-more-than-redirects-from",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: ${",
+        "}: more than ${",
+        "} redirects from ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_MORE_THAN_REDIRECTS_FROM_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_MORE_THAN_REDIRECTS_FROM_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_MORE_THAN_REDIRECTS_FROM_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_MORE_THAN_REDIRECTS_FROM_VAR_3"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "Slash command: plugin validate hooks module no such file",
       "id": "slash-command-plugin-validate-hooks-module-no-such-file",
       "description": "Error reported when a hooks module file named by a plugin does not exist",
@@ -103427,6 +105969,31 @@
         "1": "SLASH_COMMAND_PLUGIN_VALIDATE_MODULE_NOT_REGULAR_FILE_VAR_1"
       },
       "version": "2.1.291"
+    },
+    {
+      "name": "Plugin hook error: …: …: not a URL: …",
+      "id": "tool-result-plugin-http-not-a-url",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: ${",
+        "}: not a URL: ${",
+        "(",
+        ")}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_HTTP_NOT_A_URL_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_HTTP_NOT_A_URL_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_HTTP_NOT_A_URL_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_HTTP_NOT_A_URL_VAR_3"
+      },
+      "version": "2.1.330"
     },
     {
       "name": "Slash command: plugin validate hooks module no file descriptor free",
@@ -103476,6 +106043,50 @@
       "version": "2.1.296"
     },
     {
+      "name": "Plugin hook error: …: …: refused: …",
+      "id": "tool-result-plugin-request-refused",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: ${",
+        "}: refused: ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_REQUEST_REFUSED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_REQUEST_REFUSED_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_REQUEST_REFUSED_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: …: refused: …",
+      "id": "tool-result-plugin-request-refused",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: ${",
+        "}: refused: ${",
+        "}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_REQUEST_REFUSED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_REQUEST_REFUSED_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_REQUEST_REFUSED_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "Plugin URL refused: credentials in URL",
       "id": "tool-result-plugin-url-credentials-refused",
       "description": "Error thrown to plugin code when a URL argument carries username/password.",
@@ -103493,6 +106104,119 @@
         "1": "TOOL_RESULT_PLUGIN_URL_CREDENTIALS_REFUSED_VAR_1"
       },
       "version": "2.1.328"
+    },
+    {
+      "name": "Plugin hook error: …: …: socketPath … refused: a NUL byte in the path",
+      "id": "tool-result-plugin-socketpath-refused-nul-byte-path",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: ${",
+        "}: socketPath ${",
+        "(",
+        ")} refused: a NUL byte in the path"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_SOCKETPATH_REFUSED_NUL_BYTE_PATH_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_SOCKETPATH_REFUSED_NUL_BYTE_PATH_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_SOCKETPATH_REFUSED_NUL_BYTE_PATH_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_SOCKETPATH_REFUSED_NUL_BYTE_PATH_VAR_3"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: …: socketPath … refused: takes an absolute path",
+      "id": "tool-result-plugin-socketpath-refused-takes-absolute-path",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: ${",
+        "}: socketPath ${",
+        "(",
+        ")} refused: takes an absolute path"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_SOCKETPATH_REFUSED_TAKES_ABSOLUTE_PATH_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_SOCKETPATH_REFUSED_TAKES_ABSOLUTE_PATH_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_SOCKETPATH_REFUSED_TAKES_ABSOLUTE_PATH_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_SOCKETPATH_REFUSED_TAKES_ABSOLUTE_PATH_VAR_3"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: …: socketPath … refused: a network location is not reached from …",
+      "id": "tool-result-plugin-socketpath-refused-network-location-reached-from-here",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: ${",
+        "}: socketPath ${",
+        "} refused: a network location is not reached from here"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_SOCKETPATH_REFUSED_NETWORK_LOCATION_REACHED_FROM_HERE_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_SOCKETPATH_REFUSED_NETWORK_LOCATION_REACHED_FROM_HERE_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_SOCKETPATH_REFUSED_NETWORK_LOCATION_REACHED_FROM_HERE_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: …: socketPath … refused: no Unix socket transport in this build",
+      "id": "tool-result-plugin-socketpath-refused-no-unix-socket-transport-build",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: ${",
+        "}: socketPath ${",
+        "} refused: no Unix socket transport in this build"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_SOCKETPATH_REFUSED_NO_UNIX_SOCKET_TRANSPORT_BUILD_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_SOCKETPATH_REFUSED_NO_UNIX_SOCKET_TRANSPORT_BUILD_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_SOCKETPATH_REFUSED_NO_UNIX_SOCKET_TRANSPORT_BUILD_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: …: the build carried no such file",
+      "id": "tool-result-plugin-build-carried-no-such-file",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: ${",
+        "}: the build carried no such file"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_BUILD_CARRIED_NO_SUCH_FILE_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_BUILD_CARRIED_NO_SUCH_FILE_VAR_1"
+      },
+      "version": "2.1.330"
     },
     {
       "name": "Computer mid-delivery focus change",
@@ -103575,6 +106299,96 @@
         "1": "TOOL_RESULT_WORKFLOW_AGENT_SCHEMA_UNSATISFIABLE_NOT_STARTED_VAR_1"
       },
       "version": "2.1.291"
+    },
+    {
+      "name": "Plugin hook error: …: …(…)… aborted: no complete answer within …ms",
+      "id": "tool-result-plugin-aborted-no-complete-answer-within-ms",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: ${",
+        "}(${",
+        ".href})${",
+        "} aborted: no complete answer within ${",
+        "}ms"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_ABORTED_NO_COMPLETE_ANSWER_WITHIN_MS_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_ABORTED_NO_COMPLETE_ANSWER_WITHIN_MS_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_ABORTED_NO_COMPLETE_ANSWER_WITHIN_MS_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_ABORTED_NO_COMPLETE_ANSWER_WITHIN_MS_VAR_3",
+        "4": "TOOL_RESULT_PLUGIN_ABORTED_NO_COMPLETE_ANSWER_WITHIN_MS_VAR_4"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: …(…)… failed: …: `:\"\"}…",
+      "id": "tool-result-plugin-http-request-failed",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: ${",
+        "}(${",
+        ".href})${",
+        "} failed: ${",
+        "?`${",
+        "}: `:\"\"}${",
+        "(",
+        ")}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_HTTP_REQUEST_FAILED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_HTTP_REQUEST_FAILED_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_HTTP_REQUEST_FAILED_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_HTTP_REQUEST_FAILED_VAR_3",
+        "4": "TOOL_RESULT_PLUGIN_HTTP_REQUEST_FAILED_VAR_4",
+        "5": "TOOL_RESULT_PLUGIN_HTTP_REQUEST_FAILED_VAR_5",
+        "6": "TOOL_RESULT_PLUGIN_HTTP_REQUEST_FAILED_VAR_6",
+        "7": "TOOL_RESULT_PLUGIN_HTTP_REQUEST_FAILED_VAR_7"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: …(…) produced no result…",
+      "id": "tool-result-plugin-tool-call-produced-no-result",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: ${",
+        "}(${",
+        ".name}) produced no result${",
+        ".context.abortController.signal.aborted?\" (aborted)\":\"\"}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_TOOL_CALL_PRODUCED_NO_RESULT_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_TOOL_CALL_PRODUCED_NO_RESULT_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_TOOL_CALL_PRODUCED_NO_RESULT_VAR_2",
+        "3": "TOOL_RESULT_PLUGIN_TOOL_CALL_PRODUCED_NO_RESULT_VAR_3"
+      },
+      "version": "2.1.330"
     },
     {
       "name": "Artifact Org Policy Caching Proxy",
@@ -104125,6 +106939,25 @@
       "version": "2.1.302"
     },
     {
+      "name": "Plugin hook error: …: its ui.resolve hook's … built a Shader it was not given, and its…",
+      "id": "tool-result-plugin-ui-resolve-hook-built-shader-was-source-never",
+      "description": "Refusal of a plugin hook's result by the site's check; reaches the model through the mod-under-development failure notice.",
+      "pieces": [
+        "${",
+        "}: its ui.resolve hook's ${",
+        "} built a Shader it was not given, and its source never names Shader; name it there so that claude plugin validate lists it"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_UI_RESOLVE_HOOK_BUILT_SHADER_WAS_SOURCE_NEVER_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_UI_RESOLVE_HOOK_BUILT_SHADER_WAS_SOURCE_NEVER_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "Artifact Preview: Light And Dark Renders Identical",
       "id": "tool-result-artifact-preview-theme-renders-identical",
       "description": "Preview theme issue when full light and dark captures are identical, meaning the page has no dark-theme styles.",
@@ -104174,6 +107007,49 @@
         "0": "TOOL_RESULT_ARTIFACT_DB_BUSY_VAR_0"
       },
       "version": "2.1.224"
+    },
+    {
+      "name": "Plugin hook error: …: next.to(\"…\") refused: its hooks module does not spell … in a lit…",
+      "id": "tool-result-plugin-next-refused-hooks-module-does-spell-literal-scan",
+      "description": "Error thrown inside a running plugin hook; uncaught, it reaches the model through the mod-under-development failure notice.",
+      "pieces": [
+        "${",
+        "}: next.to(\"${",
+        "}\") refused: its hooks module does not spell ${",
+        "(",
+        ")} in a literal the scan reads (host rule)"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_NEXT_REFUSED_HOOKS_MODULE_DOES_SPELL_LITERAL_SCAN_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_NEXT_REFUSED_HOOKS_MODULE_DOES_SPELL_LITERAL_SCAN_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_NEXT_REFUSED_HOOKS_MODULE_DOES_SPELL_LITERAL_SCAN_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: next.to(\"user\") refused: no hook of its module that spells it st…",
+      "id": "tool-result-plugin-next-user-refused-no-hook-module-spells-stands",
+      "description": "Error thrown inside a running plugin hook; uncaught, it reaches the model through the mod-under-development failure notice.",
+      "pieces": [
+        "${",
+        "}: next.to(\"user\") refused: no hook of its module that spells it stands on this dispatch of ${",
+        "} (host rule)"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_NEXT_USER_REFUSED_NO_HOOK_MODULE_SPELLS_STANDS_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_NEXT_USER_REFUSED_NO_HOOK_MODULE_SPELLS_STANDS_VAR_1"
+      },
+      "version": "2.1.330"
     },
     {
       "name": "Tool result: plugin hook next() after it settled",
@@ -104474,6 +107350,25 @@
       "version": "2.1.265"
     },
     {
+      "name": "Plugin hook error: …: on(\"…\") after register() returned: on() is for register(); a hoo…",
+      "id": "tool-result-plugin-on-called-from-a-hook",
+      "description": "Error thrown inside a running plugin hook; uncaught, it reaches the model through the mod-under-development failure notice.",
+      "pieces": [
+        "${",
+        "}: on(\"${",
+        "}\") after register() returned: on() is for register(); a hook may not register hooks"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_ON_CALLED_FROM_A_HOOK_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_ON_CALLED_FROM_A_HOOK_VAR_1"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "Tool Result: Artifact db batch write missing if_version (entry not located)",
       "id": "tool-result-artifact-db-batch-write-missing-if-version-entry-unlocated",
       "description": "Batch-write error returned when an unpinned write targeted an existing document and the tool cannot say which entry: read the documents this batch writes, pin if_version, resend.",
@@ -104512,6 +107407,22 @@
       "version": "2.1.328"
     },
     {
+      "name": "Plugin hook error: …: options.signal must be an AbortSignal",
+      "id": "tool-result-plugin-options-signal-must-abortsignal",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: options.signal must be an AbortSignal"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_OPTIONS_SIGNAL_MUST_ABORTSIGNAL_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "Data: Stream Part Missing Partial Response",
       "id": "data-api-error-stream-part-missing-partial-response",
       "description": "Synthetic API-error assistant message added after a partial streamed response when part of the stream never arrived. It warns that the response above may be incomplete.",
@@ -104526,6 +107437,50 @@
         "0": "DATA_API_ERROR_STREAM_PART_MISSING_PARTIAL_RESPONSE_VAR_0"
       },
       "version": "2.1.281"
+    },
+    {
+      "name": "Plugin hook error: …: plugin …, which provides $.…, is not admitted yet (plugin.regist…",
+      "id": "tool-result-plugin-plugin-provides-admitted-yet-plugin-register-decides-after",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: plugin ${",
+        "}, which provides $.${",
+        "}, is not admitted yet (plugin.register decides it after its caller)"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_PLUGIN_PROVIDES_ADMITTED_YET_PLUGIN_REGISTER_DECIDES_AFTER_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_PLUGIN_PROVIDES_ADMITTED_YET_PLUGIN_REGISTER_DECIDES_AFTER_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_PLUGIN_PROVIDES_ADMITTED_YET_PLUGIN_REGISTER_DECIDES_AFTER_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: plugin …, which provides $.…, is not loaded",
+      "id": "tool-result-plugin-plugin-provides-loaded",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "${",
+        "}: plugin ${",
+        "}, which provides $.${",
+        "}, is not loaded"
+      ],
+      "identifiers": [
+        0,
+        1,
+        2
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_PLUGIN_PROVIDES_LOADED_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_PLUGIN_PROVIDES_LOADED_VAR_1",
+        "2": "TOOL_RESULT_PLUGIN_PLUGIN_PROVIDES_LOADED_VAR_2"
+      },
+      "version": "2.1.330"
     },
     {
       "name": "Tool Result: artifact types rate limited",
@@ -104558,6 +107513,54 @@
         "0": "TOOL_RESULT_ARTIFACT_DB_CLOUD_UNAVAILABLE_VAR_0"
       },
       "version": "2.1.257"
+    },
+    {
+      "name": "Plugin hook error: …: returned a drawing that holds a Proxy or a vm context; an elemen…",
+      "id": "tool-result-plugin-returned-drawing-holds-proxy-vm-context-element-props",
+      "description": "Refusal of a plugin hook's result by the site's check; reaches the model through the mod-under-development failure notice.",
+      "pieces": [
+        "${",
+        "}: returned a drawing that holds a Proxy or a vm context; an element, its props and its hover are plain objects and arrays"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_RETURNED_DRAWING_HOLDS_PROXY_VM_CONTEXT_ELEMENT_PROPS_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: returned a drawing that holds an object that is not plain data (…",
+      "id": "tool-result-plugin-returned-drawing-holds-object-plain-data-class-instance",
+      "description": "Refusal of a plugin hook's result by the site's check; reaches the model through the mod-under-development failure notice.",
+      "pieces": [
+        "${",
+        "}: returned a drawing that holds an object that is not plain data (a class instance); an element, its props and its hover are plain objects and arrays"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_RETURNED_DRAWING_HOLDS_OBJECT_PLAIN_DATA_CLASS_INSTANCE_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: …: returned a drawing with a function where plain data goes; a clos…",
+      "id": "tool-result-plugin-returned-drawing-function-where-plain-data-goes-closure",
+      "description": "Refusal of a plugin hook's result by the site's check; reaches the model through the mod-under-development failure notice.",
+      "pieces": [
+        "${",
+        "}: returned a drawing with a function where plain data goes; a closure rides only in an element's onPress or onEvent"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_RETURNED_DRAWING_FUNCTION_WHERE_PLAIN_DATA_GOES_CLOSURE_VAR_0"
+      },
+      "version": "2.1.330"
     },
     {
       "name": "ClaudeDesign Project-Scope No-Writes Validation Error",
@@ -104990,6 +107993,25 @@
         "0": "TOOL_RESULT_ARTIFACT_ORG_POLICY_STALE_TUNNEL_CREDENTIAL_VAR_0"
       },
       "version": "2.1.285"
+    },
+    {
+      "name": "Plugin hook error: …: the on(\"…\") hook returned no result",
+      "id": "tool-result-plugin-on-hook-returned-no-result",
+      "description": "Error thrown inside a running plugin hook; uncaught, it reaches the model through the mod-under-development failure notice.",
+      "pieces": [
+        "${",
+        "}: the on(\"${",
+        "}\") hook returned no result"
+      ],
+      "identifiers": [
+        0,
+        1
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_ON_HOOK_RETURNED_NO_RESULT_VAR_0",
+        "1": "TOOL_RESULT_PLUGIN_ON_HOOK_RETURNED_NO_RESULT_VAR_1"
+      },
+      "version": "2.1.330"
     },
     {
       "name": "Tool Result: Artifact DB Too Large",
@@ -210978,6 +214000,17 @@
       "version": "2.1.265"
     },
     {
+      "name": "Plugin hook error: not the file the plugin's load proved",
+      "id": "tool-result-plugin-file-plugin-load-proved",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "not the file the plugin's load proved"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
+    },
+    {
       "name": "Tool Result: App Screenshot Foreign Panel Hatched Mid",
       "id": "tool-result-app-screenshot-foreign-panel-hatched-mid",
       "description": "Middle of the app_screenshot foreign-panel note identifying the HATCHED overlay region.",
@@ -238436,6 +241469,28 @@
       "version": "2.1.296"
     },
     {
+      "name": "Tool result: plugin streaming hook returned no result",
+      "id": "tool-result-plugin-streaming-hook-returned-no-result",
+      "description": "Reason recorded when a streaming plugin hook returns nothing and never reads its next() stream to the end; reaches the model in the dev-mod failure notice.",
+      "pieces": [
+        "returned no result (and read no next() stream to its end)"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
+    },
+    {
+      "name": "Tool result: plugin streaming hook returned no stream",
+      "id": "tool-result-plugin-streaming-hook-returned-no-stream",
+      "description": "Reason recorded when a hook on a streaming event is not an async generator; reaches the model in the dev-mod failure notice.",
+      "pieces": [
+        "returned no stream: a hook on a streaming event is an async generator, async function* ($, e, next) {}"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
+    },
+    {
       "name": "Slash Command: Exit worktree returned, left in place",
       "id": "slash-command-exit-worktree-returned-left-in-place",
       "description": "Result saying the session returned to the original directory and the worktree was left in place, with optional note.",
@@ -252595,6 +255650,49 @@
       ]
     },
     {
+      "name": "Plugin hook error: takes { decorations }",
+      "id": "tool-result-plugin-prompt-fill-takes-decorations",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "takes { decorations }"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: takes { mode } of …",
+      "id": "tool-result-plugin-prompt-fill-takes-mode",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "takes { mode } of ${",
+        ".join(\", \")}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_PROMPT_FILL_TAKES_MODE_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: takes { mode } of …",
+      "id": "tool-result-plugin-prompt-fill-takes-mode",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "takes { mode } of ${",
+        ".join(\", \")}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_PROMPT_FILL_TAKES_MODE_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "Tool Result: Mod vcs.isolate bad arguments",
       "id": "tool-result-mod-vcs-isolate-bad-arguments",
       "description": "Argument check refusal for $.vcs.isolate describing the expected { name, from, for, base } shape.",
@@ -260601,6 +263699,38 @@
         "darwin"
       ],
       "version": "2.1.246"
+    },
+    {
+      "name": "Plugin hook error: the clip is over … bytes",
+      "id": "tool-result-plugin-audio-clip-over-bytes",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "the clip is over ${",
+        "} bytes"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_AUDIO_CLIP_OVER_BYTES_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: the clip is over … bytes",
+      "id": "tool-result-plugin-audio-clip-over-bytes",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "the clip is over ${",
+        "} bytes"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "TOOL_RESULT_PLUGIN_AUDIO_CLIP_OVER_BYTES_VAR_0"
+      },
+      "version": "2.1.330"
     },
     {
       "name": "System Prompt: Slash Command Closest Available",
@@ -277202,6 +280332,17 @@
       "version": "2.1.191"
     },
     {
+      "name": "Plugin hook error: the ui.resolve answer is a Proxy or a vm context; a table of elemen…",
+      "id": "tool-result-plugin-ui-resolve-answer-proxy-vm-context-table-elements",
+      "description": "Refusal of a plugin hook's result by the site's check; reaches the model through the mod-under-development failure notice.",
+      "pieces": [
+        "the ui.resolve answer is a Proxy or a vm context; a table of elements is a plain object"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
+    },
+    {
       "name": "Task Notification: Ultraplan Do Not Respond",
       "id": "task-notification-ultraplan-do-not-respond",
       "description": "Meta task-notification telling the model the ultraplan note is informational and to wait for the user's next message.",
@@ -283119,6 +286260,28 @@
         "1": "SLASH_COMMAND_PLUGIN_VALIDATE_CODE_REGEX_PROBE_UNAVAILABLE_VAR_1"
       },
       "version": "2.1.328"
+    },
+    {
+      "name": "Plugin hook error: this build has no $.decision",
+      "id": "tool-result-plugin-build-has-no-decision",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "this build has no $.decision"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
+    },
+    {
+      "name": "Plugin hook error: this build has no $.decision",
+      "id": "tool-result-plugin-build-has-no-decision",
+      "description": "Rejection of a plugin's $-API call; when the mod's hook does not catch it, the mod-under-development failure notice tells the model.",
+      "pieces": [
+        "this build has no $.decision"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
     },
     {
       "name": "Tool Result: REPL call result not saved",

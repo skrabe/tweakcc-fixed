@@ -200,6 +200,59 @@
       }
     ]
   },
+  "1cfeb6c389855f51": {
+    "at": 5085805,
+    "model": {
+      "2e10438c670417570bb0f36ff7744be7820d76f5": "the ui.resolve answer is a Proxy or a vm context; a table o…",
+      "457d58ee991911a2c00e40fbbf077682509fea8d": "${}: no ${} handler",
+      "b055b1ce51238f72dbd4f384f3d89264c14d4608": "${}: its ui.resolve hook's ${} built a Shader it was not gi…",
+      "b7c58602228e2071be6c6a3b139f56c38bd81913": "${}: ${}: could not be given its argument: ${()}",
+      "babc3d869327cd504080e8600e0a70a892e4aca3": "${}: next.to(\"${}\") refused: its hooks module does not spel…",
+      "c7f7958cab62945f56b8acbe746b5e5fe922869f": "${}: next.to(\"user\") refused: no hook of its module that sp…",
+      "c9fb22d3afaf9b32223422d38dcb6ce0ec8d7dfd": "environment ${} is not loaded"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "49f4d92a2bc725739dad16fe5eb2542b138dfa0b": {
+            "facing": "internal",
+            "preview": "${}: the stream was let go"
+          },
+          "620bddf639430ec1d8dddea33c20af1bd093b321": {
+            "facing": "ui",
+            "preview": "ui.press/ui.input/ui.select: no handler is held under handl…"
+          }
+        },
+        "why": "Same plugin-host He as 6d34e1c9. The ui arms are render-hook drawing refusals and ui.press/ui.resolve handle errors (3936397-3952864); they go back to the plugin and are reported through hookFailed (np 3809709 → CC host 11014066). The model arms are environment-host invariants on the hook dispatch itself: A() 'environment ${} is not loaded' (3943816), W() 'no ${} handler' (3945000) and N() '.catch asked because re-entry' (3944579). These reject the dispatch, which reaches the tool_result through runToolUse's 'Error calling tool' (10860151). The internal 'the stream was let go' is a stream-cancel reason. The model-arm route was not re-traced end to end."
+      },
+      {
+        "arms": {
+          "2e10438c670417570bb0f36ff7744be7820d76f5": {
+            "facing": "model",
+            "preview": "the ui.resolve answer is a Proxy or a vm context; a table o…"
+          },
+          "b055b1ce51238f72dbd4f384f3d89264c14d4608": {
+            "facing": "model",
+            "preview": "${}: its ui.resolve hook's ${} built a Shader it was not gi…"
+          },
+          "b7c58602228e2071be6c6a3b139f56c38bd81913": {
+            "facing": "model",
+            "preview": "${}: ${}: could not be given its argument: ${()}"
+          },
+          "babc3d869327cd504080e8600e0a70a892e4aca3": {
+            "facing": "model",
+            "preview": "${}: next.to(\"${}\") refused: its hooks module does not spel…"
+          },
+          "c7f7958cab62945f56b8acbe746b5e5fe922869f": {
+            "facing": "model",
+            "preview": "${}: next.to(\"user\") refused: no hook of its module that sp…"
+          }
+        },
+        "why": "Same HooksError. The newly model arms are next.to refusals raised when a running hook calls next.to (Y @5076439), the hook-argument delivery failure (q @5075599) and ui.resolve result refusals (p @5074641, fe @5074439); the hook fails, Es @4781556 puts the text in skip.why (directly or via ge @4791300's 'a result the site cannot read (…)'), and yCo @15474030 tells the model 'Your mod failed when it ran' for a watched dev mod. The ui arm 'no handler is held under handle' is the host's press dispatch (press @5085390) answering a button press, not a hook failure, and 'the stream was let go' (H3a @15341199) is a stream-cancel reason."
+      }
+    ]
+  },
   "2559f29cbaea0b34": {
     "at": 36449650,
     "model": {
@@ -353,59 +406,6 @@
           }
         },
         "why": "ee() builds an iSn refusal reason (22890443). 'a plugin's hook changed the value...' is returned under refuseRewrite to the /fast and /config key=value command onDone (model; catalogued slash-command-fast-plugin-rewrite-refused). 'a later pick replaced this one' is returned only when isSuperseded, and its only caller drops it (31101241). 'the write failed', 'nothing was applied' and 'the default was not saved' are discarded or replaced by b_t, u0e and iSn (b.thrown)."
-      }
-    ]
-  },
-  "3ed16726373c3a72": {
-    "at": 5107931,
-    "model": {
-      "457d58ee991911a2c00e40fbbf077682509fea8d": "${}: no ${} handler",
-      "c9fb22d3afaf9b32223422d38dcb6ce0ec8d7dfd": "environment ${} is not loaded"
-    },
-    "position": 0,
-    "reviews": [
-      {
-        "arms": {
-          "49f4d92a2bc725739dad16fe5eb2542b138dfa0b": {
-            "facing": "internal",
-            "preview": "${}: the stream was let go"
-          },
-          "620bddf639430ec1d8dddea33c20af1bd093b321": {
-            "facing": "ui",
-            "preview": "ui.press/ui.input/ui.select: no handler is held under handl…"
-          },
-          "b7c58602228e2071be6c6a3b139f56c38bd81913": {
-            "facing": "ui",
-            "preview": "${}: ${}: could not be given its argument: ${()}"
-          },
-          "babc3d869327cd504080e8600e0a70a892e4aca3": {
-            "facing": "ui",
-            "preview": "${}: next.to(\"${}\") refused: its hooks module does not spel…"
-          }
-        },
-        "why": "Same plugin-host He as 6d34e1c9. The ui arms are render-hook drawing refusals and ui.press/ui.resolve handle errors (3936397-3952864); they go back to the plugin and are reported through hookFailed (np 3809709 → CC host 11014066). The model arms are environment-host invariants on the hook dispatch itself: A() 'environment ${} is not loaded' (3943816), W() 'no ${} handler' (3945000) and N() '.catch asked because re-entry' (3944579). These reject the dispatch, which reaches the tool_result through runToolUse's 'Error calling tool' (10860151). The internal 'the stream was let go' is a stream-cancel reason. The model-arm route was not re-traced end to end."
-      },
-      {
-        "arms": {
-          "2e10438c670417570bb0f36ff7744be7820d76f5": {
-            "facing": "ui",
-            "preview": "the ui.resolve answer is a Proxy or a vm context; a table o…"
-          },
-          "c7f7958cab62945f56b8acbe746b5e5fe922869f": {
-            "facing": "ui",
-            "preview": "${}: next.to(\"user\") refused: no hook of its module that sp…"
-          }
-        },
-        "why": "RCn @4524619 rejects pending calls with Le(t); the model arms ('no handler', 'environment is not loaded') are dispatch rejections that reach the tool call. The unreviewed arms are ui.resolve answer validation (@4514674) and the next.to(\"user\") host-rule refusal (@4516645), thrown inside a hook dispatch and reported through hookFailed to the TUI, same as the carried ui render-refusal arms."
-      },
-      {
-        "arms": {
-          "b055b1ce51238f72dbd4f384f3d89264c14d4608": {
-            "facing": "ui",
-            "preview": "${}: its ui.resolve hook's ${} built a Shader it was not gi…"
-          }
-        },
-        "why": "The ui arm is the ui.resolve hook's Shader check (f @5096952), thrown inside a hook dispatch and reported through hookFailed to the terminal, while the model arms are environment-host dispatch rejections that reach the tool call."
       }
     ]
   },
@@ -843,660 +843,6 @@
           }
         },
         "why": "W()/P() build the computer-use tool result: the 24 new model arms are app_* action results (bc @26090664 release full control, zc @26173975 lock release, hc @26073884 menu list, and the other handlers), so each is a tool_result; the internal arm is still the never-produced typePaced 'Typed ${} char(s).'."
-      }
-    ]
-  },
-  "5f76571995cd414d": {
-    "at": 17226953,
-    "model": {
-      "005866d9491068fbedaef9acfcb6d02af0789b47": "${} event is not plain data: ${(,)}",
-      "1124a00395dc8b2a14416e35b5b4d2ffbf62b8e3": "${}: ${}: refused: credentials in the URL",
-      "22cbfc9405a370f7dc5901b1a4da174fbfffee1a": "${}: surface module ${.split(\"/\").join()} ",
-      "43ba7431689ba4fead79d9675b2e893b75db54e2": "$.audio.speak: no speech synthesizer on ${}",
-      "466777501251e1f5211c19f5ad66e6cb13f91281": "${} event ${}: ${}",
-      "8113d3c7b511864bdbae4c46bdf313bfbe6ab64b": "${}: ${}: ${()} refused: http or https only",
-      "831f9ddffe3bb43a3e91d26b634a05bb911fb01d": "${}: ${}: could not be given its argument: ",
-      "928a5d50131f66370181cf5dae24a2b319c348c4": "the plugin's load proved no file there",
-      "9dd55c2a984de1e74ea2b206aa395e8c95e42eef": "${}: $.fs.ancestors: ${} refused: ${}",
-      "9f2a4e70ce5a6c47ef77de678b2b8009405cc2a4": "ui.press: the press is not plain data: ${(,)}",
-      "bc092a4bcf998fa53ba8d0327e83b4a7a5ab3dd0": " (a link proves none)",
-      "bc80d93241f271f37e87700e7a5c2763a97b302c": "${}: ${} is not available in this mode",
-      "c7527fa816a3a518d2cfd4c1d324834bac0d2408": "${}: $.tool.check: the tool container did not answer with a…",
-      "cbd12cf261bbfcdf0d1078c00a432a13ae87a179": "${}: arguments are not plain data: ${(,)}",
-      "d8177f7d7b40205c36bca2f19e11b006fa4c8c41": "not available in a headless (-p / SDK) session yet: compact…",
-      "e8838dd5b1bdb22fb6f590f9e5188a5d61a2268f": "$.skill.prompt: called with ${}",
-      "fbc21bfcd0755f75f4f04f3fc5f66eb85b4b68c6": "$.${}: no core at the bottom of the chain (the site did not…"
-    },
-    "position": 0,
-    "reviews": [
-      {
-        "arms": {
-          "01b4387403ff8ce9b4533554d4c3a26a9342646f": {
-            "facing": "internal",
-            "preview": "$.audio.play: options.shouldLoop must be a boolean"
-          },
-          "0bdb386ac9f9e73fb24ffe430aab45efca3e4922": {
-            "facing": "internal",
-            "preview": "${}: ${}: socketPath ${} refused: no Unix socket transport …"
-          },
-          "11d5d47843a6ecfcc10f1975aac4c2c6101a5be7": {
-            "facing": "internal",
-            "preview": "${}: ${}: ${.href} refused: body of ${} bytes is over the $…"
-          },
-          "1529f16f1c2f108ea295c0c12b766ddbd0971d61": {
-            "facing": "internal",
-            "preview": "${}: ${}: socketPath ${()} refused: a NUL byte in the path"
-          },
-          "15bc15aca2c50fb483c42170aed9720f5cbd41b9": {
-            "facing": "internal",
-            "preview": "${}: hooks module not loaded; next.to(\"${}\") skips nothing …"
-          },
-          "17054ae16c07a121130c1fa1eb7a7098d293ed9d": {
-            "facing": "internal",
-            "preview": "${}: $.audio.play: refused: ${} plays are going at once"
-          },
-          "1ced802b1c1cf91e99231b94cca85653bd28bf7c": {
-            "facing": "internal",
-            "preview": "${.op}: the plugin's environment is unloaded"
-          },
-          "1ee03dacaf137af13b41d1e2e8f98e7391a3e60b": {
-            "facing": "internal",
-            "preview": "${.plugin}: ${}: not a loaded plugin"
-          },
-          "1f6e837c672083f90f993ebaac6286310ed3dcb5": {
-            "facing": "internal",
-            "preview": "$.audio.play: clip must carry exactly one of asset, url, ba…"
-          },
-          "1f8542fa2044994ce025ff9e4b9a4cbba1a35e95": {
-            "facing": "internal",
-            "preview": "${}: $.prompt.submit takes text alone; attachments cannot b…"
-          },
-          "22f6899e0882a0c902263acbad2e44c4714ead7b": {
-            "facing": "internal",
-            "preview": "$.audio.speak: ${}"
-          },
-          "2f7c4127a90b774e7447a35fdc83485e44fe4aa0": {
-            "facing": "internal",
-            "preview": "the clip is over ${} bytes"
-          },
-          "338a46bd1ac3ccb3bf552c3eaf0c5638bcc6da1f": {
-            "facing": "internal",
-            "preview": "$.audio.play: clip.mime must accompany clip.base64"
-          },
-          "3595540bd7ac837ee869edb2caee1825f9e9322d": {
-            "facing": "internal",
-            "preview": "${}: ${}: socketPath ${} refused: a network location is not…"
-          },
-          "368400a306fd50674e54999bb21c2f71c13f1666": {
-            "facing": "internal",
-            "preview": "${}: registered ${}, which is a call on core's $.${} that i…"
-          },
-          "3732c4c888a3f67d4cc5e2200b90d2ac1ec3bb26": {
-            "facing": "internal",
-            "preview": "which selects no event"
-          },
-          "39d4854c6bce73debbd66e8b6fa74e65166bb818": {
-            "facing": "internal",
-            "preview": "${}: registered ${}, which the scan of its hooks module did…"
-          },
-          "3a803f04130ae9810554f9b81fd0026464a57692": {
-            "facing": "internal",
-            "preview": "${}: ${}: not a URL: ${()}"
-          },
-          "3e48aac66da6cf7d4d842d5368f8878586a91a0e": {
-            "facing": "internal",
-            "preview": "${.plugin}: $.session.append: this process keeps no convers…"
-          },
-          "40b5d11cb4e668214d0b8256a82012fb1c875043": {
-            "facing": "internal",
-            "preview": "${}: $.turn.abort: ${.turnId} is not the running turn (${.t…"
-          },
-          "45d7129cf1705b00e19d6afca9399dc22b515e09": {
-            "facing": "internal",
-            "preview": "${}: $.tool.check: no tool named \"${}\" in this session"
-          },
-          "4c6bcc9c5d36a9a381ce11e500fac3e9ed83d58c": {
-            "facing": "internal",
-            "preview": "${.plugin}: $.prompt.compose: this process composes no syst…"
-          },
-          "514384920106ec3f83074bfdead4d02154afca49": {
-            "facing": "internal",
-            "preview": "not loaded by the fold of the whole set"
-          },
-          "54c5aa6faf71745bce34448d550d4c99a947cb0c": {
-            "facing": "internal",
-            "preview": "${}: hooks module not loaded; next.to is available to manag…"
-          },
-          "55bf2d8c194dcf25e552fbc3b7a4a99a07c537ed": {
-            "facing": "internal",
-            "preview": "${}: registered ${}, but no loaded plugin provides $.${}"
-          },
-          "578937f09340a4e43d487a333fd2bd6f582b4dae": {
-            "facing": "internal",
-            "preview": "$.audio.play: clip must be { asset }, { url } or { base64, …"
-          },
-          "57963ad80dafe76a21b18278c44d9901f8d6e48d": {
-            "facing": "internal",
-            "preview": "${}: ${} is not available in this mode: no session is bound…"
-          },
-          "5b837db9e2e1673bb3433c861376c14e0573f89e": {
-            "facing": "internal",
-            "preview": "${}: $.agent.register: \"${.name}\" refused: ${}"
-          },
-          "5bea7a87f119da47621bfc74751828582a20a4e2": {
-            "facing": "internal",
-            "preview": "${}: $.ui.notify: the channel's write failed"
-          },
-          "5f8cc9f3c5cf5d7fa199be0f30a1fab93db98d7f": {
-            "facing": "internal",
-            "preview": "$.audio.play: clip.${} must be a non-empty string"
-          },
-          "60590633ae50c1c513a0bbac6bb7d83307fcb4dc": {
-            "facing": "internal",
-            "preview": "${}: stream let go"
-          },
-          "625f19de7c04afc0c672f0db6597fb4973aa0452": {
-            "facing": "internal",
-            "preview": "${}: registered ${}, but $.${} (${.owner}) has no method ${}"
-          },
-          "64bb10185ef6d30b65f154e969e23c1d0adf5ac3": {
-            "facing": "internal",
-            "preview": "${.plugin}: $.mcp.call(${}, ${}) refused: ${.deny}"
-          },
-          "6ca2b40e2afc99cf7a632ac9d7b795d0fc4a5581": {
-            "facing": "internal",
-            "preview": "${} exited ${??\"by signal\"}"
-          },
-          "6f59accb7cb644e82b4c702c41542ecbb49fbf00": {
-            "facing": "internal",
-            "preview": "${}: registered on(\"${}\"), "
-          },
-          "733ff94c80af0e162c247defdfbb52e4b57f922a": {
-            "facing": "internal",
-            "preview": "${}: registered \"${}\", which is not an event"
-          },
-          "76326a8f3985a1788ddb01c3f2f0fbdec29b0bc2": {
-            "facing": "internal",
-            "preview": "$.audio.play: could not read ${} in ${}'s directory: "
-          },
-          "76aa8c9d48d2bafd9d38dd94ba076dc58a714e1e": {
-            "facing": "internal",
-            "preview": "${}: $.agent.spawn refused: ${} spawns are running at once"
-          },
-          "770c90b730f6e41dc3a9fafbba1f61054aca1cc7": {
-            "facing": "internal",
-            "preview": "${}: $.model.complete: maxTokens ${} is past what ${} can p…"
-          },
-          "79f6181b48e9167b979f0b8bf2d516f698f85afb": {
-            "facing": "internal",
-            "preview": "${}: $.session.compact: compaction is switched off in this …"
-          },
-          "7fab89a2235e32403ecbd5343a0519920b045043": {
-            "facing": "internal",
-            "preview": "${}: $.model.complete: maxTokens must be a positive integer…"
-          },
-          "7fbfc37ca081caf481daf4a81ecd79d7839eb721": {
-            "facing": "internal",
-            "preview": "${}: a streaming hop takes next_pull"
-          },
-          "82b63c9b88086808b3ba684f1eaf2583cc1aa7ff": {
-            "facing": "internal",
-            "preview": "${}: $.prompt.submit submits a prompt to the model; a text …"
-          },
-          "84848a5213f82ebeb7be6cd1187ebdd9c0d4c0a8": {
-            "facing": "internal",
-            "preview": "$.audio.play: clip.asset must be a string"
-          },
-          "848d76ec58cadebc54a1423bf33a7b2638633d66": {
-            "facing": "internal",
-            "preview": "$.audio.play: the plugin has no id"
-          },
-          "8d13844f00134433b14d1ba7d58c965a835fe6e7": {
-            "facing": "internal",
-            "preview": "${}: $.command.register: \"/${.name}\" refused: the plugin ${…"
-          },
-          "8f7b9bd002e4dc5c516564a4fb90db60ae6e50ec": {
-            "facing": "internal",
-            "preview": "${.name}: ${()}"
-          },
-          "8f9e816dd3c6d9b92184a476d2e1b491311fe348": {
-            "facing": "internal",
-            "preview": "${}: $.turn.abort: ${.turnId} is already ending"
-          },
-          "911492deaa91a8d48e2f6e20905a5e51c1fc3cd3": {
-            "facing": "internal",
-            "preview": "${}: $.tool.register: this host cannot add tools at run tim…"
-          },
-          "931cb902d936c95dcbb1393406e8eb6d7b78229a": {
-            "facing": "internal",
-            "preview": "${}: ${?.??\"engine.create\"} failed"
-          },
-          "97f2749bfaa4d421c2e3ef144248c8a30073c641": {
-            "facing": "internal",
-            "preview": "$.audio.play: the clip is over ${} bytes"
-          },
-          "994983878e42027b1ef82476b9eaea8176abc640": {
-            "facing": "internal",
-            "preview": "${}: unloaded while its reload ${} ("
-          },
-          "9b74215a0af5dfe4eee90ca9f8e9b51a343054e6": {
-            "facing": "internal",
-            "preview": "${}: $.config.set: no /config row with key ${.key} ($.confi…"
-          },
-          "9c2fbd7627ae0833fa62b985d212af7faf31bdd9": {
-            "facing": "internal",
-            "preview": "${}: $.tool.call: consent, when given, is a string"
-          },
-          "a3563acf4977b38a4d7542c9f29bd53d5187db67": {
-            "facing": "internal",
-            "preview": "${}: $.fs.${.event}: ${.path} refused: "
-          },
-          "a47ff84669f27abc3033ed2c524f3699767e2a8d": {
-            "facing": "internal",
-            "preview": "${.plugin}: ${}: ${} (host check)"
-          },
-          "a9aa6f796fffc1a16bb94af1727dd63f88c7e23c": {
-            "facing": "internal",
-            "preview": "$.audio.play: the plugin has no directory"
-          },
-          "ab13e1417aa47bc6943dd1ca1253ced0e12d94d6": {
-            "facing": "internal",
-            "preview": "${}: not a hooks module the binary carries; it loads in the…"
-          },
-          "ac29cc149dfa5b346b45fc18e64037fae3a42934": {
-            "facing": "internal",
-            "preview": "${.name}: options do not fit plugin.json userConfig: ${.err…"
-          },
-          "aeed8f8eb9ec49ef2eb0df1df4a866ef9ddf6674": {
-            "facing": "internal",
-            "preview": "the stream was let go"
-          },
-          "b3d99735048aca03dc6868562ae18cf445e12f1c": {
-            "facing": "internal",
-            "preview": "no hooks module named ${} is loaded or declared"
-          },
-          "b3dfb07571d6c666bcc62d43e6fdd7fd5588cdb9": {
-            "facing": "internal",
-            "preview": "${}: $.tool.register: \"${.name}\" refused: this session has …"
-          },
-          "b52015e51105775b45b4a0e550233dab259e6d90": {
-            "facing": "internal",
-            "preview": "$.audio.speak: voice must be a string when given"
-          },
-          "b5b0408dcb8e71556b32f1d0717b47968c53dc08": {
-            "facing": "internal",
-            "preview": "${}: $.fs.${.event}(${.path}) failed: "
-          },
-          "b8e7d1d3869c821a0f18f98cb3c4e98133ce64db": {
-            "facing": "internal",
-            "preview": "${}: $.model.complete: timeoutMs must be a positive integer…"
-          },
-          "bb8871e22a4d5d9ad4fbd1486be41541b4d182b0": {
-            "facing": "internal",
-            "preview": "$.audio.play: asset must be a path inside the plugin's dire…"
-          },
-          "bba7e24d35dd222a842fd189b504208e41c280d7": {
-            "facing": "ui",
-            "preview": "${}: $.prompt.submit takes { text } (a non-empty prompt)"
-          },
-          "bcb128d55775e9cd9f8cf14ed4ab944de43d5f17": {
-            "facing": "internal",
-            "preview": "${?.??\"engine.create\"} failed on reload"
-          },
-          "bfc35fe14584581b323bd970af349a1e78f24654": {
-            "facing": "internal",
-            "preview": "${}: ${}(${.href})${} aborted: no complete answer within ${…"
-          },
-          "c065712173402843e9ace88b6866c4ab307bafdc": {
-            "facing": "internal",
-            "preview": "did not settle within ${}ms of its signal aborting"
-          },
-          "c2aaea09c09bd3116be394b786b0686382b66ba3": {
-            "facing": "internal",
-            "preview": "${}: not a function"
-          },
-          "c4d9b209cb2c5956b418e97aaeeed246c629ff9f": {
-            "facing": "internal",
-            "preview": "${}: $.model.complete: effort must be one of low, medium, h…"
-          },
-          "c5940d5a2744883f07b82d69bcada0579fb9e721": {
-            "facing": "internal",
-            "preview": "${}: ${}: more than ${} redirects from ${}"
-          },
-          "c669c17f15791e4c3476490314a0ff027e66e05b": {
-            "facing": "internal",
-            "preview": "${.plugin}: $.${} refused: ${}"
-          },
-          "c760431c33745279f3877d5946a5756cc5163513": {
-            "facing": "internal",
-            "preview": "whose negated pattern selects no event"
-          },
-          "c8e9f172fd030fc50f5b59e34d75a5ac5be47d41": {
-            "facing": "internal",
-            "preview": "${.plugin}: $.${} refused: the hooks module that made the c…"
-          },
-          "ca7196cd1b73f50cefcd298f005d2221f35806a3": {
-            "facing": "internal",
-            "preview": "${.name}: hooks module not loaded; the name is the engine's…"
-          },
-          "cc1858660fd2cb71dbea93d93620327da1035938": {
-            "facing": "internal",
-            "preview": "${}: ${}: socketPath ${()} refused: takes an absolute path"
-          },
-          "cd7aa028ec76403d227c8719dd5f92732b37e9f3": {
-            "facing": "internal",
-            "preview": "$.audio.speak: text must be a non-empty string"
-          },
-          "cfad000720df8470ca964479ae4dd78acbfe779f": {
-            "facing": "internal",
-            "preview": "${}: hooks module not loaded; ${} (policy/scan)"
-          },
-          "d24526ced5c998851a619d5486119fc1d66a4de6": {
-            "facing": "internal",
-            "preview": "${.plugin}: $.${}: ${.deny}"
-          },
-          "d365d5c0e8483b5f5914be293c80d99bbcb83d75": {
-            "facing": "internal",
-            "preview": "${}: ${}: refused: ${}"
-          },
-          "d49fc9c4d81f9b0e8a477cf62e049ed26a0457f0": {
-            "facing": "internal",
-            "preview": "${.plugin}: $.prompt.compose: ${}"
-          },
-          "d65b6833dedbdf178df00ded88f9cb3fc2f69384": {
-            "facing": "internal",
-            "preview": "); not reloaded"
-          },
-          "d687efff86f7a02134e7dd472b3b41c3b35207cb": {
-            "facing": "internal",
-            "preview": "it left the declared set"
-          },
-          "d7c4d540261bb8243684c183c4d295a83ec556a0": {
-            "facing": "internal",
-            "preview": "${}: its hooks module is not loaded"
-          },
-          "d8cb4ab4378cd0233a1c4ca13ef4c26173df60b1": {
-            "facing": "ui",
-            "preview": "${}: unloaded while its module loaded"
-          },
-          "d91d1c2f6d05c953b61341bd75cd241faa618ecf": {
-            "facing": "internal",
-            "preview": "no stream is open for this op"
-          },
-          "d9879f557f9979074c4911b099166dc889e4751d": {
-            "facing": "internal",
-            "preview": "${}: $.turn.abort: no turn is running (asked for ${.turnId})"
-          },
-          "da24c5f2c6cddbcfafbeb9d9306f337298be466e": {
-            "facing": "internal",
-            "preview": "${}: $.model.complete: ${}"
-          },
-          "da665f656019ca9d2b3749b897c3a65e7e867bab": {
-            "facing": "internal",
-            "preview": "${}: $.command.register: \"/${.name}\" refused: it is the ${[…"
-          },
-          "e06b05afbc6e2cac51e3fa54ae9b734c3ac58ed5": {
-            "facing": "internal",
-            "preview": " (${.reason})"
-          },
-          "e0ada016d98593e1e16d722fdaa0e70946424033": {
-            "facing": "internal",
-            "preview": "${.plugin}: $.${}${[]}: ${.deny}"
-          },
-          "e1120545e81b907969a4a596549c8b4458d9c2c8": {
-            "facing": "internal",
-            "preview": "${}: $.tool.register: \"${}\" is a reserved MCP server name"
-          },
-          "e1d6f6d731083af020c7d06f4d49e83b21fd2473": {
-            "facing": "internal",
-            "preview": "${}: ${}(${.href})${} failed: ${?`${}: `:\"\"}${()}"
-          },
-          "e3c520a845a6c248188d6dda1f5616dd3661e297": {
-            "facing": "internal",
-            "preview": "${}: $.command.run: no command named /${} in this session"
-          },
-          "e5f88469f96da06e51ff09a02aafa29016a4397a": {
-            "facing": "internal",
-            "preview": "${}: registered ${}"
-          },
-          "e9fa12606dced20e0e368a8048c95d0e43d7baf6": {
-            "facing": "internal",
-            "preview": "${}: $.tool.register: the session already has an MCP server…"
-          },
-          "ebffccf002dff16e616e482df1eec3acdca4d3b5": {
-            "facing": "internal",
-            "preview": "$.audio.play: options.gain must be a number from 0 to ${}"
-          },
-          "ec7a54e878b9592e6d5e77ab0576ddd61e763b46": {
-            "facing": "internal",
-            "preview": "no errno"
-          },
-          "ecf571bad011aca3a3eb0b2783096f557d7e8ece": {
-            "facing": "internal",
-            "preview": "${}: $.tool.register: \"${.name}\" refused: this session runs…"
-          },
-          "f028578a0df71a23572536b1af0b73118b35b321": {
-            "facing": "internal",
-            "preview": "${}: $.session.compact: a turn is running (${.turnId}); the…"
-          },
-          "f05b031d85414dca20a1cf4295a48385ddf1cf97": {
-            "facing": "internal",
-            "preview": "$.audio.play: ${}"
-          },
-          "f2079a38e7792566845ccbc437e2ffcd66239959": {
-            "facing": "internal",
-            "preview": "$.session.append: this process keeps no conversation to app…"
-          },
-          "f5e49578819233594274424772a139dd1d706f89": {
-            "facing": "internal",
-            "preview": "${}: $.tool.check: input is the tool's arguments, an object"
-          },
-          "f77c84d82b7bd9e20fcae6683aef2a94359b0a91": {
-            "facing": "internal",
-            "preview": "${}: a hook on a streaming event returns its async generato…"
-          },
-          "f873e04839bf457456aec25d81434b94c120b6ea": {
-            "facing": "internal",
-            "preview": "${.plugin}: $.ui.notice: ${.tool_use_id} refused: "
-          },
-          "fb9753921cc7be3c9dce21ab18711254bc13b5e8": {
-            "facing": "internal",
-            "preview": "${}: $.model.complete: model \"${}\" is not in this organizat…"
-          },
-          "fd2370f671e9061a9b885fb19c089aec88ed1e85": {
-            "facing": "internal",
-            "preview": "${}: ${}: ${.origin}${} refused: the body is not an event b…"
-          }
-        },
-        "why": "He is the generic HooksError class (320434). The model arms come from event dispatch on the chain that runs the model's tool calls: k7t installs core tool.call (10861652); the worker dispatch rejects with \"${y} event is not plain data\" (11001352, 11002669); ga/Ydn have the no-core rejection (11659973, 11660967); and cWt's surface-module refusal reaches /plugin validate (10275208). The internal arms are $.<api> refusals and host invariants returned to plugin hook code, which go to hookFailed and the debug log. \"HTTP ${.status}\" is thrown here inside $.audio.play's fetch (10447102, caught and rewrapped) and is model only because the same text appears elsewhere (tool-result-http-status-code)."
-      },
-      {
-        "arms": {
-          "17e0bfad86632fa8469b5e1d1aa36a9d6bb24640": {
-            "facing": "internal",
-            "preview": "${}: plugin ${}, which provides $.${}, is not loaded"
-          },
-          "2b3610c6de373db07436cf83d22d3c9e3f03971e": {
-            "facing": "internal",
-            "preview": "${}: $.command.run: ${}"
-          },
-          "466777501251e1f5211c19f5ad66e6cb13f91281": {
-            "facing": "model",
-            "preview": "${} event ${}: ${}"
-          },
-          "831f9ddffe3bb43a3e91d26b634a05bb911fb01d": {
-            "facing": "model",
-            "preview": "${}: ${}: could not be given its argument: "
-          },
-          "97fbade0cb8466990f975c896f23168761e6aae4": {
-            "facing": "internal",
-            "preview": "$.${}.${}: plugin ${}, which provides $.${}, or its caller …"
-          },
-          "c595cb922014e3234056bf574e542f3aab6060e2": {
-            "facing": "internal",
-            "preview": "${}: plugin ${}, which provides $.${}, is not admitted yet …"
-          },
-          "e8838dd5b1bdb22fb6f590f9e5188a5d61a2268f": {
-            "facing": "model",
-            "preview": "$.skill.prompt: called with ${}"
-          }
-        },
-        "why": "46677750 model: Gkn @12069590 catch: Xe(new Oe(`${y} event ${gt}: ${vt}`)) rejects the host dispatch promise; Gkn is the host's dispatch @12080198 (17 callers, vvr/rt hop chain), the same route as the cached model arms '${} event is not plain data' / '$.${}: no core...'. Agree model. | 831f9ddf model: Site @12071065 is the sibling ternary arm in Gkn's catch (Xe(jqn(new Oe(...)))) rejecting the host dispatch exactly like the event arm; the worker-side Y @4110269 (-> vo @4122346 / T @4121292 rethrow) is the same dispatch's other end. Same route as the group's model arms. | e8838dd5 model: xmt @9102135 is Mmt['skill.prompt'], run synchronously in $i @14036763; $('skill.prompt') is awaited by Zgr @9133774 without a catch, and Zgr's callers include J7t @12207904 -> Re @17467417 (skill invocation) and the agent preload @17228758, so a throw propagates up the skill-load path like the 'no core' model arm. Not traced to the final tool_result wrapper. | 61dbc9f7 internal: jkn @12068665 is callInterface @12080686, used only by plugin-to-plugin interface calls (lJe -> _e.callInterface @11451716); the rejection goes to lJe's .then error handler (t(`...failed`,{level:'error'}) then rethrow to the calling plugin). @1191247 is the yHr template in the worker. Not the host dispatch route. | c595cb92 internal: lJe @11996787 Promise.reject answers a plugin's $.x.y interface call (callers run @12003046 via hJe @12012450 host op, routeInterfaceCall @12085297); goes back to the calling plugin's code, not to the model. | 97fbade0 internal: lJe @11997306 policy-changed reject, same plugin-to-plugin interface-call route (hJe/routeInterfaceCall) back to plugin code; @11459359 is the slice where Nwe's similar string lives. Internal. | 17e0bfad internal: lJe @11997092 'is not loaded' reject goes back to the calling plugin via hJe @12012450 / routeInterfaceCall @12085297; stays in the plugin runtime. | 3d23df41 internal: Nwe @11459333 builds the refusal for a plugin's own $.x host-op call (host-op run path); returned to plugin code, no tool_result or host dispatch. | 2b3610c6 internal: enr @11440693 is only reached via QOr's 'command.run' op @12006886 (host op the plugin calls through $.command.run); the Promise.reject goes back to the plugin. Internal."
-      },
-      {
-        "arms": {
-          "cc57d85187bb957fa41d4278d172d46a599e2acf": {
-            "facing": "internal",
-            "preview": "${.plugin}: $.${} refused: a hooks module behind the call i…"
-          }
-        },
-        "why": "He is HooksError. cc57d851 is thrown by Gxe (13148627), the admission check of host $.<api> calls (Lit 13148627-13149400, TPe), so it is a $-API refusal returned to the calling plugin's code and reported via hookFailed, like the carried internal 'plugin ${}, which provides $.${}, is not admitted yet' arm in the same group; the model arms are dispatch rejections."
-      },
-      {
-        "arms": {
-          "11190a890943cc05be446c7ea9bbf0be74c6ec40": {
-            "facing": "internal",
-            "preview": "${}: $.prompt.submit: ${}"
-          }
-        },
-        "why": "He is the generic HooksError. The internal arm '${}: $.prompt.submit: ${}' is Nxo @10855140's Promise.reject when _ye() (the origin/admission check) refuses the call (@10855766), the same $.prompt.submit argument rejections beside it (ui arm 'takes { text }', internal 'takes text alone', '/ would run a command'). Nxo is only the host op run:Nut('prompt.submit') (caller 14210707) answering a plugin's $.prompt.submit call, so the rejection goes back to the calling plugin's hook code, like the carried $.<api> refusal arms. It is not the host event dispatch that the model arms use."
-      },
-      {
-        "arms": {
-          "58661295ee0d2720ea28b7e34f45bd221813f1c4": {
-            "facing": "internal",
-            "preview": "${}: ${}: a body of bytes and compress ride engine requests…"
-          },
-          "5adacad5cad35c55115a5dc12f2318cdcddcb4af": {
-            "facing": "ui",
-            "preview": "${}: a body of bytes cannot be redacted"
-          },
-          "5ccfc8edcff4bd0b9ab94d9fd0431c18610be7e9": {
-            "facing": "internal",
-            "preview": "this build has no $.decision"
-          },
-          "8b780ac81feaa2c5a67e65e77bf721f3b3438d53": {
-            "facing": "internal",
-            "preview": "http.fetch: ${}"
-          },
-          "95c449f02a6ee1e5c4724949d9a66015a3a3819f": {
-            "facing": "internal",
-            "preview": "${}: ${}: ${.href} refused: a request body of ${.length} ch…"
-          },
-          "cb8d05878b6be7a715b6160daba54ca82d333e7e": {
-            "facing": "internal",
-            "preview": "$.fs.${.event} (${}): a tenant has no disk of its session's"
-          }
-        },
-        "why": "$e is the generic HooksError. The new internal arms and the ui arm are host-side $.<api> refusals and http.fetch hook-chain failures: the $.audio.speak/play and $.fs tenant refusals (@15505257, @15113782, @15124555), the $.decision stub (@15488613), theme.set image refusals (Tlo/yzs @15467166-15469722), the plugin $.http.fetch request checks in rLs @15143322, and the engine http.fetch chain-bottom and redaction throws (@15141961, Ono @15136894) that fail the API request itself. Each rejects into the calling plugin's hook code (hookFailed and the debug log) or fails the request, while the model arms are the tool-event dispatch rejections that end in the tool_result."
-      },
-      {
-        "arms": {
-          "69b844ffa916507c640f573a247216daa10e84d8": {
-            "facing": "internal",
-            "preview": "${}: $.wasm.compile takes a literal path, or bytes as an Ar…"
-          },
-          "8563443770b7e125ec65616baf6d926a5922c80e": {
-            "facing": "internal",
-            "preview": "${}: ${}: ${.origin}${} refused: this session sends no prod…"
-          },
-          "90c99409d36fb0df43c4bc81a282fb5c69630703": {
-            "facing": "internal",
-            "preview": "${.plugin}: $.mcp.call: no connected MCP tool \"${}\" on a se…"
-          },
-          "9c824ea60a42ec8c691d137fd7426661d9ec97fb": {
-            "facing": "internal",
-            "preview": "not the file the plugin's load proved"
-          },
-          "be6097ce96de86b61746b41b797539f0336498e9": {
-            "facing": "internal",
-            "preview": "${}: $.tool.call: no tool named \"${}\" in this session${}"
-          },
-          "e94c873cee5e754d47fb1b8f3b39e7e49129c09a": {
-            "facing": "internal",
-            "preview": "${}: ${}: the build carried no such file"
-          },
-          "ead00c04b41742bdab2f7b01f9a5aea42b29d75e": {
-            "facing": "internal",
-            "preview": "${.plugin}: $.wasm.compile: ${}"
-          },
-          "f41f889aa7bc39ac3a91457ed1a70609d59f4c37": {
-            "facing": "internal",
-            "preview": "${}: ${}(${.name}) produced no result${.context.abortContro…"
-          },
-          "fb639a3e65256f2275bfab5f8bc6f5d430da7ef6": {
-            "facing": "internal",
-            "preview": "${.plugin}: $.wasm.compile refused: ${}"
-          }
-        },
-        "why": "These internal arms are host-side $.wasm.compile, $.mcp.call, $.tool.call and product-event refusals (iko, rIs, ize, myo, zY, nyo) that reject back into the calling plugin's hook code, while the model arms are the host event-dispatch rejections that end in the tool_result."
-      },
-      {
-        "arms": {
-          "1124a00395dc8b2a14416e35b5b4d2ffbf62b8e3": {
-            "facing": "model",
-            "preview": "${}: ${}: refused: credentials in the URL"
-          },
-          "644503fb7d4268c197db200d00bed792d027f521": {
-            "facing": "ui",
-            "preview": "${.name}: hooks module not loaded; a name that starts with …"
-          }
-        },
-        "why": "Ne is HooksError. The new model arm 'refused: credentials in the URL' is thrown by zSe @15897524 beside its reviewed model sibling 'refused: http or https only' in the same function, so it takes that arm's route. The new ui arm is thrown by ufe @12360241 when a hooks module is not loaded because of its name; o6e catches it (16343808) and the y6s/SPo load paths log or store it with its internal sibling 'the name is the engine's own chain member', so it never reaches a tool result."
-      },
-      {
-        "arms": {
-          "005866d9491068fbedaef9acfcb6d02af0789b47": {
-            "facing": "model",
-            "preview": "${} event is not plain data: ${(,)}"
-          },
-          "43ba7431689ba4fead79d9675b2e893b75db54e2": {
-            "facing": "model",
-            "preview": "$.audio.speak: no speech synthesizer on ${}"
-          },
-          "8113d3c7b511864bdbae4c46bdf313bfbe6ab64b": {
-            "facing": "model",
-            "preview": "${}: ${}: ${()} refused: http or https only"
-          },
-          "928a5d50131f66370181cf5dae24a2b319c348c4": {
-            "facing": "model",
-            "preview": "the plugin's load proved no file there"
-          },
-          "9dd55c2a984de1e74ea2b206aa395e8c95e42eef": {
-            "facing": "model",
-            "preview": "${}: $.fs.ancestors: ${} refused: ${}"
-          },
-          "9f2a4e70ce5a6c47ef77de678b2b8009405cc2a4": {
-            "facing": "model",
-            "preview": "ui.press: the press is not plain data: ${(,)}"
-          },
-          "bc092a4bcf998fa53ba8d0327e83b4a7a5ab3dd0": {
-            "facing": "model",
-            "preview": " (a link proves none)"
-          },
-          "c7527fa816a3a518d2cfd4c1d324834bac0d2408": {
-            "facing": "model",
-            "preview": "${}: $.tool.check: the tool container did not answer with a…"
-          },
-          "cbd12cf261bbfcdf0d1078c00a432a13ae87a179": {
-            "facing": "model",
-            "preview": "${}: arguments are not plain data: ${(,)}"
-          }
-        },
-        "why": "Ne is HooksError. These model arms are thrown into a mod's hook code (zSe URL checks, $.audio.speak, $.fs.ancestors, wasm load proofs, ui.press and interface argument checks, KCo's $.tool.check no-verdict @16224962) or reject the event dispatch ('event is not plain data'). An error a hook does not catch is reported through hookFailed: Ka @4871436 builds skip.why = `threw ${name}: ${message}`, and WMo @16375920 -> jMo @16375414 queues 'Your mod failed when it ran: …' with that reason to the model via d6e @16370135 (a task-notification) for a mod under development, while dispatch rejections end in the tool result. So model is right on their path."
-      },
-      {
-        "arms": {
-          "bc80d93241f271f37e87700e7a5c2763a97b302c": {
-            "facing": "model",
-            "preview": "${}: ${} is not available in this mode"
-          },
-          "d8177f7d7b40205c36bca2f19e11b006fa4c8c41": {
-            "facing": "model",
-            "preview": "not available in a headless (-p / SDK) session yet: compact…"
-          }
-        },
-        "why": "je is HooksError. The new model arms are thrown into a mod's code: yG @15389719's '$.vcs.* is not available in this mode' (run handlers @15390573-15391457) and Zzl @11151918's headless compact refusal (compact @36325813); an uncaught one reaches the model through hookFailed ('Your mod failed when it ran: …') per the carried review, while the internal arms stay host-side refusals and stream bookkeeping."
       }
     ]
   },
@@ -2046,504 +1392,6 @@
           }
         },
         "why": "x is a generic TelemetrySafeError. The model arms are thrown from the TaskCreate/TaskUpdate write paths into the tool result (8086659-8091324). The [TeammateMailbox] arms are only built inside c(new x(...)) error-log calls (8097672-8103143). '[Tasks] Failed to write task' (Sus 8089672) and 'high-water mark write failed' (Z 8083448) reach only callers that catch and log: aA/dA task-list handoff (35451698, 35452929), XCt's catch{return!1} (8092061), hus .catch (19220292) and the nk restore."
-      }
-    ]
-  },
-  "71032bbc60ebf02b": {
-    "at": 5066640,
-    "model": {
-      "091159e56eeb43b342e6e23611f601d9a2de5fec": "returned no result",
-      "0f06d761fe2d4e96173bc644e68f1a5aa9250e2c": "yielded a chunk with ${}",
-      "2e7228d8fc32d442f04abe32b1283b15ced2a7f0": "${}: next() after it settled",
-      "8074f5661a475f7abebd4e9ee1ac199af4f3c3d4": "holds a list with a hole or a key",
-      "808081e6c36af7646d3387a220109f4d13362c59": "holds what JSON cannot (${typeof })",
-      "acb125184474c743769bdc5f66bc4c66c79d55cb": "holds a Proxy or a vm context",
-      "afdee4a57acef849af80df5d8c1f7ea5bfd40239": "holds an accessor",
-      "b93081ac734ee8ffefe4df6bdcb911fa4e3ad59e": "a plugin's list claims a length no list has (got ${??`a ${t…",
-      "f8c0710d0d9ede26b5b0ae5da0b9efed94f9c460": "holds an object that is not plain",
-      "f90b10a415eac727e3d121f58f6c837f4b780663": "holds a key ${}"
-    },
-    "position": 0,
-    "reviews": [
-      {
-        "arms": {
-          "015efbbaead2ff82a7c14f102ef7969f9e85b55c": {
-            "facing": "ui",
-            "preview": "${}: $.${} must be an object of methods, not ${typeof }"
-          },
-          "0f54dc967f5238ae78fac4d6274b1ab55d59bc99": {
-            "facing": "internal",
-            "preview": "returned no result (and read no next() stream to its end)"
-          },
-          "0f75e4fe0ba54041fe5c1313ad47fc2492505d26": {
-            "facing": "ui",
-            "preview": "takes { decorations }"
-          },
-          "0f8feb530781565495e8a59f219c2601ff019f1d": {
-            "facing": "ui",
-            "preview": "${}: $.store.${} takes a non-empty string key"
-          },
-          "13c1265cb5f05f808befd908770f0f66c4efb6e5": {
-            "facing": "ui",
-            "preview": "${} takes a function, ($, e, next)"
-          },
-          "1ff2ce060a1c2bf20dbcb0896df0dd2392748399": {
-            "facing": "ui",
-            "preview": "${}: on(): ${}"
-          },
-          "2092305f1e9853b4c01becac20bd4ceed4c706f6": {
-            "facing": "ui",
-            "preview": "${}: $.audio.play options.signal must be an AbortSignal"
-          },
-          "24f3c77e014f930369cdc3c801e3ffdec22e7f6a": {
-            "facing": "ui",
-            "preview": "${.plugin}: next.to is available to managed plugins (prepen…"
-          },
-          "251493b12e26a88f11a7bc31ba182ddeb87eafa9": {
-            "facing": "ui",
-            "preview": "${}: $.prompt.compose takes the facts to compose for ({ too…"
-          },
-          "2777190ab111c95942fe3b627ed9b8bf930d46d1": {
-            "facing": "ui",
-            "preview": "${}: $.prompt.fill "
-          },
-          "2ca314949aaa9187e16cb57cf89ef28293174b1c": {
-            "facing": "ui",
-            "preview": "${}: $.session.usage ${}"
-          },
-          "2e369301975179048719c4811e37f0e2124cbb23": {
-            "facing": "internal",
-            "preview": "the stream was closed before its result"
-          },
-          "3153f4e18928aed62d6a011fd19561b503378ecf": {
-            "facing": "ui",
-            "preview": "$.${} (${.pluginName}) has no method ${}"
-          },
-          "31a03d9248ecf39a66ab8ce9ae5db3b0bb940e15": {
-            "facing": "ui",
-            "preview": "${}: $.model.classify takes two or more non-empty labels"
-          },
-          "32935c7c0920e250bf7bb9933aff33a6422f7468": {
-            "facing": "ui",
-            "preview": "takes { mode } of ${.join(\", \")}"
-          },
-          "349db56eba4cf98deda83b8f3073dee7fd766754": {
-            "facing": "ui",
-            "preview": "${}: $.ui.ask takes at most ${} options (got ${})"
-          },
-          "3ca0a5c542b64d83a61f79fc85111c21300ab665": {
-            "facing": "ui",
-            "preview": "${.name}: next() passed an argument with ${}"
-          },
-          "3e39767a339c04b45736ddaea9af164ef9be4b4f": {
-            "facing": "ui",
-            "preview": "${}: ${(,)}: the engine ran out of stack loading the file (…"
-          },
-          "46132098844f362d33a04e8672d18997d8464383": {
-            "facing": "ui",
-            "preview": "${}: on(\"${}\") after register() returned: on() is for regis…"
-          },
-          "483d27ff7c4f0f6a712cb28592afa0d415b8afc6": {
-            "facing": "ui",
-            "preview": "${}: $.ui.ask takes its options as a list"
-          },
-          "4b24a999ae76addbb7a5a7c7c583013c8982faf5": {
-            "facing": "ui",
-            "preview": "${}: $.tool.check takes { tool, input }: the tool's name an…"
-          },
-          "4ef89c570644a2d1d18323c00fda6fe32ea76422": {
-            "facing": "ui",
-            "preview": "${}: $.telemetry.log takes an entry ({ to?, event, props? }…"
-          },
-          "4fcf9859846a20e505837cacd7f707cd8ae19eb2": {
-            "facing": "ui",
-            "preview": "${}: $.http.fetch takes a URL"
-          },
-          "584efc4dba321fd69dd4c94a980aacc396b0c7cf": {
-            "facing": "ui",
-            "preview": "${.name} ${}"
-          },
-          "5aa7ba837a045d69c094fad15dfdfecc12474fd0": {
-            "facing": "ui",
-            "preview": "${}: ${}: its environment was unloaded"
-          },
-          "5d2e5d4d0cc7c4192f042d17ccc40143d0160fc4": {
-            "facing": "ui",
-            "preview": "${}: $.model.classify: ${()}"
-          },
-          "5dce8b78f68fc7a462426c1de2fa872397f3bd73": {
-            "facing": "internal",
-            "preview": "the stream carries no result of its own"
-          },
-          "61867d40104fe8ba0bb666acbde3c0bc2153e826": {
-            "facing": "ui",
-            "preview": "${}: $.command.register: ${} needs a description (what the …"
-          },
-          "667077161acbf71e78689721307943364f78fc3a": {
-            "facing": "ui",
-            "preview": "${}: $.tool.call: input must be an object"
-          },
-          "74134cd11e28b145ea044dfe43673bd334cb8404": {
-            "facing": "ui",
-            "preview": "${.pluginName}: ${}: ${}"
-          },
-          "745ebf81c0f4a2854badb7670114f1e788598e8d": {
-            "facing": "ui",
-            "preview": "${}: $.tool.call takes the event's input: { tool, ...args }"
-          },
-          "767ba211dc6217701f6e2845c7f970ba24e620ee": {
-            "facing": "ui",
-            "preview": "${.pluginName}: the interface table names core as the owner…"
-          },
-          "79d6cf8140e9d65acba0e68d8ec6168604ec3430": {
-            "facing": "ui",
-            "preview": "${}: $.${}: the value is ${.length} characters, over the ${…"
-          },
-          "7c0ca03bea599e54e4a6365b62e6f0491c66eb41": {
-            "facing": "ui",
-            "preview": "${}: $.prompt.submit takes { asUser } as a boolean"
-          },
-          "7d7ffb56b6ba16e6e1c4bf64bf11f90cec2fde4d": {
-            "facing": "ui",
-            "preview": "${}: $.state.${} takes a reference { plugin, key } (and id …"
-          },
-          "80a9c7bea347a6e7828e90bd9f304a957e45ec22": {
-            "facing": "ui",
-            "preview": "${}: $.telemetry.mark takes an entry ({ feature, kind, reas…"
-          },
-          "82f264f55f05d7770a6072ea9ad2fe1edd6c26f0": {
-            "facing": "ui",
-            "preview": "${.plugin}: next.to() names no tier"
-          },
-          "83af9c9a98813a8a183f34f840a5a777df16bc28": {
-            "facing": "ui",
-            "preview": "${}: $.config.set takes { key, value } (the key as $.config…"
-          },
-          "844797ae0d086b65af5105b66769e2bf219c9429": {
-            "facing": "ui",
-            "preview": "$.${}: this environment was made without the host's streami…"
-          },
-          "855e8e859e760e96f12e1628d0f6757ef74ea1fb": {
-            "facing": "internal",
-            "preview": "returned no stream: a hook on a streaming event is an async…"
-          },
-          "8704c5994ba4f45a6ea0156b5c6579fa23a3c89b": {
-            "facing": "ui",
-            "preview": "${}: $.model.classify: the model answered with no text"
-          },
-          "887fbbccd8677227b671dd671c5c2181fcc840da": {
-            "facing": "internal",
-            "preview": "the answer holds a `then` that is not fixed"
-          },
-          "89339767144bee3e5a4be0067fb977d85d7188c7": {
-            "facing": "ui",
-            "preview": "${}: $.clock.${} takes a non-negative number of milliseconds"
-          },
-          "8a0b55b9c22d11eb981bad6c6ea7216a1addae8e": {
-            "facing": "ui",
-            "preview": "${}: on(\"${}\") takes (pattern, hook) or (pattern, matcher, …"
-          },
-          "8e0d360aee50071ed62e3cb62e7d110b325da044": {
-            "facing": "ui",
-            "preview": "${}: $.session.compact takes { instructions } (a string) or…"
-          },
-          "9101d2e9ff4942fd8a7e5edab93b5cda20fb9993": {
-            "facing": "ui",
-            "preview": "${}: $.${} takes { text } (a string)"
-          },
-          "92346ddcb88bdfe2842dae3e61c2925dd64cadf2": {
-            "facing": "ui",
-            "preview": "${}: $.${}: value is not JSON data (${()})"
-          },
-          "95b17e76db62e0210ffb01d0293eefe439e237b5": {
-            "facing": "internal",
-            "preview": "core table: not an operation"
-          },
-          "980cc4ac3224eaa122115a11901f96a0d587cbeb": {
-            "facing": "ui",
-            "preview": "${} called twice: a registration takes one .catch"
-          },
-          "9be7e2ff554f68b0f5792fa21dbab7e2c78505c2": {
-            "facing": "ui",
-            "preview": "${}: $.turn.abort takes { turnId } (the id turn.start carri…"
-          },
-          "9ed8dc721e7b7f6753edce5fd59474a4463c6f72": {
-            "facing": "ui",
-            "preview": "${}: $.command.register takes { name, description, argument…"
-          },
-          "9f2199b947fadb326c0d8b4efc608ceefd15b8d3": {
-            "facing": "ui",
-            "preview": "${}: ${(,)} exports the name \"then\" (its own, or through an…"
-          },
-          "a02241565a8bfd4b37b8cf85aeddcb2a70abde08": {
-            "facing": "ui",
-            "preview": "${.pluginName}: engine.create must return $ ({ ...await nex…"
-          },
-          "a15463f823b8fe56503f1585f9b0dc0dc956a001": {
-            "facing": "internal",
-            "preview": "${.name}: the stream was closed before next() returned its …"
-          },
-          "acb6e98afbd71a049c240d1611e3279306659cff": {
-            "facing": "ui",
-            "preview": "${}: $.ui.ask: no answer (${(.deny??.text??\"\",)||\"the dialo…"
-          },
-          "af9780b1e91dafdb3b293167fee5338f9e5f0db2": {
-            "facing": "ui",
-            "preview": "${}: $.clock.${} takes a function"
-          },
-          "b219f962cee5be045f9c6eb5899e8d04f0245289": {
-            "facing": "internal",
-            "preview": "${.name}: .catch left"
-          },
-          "b2771f5861efc30226c9fcb46c0734b78c44fe58": {
-            "facing": "ui",
-            "preview": "${}: ${} takes a function"
-          },
-          "b2cfa9f7bf890de22b594c565b87cb1dc69488ba": {
-            "facing": "ui",
-            "preview": "${.pluginName} provides no interface named ${}"
-          },
-          "b3ec15f8e20c976f54ab10fe9f6c0cb4b198942c": {
-            "facing": "ui",
-            "preview": "${} after register() returned: .catch() is for register()"
-          },
-          "b78cebf0237148a7ba146ee8d0e682a127c557ea": {
-            "facing": "ui",
-            "preview": "${}: $.${}.${} is not a function; an interface is an object…"
-          },
-          "b85771e5520d97291dc003593ff5e5904c9efbe1": {
-            "facing": "ui",
-            "preview": "${.pluginName}: $.${}.${} is not callable from an engine.cr…"
-          },
-          "bba7e24d35dd222a842fd189b504208e41c280d7": {
-            "facing": "ui",
-            "preview": "${}: $.prompt.submit takes { text } (a non-empty prompt)"
-          },
-          "bbd48e0b3af18f02ba6c37f6539d5b14be6223db": {
-            "facing": "ui",
-            "preview": "${}: $.agent.spawn takes { prompt, ... } (a non-empty promp…"
-          },
-          "c0081a8df9526dc42c878153592195781748b8ec": {
-            "facing": "ui",
-            "preview": "${}: $.ui.resolve ${}"
-          },
-          "c2a5925f9ce623c3120e4b425acd3c10a1c7ca9e": {
-            "facing": "ui",
-            "preview": "${.pluginName}: $ is already built"
-          },
-          "c88768ad7081c620a0b474d93c3fbd43c2434f29": {
-            "facing": "ui",
-            "preview": "${}: $.command.run takes { command, args? } (the command's …"
-          },
-          "cdb1f48fccc3664702aa309daecfd56aa1d05ba5": {
-            "facing": "internal",
-            "preview": "no implementation for ${.event}"
-          },
-          "ce9a26aff2754f2bc885efc785b7da733b2d814b": {
-            "facing": "ui",
-            "preview": "${}: options.signal must be an AbortSignal"
-          },
-          "d36da33eda1f1ea02debb685aca52615d4b0d31a": {
-            "facing": "ui",
-            "preview": "${}: ${(,)} does not compile: "
-          },
-          "d8cb4ab4378cd0233a1c4ca13ef4c26173df60b1": {
-            "facing": "ui",
-            "preview": "${}: unloaded while its module loaded"
-          },
-          "db357a072fb167f34e63a2fbb082ec41f2cbe5aa": {
-            "facing": "ui",
-            "preview": "${}: $.session.messages ${}"
-          },
-          "e25c0845377e4c59972de08a63cb6d91edd02d5b": {
-            "facing": "ui",
-            "preview": "${}: the on(\"${}\") hook returned no result"
-          },
-          "e7b3dfffd86af8976b5d349894f74491d7f34fc1": {
-            "facing": "ui",
-            "preview": "${}: $.${}: value is not JSON data (${===void 0?\"undefined\"…"
-          },
-          "f093e5aef10ceb15224fb8a3240c0b2eb6e567b6": {
-            "facing": "internal",
-            "preview": "${}: $.clock.${} cancelled"
-          },
-          "f11d5e936104264d6c102b5fa22ccaf2ebcdad06": {
-            "facing": "ui",
-            "preview": "${}: $.agent.register takes { name, description, prompt, ..…"
-          },
-          "f137d9e4350748b4ebc101fea1c4f04eb16b4617": {
-            "facing": "ui",
-            "preview": "${}: on(\"${}\") registered twice"
-          },
-          "f258a0a7b7c2f49f54df72ed0317b624a0ac73d1": {
-            "facing": "ui",
-            "preview": "${}: ${} exports no register(on, options) function"
-          },
-          "f52fcc57550bce13062e3a3a7b9247b6c6183c98": {
-            "facing": "ui",
-            "preview": "${}: an engine.create hook has no budget and its failure fa…"
-          },
-          "f6150de7e258dcdf6c9a0c21f0abdeeb2cc64640": {
-            "facing": "ui",
-            "preview": "${}: $.ui.ask takes the question first"
-          },
-          "f7f7369b061707a33e4280714472ffdd70370fb4": {
-            "facing": "ui",
-            "preview": "${}: $.audio.play with shouldLoop needs options.signal: the…"
-          },
-          "fae857ec26d2f9b061704d8233747c5ffbc79cb0": {
-            "facing": "ui",
-            "preview": "${.plugin}: next.to(\"${}\") skips nothing from ${.tier}; a $…"
-          },
-          "fb5b4e7c0444888453bf4cf46ff42f50e89b702b": {
-            "facing": "ui",
-            "preview": "${.pluginName}: engine.create returned $.${} changed; it is…"
-          },
-          "fd5c01681db5136a26456de07b2a878b54c1a6c8": {
-            "facing": "ui",
-            "preview": "${}: on(\"${}\") ${}"
-          }
-        },
-        "why": "He (HooksError, 320434) is the plugin-host's generic error. The ui arms are $-API argument and registration checks that reject into the calling plugin's code; when a hook throws them, the dispatch catch (3818300) reports them through np()/Nl().hookFailed (3809709), which the CC host routes to the UI (gen() 11014066), and then skips to what is below. The model arms are dispatch-result problems ('returned ${}', 'returned no result', 'yielded a chunk with ${}', '.catch threw', 'next() after it settled'). They become the dispatch's rejection when nothing is below (`if(d.inFlight===void 0&&p)throw F`) or pass up through De(), and runToolUse turns that into the 'Error calling tool' tool_result (10860151). '${.name}: ${}' is model only through identical text (deferred-tool line). This upholds the earlier review of this group; the model-arm route was not re-traced end to end."
-      },
-      {
-        "arms": {
-          "8074f5661a475f7abebd4e9ee1ac199af4f3c3d4": {
-            "facing": "model",
-            "preview": "holds a list with a hole or a key"
-          },
-          "808081e6c36af7646d3387a220109f4d13362c59": {
-            "facing": "model",
-            "preview": "holds what JSON cannot (${typeof })"
-          },
-          "afdee4a57acef849af80df5d8c1f7ea5bfd40239": {
-            "facing": "model",
-            "preview": "holds an accessor"
-          },
-          "f8c0710d0d9ede26b5b0ae5da0b9efed94f9c460": {
-            "facing": "model",
-            "preview": "holds an object that is not plain"
-          },
-          "f90b10a415eac727e3d121f58f6c837f4b780663": {
-            "facing": "model",
-            "preview": "holds a key ${}"
-          }
-        },
-        "why": "8074f566 model: Mo @3957388 throws new Oe(this phrase); Yan @3958706 catches Oe and returns t.message; xmt @9102135 (the $.skill.prompt argument normaliser, Mmt['skill.prompt']) re-throws it inside `$.skill.prompt: called with a frontmatter that ${...}`, and wn @3958838 (checkArgument of the skill.prompt site Qa) returns it to lt @3907440 which throws `${name}: next() passed an argument with a frontmatter that ...`. trace @3958440 follows that throw through G6n @14037807 / the turn.step dispatch Mr @17205104 into the query loop @17999497 and Nd @17968845, which yields it as tool_result content (is_error) and api-message @13877666: a model sink, same route as the cached-model sibling `next() after it settled` (yr @3909224, tool-result-plugin-hook-next-after-settled). The ui arms of this group are module-load/registration refusals (on() registered twice, exports \"then\") raised in the hooks-module loader g/H @4101784, a different route. | 808081e6 model: Mo @3957388 throws new Oe(this phrase); Yan @3958706 catches Oe and returns t.message; xmt @9102135 (the $.skill.prompt argument normaliser, Mmt['skill.prompt']) re-throws it inside `$.skill.prompt: called with a frontmatter that ${...}`, and wn @3958838 (checkArgument of the skill.prompt site Qa) returns it to lt @3907440 which throws `${name}: next() passed an argument with a frontmatter that ...`. trace @3958440 follows that throw through G6n @14037807 / the turn.step dispatch Mr @17205104 into the query loop @17999497 and Nd @17968845, which yields it as tool_result content (is_error) and api-message @13877666: a model sink, same route as the cached-model sibling `next() after it settled` (yr @3909224, tool-result-plugin-hook-next-after-settled). The ui arms of this group are module-load/registration refusals (on() registered twice, exports \"then\") raised in the hooks-module loader g/H @4101784, a different route. | afdee4a5 model: Mo @3957388 throws new Oe(this phrase); Yan @3958706 catches Oe and returns t.message; xmt @9102135 (the $.skill.prompt argument normaliser, Mmt['skill.prompt']) re-throws it inside `$.skill.prompt: called with a frontmatter that ${...}`, and wn @3958838 (checkArgument of the skill.prompt site Qa) returns it to lt @3907440 which throws `${name}: next() passed an argument with a frontmatter that ...`. trace @3958440 follows that throw through G6n @14037807 / the turn.step dispatch Mr @17205104 into the query loop @17999497 and Nd @17968845, which yields it as tool_result content (is_error) and api-message @13877666: a model sink, same route as the cached-model sibling `next() after it settled` (yr @3909224, tool-result-plugin-hook-next-after-settled). The ui arms of this group are module-load/registration refusals (on() registered twice, exports \"then\") raised in the hooks-module loader g/H @4101784, a different route. | b8f1aaa7 model: Mo @3957388 throws new Oe(this phrase); Yan @3958706 catches Oe and returns t.message; xmt @9102135 (the $.skill.prompt argument normaliser, Mmt['skill.prompt']) re-throws it inside `$.skill.prompt: called with a frontmatter that ${...}`, and wn @3958838 (checkArgument of the skill.prompt site Qa) returns it to lt @3907440 which throws `${name}: next() passed an argument with a frontmatter that ...`. trace @3958440 follows that throw through G6n @14037807 / the turn.step dispatch Mr @17205104 into the query loop @17999497 and Nd @17968845, which yields it as tool_result content (is_error) and api-message @13877666: a model sink, same route as the cached-model sibling `next() after it settled` (yr @3909224, tool-result-plugin-hook-next-after-settled). The ui arms of this group are module-load/registration refusals (on() registered twice, exports \"then\") raised in the hooks-module loader g/H @4101784, a different route. | f8c0710d model: Mo @3957388 throws new Oe(this phrase); Yan @3958706 catches Oe and returns t.message; xmt @9102135 (the $.skill.prompt argument normaliser, Mmt['skill.prompt']) re-throws it inside `$.skill.prompt: called with a frontmatter that ${...}`, and wn @3958838 (checkArgument of the skill.prompt site Qa) returns it to lt @3907440 which throws `${name}: next() passed an argument with a frontmatter that ...`. trace @3958440 follows that throw through G6n @14037807 / the turn.step dispatch Mr @17205104 into the query loop @17999497 and Nd @17968845, which yields it as tool_result content (is_error) and api-message @13877666: a model sink, same route as the cached-model sibling `next() after it settled` (yr @3909224, tool-result-plugin-hook-next-after-settled). The ui arms of this group are module-load/registration refusals (on() registered twice, exports \"then\") raised in the hooks-module loader g/H @4101784, a different route. | f90b10a4 model: Mo @3957388 throws new Oe(this phrase); Yan @3958706 catches Oe and returns t.message; xmt @9102135 (the $.skill.prompt argument normaliser, Mmt['skill.prompt']) re-throws it inside `$.skill.prompt: called with a frontmatter that ${...}`, and wn @3958838 (checkArgument of the skill.prompt site Qa) returns it to lt @3907440 which throws `${name}: next() passed an argument with a frontmatter that ...`. trace @3958440 follows that throw through G6n @14037807 / the turn.step dispatch Mr @17205104 into the query loop @17999497 and Nd @17968845, which yields it as tool_result content (is_error) and api-message @13877666: a model sink, same route as the cached-model sibling `next() after it settled` (yr @3909224, tool-result-plugin-hook-next-after-settled). The ui arms of this group are module-load/registration refusals (on() registered twice, exports \"then\") raised in the hooks-module loader g/H @4101784, a different route."
-      },
-      {
-        "arms": {
-          "130e6840308ef868d76fbddfaf25c626b54ba445": {
-            "facing": "ui",
-            "preview": "${.plugin}: returned a ${} in another plugin's hover scope …"
-          },
-          "16405c1c0c363c31218842b1dcc0df08cbf0e2b9": {
-            "facing": "ui",
-            "preview": "${.plugin}: ${.refusal(,)}"
-          },
-          "204fb38c88f3f1a2b4be4365fd2672f7f6f8da80": {
-            "facing": "ui",
-            "preview": "${}: returned a drawing that holds an object that is not pl…"
-          },
-          "34433a02cc7cbfa744812f257d2ee34c9570e593": {
-            "facing": "ui",
-            "preview": "${.plugin}: ${[.type]}"
-          },
-          "3e40769a754dbdeec503580f4d1302cc51cd674a": {
-            "facing": "ui",
-            "preview": "${.plugin}: returned a Client it did not draw (${()}/${()} …"
-          },
-          "6631b14d4503c85504f89920b7a1cea598e6bc0c": {
-            "facing": "ui",
-            "preview": "${}: returned a drawing with a function where plain data go…"
-          },
-          "687b8bfd240360c40f730fdb653cadf1f361301d": {
-            "facing": "ui",
-            "preview": "${.plugin}: returned ${[.type]} it did not draw (${()}#${})…"
-          },
-          "d8b803ca72f52c2e6083a65c8422f440e47de20c": {
-            "facing": "internal",
-            "preview": "${}: $.settings.read takes { source }, { key } or nothing"
-          }
-        },
-        "why": "He (HooksError, 1216168) is the plugin host's generic error. The eight ui arms are ui.render tree refusals: bfi (4156961) and Lo/fu/au/an/cu/iu (4159375-4161760) run only from fe (4318837, `i===\"ui.render\"?fe(...)` in D's m); the throw is caught in Ax (4067578), reported through Ol().hookFailed (4057687, CC host 11014066) and the TUI draws what is below, so no tool_result is involved, same ruling as the carried ui render-refusal arms. d8b803ca ($.settings.read argument check, 4283882) is a $-API argument refusal rejected into the calling plugin's code, like the carried $.<api> ui arms. The model arms are the tool-event dispatch problems."
-      },
-      {
-        "arms": {
-          "2d5889571c15bb380c594c43c23b05cbbedd59d5": {
-            "facing": "ui",
-            "preview": "${.plugin}: next.to names \"${()}\", which is not a tier a di…"
-          },
-          "5f5fa1a7077118b03d810673b11fdaa5bbe90681": {
-            "facing": "ui",
-            "preview": "${}: $.prompt.paint ${(,)}"
-          },
-          "7eb21f4501242b0ab17bde2c6bcff773e6ec18f6": {
-            "facing": "internal",
-            "preview": "${}: ${(,.identifier)}: the engine ran out of stack linking…"
-          },
-          "9619a1075425fbff7290f1c4ac31eeeaee317170": {
-            "facing": "ui",
-            "preview": "${}: returned a drawing that holds a Proxy or a vm context;…"
-          },
-          "acb125184474c743769bdc5f66bc4c66c79d55cb": {
-            "facing": "model",
-            "preview": "holds a Proxy or a vm context"
-          }
-        },
-        "why": "Le (the plugin host's generic error) is thrown by Br @4324246 for 'holds a Proxy or a vm context' on the same path as the already-ruled model siblings 'holds an accessor' and 'holds what JSON cannot', whose throw reaches the dispatch rejection and the tool_result. The new ui arms are the $.ui drawing/render refusals (@4372944), caught and reported through hookFailed to the TUI, a different route."
-      },
-      {
-        "arms": {
-          "299cc1e005612bee3af9bdc78347f9b5e1708067": {
-            "facing": "internal",
-            "preview": "${}: $.tool.register: ${}"
-          }
-        },
-        "why": "$e is the plugin host's HooksError. The new internal arm is rI's $.tool.register argument check @4943612 (Promise.reject(new $e(`${e}: $.tool.register: ${n}`)) when Q8s refuses the registration): a $-API refusal rejected back into the calling plugin's own code and reported through hookFailed, like the carried $.<api> refusal arms. The model arms are the tool-event dispatch-result problems that become the 'Error calling tool' tool_result."
-      },
-      {
-        "arms": {
-          "36d796679d050ac5aa46c7f0bbffa6abb5955c6a": {
-            "facing": "ui",
-            "preview": "${.plugin}: returned a Shader that next(e) did not hand it,…"
-          },
-          "54a977d06189a5291e71bd57a48bddda378c4b3d": {
-            "facing": "ui",
-            "preview": "${.plugin}: returned a Shader it did not draw; a render hoo…"
-          },
-          "84398e9a41e01ca71ce7ef7d385bea1f1e1e9558": {
-            "facing": "ui",
-            "preview": "${}: $.audio.speak options.signal must be an AbortSignal"
-          },
-          "ee4389f3e1107e51a8cefb28d154d6a509db8622": {
-            "facing": "ui",
-            "preview": "${}: $.agent.call options.signal must be an AbortSignal"
-          },
-          "fc53913a5ea5f8e3ef821f81b65b465bcb399cbc": {
-            "facing": "ui",
-            "preview": "${} that holds a BigInt, which cannot be written out"
-          }
-        },
-        "why": "These ui arms are $.agent.call/$.audio.speak argument checks and render-hook drawing refusals that reject into the calling plugin's code and are reported through hookFailed to the terminal, while the model arms are tool-event dispatch-result errors that end in the tool_result."
-      },
-      {
-        "arms": {
-          "b853c9c7b98ffd6f4fa32f527549fe638c8f4398": {
-            "facing": "ui",
-            "preview": "${}: $.wasm.compile: ${}"
-          }
-        },
-        "why": "The WebAssembly compile refusal is thrown in the plugin worker back into the calling plugin's own API call and reported through the hook-failure path to the terminal, while the model arms of this error class are thrown on tool-event paths whose message becomes a tool result."
-      },
-      {
-        "arms": {
-          "83b1e27b86faf3a667d08a5e6141aec5e370a08b": {
-            "facing": "internal",
-            "preview": "${.name}: ${.expiryText()}"
-          }
-        },
-        "why": "je error class @5066640: the model arms are plugin/mod load and call failures returned to the model; `${e.name}: ${H.expiryText()}` (@4792613, @4962409) is only the abort reason handed to the hook's own AbortController (x.abort/G.abort) when its grant expires — the outcome is reported through hookFailed/Es telemetry and the fallback result, not this text"
       }
     ]
   },
@@ -3563,6 +2411,722 @@
       }
     ]
   },
+  "b595a261a62eca0a": {
+    "at": 17226953,
+    "model": {
+      "005866d9491068fbedaef9acfcb6d02af0789b47": "${} event is not plain data: ${(,)}",
+      "01b4387403ff8ce9b4533554d4c3a26a9342646f": "$.audio.play: options.shouldLoop must be a boolean",
+      "0bdb386ac9f9e73fb24ffe430aab45efca3e4922": "${}: ${}: socketPath ${} refused: no Unix socket transport …",
+      "11190a890943cc05be446c7ea9bbf0be74c6ec40": "${}: $.prompt.submit: ${}",
+      "1124a00395dc8b2a14416e35b5b4d2ffbf62b8e3": "${}: ${}: refused: credentials in the URL",
+      "11d5d47843a6ecfcc10f1975aac4c2c6101a5be7": "${}: ${}: ${.href} refused: body of ${} bytes is over the $…",
+      "1529f16f1c2f108ea295c0c12b766ddbd0971d61": "${}: ${}: socketPath ${()} refused: a NUL byte in the path",
+      "17054ae16c07a121130c1fa1eb7a7098d293ed9d": "${}: $.audio.play: refused: ${} plays are going at once",
+      "17e0bfad86632fa8469b5e1d1aa36a9d6bb24640": "${}: plugin ${}, which provides $.${}, is not loaded",
+      "1ee03dacaf137af13b41d1e2e8f98e7391a3e60b": "${.plugin}: ${}: not a loaded plugin",
+      "1f6e837c672083f90f993ebaac6286310ed3dcb5": "$.audio.play: clip must carry exactly one of asset, url, ba…",
+      "1f8542fa2044994ce025ff9e4b9a4cbba1a35e95": "${}: $.prompt.submit takes text alone; attachments cannot b…",
+      "22cbfc9405a370f7dc5901b1a4da174fbfffee1a": "${}: surface module ${.split(\"/\").join()} ",
+      "22f6899e0882a0c902263acbad2e44c4714ead7b": "$.audio.speak: ${}",
+      "2b3610c6de373db07436cf83d22d3c9e3f03971e": "${}: $.command.run: ${}",
+      "338a46bd1ac3ccb3bf552c3eaf0c5638bcc6da1f": "$.audio.play: clip.mime must accompany clip.base64",
+      "3595540bd7ac837ee869edb2caee1825f9e9322d": "${}: ${}: socketPath ${} refused: a network location is not…",
+      "3a803f04130ae9810554f9b81fd0026464a57692": "${}: ${}: not a URL: ${()}",
+      "3e48aac66da6cf7d4d842d5368f8878586a91a0e": "${.plugin}: $.session.append: this process keeps no convers…",
+      "40b5d11cb4e668214d0b8256a82012fb1c875043": "${}: $.turn.abort: ${.turnId} is not the running turn (${.t…",
+      "43ba7431689ba4fead79d9675b2e893b75db54e2": "$.audio.speak: no speech synthesizer on ${}",
+      "45d7129cf1705b00e19d6afca9399dc22b515e09": "${}: $.tool.check: no tool named \"${}\" in this session",
+      "466777501251e1f5211c19f5ad66e6cb13f91281": "${} event ${}: ${}",
+      "4c6bcc9c5d36a9a381ce11e500fac3e9ed83d58c": "${.plugin}: $.prompt.compose: this process composes no syst…",
+      "578937f09340a4e43d487a333fd2bd6f582b4dae": "$.audio.play: clip must be { asset }, { url } or { base64, …",
+      "57963ad80dafe76a21b18278c44d9901f8d6e48d": "${}: ${} is not available in this mode: no session is bound…",
+      "58661295ee0d2720ea28b7e34f45bd221813f1c4": "${}: ${}: a body of bytes and compress ride engine requests…",
+      "5b837db9e2e1673bb3433c861376c14e0573f89e": "${}: $.agent.register: \"${.name}\" refused: ${}",
+      "5bea7a87f119da47621bfc74751828582a20a4e2": "${}: $.ui.notify: the channel's write failed",
+      "5f8cc9f3c5cf5d7fa199be0f30a1fab93db98d7f": "$.audio.play: clip.${} must be a non-empty string",
+      "64bb10185ef6d30b65f154e969e23c1d0adf5ac3": "${.plugin}: $.mcp.call(${}, ${}) refused: ${.deny}",
+      "69b844ffa916507c640f573a247216daa10e84d8": "${}: $.wasm.compile takes a literal path, or bytes as an Ar…",
+      "76326a8f3985a1788ddb01c3f2f0fbdec29b0bc2": "$.audio.play: could not read ${} in ${}'s directory: ",
+      "76aa8c9d48d2bafd9d38dd94ba076dc58a714e1e": "${}: $.agent.spawn refused: ${} spawns are running at once",
+      "770c90b730f6e41dc3a9fafbba1f61054aca1cc7": "${}: $.model.complete: maxTokens ${} is past what ${} can p…",
+      "79f6181b48e9167b979f0b8bf2d516f698f85afb": "${}: $.session.compact: compaction is switched off in this …",
+      "7fab89a2235e32403ecbd5343a0519920b045043": "${}: $.model.complete: maxTokens must be a positive integer…",
+      "8113d3c7b511864bdbae4c46bdf313bfbe6ab64b": "${}: ${}: ${()} refused: http or https only",
+      "82b63c9b88086808b3ba684f1eaf2583cc1aa7ff": "${}: $.prompt.submit submits a prompt to the model; a text …",
+      "831f9ddffe3bb43a3e91d26b634a05bb911fb01d": "${}: ${}: could not be given its argument: ",
+      "84848a5213f82ebeb7be6cd1187ebdd9c0d4c0a8": "$.audio.play: clip.asset must be a string",
+      "848d76ec58cadebc54a1423bf33a7b2638633d66": "$.audio.play: the plugin has no id",
+      "8563443770b7e125ec65616baf6d926a5922c80e": "${}: ${}: ${.origin}${} refused: this session sends no prod…",
+      "8d13844f00134433b14d1ba7d58c965a835fe6e7": "${}: $.command.register: \"/${.name}\" refused: the plugin ${…",
+      "8f9e816dd3c6d9b92184a476d2e1b491311fe348": "${}: $.turn.abort: ${.turnId} is already ending",
+      "90c99409d36fb0df43c4bc81a282fb5c69630703": "${.plugin}: $.mcp.call: no connected MCP tool \"${}\" on a se…",
+      "911492deaa91a8d48e2f6e20905a5e51c1fc3cd3": "${}: $.tool.register: this host cannot add tools at run tim…",
+      "928a5d50131f66370181cf5dae24a2b319c348c4": "the plugin's load proved no file there",
+      "95c449f02a6ee1e5c4724949d9a66015a3a3819f": "${}: ${}: ${.href} refused: a request body of ${.length} ch…",
+      "97f2749bfaa4d421c2e3ef144248c8a30073c641": "$.audio.play: the clip is over ${} bytes",
+      "97fbade0cb8466990f975c896f23168761e6aae4": "$.${}.${}: plugin ${}, which provides $.${}, or its caller …",
+      "9b74215a0af5dfe4eee90ca9f8e9b51a343054e6": "${}: $.config.set: no /config row with key ${.key} ($.confi…",
+      "9c2fbd7627ae0833fa62b985d212af7faf31bdd9": "${}: $.tool.call: consent, when given, is a string",
+      "9c824ea60a42ec8c691d137fd7426661d9ec97fb": "not the file the plugin's load proved",
+      "9dd55c2a984de1e74ea2b206aa395e8c95e42eef": "${}: $.fs.ancestors: ${} refused: ${}",
+      "9f2a4e70ce5a6c47ef77de678b2b8009405cc2a4": "ui.press: the press is not plain data: ${(,)}",
+      "a3563acf4977b38a4d7542c9f29bd53d5187db67": "${}: $.fs.${.event}: ${.path} refused: ",
+      "a47ff84669f27abc3033ed2c524f3699767e2a8d": "${.plugin}: ${}: ${} (host check)",
+      "a9aa6f796fffc1a16bb94af1727dd63f88c7e23c": "$.audio.play: the plugin has no directory",
+      "b3dfb07571d6c666bcc62d43e6fdd7fd5588cdb9": "${}: $.tool.register: \"${.name}\" refused: this session has …",
+      "b52015e51105775b45b4a0e550233dab259e6d90": "$.audio.speak: voice must be a string when given",
+      "b5b0408dcb8e71556b32f1d0717b47968c53dc08": "${}: $.fs.${.event}(${.path}) failed: ",
+      "b8e7d1d3869c821a0f18f98cb3c4e98133ce64db": "${}: $.model.complete: timeoutMs must be a positive integer…",
+      "bb8871e22a4d5d9ad4fbd1486be41541b4d182b0": "$.audio.play: asset must be a path inside the plugin's dire…",
+      "bc092a4bcf998fa53ba8d0327e83b4a7a5ab3dd0": " (a link proves none)",
+      "bc80d93241f271f37e87700e7a5c2763a97b302c": "${}: ${} is not available in this mode",
+      "be6097ce96de86b61746b41b797539f0336498e9": "${}: $.tool.call: no tool named \"${}\" in this session${}",
+      "bfc35fe14584581b323bd970af349a1e78f24654": "${}: ${}(${.href})${} aborted: no complete answer within ${…",
+      "c4d9b209cb2c5956b418e97aaeeed246c629ff9f": "${}: $.model.complete: effort must be one of low, medium, h…",
+      "c5940d5a2744883f07b82d69bcada0579fb9e721": "${}: ${}: more than ${} redirects from ${}",
+      "c595cb922014e3234056bf574e542f3aab6060e2": "${}: plugin ${}, which provides $.${}, is not admitted yet …",
+      "c669c17f15791e4c3476490314a0ff027e66e05b": "${.plugin}: $.${} refused: ${}",
+      "c7527fa816a3a518d2cfd4c1d324834bac0d2408": "${}: $.tool.check: the tool container did not answer with a…",
+      "c8e9f172fd030fc50f5b59e34d75a5ac5be47d41": "${.plugin}: $.${} refused: the hooks module that made the c…",
+      "cb8d05878b6be7a715b6160daba54ca82d333e7e": "$.fs.${.event} (${}): a tenant has no disk of its session's",
+      "cbd12cf261bbfcdf0d1078c00a432a13ae87a179": "${}: arguments are not plain data: ${(,)}",
+      "cc1858660fd2cb71dbea93d93620327da1035938": "${}: ${}: socketPath ${()} refused: takes an absolute path",
+      "cc57d85187bb957fa41d4278d172d46a599e2acf": "${.plugin}: $.${} refused: a hooks module behind the call i…",
+      "cd7aa028ec76403d227c8719dd5f92732b37e9f3": "$.audio.speak: text must be a non-empty string",
+      "d365d5c0e8483b5f5914be293c80d99bbcb83d75": "${}: ${}: refused: ${}",
+      "d49fc9c4d81f9b0e8a477cf62e049ed26a0457f0": "${.plugin}: $.prompt.compose: ${}",
+      "d8177f7d7b40205c36bca2f19e11b006fa4c8c41": "not available in a headless (-p / SDK) session yet: compact…",
+      "d9879f557f9979074c4911b099166dc889e4751d": "${}: $.turn.abort: no turn is running (asked for ${.turnId})",
+      "da24c5f2c6cddbcfafbeb9d9306f337298be466e": "${}: $.model.complete: ${}",
+      "da665f656019ca9d2b3749b897c3a65e7e867bab": "${}: $.command.register: \"/${.name}\" refused: it is the ${[…",
+      "e0ada016d98593e1e16d722fdaa0e70946424033": "${.plugin}: $.${}${[]}: ${.deny}",
+      "e1120545e81b907969a4a596549c8b4458d9c2c8": "${}: $.tool.register: \"${}\" is a reserved MCP server name",
+      "e1d6f6d731083af020c7d06f4d49e83b21fd2473": "${}: ${}(${.href})${} failed: ${?`${}: `:\"\"}${()}",
+      "e3c520a845a6c248188d6dda1f5616dd3661e297": "${}: $.command.run: no command named /${} in this session",
+      "e8838dd5b1bdb22fb6f590f9e5188a5d61a2268f": "$.skill.prompt: called with ${}",
+      "e94c873cee5e754d47fb1b8f3b39e7e49129c09a": "${}: ${}: the build carried no such file",
+      "e9fa12606dced20e0e368a8048c95d0e43d7baf6": "${}: $.tool.register: the session already has an MCP server…",
+      "ead00c04b41742bdab2f7b01f9a5aea42b29d75e": "${.plugin}: $.wasm.compile: ${}",
+      "ebffccf002dff16e616e482df1eec3acdca4d3b5": "$.audio.play: options.gain must be a number from 0 to ${}",
+      "ecf571bad011aca3a3eb0b2783096f557d7e8ece": "${}: $.tool.register: \"${.name}\" refused: this session runs…",
+      "f028578a0df71a23572536b1af0b73118b35b321": "${}: $.session.compact: a turn is running (${.turnId}); the…",
+      "f05b031d85414dca20a1cf4295a48385ddf1cf97": "$.audio.play: ${}",
+      "f2079a38e7792566845ccbc437e2ffcd66239959": "$.session.append: this process keeps no conversation to app…",
+      "f41f889aa7bc39ac3a91457ed1a70609d59f4c37": "${}: ${}(${.name}) produced no result${.context.abortContro…",
+      "f5e49578819233594274424772a139dd1d706f89": "${}: $.tool.check: input is the tool's arguments, an object",
+      "f873e04839bf457456aec25d81434b94c120b6ea": "${.plugin}: $.ui.notice: ${.tool_use_id} refused: ",
+      "fb639a3e65256f2275bfab5f8bc6f5d430da7ef6": "${.plugin}: $.wasm.compile refused: ${}",
+      "fb9753921cc7be3c9dce21ab18711254bc13b5e8": "${}: $.model.complete: model \"${}\" is not in this organizat…",
+      "fbc21bfcd0755f75f4f04f3fc5f66eb85b4b68c6": "$.${}: no core at the bottom of the chain (the site did not…",
+      "fd2370f671e9061a9b885fb19c089aec88ed1e85": "${}: ${}: ${.origin}${} refused: the body is not an event b…"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "15bc15aca2c50fb483c42170aed9720f5cbd41b9": {
+            "facing": "internal",
+            "preview": "${}: hooks module not loaded; next.to(\"${}\") skips nothing …"
+          },
+          "1ced802b1c1cf91e99231b94cca85653bd28bf7c": {
+            "facing": "internal",
+            "preview": "${.op}: the plugin's environment is unloaded"
+          },
+          "368400a306fd50674e54999bb21c2f71c13f1666": {
+            "facing": "internal",
+            "preview": "${}: registered ${}, which is a call on core's $.${} that i…"
+          },
+          "3732c4c888a3f67d4cc5e2200b90d2ac1ec3bb26": {
+            "facing": "internal",
+            "preview": "which selects no event"
+          },
+          "39d4854c6bce73debbd66e8b6fa74e65166bb818": {
+            "facing": "internal",
+            "preview": "${}: registered ${}, which the scan of its hooks module did…"
+          },
+          "514384920106ec3f83074bfdead4d02154afca49": {
+            "facing": "internal",
+            "preview": "not loaded by the fold of the whole set"
+          },
+          "54c5aa6faf71745bce34448d550d4c99a947cb0c": {
+            "facing": "internal",
+            "preview": "${}: hooks module not loaded; next.to is available to manag…"
+          },
+          "55bf2d8c194dcf25e552fbc3b7a4a99a07c537ed": {
+            "facing": "internal",
+            "preview": "${}: registered ${}, but no loaded plugin provides $.${}"
+          },
+          "60590633ae50c1c513a0bbac6bb7d83307fcb4dc": {
+            "facing": "internal",
+            "preview": "${}: stream let go"
+          },
+          "625f19de7c04afc0c672f0db6597fb4973aa0452": {
+            "facing": "internal",
+            "preview": "${}: registered ${}, but $.${} (${.owner}) has no method ${}"
+          },
+          "6ca2b40e2afc99cf7a632ac9d7b795d0fc4a5581": {
+            "facing": "internal",
+            "preview": "${} exited ${??\"by signal\"}"
+          },
+          "6f59accb7cb644e82b4c702c41542ecbb49fbf00": {
+            "facing": "internal",
+            "preview": "${}: registered on(\"${}\"), "
+          },
+          "733ff94c80af0e162c247defdfbb52e4b57f922a": {
+            "facing": "internal",
+            "preview": "${}: registered \"${}\", which is not an event"
+          },
+          "7fbfc37ca081caf481daf4a81ecd79d7839eb721": {
+            "facing": "internal",
+            "preview": "${}: a streaming hop takes next_pull"
+          },
+          "8f7b9bd002e4dc5c516564a4fb90db60ae6e50ec": {
+            "facing": "internal",
+            "preview": "${.name}: ${()}"
+          },
+          "931cb902d936c95dcbb1393406e8eb6d7b78229a": {
+            "facing": "internal",
+            "preview": "${}: ${?.??\"engine.create\"} failed"
+          },
+          "994983878e42027b1ef82476b9eaea8176abc640": {
+            "facing": "internal",
+            "preview": "${}: unloaded while its reload ${} ("
+          },
+          "ab13e1417aa47bc6943dd1ca1253ced0e12d94d6": {
+            "facing": "internal",
+            "preview": "${}: not a hooks module the binary carries; it loads in the…"
+          },
+          "ac29cc149dfa5b346b45fc18e64037fae3a42934": {
+            "facing": "internal",
+            "preview": "${.name}: options do not fit plugin.json userConfig: ${.err…"
+          },
+          "aeed8f8eb9ec49ef2eb0df1df4a866ef9ddf6674": {
+            "facing": "internal",
+            "preview": "the stream was let go"
+          },
+          "b3d99735048aca03dc6868562ae18cf445e12f1c": {
+            "facing": "internal",
+            "preview": "no hooks module named ${} is loaded or declared"
+          },
+          "bcb128d55775e9cd9f8cf14ed4ab944de43d5f17": {
+            "facing": "internal",
+            "preview": "${?.??\"engine.create\"} failed on reload"
+          },
+          "c065712173402843e9ace88b6866c4ab307bafdc": {
+            "facing": "internal",
+            "preview": "did not settle within ${}ms of its signal aborting"
+          },
+          "c2aaea09c09bd3116be394b786b0686382b66ba3": {
+            "facing": "internal",
+            "preview": "${}: not a function"
+          },
+          "c760431c33745279f3877d5946a5756cc5163513": {
+            "facing": "internal",
+            "preview": "whose negated pattern selects no event"
+          },
+          "ca7196cd1b73f50cefcd298f005d2221f35806a3": {
+            "facing": "internal",
+            "preview": "${.name}: hooks module not loaded; the name is the engine's…"
+          },
+          "cfad000720df8470ca964479ae4dd78acbfe779f": {
+            "facing": "internal",
+            "preview": "${}: hooks module not loaded; ${} (policy/scan)"
+          },
+          "d65b6833dedbdf178df00ded88f9cb3fc2f69384": {
+            "facing": "internal",
+            "preview": "); not reloaded"
+          },
+          "d687efff86f7a02134e7dd472b3b41c3b35207cb": {
+            "facing": "internal",
+            "preview": "it left the declared set"
+          },
+          "d7c4d540261bb8243684c183c4d295a83ec556a0": {
+            "facing": "internal",
+            "preview": "${}: its hooks module is not loaded"
+          },
+          "d8cb4ab4378cd0233a1c4ca13ef4c26173df60b1": {
+            "facing": "ui",
+            "preview": "${}: unloaded while its module loaded"
+          },
+          "d91d1c2f6d05c953b61341bd75cd241faa618ecf": {
+            "facing": "internal",
+            "preview": "no stream is open for this op"
+          },
+          "e06b05afbc6e2cac51e3fa54ae9b734c3ac58ed5": {
+            "facing": "internal",
+            "preview": " (${.reason})"
+          },
+          "e5f88469f96da06e51ff09a02aafa29016a4397a": {
+            "facing": "internal",
+            "preview": "${}: registered ${}"
+          },
+          "ec7a54e878b9592e6d5e77ab0576ddd61e763b46": {
+            "facing": "internal",
+            "preview": "no errno"
+          },
+          "f77c84d82b7bd9e20fcae6683aef2a94359b0a91": {
+            "facing": "internal",
+            "preview": "${}: a hook on a streaming event returns its async generato…"
+          }
+        },
+        "why": "He is the generic HooksError class (320434). The model arms come from event dispatch on the chain that runs the model's tool calls: k7t installs core tool.call (10861652); the worker dispatch rejects with \"${y} event is not plain data\" (11001352, 11002669); ga/Ydn have the no-core rejection (11659973, 11660967); and cWt's surface-module refusal reaches /plugin validate (10275208). The internal arms are $.<api> refusals and host invariants returned to plugin hook code, which go to hookFailed and the debug log. \"HTTP ${.status}\" is thrown here inside $.audio.play's fetch (10447102, caught and rewrapped) and is model only because the same text appears elsewhere (tool-result-http-status-code)."
+      },
+      {
+        "arms": {
+          "466777501251e1f5211c19f5ad66e6cb13f91281": {
+            "facing": "model",
+            "preview": "${} event ${}: ${}"
+          },
+          "831f9ddffe3bb43a3e91d26b634a05bb911fb01d": {
+            "facing": "model",
+            "preview": "${}: ${}: could not be given its argument: "
+          },
+          "e8838dd5b1bdb22fb6f590f9e5188a5d61a2268f": {
+            "facing": "model",
+            "preview": "$.skill.prompt: called with ${}"
+          }
+        },
+        "why": "46677750 model: Gkn @12069590 catch: Xe(new Oe(`${y} event ${gt}: ${vt}`)) rejects the host dispatch promise; Gkn is the host's dispatch @12080198 (17 callers, vvr/rt hop chain), the same route as the cached model arms '${} event is not plain data' / '$.${}: no core...'. Agree model. | 831f9ddf model: Site @12071065 is the sibling ternary arm in Gkn's catch (Xe(jqn(new Oe(...)))) rejecting the host dispatch exactly like the event arm; the worker-side Y @4110269 (-> vo @4122346 / T @4121292 rethrow) is the same dispatch's other end. Same route as the group's model arms. | e8838dd5 model: xmt @9102135 is Mmt['skill.prompt'], run synchronously in $i @14036763; $('skill.prompt') is awaited by Zgr @9133774 without a catch, and Zgr's callers include J7t @12207904 -> Re @17467417 (skill invocation) and the agent preload @17228758, so a throw propagates up the skill-load path like the 'no core' model arm. Not traced to the final tool_result wrapper. | 61dbc9f7 internal: jkn @12068665 is callInterface @12080686, used only by plugin-to-plugin interface calls (lJe -> _e.callInterface @11451716); the rejection goes to lJe's .then error handler (t(`...failed`,{level:'error'}) then rethrow to the calling plugin). @1191247 is the yHr template in the worker. Not the host dispatch route. | c595cb92 internal: lJe @11996787 Promise.reject answers a plugin's $.x.y interface call (callers run @12003046 via hJe @12012450 host op, routeInterfaceCall @12085297); goes back to the calling plugin's code, not to the model. | 97fbade0 internal: lJe @11997306 policy-changed reject, same plugin-to-plugin interface-call route (hJe/routeInterfaceCall) back to plugin code; @11459359 is the slice where Nwe's similar string lives. Internal. | 17e0bfad internal: lJe @11997092 'is not loaded' reject goes back to the calling plugin via hJe @12012450 / routeInterfaceCall @12085297; stays in the plugin runtime. | 3d23df41 internal: Nwe @11459333 builds the refusal for a plugin's own $.x host-op call (host-op run path); returned to plugin code, no tool_result or host dispatch. | 2b3610c6 internal: enr @11440693 is only reached via QOr's 'command.run' op @12006886 (host op the plugin calls through $.command.run); the Promise.reject goes back to the plugin. Internal."
+      },
+      {
+        "arms": {
+          "5adacad5cad35c55115a5dc12f2318cdcddcb4af": {
+            "facing": "ui",
+            "preview": "${}: a body of bytes cannot be redacted"
+          },
+          "8b780ac81feaa2c5a67e65e77bf721f3b3438d53": {
+            "facing": "internal",
+            "preview": "http.fetch: ${}"
+          }
+        },
+        "why": "$e is the generic HooksError. The new internal arms and the ui arm are host-side $.<api> refusals and http.fetch hook-chain failures: the $.audio.speak/play and $.fs tenant refusals (@15505257, @15113782, @15124555), the $.decision stub (@15488613), theme.set image refusals (Tlo/yzs @15467166-15469722), the plugin $.http.fetch request checks in rLs @15143322, and the engine http.fetch chain-bottom and redaction throws (@15141961, Ono @15136894) that fail the API request itself. Each rejects into the calling plugin's hook code (hookFailed and the debug log) or fails the request, while the model arms are the tool-event dispatch rejections that end in the tool_result."
+      },
+      {
+        "arms": {
+          "1124a00395dc8b2a14416e35b5b4d2ffbf62b8e3": {
+            "facing": "model",
+            "preview": "${}: ${}: refused: credentials in the URL"
+          },
+          "644503fb7d4268c197db200d00bed792d027f521": {
+            "facing": "ui",
+            "preview": "${.name}: hooks module not loaded; a name that starts with …"
+          }
+        },
+        "why": "Ne is HooksError. The new model arm 'refused: credentials in the URL' is thrown by zSe @15897524 beside its reviewed model sibling 'refused: http or https only' in the same function, so it takes that arm's route. The new ui arm is thrown by ufe @12360241 when a hooks module is not loaded because of its name; o6e catches it (16343808) and the y6s/SPo load paths log or store it with its internal sibling 'the name is the engine's own chain member', so it never reaches a tool result."
+      },
+      {
+        "arms": {
+          "005866d9491068fbedaef9acfcb6d02af0789b47": {
+            "facing": "model",
+            "preview": "${} event is not plain data: ${(,)}"
+          },
+          "43ba7431689ba4fead79d9675b2e893b75db54e2": {
+            "facing": "model",
+            "preview": "$.audio.speak: no speech synthesizer on ${}"
+          },
+          "8113d3c7b511864bdbae4c46bdf313bfbe6ab64b": {
+            "facing": "model",
+            "preview": "${}: ${}: ${()} refused: http or https only"
+          },
+          "928a5d50131f66370181cf5dae24a2b319c348c4": {
+            "facing": "model",
+            "preview": "the plugin's load proved no file there"
+          },
+          "9dd55c2a984de1e74ea2b206aa395e8c95e42eef": {
+            "facing": "model",
+            "preview": "${}: $.fs.ancestors: ${} refused: ${}"
+          },
+          "9f2a4e70ce5a6c47ef77de678b2b8009405cc2a4": {
+            "facing": "model",
+            "preview": "ui.press: the press is not plain data: ${(,)}"
+          },
+          "bc092a4bcf998fa53ba8d0327e83b4a7a5ab3dd0": {
+            "facing": "model",
+            "preview": " (a link proves none)"
+          },
+          "c7527fa816a3a518d2cfd4c1d324834bac0d2408": {
+            "facing": "model",
+            "preview": "${}: $.tool.check: the tool container did not answer with a…"
+          },
+          "cbd12cf261bbfcdf0d1078c00a432a13ae87a179": {
+            "facing": "model",
+            "preview": "${}: arguments are not plain data: ${(,)}"
+          }
+        },
+        "why": "Ne is HooksError. These model arms are thrown into a mod's hook code (zSe URL checks, $.audio.speak, $.fs.ancestors, wasm load proofs, ui.press and interface argument checks, KCo's $.tool.check no-verdict @16224962) or reject the event dispatch ('event is not plain data'). An error a hook does not catch is reported through hookFailed: Ka @4871436 builds skip.why = `threw ${name}: ${message}`, and WMo @16375920 -> jMo @16375414 queues 'Your mod failed when it ran: …' with that reason to the model via d6e @16370135 (a task-notification) for a mod under development, while dispatch rejections end in the tool result. So model is right on their path."
+      },
+      {
+        "arms": {
+          "bc80d93241f271f37e87700e7a5c2763a97b302c": {
+            "facing": "model",
+            "preview": "${}: ${} is not available in this mode"
+          },
+          "d8177f7d7b40205c36bca2f19e11b006fa4c8c41": {
+            "facing": "model",
+            "preview": "not available in a headless (-p / SDK) session yet: compact…"
+          }
+        },
+        "why": "je is HooksError. The new model arms are thrown into a mod's code: yG @15389719's '$.vcs.* is not available in this mode' (run handlers @15390573-15391457) and Zzl @11151918's headless compact refusal (compact @36325813); an uncaught one reaches the model through hookFailed ('Your mod failed when it ran: …') per the carried review, while the internal arms stay host-side refusals and stream bookkeeping."
+      },
+      {
+        "arms": {
+          "01b4387403ff8ce9b4533554d4c3a26a9342646f": {
+            "facing": "model",
+            "preview": "$.audio.play: options.shouldLoop must be a boolean"
+          },
+          "0bdb386ac9f9e73fb24ffe430aab45efca3e4922": {
+            "facing": "model",
+            "preview": "${}: ${}: socketPath ${} refused: no Unix socket transport …"
+          },
+          "11190a890943cc05be446c7ea9bbf0be74c6ec40": {
+            "facing": "model",
+            "preview": "${}: $.prompt.submit: ${}"
+          },
+          "11d5d47843a6ecfcc10f1975aac4c2c6101a5be7": {
+            "facing": "model",
+            "preview": "${}: ${}: ${.href} refused: body of ${} bytes is over the $…"
+          },
+          "1529f16f1c2f108ea295c0c12b766ddbd0971d61": {
+            "facing": "model",
+            "preview": "${}: ${}: socketPath ${()} refused: a NUL byte in the path"
+          },
+          "17054ae16c07a121130c1fa1eb7a7098d293ed9d": {
+            "facing": "model",
+            "preview": "${}: $.audio.play: refused: ${} plays are going at once"
+          },
+          "17e0bfad86632fa8469b5e1d1aa36a9d6bb24640": {
+            "facing": "model",
+            "preview": "${}: plugin ${}, which provides $.${}, is not loaded"
+          },
+          "1ee03dacaf137af13b41d1e2e8f98e7391a3e60b": {
+            "facing": "model",
+            "preview": "${.plugin}: ${}: not a loaded plugin"
+          },
+          "1f6e837c672083f90f993ebaac6286310ed3dcb5": {
+            "facing": "model",
+            "preview": "$.audio.play: clip must carry exactly one of asset, url, ba…"
+          },
+          "1f8542fa2044994ce025ff9e4b9a4cbba1a35e95": {
+            "facing": "model",
+            "preview": "${}: $.prompt.submit takes text alone; attachments cannot b…"
+          },
+          "22f6899e0882a0c902263acbad2e44c4714ead7b": {
+            "facing": "model",
+            "preview": "$.audio.speak: ${}"
+          },
+          "2b3610c6de373db07436cf83d22d3c9e3f03971e": {
+            "facing": "model",
+            "preview": "${}: $.command.run: ${}"
+          },
+          "338a46bd1ac3ccb3bf552c3eaf0c5638bcc6da1f": {
+            "facing": "model",
+            "preview": "$.audio.play: clip.mime must accompany clip.base64"
+          },
+          "3595540bd7ac837ee869edb2caee1825f9e9322d": {
+            "facing": "model",
+            "preview": "${}: ${}: socketPath ${} refused: a network location is not…"
+          },
+          "3a803f04130ae9810554f9b81fd0026464a57692": {
+            "facing": "model",
+            "preview": "${}: ${}: not a URL: ${()}"
+          },
+          "3e48aac66da6cf7d4d842d5368f8878586a91a0e": {
+            "facing": "model",
+            "preview": "${.plugin}: $.session.append: this process keeps no convers…"
+          },
+          "40b5d11cb4e668214d0b8256a82012fb1c875043": {
+            "facing": "model",
+            "preview": "${}: $.turn.abort: ${.turnId} is not the running turn (${.t…"
+          },
+          "45d7129cf1705b00e19d6afca9399dc22b515e09": {
+            "facing": "model",
+            "preview": "${}: $.tool.check: no tool named \"${}\" in this session"
+          },
+          "4c6bcc9c5d36a9a381ce11e500fac3e9ed83d58c": {
+            "facing": "model",
+            "preview": "${.plugin}: $.prompt.compose: this process composes no syst…"
+          },
+          "578937f09340a4e43d487a333fd2bd6f582b4dae": {
+            "facing": "model",
+            "preview": "$.audio.play: clip must be { asset }, { url } or { base64, …"
+          },
+          "57963ad80dafe76a21b18278c44d9901f8d6e48d": {
+            "facing": "model",
+            "preview": "${}: ${} is not available in this mode: no session is bound…"
+          },
+          "58661295ee0d2720ea28b7e34f45bd221813f1c4": {
+            "facing": "model",
+            "preview": "${}: ${}: a body of bytes and compress ride engine requests…"
+          },
+          "5b837db9e2e1673bb3433c861376c14e0573f89e": {
+            "facing": "model",
+            "preview": "${}: $.agent.register: \"${.name}\" refused: ${}"
+          },
+          "5bea7a87f119da47621bfc74751828582a20a4e2": {
+            "facing": "model",
+            "preview": "${}: $.ui.notify: the channel's write failed"
+          },
+          "5f8cc9f3c5cf5d7fa199be0f30a1fab93db98d7f": {
+            "facing": "model",
+            "preview": "$.audio.play: clip.${} must be a non-empty string"
+          },
+          "64bb10185ef6d30b65f154e969e23c1d0adf5ac3": {
+            "facing": "model",
+            "preview": "${.plugin}: $.mcp.call(${}, ${}) refused: ${.deny}"
+          },
+          "69b844ffa916507c640f573a247216daa10e84d8": {
+            "facing": "model",
+            "preview": "${}: $.wasm.compile takes a literal path, or bytes as an Ar…"
+          },
+          "76326a8f3985a1788ddb01c3f2f0fbdec29b0bc2": {
+            "facing": "model",
+            "preview": "$.audio.play: could not read ${} in ${}'s directory: "
+          },
+          "76aa8c9d48d2bafd9d38dd94ba076dc58a714e1e": {
+            "facing": "model",
+            "preview": "${}: $.agent.spawn refused: ${} spawns are running at once"
+          },
+          "770c90b730f6e41dc3a9fafbba1f61054aca1cc7": {
+            "facing": "model",
+            "preview": "${}: $.model.complete: maxTokens ${} is past what ${} can p…"
+          },
+          "79f6181b48e9167b979f0b8bf2d516f698f85afb": {
+            "facing": "model",
+            "preview": "${}: $.session.compact: compaction is switched off in this …"
+          },
+          "7fab89a2235e32403ecbd5343a0519920b045043": {
+            "facing": "model",
+            "preview": "${}: $.model.complete: maxTokens must be a positive integer…"
+          },
+          "82b63c9b88086808b3ba684f1eaf2583cc1aa7ff": {
+            "facing": "model",
+            "preview": "${}: $.prompt.submit submits a prompt to the model; a text …"
+          },
+          "84848a5213f82ebeb7be6cd1187ebdd9c0d4c0a8": {
+            "facing": "model",
+            "preview": "$.audio.play: clip.asset must be a string"
+          },
+          "848d76ec58cadebc54a1423bf33a7b2638633d66": {
+            "facing": "model",
+            "preview": "$.audio.play: the plugin has no id"
+          },
+          "8563443770b7e125ec65616baf6d926a5922c80e": {
+            "facing": "model",
+            "preview": "${}: ${}: ${.origin}${} refused: this session sends no prod…"
+          },
+          "8d13844f00134433b14d1ba7d58c965a835fe6e7": {
+            "facing": "model",
+            "preview": "${}: $.command.register: \"/${.name}\" refused: the plugin ${…"
+          },
+          "8f9e816dd3c6d9b92184a476d2e1b491311fe348": {
+            "facing": "model",
+            "preview": "${}: $.turn.abort: ${.turnId} is already ending"
+          },
+          "90c99409d36fb0df43c4bc81a282fb5c69630703": {
+            "facing": "model",
+            "preview": "${.plugin}: $.mcp.call: no connected MCP tool \"${}\" on a se…"
+          },
+          "911492deaa91a8d48e2f6e20905a5e51c1fc3cd3": {
+            "facing": "model",
+            "preview": "${}: $.tool.register: this host cannot add tools at run tim…"
+          },
+          "95c449f02a6ee1e5c4724949d9a66015a3a3819f": {
+            "facing": "model",
+            "preview": "${}: ${}: ${.href} refused: a request body of ${.length} ch…"
+          },
+          "97f2749bfaa4d421c2e3ef144248c8a30073c641": {
+            "facing": "model",
+            "preview": "$.audio.play: the clip is over ${} bytes"
+          },
+          "97fbade0cb8466990f975c896f23168761e6aae4": {
+            "facing": "model",
+            "preview": "$.${}.${}: plugin ${}, which provides $.${}, or its caller …"
+          },
+          "9b74215a0af5dfe4eee90ca9f8e9b51a343054e6": {
+            "facing": "model",
+            "preview": "${}: $.config.set: no /config row with key ${.key} ($.confi…"
+          },
+          "9c2fbd7627ae0833fa62b985d212af7faf31bdd9": {
+            "facing": "model",
+            "preview": "${}: $.tool.call: consent, when given, is a string"
+          },
+          "9c824ea60a42ec8c691d137fd7426661d9ec97fb": {
+            "facing": "model",
+            "preview": "not the file the plugin's load proved"
+          },
+          "a3563acf4977b38a4d7542c9f29bd53d5187db67": {
+            "facing": "model",
+            "preview": "${}: $.fs.${.event}: ${.path} refused: "
+          },
+          "a47ff84669f27abc3033ed2c524f3699767e2a8d": {
+            "facing": "model",
+            "preview": "${.plugin}: ${}: ${} (host check)"
+          },
+          "a9aa6f796fffc1a16bb94af1727dd63f88c7e23c": {
+            "facing": "model",
+            "preview": "$.audio.play: the plugin has no directory"
+          },
+          "b3dfb07571d6c666bcc62d43e6fdd7fd5588cdb9": {
+            "facing": "model",
+            "preview": "${}: $.tool.register: \"${.name}\" refused: this session has …"
+          },
+          "b52015e51105775b45b4a0e550233dab259e6d90": {
+            "facing": "model",
+            "preview": "$.audio.speak: voice must be a string when given"
+          },
+          "b5b0408dcb8e71556b32f1d0717b47968c53dc08": {
+            "facing": "model",
+            "preview": "${}: $.fs.${.event}(${.path}) failed: "
+          },
+          "b8e7d1d3869c821a0f18f98cb3c4e98133ce64db": {
+            "facing": "model",
+            "preview": "${}: $.model.complete: timeoutMs must be a positive integer…"
+          },
+          "bb8871e22a4d5d9ad4fbd1486be41541b4d182b0": {
+            "facing": "model",
+            "preview": "$.audio.play: asset must be a path inside the plugin's dire…"
+          },
+          "be6097ce96de86b61746b41b797539f0336498e9": {
+            "facing": "model",
+            "preview": "${}: $.tool.call: no tool named \"${}\" in this session${}"
+          },
+          "bfc35fe14584581b323bd970af349a1e78f24654": {
+            "facing": "model",
+            "preview": "${}: ${}(${.href})${} aborted: no complete answer within ${…"
+          },
+          "c4d9b209cb2c5956b418e97aaeeed246c629ff9f": {
+            "facing": "model",
+            "preview": "${}: $.model.complete: effort must be one of low, medium, h…"
+          },
+          "c5940d5a2744883f07b82d69bcada0579fb9e721": {
+            "facing": "model",
+            "preview": "${}: ${}: more than ${} redirects from ${}"
+          },
+          "c595cb922014e3234056bf574e542f3aab6060e2": {
+            "facing": "model",
+            "preview": "${}: plugin ${}, which provides $.${}, is not admitted yet …"
+          },
+          "c669c17f15791e4c3476490314a0ff027e66e05b": {
+            "facing": "model",
+            "preview": "${.plugin}: $.${} refused: ${}"
+          },
+          "c8e9f172fd030fc50f5b59e34d75a5ac5be47d41": {
+            "facing": "model",
+            "preview": "${.plugin}: $.${} refused: the hooks module that made the c…"
+          },
+          "cb8d05878b6be7a715b6160daba54ca82d333e7e": {
+            "facing": "model",
+            "preview": "$.fs.${.event} (${}): a tenant has no disk of its session's"
+          },
+          "cc1858660fd2cb71dbea93d93620327da1035938": {
+            "facing": "model",
+            "preview": "${}: ${}: socketPath ${()} refused: takes an absolute path"
+          },
+          "cc57d85187bb957fa41d4278d172d46a599e2acf": {
+            "facing": "model",
+            "preview": "${.plugin}: $.${} refused: a hooks module behind the call i…"
+          },
+          "cd7aa028ec76403d227c8719dd5f92732b37e9f3": {
+            "facing": "model",
+            "preview": "$.audio.speak: text must be a non-empty string"
+          },
+          "d365d5c0e8483b5f5914be293c80d99bbcb83d75": {
+            "facing": "model",
+            "preview": "${}: ${}: refused: ${}"
+          },
+          "d49fc9c4d81f9b0e8a477cf62e049ed26a0457f0": {
+            "facing": "model",
+            "preview": "${.plugin}: $.prompt.compose: ${}"
+          },
+          "d9879f557f9979074c4911b099166dc889e4751d": {
+            "facing": "model",
+            "preview": "${}: $.turn.abort: no turn is running (asked for ${.turnId})"
+          },
+          "da24c5f2c6cddbcfafbeb9d9306f337298be466e": {
+            "facing": "model",
+            "preview": "${}: $.model.complete: ${}"
+          },
+          "da665f656019ca9d2b3749b897c3a65e7e867bab": {
+            "facing": "model",
+            "preview": "${}: $.command.register: \"/${.name}\" refused: it is the ${[…"
+          },
+          "e0ada016d98593e1e16d722fdaa0e70946424033": {
+            "facing": "model",
+            "preview": "${.plugin}: $.${}${[]}: ${.deny}"
+          },
+          "e1120545e81b907969a4a596549c8b4458d9c2c8": {
+            "facing": "model",
+            "preview": "${}: $.tool.register: \"${}\" is a reserved MCP server name"
+          },
+          "e1d6f6d731083af020c7d06f4d49e83b21fd2473": {
+            "facing": "model",
+            "preview": "${}: ${}(${.href})${} failed: ${?`${}: `:\"\"}${()}"
+          },
+          "e3c520a845a6c248188d6dda1f5616dd3661e297": {
+            "facing": "model",
+            "preview": "${}: $.command.run: no command named /${} in this session"
+          },
+          "e94c873cee5e754d47fb1b8f3b39e7e49129c09a": {
+            "facing": "model",
+            "preview": "${}: ${}: the build carried no such file"
+          },
+          "e9fa12606dced20e0e368a8048c95d0e43d7baf6": {
+            "facing": "model",
+            "preview": "${}: $.tool.register: the session already has an MCP server…"
+          },
+          "ead00c04b41742bdab2f7b01f9a5aea42b29d75e": {
+            "facing": "model",
+            "preview": "${.plugin}: $.wasm.compile: ${}"
+          },
+          "ebffccf002dff16e616e482df1eec3acdca4d3b5": {
+            "facing": "model",
+            "preview": "$.audio.play: options.gain must be a number from 0 to ${}"
+          },
+          "ecf571bad011aca3a3eb0b2783096f557d7e8ece": {
+            "facing": "model",
+            "preview": "${}: $.tool.register: \"${.name}\" refused: this session runs…"
+          },
+          "f028578a0df71a23572536b1af0b73118b35b321": {
+            "facing": "model",
+            "preview": "${}: $.session.compact: a turn is running (${.turnId}); the…"
+          },
+          "f05b031d85414dca20a1cf4295a48385ddf1cf97": {
+            "facing": "model",
+            "preview": "$.audio.play: ${}"
+          },
+          "f2079a38e7792566845ccbc437e2ffcd66239959": {
+            "facing": "model",
+            "preview": "$.session.append: this process keeps no conversation to app…"
+          },
+          "f41f889aa7bc39ac3a91457ed1a70609d59f4c37": {
+            "facing": "model",
+            "preview": "${}: ${}(${.name}) produced no result${.context.abortContro…"
+          },
+          "f5e49578819233594274424772a139dd1d706f89": {
+            "facing": "model",
+            "preview": "${}: $.tool.check: input is the tool's arguments, an object"
+          },
+          "f873e04839bf457456aec25d81434b94c120b6ea": {
+            "facing": "model",
+            "preview": "${.plugin}: $.ui.notice: ${.tool_use_id} refused: "
+          },
+          "fb639a3e65256f2275bfab5f8bc6f5d430da7ef6": {
+            "facing": "model",
+            "preview": "${.plugin}: $.wasm.compile refused: ${}"
+          },
+          "fb9753921cc7be3c9dce21ab18711254bc13b5e8": {
+            "facing": "model",
+            "preview": "${}: $.model.complete: model \"${}\" is not in this organizat…"
+          },
+          "fd2370f671e9061a9b885fb19c089aec88ed1e85": {
+            "facing": "model",
+            "preview": "${}: ${}: ${.origin}${} refused: the body is not an event b…"
+          }
+        },
+        "why": "He/je is HooksError. The newly model arms are host-side $.<api> op refusals (audio, http.fetch request checks, fs, tool/agent/command/mcp/model/session/turn/prompt/config/ui ops, interface calls, NFt admission @15406352) that reject the op back into the calling hook; uncaught, Es @4781556 reports 'threw HooksError: <msg>' and yCo @15474030 queues 'Your mod failed when it ran: …' to the model (fYe @15468718 task-notification) for a watched mod under development. The arms left internal/ui never become a running hook's failure: hooks-module load and registration scans (cCn @12691487, fCn @12692660, Spe @12692253, Hpe @12730630, Rli @12728643, njs @14931281) and reload failures (E$t @15448849), which SCo skips or the plugin-dir watch shows as a ui.log row; engine-side http.fetch chain and redaction failures (Umo/bottom @14981997, ggo @14976370) that fail CC's own request; stream/op bookkeeping (H3a, FCo, LCo, next_pull) and generic fragments ('${} exited …', 'no errno', ' (${reason})')."
+      }
+    ]
+  },
   "b94b680491f0af80": {
     "at": 12228697,
     "model": {
@@ -3995,6 +3559,552 @@
           }
         },
         "why": "x is the generic error in plugin-fetch chunk-x1hnhzq0. The composite arm (corrected to model) is the literal+literal head of the one message rus (6853867) throws when a marketplace-catalog redirect is refused; rus is the beforeRedirect of S7e (beforeRedirect:rus(...), 12369521), whose axios failure is rethrown as that x by nio (6865111) and propagates through b7e (12373227) to /plugin marketplace add/update (12383987, 12416447) local_command output, the same route as its already-model leaves a7e00639/b78b1406. The ui arms are the consent-gated plugin-source-command and directory texts (6839262-6846621 under tus 6850103, and yt/sn 6861904-6862968) that the model route never reaches, as in the existing review."
+      }
+    ]
+  },
+  "e0797a1752a271ce": {
+    "at": 5066640,
+    "model": {
+      "091159e56eeb43b342e6e23611f601d9a2de5fec": "returned no result",
+      "0f06d761fe2d4e96173bc644e68f1a5aa9250e2c": "yielded a chunk with ${}",
+      "0f54dc967f5238ae78fac4d6274b1ab55d59bc99": "returned no result (and read no next() stream to its end)",
+      "0f75e4fe0ba54041fe5c1313ad47fc2492505d26": "takes { decorations }",
+      "0f8feb530781565495e8a59f219c2601ff019f1d": "${}: $.store.${} takes a non-empty string key",
+      "130e6840308ef868d76fbddfaf25c626b54ba445": "${.plugin}: returned a ${} in another plugin's hover scope …",
+      "16405c1c0c363c31218842b1dcc0df08cbf0e2b9": "${.plugin}: ${.refusal(,)}",
+      "204fb38c88f3f1a2b4be4365fd2672f7f6f8da80": "${}: returned a drawing that holds an object that is not pl…",
+      "2092305f1e9853b4c01becac20bd4ceed4c706f6": "${}: $.audio.play options.signal must be an AbortSignal",
+      "251493b12e26a88f11a7bc31ba182ddeb87eafa9": "${}: $.prompt.compose takes the facts to compose for ({ too…",
+      "2777190ab111c95942fe3b627ed9b8bf930d46d1": "${}: $.prompt.fill ",
+      "299cc1e005612bee3af9bdc78347f9b5e1708067": "${}: $.tool.register: ${}",
+      "2ca314949aaa9187e16cb57cf89ef28293174b1c": "${}: $.session.usage ${}",
+      "2e7228d8fc32d442f04abe32b1283b15ced2a7f0": "${}: next() after it settled",
+      "3153f4e18928aed62d6a011fd19561b503378ecf": "$.${} (${.pluginName}) has no method ${}",
+      "31a03d9248ecf39a66ab8ce9ae5db3b0bb940e15": "${}: $.model.classify takes two or more non-empty labels",
+      "34433a02cc7cbfa744812f257d2ee34c9570e593": "${.plugin}: ${[.type]}",
+      "349db56eba4cf98deda83b8f3073dee7fd766754": "${}: $.ui.ask takes at most ${} options (got ${})",
+      "36d796679d050ac5aa46c7f0bbffa6abb5955c6a": "${.plugin}: returned a Shader that next(e) did not hand it,…",
+      "3ca0a5c542b64d83a61f79fc85111c21300ab665": "${.name}: next() passed an argument with ${}",
+      "3e40769a754dbdeec503580f4d1302cc51cd674a": "${.plugin}: returned a Client it did not draw (${()}/${()} …",
+      "46132098844f362d33a04e8672d18997d8464383": "${}: on(\"${}\") after register() returned: on() is for regis…",
+      "483d27ff7c4f0f6a712cb28592afa0d415b8afc6": "${}: $.ui.ask takes its options as a list",
+      "4b24a999ae76addbb7a5a7c7c583013c8982faf5": "${}: $.tool.check takes { tool, input }: the tool's name an…",
+      "4ef89c570644a2d1d18323c00fda6fe32ea76422": "${}: $.telemetry.log takes an entry ({ to?, event, props? }…",
+      "4fcf9859846a20e505837cacd7f707cd8ae19eb2": "${}: $.http.fetch takes a URL",
+      "54a977d06189a5291e71bd57a48bddda378c4b3d": "${.plugin}: returned a Shader it did not draw; a render hoo…",
+      "5d2e5d4d0cc7c4192f042d17ccc40143d0160fc4": "${}: $.model.classify: ${()}",
+      "5f5fa1a7077118b03d810673b11fdaa5bbe90681": "${}: $.prompt.paint ${(,)}",
+      "61867d40104fe8ba0bb666acbde3c0bc2153e826": "${}: $.command.register: ${} needs a description (what the …",
+      "6631b14d4503c85504f89920b7a1cea598e6bc0c": "${}: returned a drawing with a function where plain data go…",
+      "667077161acbf71e78689721307943364f78fc3a": "${}: $.tool.call: input must be an object",
+      "687b8bfd240360c40f730fdb653cadf1f361301d": "${.plugin}: returned ${[.type]} it did not draw (${()}#${})…",
+      "745ebf81c0f4a2854badb7670114f1e788598e8d": "${}: $.tool.call takes the event's input: { tool, ...args }",
+      "79d6cf8140e9d65acba0e68d8ec6168604ec3430": "${}: $.${}: the value is ${.length} characters, over the ${…",
+      "7c0ca03bea599e54e4a6365b62e6f0491c66eb41": "${}: $.prompt.submit takes { asUser } as a boolean",
+      "7d7ffb56b6ba16e6e1c4bf64bf11f90cec2fde4d": "${}: $.state.${} takes a reference { plugin, key } (and id …",
+      "8074f5661a475f7abebd4e9ee1ac199af4f3c3d4": "holds a list with a hole or a key",
+      "808081e6c36af7646d3387a220109f4d13362c59": "holds what JSON cannot (${typeof })",
+      "80a9c7bea347a6e7828e90bd9f304a957e45ec22": "${}: $.telemetry.mark takes an entry ({ feature, kind, reas…",
+      "82f264f55f05d7770a6072ea9ad2fe1edd6c26f0": "${.plugin}: next.to() names no tier",
+      "83af9c9a98813a8a183f34f840a5a777df16bc28": "${}: $.config.set takes { key, value } (the key as $.config…",
+      "84398e9a41e01ca71ce7ef7d385bea1f1e1e9558": "${}: $.audio.speak options.signal must be an AbortSignal",
+      "855e8e859e760e96f12e1628d0f6757ef74ea1fb": "returned no stream: a hook on a streaming event is an async…",
+      "8704c5994ba4f45a6ea0156b5c6579fa23a3c89b": "${}: $.model.classify: the model answered with no text",
+      "89339767144bee3e5a4be0067fb977d85d7188c7": "${}: $.clock.${} takes a non-negative number of milliseconds",
+      "8e0d360aee50071ed62e3cb62e7d110b325da044": "${}: $.session.compact takes { instructions } (a string) or…",
+      "9101d2e9ff4942fd8a7e5edab93b5cda20fb9993": "${}: $.${} takes { text } (a string)",
+      "92346ddcb88bdfe2842dae3e61c2925dd64cadf2": "${}: $.${}: value is not JSON data (${()})",
+      "9619a1075425fbff7290f1c4ac31eeeaee317170": "${}: returned a drawing that holds a Proxy or a vm context;…",
+      "9be7e2ff554f68b0f5792fa21dbab7e2c78505c2": "${}: $.turn.abort takes { turnId } (the id turn.start carri…",
+      "9ed8dc721e7b7f6753edce5fd59474a4463c6f72": "${}: $.command.register takes { name, description, argument…",
+      "acb125184474c743769bdc5f66bc4c66c79d55cb": "holds a Proxy or a vm context",
+      "acb6e98afbd71a049c240d1611e3279306659cff": "${}: $.ui.ask: no answer (${(.deny??.text??\"\",)||\"the dialo…",
+      "af9780b1e91dafdb3b293167fee5338f9e5f0db2": "${}: $.clock.${} takes a function",
+      "afdee4a57acef849af80df5d8c1f7ea5bfd40239": "holds an accessor",
+      "b2771f5861efc30226c9fcb46c0734b78c44fe58": "${}: ${} takes a function",
+      "b2cfa9f7bf890de22b594c565b87cb1dc69488ba": "${.pluginName} provides no interface named ${}",
+      "b3ec15f8e20c976f54ab10fe9f6c0cb4b198942c": "${} after register() returned: .catch() is for register()",
+      "b853c9c7b98ffd6f4fa32f527549fe638c8f4398": "${}: $.wasm.compile: ${}",
+      "b93081ac734ee8ffefe4df6bdcb911fa4e3ad59e": "a plugin's list claims a length no list has (got ${??`a ${t…",
+      "bbd48e0b3af18f02ba6c37f6539d5b14be6223db": "${}: $.agent.spawn takes { prompt, ... } (a non-empty promp…",
+      "c0081a8df9526dc42c878153592195781748b8ec": "${}: $.ui.resolve ${}",
+      "c88768ad7081c620a0b474d93c3fbd43c2434f29": "${}: $.command.run takes { command, args? } (the command's …",
+      "ce9a26aff2754f2bc885efc785b7da733b2d814b": "${}: options.signal must be an AbortSignal",
+      "d8b803ca72f52c2e6083a65c8422f440e47de20c": "${}: $.settings.read takes { source }, { key } or nothing",
+      "db357a072fb167f34e63a2fbb082ec41f2cbe5aa": "${}: $.session.messages ${}",
+      "e25c0845377e4c59972de08a63cb6d91edd02d5b": "${}: the on(\"${}\") hook returned no result",
+      "e7b3dfffd86af8976b5d349894f74491d7f34fc1": "${}: $.${}: value is not JSON data (${===void 0?\"undefined\"…",
+      "ee4389f3e1107e51a8cefb28d154d6a509db8622": "${}: $.agent.call options.signal must be an AbortSignal",
+      "f11d5e936104264d6c102b5fa22ccaf2ebcdad06": "${}: $.agent.register takes { name, description, prompt, ..…",
+      "f6150de7e258dcdf6c9a0c21f0abdeeb2cc64640": "${}: $.ui.ask takes the question first",
+      "f7f7369b061707a33e4280714472ffdd70370fb4": "${}: $.audio.play with shouldLoop needs options.signal: the…",
+      "f8c0710d0d9ede26b5b0ae5da0b9efed94f9c460": "holds an object that is not plain",
+      "f90b10a415eac727e3d121f58f6c837f4b780663": "holds a key ${}",
+      "fc53913a5ea5f8e3ef821f81b65b465bcb399cbc": "${} that holds a BigInt, which cannot be written out"
+    },
+    "position": 0,
+    "reviews": [
+      {
+        "arms": {
+          "015efbbaead2ff82a7c14f102ef7969f9e85b55c": {
+            "facing": "ui",
+            "preview": "${}: $.${} must be an object of methods, not ${typeof }"
+          },
+          "13c1265cb5f05f808befd908770f0f66c4efb6e5": {
+            "facing": "ui",
+            "preview": "${} takes a function, ($, e, next)"
+          },
+          "1ff2ce060a1c2bf20dbcb0896df0dd2392748399": {
+            "facing": "ui",
+            "preview": "${}: on(): ${}"
+          },
+          "24f3c77e014f930369cdc3c801e3ffdec22e7f6a": {
+            "facing": "ui",
+            "preview": "${.plugin}: next.to is available to managed plugins (prepen…"
+          },
+          "2e369301975179048719c4811e37f0e2124cbb23": {
+            "facing": "internal",
+            "preview": "the stream was closed before its result"
+          },
+          "3e39767a339c04b45736ddaea9af164ef9be4b4f": {
+            "facing": "ui",
+            "preview": "${}: ${(,)}: the engine ran out of stack loading the file (…"
+          },
+          "584efc4dba321fd69dd4c94a980aacc396b0c7cf": {
+            "facing": "ui",
+            "preview": "${.name} ${}"
+          },
+          "5aa7ba837a045d69c094fad15dfdfecc12474fd0": {
+            "facing": "ui",
+            "preview": "${}: ${}: its environment was unloaded"
+          },
+          "5dce8b78f68fc7a462426c1de2fa872397f3bd73": {
+            "facing": "internal",
+            "preview": "the stream carries no result of its own"
+          },
+          "74134cd11e28b145ea044dfe43673bd334cb8404": {
+            "facing": "ui",
+            "preview": "${.pluginName}: ${}: ${}"
+          },
+          "767ba211dc6217701f6e2845c7f970ba24e620ee": {
+            "facing": "ui",
+            "preview": "${.pluginName}: the interface table names core as the owner…"
+          },
+          "844797ae0d086b65af5105b66769e2bf219c9429": {
+            "facing": "ui",
+            "preview": "$.${}: this environment was made without the host's streami…"
+          },
+          "887fbbccd8677227b671dd671c5c2181fcc840da": {
+            "facing": "internal",
+            "preview": "the answer holds a `then` that is not fixed"
+          },
+          "8a0b55b9c22d11eb981bad6c6ea7216a1addae8e": {
+            "facing": "ui",
+            "preview": "${}: on(\"${}\") takes (pattern, hook) or (pattern, matcher, …"
+          },
+          "95b17e76db62e0210ffb01d0293eefe439e237b5": {
+            "facing": "internal",
+            "preview": "core table: not an operation"
+          },
+          "980cc4ac3224eaa122115a11901f96a0d587cbeb": {
+            "facing": "ui",
+            "preview": "${} called twice: a registration takes one .catch"
+          },
+          "9f2199b947fadb326c0d8b4efc608ceefd15b8d3": {
+            "facing": "ui",
+            "preview": "${}: ${(,)} exports the name \"then\" (its own, or through an…"
+          },
+          "a02241565a8bfd4b37b8cf85aeddcb2a70abde08": {
+            "facing": "ui",
+            "preview": "${.pluginName}: engine.create must return $ ({ ...await nex…"
+          },
+          "a15463f823b8fe56503f1585f9b0dc0dc956a001": {
+            "facing": "internal",
+            "preview": "${.name}: the stream was closed before next() returned its …"
+          },
+          "b219f962cee5be045f9c6eb5899e8d04f0245289": {
+            "facing": "internal",
+            "preview": "${.name}: .catch left"
+          },
+          "b78cebf0237148a7ba146ee8d0e682a127c557ea": {
+            "facing": "ui",
+            "preview": "${}: $.${}.${} is not a function; an interface is an object…"
+          },
+          "b85771e5520d97291dc003593ff5e5904c9efbe1": {
+            "facing": "ui",
+            "preview": "${.pluginName}: $.${}.${} is not callable from an engine.cr…"
+          },
+          "c2a5925f9ce623c3120e4b425acd3c10a1c7ca9e": {
+            "facing": "ui",
+            "preview": "${.pluginName}: $ is already built"
+          },
+          "cdb1f48fccc3664702aa309daecfd56aa1d05ba5": {
+            "facing": "internal",
+            "preview": "no implementation for ${.event}"
+          },
+          "d36da33eda1f1ea02debb685aca52615d4b0d31a": {
+            "facing": "ui",
+            "preview": "${}: ${(,)} does not compile: "
+          },
+          "d8cb4ab4378cd0233a1c4ca13ef4c26173df60b1": {
+            "facing": "ui",
+            "preview": "${}: unloaded while its module loaded"
+          },
+          "f093e5aef10ceb15224fb8a3240c0b2eb6e567b6": {
+            "facing": "internal",
+            "preview": "${}: $.clock.${} cancelled"
+          },
+          "f137d9e4350748b4ebc101fea1c4f04eb16b4617": {
+            "facing": "ui",
+            "preview": "${}: on(\"${}\") registered twice"
+          },
+          "f258a0a7b7c2f49f54df72ed0317b624a0ac73d1": {
+            "facing": "ui",
+            "preview": "${}: ${} exports no register(on, options) function"
+          },
+          "f52fcc57550bce13062e3a3a7b9247b6c6183c98": {
+            "facing": "ui",
+            "preview": "${}: an engine.create hook has no budget and its failure fa…"
+          },
+          "fae857ec26d2f9b061704d8233747c5ffbc79cb0": {
+            "facing": "ui",
+            "preview": "${.plugin}: next.to(\"${}\") skips nothing from ${.tier}; a $…"
+          },
+          "fb5b4e7c0444888453bf4cf46ff42f50e89b702b": {
+            "facing": "ui",
+            "preview": "${.pluginName}: engine.create returned $.${} changed; it is…"
+          },
+          "fd5c01681db5136a26456de07b2a878b54c1a6c8": {
+            "facing": "ui",
+            "preview": "${}: on(\"${}\") ${}"
+          }
+        },
+        "why": "He (HooksError, 320434) is the plugin-host's generic error. The ui arms are $-API argument and registration checks that reject into the calling plugin's code; when a hook throws them, the dispatch catch (3818300) reports them through np()/Nl().hookFailed (3809709), which the CC host routes to the UI (gen() 11014066), and then skips to what is below. The model arms are dispatch-result problems ('returned ${}', 'returned no result', 'yielded a chunk with ${}', '.catch threw', 'next() after it settled'). They become the dispatch's rejection when nothing is below (`if(d.inFlight===void 0&&p)throw F`) or pass up through De(), and runToolUse turns that into the 'Error calling tool' tool_result (10860151). '${.name}: ${}' is model only through identical text (deferred-tool line). This upholds the earlier review of this group; the model-arm route was not re-traced end to end."
+      },
+      {
+        "arms": {
+          "8074f5661a475f7abebd4e9ee1ac199af4f3c3d4": {
+            "facing": "model",
+            "preview": "holds a list with a hole or a key"
+          },
+          "808081e6c36af7646d3387a220109f4d13362c59": {
+            "facing": "model",
+            "preview": "holds what JSON cannot (${typeof })"
+          },
+          "afdee4a57acef849af80df5d8c1f7ea5bfd40239": {
+            "facing": "model",
+            "preview": "holds an accessor"
+          },
+          "f8c0710d0d9ede26b5b0ae5da0b9efed94f9c460": {
+            "facing": "model",
+            "preview": "holds an object that is not plain"
+          },
+          "f90b10a415eac727e3d121f58f6c837f4b780663": {
+            "facing": "model",
+            "preview": "holds a key ${}"
+          }
+        },
+        "why": "8074f566 model: Mo @3957388 throws new Oe(this phrase); Yan @3958706 catches Oe and returns t.message; xmt @9102135 (the $.skill.prompt argument normaliser, Mmt['skill.prompt']) re-throws it inside `$.skill.prompt: called with a frontmatter that ${...}`, and wn @3958838 (checkArgument of the skill.prompt site Qa) returns it to lt @3907440 which throws `${name}: next() passed an argument with a frontmatter that ...`. trace @3958440 follows that throw through G6n @14037807 / the turn.step dispatch Mr @17205104 into the query loop @17999497 and Nd @17968845, which yields it as tool_result content (is_error) and api-message @13877666: a model sink, same route as the cached-model sibling `next() after it settled` (yr @3909224, tool-result-plugin-hook-next-after-settled). The ui arms of this group are module-load/registration refusals (on() registered twice, exports \"then\") raised in the hooks-module loader g/H @4101784, a different route. | 808081e6 model: Mo @3957388 throws new Oe(this phrase); Yan @3958706 catches Oe and returns t.message; xmt @9102135 (the $.skill.prompt argument normaliser, Mmt['skill.prompt']) re-throws it inside `$.skill.prompt: called with a frontmatter that ${...}`, and wn @3958838 (checkArgument of the skill.prompt site Qa) returns it to lt @3907440 which throws `${name}: next() passed an argument with a frontmatter that ...`. trace @3958440 follows that throw through G6n @14037807 / the turn.step dispatch Mr @17205104 into the query loop @17999497 and Nd @17968845, which yields it as tool_result content (is_error) and api-message @13877666: a model sink, same route as the cached-model sibling `next() after it settled` (yr @3909224, tool-result-plugin-hook-next-after-settled). The ui arms of this group are module-load/registration refusals (on() registered twice, exports \"then\") raised in the hooks-module loader g/H @4101784, a different route. | afdee4a5 model: Mo @3957388 throws new Oe(this phrase); Yan @3958706 catches Oe and returns t.message; xmt @9102135 (the $.skill.prompt argument normaliser, Mmt['skill.prompt']) re-throws it inside `$.skill.prompt: called with a frontmatter that ${...}`, and wn @3958838 (checkArgument of the skill.prompt site Qa) returns it to lt @3907440 which throws `${name}: next() passed an argument with a frontmatter that ...`. trace @3958440 follows that throw through G6n @14037807 / the turn.step dispatch Mr @17205104 into the query loop @17999497 and Nd @17968845, which yields it as tool_result content (is_error) and api-message @13877666: a model sink, same route as the cached-model sibling `next() after it settled` (yr @3909224, tool-result-plugin-hook-next-after-settled). The ui arms of this group are module-load/registration refusals (on() registered twice, exports \"then\") raised in the hooks-module loader g/H @4101784, a different route. | b8f1aaa7 model: Mo @3957388 throws new Oe(this phrase); Yan @3958706 catches Oe and returns t.message; xmt @9102135 (the $.skill.prompt argument normaliser, Mmt['skill.prompt']) re-throws it inside `$.skill.prompt: called with a frontmatter that ${...}`, and wn @3958838 (checkArgument of the skill.prompt site Qa) returns it to lt @3907440 which throws `${name}: next() passed an argument with a frontmatter that ...`. trace @3958440 follows that throw through G6n @14037807 / the turn.step dispatch Mr @17205104 into the query loop @17999497 and Nd @17968845, which yields it as tool_result content (is_error) and api-message @13877666: a model sink, same route as the cached-model sibling `next() after it settled` (yr @3909224, tool-result-plugin-hook-next-after-settled). The ui arms of this group are module-load/registration refusals (on() registered twice, exports \"then\") raised in the hooks-module loader g/H @4101784, a different route. | f8c0710d model: Mo @3957388 throws new Oe(this phrase); Yan @3958706 catches Oe and returns t.message; xmt @9102135 (the $.skill.prompt argument normaliser, Mmt['skill.prompt']) re-throws it inside `$.skill.prompt: called with a frontmatter that ${...}`, and wn @3958838 (checkArgument of the skill.prompt site Qa) returns it to lt @3907440 which throws `${name}: next() passed an argument with a frontmatter that ...`. trace @3958440 follows that throw through G6n @14037807 / the turn.step dispatch Mr @17205104 into the query loop @17999497 and Nd @17968845, which yields it as tool_result content (is_error) and api-message @13877666: a model sink, same route as the cached-model sibling `next() after it settled` (yr @3909224, tool-result-plugin-hook-next-after-settled). The ui arms of this group are module-load/registration refusals (on() registered twice, exports \"then\") raised in the hooks-module loader g/H @4101784, a different route. | f90b10a4 model: Mo @3957388 throws new Oe(this phrase); Yan @3958706 catches Oe and returns t.message; xmt @9102135 (the $.skill.prompt argument normaliser, Mmt['skill.prompt']) re-throws it inside `$.skill.prompt: called with a frontmatter that ${...}`, and wn @3958838 (checkArgument of the skill.prompt site Qa) returns it to lt @3907440 which throws `${name}: next() passed an argument with a frontmatter that ...`. trace @3958440 follows that throw through G6n @14037807 / the turn.step dispatch Mr @17205104 into the query loop @17999497 and Nd @17968845, which yields it as tool_result content (is_error) and api-message @13877666: a model sink, same route as the cached-model sibling `next() after it settled` (yr @3909224, tool-result-plugin-hook-next-after-settled). The ui arms of this group are module-load/registration refusals (on() registered twice, exports \"then\") raised in the hooks-module loader g/H @4101784, a different route."
+      },
+      {
+        "arms": {
+          "2d5889571c15bb380c594c43c23b05cbbedd59d5": {
+            "facing": "ui",
+            "preview": "${.plugin}: next.to names \"${()}\", which is not a tier a di…"
+          },
+          "7eb21f4501242b0ab17bde2c6bcff773e6ec18f6": {
+            "facing": "internal",
+            "preview": "${}: ${(,.identifier)}: the engine ran out of stack linking…"
+          },
+          "acb125184474c743769bdc5f66bc4c66c79d55cb": {
+            "facing": "model",
+            "preview": "holds a Proxy or a vm context"
+          }
+        },
+        "why": "Le (the plugin host's generic error) is thrown by Br @4324246 for 'holds a Proxy or a vm context' on the same path as the already-ruled model siblings 'holds an accessor' and 'holds what JSON cannot', whose throw reaches the dispatch rejection and the tool_result. The new ui arms are the $.ui drawing/render refusals (@4372944), caught and reported through hookFailed to the TUI, a different route."
+      },
+      {
+        "arms": {
+          "83b1e27b86faf3a667d08a5e6141aec5e370a08b": {
+            "facing": "internal",
+            "preview": "${.name}: ${.expiryText()}"
+          }
+        },
+        "why": "je error class @5066640: the model arms are plugin/mod load and call failures returned to the model; `${e.name}: ${H.expiryText()}` (@4792613, @4962409) is only the abort reason handed to the hook's own AbortController (x.abort/G.abort) when its grant expires — the outcome is reported through hookFailed/Es telemetry and the fallback result, not this text"
+      },
+      {
+        "arms": {
+          "0f75e4fe0ba54041fe5c1313ad47fc2492505d26": {
+            "facing": "model",
+            "preview": "takes { decorations }"
+          },
+          "0f8feb530781565495e8a59f219c2601ff019f1d": {
+            "facing": "model",
+            "preview": "${}: $.store.${} takes a non-empty string key"
+          },
+          "130e6840308ef868d76fbddfaf25c626b54ba445": {
+            "facing": "model",
+            "preview": "${.plugin}: returned a ${} in another plugin's hover scope …"
+          },
+          "16405c1c0c363c31218842b1dcc0df08cbf0e2b9": {
+            "facing": "model",
+            "preview": "${.plugin}: ${.refusal(,)}"
+          },
+          "204fb38c88f3f1a2b4be4365fd2672f7f6f8da80": {
+            "facing": "model",
+            "preview": "${}: returned a drawing that holds an object that is not pl…"
+          },
+          "2092305f1e9853b4c01becac20bd4ceed4c706f6": {
+            "facing": "model",
+            "preview": "${}: $.audio.play options.signal must be an AbortSignal"
+          },
+          "251493b12e26a88f11a7bc31ba182ddeb87eafa9": {
+            "facing": "model",
+            "preview": "${}: $.prompt.compose takes the facts to compose for ({ too…"
+          },
+          "2777190ab111c95942fe3b627ed9b8bf930d46d1": {
+            "facing": "model",
+            "preview": "${}: $.prompt.fill "
+          },
+          "299cc1e005612bee3af9bdc78347f9b5e1708067": {
+            "facing": "model",
+            "preview": "${}: $.tool.register: ${}"
+          },
+          "2ca314949aaa9187e16cb57cf89ef28293174b1c": {
+            "facing": "model",
+            "preview": "${}: $.session.usage ${}"
+          },
+          "3153f4e18928aed62d6a011fd19561b503378ecf": {
+            "facing": "model",
+            "preview": "$.${} (${.pluginName}) has no method ${}"
+          },
+          "31a03d9248ecf39a66ab8ce9ae5db3b0bb940e15": {
+            "facing": "model",
+            "preview": "${}: $.model.classify takes two or more non-empty labels"
+          },
+          "34433a02cc7cbfa744812f257d2ee34c9570e593": {
+            "facing": "model",
+            "preview": "${.plugin}: ${[.type]}"
+          },
+          "349db56eba4cf98deda83b8f3073dee7fd766754": {
+            "facing": "model",
+            "preview": "${}: $.ui.ask takes at most ${} options (got ${})"
+          },
+          "36d796679d050ac5aa46c7f0bbffa6abb5955c6a": {
+            "facing": "model",
+            "preview": "${.plugin}: returned a Shader that next(e) did not hand it,…"
+          },
+          "3ca0a5c542b64d83a61f79fc85111c21300ab665": {
+            "facing": "model",
+            "preview": "${.name}: next() passed an argument with ${}"
+          },
+          "3e40769a754dbdeec503580f4d1302cc51cd674a": {
+            "facing": "model",
+            "preview": "${.plugin}: returned a Client it did not draw (${()}/${()} …"
+          },
+          "46132098844f362d33a04e8672d18997d8464383": {
+            "facing": "model",
+            "preview": "${}: on(\"${}\") after register() returned: on() is for regis…"
+          },
+          "483d27ff7c4f0f6a712cb28592afa0d415b8afc6": {
+            "facing": "model",
+            "preview": "${}: $.ui.ask takes its options as a list"
+          },
+          "4b24a999ae76addbb7a5a7c7c583013c8982faf5": {
+            "facing": "model",
+            "preview": "${}: $.tool.check takes { tool, input }: the tool's name an…"
+          },
+          "4ef89c570644a2d1d18323c00fda6fe32ea76422": {
+            "facing": "model",
+            "preview": "${}: $.telemetry.log takes an entry ({ to?, event, props? }…"
+          },
+          "4fcf9859846a20e505837cacd7f707cd8ae19eb2": {
+            "facing": "model",
+            "preview": "${}: $.http.fetch takes a URL"
+          },
+          "54a977d06189a5291e71bd57a48bddda378c4b3d": {
+            "facing": "model",
+            "preview": "${.plugin}: returned a Shader it did not draw; a render hoo…"
+          },
+          "5d2e5d4d0cc7c4192f042d17ccc40143d0160fc4": {
+            "facing": "model",
+            "preview": "${}: $.model.classify: ${()}"
+          },
+          "5f5fa1a7077118b03d810673b11fdaa5bbe90681": {
+            "facing": "model",
+            "preview": "${}: $.prompt.paint ${(,)}"
+          },
+          "61867d40104fe8ba0bb666acbde3c0bc2153e826": {
+            "facing": "model",
+            "preview": "${}: $.command.register: ${} needs a description (what the …"
+          },
+          "6631b14d4503c85504f89920b7a1cea598e6bc0c": {
+            "facing": "model",
+            "preview": "${}: returned a drawing with a function where plain data go…"
+          },
+          "667077161acbf71e78689721307943364f78fc3a": {
+            "facing": "model",
+            "preview": "${}: $.tool.call: input must be an object"
+          },
+          "687b8bfd240360c40f730fdb653cadf1f361301d": {
+            "facing": "model",
+            "preview": "${.plugin}: returned ${[.type]} it did not draw (${()}#${})…"
+          },
+          "745ebf81c0f4a2854badb7670114f1e788598e8d": {
+            "facing": "model",
+            "preview": "${}: $.tool.call takes the event's input: { tool, ...args }"
+          },
+          "79d6cf8140e9d65acba0e68d8ec6168604ec3430": {
+            "facing": "model",
+            "preview": "${}: $.${}: the value is ${.length} characters, over the ${…"
+          },
+          "7c0ca03bea599e54e4a6365b62e6f0491c66eb41": {
+            "facing": "model",
+            "preview": "${}: $.prompt.submit takes { asUser } as a boolean"
+          },
+          "7d7ffb56b6ba16e6e1c4bf64bf11f90cec2fde4d": {
+            "facing": "model",
+            "preview": "${}: $.state.${} takes a reference { plugin, key } (and id …"
+          },
+          "80a9c7bea347a6e7828e90bd9f304a957e45ec22": {
+            "facing": "model",
+            "preview": "${}: $.telemetry.mark takes an entry ({ feature, kind, reas…"
+          },
+          "82f264f55f05d7770a6072ea9ad2fe1edd6c26f0": {
+            "facing": "model",
+            "preview": "${.plugin}: next.to() names no tier"
+          },
+          "83af9c9a98813a8a183f34f840a5a777df16bc28": {
+            "facing": "model",
+            "preview": "${}: $.config.set takes { key, value } (the key as $.config…"
+          },
+          "84398e9a41e01ca71ce7ef7d385bea1f1e1e9558": {
+            "facing": "model",
+            "preview": "${}: $.audio.speak options.signal must be an AbortSignal"
+          },
+          "8704c5994ba4f45a6ea0156b5c6579fa23a3c89b": {
+            "facing": "model",
+            "preview": "${}: $.model.classify: the model answered with no text"
+          },
+          "89339767144bee3e5a4be0067fb977d85d7188c7": {
+            "facing": "model",
+            "preview": "${}: $.clock.${} takes a non-negative number of milliseconds"
+          },
+          "8e0d360aee50071ed62e3cb62e7d110b325da044": {
+            "facing": "model",
+            "preview": "${}: $.session.compact takes { instructions } (a string) or…"
+          },
+          "9101d2e9ff4942fd8a7e5edab93b5cda20fb9993": {
+            "facing": "model",
+            "preview": "${}: $.${} takes { text } (a string)"
+          },
+          "92346ddcb88bdfe2842dae3e61c2925dd64cadf2": {
+            "facing": "model",
+            "preview": "${}: $.${}: value is not JSON data (${()})"
+          },
+          "9619a1075425fbff7290f1c4ac31eeeaee317170": {
+            "facing": "model",
+            "preview": "${}: returned a drawing that holds a Proxy or a vm context;…"
+          },
+          "9be7e2ff554f68b0f5792fa21dbab7e2c78505c2": {
+            "facing": "model",
+            "preview": "${}: $.turn.abort takes { turnId } (the id turn.start carri…"
+          },
+          "9ed8dc721e7b7f6753edce5fd59474a4463c6f72": {
+            "facing": "model",
+            "preview": "${}: $.command.register takes { name, description, argument…"
+          },
+          "acb6e98afbd71a049c240d1611e3279306659cff": {
+            "facing": "model",
+            "preview": "${}: $.ui.ask: no answer (${(.deny??.text??\"\",)||\"the dialo…"
+          },
+          "af9780b1e91dafdb3b293167fee5338f9e5f0db2": {
+            "facing": "model",
+            "preview": "${}: $.clock.${} takes a function"
+          },
+          "b2771f5861efc30226c9fcb46c0734b78c44fe58": {
+            "facing": "model",
+            "preview": "${}: ${} takes a function"
+          },
+          "b2cfa9f7bf890de22b594c565b87cb1dc69488ba": {
+            "facing": "model",
+            "preview": "${.pluginName} provides no interface named ${}"
+          },
+          "b3ec15f8e20c976f54ab10fe9f6c0cb4b198942c": {
+            "facing": "model",
+            "preview": "${} after register() returned: .catch() is for register()"
+          },
+          "b853c9c7b98ffd6f4fa32f527549fe638c8f4398": {
+            "facing": "model",
+            "preview": "${}: $.wasm.compile: ${}"
+          },
+          "bbd48e0b3af18f02ba6c37f6539d5b14be6223db": {
+            "facing": "model",
+            "preview": "${}: $.agent.spawn takes { prompt, ... } (a non-empty promp…"
+          },
+          "c0081a8df9526dc42c878153592195781748b8ec": {
+            "facing": "model",
+            "preview": "${}: $.ui.resolve ${}"
+          },
+          "c88768ad7081c620a0b474d93c3fbd43c2434f29": {
+            "facing": "model",
+            "preview": "${}: $.command.run takes { command, args? } (the command's …"
+          },
+          "ce9a26aff2754f2bc885efc785b7da733b2d814b": {
+            "facing": "model",
+            "preview": "${}: options.signal must be an AbortSignal"
+          },
+          "d8b803ca72f52c2e6083a65c8422f440e47de20c": {
+            "facing": "model",
+            "preview": "${}: $.settings.read takes { source }, { key } or nothing"
+          },
+          "db357a072fb167f34e63a2fbb082ec41f2cbe5aa": {
+            "facing": "model",
+            "preview": "${}: $.session.messages ${}"
+          },
+          "e25c0845377e4c59972de08a63cb6d91edd02d5b": {
+            "facing": "model",
+            "preview": "${}: the on(\"${}\") hook returned no result"
+          },
+          "e7b3dfffd86af8976b5d349894f74491d7f34fc1": {
+            "facing": "model",
+            "preview": "${}: $.${}: value is not JSON data (${===void 0?\"undefined\"…"
+          },
+          "ee4389f3e1107e51a8cefb28d154d6a509db8622": {
+            "facing": "model",
+            "preview": "${}: $.agent.call options.signal must be an AbortSignal"
+          },
+          "f11d5e936104264d6c102b5fa22ccaf2ebcdad06": {
+            "facing": "model",
+            "preview": "${}: $.agent.register takes { name, description, prompt, ..…"
+          },
+          "f6150de7e258dcdf6c9a0c21f0abdeeb2cc64640": {
+            "facing": "model",
+            "preview": "${}: $.ui.ask takes the question first"
+          },
+          "f7f7369b061707a33e4280714472ffdd70370fb4": {
+            "facing": "model",
+            "preview": "${}: $.audio.play with shouldLoop needs options.signal: the…"
+          },
+          "fc53913a5ea5f8e3ef821f81b65b465bcb399cbc": {
+            "facing": "model",
+            "preview": "${} that holds a BigInt, which cannot be written out"
+          }
+        },
+        "why": "je is HooksError (@96881). The newly model arms are $-API argument checks in the worker's $ object (5017000-5045000), runtime on()/.catch()/next()/next.to calls made from inside a running hook (@5052291, @5051723, @4777739, @4778730, og's 'hook returned no result' @5048175) and render-site result refusals (@4849926-4856697); each ends in the hook's failure, which Es @4781556 reports as skip.why ('threw HooksError: <msg>', or for a site check 'returned the wrong shape (a result the site cannot read (<msg>))' via ge @4791300), and SCo -> yCo @15474030 queues 'Your mod failed when it ran: …' to the model as a task-notification (fYe @15468718) for a watched mod under development. The arms left internal/ui never reach a running hook's failure: load-time registration and compile checks (on()/.catch() before register() returns, engine.create returns @5017327, Hl interface tables @5016995, VN/load/Rg/B/F @5021618-5066664, Rr's next.to literal scan @4674021) fail the load, which SCo skips (engine.create) and the plugin-dir watch shows as a ui.log row (c7 @5176792 -> Zje informational row); engine bookkeeping ('returned no result (and read no next() stream…)' and 'returned no stream' set a shape string, so their text is not in skip.why; stream-closed and .catch-left reasons; the `then`-not-fixed VM answer check @5006340; '${e.name}: ${expiryText}' abort reasons @4792613/@4962409, whose readers only reject back into the expired plugin call)."
+      },
+      {
+        "arms": {
+          "0f54dc967f5238ae78fac4d6274b1ab55d59bc99": {
+            "facing": "model",
+            "preview": "returned no result (and read no next() stream to its end)"
+          },
+          "855e8e859e760e96f12e1628d0f6757ef74ea1fb": {
+            "facing": "model",
+            "preview": "returned no stream: a hook on a streaming event is an async…"
+          }
+        },
+        "why": "Standing split of the HooksError (je @96881) group carried from b14295a31cefc5e4, now with the two streaming-runner arms (returned no result / returned no stream) ruled model: vt @4960496 throws inside the streaming runner try, catch -> Qt -> Es @4962924 -> hookFailed -> dev-mod failure notice (verified 2026-11-22). Kept arms are load/registration, engine.create, reload, host dispatch and bookkeeping errors that never reach the notice."
       }
     ]
   },
