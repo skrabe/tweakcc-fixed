@@ -15,6 +15,7 @@ import matter from 'gray-matter';
 
 import { SYSTEM_PROMPTS_DIR, SYSTEM_REMINDERS_DIR } from './config';
 import { MutableText } from './mutableText';
+import { matchListDigest, TRACE } from './perfTrace';
 import {
   findAllPromptPieceMatchesBatch,
   foldPromptMatchContent,
@@ -334,6 +335,19 @@ export const replayPromptPlans = async (
       order: plan.order,
     });
   }
+  if (TRACE) {
+    for (const plan of orderedPlans) {
+      const destination = destinations.get(plan.claim);
+      const replacement = replacements.get(plan.claim);
+      TRACE.emit('replay', {
+        order: plan.order,
+        re: TRACE.digest(plan.regex),
+        landed: landed.get(plan.claim) ?? null,
+        dest: destination ? [destination.start, destination.end] : null,
+        rep: replacement === undefined ? null : TRACE.digest(replacement),
+      });
+    }
+  }
   return {
     content: working.toString(),
     landed,
@@ -546,6 +560,14 @@ export const runSystemPromptPreflight = async ({
     pristine,
     foldPromptMatchContent(pristine)
   );
+  if (TRACE) {
+    for (const [regex, matches] of groupMatches) {
+      TRACE.emit('batch', {
+        re: TRACE.digest(regex),
+        matches: matchListDigest(TRACE, matches),
+      });
+    }
+  }
 
   for (const entries of groups.values()) {
     const { regex, asset } = entries[0].entry;

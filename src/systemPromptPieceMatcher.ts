@@ -1,3 +1,4 @@
+import { TRACE } from './perfTrace';
 import { findAllMatchesWithStackFallback } from './safeRegexMatch';
 import {
   generalizeExpressionIdentifiers,
@@ -871,6 +872,12 @@ export class PromptPieceMatcherCatalog {
         [...this.anchorRegexes.keys()].map(anchor => [anchor, []])
       )
     );
+    if (TRACE) {
+      TRACE.emit('index', {
+        anchors: this.anchorRegexes.size,
+        length: content.length,
+      });
+    }
   }
 
   async matchCurrent(
@@ -884,6 +891,12 @@ export class PromptPieceMatcherCatalog {
     const indexed = anchor
       ? tokenMatches(matcher, content, this.anchorOccurrences.get(anchor))
       : null;
+    if (TRACE) {
+      TRACE.emit('current', {
+        by: indexed ? 'token' : 'regex',
+        anchored: Boolean(anchor),
+      });
+    }
     const matches =
       indexed ??
       (await findAllMatchesWithStackFallback(
@@ -924,6 +937,7 @@ export class PromptPieceMatcherCatalog {
         : undefined;
     const anchor = matcher?.plan?.anchor;
     if (!matcher || !anchor || hashWindowFor(anchor) === 0) {
+      if (TRACE) TRACE.emit('pristine-path', { path: 'unindexable' });
       return findAllPromptPieceMatches(spec, content);
     }
     if (
@@ -931,17 +945,24 @@ export class PromptPieceMatcherCatalog {
       this.pristineRescans < PRISTINE_RESCANS_BEFORE_INDEX
     ) {
       this.pristineRescans++;
+      if (TRACE) TRACE.emit('pristine-path', { path: 'rescan' });
       return findAllPromptPieceMatches(spec, content);
     }
     const occurrences = this.pristineOccurrences(content).get(
       foldAsciiCase(anchor)
     );
     if (occurrences === undefined) {
+      if (TRACE) TRACE.emit('pristine-path', { path: 'unindexed-anchor' });
       return findAllPromptPieceMatches(spec, content);
     }
+    const indexed = tokenMatches(matcher, content, occurrences);
+    if (TRACE) {
+      TRACE.emit('pristine-path', {
+        path: indexed ? 'index' : 'regex-fallback',
+      });
+    }
     return (
-      tokenMatches(matcher, content, occurrences) ??
-      findAllMatchesWithStackFallback(spec.regex, 'sg', content)
+      indexed ?? findAllMatchesWithStackFallback(spec.regex, 'sg', content)
     );
   }
 
