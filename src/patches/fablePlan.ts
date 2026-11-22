@@ -68,6 +68,7 @@
 import { FablePlanConfig } from '../types';
 import { debug } from '../utils';
 import { escapeIdent, showDiff } from './index';
+import { runPatchSteps } from './patchSteps';
 
 const ALIAS = 'fableplan';
 
@@ -941,53 +942,37 @@ export const writeFablePlan = (
     return null;
   }
 
-  // The alias-to-model resolver goes first: it hands back its own minified name,
-  // which the plan resolver calls.
-  const resolved = patchAliasToModel(oldFile, config);
-  if (!resolved) return null;
-  let file = resolved.file;
-
-  const whitelisted = patchAliasWhitelist(file);
-  if (!whitelisted) return null;
-  file = whitelisted;
-
-  const planSetting = PLAN_SETTING_PARAM.test(file);
-  const planned = patchPlanResolver(file, config, resolved.resolver);
-  if (!planned) return null;
-  file = planned;
-
-  const defaulted = patchBuiltinDefault(file, config);
-  if (!defaulted) return null;
-  file = defaulted;
-
-  const picked = patchModelPicker(file, config);
-  if (!picked) return null;
-  file = picked;
-
-  const efforted = patchEffortLookup(file);
-  if (!efforted) return null;
-  file = efforted.file;
-
-  // Required where the lookup has its 2.1.291 shape, which is where the
-  // per-request caller is known; older shapes keep the session's mode.
-  const contexted = patchEffortContext(
-    file,
-    efforted.resolver,
-    efforted.block,
-    planSetting
-  );
-  if (!contexted) return null;
-  file = contexted;
-
-  const effortRow = patchPickerEffortRow(file, config);
-  if (!effortRow) return null;
-  file = effortRow;
-
-  if (config.offerClearContextOnPlanAccept) {
-    const cleared = patchClearContextOption(file);
-    if (!cleared) return null;
-    file = cleared;
-  }
-
-  return file;
+  let aliasResolver = '';
+  let planSetting = false;
+  let effortResolver: string | undefined;
+  let effortBlock = false;
+  return runPatchSteps(oldFile, [
+    // The alias-to-model resolver goes first: it hands back its own minified name,
+    // which the plan resolver calls.
+    file => {
+      const resolved = patchAliasToModel(file, config);
+      if (!resolved) return null;
+      aliasResolver = resolved.resolver;
+      return resolved.file;
+    },
+    patchAliasWhitelist,
+    file => {
+      planSetting = PLAN_SETTING_PARAM.test(file);
+      return patchPlanResolver(file, config, aliasResolver);
+    },
+    file => patchBuiltinDefault(file, config),
+    file => patchModelPicker(file, config),
+    file => {
+      const efforted = patchEffortLookup(file);
+      if (!efforted) return null;
+      effortResolver = efforted.resolver;
+      effortBlock = efforted.block;
+      return efforted.file;
+    },
+    // Required where the lookup has its 2.1.291 shape, which is where the
+    // per-request caller is known; older shapes keep the session's mode.
+    file => patchEffortContext(file, effortResolver, effortBlock, planSetting),
+    file => patchPickerEffortRow(file, config),
+    ...(config.offerClearContextOnPlanAccept ? [patchClearContextOption] : []),
+  ]);
 };

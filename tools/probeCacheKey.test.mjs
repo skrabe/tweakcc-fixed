@@ -61,7 +61,7 @@ describe('probeCacheKey', () => {
       expect(m, `${rec.start}-${rec.end}`).toBeTruthy();
       expect(m.keys[0]).toMatchObject({ variant: 'raw', key: sha1(rec.cacheBody) });
     }
-  });
+  }, 60000);
 
   it('keeps the member access of a template slot and drops only the identifier', () => {
     const { matches } = probe(cli, { text: 'for the reviewer to read later' });

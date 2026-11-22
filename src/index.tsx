@@ -34,7 +34,6 @@ import {
   resolveFetchVersion,
 } from './systemPromptDownload';
 import { migrateConfigIfNeeded } from './migration';
-import { ensureHeapLimit } from './heapLimit';
 import { completeStartupCheck, startupCheck } from './startup';
 import {
   formatNotFoundError,
@@ -1124,5 +1123,4 @@ async function startApp(
   );
 }
 
-ensureHeapLimit();
 main();
