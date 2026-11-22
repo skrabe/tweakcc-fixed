@@ -23351,7 +23351,10 @@
       ],
       "identifiers": [],
       "identifierMap": {},
-      "version": "2.1.330"
+      "version": "2.1.330",
+      "platforms": [
+        "darwin"
+      ]
     },
     {
       "name": "Tool result: wait full time hint",
@@ -46164,6 +46167,17 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.326"
+    },
+    {
+      "name": "Tool Description: TaskCreate description field",
+      "id": "tool-description-taskcreate-description-field",
+      "description": "Field note saying the description states what needs to be done.",
+      "pieces": [
+        "**description**: What needs to be done"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
     },
     {
       "name": "Tool Description: Agent explicit-spawn restriction",
@@ -96895,7 +96909,10 @@
         "0": "TOOL_RESULT_COMPUTER_USE_BATCH_STEP_ACTION_THREW_VAR_0",
         "1": "TOOL_RESULT_COMPUTER_USE_BATCH_STEP_ACTION_THREW_VAR_1"
       },
-      "version": "2.1.296"
+      "version": "2.1.296",
+      "platforms": [
+        "darwin"
+      ]
     },
     {
       "name": "Computer use: teach/computer batch action threw",
@@ -96914,7 +96931,10 @@
         "0": "TOOL_RESULT_COMPUTER_USE_BATCH_STEP_ACTION_THREW_VAR_0",
         "1": "TOOL_RESULT_COMPUTER_USE_BATCH_STEP_ACTION_THREW_VAR_1"
       },
-      "version": "2.1.296"
+      "version": "2.1.296",
+      "platforms": [
+        "darwin"
+      ]
     },
     {
       "name": "availableModels Hyphenate Version Suggestion",
@@ -97797,7 +97817,10 @@
       "identifierMap": {
         "0": "TOOL_RESULT_COMPUTER_USE_APP_ACTION_NOT_PERFORMED_LEAD_VAR_0"
       },
-      "version": "2.1.330"
+      "version": "2.1.330",
+      "platforms": [
+        "darwin"
+      ]
     },
     {
       "name": "Tool Result: MCP call ended while plugins answered tool list",
@@ -153570,6 +153593,30 @@
       "version": "2.1.233"
     },
     {
+      "name": "/autofix-pr PR number not found",
+      "id": "slash-command-autofix-pr-pr-number-not-found",
+      "description": "Tells the model the named PR number could not be found in the repo.",
+      "pieces": [
+        "couldn't find PR #${",
+        "}${",
+        "?` in ${",
+        "(",
+        ")}`:\" in this repo\"}."
+      ],
+      "identifiers": [
+        0,
+        1,
+        2,
+        1
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_AUTOFIX_PR_PR_NUMBER_NOT_FOUND_VAR_0",
+        "1": "SLASH_COMMAND_AUTOFIX_PR_PR_NUMBER_NOT_FOUND_VAR_1",
+        "2": "SLASH_COMMAND_AUTOFIX_PR_PR_NUMBER_NOT_FOUND_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "Slash Command: IDE plugin not running, restart",
       "id": "slash-command-ide-plugin-not-running-restart",
       "description": "Says the Claude Code plugin was not found running in the IDE, to install it from the JetBrains Marketplace if missing, then restart the IDE and run /ide again",
@@ -154960,6 +155007,48 @@
         "0": "SLASH_COMMAND_WEB_SETUP_NOT_SIGNED_IN_GITHUB_APP_VAR_0"
       },
       "version": "2.1.328"
+    },
+    {
+      "name": "Slash command: /autofix-pr couldn't start (exception)",
+      "id": "slash-command-autofix-pr-start-failed-exception",
+      "description": "The same lead for an exception thrown while starting /autofix-pr; the error message follows. Reaches the model as local-command-stdout.",
+      "pieces": [
+        "Couldn't start autofix: ${",
+        " instanceof ",
+        "?",
+        ".message:",
+        "(",
+        ")}"
+      ],
+      "identifiers": [
+        0,
+        1,
+        0,
+        2,
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_AUTOFIX_PR_START_FAILED_EXCEPTION_VAR_0",
+        "1": "SLASH_COMMAND_AUTOFIX_PR_START_FAILED_EXCEPTION_VAR_1",
+        "2": "SLASH_COMMAND_AUTOFIX_PR_START_FAILED_EXCEPTION_VAR_2"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "Slash command: /autofix-pr couldn't start (reason)",
+      "id": "slash-command-autofix-pr-start-failed",
+      "description": "Lead of every /autofix-pr start error; the reason follows. Reaches the model as local-command-stdout via onDone with no display option.",
+      "pieces": [
+        "Couldn't start autofix: ${",
+        "}"
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_AUTOFIX_PR_START_FAILED_VAR_0"
+      },
+      "version": "2.1.330"
     },
     {
       "name": "Slash Command: /background — Couldn't Start (Detail Withheld)",
@@ -199897,6 +199986,17 @@
       "version": "2.1.326"
     },
     {
+      "name": "Data: Monitor timed out — lead",
+      "id": "data-task-notification-monitor-timed-out-lead",
+      "description": "Lead of the Monitor time-out notice when its command wrote nothing to stderr: states that the watch timed out.",
+      "pieces": [
+        "Monitor timed out. "
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
+    },
+    {
       "name": "Slash Command: /usage-credits — monthly limit removed",
       "id": "slash-command-usage-credits-monthly-limit-unlimited",
       "description": "Tells the model the monthly spend cap is gone, so it should not treat budget exhaustion as an imminent constraint.",
@@ -200295,7 +200395,10 @@
       ],
       "identifiers": [],
       "identifierMap": {},
-      "version": "2.1.296"
+      "version": "2.1.296",
+      "platforms": [
+        "darwin"
+      ]
     },
     {
       "name": "Code review second tier footguns",
@@ -203352,6 +203455,17 @@
       "version": "2.1.294"
     },
     {
+      "name": "Slash Command: /terminal-setup no configuration needed",
+      "id": "slash-command-terminal-setup-shift-enter-no-config-needed",
+      "description": "/terminal-setup note that Shift+Enter needs no configuration and already adds newlines.",
+      "pieces": [
+        "No configuration needed. Just use Shift+Enter to add newlines."
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
+    },
+    {
       "name": "Tool result: cloud session no default environment",
       "id": "tool-result-cloud-session-no-default-environment",
       "description": "Error when no configured default or anthropic_cloud environment is available after retry.",
@@ -206147,6 +206261,38 @@
       "identifiers": [],
       "identifierMap": {},
       "version": "2.1.274"
+    },
+    {
+      "name": "/autofix-pr no open PR for branch",
+      "id": "slash-command-autofix-pr-no-open-pr-for-branch",
+      "description": "Tells the model no open PR exists for the branch and to create one before retrying autofix.",
+      "pieces": [
+        "no open PR found for branch \"${",
+        "}\". Create a PR first, then retry."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_AUTOFIX_PR_NO_OPEN_PR_FOR_BRANCH_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
+      "name": "/autofix-pr no open PR for branch",
+      "id": "slash-command-autofix-pr-no-open-pr-for-branch",
+      "description": "Tells the model no open PR exists for the branch and to create one before retrying autofix.",
+      "pieces": [
+        "no open PR found for branch \"${",
+        "}\". Create a PR first, then retry."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_AUTOFIX_PR_NO_OPEN_PR_FOR_BRANCH_VAR_0"
+      },
+      "version": "2.1.330"
     },
     {
       "name": "Cross-machine send: no allowing policy reason",
@@ -225265,6 +225411,24 @@
       "version": "2.1.291"
     },
     {
+      "name": "/autofix-pr PR not open",
+      "id": "slash-command-autofix-pr-pr-not-open",
+      "description": "Tells the model the PR is merged or closed and autofix needs an open PR.",
+      "pieces": [
+        "PR #${",
+        ".number} is ${",
+        ".state.toLowerCase()}. Autofix requires an open PR."
+      ],
+      "identifiers": [
+        0,
+        0
+      ],
+      "identifierMap": {
+        "0": "SLASH_COMMAND_AUTOFIX_PR_PR_NOT_OPEN_VAR_0"
+      },
+      "version": "2.1.330"
+    },
+    {
       "name": "Autofix PR: PR Steward watching with labels",
       "id": "slash-command-autofix-pr-steward-watching-with-labels",
       "description": "Tells the model PR Steward is watching this PR because it carries the watching label(s), part of the pr_steward hand-off message",
@@ -241597,6 +241761,17 @@
         "0": "TOOL_DESCRIPTION_SAVE_TASK_FILES_VAR_0"
       },
       "version": "2.1.311"
+    },
+    {
+      "name": "Tool Result: Mod theme.set image — resize advice",
+      "id": "tool-result-mod-theme-set-image-size-advice",
+      "description": "Advice in the theme.set too-big error telling the model how to re-save the image (about 2560 wide, as a JPEG).",
+      "pieces": [
+        "save it about 2560 wide as a JPEG"
+      ],
+      "identifiers": [],
+      "identifierMap": {},
+      "version": "2.1.330"
     },
     {
       "name": "Data: Animated WebP First-Frame Advice",
@@ -280219,6 +280394,22 @@
         "1": "TOOL_RESULT_SCHEDULEWAKEUP_CONTINUE_INSTRUCTION_LEAD_VAR_1"
       },
       "version": "2.1.296"
+    },
+    {
+      "name": "Skill: Code review fix — re-report and explain skips",
+      "id": "skill-code-review-fix-report-skipped-findings",
+      "description": "Code review --fix instruction to re-report findings with outcomes, then give one line per skipped finding saying why.",
+      "pieces": [
+        "Then ${",
+        "}; after the call, give one line per skipped finding saying why."
+      ],
+      "identifiers": [
+        0
+      ],
+      "identifierMap": {
+        "0": "SKILL_CODE_REVIEW_FIX_REPORT_SKIPPED_FINDINGS_VAR_0"
+      },
+      "version": "2.1.330"
     },
     {
       "name": "Tool result: app_type selection not read click step",

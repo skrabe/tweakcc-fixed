@@ -224,6 +224,24 @@ export const applySystemPrompts = async (
       );
     }
 
+    if (
+      ambiguous &&
+      prompt.content.trim() ===
+        reconstructContentFromPieces(pieces, identifiers, identifierMap).trim()
+    ) {
+      debug(
+        `"${prompt.name}": ${allMatches.length} ambiguous sites, still vanilla — nothing to apply`
+      );
+      results.push({
+        id: promptId,
+        name: prompt.name,
+        group: PatchGroup.SYSTEM_PROMPTS,
+        applied: false,
+        details: 'unchanged',
+      });
+      continue;
+    }
+
     if (ambiguous) {
       console.log(
         chalk.yellow(

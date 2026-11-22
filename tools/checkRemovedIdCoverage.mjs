@@ -546,7 +546,7 @@ const maxMatching = choices => {
   return n;
 };
 const namedSites = (run, lines) => {
-  const holders = curBodies.filter(b => b.body.includes(run));
+  const holders = bodiesWith(run).map(i => curBodies[i]);
   if (!holders.length) return 0;
   const sites = cliPositions(run).map(i => ({
     at: i,
@@ -622,10 +622,7 @@ const bodiesHolding = u => {
 const bestSuccessor = units => {
   const hits = new Map();
   for (const u of units) {
-    const cand = bodiesHolding(u);
-    const scan = cand ?? curBodies.map((_, i) => i);
-    for (const i of scan)
-      if (curBodies[i].body.includes(u)) hits.set(i, (hits.get(i) || 0) + 1);
+    for (const i of bodiesWith(u)) hits.set(i, (hits.get(i) || 0) + 1);
   }
   let best = null;
   let bestHit = 0;
@@ -780,43 +777,172 @@ const runAround = (hay, at, line, off) =>
   WINDOW +
   extendForward(hay, at + WINDOW, line, off + WINDOW);
 
-const cliPositionCache = new Map();
-const cliPositions = u => {
-  let positions = cliPositionCache.get(u);
-  if (!positions) {
-    positions = [];
-    for (let i = cli.indexOf(u); i >= 0; i = cli.indexOf(u, i + 1))
-      positions.push(i);
-    cliPositionCache.set(u, positions);
+const removedEntries = [...prevById]
+  .filter(([id]) => !curIds.has(id))
+  .flatMap(([, entries]) => entries);
+const probeKeys = (() => {
+  const keys = new Set();
+  const add = s => {
+    if (s.length >= WINDOW) keys.add(s.slice(0, WINDOW));
+  };
+  for (const p of removedEntries) {
+    strayProbes(p).forEach(add);
+    midBodyProbes(p).forEach(add);
+    proseLines(p).flatMap(asciiRunsOnLine).forEach(add);
+    for (const run of literalRuns(p)) {
+      for (let off = 0; off + WINDOW <= run.length; off += STRIDE)
+        add(run.slice(off, off + WINDOW));
+    }
   }
+  return keys;
+})();
+
+const UNIT_KEY = 8;
+const unitKeys = (() => {
+  const keys = new Set([...probeKeys].map(k => k.slice(0, UNIT_KEY)));
+  for (const p of removedEntries) {
+    for (const u of shareUnits(p))
+      if (u.length >= UNIT_KEY) keys.add(u.slice(0, UNIT_KEY));
+  }
+  return keys;
+})();
+
+const HASH_BASE = 31;
+const HASH_BITS = 24;
+const hashWindow = (s, at, width) => {
+  let h = 0;
+  for (let k = 0; k < width; k++)
+    h = (Math.imul(h, HASH_BASE) + s.charCodeAt(at + k)) | 0;
+  return h;
+};
+const hashBucket = h => (h ^ (h >>> 13)) & ((1 << HASH_BITS) - 1);
+const windowIndex = (hay, keys, width) => {
+  const hits = new Map();
+  for (const k of keys) hits.set(k, []);
+  if (hay.length < width || !hits.size) return hits;
+  let top = 1;
+  for (let k = 1; k < width; k++) top = Math.imul(top, HASH_BASE);
+  const filter = new Uint8Array(1 << (HASH_BITS - 3));
+  for (const k of hits.keys()) {
+    const b = hashBucket(hashWindow(k, 0, width));
+    filter[b >>> 3] |= 1 << (b & 7);
+  }
+  let h = hashWindow(hay, 0, width);
+  for (let i = 0; ; i++) {
+    const b = hashBucket(h);
+    if (filter[b >>> 3] & (1 << (b & 7))) {
+      const list = hits.get(hay.slice(i, i + width));
+      if (list) list.push(i);
+    }
+    if (i + width >= hay.length) break;
+    h =
+      (Math.imul(h - Math.imul(hay.charCodeAt(i), top), HASH_BASE) +
+        hay.charCodeAt(i + width)) |
+      0;
+  }
+  return hits;
+};
+const scanPositions = (hay, u) => {
+  const positions = [];
+  for (let i = hay.indexOf(u); i >= 0; i = hay.indexOf(u, i + 1))
+    positions.push(i);
   return positions;
 };
-const cliSiteCache = new WeakMap();
+const indexedHaystack = (hay, keys, width) => {
+  let index = null;
+  const cache = new Map();
+  return u => {
+    let positions = cache.get(u);
+    if (positions) return positions;
+    index ??= windowIndex(hay, keys, width);
+    const list = u.length >= width ? index.get(u.slice(0, width)) : null;
+    if (!list) positions = scanPositions(hay, u);
+    else if (u.length === width) positions = list;
+    else positions = list.filter(i => hay.startsWith(u, i));
+    cache.set(u, positions);
+    return positions;
+  };
+};
+const cliPositions = indexedHaystack(cli, probeKeys, WINDOW);
+const sidecarPositions = indexedHaystack(sidecarBlob, unitKeys, UNIT_KEY);
+const curBlobPositions = indexedHaystack(curBlob, probeKeys, WINDOW);
+const bodiesBlob = curBodies.map(b => b.body).join('\n');
+const bodyStarts = [];
+curBodies.reduce((at, b) => {
+  bodyStarts.push(at);
+  return at + b.body.length + 1;
+}, 0);
+const bodiesBlobPositions = indexedHaystack(bodiesBlob, unitKeys, UNIT_KEY);
+const bodiesWithCache = new Map();
+const bodiesWith = u => {
+  let ids = bodiesWithCache.get(u);
+  if (ids) return ids;
+  if (u.includes('\n') || u.length < UNIT_KEY) {
+    ids = (bodiesHolding(u) ?? curBodies.map((_, i) => i)).filter(i =>
+      curBodies[i].body.includes(u)
+    );
+  } else {
+    ids = [];
+    let b = 0;
+    for (const at of bodiesBlobPositions(u)) {
+      while (b + 1 < bodyStarts.length && bodyStarts[b + 1] <= at) b++;
+      if (ids.at(-1) !== b) ids.push(b);
+    }
+  }
+  bodiesWithCache.set(u, ids);
+  return ids;
+};
+const siteCaches = new Map([
+  [cli, new WeakMap()],
+  [sidecarBlob, new WeakMap()],
+]);
+const positionsIn = hay =>
+  hay === cli
+    ? cliPositions
+    : hay === sidecarBlob
+      ? sidecarPositions
+      : u => scanPositions(hay, u);
+const contextIndex = new WeakMap();
+const contextsOf = (u, lines) => {
+  if (u.length !== WINDOW) {
+    const contexts = [];
+    for (const line of lines) {
+      for (let o = line.indexOf(u); o >= 0; o = line.indexOf(u, o + 1)) {
+        contexts.push({ line, off: o });
+      }
+    }
+    return contexts;
+  }
+  let byWindow = contextIndex.get(lines);
+  if (!byWindow) {
+    byWindow = new Map();
+    for (const line of lines) {
+      for (let o = 0; o + WINDOW <= line.length; o++) {
+        const w = line.slice(o, o + WINDOW);
+        if (!byWindow.has(w)) byWindow.set(w, []);
+        byWindow.get(w).push({ line, off: o });
+      }
+    }
+    contextIndex.set(lines, byWindow);
+  }
+  return byWindow.get(u) || [];
+};
 
 // Occurrences of `u` in `hay` that continue some old line that holds it.
 const siteOffsets = (hay, u, lines) => {
-  if (hay === cli) {
-    let byUnit = cliSiteCache.get(lines);
-    if (!byUnit) cliSiteCache.set(lines, (byUnit = new Map()));
+  const siteCache = siteCaches.get(hay);
+  if (siteCache) {
+    let byUnit = siteCache.get(lines);
+    if (!byUnit) siteCache.set(lines, (byUnit = new Map()));
     if (!byUnit.has(u)) byUnit.set(u, scanSiteOffsets(hay, u, lines));
     return byUnit.get(u);
   }
   return scanSiteOffsets(hay, u, lines);
 };
 const scanSiteOffsets = (hay, u, lines) => {
-  const contexts = [];
-  for (const line of lines) {
-    for (let o = line.indexOf(u); o >= 0; o = line.indexOf(u, o + 1)) {
-      contexts.push({ line, off: o });
-    }
-  }
+  const contexts = contextsOf(u, lines);
   const out = [];
-  let positions = hay === cli ? cliPositions(u) : null;
-  if (!positions) {
-    positions = [];
-    for (let i = hay.indexOf(u); i >= 0; i = hay.indexOf(u, i + 1))
-      positions.push(i);
-  }
+  const positions = positionsIn(hay)(u);
   for (const i of positions) {
     if (
       contexts.some(
@@ -844,28 +970,27 @@ const strayUnits = (probes, lines) =>
     );
   });
 
-const share = (units, haystack) =>
-  units.filter(u => haystack.includes(u)).length / units.length;
+const share = (units, positions) =>
+  units.filter(u => positions(u).length > 0).length / units.length;
 
 // `share(windows, curBlob)` was the gate's hot spot (174 s of 259 s on CC
 // 2.1.312): every 25-char window scanned the whole 10 MB catalogue blob. Every
 // window of every blob position is precomputed once instead, so the test is a
 // set lookup. Exact for fixed-length windows: a window is in the blob iff it is
 // one of the blob's own WINDOW-length substrings.
-const windowSet = blob => {
-  const set = new Set();
-  for (let i = 0; i + WINDOW <= blob.length; i++)
-    set.add(blob.slice(i, i + WINDOW));
-  return set;
-};
-let curWindows = null;
-let curSidecarWindows = null;
+const curSidecarSeam = `${curBlob.slice(Math.max(0, curBlob.length - (WINDOW - 1)))}\n${sidecarBlob.slice(0, WINDOW - 1)}`;
 // strayProbes only emits WINDOW-length windows.
 const shareWindows = (windows, set) =>
   windows.filter(w => set().has(w)).length / windows.length;
-const curWindowSet = () => (curWindows ??= windowSet(curBlob));
-const curSidecarWindowSet = () =>
-  (curSidecarWindows ??= windowSet(`${curBlob}\n${sidecarBlob}`));
+const curWindows = { has: w => curBlobPositions(w).length > 0 };
+const curSidecarWindows = {
+  has: w =>
+    curWindows.has(w) ||
+    sidecarPositions(w).length > 0 ||
+    curSidecarSeam.includes(w),
+};
+const curWindowSet = () => curWindows;
+const curSidecarWindowSet = () => curSidecarWindows;
 
 const classify = id => {
   const entries = prevById.get(id) || [];
@@ -887,7 +1012,7 @@ const classify = id => {
     const pending =
       !to &&
       !split &&
-      (share(units, sidecarBlob) >= RENAME_SHARE ||
+      (share(units, sidecarPositions) >= RENAME_SHARE ||
         (windows.length > 0 &&
           shareWindows(windows, curSidecarWindowSet) >= RENAME_SHARE));
     if (to || split || pending) {
@@ -913,8 +1038,8 @@ const classify = id => {
         ...entries.flatMap(proseLines).flatMap(asciiRunsOnLine),
       ]),
     ];
-    const live = runs.filter(r => cli.includes(r));
-    const uncovered = live.filter(r => countOf(cli, r) > namedSites(r));
+    const live = runs.filter(r => cliPositions(r).length > 0);
+    const uncovered = live.filter(r => cliPositions(r).length > namedSites(r));
     return { bucket: uncovered.length ? 'IN-BUNDLE' : 'gone', near };
   }
   for (const p of entries) {
@@ -925,7 +1050,7 @@ const classify = id => {
         // A window a named id already holds at every bundle site is that id's
         // text, not this one surviving (2.1.305: a reworded fence error shared
         // one window with the catalogued verify-inconclusive message).
-        if (countOf(cli, w) > namedSites(w))
+        if (cliPositions(w).length > namedSites(w))
           return { bucket: 'IN-BUNDLE', near };
       }
     }

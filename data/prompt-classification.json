@@ -6525,7 +6525,12 @@
   },
   "265d1d2741403f31e65b21585a0a8f7a924ba37b": { "facing": "ui" },
   "26614a6ab2719a1dab099730e770fcad71dd1b78": { "facing": "internal" },
-  "266534e86cd9ea7ea38405d00f5cc5182930363c": { "facing": "ui" },
+  "266534e86cd9ea7ea38405d00f5cc5182930363c": {
+    "facing": "model",
+    "id": "slash-command-autofix-pr-pr-number-not-found",
+    "name": "/autofix-pr PR number not found",
+    "desc": "Tells the model the named PR number could not be found in the repo."
+  },
   "266948d11d7ed8daee6be6204ce83ea451b8aa02": { "facing": "internal" },
   "2670ed263c82fce88a3f241bdaa4396130cad2c7": {
     "facing": "model",
@@ -32478,7 +32483,12 @@
     "name": "Data: extraKnownMarketplaces.source.(url).headers setting description",
     "desc": "Description of the `extraKnownMarketplaces.source.(url).headers` setting in Claude Code's settings JSON schema. The model reads it through /update-config and settings validation errors; it is also shown to users in the settings help."
   },
-  "c00e524ee643769cbd7255fdb38d1af48e9a768c": { "facing": "ui" },
+  "c00e524ee643769cbd7255fdb38d1af48e9a768c": {
+    "facing": "model",
+    "id": "slash-command-autofix-pr-pr-not-open",
+    "name": "/autofix-pr PR not open",
+    "desc": "Tells the model the PR is merged or closed and autofix needs an open PR."
+  },
   "c01d3b46d172be04e02a7b9051dad70b764af762": {
     "facing": "model",
     "id": "data-task-notification-remote-tasks-completed",
@@ -147677,7 +147687,12 @@
   "894e4f38c28774a1861d007ff3327ef7ee000625": { "facing": "ui" },
   "cfc03064149b8b84a8a9ea0add1eb15de3c59d40": { "facing": "ui" },
   "a46eb156f3c1bbbba8a2636bc074f2c4ee37fead": { "facing": "ui" },
-  "ab4e6c0417b37ceedc8ee2a397d3b003531735ba": { "facing": "ui" },
+  "ab4e6c0417b37ceedc8ee2a397d3b003531735ba": {
+    "facing": "model",
+    "id": "slash-command-autofix-pr-no-open-pr-for-branch",
+    "name": "/autofix-pr no open PR for branch",
+    "desc": "Tells the model no open PR exists for the branch and to create one before retrying autofix."
+  },
   "a280ff461a648ce38254a8d3c41898de9352ec5d": { "facing": "internal" },
   "00b2770eccab3b1254d8ecfce2f64264ee3dba69": { "facing": "internal" },
   "7e1084506f84c2e63986d7218b76b869ad7dca37": { "facing": "internal" },
@@ -181446,5 +181461,47 @@
     "id": "tool-result-computer-delivery-stopped-key-repeat-partial",
     "name": "Tool Result: Computer use — key repeat stopped partway",
     "desc": "Headline naming how many key presses landed before the key repeat stopped."
+  },
+  "2f7d83adc59c20862ade92ebdf2a105ae2c2c0e7": {
+    "facing": "model",
+    "id": "data-task-notification-monitor-timed-out-lead",
+    "name": "Data: Monitor timed out — lead",
+    "desc": "Lead of the Monitor time-out notice when its command wrote nothing to stderr: states that the watch timed out."
+  },
+  "14fe79e89c0b8c00cbb2688177c6a7f40e7d1990": {
+    "facing": "model",
+    "id": "tool-result-mod-theme-set-image-size-advice",
+    "name": "Tool Result: Mod theme.set image — resize advice",
+    "desc": "Advice in the theme.set too-big error telling the model how to re-save the image (about 2560 wide, as a JPEG)."
+  },
+  "6b1b6d80b3cfbdaab6e1b06b7b5feeedb7e43c4e": {
+    "facing": "model",
+    "id": "tool-description-taskcreate-description-field",
+    "name": "Tool Description: TaskCreate description field",
+    "desc": "Field note saying the description states what needs to be done."
+  },
+  "e0355dd51611a1fbfc0c3423b5a6160119b7795c": {
+    "facing": "model",
+    "id": "skill-code-review-fix-report-skipped-findings",
+    "name": "Skill: Code review fix — re-report and explain skips",
+    "desc": "Code review --fix instruction to re-report findings with outcomes, then give one line per skipped finding saying why."
+  },
+  "f0be2d340dc9cf5e15a71a3bf3f89321f1efc678": {
+    "facing": "model",
+    "id": "slash-command-terminal-setup-shift-enter-no-config-needed",
+    "name": "Slash Command: /terminal-setup no configuration needed",
+    "desc": "/terminal-setup note that Shift+Enter needs no configuration and already adds newlines."
+  },
+  "80f69fd29587c3f8c0f524650eb9f7c0afc7df94": {
+    "facing": "model",
+    "id": "slash-command-autofix-pr-start-failed",
+    "name": "Slash command: /autofix-pr couldn't start (reason)",
+    "desc": "Lead of every /autofix-pr start error; the reason follows. Reaches the model as local-command-stdout via onDone with no display option."
+  },
+  "380b93dfbaa32ea9994a3f2918ba25ca2e989158": {
+    "facing": "model",
+    "id": "slash-command-autofix-pr-start-failed-exception",
+    "name": "Slash command: /autofix-pr couldn't start (exception)",
+    "desc": "The same lead for an exception thrown while starting /autofix-pr; the error message follows. Reaches the model as local-command-stdout."
   }
 }
