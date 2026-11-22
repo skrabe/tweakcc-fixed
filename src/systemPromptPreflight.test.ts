@@ -221,6 +221,30 @@ describe('replayPromptPlans', () => {
     expect(result.landed.get(guarded)).toBe(false);
     expect(result.mutations).toEqual([]);
   });
+  it('retains unchanged and malformed sites without interpolating or throwing', async () => {
+    const vanilla = claim('vanilla', 0, 0, 6, 'VANILLA');
+    const malformed = claim('malformed', 1, 7, 13, 'BROKEN');
+    const plan = (target: SpanClaim, order: number) => ({
+      claim: target,
+      regex: 'TARGET',
+      spec: { regex: 'TARGET', pieces: ['TARGET'], version: VERSION },
+      order,
+      getInterpolatedContent: (): string => {
+        throw new Error('unbalanced ${...} interpolation');
+      },
+    });
+    const result = await replayPromptPlans(
+      'TARGET TARGET',
+      new OffsetMapper(),
+      [{ ...plan(vanilla, 0), unchanged: true }, plan(malformed, 1)],
+      false
+    );
+
+    expect(result.content).toBe('TARGET TARGET');
+    expect(result.landed.get(vanilla)).toBe(false);
+    expect(result.landed.get(malformed)).toBe(false);
+    expect(result.mutations).toEqual([]);
+  });
 });
 
 // Each inline-blob and reminder surface turns the bundle into a whole new
