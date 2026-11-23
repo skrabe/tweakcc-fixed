@@ -29,6 +29,7 @@ import matter from 'gray-matter';
 
 import { debug, escapeNonAscii as escapeNonAsciiUnicode } from '../utils';
 import { detachedSlice, detectUnicodeEscaping } from '../systemPromptSites';
+import { literalAnchored } from '../literalAnchoredSearch';
 import { oneByteText } from '../oneByteText';
 import { SYSTEM_PROMPTS_DIR } from '../config';
 import { showDiff } from './patchDiffing';
@@ -821,7 +822,10 @@ export const applyInlineBlobOverrides = async (
       continue;
     }
 
-    const m = anchorRe.exec(content);
+    const m = literalAnchored.match(
+      content,
+      anchorRe
+    ) as RegExpExecArray | null;
     if (!m) {
       results.push({
         filename,
