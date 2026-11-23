@@ -959,6 +959,28 @@ export const findAllPromptPieceMatches = async (
   return findAllMatchesWithStackFallback(spec.regex, 'sg', content);
 };
 
+const execSignature = (matches: RegExpExecArray[]): string =>
+  JSON.stringify(matches.map(match => [match.index, ...Array.from(match)]));
+
+const shadowMemo = async (
+  regex: string,
+  content: PromptMatchSource,
+  memoized: RegExpExecArray[]
+): Promise<void> => {
+  const fresh = await findAllMatchesWithStackFallback(
+    regex,
+    'sg',
+    sourceString(content)
+  );
+  if (execSignature(fresh) !== execSignature(memoized)) {
+    shadowFail('u6-memo', {
+      memoized: memoized.length,
+      fresh: fresh.length,
+    });
+  }
+  if (TRACE) TRACE.emit('shadow', { check: 'u6-memo' });
+};
+
 export class PromptPieceMatcherCatalog {
   private specs = new Map<string, PromptMatchSpec>();
   private compiled = new Map<string, CompiledPromptMatcher>();
@@ -972,6 +994,9 @@ export class PromptPieceMatcherCatalog {
     occurrences: Map<string, number[] | null>;
   } | null = null;
   private pristineRescans = 0;
+  private memo = new Map<string, RegExpExecArray[]>();
+  private memoContent: PromptMatchSource | null = null;
+  private memoGeneration = 0;
 
   constructor(specs: PromptMatchSpec[]) {
     for (const spec of specs) {
@@ -998,8 +1023,15 @@ export class PromptPieceMatcherCatalog {
     return this.specs.get(regex);
   }
 
+  private clearMemo(): void {
+    this.memo.clear();
+    this.memoContent = null;
+    this.memoGeneration++;
+  }
+
   delete(regex: string): void {
     const anchor = this.compiled.get(regex)?.plan?.anchor;
+    this.memo.delete(regex);
     this.specs.delete(regex);
     this.compiled.delete(regex);
     if (!anchor) return;
@@ -1029,6 +1061,7 @@ export class PromptPieceMatcherCatalog {
     content: string,
     foldedContent = foldPromptMatchContent(content)
   ): void {
+    this.clearMemo();
     if (foldedContent.length !== content.length) {
       this.anchorOccurrences.clear();
       return;
@@ -1078,13 +1111,29 @@ export class PromptPieceMatcherCatalog {
         anchored: Boolean(anchor),
       });
     }
-    const matches =
-      indexed ??
-      (await findAllMatchesWithStackFallback(
-        spec.regex,
-        'sg',
-        sourceString(content)
-      ));
+    if (indexed) return indexed;
+    if (this.memoContent !== content) {
+      this.clearMemo();
+      this.memoContent = content;
+    }
+    const memoized = this.memo.get(regex);
+    if (memoized) {
+      if (TRACE) TRACE.emit('memo', { hit: true });
+      if (SHADOW) await shadowMemo(spec.regex, content, memoized);
+      return memoized;
+    }
+    const generation = this.memoGeneration;
+    const matches = await findAllMatchesWithStackFallback(
+      spec.regex,
+      'sg',
+      sourceString(content)
+    );
+    for (const match of matches) Object.freeze(match);
+    Object.freeze(matches);
+    if (this.memoGeneration === generation && this.memoContent === content) {
+      this.memo.set(regex, matches);
+    }
+    if (TRACE) TRACE.emit('memo', { hit: false });
     return matches;
   }
 
@@ -1148,6 +1197,7 @@ export class PromptPieceMatcherCatalog {
   }
 
   recordSplice(content: PromptMatchText, splice: PromptMatchSplice): void {
+    this.clearMemo();
     const delta = splice.replacementLength - (splice.end - splice.start);
     for (const [anchor, positions] of this.anchorOccurrences) {
       if (positions === null) continue;
