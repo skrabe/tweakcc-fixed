@@ -435,7 +435,8 @@ async function main() {
     console.error(
       'mixed call verdicts: refusing to write: the scan is incomplete or ambiguous'
     );
-    process.exit(2);
+    process.exitCode = 2;
+    return;
   }
   if (opt.record) {
     const reviews = JSON.parse(fs.readFileSync(opt.record, 'utf8'));
@@ -443,7 +444,8 @@ async function main() {
     for (const p of rec.problems) console.error(`FAIL ${p}`);
     if (rec.recorded) await writeAllowlist(allowlistPath, rec.allowlist);
     console.log(`mixed call verdicts: recorded ${rec.recorded} review(s)`);
-    process.exit(rec.problems.length ? 1 : 0);
+    process.exitCode = rec.problems.length ? 1 : 0;
+    return;
   }
   if (opt.prune) {
     const p = pruneReviews(allowlist, r.mixed);
@@ -460,7 +462,8 @@ async function main() {
     console.log(
       `mixed call verdicts: pruned ${p.removedEntries.length} entr(ies) and ${p.removedArms.length} arm(s), re-keyed ${p.rekeyed.length}; ${Object.keys(p.allowlist).length} entr(ies) kept`
     );
-    process.exit(0);
+    process.exitCode = 0;
+    return;
   }
   const open = unreviewedMixed(r.mixed, allowlist);
   if (opt.json) console.log(JSON.stringify(open, null, 1));
@@ -509,9 +512,8 @@ async function main() {
   say(
     `mixed call verdicts: ${open.length} unreviewed of ${r.mixed.length} call group(s) ruled both model and ui/internal (${arms} arm(s) to review${stale ? `; ${p.removedEntries.length} stale entr(ies), ${p.removedArms.length} stale arm(s), ${p.rekeyed.length} to re-key: run --prune` : ''})`
   );
-  process.exit(
-    r.unparsed.length || collisions.length ? 2 : open.length ? 1 : 0
-  );
+  process.exitCode =
+    r.unparsed.length || collisions.length ? 2 : open.length ? 1 : 0;
 }
 
 if (

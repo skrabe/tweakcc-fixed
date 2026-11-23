@@ -1277,7 +1277,7 @@ function main() {
   say(
     `sibling arms: ${r.findings.length} uncatalogued unclassified arm(s) in ${r.anchored} group(s) with a catalogued arm (${r.groups} switch/ternary groups scanned, ${r.trivial} non-prose arm(s) skipped, ${r.unearnedCallGroups} call group(s) with no model arm earned at their own calls skipped, ${r.unparsed.length} unparseable segment(s))`
   );
-  process.exit(r.unparsed.length ? 2 : r.findings.length ? 1 : 0);
+  process.exitCode = r.unparsed.length ? 2 : r.findings.length ? 1 : 0;
 }
 
 if (
