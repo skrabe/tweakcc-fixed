@@ -129,6 +129,12 @@ import { writeSwapRipgrepForFff } from './swapRipgrepForFff';
 import { writeFffInstructionHygiene } from './fffInstructions';
 import { writeEmptyEnvironment } from './emptyEnvironment';
 import { ensureRgFffWrapper } from '../ripgrepFff';
+import { writeEverythingGlob } from './everythingGlob';
+import { findEsExe, isEverythingRunning } from '../everythingEs';
+import {
+  EVERYTHING_GLOB_DESCRIPTION,
+  EVERYTHING_GLOB_TITLE,
+} from '../everythingGlobDescription';
 import {
   writeSuppressDeferredTools,
   writeStripEmptySystemReminders,
@@ -690,6 +696,12 @@ const PATCH_DEFINITIONS = [
     name: FFF_BASH_READ_TITLE,
     group: PatchGroup.FEATURES,
     description: FFF_BASH_READ_DESCRIPTION,
+  },
+  {
+    id: 'everything-glob',
+    name: EVERYTHING_GLOB_TITLE,
+    group: PatchGroup.FEATURES,
+    description: EVERYTHING_GLOB_DESCRIPTION,
   },
   {
     id: 'dream-mode',
@@ -1278,6 +1290,31 @@ export const applyCustomization = async (
     }
   }
 
+  // The UI keeps these exclusive, but a hand-edited config can enable both.
+  // Both take over Glob's ripgrep, so fff (the older feature) wins - but only
+  // when it actually applies, since its wrapper often isn't built for Windows.
+  let esExePath: string | null = null;
+  if (config.settings.misc?.useEverythingForGlob && rgFffWrapperPath) {
+    console.log(
+      'patch: everythingGlob: skipped because swapRipgrepForFff is enabled - turn one off'
+    );
+  } else if (
+    config.settings.misc?.useEverythingForGlob &&
+    process.platform === 'win32'
+  ) {
+    esExePath = findEsExe();
+    if (!esExePath) {
+      console.log(
+        'patch: everythingGlob: es.exe not found on PATH - keeping ripgrep. Install Everything and its command-line interface (es.exe) from voidtools.com.'
+      );
+    } else if (!isEverythingRunning(esExePath)) {
+      // still apply: each Glob falls back to rg until Everything is started
+      console.log(
+        'patch: everythingGlob: Everything is not running - Glob uses ripgrep until it is started'
+      );
+    }
+  }
+
   const patchImplementations: Record<PatchId, PatchImplementation> = {
     // Always Applied
     'verbose-property': {
@@ -1637,6 +1674,10 @@ export const applyCustomization = async (
     'fff-bash-reads': {
       fn: c => writeFffBashReads(c, fffViewerDirectory!, rgFffWrapperPath!),
       condition: swapRipgrepEnabled && !!fffViewerDirectory,
+    },
+    'everything-glob': {
+      fn: c => writeEverythingGlob(c, esExePath!),
+      condition: !!esExePath,
     },
     'dream-mode': {
       fn: c => writeDreamMode(c),
