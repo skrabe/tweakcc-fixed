@@ -8,7 +8,12 @@ import { showDiff } from './index';
 // spawnCwd), not at the search target. CC rewrites anchored patterns with
 // that in mind, so matching against target-relative paths would make
 // anchored deny rules silently miss. Anything we don't mirror goes to rg.
-export const buildEverythingGlobRuntime = (esPath: string): string => {
+export const ES_TIMEOUT_MS = 5000;
+
+export const buildEverythingGlobRuntime = (
+  esPath: string,
+  timeoutMs: number = ES_TIMEOUT_MS
+): string => {
   const es = escapeNonAscii(JSON.stringify(esPath));
   return String.raw`(async(rg,state,args,target,signal,opts)=>{
 let fallback=()=>rg(args,target,signal,opts);
@@ -29,7 +34,7 @@ opts.beforeSpawn();
 let prefix=target.endsWith("\\")?target:target+"\\",main=globs[0].glob,name=main.split("/").pop(),query=["-path",prefix,"/a-d","-sort","date-modified-ascending"];
 if(!main.startsWith("!")&&!name.includes("**")&&/^[\w.*?-]+$/.test(name))query.push("wfn:"+name);
 let tmp=path.join(os.tmpdir(),"tweakcc-es-"+crypto.randomUUID()+".txt"),text;
-try{let ok=await new Promise(done=>execFile(${es},[...query,"-export-txt",tmp],{signal,windowsHide:true},e=>done(!e)));
+try{let ok=await new Promise(done=>execFile(${es},[...query,"-export-txt",tmp],{signal,windowsHide:true,timeout:${timeoutMs}},e=>done(!e)));
 if(!ok)return fallback();text=await fs.readFile(tmp,"utf8")}finally{await fs.rm(tmp,{force:true})}
 let lower=prefix.toLowerCase(),files=text.split(/\r?\n/).filter(l=>l.length>prefix.length&&l.slice(0,prefix.length).toLowerCase()===lower).map(l=>prefix+l.slice(prefix.length));
 if(files.length===0)return fallback();
