@@ -50,17 +50,24 @@ export const writeShimmerStyle = (
   oldFile: string,
   { enabled, stepMs, width }: ShimmerStyleOptions
 ): string | null => {
-  const stepMatch = oldFile.match(
-    /([$\w]+)=([$\w]+)==="requesting"\?50:[$\w]+,/
-  );
+  const stepPattern =
+    /([$\w]+)=(?:([$\w]+)==="requesting"\?50:[$\w]+|\d+),(?=[$\w]+=[$\w]+\(\(\)=>[$\w]+\([$\w]+\),\[[$\w]+\]\),[$\w]+=[$\w]+\+2\*)/;
+  const stepMatch = oldFile.match(stepPattern);
   if (!stepMatch) return null;
-  const [stepDecl, stepVar, modeVar] = stepMatch;
+  const stepVar = stepMatch[1];
+  const modeVar =
+    stepMatch[2] ??
+    oldFile.match(/([$\w]+)==="requesting"\?[$\w]+%[$\w]+-/)?.[1];
+  if (!modeVar) {
+    console.error('patch: shimmerStyle: failed to find the spinner mode');
+    return null;
+  }
   let file: string | null = oldFile;
 
   if (stepMs !== null) {
     file = replaceFirst(
       file,
-      new RegExp(stepDecl.replace(/[$?.]/g, '\\$&')),
+      stepPattern,
       () => `${stepVar}=${Math.max(1, Math.round(stepMs))},`
     );
     if (!file) return null;
@@ -68,43 +75,58 @@ export const writeShimmerStyle = (
 
   if (!enabled) {
     // Force the reduced-motion branches: glimmer parked, no tool-use flash.
-    file = replaceFirst(
-      file,
-      /([$\w]+)=([$\w]+)\?-100:[$\w]+\?-100:/,
-      ([whole, glimmer]) => `${glimmer}=!0||${whole.slice(glimmer.length + 1)}`
-    );
-    if (!file) return null;
-    file = replaceFirst(
-      file,
-      new RegExp(`,([$\\w]+)=[$\\w]+\\?0:${modeVar}==="tool-use"\\?`),
-      ([whole, flash]) => `,${flash}=!0||${whole.slice(flash.length + 2)}`
-    );
-    if (!file) return null;
+    if (!/[$\w]+=!0\|\|[$\w]+\?-100:[$\w]+\?-100:/.test(file)) {
+      file = replaceFirst(
+        file,
+        /([$\w]+)=([$\w]+)\?-100:[$\w]+\?-100:/,
+        ([whole, glimmer]) =>
+          `${glimmer}=!0||${whole.slice(glimmer.length + 1)}`
+      );
+      if (!file) return null;
+    }
+    const flashPattern = `[$\\w]+\\?0:${modeVar}==="tool-use"\\?`;
+    if (!new RegExp(`,[$\\w]+=!0\\|\\|${flashPattern}`).test(file)) {
+      file = replaceFirst(
+        file,
+        new RegExp(`,([$\\w]+)=${flashPattern}`),
+        ([whole, flash]) => `,${flash}=!0||${whole.slice(flash.length + 2)}`
+      );
+      if (!file) return null;
+    }
   }
 
   if (width !== null) {
     const cells = Math.max(1, Math.round(width));
     const left = Math.floor((cells - 1) / 2);
     const right = cells - 1 - left;
+    const windowPatterns = [
+      /let ([$\w]+)=([$\w]+)-\d+,([$\w]+)=\2\+\d+(?=[,;][^]{0,1500}?\1>=[$\w]+\|\|\3<0)/,
+      /let ([$\w]+)=([$\w]+)-\d+,([$\w]+)=\2\+\d+(?=;if\(\1>=)/,
+    ];
+    const windowPattern = windowPatterns.find(p => p.test(file as string));
+    if (!windowPattern) {
+      console.error('patch: shimmerStyle: failed to find glimmer window');
+      return null;
+    }
     file = replaceFirst(
       file,
-      /let ([$\w]+)=([$\w]+)-1,([$\w]+)=\2\+1;if\(\1>=/,
+      windowPattern,
       ([, start, center, end]) =>
-        `let ${start}=${center}-${left},${end}=${center}+${right};if(${start}>=`
+        `let ${start}=${center}-${left},${end}=${center}+${right}`
     );
     if (!file) return null;
     // Pad the sweep by at least the window width so a wide window still
     // fully leaves the message between passes.
     file = replaceFirst(
       file,
-      /([$\w]+)=([$\w]+)\+2\*([$\w]+),([^;]*?)==="requesting"\?([$\w]+)%\1-\3:\2\+\3-\5%\1,/,
-      ([, period, msgWidth, pad, middle, tick]) => {
-        const p = `Math.max(${pad},${cells})`;
+      /([$\w]+)=([$\w]+)\+2\*([$\w]+|Math\.max\(([$\w]+),\d+\)),([^;]*?)==="requesting"\?([$\w]+)%\1-\3:\2\+\3-\6%\1,/,
+      ([, period, msgWidth, padExpr, basePad, middle, tick]) => {
+        const p = `Math.max(${basePad ?? padExpr},${cells})`;
         return `${period}=${msgWidth}+2*${p},${middle}==="requesting"?${tick}%${period}-${p}:${msgWidth}+${p}-${tick}%${period},`;
       }
     );
     if (!file) return null;
   }
 
-  return file === oldFile ? null : file;
+  return file;
 };

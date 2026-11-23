@@ -52,6 +52,7 @@ import {
   analyzeThrowingRewriters,
   checkThrowingNeedles,
 } from './lib/throwingRewriters.mjs';
+import { isMain } from './lib/isMain.mjs';
 
 const require = createRequire(import.meta.url);
 const {
@@ -595,4 +596,4 @@ const main = () => {
   );
 };
 
-if (import.meta.url === `file://${process.argv[1]}`) main();
+if (isMain(import.meta.url)) main();

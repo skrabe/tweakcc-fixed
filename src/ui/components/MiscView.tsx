@@ -4,6 +4,12 @@ import {
   FFF_FEATURE_DESCRIPTION,
   FFF_FEATURE_TITLE,
 } from '../../fffDescription';
+import {
+  EVERYTHING_GLOB_DESCRIPTION,
+  EVERYTHING_GLOB_MISSING_ES,
+  EVERYTHING_GLOB_TITLE,
+} from '../../everythingGlobDescription';
+import { findEsExe } from '../../everythingEs';
 import { Box, Text, useInput } from 'ink';
 import { useContext, useState, useMemo } from 'react';
 import { SettingsContext } from '../App';
@@ -93,7 +99,6 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     enableDreamMode: true,
     enableLeanMemoryTypes: false,
     fixSummarizeFromHere: true,
-    fixRewindSummaryHeader: true,
     enableRememberSkill: false,
     tokenCountRounding: null as number | null,
     autoAcceptPlanMode: false,
@@ -105,6 +110,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     unlockResponsiveMode: false,
     swapRipgrepForFff: false,
     fffLearnFromBashReads: true,
+    useEverythingForGlob: false,
     allowCustomAgentModels: false,
     enableContextLimitOverride: false,
     enableModelCustomizations: true,
@@ -114,6 +120,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     attachedBackgroundInteractive: false,
     enableProposeGoal: false,
     maxEffortDefault: false,
+    compactionHighEffort: false,
     autonomousOperationAllModels: false,
     refusalFallbackModel: false,
     refusalFallbackRoutes: {},
@@ -226,6 +233,8 @@ export function MiscView({ onSubmit }: MiscViewProps) {
     }
     return TOKEN_ROUNDING_OPTIONS[newIndex];
   };
+
+  const esExeFound = useMemo(() => findEsExe() !== null, []);
 
   const items: MiscItem[] = useMemo(
     () => [
@@ -547,6 +556,10 @@ export function MiscView({ onSubmit }: MiscViewProps) {
             ensureMisc();
             settings.misc!.swapRipgrepForFff =
               !settings.misc!.swapRipgrepForFff;
+            // both replace Glob's ripgrep, so only one at a time
+            if (settings.misc!.swapRipgrepForFff) {
+              settings.misc!.useEverythingForGlob = false;
+            }
           });
         },
       },
@@ -564,6 +577,30 @@ export function MiscView({ onSubmit }: MiscViewProps) {
           });
         },
       },
+      ...(process.platform === 'win32'
+        ? [
+            {
+              id: 'useEverythingForGlob',
+              title: EVERYTHING_GLOB_TITLE,
+              description: esExeFound
+                ? EVERYTHING_GLOB_DESCRIPTION
+                : `${EVERYTHING_GLOB_MISSING_ES} ${EVERYTHING_GLOB_DESCRIPTION}`,
+              getValue: () => settings.misc?.useEverythingForGlob ?? false,
+              toggle: () => {
+                // turning it off always works, so a config from another machine can be cleared
+                if (!esExeFound && !settings.misc?.useEverythingForGlob) return;
+                updateSettings(settings => {
+                  ensureMisc();
+                  settings.misc!.useEverythingForGlob =
+                    !settings.misc!.useEverythingForGlob;
+                  if (settings.misc!.useEverythingForGlob) {
+                    settings.misc!.swapRipgrepForFff = false;
+                  }
+                });
+              },
+            },
+          ]
+        : []),
       {
         id: 'enableVoiceMode',
         title: 'Enable voice mode (/voice command)',
@@ -637,7 +674,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
         id: 'enableContextLimitOverride',
         title: 'Override context limit',
         description:
-          'Replaces the default model context limit with CLAUDE_CODE_CONTEXT_LIMIT env var. Must be exported manually before launching CC, or falls back to 200K.',
+          "Replaces the default model context limit with CLAUDE_CODE_CONTEXT_LIMIT env var. Must be exported manually before launching CC, or falls back to 200K. Applies to every model; CC's own CLAUDE_CODE_MAX_CONTEXT_TOKENS (2.1.325+) covers only models CC does not recognise, or every model when DISABLE_COMPACT is set.",
         getValue: () => settings.misc?.enableContextLimitOverride ?? false,
         toggle: () => {
           updateSettings(settings => {
@@ -734,30 +771,15 @@ export function MiscView({ onSubmit }: MiscViewProps) {
       },
       {
         id: 'fixSummarizeFromHere',
-        title: 'Fix "Summarize from here"',
+        title: 'Rewind fixes',
         description:
-          'Make "Summarize from here" summarize only the messages after the rewind point instead of the whole conversation.',
+          'Make "Summarize from here" summarize only the messages after the rewind point instead of the whole conversation, and label that summary as a deliberate rewind instead of the misleading "ran out of context" header.',
         getValue: () => settings.misc?.fixSummarizeFromHere ?? true,
         toggle: () => {
           updateSettings(settings => {
             ensureMisc();
             settings.misc!.fixSummarizeFromHere = !(
               settings.misc!.fixSummarizeFromHere ?? true
-            );
-          });
-        },
-      },
-      {
-        id: 'fixRewindSummaryHeader',
-        title: 'Honest rewind summary header',
-        description:
-          'Label a rewind summary as a deliberate rewind (you continued forward, then rewound and chose to carry the summary forward) instead of the misleading "ran out of context" header.',
-        getValue: () => settings.misc?.fixRewindSummaryHeader ?? true,
-        toggle: () => {
-          updateSettings(settings => {
-            ensureMisc();
-            settings.misc!.fixRewindSummaryHeader = !(
-              settings.misc!.fixRewindSummaryHeader ?? true
             );
           });
         },
@@ -922,6 +944,20 @@ export function MiscView({ onSubmit }: MiscViewProps) {
           updateSettings(settings => {
             ensureMisc();
             settings.misc!.maxEffortDefault = !settings.misc!.maxEffortDefault;
+          });
+        },
+      },
+      {
+        id: 'compactionHighEffort',
+        title: 'Compact at high effort',
+        description:
+          'Writes the compaction summary at "high" reasoning effort whatever effort the session uses. At medium effort summaries drop branch tips, rules and traps the next context window needs.',
+        getValue: () => settings.misc?.compactionHighEffort ?? false,
+        toggle: () => {
+          updateSettings(settings => {
+            ensureMisc();
+            settings.misc!.compactionHighEffort =
+              !settings.misc!.compactionHighEffort;
           });
         },
       },
@@ -1140,7 +1176,7 @@ export function MiscView({ onSubmit }: MiscViewProps) {
         },
       },
     ],
-    [settings, updateSettings]
+    [settings, updateSettings, esExeFound]
   );
 
   const totalItems = items.length;

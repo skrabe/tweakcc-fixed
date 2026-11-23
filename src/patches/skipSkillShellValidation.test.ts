@@ -12,6 +12,17 @@ const EXPAND_FN =
 
 const CHUNK = PLUGIN_CALLER + ';' + SKILL_CALLER + ';' + EXPAND_FN;
 
+// Real CC 2.1.325 excerpts (prompt-shell check block and own-skill caller).
+const CHECK_325 =
+  'if(ot.behavior!=="allow"){t(`Shell command permission check failed for command in ${r}: ${xe}. Error: ${ot.message}`);let Nt=ot.decisionReason?.type==="asyncAgent"?ot.decisionReason.ask?.decisionReason:ot.decisionReason;if(tt&&yt&&(Nt?.type==="other"||Nt?.type==="subcommandResults"))throw new yx(`Couldn\'t run \\`${xe}\\` for ${r}. This folder or one above it looks like a bare git repository that may not be yours, and git can run commands named in a repository\'s files. If you trust this folder, allow the git commands this needs, for example with /permissions, and try again.`);if(jo(Xe.session))throw t(`prompt shell permission denial: ${ot.message||"Permission denied"}`,{level:"error"}),new yx(`Shell command permission check failed for pattern "${Ae}" (detail withheld on this connection)`);let ln=Nt?.type==="subcommandResults"?[...Nt.reasons.values()][0]?.decisionReason:Nt,Ht=ln?.type==="other"&&ln.bashMissKind==="git-untrusted-checkout"?ln.reason:ot.message;throw new yx(`Shell command permission check failed for pattern "${Ae}": ${Ht||"Permission denied"}`)}';
+const CALLER_325 =
+  'ous(st,Ne)&&PRe())to=YG(to);else if(rus(st))to=await C1e(to,{...fo,getAppState:VB(fo,mo())},`/${e}`,Mt);if(tt&&!Xe)to=`${aus(tt)}\n\n${to}`';
+const CHUNK_325 =
+  'async function C1e(e,n,r,s,h){if(n.options.readOnlySkillLoad)return YG(e,BJe);let y=e;' +
+  CHECK_325 +
+  'n0(E.name);};' +
+  CALLER_325;
+
 describe('writeSkipSkillShellValidation', () => {
   it('marks only the own-skill call and lets "ask" through for it', () => {
     const result = writeSkipSkillShellValidation(CHUNK);
@@ -41,6 +52,134 @@ describe('writeSkipSkillShellValidation', () => {
     expect(result).toContain(
       'if(Me.behavior!=="allow"&&!(n.tweakccOwnSkill&&Me.behavior==="ask")){'
     );
+  });
+
+  it('keeps the bare-repo guard live for own skills (CC 2.1.325)', () => {
+    const result = writeSkipSkillShellValidation(CHUNK_325);
+
+    expect(result).not.toBeNull();
+    expect(result).toContain(
+      'else if(rus(st))to=await C1e(to,{tweakccOwnSkill:!0,...fo,getAppState:VB(fo,mo())}'
+    );
+    expect(result).toContain(
+      'if(ot.behavior!=="allow")tweakccAsk:{t(`Shell command permission check failed for command in'
+    );
+    expect(result).toContain(
+      'try again.`);if(n.tweakccOwnSkill&&ot.behavior==="ask"&&!(Nt?.type==="subcommandResults"?[...Nt.reasons.values()].map(tweakccR=>tweakccR?.decisionReason):[Nt]).some(tweakccR=>tweakccR?.type==="other"&&tweakccR.bashMissKind==="git-untrusted-checkout"))break tweakccAsk;if(jo(Xe.session))throw'
+    );
+    expect(result).toContain(
+      'if(tt&&yt&&(Nt?.type==="other"||Nt?.type==="subcommandResults"))throw new yx(`Couldn\'t run'
+    );
+    expect(writeSkipSkillShellValidation(result!)).toBe(result);
+
+    const block = result!.slice(
+      result!.indexOf('if(ot.behavior!=="allow")'),
+      result!.indexOf('n0(E.name)')
+    );
+    const run = new Function(
+      'n',
+      'ot',
+      'tt',
+      'yt',
+      'r',
+      'xe',
+      'Ae',
+      'Xe',
+      't',
+      'jo',
+      'yx',
+      `${block}return "ran";`
+    );
+    const exec = (
+      own: boolean,
+      behavior: string,
+      bareRepo: boolean,
+      decisionReason: unknown = { type: 'other' }
+    ) =>
+      run(
+        own ? { tweakccOwnSkill: true } : {},
+        { behavior, message: 'm', decisionReason },
+        bareRepo,
+        behavior === 'ask',
+        '/s',
+        'git status',
+        '!`git status`',
+        { session: {} },
+        () => {},
+        () => false,
+        Error
+      );
+
+    expect(exec(true, 'ask', false)).toBe('ran');
+    expect(() => exec(true, 'ask', true)).toThrow('bare git repository');
+    expect(() => exec(true, 'deny', false)).toThrow(
+      'Shell command permission check failed for pattern'
+    );
+    expect(() => exec(false, 'ask', false)).toThrow(
+      'Shell command permission check failed for pattern'
+    );
+
+    const untrusted = {
+      type: 'other',
+      reason: 'Git would use a repository that Claude Code cannot match',
+      bashMissKind: 'git-untrusted-checkout',
+    };
+    const plain = { type: 'other', reason: 'Contains simple_expansion' };
+    expect(() => exec(true, 'ask', false, untrusted)).toThrow(
+      'Git would use a repository that Claude Code cannot match'
+    );
+    expect(exec(true, 'ask', false, plain)).toBe('ran');
+    expect(
+      exec(true, 'ask', false, {
+        type: 'subcommandResults',
+        reasons: new Map([
+          ['echo a', { behavior: 'ask', decisionReason: plain }],
+          ['echo b', { behavior: 'ask', decisionReason: plain }],
+        ]),
+      })
+    ).toBe('ran');
+    expect(() =>
+      exec(true, 'ask', false, {
+        type: 'subcommandResults',
+        reasons: new Map([
+          ['echo a', { behavior: 'ask', decisionReason: plain }],
+          ['git status', { behavior: 'ask', decisionReason: untrusted }],
+        ]),
+      })
+    ).toThrow('Shell command permission check failed for pattern');
+    expect(() =>
+      exec(true, 'ask', false, {
+        type: 'asyncAgent',
+        ask: { decisionReason: untrusted },
+      })
+    ).toThrow('Git would use a repository that Claude Code cannot match');
+  });
+
+  it('finds the expansion function that normalizes its context first (CC 2.1.328)', () => {
+    const check328 = CHECK_325.replaceAll('ot.', 'It.')
+      .replaceAll('Nt', 'gn')
+      .replace('tt&&yt&&', 'tt&&Rt&&');
+    const chunk =
+      'async function Uze(e,o,r,g,h){if(o=vpe(o),o.options.readOnlySkillLoad)return b1(e,qlt);let y=e;' +
+      check328 +
+      'yO(k.name);};' +
+      'oHs(tt,Le)&&oLe())Rn=b1(Rn);else if(rHs(tt))Rn=await Uze(Rn,{...so,getAppState:vG(so,go())},`/${e}`,Rt);if(Je&&!ze)Rn=`${aHs(Je)}\n\n${Rn}`';
+    const result = writeSkipSkillShellValidation(chunk);
+
+    expect(result).not.toBeNull();
+    expect(result).toContain(
+      'else if(rHs(tt))Rn=await Uze(Rn,{tweakccOwnSkill:!0,...so,getAppState:vG(so,go())}'
+    );
+    expect(result).toContain(
+      'if(It.behavior!=="allow")tweakccAsk:{t(`Shell command permission check failed'
+    );
+    expect(result).toContain(
+      'try again.`);if(o.tweakccOwnSkill&&It.behavior==="ask"&&!(gn?.type==="subcommandResults"'
+    );
+    expect(result).toContain(
+      'if(tt&&Rt&&(gn?.type==="other"||gn?.type==="subcommandResults"))throw new yx(`Couldn\'t run'
+    );
+    expect(writeSkipSkillShellValidation(result!)).toBe(result);
   });
 
   it('returns null for modules without the prompt-shell check', () => {

@@ -24,6 +24,11 @@
 //    return j_("tengu_ochre_finch",!1)
 //  }
 // ```
+//
+// CC 2.1.319 removed the experiment: the flag, the compact list and the
+// memory-types skill registration are gone, and only the verbose <types>
+// prompt remains. Stripping that block now would drop the taxonomy with no
+// on-demand skill to serve it, so the patch is a no-op from 2.1.319 on.
 
 import { debug } from '../utils';
 import { showDiff } from './index';
@@ -31,7 +36,7 @@ import { showDiff } from './index';
 export const writeLeanMemoryTypes = (file: string): string | null => {
   if (!file.includes('"tengu_ochre_finch"')) {
     debug(
-      'patch: leanMemoryTypes: gate already promoted/removed in this CC build — no-op'
+      'patch: leanMemoryTypes: experiment removed in CC >= 2.1.319 — no-op'
     );
     return file;
   }

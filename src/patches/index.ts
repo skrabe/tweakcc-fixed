@@ -68,11 +68,16 @@ import { writePatchesAppliedIndication } from './patchesAppliedIndication';
 import { applySystemPrompts } from './systemPrompts';
 import { applyInlineBlobOverrides } from './inlineBlobOverrides';
 import {
+  buildPristineSession,
   formatPreflightFinding,
-  runSystemPromptPreflight,
+  runPreflightChecks,
 } from '../systemPromptPreflight';
+import type { PristinePromptAnswers } from '../systemPromptPieceMatcher';
 import { writeFixLspSupport } from './fixLspSupport';
-import { writeNoGlobalCacheScope } from './globalCacheScope';
+import {
+  pristineIdentityOf,
+  writeNoGlobalCacheScope,
+} from './globalCacheScope';
 import { writeFixSummarizeFromHere } from './fixSummarizeFromHere';
 import { writeFixRewindSummaryHeader } from './fixRewindSummaryHeader';
 import { writeToolsets } from './toolsets';
@@ -104,11 +109,13 @@ import { writeWorktreeMode } from './worktreeMode';
 import { writeResponsiveMode } from './responsiveMode';
 import { writeAllowCustomAgentModels } from './allowCustomAgentModels';
 import { writeMaxEffortDefault } from './maxEffortDefault';
+import { writeCompactionHighEffort } from './compactionHighEffort';
 import { writeAutonomousOperationAllModels } from './autonomousOperationAllModels';
 import { writeRefusalFallbackModel } from './refusalFallbackModel';
 import { writeOutputStyleTurnReminder } from './outputStyleTurnReminder';
 import { writeAutoModeClassifierModel } from './autoModeClassifierModel';
 import { writeComplexityRouter } from './complexityRouter';
+import { TRACE } from '../perfTrace';
 import { writeComplexityRouterModels } from './complexityRouterModels';
 import { writeFablePlan } from './fablePlan';
 import { writeVoiceMode } from './voiceMode';
@@ -120,7 +127,14 @@ import { writeSessionColor } from './sessionColor';
 import { writeReadDefaultLines } from './readDefaultLines';
 import { writeSwapRipgrepForFff } from './swapRipgrepForFff';
 import { writeFffInstructionHygiene } from './fffInstructions';
+import { writeEmptyEnvironment } from './emptyEnvironment';
 import { ensureRgFffWrapper } from '../ripgrepFff';
+import { writeEverythingGlob } from './everythingGlob';
+import { findEsExe, isEverythingRunning } from '../everythingEs';
+import {
+  EVERYTHING_GLOB_DESCRIPTION,
+  EVERYTHING_GLOB_TITLE,
+} from '../everythingGlobDescription';
 import {
   writeSuppressDeferredTools,
   writeStripEmptySystemReminders,
@@ -154,6 +168,7 @@ export {
   getRequireFuncName,
   clearRequireFuncNameCache,
   findTextComponent,
+  findTextComponentInModule,
   findBoxComponent,
 } from './helpers';
 
@@ -246,11 +261,18 @@ const PATCH_DEFINITIONS = [
       'When a prompt override replaces one of Claude Code\'s identity lines, turn off the "global" cache scope that the first-party API rejects after a non-stock identity, so the prompt caches at organization scope instead. Does nothing while the identity lines are stock.',
   },
   {
+    id: 'empty-environment',
+    name: 'Suppress empty environment scaffolding',
+    group: PatchGroup.ALWAYS_APPLIED,
+    description:
+      'Omit the environment prose heading and list when every fragment is blank',
+  },
+  {
     id: 'fff-instruction-hygiene',
     name: 'Remove stale fff tool guidance',
     group: PatchGroup.ALWAYS_APPLIED,
     description:
-      'Remove previously appended fff guidance from active saved tool descriptions without modifying session records',
+      'Remove stale fff guidance from active prompts and saved tool descriptions without modifying session records',
   },
   {
     id: 'fix-summarize-from-here',
@@ -265,7 +287,7 @@ const PATCH_DEFINITIONS = [
     name: 'Honest rewind summary header',
     group: PatchGroup.MISC_CONFIGURABLE,
     description:
-      'Label a rewind summary as a deliberate rewind instead of the misleading "ran out of context" header',
+      'Note after a rewind summary that it came from a deliberate rewind, not a context overflow',
     modelFacing: true,
   },
   {
@@ -569,6 +591,14 @@ const PATCH_DEFINITIONS = [
     modelFacing: true,
   },
   {
+    id: 'compaction-high-effort',
+    name: 'Compact at high effort',
+    group: PatchGroup.MISC_CONFIGURABLE,
+    description:
+      'The compaction summary is written at "high" reasoning effort regardless of the session effort, which keeps more of the state the next context window needs',
+    modelFacing: true,
+  },
+  {
     id: 'autonomous-operation-all-models',
     name: 'Fable/Mythos prompt set (all models)',
     group: PatchGroup.MISC_CONFIGURABLE,
@@ -666,6 +696,12 @@ const PATCH_DEFINITIONS = [
     name: FFF_BASH_READ_TITLE,
     group: PatchGroup.FEATURES,
     description: FFF_BASH_READ_DESCRIPTION,
+  },
+  {
+    id: 'everything-glob',
+    name: EVERYTHING_GLOB_TITLE,
+    group: PatchGroup.FEATURES,
+    description: EVERYTHING_GLOB_DESCRIPTION,
   },
   {
     id: 'dream-mode',
@@ -877,6 +913,16 @@ export const applyPatchImplementations = (
     if (result !== null) {
       content = result;
     }
+    if (TRACE) {
+      TRACE.emit('patch', {
+        id: def.id,
+        applied,
+        failed,
+        errors: errors.map(TRACE.clip),
+        len: content.length,
+        h: TRACE.digest(content),
+      });
+    }
 
     results.push({
       id: def.id,
@@ -925,14 +971,9 @@ const assertNativeBinaryStarts = (binaryPath: string) => {
 // Main Apply Function
 // =============================================================================
 
-export const applyCustomization = async (
-  config: TweakccConfig,
-  ccInstInfo: ClaudeCodeInstallationInfo,
-  patchFilter?: string[] | null
-): Promise<ApplyCustomizationResult> => {
-  let content: string;
-  let clearBytecode = false;
-
+const readClaudeJs = async (
+  ccInstInfo: ClaudeCodeInstallationInfo
+): Promise<{ content: string; clearBytecode: boolean }> => {
   if (ccInstInfo.nativeInstallationPath) {
     // For native installations: restore the binary, then extract to memory
     await restoreNativeBinaryFromBackup(ccInstInfo);
@@ -971,23 +1012,41 @@ export const applyCustomization = async (
       );
     }
 
-    clearBytecode = needsClearBytecode;
-
     const origPath = path.join(CONFIG_DIR, 'native-claudejs-orig.js');
     fsSync.writeFileSync(origPath, claudeJsBuffer);
     debug(`Saved original extracted JS from native to: ${origPath}`);
 
-    content = claudeJsBuffer.toString('utf8');
-  } else {
-    // For NPM installations: restore cli.js from backup, then read it
-    await restoreClijsFromBackup(ccInstInfo);
-
-    if (!ccInstInfo.cliPath) {
-      throw new Error('cliPath is required for NPM installations');
-    }
-
-    content = await fs.readFile(ccInstInfo.cliPath, { encoding: 'utf8' });
+    return {
+      content: claudeJsBuffer.toString('utf8'),
+      clearBytecode: needsClearBytecode,
+    };
   }
+  // For NPM installations: restore cli.js from backup, then read it
+  await restoreClijsFromBackup(ccInstInfo);
+
+  if (!ccInstInfo.cliPath) {
+    throw new Error('cliPath is required for NPM installations');
+  }
+
+  return {
+    content: await fs.readFile(ccInstInfo.cliPath, { encoding: 'utf8' }),
+    clearBytecode: false,
+  };
+};
+
+export const applyCustomization = async (
+  config: TweakccConfig,
+  ccInstInfo: ClaudeCodeInstallationInfo,
+  patchFilter?: string[] | null
+): Promise<ApplyCustomizationResult> => {
+  let content = '';
+  const adopt = <T>(result: { content: string; results: T }): T => {
+    content = result.content;
+    return result.results;
+  };
+  const clearBytecode = await readClaudeJs(ccInstInfo).then(result =>
+    adopt({ content: result.content, results: result.clearBytecode })
+  );
 
   // Collect all patch results
   const allResults: PatchResult[] = [];
@@ -1001,7 +1060,7 @@ export const applyCustomization = async (
   // splice → silent skip) apart from genuine anchor drift (never matched the
   // pristine binary → warn), so consumed-region prompts don't raise spurious
   // "Could not find" noise.
-  const pristineContent = content;
+  let pristineContent: string | null = content;
 
   // ==========================================================================
   // Preflight — the same checks `--validate-system-prompts` runs, against the
@@ -1013,17 +1072,38 @@ export const applyCustomization = async (
   // findings would strand an operator mid-bump behind a validator they cannot
   // satisfy without editing overrides, which is how gates end up bypassed.
   // ==========================================================================
+  let pristineAnswers: PristinePromptAnswers | null = null;
   if (ccInstInfo.version) {
     // A preflight that cannot run must not take the apply down with it: it is
     // an advisory pass in front of the real work, not a dependency of it.
-    const preflight = await runSystemPromptPreflight({
+    const preflight = await buildPristineSession({
       pristine: pristineContent,
       version: ccInstInfo.version,
       patchFilter,
-    }).catch(error => {
-      debug(`system-prompt preflight skipped: ${error}`);
-      return null;
-    });
+    })
+      .then(session => {
+        pristineAnswers = session.answers;
+        return runPreflightChecks(session);
+      })
+      .catch(error => {
+        debug(`system-prompt preflight skipped: ${error}`);
+        if (TRACE) {
+          TRACE.emit('preflight-error', { error: TRACE.clip(String(error)) });
+        }
+        return null;
+      });
+    if (TRACE) {
+      const trace = TRACE;
+      trace.emit('preflight', {
+        ran: preflight !== null,
+        checked: preflight?.promptsChecked ?? null,
+        sites: preflight?.sitesChecked ?? null,
+        findings: (preflight?.findings ?? []).map(finding => {
+          const line = formatPreflightFinding(finding);
+          return [trace.clip(line), trace.digest(line)];
+        }),
+      });
+    }
     // Errors surface here; advisories do not. The corpus carries ~48 standing
     // cardinality/ownership findings that no single apply can act on, and a
     // recurring wall of yellow is how a real error gets scrolled past. The full
@@ -1066,11 +1146,17 @@ export const applyCustomization = async (
   // Running inline-blob overrides first means the named-prompt wipes
   // for content already inside an inline-blob target simply no-op.
   // ==========================================================================
-  const inlineResult = await applyInlineBlobOverrides(content);
-  content = inlineResult.content;
-  const appliedInline = inlineResult.results.filter(r => r.applied);
-  const failedInline = inlineResult.results.filter(r => r.failed);
-  if (inlineResult.results.length > 0) {
+  const inlineResults = adopt(await applyInlineBlobOverrides(content));
+  if (TRACE) {
+    TRACE.emit('phase', {
+      name: 'inline-blob',
+      len: content.length,
+      h: TRACE.digest(content),
+    });
+  }
+  const appliedInline = inlineResults.filter(r => r.applied);
+  const failedInline = inlineResults.filter(r => r.failed);
+  if (inlineResults.length > 0) {
     debug(
       `inlineBlobOverrides: ${appliedInline.length} applied, ${failedInline.length} failed`
     );
@@ -1080,7 +1166,7 @@ export const applyCustomization = async (
       );
     }
   }
-  for (const r of inlineResult.results) {
+  for (const r of inlineResults) {
     allResults.push({
       id: `inline-blob:${r.filename}`,
       name: r.name,
@@ -1095,12 +1181,17 @@ export const applyCustomization = async (
   // ==========================================================================
   // Apply named system prompt customizations AFTER inline-blob overrides.
   // ==========================================================================
-  const reminderResult = await applySystemReminderOverrides(
-    content,
-    ccInstInfo.version ?? ''
+  const reminderResults = adopt(
+    await applySystemReminderOverrides(content, ccInstInfo.version ?? '')
   );
-  content = reminderResult.content;
-  for (const r of reminderResult.results) {
+  if (TRACE) {
+    TRACE.emit('phase', {
+      name: 'reminders',
+      len: content.length,
+      h: TRACE.digest(content),
+    });
+  }
+  for (const r of reminderResults) {
     allResults.push({
       id: `reminder:${r.id}`,
       name: `Reminder: ${r.name} (${r.state})`,
@@ -1116,15 +1207,27 @@ export const applyCustomization = async (
   // Apply system prompts unconditionally, including native installs — this fork's
   // lobotomization patches the prompts inside the Bun bundle (upstream skips native
   // here; we don't, because native prompt overrides are the whole point).
-  const systemPromptsResult = await applySystemPrompts(
+  const systemPromptResults = await applySystemPrompts(
     content,
     ccInstInfo.version,
     undefined, // escapeNonAscii - auto-detect
     patchFilter,
-    pristineContent
+    pristineContent,
+    pristineAnswers
+  ).then(result =>
+    adopt({ content: result.newContent, results: result.results })
   );
-  content = systemPromptsResult.newContent;
-  const identityOverrideApplied = systemPromptsResult.results.some(
+  const pristineIdentity = pristineIdentityOf(pristineContent);
+  pristineContent = null;
+  pristineAnswers = null;
+  if (TRACE) {
+    TRACE.emit('phase', {
+      name: 'system-prompts',
+      len: content.length,
+      h: TRACE.digest(content),
+    });
+  }
+  const identityOverrideApplied = systemPromptResults.some(
     r =>
       r.applied &&
       [
@@ -1134,8 +1237,8 @@ export const applyCustomization = async (
       ].includes(r.id)
   );
 
-  const sortedSystemPromptResults = [...systemPromptsResult.results].sort(
-    (a, b) => a.name.localeCompare(b.name)
+  const sortedSystemPromptResults = [...systemPromptResults].sort((a, b) =>
+    a.name.localeCompare(b.name)
   );
   allResults.push(...sortedSystemPromptResults);
 
@@ -1187,6 +1290,31 @@ export const applyCustomization = async (
     }
   }
 
+  // The UI keeps these exclusive, but a hand-edited config can enable both.
+  // Both take over Glob's ripgrep, so fff (the older feature) wins - but only
+  // when it actually applies, since its wrapper often isn't built for Windows.
+  let esExePath: string | null = null;
+  if (config.settings.misc?.useEverythingForGlob && rgFffWrapperPath) {
+    console.log(
+      'patch: everythingGlob: skipped because swapRipgrepForFff is enabled - turn one off'
+    );
+  } else if (
+    config.settings.misc?.useEverythingForGlob &&
+    process.platform === 'win32'
+  ) {
+    esExePath = findEsExe();
+    if (!esExePath) {
+      console.log(
+        'patch: everythingGlob: es.exe not found on PATH - keeping ripgrep. Install Everything and its command-line interface (es.exe) from voidtools.com.'
+      );
+    } else if (!isEverythingRunning(esExePath)) {
+      // still apply: each Glob falls back to rg until Everything is started
+      console.log(
+        'patch: everythingGlob: Everything is not running - Glob uses ripgrep until it is started'
+      );
+    }
+  }
+
   const patchImplementations: Record<PatchId, PatchImplementation> = {
     // Always Applied
     'verbose-property': {
@@ -1216,10 +1344,13 @@ export const applyCustomization = async (
     },
     'no-global-cache-scope': {
       fn: c =>
-        writeNoGlobalCacheScope(c, pristineContent, identityOverrideApplied),
+        writeNoGlobalCacheScope(c, pristineIdentity, identityOverrideApplied),
     },
     'fff-instruction-hygiene': {
       fn: c => writeFffInstructionHygiene(c),
+    },
+    'empty-environment': {
+      fn: c => writeEmptyEnvironment(c),
     },
     'fix-summarize-from-here': {
       fn: c => writeFixSummarizeFromHere(c),
@@ -1227,7 +1358,7 @@ export const applyCustomization = async (
     },
     'fix-rewind-summary-header': {
       fn: c => writeFixRewindSummaryHeader(c),
-      condition: config.settings.misc?.fixRewindSummaryHeader !== false,
+      condition: config.settings.misc?.fixSummarizeFromHere !== false,
     },
     'statusline-update-throttle': {
       fn: c =>
@@ -1438,6 +1569,10 @@ export const applyCustomization = async (
       fn: c => writeMaxEffortDefault(c),
       condition: !!config.settings.misc?.maxEffortDefault,
     },
+    'compaction-high-effort': {
+      fn: c => writeCompactionHighEffort(c),
+      condition: !!config.settings.misc?.compactionHighEffort,
+    },
     'autonomous-operation-all-models': {
       fn: c => writeAutonomousOperationAllModels(c),
       condition: !!config.settings.misc?.autonomousOperationAllModels,
@@ -1540,6 +1675,10 @@ export const applyCustomization = async (
       fn: c => writeFffBashReads(c, fffViewerDirectory!, rgFffWrapperPath!),
       condition: swapRipgrepEnabled && !!fffViewerDirectory,
     },
+    'everything-glob': {
+      fn: c => writeEverythingGlob(c, esExePath!),
+      condition: !!esExePath,
+    },
     'dream-mode': {
       fn: c => writeDreamMode(c),
       condition: !!config.settings.misc?.enableDreamMode,
@@ -1636,9 +1775,9 @@ export const applyCustomization = async (
   // ==========================================================================
   // Apply all patches
   // ==========================================================================
-  const { content: patchedContent, results: patchResults } =
-    applyPatchImplementations(content, patchImplementations, patchFilter);
-  content = patchedContent;
+  const patchResults = adopt(
+    applyPatchImplementations(content, patchImplementations, patchFilter)
+  );
   allResults.push(...patchResults);
 
   const failedBinaryPatches = patchResults.filter(r => r.failed);
@@ -1668,12 +1807,14 @@ export const applyCustomization = async (
       `Repacking modified claude.js into native installation: ${ccInstInfo.nativeInstallationPath}`
     );
 
+    const modifiedBuffer = Buffer.from(content, 'utf8');
+    content = '';
+
     // Save patched JS for debugging
     const patchedPath = path.join(CONFIG_DIR, 'native-claudejs-patched.js');
-    fsSync.writeFileSync(patchedPath, content, 'utf8');
+    fsSync.writeFileSync(patchedPath, modifiedBuffer);
     debug(`Saved patched JS from native to: ${patchedPath}`);
 
-    const modifiedBuffer = Buffer.from(content, 'utf8');
     const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'tweakcc-native-'));
     const tempBinaryPath = path.join(
       tempDir,

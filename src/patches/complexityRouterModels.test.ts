@@ -29,6 +29,34 @@ const fixture312 = fixture284.replace(
   'el(Text,{color:"subtle",dimColor:!1,children:[el(Icon,{effort:void 0})," ","Effort not supported"]})'
 );
 
+// CC 2.1.319 guards the adjust handler and the commit against the "more
+// models" row and dims the unsupported-effort label.
+const fixture319 = fixture312
+  .replace(
+    'if(row===void 0||row.disabled===!0)return;',
+    'if(row===void 0||row.disabled===!0||row.value===MORE)return;'
+  )
+  .replace(
+    'function commit(value){',
+    'function commit(value){if(value===MORE)return;'
+  )
+  .replace(
+    'el(Text,{color:"subtle",dimColor:!1,children:',
+    'el(Text,{dimColor:!0,children:'
+  );
+
+// CC 2.1.326 hides the effort glyph behind a compact flag.
+const fixture326 = fixture319.replace(
+  'el(Text,{dimColor:!0,children:[el(Icon,{effort:void 0})," ","Effort not supported"',
+  'el(Text,{dimColor:!0,children:[!compact&&el(Icon,{effort:void 0}),compact?"":" ","Effort not supported"'
+);
+
+// CC 2.1.330 drops the compact flag and builds the label as a template.
+const fixture330 = fixture326.replace(
+  '[!compact&&el(Icon,{effort:void 0}),compact?"":" ","Effort not supported"',
+  '[el(Icon,{effort:void 0})," ",`Effort not supported${hidden?" here":""}`'
+);
+
 function harness(source = fixture) {
   const context = vm.createContext({
     available: [] as { value: string; disabled?: boolean }[],
@@ -46,6 +74,7 @@ function harness(source = fixture) {
     Icon: 'icon',
     el: (_tag: unknown, props: unknown) => props,
     DEFAULT: 'default',
+    MORE: 'more',
   });
   const result = writeComplexityRouterModels(source);
   expect(result).not.toBeNull();
@@ -168,6 +197,64 @@ describe('effort router model aliases', () => {
       'dimColor:!1,children:[el(Icon,{effort:void 0})," ","Effort not supported"'
     );
     const { context, result } = harness(fixture312);
+    expect(vm.runInContext('display().children', context)).toMatchObject({
+      color: 'subtle',
+      children: 'Automatic effort · currently high',
+    });
+    context.focused = 'opus';
+    expect(vm.runInContext('display().children', context)).toBe('manual');
+    expect(writeComplexityRouterModels(result)).toBe(result);
+  });
+
+  it('applies against the CC 2.1.319 picker with a more-models row', () => {
+    expect(fixture319).toContain('row.value===MORE)return;');
+    expect(fixture319).toContain(
+      'function commit(value){if(value===MORE)return;'
+    );
+    const { context, result } = harness(fixture319);
+    expect(result).toContain(
+      'row.value===MORE)return;if((selected==="opusrouter"||selected==="fablerouter"))return;let state'
+    );
+    expect(result).toContain(
+      'function commit(value){if(value===MORE)return;if((value==="opusrouter"||value==="fablerouter")){apply(value,void 0);return}let model'
+    );
+    context.focus = 'opusrouter';
+    vm.runInContext('adjust("right")', context);
+    expect(context.adjustments).toBe(0);
+    expect(vm.runInContext('display().children', context)).toMatchObject({
+      color: 'subtle',
+      children: 'Automatic effort · currently high',
+    });
+    vm.runInContext('commit("fablerouter")', context);
+    expect(context.applied).toEqual(['fablerouter', undefined]);
+    vm.runInContext('commit("more")', context);
+    expect(context.applied).toEqual(['fablerouter', undefined]);
+    vm.runInContext('commit("opus")', context);
+    expect(context.applied).toEqual(['opus', 'max']);
+    expect(writeComplexityRouterModels(result)).toBe(result);
+  });
+
+  it('shows automatic effort with the CC 2.1.326 compact-aware label', () => {
+    expect(fixture326).toContain(
+      '[!compact&&el(Icon,{effort:void 0}),compact?"":" ","Effort not supported"'
+    );
+    const { context, result } = harness(fixture326);
+    expect(result).toContain('compact?"":" ","Effort not supported"');
+    expect(vm.runInContext('display().children', context)).toMatchObject({
+      color: 'subtle',
+      children: 'Automatic effort · currently high',
+    });
+    context.focused = 'opus';
+    expect(vm.runInContext('display().children', context)).toBe('manual');
+    expect(writeComplexityRouterModels(result)).toBe(result);
+  });
+
+  it('shows automatic effort with the CC 2.1.330 template-literal label', () => {
+    expect(fixture330).toContain(
+      '[el(Icon,{effort:void 0})," ",`Effort not supported${hidden?" here":""}`'
+    );
+    const { context, result } = harness(fixture330);
+    expect(result).toContain('" ",`Effort not supported${hidden?" here":""}`');
     expect(vm.runInContext('display().children', context)).toMatchObject({
       color: 'subtle',
       children: 'Automatic effort · currently high',

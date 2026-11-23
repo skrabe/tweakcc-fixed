@@ -38,7 +38,8 @@ const buildChalkChain = (
 const rewriteJsxHighlightRenderer = (
   oldFile: string,
   jsxMatch: RegExpMatchArray,
-  dottedJsx: boolean
+  dottedJsx: boolean,
+  leadProps = ''
 ): string | null => {
   if (jsxMatch.index === undefined) return null;
   const [, jsxVar, textComp, props, segVar, innerComp, keyVar] = jsxMatch;
@@ -62,6 +63,7 @@ const rewriteJsxHighlightRenderer = (
 
   const replacement =
     `return ${call}(${textComp},{` +
+    leadProps +
     `${off('color').slice(1)}` +
     off('backgroundColor') +
     `,dimColor:${segVar}.highlight?.dimColor` +
@@ -97,6 +99,23 @@ const writeCustomHighlighterImpl = (oldFile: string): string | null => {
     oldFile.includes('.highlight?.style??(typeof ')
   ) {
     return oldFile;
+  }
+
+  // CC >= 2.1.326: the Text gains literal flag props ahead of the highlight
+  // run (`return c(u,{dangerouslyAllowHiddenCharacters:!0,color:C.highlight
+  // ?.color,...`). They are carried through unchanged.
+  const leadPropsJsxRegex =
+    /return ([$\w]+)\(([$\w]+),\{((?:[$\w]+:(?:![01]|"[^"]*"),)+)((?:[$\w]+:([$\w]+)\.highlight\?\.[$\w]+,)+)children:\1\(([$\w]+),\{children:\5\.text\}\)\},([$\w]+)\)/;
+
+  const leadPropsMatch = oldFile.match(leadPropsJsxRegex);
+  if (leadPropsMatch && leadPropsMatch.index !== undefined) {
+    const [whole, jsxVar, textComp, leadProps, props, segVar, inner, key] =
+      leadPropsMatch;
+    const normalized = Object.assign(
+      [whole, jsxVar, textComp, props, segVar, inner, key],
+      { index: leadPropsMatch.index, input: oldFile }
+    ) as RegExpMatchArray;
+    return rewriteJsxHighlightRenderer(oldFile, normalized, false, leadProps);
   }
 
   // Method 0 — CC >= 2.1.246: jsx/jsxs are imported bindings, so the renderer

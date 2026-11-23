@@ -35,6 +35,7 @@ import { writeThinkingBlockStyling } from './thinkingBlockStyling';
 import { writeFixLspSupport } from './fixLspSupport';
 import { writeNoGlobalCacheScope } from './globalCacheScope';
 import { writeFffInstructionHygiene } from './fffInstructions';
+import { writeEmptyEnvironment } from './emptyEnvironment';
 import { writeFixSummarizeFromHere } from './fixSummarizeFromHere';
 import { writeFixRewindSummaryHeader } from './fixRewindSummaryHeader';
 import { writeStatuslineUpdateThrottle } from './statuslineUpdateThrottle';
@@ -79,6 +80,7 @@ import { writeSuppressNativeInstallerWarning } from './suppressNativeInstallerWa
 import { writeModelAtEffort } from './modelAtEffort';
 import { writeScrollEscapeSequenceFilter } from './scrollEscapeSequenceFilter';
 import { writeMaxEffortDefault } from './maxEffortDefault';
+import { writeCompactionHighEffort } from './compactionHighEffort';
 import { writeAutonomousOperationAllModels } from './autonomousOperationAllModels';
 import { writeRefusalFallbackModel } from './refusalFallbackModel';
 import { writeOutputStyleTurnReminder } from './outputStyleTurnReminder';
@@ -92,6 +94,7 @@ import { writeResponsiveMode } from './responsiveMode';
 import { writeSessionMemory } from './sessionMemory';
 import { writeSwapRipgrepForFff } from './swapRipgrepForFff';
 import { writeFffBashReads } from './fffBashReads';
+import { writeEverythingGlob } from './everythingGlob';
 import { writeDreamMode } from './dreamMode';
 import { writeLeanMemoryTypes } from './leanMemoryTypes';
 import { writeToolsets } from './toolsets';
@@ -313,6 +316,7 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
   'thinking-block-styling': c => writeThinkingBlockStyling(c),
   'fix-lsp-support': c => writeFixLspSupport(c),
   'fff-instruction-hygiene': c => writeFffInstructionHygiene(c),
+  'empty-environment': c => writeEmptyEnvironment(c),
   // The patch acts only once an identity line differs from stock, so one is
   // replaced here to exercise both of its anchors against the real bundle.
   'no-global-cache-scope': c =>
@@ -399,6 +403,7 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
   'model-at-effort': c => writeModelAtEffort(c),
   'filter-scroll-escape-sequences': c => writeScrollEscapeSequenceFilter(c),
   'max-effort-default': c => writeMaxEffortDefault(c),
+  'compaction-high-effort': c => writeCompactionHighEffort(c),
   'autonomous-operation-all-models': c => writeAutonomousOperationAllModels(c),
   'refusal-fallback-model': c =>
     writeRefusalFallbackModel(c, {
@@ -419,6 +424,7 @@ const INVOCATIONS: Record<PatchId, (src: string) => string | null> = {
   'worktree-mode': c => writeWorktreeMode(c),
   'session-memory': c => writeSessionMemory(c),
   'swap-ripgrep-for-fff': c => writeSwapRipgrepForFff(c, FFF_WRAPPER_PATH),
+  'everything-glob': c => writeEverythingGlob(c, 'C:\\tools\\es.exe'),
   'fff-bash-reads': c => {
     const search = writeSwapRipgrepForFff(c, FFF_WRAPPER_PATH);
     return search === null
@@ -494,7 +500,14 @@ const EXPECTED_NOOP: Partial<Record<PatchId, string>> = {
     'CC >= 2.1.83 accepts any agent model string (no enum/includes gate)',
   'conversation-title':
     'CC ships /rename natively (name:"rename",aliases:["name"])',
+  'lean-memory-types':
+    'CC >= 2.1.319 removed the tengu_ochre_finch compact memory-types list ' +
+    'and its skill; only the verbose <types> prompt remains',
 };
+
+// Patches that apply but log an error on the pristine bundle, which the
+// harness reports as "partially applied". Each needs a reason and a backlog fix.
+const EXPECTED_PARTIAL: Partial<Record<PatchId, string>> = {};
 
 type Outcome = 'applied' | 'no-op' | 'null';
 
@@ -503,6 +516,7 @@ interface PatchOutcome {
   outcome: Outcome;
   bytesDelta: number;
   parseError: string | null;
+  partialError: string | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -532,6 +546,14 @@ describe.skipIf(skipReason !== null)('every patch vs. pristine cli.js', () => {
     for (const def of getAllPatchDefinitions()) {
       const id = def.id;
       let result: string | null;
+      // Mirror applyCustomizations: an error logged by a patch that still
+      // returns a file is reported as "partially applied" and fails check.
+      const errors: string[] = [];
+      const consoleError = console.error;
+      console.error = (...args: unknown[]) => {
+        errors.push(args.map(String).join(' '));
+        if (!EXPECTED_NULL[id]) consoleError(...args);
+      };
       try {
         result = INVOCATIONS[id](source);
       } catch (error) {
@@ -541,8 +563,11 @@ describe.skipIf(skipReason !== null)('every patch vs. pristine cli.js', () => {
           outcome: 'null',
           bytesDelta: 0,
           parseError: `threw: ${(error as Error).message}`,
+          partialError: null,
         });
         continue;
+      } finally {
+        console.error = consoleError;
       }
       const outcome: Outcome =
         result === null ? 'null' : result === source ? 'no-op' : 'applied';
@@ -552,6 +577,7 @@ describe.skipIf(skipReason !== null)('every patch vs. pristine cli.js', () => {
         bytesDelta: result === null ? 0 : result.length - source.length,
         parseError:
           outcome === 'applied' ? oracle.check(result!, `patched-${id}`) : null,
+        partialError: result !== null && errors.length > 0 ? errors[0] : null,
       });
       await new Promise<void>(resolve => setImmediate(resolve));
     }
@@ -639,6 +665,20 @@ describe.skipIf(skipReason !== null)('every patch vs. pristine cli.js', () => {
           're-anchor it, or declare the no-op with a reason.'
       ).not.toBe('no-op');
 
+      if (EXPECTED_PARTIAL[id]) {
+        expect(
+          outcome.partialError,
+          `${id} is recorded in EXPECTED_PARTIAL (${EXPECTED_PARTIAL[id]}) ` +
+            'but now applies cleanly — drop the entry'
+        ).not.toBeNull();
+      } else
+        expect(
+          outcome.partialError,
+          `${id} applied only partially against the pristine bundle (the ` +
+            'harness reports "partially applied" and the health check fails): ' +
+            `${outcome.partialError}`
+        ).toBeNull();
+
       expect(
         outcome.parseError,
         `${id} spliced JS that Bun cannot parse — this would brick Claude ` +
@@ -699,12 +739,14 @@ describe.skipIf(skipReason !== null)(
       'thinking-reminder': 'no thinking_reminder handler in this build',
       'verify-plan-reminder': 'CC >= 2.1.187 removed the verify-plan case body',
     };
+    type Status = 'NULL' | 'no-op' | 'applied';
     const results = new Map<
       string,
       {
-        stock: string | null;
-        edited: string | null;
-        suppressed: string | null;
+        stock: Status;
+        edited: Status;
+        suppressed: Status;
+        editedHasProbe: boolean;
         editedParse: string | null;
         suppressedParse: string | null;
       }
@@ -746,21 +788,22 @@ describe.skipIf(skipReason !== null)(
         const suppressed = run(entry.id, 'suppressed', () =>
           entry.apply(source, body, true)
         );
+        const status = (v: string | null): Status =>
+          v === null ? 'NULL' : v === source ? 'no-op' : 'applied';
         results.set(entry.id, {
-          stock,
-          edited,
-          suppressed,
+          stock: status(stock),
+          edited: status(edited),
+          suppressed: status(suppressed),
+          editedHasProbe: edited !== null && edited.includes(PROBE_TEXT),
           editedParse: parse(edited, `reminder-${entry.id}-edited`),
           suppressedParse: parse(suppressed, `reminder-${entry.id}-suppressed`),
         });
       }
       const rows = REMINDER_REGISTRY.map(e => {
         const r = results.get(e.id)!;
-        const label = (v: string | null) =>
-          v === null ? 'NULL' : v === pristine!.source ? 'no-op' : 'applied';
         return (
-          `  ${e.id.padEnd(40)} stock=${label(r.stock).padEnd(8)} ` +
-          `edited=${label(r.edited).padEnd(8)} suppressed=${label(r.suppressed).padEnd(8)}` +
+          `  ${e.id.padEnd(40)} stock=${r.stock.padEnd(8)} ` +
+          `edited=${r.edited.padEnd(8)} suppressed=${r.suppressed.padEnd(8)}` +
           (r.editedParse || r.suppressedParse ? ' PARSE-ERROR' : '')
         );
       }).join('\n');
@@ -780,13 +823,13 @@ describe.skipIf(skipReason !== null)(
             'build. Re-derive the registry entry from cli.js — and prefer ' +
             'anchoring on the registry KEY and code shape over the English ' +
             'prose, which Anthropic rewords freely.'
-        ).not.toBeNull();
+        ).not.toBe('NULL');
         expect(
           r.suppressed,
           `reminder ${id} returned null on the SUPPRESS path (empty body) ` +
             'while the edited path matched — the two take different branches ' +
             'and both must find the site.'
-        ).not.toBeNull();
+        ).not.toBe('NULL');
         expect(
           r.editedParse,
           `reminder ${id} spliced unparseable JS`
@@ -795,13 +838,13 @@ describe.skipIf(skipReason !== null)(
           // Non-null and parseable is not enough: a drifted anchor plus a
           // broad idempotency check returns the file unchanged and passes.
           expect(
-            r.edited !== pristine!.source,
+            r.edited === 'applied',
             `reminder ${id} returned the file unchanged for an edited body ` +
               'but is not in EXPECTED_REMINDER_NOOP: a silent dead anchor.'
           ).toBe(true);
           if (!REMINDER_REGISTRY.find(e => e.id === id)!.bodyIsMarker)
             expect(
-              r.edited!.includes(PROBE_TEXT),
+              r.editedHasProbe,
               `reminder ${id} spliced, but the edited body's probe line is ` +
                 'not in the output'
             ).toBe(true);
@@ -817,7 +860,7 @@ describe.skipIf(skipReason !== null)(
     it.each(REMINDER_REGISTRY.filter(e => !e.bodyIsMarker).map(e => e.id))(
       '%s leaves pristine untouched for its stock body',
       id => {
-        expect(results.get(id)!.stock).toBe(pristine!.source);
+        expect(results.get(id)!.stock).toBe('no-op');
       }
     );
   }

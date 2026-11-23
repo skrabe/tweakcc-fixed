@@ -571,7 +571,8 @@ function main() {
 
   if (args.includes('--json')) {
     console.log(JSON.stringify({ findings, unreviewed, conflicts }, null, 1));
-    process.exit(unreviewed.length || conflicts.length ? 1 : 0);
+    process.exitCode = unreviewed.length || conflicts.length ? 1 : 0;
+    return;
   }
 
   const kinds = k => conflicts.filter(c => c.kind === k).length;
@@ -664,7 +665,7 @@ function main() {
     return;
   }
 
-  process.exit(unreviewed.length || conflicts.length ? 1 : 0);
+  process.exitCode = unreviewed.length || conflicts.length ? 1 : 0;
 }
 
 if (

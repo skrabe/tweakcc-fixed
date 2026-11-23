@@ -936,6 +936,25 @@ describe('systemPrompts.ts', () => {
         expect(errors).toEqual([]);
       });
 
+      it('skips an ambiguous vanilla override quietly', async () => {
+        setupMocks(
+          buildMockPromptData({
+            prompt: { content: 'never skip hooks' },
+            regex: 'never skip hooks',
+            getInterpolatedContent: () => 'never skip hooks',
+            pieces: ['never skip hooks'],
+          })
+        );
+        const current = 'x="never skip hooks";y="never skip hooks";';
+        const { result, errors, logs } = await applyWithSpy(current);
+
+        expect(result.newContent).toBe(current);
+        expect(result.results[0].applied).toBe(false);
+        expect(result.results[0].details).toBe('unchanged');
+        expect(logs.join('\n')).not.toContain('skipping');
+        expect(errors).toEqual([]);
+      });
+
       it('consumes two sites for two catalogue entries sharing one regex', async () => {
         const first = buildData();
         const second = buildMockPromptData({

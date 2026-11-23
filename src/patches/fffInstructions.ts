@@ -1,32 +1,27 @@
 import { parseExpressionAt } from 'acorn';
+import { oneByteText } from '../oneByteText';
 import { escapeNonAscii } from '../utils';
 import { showDiff } from './index';
-import { FFF_OWNED_TOOL_GUIDANCE_SUFFIXES } from './fffInstructionSuffixes';
+import { normalizeRecordedPrompt } from './promptHygiene';
+export { normalizeRecordedPrompt } from './promptHygiene';
+import {
+  FFF_BASH_GUIDANCE,
+  FFF_OWNED_PROJECT_GUIDANCE,
+  FFF_OWNED_TOOL_GUIDANCE_SUFFIXES,
+} from './fffInstructionSuffixes';
 
-export const FFF_PROJECT_GUIDANCE =
-  "FFF project navigation: When the relevant project file is not already known, start file discovery with fff files '<short filename or path words>' in Bash. This fuzzy filename search tolerates incomplete or misspelled names and ranks matching paths using local file usage and Git activity. Treat its results as candidate paths, not evidence of code behavior. Read plausible files to inspect current code. If filename search gives no useful candidates, or you need exact code text, use the available native content-search tools; Grep files_with_matches finds candidate files and a targeted content search shows matches. Use Glob for exact filename patterns when available. After one or two locating searches, inspect candidate code rather than repeating broad searches. Use LSP for symbol definitions or references when available. If fff is unavailable, continue with native search tools.";
+export { FFF_BASH_GUIDANCE } from './fffInstructionSuffixes';
 
-export function normalizeFffPrompt(
-  prompt: unknown,
-  tools: unknown,
+export function composeFffToolDescription(
+  description: unknown,
+  name: unknown,
   guidance: string
 ): unknown {
-  if (
-    !Array.isArray(prompt) ||
-    !prompt.every(part => typeof part === 'string') ||
-    !Array.isArray(tools) ||
-    !tools.some(
-      (tool: unknown) =>
-        typeof tool === 'object' &&
-        tool !== null &&
-        (tool as Record<string, unknown>).name === 'Bash'
-    ) ||
-    !guidance.trim() ||
-    prompt.includes(guidance)
-  ) {
-    return prompt;
+  if (name !== 'Bash' || typeof description !== 'string' || !guidance.trim()) {
+    return description;
   }
-  return [...prompt, guidance];
+  const suffix = '\n\n' + guidance;
+  return description.replaceAll(suffix, '') + suffix;
 }
 
 export function normalizeFffAutoMode(
@@ -45,26 +40,16 @@ export function normalizeFffAutoMode(
   ) {
     return messages;
   }
-  const names = new Set(
-    tools.flatMap((tool: unknown) =>
-      typeof tool === 'object' &&
-      tool !== null &&
-      typeof (tool as Record<string, unknown>).name === 'string'
-        ? [(tool as { name: string }).name]
-        : []
+  if (
+    !tools.some(
+      tool =>
+        typeof tool === 'object' &&
+        tool !== null &&
+        (tool as Record<string, unknown>).name === 'Bash'
     )
-  );
-  if (!names.has('Bash')) return messages;
-  let replacement =
-    'start discovery of unknown project files with fff files in Bash';
-  if (names.has('Glob')) {
-    replacement += ', use Glob for exact filename patterns';
-  }
-  if (names.has('Grep')) {
-    replacement += ', and use Grep for file contents';
-  } else {
-    replacement += ', and use shell tools for exact content searches';
-  }
+  )
+    return messages;
+  const replacement = 'search following the Bash tool description';
   let changed = false;
   const updated = messages.map(row => {
     if (typeof row !== 'object' || row === null) return row;
@@ -230,12 +215,13 @@ const readScope = (file: string, pattern: RegExp): Scope | null => {
 
 const serialize = (
   fn:
-    | typeof normalizeFffPrompt
+    | typeof normalizeRecordedPrompt
+    | typeof composeFffToolDescription
     | typeof normalizeFffAutoMode
     | typeof normalizeFffRecordedTools,
   name: string
 ): string => {
-  const source = fn.toString();
+  const source = oneByteText(fn.toString());
   return `function ${name}${source.slice(source.indexOf('('))}`;
 };
 
@@ -308,16 +294,38 @@ const readApiScope = (file: string): Scope | null =>
   readScope(file, API_HOOK_LOOP_SCOPE) ??
   readScope(file, API_LOOP_SCOPE) ??
   readScope(file, API_SCOPE);
+// CC 2.1.322+: the context-usage function takes six parameters and its
+// options destructure continues with `originalMessages:` instead of
+// `mainThreadAgentDefinition:`.
+const CONTEXT_SCOPE_2_1_322 =
+  /(?:^|[;}])async function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+)\)\{let\{session:[$\w]+,terminalWidth:[$\w]+,toolUseContext:[$\w]+,originalMessages:[$\w]+,/g;
 const CONTEXT_SCOPE =
   /(?:^|[;}])async function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+)\)\{let\{session:[$\w]+,terminalWidth:[$\w]+,toolUseContext:[$\w]+,mainThreadAgentDefinition:/g;
+const readContextScope = (file: string): Scope | null =>
+  readScope(file, CONTEXT_SCOPE_2_1_322) ?? readScope(file, CONTEXT_SCOPE);
 
 export const writeFffInstructions = (
   file: string,
-  guidance = FFF_PROJECT_GUIDANCE
+  guidance = FFF_BASH_GUIDANCE
 ): string | null => {
-  const api = readApiScope(file);
-  const context = readScope(file, CONTEXT_SCOPE);
   const renderer =
+    // CC 2.1.328+: the fold assignment continues with `,rows=clear(rows,...)`.
+    readScope(
+      file,
+      /(?:^|[;}])function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+),([$\w]+)(?:,[$\w]+)*\)\{let [$\w]+=\4===void 0\?void 0:[$\w]+\(\4\);\2=([$\w]+)\(\2,\5\?\.accountMemoryWithheld,([$\w]+)\(\(\)=>\3\)\),\2=[$\w]+\(\2,/g
+    ) ??
+    // CC 2.1.325+: a `let` derived from the third parameter precedes the
+    // fold assignment.
+    readScope(
+      file,
+      /(?:^|[;}])function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+),([$\w]+)(?:,[$\w]+)*\)\{let [$\w]+=\4===void 0\?void 0:[$\w]+\(\4\);\2=([$\w]+)\(\2,\5\?\.accountMemoryWithheld,([$\w]+)\(\(\)=>\3\)\);let /g
+    ) ??
+    // CC 2.1.319+: the tools parameter lost its `=[]` default, a fifth
+    // parameter follows, and the fold assignment ends the statement.
+    readScope(
+      file,
+      /(?:^|[;}])function ([$\w]+)\(([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+)\)\{\2=([$\w]+)\(\2,\5\?\.accountMemoryWithheld,([$\w]+)\(\(\)=>\3\)\);let /g
+    ) ??
     // CC 2.1.299+: the fold assignment continues with `,rows=next(rows);`.
     readScope(
       file,
@@ -327,40 +335,77 @@ export const writeFffInstructions = (
       file,
       /(?:^|[;}])function ([$\w]+)\(([$\w]+),([$\w]+)=\[\],([$\w]+),([$\w]+)\)\{\2=([$\w]+)\(\2,\5\?\.accountMemoryWithheld,([$\w]+)\(\(\)=>\3\)\);/g
     );
-  const promptHelper = serialize(normalizeFffPrompt, '__tweakccFffPrompt');
+  const descriptionPattern =
+    /,([$\w]+)=\{name:([$\w]+)\.name,description:(([$\w]+)\?([$\w]+)\.description:([$\w]+)\?\.description\?\?([$\w]+)\.recordedDescription\?\?\5\.description),input_schema:/g;
+  const descriptions = [...file.matchAll(descriptionPattern)];
+  const descriptionHelper = serialize(
+    composeFffToolDescription,
+    '__tweakccFffDescription'
+  );
+  const markedPattern =
+    /,[$\w]+=\{name:[$\w]+\.name,description:\(function __tweakccFffDescription\(/g;
+  const marked = [...file.matchAll(markedPattern)];
+  let descriptionSite: Site | null = null;
+  if (descriptions.length === 1 && marked.length === 0) {
+    const match = descriptions[0];
+    const start =
+      match.index! + match[0].indexOf('description:') + 'description:'.length;
+    descriptionSite = {
+      start,
+      end: start + match[3].length,
+      replacement: `(${descriptionHelper})(${match[3]},${match[2]}.name,${escapeNonAscii(JSON.stringify(guidance))})`,
+    };
+  } else if (descriptions.length === 0 && marked.length === 1) {
+    const start =
+      marked[0].index! +
+      marked[0][0].indexOf('description:') +
+      'description:'.length;
+    try {
+      const object = parseExpressionAt(
+        file,
+        marked[0].index! + marked[0][0].indexOf('{name:'),
+        {
+          ecmaVersion: 'latest',
+        }
+      ) as unknown;
+      const property =
+        isNode(object) && Array.isArray(object.properties)
+          ? object.properties.find(
+              (node: unknown) =>
+                isNode(node) &&
+                isNode(node.key) &&
+                node.key.name === 'description'
+            )
+          : undefined;
+      const expression =
+        isNode(property) && isNode(property.value) ? property.value : undefined;
+      if (expression) {
+        const original = file.slice(start, expression.end);
+        if (
+          original.startsWith(`(${descriptionHelper})(`) &&
+          original.endsWith(`,${escapeNonAscii(JSON.stringify(guidance))})`)
+        ) {
+          descriptionSite = {
+            start,
+            end: expression.end,
+            replacement: original,
+          };
+        }
+      }
+    } catch {
+      descriptionSite = null;
+    }
+  }
   const autoHelper = serialize(normalizeFffAutoMode, '__tweakccFffAutoMode');
   const sites = [
-    api &&
-      selectSite(
-        file,
-        api,
-        /let ([$\w]+)=([$\w]+)\(([$\w]+)\(([$\w]+)\.systemPrompt,([$\w]+)\.systemContext\)\),([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+)=\(\)=>\{let ([$\w]+)=([$\w]+)\(([$\w]+),\8,\{options:([$\w]+)\.options,querySource:([$\w]+),stamp:([$\w]+),toolInputCopies:\9\}\)/g,
-        '__tweakccFffPrompt',
-        promptHelper,
-        guidance,
-        match => ({
-          original: `${match[2]}(${match[3]}(${match[4]}.systemPrompt,${match[5]}.systemContext))`,
-          args: [`${match[14]}.options.tools`],
-        })
-      ),
-    context &&
-      selectSite(
-        file,
-        context,
-        /let ([$\w]+)=([$\w]+)\?\.systemPrompt\?\?([$\w]+),([$\w]+)=([$\w]+)\?\.toolDescriptions,([$\w]+)=\5\?\.toolEntries/g,
-        '__tweakccFffPrompt',
-        promptHelper,
-        guidance,
-        match => ({
-          original: `${match[2]}?.systemPrompt??${match[3]}`,
-          args: [context.header[5]],
-        })
-      ),
+    descriptionSite,
     renderer &&
-      selectSite(
+      // CC 2.1.325+: the declaration ends after `.messages` and the
+      // `isKnownType`/`recordedRole` destructure moved to a later statement.
+      (selectSite(
         file,
         renderer,
-        /([$\w]+)=([$\w]+)\?\.withoutAttachmentHooks\?([$\w]+)\(([$\w]+),([$\w]+)\):([$\w]+)\(\4,\5,([$\w]+)\),([$\w]+)=\1\.messages,\{isKnownType:([$\w]+),recordedRole:([$\w]+)\}=\1/g,
+        /([$\w]+)=([$\w]+)\?\.withoutAttachmentHooks\?([$\w]+)\(([$\w]+),([$\w]+)\):([$\w]+)\(\4,\5,([$\w]+)\),([$\w]+)=\1\.messages;/g,
         '__tweakccFffAutoMode',
         autoHelper,
         guidance,
@@ -369,7 +414,20 @@ export const writeFffInstructions = (
           args: [`${match[4]}.attachment`, renderer.header[3]],
         }),
         8
-      ),
+      ) ??
+        selectSite(
+          file,
+          renderer,
+          /([$\w]+)=([$\w]+)\?\.withoutAttachmentHooks\?([$\w]+)\(([$\w]+),([$\w]+)\):([$\w]+)\(\4,\5,([$\w]+)\),([$\w]+)=\1\.messages,\{isKnownType:([$\w]+),recordedRole:([$\w]+)\}=\1/g,
+          '__tweakccFffAutoMode',
+          autoHelper,
+          guidance,
+          match => ({
+            original: `${match[1]}.messages`,
+            args: [`${match[4]}.attachment`, renderer.header[3]],
+          }),
+          8
+        )),
   ];
   if (sites.some(site => site === null)) {
     console.error(
@@ -391,25 +449,79 @@ export const writeFffInstructions = (
 export const writeFffInstructionHygiene = (file: string): string | null => {
   if (!file.includes('prompt_snapshot')) return file;
   const api = readApiScope(file);
-  const context = readScope(file, CONTEXT_SCOPE);
+  const context = readContextScope(file);
   const marker = '__tweakccFffToolRecords';
   const helper = serialize(normalizeFffRecordedTools, marker);
   const payload = escapeNonAscii(
     JSON.stringify(FFF_OWNED_TOOL_GUIDANCE_SUFFIXES)
   );
+  const promptHelper = serialize(
+    normalizeRecordedPrompt,
+    '__tweakccRecordedPrompt'
+  );
   const sites: Array<Site | null> = [
+    api &&
+      // CC 2.1.329+: a declarator appending a session section to the
+      // selected prompt comes first, and the merge reads that instead.
+      (selectSite(
+        file,
+        api,
+        /let ([$\w]+)=([$\w]+)\(([$\w]+)\.systemPrompt,([$\w]+),([$\w]+)\),([$\w]+)=([$\w]+)\(([$\w]+)\(\1,([$\w]+)\.systemContext\)\),([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+)=\(\)=>\{let ([$\w]+)=([$\w]+)\(([$\w]+),\12,\{options:([$\w]+)\.options,querySource:([$\w]+),stamp:([$\w]+),toolInputCopies:\13\}\)/g,
+        '__tweakccRecordedPrompt',
+        promptHelper,
+        FFF_OWNED_PROJECT_GUIDANCE,
+        match => ({
+          original: `${match[7]}(${match[8]}(${match[1]},${match[9]}.systemContext))`,
+          args: [],
+        }),
+        6
+      ) ??
+        selectSite(
+          file,
+          api,
+          /let ([$\w]+)=([$\w]+)\(([$\w]+)\(([$\w]+)\.systemPrompt,([$\w]+)\.systemContext\)\),([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+)=\(\)=>\{let ([$\w]+)=([$\w]+)\(([$\w]+),\8,\{options:([$\w]+)\.options,querySource:([$\w]+),stamp:([$\w]+),toolInputCopies:\9\}\)/g,
+          '__tweakccRecordedPrompt',
+          promptHelper,
+          FFF_OWNED_PROJECT_GUIDANCE,
+          match => ({
+            original: `${match[2]}(${match[3]}(${match[4]}.systemPrompt,${match[5]}.systemContext))`,
+            args: [],
+          })
+        )),
+    context &&
+      selectSite(
+        file,
+        context,
+        /let ([$\w]+)=([$\w]+)\?\.systemPrompt\?\?([$\w]+),([$\w]+)=([$\w]+)\?\.toolDescriptions,([$\w]+)=\5\?\.toolEntries/g,
+        '__tweakccRecordedPrompt',
+        promptHelper,
+        FFF_OWNED_PROJECT_GUIDANCE,
+        match => ({
+          original: `${match[2]}?.systemPrompt??${match[3]}`,
+          args: [],
+        })
+      ),
     api &&
       // CC 2.1.299+: a `restore=()=>...` declarator precedes the selection
       // and further options follow `contextRendering`.
       (selectSite(
         file,
         api,
-        /let\{advisorModel:[$\w]+,advisorDeferred:[$\w]+,advisorActive:[$\w]+\}=[$\w]+,[$\w]+=\(\)=>[^,;{}]+,([$\w]+)=(([$\w]+)\(([$\w]+),([$\w]+),\{options:[$\w]+\.options,querySource:[$\w]+,resumeActive:[$\w]+,stamp:[$\w]+,[\s\S]*?contextRendering:[$\w]+\.rendering(?:,[$\w]+:[$\w]+)*\}\))/g,
+        /let\{advisorModel:[$\w]+,advisorDeferred:[$\w]+,advisorActive:[$\w]+\}=[$\w]+,[$\w]+=\(\)=>[^,;{}]+,(?:[$\w]+=[^,;{}=]+,)+([$\w]+)=(([$\w]+)\(([$\w]+),([$\w]+),\{options:[$\w]+\.options,querySource:[$\w]+,resumeActive:[$\w]+,stamp:[$\w]+,[\s\S]*?contextRendering:[$\w]+\.rendering(?:,[$\w]+:[$\w]+)*\}\))/g,
         marker,
         helper,
         FFF_OWNED_TOOL_GUIDANCE_SUFFIXES,
         match => ({ original: match[2], args: [] })
       ) ??
+        selectSite(
+          file,
+          api,
+          /let\{advisorModel:[$\w]+,advisorDeferred:[$\w]+,advisorActive:[$\w]+\}=[$\w]+,[$\w]+=\(\)=>[^,;{}]+,([$\w]+)=(([$\w]+)\(([$\w]+),([$\w]+),\{options:[$\w]+\.options,querySource:[$\w]+,resumeActive:[$\w]+,stamp:[$\w]+,[\s\S]*?contextRendering:[$\w]+\.rendering(?:,[$\w]+:[$\w]+)*\}\))/g,
+          marker,
+          helper,
+          FFF_OWNED_TOOL_GUIDANCE_SUFFIXES,
+          match => ({ original: match[2], args: [] })
+        ) ??
         selectSite(
           file,
           api,

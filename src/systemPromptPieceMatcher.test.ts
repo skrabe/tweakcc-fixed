@@ -6,10 +6,17 @@ import {
   findAllPromptPieceMatches,
   findAllPromptPieceMatchesBatch,
   foldPromptMatchContent,
+  PRISTINE_RESCANS_BEFORE_INDEX,
   PromptPieceMatcherCatalog,
   PromptMatchSpec,
 } from './systemPromptPieceMatcher';
 import { buildSearchRegexFromPieces } from './systemPromptSync';
+import {
+  BundleRegions,
+  matchesInRegion,
+  moduleCountDeclaration,
+  moduleSentinel,
+} from './virtualBundle';
 
 const version = '2.1.215';
 
@@ -436,5 +443,212 @@ describe('prompts without a long word run', () => {
     expect(
       (await catalog.matchCurrent(tiny.regex, working)).map(signature)
     ).toEqual([[17, '(x)']]);
+  });
+});
+
+describe('PromptPieceMatcherCatalog.matchPristine', () => {
+  const tokenOnly = (pieces: string[]): PromptMatchSpec => ({
+    ...spec(pieces),
+    regex: `(${pieces.join('|')}`,
+  });
+
+  const rescan = async (
+    matcher: PromptMatchSpec,
+    content: string
+  ): Promise<unknown> => {
+    try {
+      return (await findAllPromptPieceMatches(matcher, content)).map(signature);
+    } catch (error) {
+      return { threw: String(error) };
+    }
+  };
+
+  const fromIndex = async (
+    catalog: PromptPieceMatcherCatalog,
+    matcher: PromptMatchSpec,
+    content: string
+  ): Promise<unknown> => {
+    for (let i = 0; i < PRISTINE_RESCANS_BEFORE_INDEX; i++) {
+      await catalog.matchPristine(matcher, content).catch(() => []);
+    }
+    try {
+      return (await catalog.matchPristine(matcher, content)).map(signature);
+    } catch (error) {
+      return { threw: String(error) };
+    }
+  };
+
+  it('answers the first checks by rescanning, then from the index', async () => {
+    const matcher = spec(['Rescanned Then Indexed Anchor']);
+    const content =
+      'a="Rescanned Then Indexed Anchor";b="rescanned then indexed anchor"';
+    const catalog = new PromptPieceMatcherCatalog([matcher]);
+    const expected = await rescan(matcher, content);
+    for (let i = 0; i <= PRISTINE_RESCANS_BEFORE_INDEX + 1; i++) {
+      expect(
+        (await catalog.matchPristine(matcher, content)).map(signature)
+      ).toEqual(expected);
+    }
+  });
+
+  it('agrees with the pristine rescan for every anchor kind', async () => {
+    const specs = [
+      spec(['Long Enough Prefix "quoted" ', ' and tail']),
+      spec(['\n</ax-summary>']),
+      spec(['(x)']),
+      spec(['${', '}']),
+      spec(['café — Tail Words Here']),
+    ];
+    const content = [
+      'a="Long Enough Prefix \\"quoted\\" aB and tail"',
+      'b="long enough prefix \\"quoted\\" cD and tail"',
+      'c=`\n</ax-summary>`;d=`\n</AX-SUMMARY>`;e="(x)(X)"',
+      'f=`${abc} ${def}`',
+      'g="caf\\xE9 \\u2014 tail words here";h="café — Tail Words Here"',
+    ].join(';');
+    const catalog = new PromptPieceMatcherCatalog(specs);
+    for (const matcher of specs) {
+      expect(await fromIndex(catalog, matcher, content)).toEqual(
+        await rescan(matcher, content)
+      );
+    }
+  });
+
+  it('answers from the index without compiling the prompt regex', async () => {
+    const matcher = tokenOnly(['Pristine Anchor Words', '!']);
+    const content =
+      'x="Pristine Anchor Words$!";y="pristine anchor words$!";z="PRISTINE ANCHOR WORDSq!"';
+    const catalog = new PromptPieceMatcherCatalog([matcher]);
+    const expected = await rescan(matcher, content);
+    expect(expected).toEqual([[3, 'Pristine Anchor Words$!', '$']]);
+    expect(await fromIndex(catalog, matcher, content)).toEqual(expected);
+  });
+
+  it('counts case-insensitive hits toward the occurrence cap as the rescan does', async () => {
+    const prompt = 'Frequently Repeated Anchor!';
+    const variant = 'frequently repeated ANCHOR!';
+    for (const [exact, folded] of [
+      [250, 0],
+      [251, 0],
+      [200, 50],
+      [200, 51],
+      [0, 251],
+    ]) {
+      const content = `${prompt} `.repeat(exact) + `${variant} `.repeat(folded);
+      const indexedOnly = tokenOnly([prompt]);
+      const indexedCatalog = new PromptPieceMatcherCatalog([indexedOnly]);
+      const rescanned = await rescan(indexedOnly, content);
+      expect(await fromIndex(indexedCatalog, indexedOnly, content)).toEqual(
+        rescanned
+      );
+      expect(Array.isArray(rescanned)).toBe(exact + folded <= 250);
+
+      const real = spec([prompt]);
+      const realCatalog = new PromptPieceMatcherCatalog([real]);
+      const expected = await rescan(real, content);
+      expect(expected).toHaveLength(exact);
+      expect(await fromIndex(realCatalog, real, content)).toEqual(expected);
+    }
+  });
+
+  it('folds only ASCII letters, as the case-insensitive rescan does', async () => {
+    const matcher = spec(['Keep Skipping Kelvin Signs']);
+    const content = [
+      '"Keep Skipping Kelvin Signs"',
+      '"Keep ſkipping Kelvin ſigns"',
+      '"KEEP SKIPPING KELVIN SIGNS"',
+    ].join(',');
+    const catalog = new PromptPieceMatcherCatalog([matcher]);
+    expect(await fromIndex(catalog, matcher, content)).toEqual(
+      await rescan(matcher, content)
+    );
+  });
+
+  it('is unaffected by current-content splices and deletions', async () => {
+    const kept = spec(['Surviving Pristine Prompt Text']);
+    const gone = spec(['Deleted Before The Check Ran']);
+    const pristine =
+      'a="Surviving Pristine Prompt Text";b="Deleted Before The Check Ran"';
+    const catalog = new PromptPieceMatcherCatalog([kept, gone]);
+    catalog.index(pristine);
+    const working = new MutableText(pristine);
+    working.splice(3, 33, 'replaced');
+    catalog.recordSplice(working, {
+      start: 3,
+      end: 33,
+      replacementLength: 'replaced'.length,
+    });
+    catalog.delete(gone.regex);
+    expect(await catalog.matchCurrent(kept.regex, working)).toEqual([]);
+    expect(await fromIndex(catalog, kept, pristine)).toEqual(
+      await rescan(kept, pristine)
+    );
+    expect(await fromIndex(catalog, gone, pristine)).toEqual(
+      await rescan(gone, pristine)
+    );
+    expect(await fromIndex(catalog, kept, pristine)).toEqual([
+      [3, 'Surviving Pristine Prompt Text'],
+    ]);
+  });
+
+  it('keeps the JS and text-asset verdicts of the rescan', async () => {
+    const shared = spec(['Shared By Script And Document']);
+    const scriptOnly = spec(['Only The Script Carries This']);
+    const assetOnly = spec(['Only The Document Carries This']);
+    const content =
+      '#!/usr/bin/env node\n' +
+      moduleCountDeclaration(1) +
+      moduleSentinel(0, '/$bunfs/root/m0.js') +
+      'let a = "Shared By Script And Document";let b = "Only The Script Carries This";' +
+      moduleSentinel(1, '/$bunfs/root/a0.md') +
+      '`# Doc\nShared By Script And Document\nOnly The Document Carries This\n`';
+    const regions = BundleRegions.of(content)!;
+    expect(regions).not.toBeNull();
+    const catalog = new PromptPieceMatcherCatalog([
+      shared,
+      scriptOnly,
+      assetOnly,
+    ]);
+    for (let i = 0; i < PRISTINE_RESCANS_BEFORE_INDEX; i++) {
+      await catalog.matchPristine(shared, content);
+    }
+    for (const [matcher, inJs, inAsset] of [
+      [shared, true, true],
+      [scriptOnly, true, false],
+      [assetOnly, false, true],
+    ] as const) {
+      const expected = await findAllPromptPieceMatches(matcher, content);
+      const actual = await catalog.matchPristine(matcher, content);
+      expect(actual.map(signature)).toEqual(expected.map(signature));
+      for (const [asset, present] of [
+        [false, inJs],
+        [true, inAsset],
+      ] as const) {
+        expect(matchesInRegion(actual, regions, asset).map(signature)).toEqual(
+          matchesInRegion(expected, regions, asset).map(signature)
+        );
+        expect(matchesInRegion(actual, regions, asset).length > 0).toBe(
+          present
+        );
+      }
+    }
+  });
+
+  it('rebuilds for different content and falls back for a foreign spec', async () => {
+    const matcher = spec(['Content Specific Anchor Text']);
+    const catalog = new PromptPieceMatcherCatalog([matcher]);
+    const first = 'x="Content Specific Anchor Text"';
+    const second =
+      'yy="content specific anchor text";z="Content Specific Anchor Text"';
+    expect(await fromIndex(catalog, matcher, first)).toEqual(
+      await rescan(matcher, first)
+    );
+    expect(await fromIndex(catalog, matcher, second)).toEqual(
+      await rescan(matcher, second)
+    );
+    const foreign = { ...matcher };
+    expect(await fromIndex(catalog, foreign, second)).toEqual(
+      await rescan(foreign, second)
+    );
   });
 });

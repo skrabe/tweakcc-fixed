@@ -24,11 +24,16 @@ parentPort.on('message', async task => {
     loadedTarget = task.target;
   }
   const results = [];
-  for (const { i, pieces } of task.items) {
+  for (const { i, pieces, occurrences } of task.items) {
     try {
       results.push({
         i,
-        r: await core.checkPromptDifferential(pieces, task.version, content),
+        r: await core.checkPromptDifferential(
+          pieces,
+          task.version,
+          content,
+          occurrences
+        ),
       });
     } catch (err) {
       results.push({

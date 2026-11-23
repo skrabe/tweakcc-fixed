@@ -8,7 +8,10 @@ import {
   restoreNativeSearchTools,
   writeSwapRipgrepForFff,
 } from './swapRipgrepForFff';
-import { FFF_PROJECT_GUIDANCE } from './fffInstructions';
+import { FFF_BASH_GUIDANCE } from './fffInstructions';
+
+const SERIALIZER =
+  ';async function $describe($tool,$options){let $cached=$options.cached??{description:await $tool.prompt(),input_schema:$tool.input_schema},$entry=$options.recordedEntry,$redescribed=$options.isRedescribed===true,$result={name:$tool.name,description:$redescribed?$cached.description:$entry?.description??$options.recordedDescription??$cached.description,input_schema:$entry?.input_schema??$cached.input_schema};return $result;}';
 
 const WRAPPER = '/Users/x/.tweakcc/fff/aarch64-apple-darwin/rg-fff';
 const VISIBILITY =
@@ -74,7 +77,7 @@ const INSTRUCTIONS =
   'let $saved=$details.snapshot,$fallback=$details.prompt,$tools={};let $counted=$saved?.systemPrompt??$fallback,$descriptions=$tools?.toolDescriptions,$schemas=$tools?.toolEntries;return $counted;}' +
   ';function fffRender($rows,$visible=[],$model,$config){$rows=$fold($rows,$config?.accountMemoryWithheld,$memo(()=>$visible));let $output=[];for(let $row of $rows){' +
   'let $options={},$active=false,$result=$config?.withoutAttachmentHooks?$live($row,$options):$recorded($row,$options,$active),$rendered=$result.messages,{isKnownType:$known,recordedRole:$role}=$result;$output.push(...$rendered)}return $output;}';
-const BASE = VISIBILITY + SHADOW + SETUP + SNAPSHOT + INSTRUCTIONS;
+const BASE = VISIBILITY + SHADOW + SETUP + SNAPSHOT + INSTRUCTIONS + SERIALIZER;
 const COMBINED = BASE + RESOLVER + GREP_DESC + BASH_DESC;
 const countOf = (source: string, part: string) => source.split(part).length - 1;
 const shellCommands = (source: string, enabled = true): string[] =>
@@ -115,6 +118,40 @@ describe('native search visibility', () => {
     expect(evaluate(source, ['Grep'])).toEqual(['Glob', 'Bash']);
     expect(source).toContain(catalog);
     expect(restoreNativeSearchTools(source)).toBe(source);
+  });
+
+  it('restores Grep and Glob in the 2.1.326 iterated omission set', () => {
+    const iterated =
+      'var $glob="Glob";var $grep="Grep";' +
+      'var $empty=new Set,$excluded=new Set([$glob,$grep]);' +
+      'function hidden(){if(!searchGate()||!hasBash())return $empty;' +
+      'let $aliases;for(let name of $excluded){let alias=aliasFor(name);' +
+      'if(alias!==void 0)$aliases??=new Set($excluded),$aliases.add(alias.name)}return $aliases??$excluded}';
+    const catalog =
+      ';function catalog(tools){return tools.filter(tool=>!hidden().has(tool.name)).map(tool=>tool.name)}';
+    const evaluate = (code: string) =>
+      new Function(
+        'searchGate',
+        'hasBash',
+        'aliasFor',
+        code + ';return catalog([{name:"Grep"},{name:"Glob"},{name:"Bash"}]);'
+      )(
+        () => true,
+        () => true,
+        () => undefined
+      ) as string[];
+    const source = restoreNativeSearchTools(iterated + catalog)!;
+    expect(evaluate(iterated + catalog)).toEqual(['Bash']);
+    expect(evaluate(source)).toEqual(['Grep', 'Glob', 'Bash']);
+    expect(source).toContain('function hidden(){return $empty;');
+    expect(source).toContain(catalog);
+    expect(restoreNativeSearchTools(source)).toBe(source);
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      expect(restoreNativeSearchTools(iterated + iterated)).toBeNull();
+    } finally {
+      error.mockRestore();
+    }
   });
 
   it('requires an unambiguous omission set for the actual native tool names', () => {
@@ -255,13 +292,70 @@ describe('swapRipgrepForFff', () => {
         'patch: swapRipgrepForFff: failed to find unique scoped search instruction boundaries'
       );
       const patched = writeSwapRipgrepForFff(BASE, WRAPPER)!;
-      expect(patched).toContain('function __tweakccFffPrompt');
+      expect(patched).toContain('function __tweakccFffDescription');
       expect(patched).toContain('function __tweakccFffAutoMode');
-      expect(patched).toContain(FFF_PROJECT_GUIDANCE);
+      expect(patched).toContain(FFF_BASH_GUIDANCE);
       expect(() => new Function(patched)).not.toThrow();
     } finally {
       error.mockRestore();
     }
+  });
+
+  it('binds the 2.1.325 renderer with a leading let and a split destructure', () => {
+    const render325 = INSTRUCTIONS.replace(
+      'function fffRender($rows,$visible=[],$model,$config){',
+      'function fffRender($rows,$visible,$model,$config,$extra){let $mark=$model===void 0?void 0:$markOf($model);'
+    ).replace(
+      '$rendered=$result.messages,{isKnownType:$known,recordedRole:$role}=$result;',
+      '$rendered=$result.messages;let{isKnownType:$known,recordedRole:$role}=$result;'
+    );
+    expect(render325).not.toContain('$visible=[]');
+    expect(render325).toContain('$result.messages;let{isKnownType:');
+    const source = BASE.replace(INSTRUCTIONS, render325);
+    const patched = writeSwapRipgrepForFff(source, WRAPPER)!;
+    expect(patched).not.toBeNull();
+    expect(patched).toContain('$rendered=(function __tweakccFffAutoMode(');
+    expect(patched).toContain('})($result.messages,$row.attachment,$visible,"');
+    expect(patched).toContain(
+      ';let{isKnownType:$known,recordedRole:$role}=$result;'
+    );
+    expect(patched).toContain(
+      '{let $mark=$model===void 0?void 0:$markOf($model);$rows=$fold('
+    );
+    expect(patched).toContain('function __tweakccFffDescription');
+    expect(hasFffShellIntegration(patched, WRAPPER)).toBe(true);
+    expect(() => new Function(patched)).not.toThrow();
+    expect(writeSwapRipgrepForFff(patched, WRAPPER)).toBe(patched);
+  });
+
+  it('binds the 2.1.328 renderer whose fold assignment continues with a comma', () => {
+    const render328 = INSTRUCTIONS.replace(
+      'function fffRender($rows,$visible=[],$model,$config){',
+      'function fffRender($rows,$visible,$model,$config,$extra){let $mark=$model===void 0?void 0:$markOf($model);'
+    )
+      .replace(
+        '$memo(()=>$visible));let $output=[];',
+        '$memo(()=>$visible)),$rows=$clear($rows,$config?.accountMemoryClearing).messages,$rows=$tail($rows);let $output=[];'
+      )
+      .replace(
+        '$rendered=$result.messages,{isKnownType:$known,recordedRole:$role}=$result;',
+        '$rendered=$result.messages;let{isKnownType:$known,recordedRole:$role}=$result;'
+      );
+    expect(render328).toContain(
+      '$memo(()=>$visible)),$rows=$clear($rows,$config?.accountMemoryClearing).messages,'
+    );
+    const source = BASE.replace(INSTRUCTIONS, render328);
+    const patched = writeSwapRipgrepForFff(source, WRAPPER)!;
+    expect(patched).not.toBeNull();
+    expect(patched).toContain('$rendered=(function __tweakccFffAutoMode(');
+    expect(patched).toContain('})($result.messages,$row.attachment,$visible,"');
+    expect(patched).toContain(
+      '$memo(()=>$visible)),$rows=$clear($rows,$config?.accountMemoryClearing).messages,$rows=$tail($rows);let $output=[];'
+    );
+    expect(patched).toContain('function __tweakccFffDescription');
+    expect(hasFffShellIntegration(patched, WRAPPER)).toBe(true);
+    expect(() => new Function(patched)).not.toThrow();
+    expect(writeSwapRipgrepForFff(patched, WRAPPER)).toBe(patched);
   });
 
   it('refuses legacy interception instead of leaving native searches redirected', () => {
@@ -281,13 +375,13 @@ describe('swapRipgrepForFff', () => {
     }
   });
 
-  it('keeps native descriptions intact and confines guidance to request hooks', () => {
+  it('keeps native descriptions intact and composes guidance at the tool serializer', () => {
     const patched = writeSwapRipgrepForFff(COMBINED, WRAPPER)!;
     expect(patched).toContain(GREP_DESC);
     expect(patched).toContain(BASH_DESC);
     expect(countOf(patched, 'Native Grep navigation:')).toBe(0);
     expect(countOf(patched, 'Native search and fff files:')).toBe(0);
-    expect(patched).toContain(FFF_PROJECT_GUIDANCE);
+    expect(patched).toContain(FFF_BASH_GUIDANCE);
     for (const stale of [
       'most-relevant-first',
       'likely declarations first',

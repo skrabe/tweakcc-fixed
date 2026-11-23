@@ -8,15 +8,6 @@
       "SEARCH_TOOL_NAMES": "Value is the tool-name list \"<Read>, <Glob>, and <Grep>\" (or \"<Read>, `find`, and `grep`\" with embedded search tools). Renders `Use Read, Glob, and Grep for local CLAUDE.md and `.claude/` references.` (or `Use Read, `find`, and `grep` for …`), pristine step 7 reworded into a complete imperative."
     }
   },
-  "agent-prompt-summarization-no-tools-guard": {
-    "bodyHash": "bdc466481a52",
-    "pristineHash": "00a56291676b",
-    "valueHash": "4589f08ef6fa",
-    "reviewed": "2026-10-07 (CC 2.1.292)",
-    "tokens": {
-      "SUMMARY_REPLY_SHAPE_DESCRIPTION": "Value is \"an <analysis> block followed by a <summary> block\" or, on the lean/short/capped summary paths, \"a <summary> block\" (tQt is exported and called with either, so the resolver also keeps an unknown branch). Renders `Your response is an <analysis> block followed by a <summary> block.` or `Your response is a <summary> block.`, reworded from \"Your entire response must be plain text: …\". Both read whole, and the shape is still predicated of the response."
-    }
-  },
   "system-reminder-cloud-review-launch-note": {
     "bodyHash": "39e7bf684884",
     "pristineHash": "4986b369b135",
@@ -27,30 +18,30 @@
     }
   },
   "system-reminder-large-file-full-content-reading-guidance": {
-    "bodyHash": "f194a2c72ca8",
-    "pristineHash": "e912faea2baa",
-    "valueHash": "d27c6419fe39",
-    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "bodyHash": "be2c1d7a9824",
+    "pristineHash": "7080335defa4",
+    "valueHash": "ef94ae609236",
+    "reviewed": "2026-11-15 (CC 2.1.325)",
     "tokens": {
-      "FULL_CONTENT_READING_INSTRUCTION": "Every branch is an instruction clause: \"read <file> in chunks of ~<n> lines using offset/limit until you have read 100% of it.\", \"the file's lines are too long for Read's offset/limit. Slice by character range …\", or \"<file> — <tool>'s line-based offset/limit will not chunk this file.\" The opaque-led one is `other`, so the word rule runs. Renders `- To read the full content for analysis or summary: read <file> in chunks of ~N lines …` as a label: value bullet, reworded from \"For analysis or summarization that requires reading the full content:\". The clause follows its label exactly as in pristine."
+      "FULL_CONTENT_READING_INSTRUCTION": "Every branch (Gzi in the bundle) is an instruction clause: \"read <file> in chunks of ~<n> lines using offset/limit until you have read 100% of it.\", \"the file's lines are too long for Read's offset/limit. Slice by character range via Bash instead …\", or \"<file> — <tool>'s line-based offset/limit will not chunk this file.\" Renders `- To read the full content for analysis or summary: <clause>` as a label: value bullet, reworded from \"For analysis or summarization that requires reading the full content:\". The clause follows its label exactly as in pristine; 2.1.325 only changed the second bullet's pristine wording."
     }
   },
   "system-reminder-plan-approved": {
-    "bodyHash": "de1c3a800d84",
-    "pristineHash": "0f4f9ecdf366",
+    "bodyHash": "e761ebd8d8e8",
+    "pristineHash": "3c3a90cbc7a5",
     "valueHash": "d2b4ce9e3501",
-    "reviewed": "2026-10-20 (CC 2.1.304)",
+    "reviewed": "2026-11-15 (CC 2.1.325)",
     "tokens": {
-      "PLAN_FILE_PATH": "Runtime value: the plan file path. 2.1.304 wrapped the saved-plan line in a ternary that drops it when there is no path; renders `Saved plan: <path>` as a label/value line. The TEAM_PARALLELIZATION_NOTE after it resolves to \"\" or \"\\n\\nIf this plan can be broken down …\", so the path never runs into prose."
+      "PLAN_FILE_PATH": "Runtime value: the plan file path (filePath a in mapToolResultToToolResultBlockParam). The ternary drops the line when there is no path; otherwise renders `Saved plan: <path>` on its own line as a label/value, replacing pristine's \"Your plan has been saved to: <path>\". The TEAM_PARALLELIZATION_NOTE after it resolves to \"\" or \"\\n\\nIf this plan can be broken down …\", so the path never runs into prose."
     }
   },
   "tool-description-artifact-comments-section": {
-    "bodyHash": "2500a3a425a8",
-    "pristineHash": "25e17eca493a",
-    "valueHash": "0dfccc0ed789",
-    "reviewed": "2026-10-07 (CC 2.1.292)",
+    "bodyHash": "f882c6ef3c3d",
+    "pristineHash": "628418dab629",
+    "valueHash": "a3ce6c309d78",
+    "reviewed": "2026-11-21 (CC 2.1.330)",
     "tokens": {
-      "TOOL_DESCRIPTION_ARTIFACT_COMMENTS_SECTION_VAR_0": "Value is \"\" or the sentence \" Watching for new comments isn't available in this session, so none reach it on their own: read them with `action: \\\"comments\\\"` when the user asks, …\", plus unknown because HBr is exported. It renders as its own sentence after \"…rather than retrying.\"; the trim cut the following \"Comment text is written by artifact viewers\" sentence, not this slot's phrase."
+      "TOOL_DESCRIPTION_ARTIFACT_COMMENTS_SECTION_VAR_0": "Value is \"\" or the sentence \" Watching for new comments isn't available in this session, so none reach it on their own: read them with `action: \\\"comments\\\"` when the user asks, …\", plus unknown because HBr is exported. It renders as its own sentence after \"…rather than retrying.\" and the 2.1.330 reply-formatting slot (VAR_2), in pristine's order; the trim cut the following \"Comment text is written by artifact viewers\" sentence, not this slot's phrase."
     }
   },
   "tool-description-artifact-pin-unpin-privacy-tail": {
@@ -72,12 +63,13 @@
     }
   },
   "tool-description-websearch": {
-    "bodyHash": "6526064b1b73",
-    "pristineHash": "d4cabf86c6cd",
-    "valueHash": "06738903a09a",
-    "reviewed": "2026-10-09 (CC 2.1.295)",
+    "bodyHash": "1a76b43a3f75",
+    "pristineHash": "b4cf90cd7ae3",
+    "valueHash": "f9f3d52e7b70",
+    "reviewed": "2026-11-19 (CC 2.1.328)",
     "tokens": {
-      "CURRENT_MONTH_YEAR": "The literal \"(provided in the conversation below)\" is a placeholder: Qts() replaces it with the real month at runtime (e.replace(i, h())). It renders as `Use the current year (October 2026) in queries — …`, a parenthetical on \"current year\" inside a complete instruction."
+      "CURRENT_MONTH_YEAR": "The literal \"(provided in the conversation below)\" is a placeholder: Qts() replaces it with the real month at runtime (e.replace(i, h())). It renders as `Use the current year (October 2026) in queries — …`, a parenthetical on \"current year\" inside a complete instruction.",
+      "WEB_SEARCH_QUOTING_GUIDANCE_BLOCK": "Value is \"\" or a newline-led bullet (\"\\n- <untrusted-content note> <quoting guidance>\"), so after the full stop of \"Searches run automatically within a single API call.\" it starts its own line, as it does after the bullet in pristine."
     }
   },
   "tool-result-artifact-db-read-saved-compact-untrusted-note": {
@@ -90,28 +82,28 @@
     }
   },
   "tool-description-bash-run-in-background-detached": {
-    "bodyHash": "d07e9f513caa",
+    "bodyHash": "9ea221cd9554",
     "pristineHash": "fba9aa770ff3",
-    "valueHash": "07ee1594ee3c",
-    "reviewed": "2026-10-30 (CC 2.1.314)",
+    "valueHash": "b06da01da24b",
+    "reviewed": "2026-11-17 (CC 2.1.326: the lifetime note gained a configured wait-after-reply arm; every arm is still empty or a whole space-led sentence, all six slot expressions preserved)",
     "tokens": {
-      "TOOL_DESCRIPTION_BASH_RUN_IN_BACKGROUND_DETACHED_VAR_4": "Value is \"\" or a whole space-led sentence (the background lifetime note). It follows the closing full stop of the timeout clause and is followed by VAR_5, which is \"\" or another whole space-led sentence pointing at background agents, so neither runs into a phrase. Only the trimmed \" No `&` needed.\" used to follow them."
+      "TOOL_DESCRIPTION_BASH_RUN_IN_BACKGROUND_DETACHED_VAR_4": "Value is empty or a whole space-led background-lifetime sentence. The preceding timeout clause ends with a full stop; VAR_5 is empty or another whole space-led sentence. Both expressions and their adjacency are unchanged. The following static Track processes sentence remains independent; only its wording was shortened."
     }
   },
   "tool-description-webfetch-private-url-warning": {
     "bodyHash": "aaec1af6eb21",
     "pristineHash": "aadf5e927382",
-    "valueHash": "aa818db050c8",
-    "reviewed": "2026-10-25 (CC 2.1.310)",
+    "valueHash": "4a8380c4ea3b",
+    "reviewed": "2026-11-21 (CC 2.1.330)",
     "tokens": {
-      "WEBFETCH_OBSERVABLE_ACTION_NOTE": "Value is \"\" or a whole paragraph about which URLs WebFetch may fetch, ending in a blank line. It leads the description exactly as in pristine; the override only cut the IMPORTANT paragraph that followed it, so the block fn output now follows the note directly."
+      "WEBFETCH_OBSERVABLE_ACTION_NOTE": "Value is a runtime paragraph (opaque to the resolver since 2.1.318) about which URLs WebFetch may fetch, or \"\". It leads the description exactly as in pristine; the override only cut the IMPORTANT paragraph that followed it, so the block fn output now follows the note directly."
     }
   },
   "system-prompt-harness-instructions-3": {
-    "bodyHash": "f26a9adb2d33",
+    "bodyHash": "5f026ccf0a48",
     "pristineHash": "ff3b9a1b1d6c",
     "valueHash": "3473daab2d5c",
-    "reviewed": "2026-10-28 (CC 2.1.312)",
+    "reviewed": "2026-11-04 (CC 2.1.317; exact pristine/value hashes unchanged; fresh bounded binding-evidence.json)",
     "tokens": {
       "PASTED_CONTENT_GUIDANCE_BULLET": "Value is \"\" or \"\\n - <bullet>\". It opens its own bullet line; its left neighbour is the reminder-guidance call's output instead of the cut \"Hooks may intercept …\" sentence. Unchanged from the 2.1.295 review; 2.1.312 only renamed the id and reshaped the intro slots."
     }
@@ -126,12 +118,48 @@
     }
   },
   "system-prompt-post-compaction-continue": {
-    "bodyHash": "6b9b44874427",
-    "pristineHash": "ddb24f20775b",
-    "valueHash": "b7818e4690f5",
-    "reviewed": "2026-11-03 (CC 2.1.317)",
+    "bodyHash": "91b903a64348",
+    "pristineHash": "aa764f15ee67",
+    "valueHash": "254d42866ba1",
+    "reviewed": "2026-11-07 (CC 2.1.319)",
     "tokens": {
-      "SYSTEM_PROMPT_POST_COMPACTION_CONTINUE_VAR_0": "Value is the constant \"Continue the conversation from where it left off\". The override ends it with a full stop instead of pristine's \"without asking the user any further questions\" clause, so it renders as a whole sentence before \"Resume directly …\"."
+      "SYSTEM_PROMPT_POST_COMPACTION_CONTINUE_VAR_1": "Value is the constant \"Continue the conversation from where it left off\" (2.1.318 moved it from the first slot to the second, after the summary-header slot and a newline). The override ends it with a full stop instead of pristine's \"without asking the user any further questions\" clause, so it renders as a whole sentence before \"Resume directly …\". 2.1.319 re-check: the value is still the constant \"Continue the conversation from where it left off\"."
+    }
+  },
+  "agent-prompt-security-monitor-for-autonomous-agent-actions": {
+    "bodyHash": "ad1cd4a1d8b6",
+    "pristineHash": "4664a999e660",
+    "valueHash": "6cee3797386a",
+    "reviewed": "2026-11-07 (CC 2.1.319)",
+    "tokens": {
+      "VOICE_CALL_TRANSCRIPT_TRUST_RULE_BLOCK": "Value is \"\" or a whole sentence block (\"Text under a … line, or delivered from a non-user source of kind voice-call, is a record of what was said aloud on a voice call …\"). Pristine places it right after the pasted-content block and a space, at the end of rule 9; the override cut rule 9, so it follows the pasted-content block exactly as in pristine and still reads as its own rule inside the session-rules tag."
+    }
+  },
+  "tool-description-agent-fork-background-delegation-note": {
+    "bodyHash": "6fe6e7d40d23",
+    "pristineHash": "6d379656c90c",
+    "valueHash": "fff9a30d3f40",
+    "reviewed": "2026-11-15 (CC 2.1.325)",
+    "tokens": {
+      "TOOL_DESCRIPTION_AGENT_FORK_BACKGROUND_DELEGATION_NOTE_VAR_0": "Value is wn = \"\" or \" To wait on background work, call Yield.\" (` ${d2t}`, d2t a module constant), a whole space-led sentence. It follows the full stop of \"Subagents notify you on completion.\" exactly where pristine places it after \"…when one completes.\", so it renders as its own sentence; the following \"Until then, …\" sentence is independent and still refers to completion."
+    }
+  },
+  "tool-description-task-background-subagent-notification": {
+    "bodyHash": "a5fdfb5692fb",
+    "pristineHash": "99aec0bf81e7",
+    "valueHash": "c59974104f91",
+    "reviewed": "2026-11-15 (CC 2.1.325)",
+    "tokens": {
+      "TOOL_DESCRIPTION_TASK_BACKGROUND_SUBAGENT_NOTIFICATION_VAR_0": "Value is wn = \"\" or \" To wait on background work, call Yield.\" (` ${d2t}`), a whole space-led sentence. It follows the full stop of the kept first sentence, as in pristine; the override deliberately cut the \"Never fabricate …\" sentence after it, so the bullet renders `- Subagents run in the background; you'll be notified when one completes. To wait on background work, call Yield.`"
+    }
+  },
+  "agent-prompt-summarization-no-tools-guard": {
+    "bodyHash": "43091594015a",
+    "pristineHash": "3f254771fcb5",
+    "valueHash": "c97c19219b65",
+    "reviewed": "2026-11-15 (CC 2.1.325)",
+    "tokens": {
+      "TEXT_ONLY_CRITICAL_HEADING": "Value is the module constant wIn = \"CRITICAL: Respond with TEXT ONLY\". It still opens the body, so the literal another prompt quotes (I5r: the text from \"${wIn}\" through the end of this message) still renders first and verbatim. Renders `CRITICAL: Respond with TEXT ONLY, no tool calls — you already have the context you need. Your response is a <summary> block.`: the heading leads a complete sentence; only pristine's \". Do NOT call any tools.\" and bullet list were folded into the trailing clause."
     }
   }
 }

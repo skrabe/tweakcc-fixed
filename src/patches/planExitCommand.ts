@@ -38,8 +38,10 @@ const DIALOG_PATTERN =
   /function ([$\w]+)\(\{payload:[$\w]+,answer:[$\w]+,wouldTakeAnswer:[$\w]+\}\)\{[^]{0,800}?\.showClearContextOnPlanAccept\)/;
 
 /** Start of the /plan handler, up to "already in plan mode?". */
-const HANDLER_PATTERN =
-  /async function [$\w]+\(([$\w]+),([$\w]+),([$\w]+)\)\{let\{getAppState:[$\w]+,setAppState:([$\w]+)\}=\2,([$\w]+)=[$\w]+\(\)\.toolPermissionContext\.mode,([$\w]+)=\5!=="plan";/;
+const HANDLER_PATTERNS = [
+  /async function [$\w]+\((?<done>[$\w]+),(?<ctx>[$\w]+),(?<args>[$\w]+)\)\{let\{getAppState:([$\w]+),setAppState:(?<setAppState>[$\w]+)\}=\k<ctx>,([$\w]+)=\4\(\),([$\w]+)=\6\.toolPermissionContext\.mode,(?<notPlan>[$\w]+)=\7!=="plan";/,
+  /async function [$\w]+\((?<done>[$\w]+),(?<ctx>[$\w]+),(?<args>[$\w]+)\)\{let\{getAppState:[$\w]+,setAppState:(?<setAppState>[$\w]+)\}=\k<ctx>,([$\w]+)=[$\w]+\(\)\.toolPermissionContext\.mode,(?<notPlan>[$\w]+)=\5!=="plan";/,
+];
 
 /** Plan path and contents: let c=gv();Wh(c);let C=await YKe(void 0,o.storageV5); */
 const PLAN_PATTERN =
@@ -52,14 +54,15 @@ const USER_MESSAGE_PATTERN =
 /** JSX factory: e(b,{planContent:… */
 const JSX_PATTERN = /([$\w]+)\([$\w]+,\{planContent:/;
 
-/** Cloud-session branch: if(Ht()){if(!Ka())return i(d?"Enabled plan mode":"Already in plan mode."),null; */
-const CLOUD_PATTERN =
-  /if\(([$\w]+)\(\)\)\{if\(![$\w]+\(\)\)return [$\w]+\([$\w]+\?"Enabled plan mode":"Already in plan mode\."\),null;/;
+/** Cloud-session branch, the handler's first `if(X()){if(!Y())return`. */
+const CLOUD_PATTERNS = [
+  /if\(([$\w]+)\(\)\)\{if\(![$\w]+\(\)\)return /,
+  /if\(([$\w]+)\(\)\)\{if\(![$\w]+\(\)\)return [$\w]+\([$\w]+\?"Enabled plan mode":"Already in plan mode\."\),null;/,
+];
 
 const PATCHED_MARKER = '.trim()==="exit"){if(';
 
-const ARGUMENT_HINT =
-  'name:"plan",description:"Enable plan mode or view the current session plan",argumentHint:"[open|';
+const ARGUMENT_HINT = /name:"plan",description:"[^"]*",argumentHint:"\[open\|/;
 
 /** The virtual-bundle module holding `at`: [start, end) of its text. */
 const moduleSpan = (file: string, at: number): [number, number] => {
@@ -94,8 +97,11 @@ interface Handler {
 }
 
 const buildHandler = (file: string): Handler | null => {
-  const handler = file.match(HANDLER_PATTERN);
-  if (!handler || handler.index === undefined) return null;
+  const handler = HANDLER_PATTERNS.map(pattern => file.match(pattern)).find(
+    match => match?.index !== undefined && match.groups
+  );
+  if (!handler?.groups || handler.index === undefined) return null;
+  const insertAt = handler.index + handler[0].length;
   const [start, end] = moduleSpan(file, handler.index);
   const module = file.slice(start, end);
   const plan = module.match(PLAN_PATTERN);
@@ -103,12 +109,20 @@ const buildHandler = (file: string): Handler | null => {
   const jsx = module.match(JSX_PATTERN)?.[1];
   if (!plan || !userMessage || !jsx) return null;
 
-  const [, done, ctx, args, setAppState, , notPlan] = handler;
+  const { done, ctx, args, setAppState, notPlan } = handler.groups;
   const [, , planPath, , readPlan] = plan;
   // Cloud sessions keep the plan in the cloud workspace, and the dialog's
   // answer queues a local message, so decline there instead of reading a
   // stale or missing local plan.
-  const cloud = module.match(CLOUD_PATTERN)?.[1];
+  const cloud =
+    file
+      .slice(insertAt, Math.min(end, insertAt + 1000))
+      .match(CLOUD_PATTERNS[0])?.[1] ?? module.match(CLOUD_PATTERNS[1])?.[1];
+  if (!cloud) {
+    console.error(
+      'patch: planExitCommand: failed to find the cloud-session check'
+    );
+  }
   const insertion =
     `if(${args}.trim()==="exit"){` +
     `if(${notPlan})return ${done}("Not in plan mode."),null;` +
@@ -127,7 +141,7 @@ const buildHandler = (file: string): Handler | null => {
     `${setAppState}((tccState)=>({...tccState,initialMessage:{message:${userMessage}({content:"Implement the following plan:\\n\\n"+(tccAnswer.updatedInput?.plan??tccPlan),origin:{kind:"auto-continuation"}}),...tccMode&&{mode:tccMode}}}))}` +
     `else if(tccAnswer.feedback)${setAppState}((tccState)=>({...tccState,initialMessage:{message:${userMessage}({content:tccAnswer.feedback,origin:{kind:"human"}})}}));` +
     `${done}(void 0,{display:"skip"});return!0}})}`;
-  return { insertAt: handler.index + handler[0].length, insertion };
+  return { insertAt, insertion };
 };
 
 export const writePlanExitCommand = (oldFile: string): string | null => {
@@ -151,15 +165,14 @@ export const writePlanExitCommand = (oldFile: string): string | null => {
     console.error('patch: planExitCommand: failed to find the /plan handler');
     return null;
   }
-  const hintAt = oldFile.indexOf(ARGUMENT_HINT);
+  const hint = oldFile.match(ARGUMENT_HINT);
+  const hintAt = hint?.index === undefined ? -1 : hint.index + hint[0].length;
 
   // Apply later offsets first so earlier ones stay valid.
   const edits = [
     { at: publishAt, text: `${BRIDGE}=${dialog[1]};` },
     { at: handler.insertAt, text: handler.insertion },
-    ...(hintAt === -1
-      ? []
-      : [{ at: hintAt + ARGUMENT_HINT.length, text: 'exit|' }]),
+    ...(hintAt === -1 ? [] : [{ at: hintAt, text: 'exit|' }]),
   ].sort((a, b) => b.at - a.at);
 
   let file = oldFile;

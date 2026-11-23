@@ -1,3 +1,4 @@
+import * as acorn from 'acorn';
 import { escapeIdent } from '.';
 import { debug } from '../utils';
 
@@ -318,16 +319,21 @@ export const clearCaches = (): void => {
 /**
  * Find the Text component variable name from Ink
  */
-export const findTextComponent = (fileContents: string): string | undefined => {
+export const findTextComponentDefinition = (
+  fileContents: string
+): { name: string; index: number } | undefined => {
   // Method 1 (CC 2.1.204+): the Ink Text component is now React-Compiler
   // memoized, so the color/backgroundColor/dimColor/bold props are destructured
   // out of the body AFTER a memo-cache guard rather than in the params:
   //   function h(P){let $=X.c(31),...;if($[0]!==P)({color:A,backgroundColor:B,
   //   dimColor:C,bold:D,...}=P)...}
+  // The code-split bundle (2.1.246+) imports the cache hook bare: `k(19)`.
   const memoizedTextPattern =
-    /function ([$\w]+)\([$\w]+\)\{let [$\w]+=[$\w]+\.c\(\d+\)[^;]{0,240};if\([$\w]+\[0\]!==[$\w]+\)\(\{color:[$\w]+,backgroundColor:[$\w]+,dimColor:[$\w]+,bold:[$\w]+/;
+    /function ([$\w]+)\([$\w]+\)\{let [$\w]+=[$\w]+(?:\.c)?\(\d+\)[^;]{0,240};if\([$\w]+\[0\]!==[$\w]+\)\(\{color:[$\w]+,backgroundColor:[$\w]+,dimColor:[$\w]+,bold:[$\w]+/;
   const memoMatch = fileContents.match(memoizedTextPattern);
-  if (memoMatch) return memoMatch[1];
+  if (memoMatch && memoMatch.index !== undefined) {
+    return { name: memoMatch[1], index: memoMatch.index };
+  }
 
   // Method 2 (CC <= 2.1.202): the minified Text component destructures its props
   // directly in the signature:
@@ -335,11 +341,102 @@ export const findTextComponent = (fileContents: string): string | undefined => {
   const textComponentPattern =
     /\bfunction ([$\w]+).{0,80}color:[$\w]+,backgroundColor:[$\w]+,dimColor:[$\w]+(?:=![01])?,bold:[$\w]+(?:=![01])?/;
   const match = fileContents.match(textComponentPattern);
-  if (!match) {
+  if (!match || match.index === undefined) {
     console.log('patch: findTextComponent: failed to find text component');
     return undefined;
   }
-  return match[1];
+  return { name: match[1], index: match.index };
+};
+
+export const findTextComponent = (fileContents: string): string | undefined =>
+  findTextComponentDefinition(fileContents)?.name;
+
+const moduleSpanAt = (
+  fileContents: string,
+  at: number
+): { start: number; end: number; path: string } | undefined => {
+  const start = fileContents.lastIndexOf(TWEAKCC_MODULE_MARK, at);
+  if (start === -1) return undefined;
+  const headerEnd = fileContents.indexOf('@@*/', start);
+  if (headerEnd === -1) return undefined;
+  const header = fileContents.slice(
+    start + TWEAKCC_MODULE_MARK.length,
+    headerEnd
+  );
+  const sep = header.indexOf(':');
+  if (sep === -1) return undefined;
+  const next = fileContents.indexOf(TWEAKCC_MODULE_MARK, start + 1);
+  return {
+    start,
+    end: next === -1 ? fileContents.length : next,
+    path: header.slice(sep + 1),
+  };
+};
+
+const parseBindingList = (list: string): Array<[string, string]> =>
+  list
+    .split(',')
+    .map(part => part.trim().match(/^([$\w]+)(?:\s+as\s+([$\w]+))?$/))
+    .filter((m): m is RegExpMatchArray => m !== null)
+    .map(m => [m[1], m[2] ?? m[1]]);
+
+/**
+ * The name a binding defined at `definingIndex` (as `definingLocal`) has in
+ * the module containing `useIndex`. On a code-split bundle this follows the
+ * defining module's `export{…}` to the using module's
+ * `import{…}from"<defining path>"`. Returns undefined when the using module
+ * does not import it. Without module sentinels, or within one module, the
+ * defining name is the answer.
+ */
+export const resolveBindingInModule = (
+  fileContents: string,
+  definingLocal: string,
+  definingIndex: number,
+  useIndex: number
+): string | undefined => {
+  const def = moduleSpanAt(fileContents, definingIndex);
+  const use = moduleSpanAt(fileContents, useIndex);
+  if (!def || !use) {
+    return fileContents.includes(TWEAKCC_MODULE_MARK)
+      ? undefined
+      : definingLocal;
+  }
+  if (def.start === use.start) return definingLocal;
+
+  const defMod = fileContents.slice(def.start, def.end);
+  const exportedNames: string[] = [];
+  for (const exp of defMod.matchAll(/export\{([^}]*)\}/g)) {
+    for (const [local, exported] of parseBindingList(exp[1])) {
+      if (local === definingLocal) exportedNames.push(exported);
+    }
+  }
+  if (exportedNames.length === 0) return undefined;
+
+  const useMod = fileContents.slice(use.start, use.end);
+  const importRe = new RegExp(
+    `import\\{([^}]*)\\}from"${def.path.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"`,
+    'g'
+  );
+  for (const imp of useMod.matchAll(importRe)) {
+    for (const [imported, local] of parseBindingList(imp[1])) {
+      if (exportedNames.includes(imported)) return local;
+    }
+  }
+  return undefined;
+};
+
+/**
+ * Ink's Text component as it is named inside the module containing `at`.
+ * Undefined when that module does not import Text: splicing a name from
+ * another module (or a look-alike wrapper) breaks the render.
+ */
+export const findTextComponentInModule = (
+  fileContents: string,
+  at: number
+): string | undefined => {
+  const def = findTextComponentDefinition(fileContents);
+  if (!def) return undefined;
+  return resolveBindingInModule(fileContents, def.name, def.index, at);
 };
 
 /**
@@ -424,4 +521,35 @@ export const findBoxComponent = (fileContents: string): string | undefined => {
     'patch: findBoxComponent: failed to find Box component (neither ink-box createElement nor displayName found)'
   );
   return undefined;
+};
+
+// Index of the bracket closing the one opened at `open`, or -1 when it does
+// not close before `limit`. Uses acorn's tokenizer, so strings, template
+// literals (with `${…}` nesting), regex literals and comments are skipped
+// exactly as the engine would read them.
+export const findClosingBracket = (
+  src: string,
+  open: number,
+  limit: number
+): number => {
+  const closes: Record<string, string> = { '{': '}', '(': ')', '[': ']' };
+  if (!closes[src[open]]) return -1;
+  const stack: string[] = [];
+  try {
+    for (const tok of acorn.tokenizer(src.slice(open, limit), {
+      ecmaVersion: 'latest',
+      allowHashBang: false,
+    })) {
+      const label = tok.type.label;
+      if (label === '{' || label === '${' || label === '(' || label === '[') {
+        stack.push(label === '${' ? '{' : label);
+      } else if (label === '}' || label === ')' || label === ']') {
+        if (closes[stack.pop() ?? ''] !== label) return -1;
+        if (stack.length === 0) return open + tok.start;
+      }
+    }
+  } catch {
+    return -1;
+  }
+  return -1;
 };

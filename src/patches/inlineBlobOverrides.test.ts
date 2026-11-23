@@ -34,6 +34,7 @@ import {
   parseFrontmatter,
   minifiedInterpNames,
   introducedMinifiedSlots,
+  type WrittenRegion,
 } from './inlineBlobOverrides';
 
 const writeOverride = (name: string, contents: string) => {
@@ -191,6 +192,43 @@ describe('inlineBlobOverrides: applyInlineBlobOverrides (integration)', () => {
     expect(out).not.toContain('When the conversation grows long, wrap up');
   });
 
+  it('refuses a template body that escapes its own backticks', async () => {
+    const write = (body: string) => {
+      clearOverrides();
+      writeOverride(
+        'inline-code.md',
+        [
+          '<!--',
+          "name: 'Inline blob: code'",
+          'description: x',
+          'inlineBlobAnchor: "`Use the "',
+          'inlineBlobKind: template',
+          'injectionGate: always on',
+          'ccVersion: 2.1.318',
+          '-->',
+          body,
+        ].join('\n')
+      );
+    };
+    const content = 'function f(){return`Use the \\`x\\` tool.`}';
+    write('Use the \\`y\\` tool.');
+    const bad = await applyInlineBlobOverrides(content);
+    expect(bad.results[0].applied).toBe(false);
+    expect(bad.results[0].details).toContain('escapes a backtick');
+    expect(bad.content).toBe(content);
+    write('Use the `y` tool.');
+    const good = await applyInlineBlobOverrides(content);
+    expect(good.results[0].applied).toBe(true);
+    const rendered = new Function(`${good.content};return f()`)();
+    expect(rendered).toBe('Use the `y` tool.');
+    // An escaped backtick inside a kept nested slot is not the body's own.
+    const nested =
+      'function f(){return`Use the ${H?`run ${X} via \\`bash\\``:""} tool.`}';
+    write('Use the ${H?`run ${X} via \\`bash\\``:""} tool, now.');
+    const kept = await applyInlineBlobOverrides(nested);
+    expect(kept.results[0].applied).toBe(true);
+  });
+
   // Root cause A: the agent-launch shape. The override has MORE top-level
   // ${...} slots than the pristine, so its NESTED `${cond?`…${K9}…`}` is left
   // verbatim by the positional top-level remap. ${K9} is stale (binary binds
@@ -345,6 +383,57 @@ describe('inlineBlobOverrides: applyInlineBlobOverrides (integration)', () => {
     expect(out).not.toContain('AAA');
   });
 
+  it('refuses a raw-passthrough array override whose slots no longer line up with the binary', async () => {
+    clearOverrides();
+    writeOverride(
+      'inline-sys.md',
+      [
+        '<!--',
+        "name: 'Inline blob: sys'",
+        'description: x',
+        'inlineBlobAnchor: \'[$\\w]+=\\["All text you output"\'',
+        'inlineBlobKind: array',
+        "inlineBlobRawPassthrough: 'true'",
+        'injectionGate: always on',
+        'ccVersion: 2.1.317',
+        '-->',
+        '"All text you output",itp(e,"standard"),uMy(),"tail"',
+      ].join('\n')
+    );
+    // The binary gained `...n?[HQe]:[]` before the hooks call, so a positional
+    // remap of the 3-slot override would turn uMy() into n().
+    const content =
+      'function O(e,n){let r=["All text you output",Bdn(e,"standard"),...n?[HQe]:[],spr(),"tail"];return r}';
+    const { content: out, results } = await applyInlineBlobOverrides(content);
+    expect(results[0].applied).toBe(false);
+    expect(results[0].failed).toBe(true);
+    expect(results[0].details).toContain('slot 3 uMy is a call');
+    expect(out).toBe(content);
+  });
+
+  it('allows a raw-passthrough array override that drops trailing slots', async () => {
+    clearOverrides();
+    writeOverride(
+      'inline-save.md',
+      [
+        '<!--',
+        "name: 'Inline blob: save'",
+        'description: x',
+        'inlineBlobAnchor: \'\\["## How to save"\'',
+        'inlineBlobKind: array',
+        "inlineBlobRawPassthrough: 'true'",
+        'injectionGate: always on',
+        'ccVersion: 2.1.317',
+        '-->',
+        '"## How to save",...Gwe,"- short"',
+      ].join('\n')
+    );
+    const content = 'x=["## How to save",...o3t,`- ${nr}`,...qn];';
+    const { content: out, results } = await applyInlineBlobOverrides(content);
+    expect(results[0].applied).toBe(true);
+    expect(out).toContain('["## How to save",...o3t,"- short"]');
+  });
+
   // memory-types-dynamic shape: the stale minified names (Fu5/lL8) live INSIDE
   // template-literal `${...}` array elements. The remap must recurse into the
   // interpolations and rewrite them to the pristine's platform-specific names
@@ -377,5 +466,69 @@ describe('inlineBlobOverrides: applyInlineBlobOverrides (integration)', () => {
     expect(out).toContain('`Invoke ${GE8} skill.`');
     expect(out).not.toContain('Fu5');
     expect(out).not.toContain('lL8');
+  });
+
+  const stringOverride = (file: string, anchor: string, body: string) =>
+    writeOverride(
+      file,
+      [
+        '<!--',
+        `name: 'Inline blob: ${file}'`,
+        'description: x',
+        `inlineBlobAnchor: '${anchor}'`,
+        'inlineBlobKind: string',
+        'injectionGate: always on',
+        'ccVersion: 2.1.319',
+        '-->',
+        body,
+      ].join('\n')
+    );
+
+  it('refuses a later override whose anchor lands on text an earlier one wrote', async () => {
+    clearOverrides();
+    stringOverride('inline-a.md', '"When to access', 'When to access: first');
+    stringOverride('inline-b.md', '"When to access', 'second body');
+    stringOverride('inline-c.md', '"Other', 'third body');
+    const content = 'x="When to access memories.";y="Other text";';
+    const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const { content: out, results } = await applyInlineBlobOverrides(content);
+    errSpy.mockRestore();
+    const by = Object.fromEntries(results.map(r => [r.filename, r]));
+    expect(by['inline-a.md'].applied).toBe(true);
+    expect(by['inline-b.md'].failed).toBe(true);
+    expect(by['inline-b.md'].details).toContain('inline-a.md');
+    expect(by['inline-c.md'].applied).toBe(true);
+    expect(out).toBe('x="When to access: first";y="third body";');
+  });
+
+  it('refuses the same overlap across per-file calls sharing written regions', async () => {
+    clearOverrides();
+    stringOverride('inline-a.md', '"When to access', 'When to access: first');
+    stringOverride('inline-b.md', '"When to access', 'second body');
+    const content = 'x="When to access memories.";';
+    const written: WrittenRegion[] = [];
+    const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const a = await applyInlineBlobOverrides(content, {
+      only: 'inline-a.md',
+      written,
+    });
+    const b = await applyInlineBlobOverrides(a.content, {
+      only: 'inline-b.md',
+      written,
+    });
+    errSpy.mockRestore();
+    expect(a.results[0].applied).toBe(true);
+    expect(b.results[0].failed).toBe(true);
+    expect(b.content).toBe('x="When to access: first";');
+  });
+
+  it('lands two overrides sharing an anchor on successive copies', async () => {
+    clearOverrides();
+    stringOverride('inline-a.md', '"Copy', 'one');
+    stringOverride('inline-b.md', '"Copy', 'a longer second body');
+    const content = 'p="Copy text";q="Copy text";';
+    const { content: out, results } = await applyInlineBlobOverrides(content);
+    expect(results.every(r => r.applied)).toBe(true);
+    expect(out).toBe('p="one";q="a longer second body";');
   });
 });

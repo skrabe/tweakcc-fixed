@@ -38,6 +38,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { isMain } from './lib/isMain.mjs';
 
 const DEFAULT_ALLOWLIST = path.join(
   import.meta.dirname,
@@ -201,7 +202,8 @@ const main = () => {
         console.log(`    ${String(m.tokens).padStart(6)} tk  ${m.id}`);
       }
     }
-    process.exit(0);
+    process.exitCode = 0;
+    return;
   }
 
   if (stale.length > 0) {
@@ -217,7 +219,7 @@ const main = () => {
     console.log(`  ${String(m.tokens).padStart(6)} tk  ${m.id}`);
   }
   console.log(`\n(${trailer}.)`);
-  process.exit(1);
+  process.exitCode = 1;
 };
 
-if (import.meta.url === `file://${process.argv[1]}`) main();
+if (isMain(import.meta.url)) main();

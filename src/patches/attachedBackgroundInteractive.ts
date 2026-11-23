@@ -19,7 +19,10 @@
 //
 //   1. ProposeGoal: its isEnabled and its call guard (`ve()||$n()||Lt()`).
 //      The tool still needs its `tengu_propose_goal` flag, which is served by
-//      GrowthBook or forced on by the separate propose-goal patch.
+//      GrowthBook or forced on by the separate propose-goal patch. Since
+//      2.1.326 SetGoal, GetGoal and PauseGoal share one gate beside the flag
+//      reader (`if(Lt())return;if(!jRs())return;...`) and the call guard
+//      defers to it, so the gate is the only edit there.
 //   2. The usage-limit auto-resume offer (`autoContinueAtUsageLimit`,
 //      `tengu_marble_heron`): `function SBt(){return fp()&&!Lt()&&!Dt()}`.
 //   3. Its auto-continuation prompt after the limit resets:
@@ -110,9 +113,12 @@ const publishUnattended = (file: string, p: Predicates): string => {
 
 interface Site {
   name: string;
-  // Matches the site patched or unpatched: capture 1 is the text before the
-  // predicate call, capture 2 the callee.
-  pattern: (p: Predicates) => RegExp;
+  // Each matches the site patched or unpatched: capture 1 is the text before
+  // the predicate call, capture 2 the callee. Newest shape first.
+  methods: (p: Predicates) => RegExp[];
+  // A shape in which the site no longer tests the predicate itself but defers
+  // to a gate another site patches.
+  delegated?: RegExp;
 }
 
 const either = (p: Predicates): string =>
@@ -121,51 +127,71 @@ const either = (p: Predicates): string =>
 const SITES: Site[] = [
   {
     name: 'ProposeGoal isEnabled',
-    pattern: p =>
+    methods: p => [
+      new RegExp(
+        `("tengu_propose_goal",!1\\)\\}function [$\\w]+\\(\\)\\{(?:if\\([$\\w()|!]+\\)return;)*?if\\()${either(p)}(\\(\\)\\)return;if\\(![$\\w]+\\(\\)\\)return;let [$\\w]+=[$\\w]+\\(\\);return [$\\w]+==="disabled"\\?void 0:[$\\w]+\\})`
+      ),
       new RegExp(
         `(isEnabled\\(\\)\\{if\\([$\\w]+\\(\\)\\|\\|[$\\w]+\\(\\)\\)return!1;if\\()${either(p)}(\\(\\)\\)return!1;if\\(![$\\w]+\\(\\)\\)return!1;let [$\\w]+=[$\\w]+\\(\\);if\\([$\\w]+==="disabled"\\))`
       ),
+    ],
   },
   {
     name: 'ProposeGoal call guard',
-    pattern: p =>
+    methods: p => [
       new RegExp(
         `(if\\([$\\w]+\\(\\)\\|\\|[$\\w]+\\(\\)\\|\\|)${either(p)}(\\(\\)\\)throw [$\\w]+\\("goal_propose","session_shape"\\))`
       ),
+    ],
+    delegated:
+      /if\([$\w]+\(\)===void 0&&[$\w]+\(\)!=="disabled"\)throw [$\w]+\("goal_propose","session_shape"\)/,
   },
   {
     name: 'usage-limit auto-resume offer',
-    pattern: p =>
+    methods: p => [
       new RegExp(
         `(var [$\\w]+="tengu_marble_heron";(?:(?!/\\*@@TWEAKCC_MODULE:)[^])*?function [$\\w]+\\(\\)\\{return [$\\w]+\\(\\)&&!)${either(p)}(\\(\\)&&![$\\w]+\\(\\)\\})`
       ),
+    ],
   },
   {
     name: 'usage-limit auto-continuation',
-    pattern: p =>
+    methods: p => [
       new RegExp(
         `(function [$\\w]+\\(\\)\\{return [^{}]*?&&!)${either(p)}(\\(\\)\\}function [$\\w]+\\([$\\w]+\\)\\{return [$\\w]+\\(\\)&&[$\\w]+\\([$\\w]+\\)&&[$\\w]+\\.rateLimitType==="five_hour")`
       ),
+    ],
   },
   {
     name: 'outside-read prompt',
-    pattern: p =>
+    methods: p => [
       new RegExp(
         `(if\\()${either(p)}(\\(\\)\\|\\|[$\\w]+\\(\\)\\)return!1;if\\(![$\\w]+\\("userSettings"\\)\\)return!1;return![$\\w]+\\.session\\.outsideReadPrompt)`
       ),
+    ],
   },
   {
     name: 'workflow usage consent prompt',
-    pattern: p =>
+    methods: p => [
+      new RegExp(
+        `(if\\()${either(p)}(\\(\\)\\)return!1;if\\([$\\w]+\\(\\)\\)return!1;if\\([^;]*?\\)return!1;return![$\\w]+\\.session\\.workflowUsageConsent\\.isGranted\\(\\))`
+      ),
       new RegExp(
         `(if\\()${either(p)}(\\(\\)\\)return!1;if\\([$\\w]+\\(\\)\\)return!1;if\\([$\\w]+\\([$\\w]+\\([$\\w]+\\),[$\\w]+\\.options\\.mainLoopModel\\)\\)return!1;return![$\\w]+\\.session\\.workflowUsageConsent)`
       ),
+    ],
   },
 ];
 
 const patchSite = (file: string, site: Site, p: Predicates): string | null => {
-  const match = file.match(site.pattern(p));
+  const match = firstMatch(file, site.methods(p));
   if (!match || match.index === undefined) {
+    if (site.delegated?.test(file)) {
+      debug(
+        `patch: attachedBackgroundInteractive: ${site.name} defers to the gate`
+      );
+      return file;
+    }
     console.error(
       `patch: attachedBackgroundInteractive: failed to find the ${site.name}`
     );
@@ -184,22 +210,41 @@ const patchSite = (file: string, site: Site, p: Predicates): string | null => {
 
 const KEY_FIELD = 'unattendedBg';
 
+const KEY_METHODS: RegExp[] = [
+  /(waitForMcpServersDeclared:[$\w]+\(\))(,unattendedBg:[^,}]*\(\))?(?=,(?!unattendedBg:)[^;]*?\},[$\w]+=this\.toolPoolCache;)/,
+  /(waitForMcpServersDeclared:[$\w]+\(\))(,unattendedBg:[^}]*)?(?=\},[$\w]+=this\.toolPoolCache;)/,
+];
+
+const COMPARE_PREFIX =
+  '(function [$\\w]+\\(([$\\w]+),([$\\w]+)\\)\\{return \\2\\.toolPermissionContext===\\3\\.toolPermissionContext[^}]*?&&\\2\\.waitForMcpServersDeclared===\\3\\.waitForMcpServersDeclared)(&&\\2\\.unattendedBg===\\3\\.unattendedBg)?';
+
+const COMPARE_METHODS: RegExp[] = [
+  new RegExp(`${COMPARE_PREFIX}(?=&&(?!\\2\\.unattendedBg===)[^}]*\\})`),
+  new RegExp(`${COMPARE_PREFIX}(?=\\})`),
+];
+
+const firstMatch = (file: string, methods: RegExp[]) => {
+  for (const method of methods) {
+    const match = file.match(method);
+    if (match && match.index !== undefined) return match;
+  }
+  return null;
+};
+
 /**
  * The tool pool's cache key gains the unattended predicate's answer:
- *   computeToolPool(h,E,D){let L={toolPermissionContext:...,
- *     waitForMcpServersDeclared:xWe()},Q=this.toolPoolCache;
- *     if(Q!==null&&hbt(Q.key,L))return Q.result;...
+ *   computeToolPool(h,P,D){let H={toolPermissionContext:...,
+ *     waitForMcpServersDeclared:N_t(),toolListRevision:tDr(),...{}},
+ *     ee=this.toolPoolCache;if(ee!==null&&ZHt(ee.key,H))return ee.result;...
  * and the key comparison compares it:
- *   function hbt(h,E){return h.toolPermissionContext===E.toolPermissionContext
- *     &&...&&h.waitForMcpServersDeclared===E.waitForMcpServersDeclared}
+ *   function ZHt(h,P){return h.toolPermissionContext===P.toolPermissionContext
+ *     &&...&&h.waitForMcpServersDeclared===P.waitForMcpServersDeclared
+ *     &&h.toolListRevision===P.toolListRevision&&!0}
+ * Before 2.1.325 both ended at waitForMcpServersDeclared.
  */
 const patchToolPoolKey = (file: string): string | null => {
-  const key = file.match(
-    /(waitForMcpServersDeclared:[$\w]+\(\))(,unattendedBg:[^}]*)?(\},[$\w]+=this\.toolPoolCache;)/
-  );
-  const compare = file.match(
-    /function [$\w]+\(([$\w]+),([$\w]+)\)\{return \1\.toolPermissionContext===\2\.toolPermissionContext[^}]*?&&\1\.waitForMcpServersDeclared===\2\.waitForMcpServersDeclared(&&\1\.unattendedBg===\2\.unattendedBg)?\}/
-  );
+  const key = firstMatch(file, KEY_METHODS);
+  const compare = firstMatch(file, COMPARE_METHODS);
   if (
     !key ||
     key.index === undefined ||
@@ -211,13 +256,14 @@ const patchToolPoolKey = (file: string): string | null => {
     );
     return null;
   }
-  if (key[2] && compare[3]) return file;
-  const [h, e] = [compare[1], compare[2]];
+  if (key[2] && compare[4]) return file;
+  const [h, e] = [compare[2], compare[3]];
   const keyAt = key.index + key[1].length;
+  const keyText = `,${KEY_FIELD}:${BRIDGE}()`;
   const edits: [number, string][] = [
-    [keyAt, `,${KEY_FIELD}:${BRIDGE}()`],
+    [keyAt, keyText],
     [
-      compare.index + compare[0].length - 1,
+      compare.index + compare[1].length,
       `&&${h}.${KEY_FIELD}===${e}.${KEY_FIELD}`,
     ],
   ];
@@ -226,7 +272,7 @@ const patchToolPoolKey = (file: string): string | null => {
   for (const [at, text] of edits.sort((x, y) => y[0] - x[0])) {
     newFile = newFile.slice(0, at) + text + newFile.slice(at);
   }
-  showDiff(file, newFile, edits[0][1], keyAt, keyAt);
+  showDiff(file, newFile, keyText, keyAt, keyAt);
   return newFile;
 };
 

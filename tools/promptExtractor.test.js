@@ -437,6 +437,64 @@ describe('promptExtractor below-floor capture', () => {
       const bodies = run(`var s=${JSON.stringify(long)};`);
       expect(bodies.some(b => b.includes('interactive CLI tool'))).toBe(true);
     });
+
+    // CC 2.1.328 shapes flagged by detectionCoverage. Each composite is queued
+    // for classification under its joined text, and a model verdict on that
+    // text captures its prose fragments, which is what the coverage gate reads.
+    describe('multi-node composites wait for a verdict on the joined text', () => {
+      const { _setClassificationCacheForTests, sha1Hex } = extractStrings;
+      afterEach(() => _setClassificationCacheForTests(null));
+
+      const helpLines = [
+        '\n\nCommon issues:\n',
+        '· Permission denied → run: gh auth refresh -h github.com -s repo,workflow\n',
+        '· Not authorized → you need admin access to the repository\n',
+        '· Manual setup → https://github.com/anthropics/claude-code-action',
+      ];
+      const reason =
+        'the field in a `query.where` clause is a top-level field name, not empty and with no dot';
+      const outcome =
+        'this delete did not go through, and that they can try removing the doc from the project in claude.ai.';
+      const shapes = [
+        {
+          name: 'template + string concat thrown later',
+          code: `async function f(N,p){if(N.code!==0){let U=\`${helpLines[0]}\`+\`${helpLines[1]}\`+\`${helpLines[2]}\`+${JSON.stringify(helpLines[3])};throw Error(\`Couldn't create workflow file \${p}: \${N.stderr}\${U}\`)}}`,
+          joined: helpLines.join(''),
+          prose: helpLines.slice(1),
+          keys: [helpLines[0]],
+        },
+        {
+          name: 'Map of [code, reason] pairs',
+          code: `var ye=new Map([["where_field",${JSON.stringify(reason)}],["cursor","x"]]);`,
+          joined: `where_field\n${reason}`,
+          prose: [reason],
+          keys: ['where_field'],
+        },
+        {
+          name: 'destructured array of words and an outcome sentence',
+          code: `function zo(e,o){let[r,i,h,m]=o?["deleted","delete","project_delete",${JSON.stringify(outcome)}]:["a","b","c","d"];return m}`,
+          joined: `deleted\ndelete\nproject_delete\n${outcome}`,
+          prose: [outcome],
+          keys: ['deleted', 'project_delete'],
+        },
+      ];
+
+      for (const shape of shapes) {
+        it(`${shape.name}: queued without a verdict, captured with one`, () => {
+          _setClassificationCacheForTests({ _: {} });
+          const before = extract(shape.code);
+          for (const p of shape.prose) expect(before.bodies).not.toContain(p);
+          expect(before.candidates).toContain(shape.joined);
+
+          _setClassificationCacheForTests({
+            [sha1Hex(shape.joined)]: { facing: 'model' },
+          });
+          const after = extract(shape.code);
+          for (const p of shape.prose) expect(after.bodies).toContain(p);
+          for (const k of shape.keys) expect(after.bodies).not.toContain(k);
+        });
+      }
+    });
   });
 });
 

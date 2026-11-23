@@ -1117,5 +1117,133 @@
     "shape": "array",
     "verdict": "internal",
     "why": "Windows sandbox init: substrings matched with includes() against an acl_grant_failed error message to collect hard-linked deny targets; never rendered."
+  },
+  "e6888d35eb603911": {
+    "verdict": "ui",
+    "shape": "concat",
+    "excerpt": "Couldn’t add the note. If the box has text, send or clear it, then try again.",
+    "why": "Side-note respond plugin: shown only as a ui.toast when the prompt box cannot take the note; never sent to the model."
+  },
+  "312cbda82b136038": {
+    "excerpt": "also . This list adds to the skills listed earlier in this conversation and is not the full list",
+    "note": "captured per-FRAGMENT as of 2.1.322 (the skill_listing renderer picks the pair by addsToEarlier at runtime; the joined form never exists in the bundle); coverage is judged on the fragments, catalogued as system-reminder-skill-listing-adds-to-earlier(-suffix)",
+    "shape": "array",
+    "verdict": "internal"
+  },
+  "f6ef18c4b5bd5032": {
+    "excerpt": "This machine may require organization login enforcement, but the policy file failed to load. Contact your administrator.",
+    "note": "ui: default text of the managed-policy-unreadable error returned by the forced-org-login check; shown to the user at login, never sent to the model.",
+    "shape": "array",
+    "verdict": "ui"
+  },
+  "b52404cf91c2a4b8": {
+    "excerpt": "maximum context length context_length_exceeded exceeds the context window contextwindowexceedederror longer than the maximum model length lo",
+    "note": "context-length error matcher list (substring tests on API errors), not prose",
+    "shape": "array",
+    "verdict": "internal"
+  },
+  "f5a4a8a701080b77": {
+    "excerpt": "synced-file staging not supported on this runner kind CLAUDE_CODE_REMOTE_SESSION_ID unset list returned incomplete credential a /connector-d",
+    "note": "set of withheld-artifact reason codes, never rendered",
+    "shape": "array",
+    "verdict": "internal"
+  },
+  "dc418f85e74895ed": {
+    "excerpt": "^(Drafted from the user's local Claude Code sessions in the folder “.*” and approved when | “.*” on |- Repository: (https:\\/\\/\\S+, the origi",
+    "note": "regex source for recognizing drafted sections",
+    "shape": "array",
+    "verdict": "internal"
+  },
+  "036032e1ecde63c7": {
+    "excerpt": "[Sandbox Windows] updateConfig: the resolved file-access set (filesystem.* ∪ credentials.files) changed but the session state is fixed at in",
+    "note": "Windows sandbox debug log line",
+    "shape": "concat",
+    "verdict": "internal"
+  },
+  "98dfd9e799f21c96": {
+    "excerpt": "no answer from the session · your message may still be read no answer · may still be read",
+    "note": "message-edit status line shown in the TUI",
+    "shape": "array",
+    "verdict": "ui"
+  },
+  "eac1782a94bd1af6": {
+    "excerpt": "message not taken back · Claude may or may not read it message may still be read",
+    "note": "message-edit status line shown in the TUI",
+    "shape": "array",
+    "verdict": "ui"
+  },
+  "8c474f318d1a8df8": {
+    "excerpt": "too late to edit · that message is on its way to Claude too late to edit",
+    "note": "message-edit status line shown in the TUI",
+    "shape": "array",
+    "verdict": "ui"
+  },
+  "9c7a6a7802db2742": {
+    "note": "usage blurb lines of the cloud plan launch dialog",
+    "verdict": "ui",
+    "shape": "array",
+    "excerpt": "Plan mode with several agents. Runs in a cloud session. When the plan is ready, you can run it there or send it back here. You can keep work"
+  },
+  "4bfd707048e81fa5": {
+    "note": "--safe-mode CLI option help text",
+    "verdict": "ui",
+    "shape": "concat",
+    "excerpt": "Start with all customizations (CLAUDE.md, skills, installed plugins, hooks, MCP servers, custom commands and agents, output styles, workflow"
+  },
+  "5b5ca401c0a73ccd": {
+    "note": "safe-mode startup banner line in the TUI",
+    "verdict": "ui",
+    "shape": "array",
+    "excerpt": "· managed hooks, managed plugins' hooks, and settings policy from your organization still apply; managed skills, CLAUDE.md, and MCP servers "
+  },
+  "233f270ce9468156": {
+    "note": "screen-reader picker hint in the send-to-project dialog",
+    "verdict": "ui",
+    "shape": "array",
+    "excerpt": "Select with numbers [1-2] or up / down arrow keys. Then Enter to submit or Escape to cancel: 12 \"12\" isn't an option. Enter a number between"
+  },
+  "84e9cc9150911fb2": {
+    "note": "usage blurb lines of the cloud plan launch dialog (single-agent variant)",
+    "verdict": "ui",
+    "shape": "array",
+    "excerpt": "Plan mode you can edit in your browser. Runs in a cloud session. When the plan is ready, you can run it there or send it back here. You can "
+  },
+  "a2b0c2126c00cfd7": {
+    "verdict": "ui",
+    "shape": "array",
+    "excerpt": "put_org_not_allowed Your organization's settings don't allow sending files to connectors. An admin can change this."
+  },
+  "554b0d95fb7c1b73": {
+    "verdict": "ui",
+    "shape": "array",
+    "excerpt": "put_storage_failed The connector's storage didn't take the whole file. Part of the file may be there: check the connector before sending it "
+  },
+  "7d264dbc94944b50": {
+    "verdict": "ui",
+    "shape": "array",
+    "excerpt": "put_too_slow The connection was too slow for the file to arrive in time. Try again on a faster connection."
+  },
+  "b22fb5f8bb4ea0d0": {
+    "verdict": "ui",
+    "shape": "array",
+    "excerpt": "put_tool_policy_not_allowed Your organization's settings or your role may not allow sending this file, or they couldn't be checked. Ask an a"
+  },
+  "fa9e3616b634a645": {
+    "verdict": "ui",
+    "shape": "array",
+    "excerpt": "This machine's managed settings require a sign-in to Anthropic for each Claude Code session (enforceAnthropicSignIn), so it cannot run the C",
+    "why": "claude gateway command error printed to the terminal when managed settings require sign-in; never sent to the model"
+  },
+  "953ea49d59454317": {
+    "verdict": "ui",
+    "shape": "array",
+    "excerpt": "This gateway can push settings that run commands on developer machines. Keep it on your private network. Never expose it to the public inter",
+    "why": "claude apps gateway startup banner written to stderr (or the gateway log); never sent to the model"
+  },
+  "98b3483d7d587c80": {
+    "verdict": "ui",
+    "shape": "array",
+    "excerpt": "put_network_not_allowed Your organization doesn't allow access to Claude from this network. Connect from an allowed network, then ask Claude",
+    "why": "upload error table (put_network_not_allowed and siblings) shown to the person in the artifact upload UI; addressed to the user, not the model"
   }
 }

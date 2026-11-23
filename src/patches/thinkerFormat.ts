@@ -22,7 +22,13 @@ const getThinkerFormatLocation = (oldFile: string): LocationResult | null => {
   // compactingStartTime … spinnerSuffix … verbose.
   const approxAreaPattern2144 =
     /overrideMessage:[$\w]+,isCompacting:[$\w]+,compactingHintText:[$\w]+,compactingStartTime:[$\w]+,spinnerSuffix:[$\w]+,verbose:[$\w]+,.{300}/;
+  // CC >= 2.1.326: isResponseHeld sits inside that run, and the sibling
+  // spinner moved ~170KB away, so the Latest fallback no longer lands near the
+  // format. Tolerate extra props between isCompacting and compactingHintText.
+  const approxAreaPattern2326 =
+    /overrideMessage:[$\w]+,isCompacting:[$\w]+,(?:[$\w]+:[$\w]+(?:=[^,]{1,10})?,)*?compactingHintText:[$\w]+,compactingStartTime:[$\w]+,spinnerSuffix:[$\w]+,verbose:[$\w]+,/;
   const approxAreaMatch =
+    oldFile.match(approxAreaPattern2326) ||
     oldFile.match(approxAreaPattern2144) ||
     oldFile.match(approxAreaPatternOld) ||
     oldFile.match(approxAreaPatternNew) ||

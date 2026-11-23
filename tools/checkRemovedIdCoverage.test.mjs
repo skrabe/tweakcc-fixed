@@ -33,7 +33,7 @@ const write = (name, value) => {
 
 // TWEAKCC_CLASSIFY_DIR points the sidecar scan at an empty directory: reading
 // the real /tmp would let whatever bump is in flight decide the answer.
-const run = (cli, prev, cur, allowlist, cache) => {
+const run = (cli, prev, cur, allowlist, cache, env = {}) => {
   const opts = {
     encoding: 'utf8',
     env: {
@@ -42,6 +42,7 @@ const run = (cli, prev, cur, allowlist, cache) => {
       TWEAKCC_RENAME_MAP: path.join(dir, 'renames.json'),
       ...(allowlist && { TWEAKCC_REMOVED_ID_ALLOWLIST: allowlist }),
       ...(cache && { TWEAKCC_CLASSIFICATION_CACHE: cache }),
+      ...env,
     },
   };
   try {
@@ -123,6 +124,29 @@ describe('checkRemovedIdCoverage: prompts with little literal text', () => {
     );
     expect(out).toMatch(
       /STILL IN BUNDLE[\s\S]*tool-result-computer-use-element/
+    );
+  });
+
+  it('does not treat a code-only piece as prompt text surviving in the bundle', () => {
+    // CC 2.1.330: the template holding this fragment is gone, but the call it
+    // wrapped is still code in the bundle.
+    const prompt = {
+      id: 'tool-result-fixture-code-only-fragment',
+      version: '2.1.296',
+      pieces: ['${', '(', '.reasonCode??"canvas",', ',', ',', ')}.'],
+      identifiers: [0, 1, 2, 3, 4],
+      identifierMap: { 0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E' },
+    };
+    const out = run(
+      write('cli-code.js', 'Vi=Pn?Ic:Vn(y.reasonCode??"canvas",u,_,it);'),
+      write('prev-code.json', { prompts: [prompt] }),
+      write('cur-code.json', { prompts: [] })
+    );
+    expect(out).not.toMatch(
+      /STILL IN BUNDLE —[\s\S]*tool-result-fixture-code-only-fragment/
+    );
+    expect(out).toMatch(
+      /NO PROBE SURFACE[\s\S]*tool-result-fixture-code-only-fragment/
     );
   });
 
@@ -332,6 +356,57 @@ describe('checkRemovedIdCoverage: a rename needs most of the old body', () => {
     expect(map['tool-result-fixture-resume-for-report']).toBe(
       'tool-result-fixture-resume-for-report-slotted'
     );
+  });
+
+  it('writes the rename map under the run temp dir, or a fresh one', () => {
+    const old = {
+      id: 'tool-result-fixture-resume-for-report',
+      version: '2.1.292',
+      pieces: [
+        'Resume it by sending it a message with SendMessage to get its report.',
+      ],
+      identifiers: [],
+      identifierMap: {},
+    };
+    const successor = {
+      ...old,
+      id: 'tool-result-fixture-resume-for-report-renamed',
+      version: '2.1.294',
+    };
+    const args = [
+      write(
+        'cli-map.js',
+        'x="Resume it by sending it a message with SendMessage to get its report."'
+      ),
+      write('prev-map.json', { prompts: [old] }),
+      write('cur-map.json', { prompts: [successor] }),
+    ];
+    const expected = {
+      'tool-result-fixture-resume-for-report':
+        'tool-result-fixture-resume-for-report-renamed',
+    };
+    const runTmp = path.join(dir, 'run');
+    fs.mkdirSync(runTmp);
+    const inRun = run(...args, undefined, undefined, {
+      TWEAKCC_RENAME_MAP: undefined,
+      SHOWTIME_TMP: runTmp,
+    });
+    expect(inRun).not.toMatch(/rename map:/);
+    expect(
+      JSON.parse(
+        fs.readFileSync(path.join(runTmp, 'removed-id-renames.json'), 'utf8')
+      )
+    ).toEqual(expected);
+    const tmp = path.join(dir, 'tmp');
+    fs.mkdirSync(tmp);
+    const outside = run(...args, undefined, undefined, {
+      TWEAKCC_RENAME_MAP: undefined,
+      SHOWTIME_TMP: undefined,
+      TMPDIR: tmp,
+    });
+    const file = /rename map: (.+)/.exec(outside)?.[1];
+    expect(path.dirname(path.dirname(file))).toBe(tmp);
+    expect(JSON.parse(fs.readFileSync(file, 'utf8'))).toEqual(expected);
   });
 
   it('reports text the successor carries but the bundle also holds at an uncovered site', () => {
@@ -748,7 +823,7 @@ describe('checkRemovedIdCoverage: every live run, each site once', () => {
     const out = run(
       write(
         'cli-nested.js',
-        `x="Use the vault for credentials. ${kept}";y="${kept}"`
+        `x="Use the vault for credentials. ${kept}";y="Reminder: ${kept}"`
       ),
       write('prev-nested.json', { prompts: [old, parent, fragment] }),
       write('cur-nested.json', { prompts: [parent, fragment] })
@@ -821,7 +896,10 @@ describe('checkRemovedIdCoverage: contextual coverage in rename and split branch
 
   it('flags an extra source site hidden by a fragment nested in the rename successor', () => {
     const out = run(
-      write('rename-nested-cli.js', `x="${parent.pieces[0]}";y="${kept}"`),
+      write(
+        'rename-nested-cli.js',
+        `x="${parent.pieces[0]}";y="Reminder: ${kept}"`
+      ),
       write('rename-nested-prev.json', { prompts: [old] }),
       write('rename-nested-cur.json', { prompts: [parent, fragment] })
     );
@@ -855,7 +933,7 @@ describe('checkRemovedIdCoverage: contextual coverage in rename and split branch
     const out = run(
       write(
         'split-nested-cli.js',
-        `x="${parent.pieces[0]}";y="${secondParent.pieces[0]}";z="${kept}"`
+        `x="${parent.pieces[0]}";y="${secondParent.pieces[0]}";z="Reminder: ${kept}"`
       ),
       write('split-nested-prev.json', { prompts: [splitOld] }),
       write('split-nested-cur.json', {
@@ -893,7 +971,7 @@ describe('checkRemovedIdCoverage: contextual coverage in rename and split branch
           lead +
           '${a}' +
           tail +
-          '`;y=`' +
+          '`;y=`Reminder: ' +
           lead +
           '${b}' +
           tail +
@@ -933,7 +1011,7 @@ describe('checkRemovedIdCoverage: contextual coverage in rename and split branch
     const out = run(
       write(
         'mixed-cli.js',
-        mixedSource + 'y=`' + lead + '${String(b)}' + tail + '`;'
+        mixedSource + 'y=`Reminder: ' + lead + '${String(b)}' + tail + '`;'
       ),
       write('mixed-prev.json', { prompts: [oldSlotted] }),
       write('mixed-cur.json', { prompts: [promotedParent, bakedChild] })
@@ -1014,7 +1092,7 @@ describe('checkRemovedIdCoverage: contextual coverage in rename and split branch
           syntax +
           ')}' +
           tail +
-          '`;y=`' +
+          '`;y=`Reminder: ' +
           lead +
           '${String(b' +
           syntax.replace('${a}', '${b}') +
@@ -1027,5 +1105,293 @@ describe('checkRemovedIdCoverage: contextual coverage in rename and split branch
     );
     expect(out).toMatch(/removed-id coverage: FAIL/);
     expect(out).toMatch(/STILL IN BUNDLE —[\s\S]*fixture-old-mixed-slots/);
+  });
+});
+
+describe('checkRemovedIdCoverage: catalogued sites counted by bundle location', () => {
+  const lead = 'You are reviewing for **recall** at ${';
+  const leadTail =
+    '==="max"?"maximum":"extra-high"} effort: catch every real bug.';
+  const leadIn = {
+    id: 'fixture-review-lead-in',
+    pieces: [lead, leadTail],
+    identifiers: [0],
+    identifierMap: { 0: 'EFFORT_LEVEL' },
+  };
+  const header = {
+    id: 'fixture-review-header',
+    pieces: ['Header line for the maximum review tier.\n\n' + lead, leadTail],
+    identifiers: [0],
+    identifierMap: { 0: 'EFFORT_LEVEL' },
+  };
+  const oldReview = {
+    id: 'fixture-review-old-tier',
+    pieces: [
+      lead,
+      leadTail +
+        '\nWeigh every candidate against the diff before you report it.',
+    ],
+    identifiers: [0],
+    identifierMap: { 0: 'OLD_LEVEL' },
+  };
+  const slot = '${e==="max"?"maximum":"extra-high"}';
+  const leadSource =
+    'You are reviewing for **recall** at ' +
+    slot +
+    ' effort: catch every real bug.';
+  const reviewCli =
+    'x=`Header line for the maximum review tier.\n\n' +
+    leadSource +
+    '`;y={leadIn:`' +
+    leadSource +
+    '`};';
+
+  it('counts a lead-in template as its own site although a header embeds its text', () => {
+    const out = run(
+      write('lead-in-cli.js', reviewCli),
+      write('lead-in-prev.json', { prompts: [oldReview, leadIn, header] }),
+      write('lead-in-cur.json', { prompts: [leadIn, header] })
+    );
+    expect(out).toMatch(/0 STILL IN BUNDLE/);
+    expect(out).toMatch(/removed-id coverage: PASS/);
+  });
+
+  it('still flags a third copy of the lead-in that nothing catalogues', () => {
+    const out = run(
+      write(
+        'lead-in-extra-cli.js',
+        reviewCli + 'z=`Elsewhere: ' + leadSource + '`;'
+      ),
+      write('lead-in-extra-prev.json', {
+        prompts: [oldReview, leadIn, header],
+      }),
+      write('lead-in-extra-cur.json', { prompts: [leadIn, header] })
+    );
+    expect(out).toMatch(/STILL IN BUNDLE —[\s\S]*fixture-review-old-tier/);
+  });
+
+  const refused = 'Write refused; nothing in the project was changed.';
+  const prefix = {
+    id: 'fixture-write-refused-prefix',
+    pieces: [refused],
+    identifiers: [],
+    identifierMap: {},
+  };
+  const reasons = [
+    'The doc at this path has changed since you last read it.',
+    'This session cannot check if_version on this path.',
+  ];
+  const refusals = reasons.map((r, i) => ({
+    id: `fixture-write-refused-reason-${i}`,
+    pieces: [`${refused} ${r}`],
+    identifiers: [],
+    identifierMap: {},
+  }));
+  const oldRefusal = {
+    id: 'fixture-write-refused-over-size',
+    pieces: [
+      `${refused}\nThis text is over the size limit for a single doc, so split it into several smaller docs at new paths.`,
+    ],
+    identifiers: [],
+    identifierMap: {},
+  };
+  const refusedCli =
+    `var ee="${refused}";` +
+    reasons.map((r, i) => `var r${i}="${refused} ${r}";`).join('');
+
+  it('counts a standalone constant as its own site although longer messages open with it', () => {
+    const out = run(
+      write('refused-cli.js', refusedCli),
+      write('refused-prev.json', {
+        prompts: [oldRefusal, prefix, ...refusals],
+      }),
+      write('refused-cur.json', { prompts: [prefix, ...refusals] })
+    );
+    expect(out).toMatch(/0 STILL IN BUNDLE/);
+    expect(out).toMatch(/removed-id coverage: PASS/);
+  });
+
+  it('still flags a second standalone copy of the constant', () => {
+    const out = run(
+      write('refused-extra-cli.js', `${refusedCli}var e2="${refused}";`),
+      write('refused-extra-prev.json', {
+        prompts: [oldRefusal, prefix, ...refusals],
+      }),
+      write('refused-extra-cur.json', { prompts: [prefix, ...refusals] })
+    );
+    expect(out).toMatch(
+      /STILL IN BUNDLE —[\s\S]*fixture-write-refused-over-size/
+    );
+  });
+});
+
+describe('checkRemovedIdCoverage: windows never span slot source', () => {
+  it('does not read a literal inside a removed slot expression as the prompt surviving', () => {
+    const old = {
+      id: 'slash-command-fixture-reconnect-pending',
+      pieces: [
+        '"${',
+        '(',
+        ')}" is pending approval.${',
+        '(" Approve it with `/mcp` in the terminal first."," Open MCP servers from the command menu.")}',
+      ],
+      identifiers: [0, 1, 2],
+      identifierMap: { 0: 'A', 1: 'B', 2: 'C' },
+    };
+    const hint = {
+      id: 'slash-command-fixture-open-from-menu-hint',
+      pieces: [' Open MCP servers from the command menu.'],
+      identifiers: [],
+      identifierMap: {},
+    };
+    const out = run(
+      write(
+        'slot-source-cli.js',
+        'q=`Server ${n} needs approval.${b(" Approve it with `/mcp` in the terminal first."," Open MCP servers from the command menu.")}`;' +
+          'r=`Server ${n} failed.${b(" Run /mcp."," Open MCP servers from the command menu.")}`;'
+      ),
+      write('slot-source-prev.json', { prompts: [old, hint] }),
+      write('slot-source-cur.json', { prompts: [hint] })
+    );
+    expect(out).toMatch(/0 STILL IN BUNDLE/);
+    expect(out).toMatch(/1 truly removed/);
+  });
+});
+
+describe('checkRemovedIdCoverage: a fragment is placed only where it fills a whole literal', () => {
+  const kept =
+    'Secrets stay in the vault and never enter the conversation transcript.';
+  const parent = {
+    id: 'fixture-place-parent',
+    pieces: [`Use the vault for credentials. ${kept}`],
+    identifiers: [],
+    identifierMap: {},
+  };
+  const fragment = {
+    id: 'fixture-place-fragment',
+    pieces: [kept],
+    identifiers: [],
+    identifierMap: {},
+  };
+  const old = {
+    id: 'fixture-place-old',
+    pieces: [kept],
+    identifiers: [],
+    identifierMap: {},
+  };
+
+  it('does not take a quoted run inside a template for a string literal', () => {
+    const out = run(
+      write(
+        'place-quoted-cli.js',
+        `x="${parent.pieces[0]}";z=\`If the tool prints "${kept}" stop and report.\``
+      ),
+      write('place-quoted-prev.json', { prompts: [old] }),
+      write('place-quoted-cur.json', { prompts: [parent, fragment] })
+    );
+    expect(out).toMatch(/STILL IN BUNDLE —[\s\S]*fixture-place-old/);
+  });
+
+  it('does not take a template chunk between two slots for a whole literal', () => {
+    const out = run(
+      write(
+        'place-slots-cli.js',
+        `x="${parent.pieces[0]}";z=\`Note for \${u}${kept}\${w} more\``
+      ),
+      write('place-slots-prev.json', { prompts: [old] }),
+      write('place-slots-cur.json', { prompts: [parent, fragment] })
+    );
+    expect(out).toMatch(/STILL IN BUNDLE —[\s\S]*fixture-place-old/);
+  });
+
+  it('does not place a slotted fragment on a template that shares only its tail', () => {
+    const lead = 'Secrets stay in the protected vault under tenant ';
+    const tail = ' and never enter the conversation transcript of any kind.';
+    const slottedParent = {
+      id: 'fixture-place-slotted-parent',
+      pieces: ['Use the vault. ' + lead + '${', '}' + tail],
+      identifiers: [0],
+      identifierMap: { 0: 'P' },
+    };
+    const slottedFragment = {
+      id: 'fixture-place-slotted-fragment',
+      pieces: [lead + '${', '}' + tail],
+      identifiers: [0],
+      identifierMap: { 0: 'F' },
+    };
+    const slottedOld = {
+      id: 'fixture-place-slotted-old',
+      pieces: ['Hi there ${', '}' + tail],
+      identifiers: [0],
+      identifierMap: { 0: 'O' },
+    };
+    const out = run(
+      write(
+        'place-tail-cli.js',
+        'x=`Use the vault. ' +
+          lead +
+          '${a}' +
+          tail +
+          '`;y=`Hi there ${b}' +
+          tail +
+          '`'
+      ),
+      write('place-tail-prev.json', { prompts: [slottedOld] }),
+      write('place-tail-cur.json', {
+        prompts: [slottedParent, slottedFragment],
+      })
+    );
+    expect(out).toMatch(/STILL IN BUNDLE —[\s\S]*fixture-place-slotted-old/);
+  });
+});
+
+describe('checkRemovedIdCoverage: a run inside a slot is pinned to its place in the expression', () => {
+  const kept =
+    'Secrets stay in the vault and never enter the conversation transcript.';
+  const wrapper = {
+    id: 'fixture-slot-wrapper',
+    pieces: ['${', '("' + kept + '")}\n\n${', '}'],
+    identifiers: [0, 1],
+    identifierMap: { 0: 'F', 1: 'B' },
+  };
+  const fragment = {
+    id: 'fixture-slot-fragment',
+    pieces: [kept],
+    identifiers: [],
+    identifierMap: {},
+  };
+  const old = {
+    id: 'fixture-slot-old',
+    pieces: [kept],
+    identifiers: [],
+    identifierMap: {},
+  };
+  const real = 'x=`${f("' + kept + '")}\\n\\n${b}`;';
+
+  it.each([
+    ['string', `"Note: ${kept} Extra."`],
+    ['template', `\`Note: ${kept} Extra.\``],
+  ])(
+    'flags a %s stray in another template slot of the same shape',
+    (kind, arg) => {
+      const out = run(
+        write(
+          `slot-pin-${kind}-cli.js`,
+          `${real}z=\`\${g(${arg})}\\n\\n\${c}\`;`
+        ),
+        write(`slot-pin-${kind}-prev.json`, { prompts: [old] }),
+        write(`slot-pin-${kind}-cur.json`, { prompts: [wrapper, fragment] })
+      );
+      expect(out).toMatch(/STILL IN BUNDLE —[\s\S]*fixture-slot-old/);
+    }
+  );
+
+  it('passes when the run sits only at the catalogued slot', () => {
+    const out = run(
+      write('slot-pin-control-cli.js', real),
+      write('slot-pin-control-prev.json', { prompts: [old] }),
+      write('slot-pin-control-cur.json', { prompts: [wrapper, fragment] })
+    );
+    expect(out).toMatch(/0 STILL IN BUNDLE/);
   });
 });

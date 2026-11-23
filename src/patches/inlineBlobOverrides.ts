@@ -28,7 +28,9 @@ import * as path from 'node:path';
 import matter from 'gray-matter';
 
 import { debug, escapeNonAscii as escapeNonAsciiUnicode } from '../utils';
-import { detectUnicodeEscaping } from '../systemPromptSites';
+import { detachedSlice, detectUnicodeEscaping } from '../systemPromptSites';
+import { literalAnchored } from '../literalAnchoredSearch';
+import { oneByteText } from '../oneByteText';
 import { SYSTEM_PROMPTS_DIR } from '../config';
 import { showDiff } from './patchDiffing';
 
@@ -634,6 +636,36 @@ const remapArrayIdentifiers = (body: string, pristineIds: string[]): string => {
   return out;
 };
 
+type IdRef = { name: string; start: number; end: number };
+
+const slotShape = (text: string, ref: IdRef): string => {
+  const spread = text.slice(Math.max(0, ref.start - 3), ref.start) === '...';
+  let i = ref.end;
+  while (i < text.length && /\s/.test(text[i])) i++;
+  const next = text[i] ?? '';
+  const use = next === '(' ? 'call' : next === '[' || next === '.' ? next : '';
+  return (spread ? 'spread ' : '') + (use || 'value');
+};
+
+const findMisalignedSlot = (
+  body: string,
+  overrideRefs: IdRef[],
+  pristine: string,
+  pristineRefs: IdRef[]
+): string | null => {
+  if (overrideRefs.length > pristineRefs.length) {
+    return `override has ${overrideRefs.length} slots, binary has ${pristineRefs.length}`;
+  }
+  for (let k = 0; k < overrideRefs.length; k++) {
+    const want = slotShape(pristine, pristineRefs[k]);
+    const got = slotShape(body, overrideRefs[k]);
+    if (want !== got) {
+      return `slot ${k + 1} ${overrideRefs[k].name} is a ${got} but binary ${pristineRefs[k].name} is a ${want}`;
+    }
+  }
+  return null;
+};
+
 const encodeAsTemplateLiteral = (
   text: string,
   escapeNonAscii: boolean
@@ -706,14 +738,23 @@ export interface InlineBlobApplyResult {
   failed: boolean;
   skipped?: boolean;
   details: string;
+  // The literal this override replaced, as it stood in the content it was
+  // spliced into (pristine text when run with `only`). The drift gate compares
+  // it across versions.
+  replaced?: string;
 }
+
+export type WrittenRegion = { start: number; end: number; filename: string };
 
 export const applyInlineBlobOverrides = async (
   content: string,
   // Restrict the run to a single override file. The apply preflight uses this
   // to measure ONE override's claimed span against the pristine binary through
   // the real resolution path, instead of re-deriving the boundary walkers.
-  options?: { only?: string }
+  // `written` carries Guard 4's record of the regions earlier overrides wrote
+  // across calls, so a caller applying one file per call (the preflight) sees
+  // the same refusals as a single run over every file.
+  options?: { only?: string; written?: WrittenRegion[] }
 ): Promise<{ content: string; results: InlineBlobApplyResult[] }> => {
   const escapeNonAscii = detectUnicodeEscaping(content);
   if (escapeNonAscii) {
@@ -736,6 +777,8 @@ export const applyInlineBlobOverrides = async (
   if (candidates.length === 0) return { content, results: [] };
 
   const results: InlineBlobApplyResult[] = [];
+  // Regions earlier overrides wrote, in current-content coordinates.
+  const written: WrittenRegion[] = options?.written ?? [];
   for (const filename of candidates.sort()) {
     const fullPath = path.join(SYSTEM_PROMPTS_DIR, filename);
     let raw: string;
@@ -779,7 +822,10 @@ export const applyInlineBlobOverrides = async (
       continue;
     }
 
-    const m = anchorRe.exec(content);
+    const m = literalAnchored.match(
+      content,
+      anchorRe
+    ) as RegExpExecArray | null;
     if (!m) {
       results.push({
         filename,
@@ -826,9 +872,29 @@ export const applyInlineBlobOverrides = async (
         // array carries — these names are minifier output and differ
         // between Mac and Linux native builds.
         const pristineArrayBody = content.slice(lb + 1, end - 1);
-        const pristineIds = extractArrayIdentifiers(pristineArrayBody).map(
-          r => r.name
+        const pristineRefs = extractArrayIdentifiers(pristineArrayBody);
+        const pristineIds = pristineRefs.map(r => r.name);
+        // Positional remap is only sound while each override slot lines up with
+        // a binary slot used the same way. A new element in the binary's array
+        // shifts every later slot, so `hooks()` could bind to an unrelated
+        // variable and crash at runtime instead of failing here. Overrides may
+        // still drop trailing slots on purpose.
+        const misaligned = findMisalignedSlot(
+          body,
+          extractArrayIdentifiers(body),
+          pristineArrayBody,
+          pristineRefs
         );
+        if (misaligned) {
+          results.push({
+            filename,
+            name: frontmatter.name,
+            applied: false,
+            failed: true,
+            details: `identifier slots misaligned with the binary (${misaligned}); binary slots: ${pristineIds.join(', ')} — realign the override`,
+          });
+          continue;
+        }
         const remappedBody = remapArrayIdentifiers(body, pristineIds);
         // The raw-passthrough body is verbatim JS (array elements that may carry
         // `${expr}` interpolations or nested templates), so it can't be string-
@@ -901,6 +967,35 @@ export const applyInlineBlobOverrides = async (
           applied: false,
           failed: true,
           details: `authored content inside \${...} slot(s) ${droppedSlots.join(', ')} would be discarded`,
+        });
+        continue;
+      }
+
+      // A template body is plain text: the encoder escapes every backtick and
+      // backslash itself. A body written with a backslash before a backtick
+      // gets that backslash escaped too, and the model reads a stray `\`
+      // before every code span. Only the text outside `${…}` slots counts
+      // (slots are copied verbatim), and a template whose pristine text
+      // renders a backslash before a backtick may keep one on purpose.
+      const outsideSlots = (text: string) =>
+        extractTemplateInterpolations(text).reduce(
+          (rest, expr) => rest.replace('${' + expr + '}', '\u0000'),
+          text
+        );
+      // Pristine source writes a rendered backtick as \` and a rendered
+      // backslash-backtick as \\\`; only the latter in a body matches a
+      // rendering pristine itself produces.
+      const pristineRendersBackslashTick = /\\\\\\`/.test(
+        outsideSlots(pristineBody)
+      );
+      if (/\\`/.test(outsideSlots(body)) && !pristineRendersBackslashTick) {
+        results.push({
+          filename,
+          name: frontmatter.name,
+          applied: false,
+          failed: true,
+          details:
+            'body escapes a backtick; template bodies are plain text, write ` not \\`',
         });
         continue;
       }
@@ -1023,13 +1118,45 @@ export const applyInlineBlobOverrides = async (
       continue;
     }
 
+    // Guard 4 — overrides apply in sequence, each anchor searched in the
+    // content the earlier ones left behind. Two blobs sharing an anchor land
+    // on successive copies of a literal only when the first rewrite stops the
+    // anchor matching there; when the rewrite keeps the anchor text, the later
+    // file would silently replace the earlier one's text instead. Refuse it.
+    const owner = written.find(w => startOfBlob < w.end && w.start < endOfBlob);
+    if (owner) {
+      const details = `span overlaps the text ${owner.filename} already wrote; two overrides claim one literal — retarget one anchor`;
+      console.error(
+        `patch: inline-blob: "${frontmatter.name}" (${filename}): ${details}. Override not applied.`
+      );
+      results.push({
+        filename,
+        name: frontmatter.name,
+        applied: false,
+        failed: true,
+        details,
+      });
+      continue;
+    }
+
     const before = content;
     content =
-      content.slice(0, startOfBlob) + replacement + content.slice(endOfBlob);
+      content.slice(0, startOfBlob) +
+      oneByteText(replacement) +
+      content.slice(endOfBlob);
+    const delta = replacement.length - (endOfBlob - startOfBlob);
+    for (const w of written)
+      if (w.start >= endOfBlob) {
+        w.start += delta;
+        w.end += delta;
+      }
+    written.push({
+      start: startOfBlob,
+      end: startOfBlob + replacement.length,
+      filename,
+    });
 
-    const origLen = endOfBlob - startOfBlob;
-    const newLen = replacement.length;
-    const charDiff = origLen - newLen;
+    const charDiff = -delta;
     const status =
       charDiff > 0
         ? `${charDiff} fewer chars`
@@ -1043,6 +1170,7 @@ export const applyInlineBlobOverrides = async (
       applied: true,
       failed: false,
       details: status,
+      replaced: detachedSlice(before, startOfBlob, endOfBlob),
     });
   }
 

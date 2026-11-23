@@ -325,4 +325,4 @@ const failed = drifted.length + moved.length;
 console.log(
   `${failed ? '✗' : '✓'} identifierMap drift: ${drifted.length} unacknowledged, ${acknowledged.length} acknowledged, ${reshaped.length} reshaped, ${moved.length} moved, ${compared} same-shape prompts compared`
 );
-process.exit(failed ? 1 : 0);
+process.exitCode = failed ? 1 : 0;

@@ -602,6 +602,78 @@ const findNearbyJsxTitle = (
   return { jsx: last[1], text: last[2] };
 };
 
+// CC >= 2.1.285 inlines the banner row as the first child of a column:
+// `$t=r(s,{flexDirection:"column",children:[r(s,{flexDirection:"row",gap:2,
+// alignItems:"center",children:[Ee,_t]}),ct]})`. Group 3 is the row alone (same
+// jsx helper and Box as the column, hence the backreferences), so the caller
+// wraps exactly what IMPORTED_BANNER_ROW would have matched.
+const IMPORTED_BANNER_COLUMN =
+  /[=(,:?[]([$\w]+)\(([$\w]+),\{flexDirection:"column",children:\[(\1\(\2,\{flexDirection:"row",gap:2,alignItems:"center",children:\[[$\w]+,[$\w]+\]\}\)),/g;
+
+type BannerRow = {
+  /** [0] the row expression, [1] jsx(s) helper, [2] Box; .index = row start. */
+  rowMatch: RegExpExecArray;
+  /** Module-local Text resolved from the "Claude Code" title; null if absent. */
+  title: { jsx: string; text: string } | null;
+};
+
+const titleFor = (
+  content: string,
+  at: number,
+  box: string
+): { jsx: string; text: string } | null => {
+  const title = findNearbyJsxTitle(content, at);
+  return title && title.text !== box ? title : null;
+};
+
+/**
+ * Locate the startup banner row. Since 2.1.322 a second module (an animated
+ * Clawd row, `ft=r(s,{flexDirection:"row",gap:2,alignItems:"center",
+ * children:[Xe,qt]})`) emits the same row shape EARLIER in the bundle, with no
+ * "Claude Code" title in its module — so first-hit selection bound to it and
+ * failed Text resolution. Every candidate must now resolve Text in its own
+ * module; the first that does wins.
+ *   Method 1 (CC >= 2.1.285): the row inlined as a column child.
+ *   Method 2 (CC 2.1.246-2.1.284 fallback): the bare row, assigned to a var.
+ * If no candidate resolves Text, the first row found is returned with a null
+ * title so the caller logs the Text failure rather than splicing a Box.
+ */
+const findImportedBannerRow = (content: string): BannerRow | null => {
+  let firstRow: RegExpExecArray | null = null;
+
+  IMPORTED_BANNER_COLUMN.lastIndex = 0;
+  for (const m of content.matchAll(IMPORTED_BANNER_COLUMN)) {
+    const rowText = m[3];
+    const rowStart = m.index! + m[0].length - 1 - rowText.length;
+    IMPORTED_BANNER_ROW.lastIndex = rowStart;
+    const row = IMPORTED_BANNER_ROW.exec(content);
+    if (!row || row[0] !== rowText) continue;
+    firstRow ??= row;
+    const title = titleFor(content, rowStart, row[2]);
+    if (title) return { rowMatch: row, title };
+  }
+
+  const anchor = ',{flexDirection:"row",gap:2,alignItems:"center",children:[';
+  for (
+    let at = content.indexOf(anchor);
+    at !== -1;
+    at = content.indexOf(anchor, at + anchor.length)
+  ) {
+    const head = /[$\w]+\([$\w]+$/.exec(
+      content.slice(Math.max(0, at - 40), at)
+    );
+    if (!head) continue;
+    IMPORTED_BANNER_ROW.lastIndex = at - head[0].length;
+    const row = IMPORTED_BANNER_ROW.exec(content);
+    if (!row) continue;
+    firstRow ??= row;
+    const title = titleFor(content, row.index, row[2]);
+    if (title) return { rowMatch: row, title };
+  }
+
+  return firstRow ? { rowMatch: firstRow, title: null } : null;
+};
+
 const renderImportedJsxPatchList = (
   jsx: string,
   jsxs: string,
@@ -638,10 +710,13 @@ const applyImportedJsxHeader = (
   showTweakccVersion: boolean,
   showPatchesApplied: boolean
 ): { content: string; didVersion: boolean; didList: boolean } => {
-  let didVersion = false;
-  let didList = false;
+  // A marker already in the bundle counts as done, so a re-run is a no-op
+  // instead of falling through to the legacy paths (which refuse on a split
+  // bundle and would turn a second application into a null result).
+  let didVersion = content.includes(`+ tweakcc v${tweakccVersion}`);
+  let didList = content.includes('tweakcc-fixed patches are applied');
 
-  if (showTweakccVersion && !content.includes(`+ tweakcc v${tweakccVersion}`)) {
+  if (showTweakccVersion && !didVersion) {
     const dim = ',{dimColor:!0,children:["v"';
     let dimAt = content.indexOf(dim);
     while (dimAt !== -1 && !didVersion) {
@@ -665,25 +740,9 @@ const applyImportedJsxHeader = (
     }
   }
 
-  if (
-    showPatchesApplied &&
-    !content.includes('tweakcc-fixed patches are applied')
-  ) {
-    const anchor = ',{flexDirection:"row",gap:2,alignItems:"center",children:[';
-    let rowMatch: RegExpExecArray | null = null;
-    for (
-      let at = content.indexOf(anchor);
-      at !== -1 && !rowMatch;
-      at = content.indexOf(anchor, at + anchor.length)
-    ) {
-      const head = /[$\w]+\([$\w]+$/.exec(
-        content.slice(Math.max(0, at - 40), at)
-      );
-      if (!head) continue;
-      IMPORTED_BANNER_ROW.lastIndex = at - head[0].length;
-      rowMatch = IMPORTED_BANNER_ROW.exec(content);
-    }
-    if (!rowMatch) {
+  if (showPatchesApplied && !didList) {
+    const banner = findImportedBannerRow(content);
+    if (!banner) {
       if (content.includes(TWEAKCC_MODULE_MARK)) {
         console.error(
           'patch: patchesAppliedIndication: failed to find the startup banner row for the patches list'
@@ -691,15 +750,15 @@ const applyImportedJsxHeader = (
       }
       return { content, didVersion, didList };
     }
+    const { rowMatch, title } = banner;
     const absIndex = rowMatch.index;
     const jsxs = rowMatch[1];
     const box = rowMatch[2];
-    const title = findNearbyJsxTitle(content, absIndex);
     // No fallback here: `box` renders its children as a layout node, so
     // handing it a bare string throws Ink's "must be rendered inside <Text>"
     // at startup — an unrecoverable interface error that boots fine under
     // --print. Refuse to splice rather than emit a Box where Text is needed.
-    if (!title || title.text === box) {
+    if (!title) {
       console.error(
         'patch: patchesAppliedIndication: failed to find the Text component near the startup banner'
       );
@@ -744,10 +803,10 @@ export const writePatchesAppliedIndication = (
   const newText = `\\n${tweakccVersion} (tweakcc-fixed)`;
   // Patch ALL occurrences of the version pattern (commander help text + console.log early exit)
   const versionPattern = '}.VERSION} (Claude Code)';
-  let content = fileContents.replaceAll(
-    versionPattern,
-    versionPattern + newText
-  );
+  // Skip when already applied so a second run does not stack a second line.
+  let content = fileContents.includes(versionPattern + newText)
+    ? fileContents
+    : fileContents.replaceAll(versionPattern, versionPattern + newText);
 
   showDiff(
     fileContents,

@@ -1,6 +1,8 @@
+import { bridgeUpdateAvailable } from '@/browserBridgeUpdate';
 import { CONFIG_FILE } from '@/config';
 import { MainMenuItem } from '@/types';
-import { useState } from 'react';
+import { Box, Text } from 'ink';
+import { useEffect, useState } from 'react';
 import { SelectInput, SelectItem } from './SelectInput';
 
 const baseMenuItems: SelectItem[] = [
@@ -86,17 +88,47 @@ const systemMenuItems: SelectItem[] = [
 ];
 
 const MainMenu = ({ onSubmit }: { onSubmit: (item: MainMenuItem) => void }) => {
-  const menuItems: SelectItem[] = [...baseMenuItems, ...systemMenuItems];
+  const [bridgeUpdate, setBridgeUpdate] = useState<string | null>(null);
+  useEffect(() => {
+    let live = true;
+    void bridgeUpdateAvailable().then(v => {
+      if (live) setBridgeUpdate(v);
+    });
+    return () => {
+      live = false;
+    };
+  }, []);
+  // The label doubles as the submitted value, so the notice can't go in it. Color the row instead,
+  // and say what's new in one dim line under the menu.
+  const menuItems: SelectItem[] = [
+    ...baseMenuItems.map(item =>
+      item.name === MainMenuItem.BROWSER_BRIDGE && bridgeUpdate
+        ? {
+            ...item,
+            styles: { color: 'yellow' },
+            desc: `Update available (v${bridgeUpdate}): open it and choose Reinstall`,
+          }
+        : item
+    ),
+    ...systemMenuItems,
+  ];
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   return (
-    <SelectInput
-      items={menuItems}
-      selectedIndex={selectedIndex}
-      onSelect={setSelectedIndex}
-      onSubmit={item => onSubmit(item as MainMenuItem)}
-    />
+    <Box flexDirection="column">
+      <SelectInput
+        items={menuItems}
+        selectedIndex={selectedIndex}
+        onSelect={setSelectedIndex}
+        onSubmit={item => onSubmit(item as MainMenuItem)}
+      />
+      {bridgeUpdate && (
+        <Text dimColor>
+          {'\n'}Better Claude in Chrome v{bridgeUpdate} is available.
+        </Text>
+      )}
+    </Box>
   );
 };
 

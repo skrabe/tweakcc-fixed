@@ -262,6 +262,12 @@ const MERGE_HEAD = '((__tweakccD,__tweakccO)=>{';
  * own cut still bounds the chain, keeping the configured models first.
  */
 const patchRouteMerge = (file: string): string | null => {
+  if (WRAPPER_MERGED.test(file) || findRouteSupplier(file)?.wrapper) {
+    debug(
+      'patch: refusalFallbackModel: routes merge in the override wrapper, leaving the walker alone'
+    );
+    return file;
+  }
   const walker = findRouteWalker(file);
   if (!walker) {
     if (file.includes(MERGE_HEAD)) {
@@ -286,19 +292,98 @@ const patchRouteMerge = (file: string): string | null => {
 };
 
 /**
- * The routes supplier, selected by two facts together: its body is
- * `{return}`, and its name is passed as `routesOverride`. The body alone is not
- * a discriminator, because many declarations in the bundle share it; only one
- * of those is ever handed to the walker.
+ * The wrapper 2.1.328+ passes as `routesOverride`: the supplier's routes, or
+ * else the table the served model catalogue sends for the flagged model.
+ */
+export interface RouteWrapper {
+  index: number;
+  length: number;
+  name: string;
+  canonical: string;
+  served: string;
+  supplier: string;
+  servedTable: string;
+}
+
+/** A wrapper whose body this patch has replaced with the merge. */
+const WRAPPER_MERGED =
+  /function [$\w]+\(\{canonical:[$\w]+,servedRefusalRoutes:[$\w]+\}\)\{let __tweakccO=/;
+
+export const findRouteWrapper = (file: string): RouteWrapper | null => {
+  for (const match of file.matchAll(
+    /function ([$\w]+)\(\{canonical:([$\w]+),servedRefusalRoutes:([$\w]+)\}\)\{return ([$\w]+)\(\)\?\?([$\w]+)\(\2,\3\)\}/g
+  )) {
+    if (match.index === undefined) continue;
+    if (!file.includes(`routesOverride:${match[1]}(`)) continue;
+    const [whole, name, canonical, served, supplier, servedTable] = match;
+    return {
+      index: match.index,
+      length: whole.length,
+      name,
+      canonical,
+      served,
+      supplier,
+      servedTable,
+    };
+  }
+  return null;
+};
+
+/**
+ * The routes supplier, a declaration whose whole body is `{return}`. The body
+ * alone is not a discriminator, because many declarations in the bundle share
+ * it; only one of those is ever handed to the walker.
  */
 export const findRouteSupplier = (
   file: string
-): { index: number; length: number; name: string } | null => {
+): {
+  index: number;
+  length: number;
+  name: string;
+  wrapper?: RouteWrapper;
+} | null => {
+  // Method 1 (2.1.328+): the call sites pass a wrapper that asks the supplier
+  // first and the served table second, and the supplier is declared in the
+  // wrapper's module
+  const wrapper = findRouteWrapper(file);
+  if (wrapper) {
+    const [start, end] = moduleSpan(file, wrapper.index);
+    const head = `function ${wrapper.supplier}(){return}`;
+    const at = file.slice(start, end).indexOf(head);
+    if (at === -1) return null;
+    return {
+      index: start + at,
+      length: head.length,
+      name: wrapper.supplier,
+      wrapper,
+    };
+  }
+
+  // Method 2: the call sites call the supplier itself
   const match = [...file.matchAll(/function ([$\w]+)\(\)\{return\}/g)].find(
     c => c[1] !== undefined && file.includes(`routesOverride:${c[1]}()`)
   );
   if (!match || match.index === undefined) return null;
   return { index: match.index, length: match[0].length, name: match[1] };
+};
+
+/**
+ * The wrapper's body, merging the configured routes over the routes stock would
+ * use: the served table, or the shipped one when nothing is served. With no
+ * route configured it returns what stock does, so a served table that gives a
+ * category no route keeps giving it none.
+ */
+const wrapperMerge = (wrapper: RouteWrapper, table: string): string => {
+  const { name, canonical, served, supplier, servedTable } = wrapper;
+  const stock = `${servedTable}(${canonical},${served})`;
+  return (
+    `function ${name}({canonical:${canonical},servedRefusalRoutes:${served}}){` +
+    `let __tweakccO=${supplier}();if(!__tweakccO||!Object.keys(__tweakccO).length)return ${stock};` +
+    `let __tweakccD=${stock}??${table}(${canonical}),__tweakccM=Object.assign(Object.create(null),__tweakccD);` +
+    'for(let __tweakccK of Object.keys(__tweakccO))' +
+    '__tweakccM[__tweakccK]=[...new Set([].concat(__tweakccO[__tweakccK],Object.hasOwn(__tweakccD,__tweakccK)?__tweakccD[__tweakccK]:[]))];' +
+    'return __tweakccM}'
+  );
 };
 
 /**
@@ -322,6 +407,38 @@ const patchRouteSupplier = (
       'patch: refusalFallbackModel: failed to find the refusal routes supplier'
     );
     return null;
+  }
+  const { wrapper } = supplier;
+  if (wrapper) {
+    const walker = findRouteWalker(file);
+    const [start, end] = moduleSpan(file, wrapper.index);
+    if (
+      !walker ||
+      walker.index < start ||
+      walker.index >= end ||
+      !file.slice(start, end).includes(`function ${walker.table}(`)
+    ) {
+      console.error(
+        "patch: refusalFallbackModel: failed to find the shipped route table in the override wrapper's module"
+      );
+      return null;
+    }
+    const sites = [
+      {
+        at: supplier.index,
+        length: supplier.length,
+        text: `function ${supplier.name}()${body}`,
+      },
+      {
+        at: wrapper.index,
+        length: wrapper.length,
+        text: wrapperMerge(wrapper, walker.table),
+      },
+    ].sort((a, b) => b.at - a.at);
+    let out = file;
+    for (const site of sites)
+      out = splice(out, site.at, site.length, site.text);
+    return out;
   }
   return splice(
     file,
@@ -663,9 +780,16 @@ const patchReturnOnReplTurnEnd = (file: string): string | null => {
  * the model.
  */
 const patchReturnOnHeadlessTurnEnd = (file: string): string | null => {
-  const turn = file.match(
-    /noteTurnEnded\(([$\w]+),([$\w]+),([$\w]+)\)\{if\(this\.selector\.noteTurnEnded\(\1\),\1\|\|\3\.num_turns>0\)\{/
-  );
+  const turn =
+    // Method 1 (2.1.322+): the delegation is its own statement, and the body
+    // goes on to read the result message's `num_turns` in a later branch
+    file.match(
+      /noteTurnEnded\(([$\w]+),([$\w]+),([$\w]+)\)\{this\.selector\.noteTurnEnded\(\1\);(?=[^{}]*else if\(\3\.num_turns>0\)\{)/
+    ) ??
+    // Method 2: the delegation and the `num_turns` test share one condition
+    file.match(
+      /noteTurnEnded\(([$\w]+),([$\w]+),([$\w]+)\)\{if\(this\.selector\.noteTurnEnded\(\1\),\1\|\|\3\.num_turns>0\)\{/
+    );
   if (!turn || turn.index === undefined) {
     if (
       /noteTurnEnded\([$\w]+,[$\w]+,[$\w]+\)\{try\{let __tweakccN=/.test(file)

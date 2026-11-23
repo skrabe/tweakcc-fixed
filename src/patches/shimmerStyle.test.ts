@@ -11,6 +11,11 @@ const RENDERER =
   'let kt=c-1,xt=c+1;if(kt>=T||xt<0){let x;if(u[67]!==t||u[68]!==o)x=e(n,{color:o,children:t}),u[67]=t,u[68]=o,u[69]=x;else x=u[69];return x}';
 const MODULE = SPINNER + RENDERER;
 
+// Real CC 2.1.328 excerpt (chunk-2ynyfvxs.js): the window is declared ahead of
+// a memoized color branch, and the bounds check moved into its ternary.
+const RENDERER_2_1_328 =
+  'let{segments:I,messageWidth:H}=B;if(!t){return null}let x=m-1,c=m+1,d;if(p[7]!==i||p[8]!==N||p[9]!==S||p[10]!==A)d=N>0?tt(S,i,"error",N):A>0?tt(S,i,"warning",A):void 0,p[7]=i,p[8]=N,p[9]=S,p[10]=A,p[11]=d;else d=p[11];let b=d,K;if(p[12]!==h||p[13]!==i||p[14]!==H||p[15]!==l||p[16]!==f||p[17]!==c||p[18]!==x||p[19]!==S||p[20]!==b)K=b??(l==="tool-use"?tt(S,i,f,h):x>=H||c<0?i:void 0);';
+
 const DEFAULTS = { enabled: true, stepMs: null, width: null };
 
 // Evaluate the hook with reducedMotion off, not stalled, and a 10-cell message.
@@ -60,10 +65,50 @@ describe('writeShimmerStyle', () => {
     expect(runHook(MODULE, 'responding', 0).dt).toBe(30);
   });
 
+  it('widens the 2.1.328 window ahead of its memoized bounds check', () => {
+    const result = writeShimmerStyle(SPINNER + RENDERER_2_1_328, {
+      ...DEFAULTS,
+      width: 5,
+    })!;
+    expect(result).toContain('let x=m-2,c=m+2,d;if(p[7]!==i');
+    expect(result).toContain('x>=H||c<0?i:void 0');
+    expect(result).toContain('dt=gt+2*Math.max(le,5),');
+  });
+
   it('keeps the default padding for narrow windows', () => {
     const result = writeShimmerStyle(MODULE, { ...DEFAULTS, width: 1 })!;
     expect(result).toContain('let kt=c-0,xt=c+0;');
     expect(runHook(result, 'responding', 0).dt).toBe(30);
+  });
+
+  it('re-applies cleanly to its own output', () => {
+    const options = { enabled: false, stepMs: 80, width: 24 };
+    for (const base of [MODULE, SPINNER + RENDERER_2_1_328]) {
+      const once = writeShimmerStyle(base, options)!;
+      expect(once).not.toBeNull();
+      expect(writeShimmerStyle(once, options)).toBe(once);
+    }
+    const once = writeShimmerStyle(MODULE, options)!;
+    const { Z, dt, Lt, At } = runHook(once, 'tool-use', 1234);
+    expect([Z, dt, Lt, At]).toEqual([80, 58, -100, 0]);
+  });
+
+  it('applies new settings over a previous run', () => {
+    const first = writeShimmerStyle(MODULE, {
+      ...DEFAULTS,
+      stepMs: 80,
+      width: 24,
+    })!;
+    const second = writeShimmerStyle(first, {
+      ...DEFAULTS,
+      stepMs: 120,
+      width: 5,
+    })!;
+    expect(second).toBe(
+      writeShimmerStyle(MODULE, { ...DEFAULTS, stepMs: 120, width: 5 })
+    );
+    expect(second).toContain('let kt=c-2,xt=c+2;');
+    expect(runHook(second, 'requesting', 0).Z).toBe(120);
   });
 
   it('is only enabled when a shimmer option differs from the default', () => {

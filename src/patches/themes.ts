@@ -3,6 +3,7 @@
 import { Theme } from '../types';
 import { debug } from '../utils';
 import { LocationResult, showDiff } from './index';
+import { literalAnchored } from '../literalAnchoredSearch';
 
 /**
  * CC's theme-ID whitelist: `Kls=["dark","light",...]`, immediately followed by
@@ -21,6 +22,19 @@ import { LocationResult, showDiff } from './index';
  */
 const THEME_ID_REGISTRY =
   /([$\w]+)=(\["dark","light"(?:,"[\w-]+")*\]),([$\w]+)=\["auto",\.\.\.\1\]/;
+
+// Find each `var={label:"Theme Name",value:"theme-id"}` assignment.
+export const THEME_VAR_ASSIGN_PATTERN =
+  /([$\w]+)=\{label:"(?:Auto|Dark|Light|Monochrome)[^"]*",value:"[^"]+"\}/g;
+
+// The prefix group MUST be capturing: the writer reads objMatch[1] as the
+// assignment prefix (`hM3=` on var-collected builds, `return` on the old
+// switch form) and reuses it. If it were non-capturing, objMatch[1] is
+// undefined, objPrefix defaults to `return`, and `hM3={...}` gets rewritten to
+// `return{...}` — destroying the binding and crashing /config with
+// "undefined is not an object (evaluating 'hM3[...]')".
+export const THEME_NAME_MAP_PATTERN =
+  /(return|[$\w]+=)\{(?:"?(?:[$\w-]+)"?:"(?:Auto |Dark|Light|Monochrome)[^"]*",?)+\}/;
 
 // The switch CC ships returns module-scope theme objects by reference
 // (`case"light":return v;…default:return B`). Each patched case spreads the
@@ -141,10 +155,9 @@ function getThemesLocation(oldFile: string): {
     objArrStart = oldObjArrMatch.index;
     objArrEnd = oldObjArrMatch.index + oldObjArrMatch[0].length;
   } else {
-    // Find each `var={label:"Theme Name",value:"theme-id"}` assignment.
-    const themeVarAssignPat =
-      /([$\w]+)=\{label:"(?:Auto|Dark|Light|Monochrome)[^"]*",value:"[^"]+"\}/g;
-    const assigns = [...oldFile.matchAll(themeVarAssignPat)];
+    const assigns = [
+      ...literalAnchored.matchAll(oldFile, THEME_VAR_ASSIGN_PATTERN),
+    ];
     if (assigns.length < 2) {
       console.error('patch: themes: failed to find objArrMatch');
       return null;
@@ -170,15 +183,7 @@ function getThemesLocation(oldFile: string): {
 
   // === Theme Name Mapping Object ===
   // {dark:"Dark mode",...} or {"dark":"Dark mode",...}
-  // The prefix group MUST be capturing: the writer reads objMatch[1] as the
-  // assignment prefix (`hM3=` on var-collected builds, `return` on the old
-  // switch form) and reuses it. If it were non-capturing, objMatch[1] is
-  // undefined, objPrefix defaults to `return`, and `hM3={...}` gets rewritten to
-  // `return{...}` — destroying the binding and crashing /config with
-  // "undefined is not an object (evaluating 'hM3[...]')".
-  const objPat =
-    /(return|[$\w]+=)\{(?:"?(?:[$\w-]+)"?:"(?:Auto |Dark|Light|Monochrome)[^"]*",?)+\}/;
-  const objMatch = oldFile.match(objPat);
+  const objMatch = literalAnchored.match(oldFile, THEME_NAME_MAP_PATTERN);
 
   if (!objMatch || objMatch.index == undefined) {
     debug(
