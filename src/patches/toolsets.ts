@@ -2538,7 +2538,8 @@ export const writeToolsets = (
   // Step 3: Add toolset component definition (JSX UI). On ESM-split builds
   // React is not a global in the insertion module — skip the component and
   // register a text /toolset command instead.
-  const withUi = getReactVar(result)
+  const hasReact = getReactVar(result) !== undefined;
+  const withUi = hasReact
     ? writeToolsetComponentDefinition(
         result,
         toolsets,
@@ -2551,7 +2552,7 @@ export const writeToolsets = (
     result = withUi;
   } else {
     console.log(
-      getReactVar(result)
+      hasReact
         ? 'patch: toolsets: step 3 skipped (toolset picker UI unavailable — using text /toolset)'
         : 'patch: toolsets: step 3 skipped (no React global — using text /toolset)'
     );
