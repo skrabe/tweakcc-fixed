@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import { writeModelCustomizations, CUSTOM_MODELS } from './modelSelector';
+import { CUSTOM_MODELS } from '../customModels';
+import { writeModelCustomizations } from './modelSelector';
 
 // modelSelector injects extra Claude models into CC's model-picker list.
 // The patch (a) finds the custom-model push site
