@@ -33,7 +33,7 @@ const write = (name, value) => {
 
 // TWEAKCC_CLASSIFY_DIR points the sidecar scan at an empty directory: reading
 // the real /tmp would let whatever bump is in flight decide the answer.
-const run = (cli, prev, cur, allowlist, cache) => {
+const run = (cli, prev, cur, allowlist, cache, env = {}) => {
   const opts = {
     encoding: 'utf8',
     env: {
@@ -42,6 +42,7 @@ const run = (cli, prev, cur, allowlist, cache) => {
       TWEAKCC_RENAME_MAP: path.join(dir, 'renames.json'),
       ...(allowlist && { TWEAKCC_REMOVED_ID_ALLOWLIST: allowlist }),
       ...(cache && { TWEAKCC_CLASSIFICATION_CACHE: cache }),
+      ...env,
     },
   };
   try {
@@ -355,6 +356,57 @@ describe('checkRemovedIdCoverage: a rename needs most of the old body', () => {
     expect(map['tool-result-fixture-resume-for-report']).toBe(
       'tool-result-fixture-resume-for-report-slotted'
     );
+  });
+
+  it('writes the rename map under the run temp dir, or a fresh one', () => {
+    const old = {
+      id: 'tool-result-fixture-resume-for-report',
+      version: '2.1.292',
+      pieces: [
+        'Resume it by sending it a message with SendMessage to get its report.',
+      ],
+      identifiers: [],
+      identifierMap: {},
+    };
+    const successor = {
+      ...old,
+      id: 'tool-result-fixture-resume-for-report-renamed',
+      version: '2.1.294',
+    };
+    const args = [
+      write(
+        'cli-map.js',
+        'x="Resume it by sending it a message with SendMessage to get its report."'
+      ),
+      write('prev-map.json', { prompts: [old] }),
+      write('cur-map.json', { prompts: [successor] }),
+    ];
+    const expected = {
+      'tool-result-fixture-resume-for-report':
+        'tool-result-fixture-resume-for-report-renamed',
+    };
+    const runTmp = path.join(dir, 'run');
+    fs.mkdirSync(runTmp);
+    const inRun = run(...args, undefined, undefined, {
+      TWEAKCC_RENAME_MAP: undefined,
+      SHOWTIME_TMP: runTmp,
+    });
+    expect(inRun).not.toMatch(/rename map:/);
+    expect(
+      JSON.parse(
+        fs.readFileSync(path.join(runTmp, 'removed-id-renames.json'), 'utf8')
+      )
+    ).toEqual(expected);
+    const tmp = path.join(dir, 'tmp');
+    fs.mkdirSync(tmp);
+    const outside = run(...args, undefined, undefined, {
+      TWEAKCC_RENAME_MAP: undefined,
+      SHOWTIME_TMP: undefined,
+      TMPDIR: tmp,
+    });
+    const file = /rename map: (.+)/.exec(outside)?.[1];
+    expect(path.dirname(path.dirname(file))).toBe(tmp);
+    expect(JSON.parse(fs.readFileSync(file, 'utf8'))).toEqual(expected);
   });
 
   it('reports text the successor carries but the bundle also holds at an uncovered site', () => {
