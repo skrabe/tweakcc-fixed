@@ -1407,11 +1407,10 @@ export const writeToolsetComponentDefinition = (
   acceptEditsToolset?: string | null,
   planModeToolset?: string | null
 ): string | null => {
+  // No React global (a code-split bundle) is expected; the caller falls back
+  // to a text /toolset command and says so.
   const reactVar = getReactVar(oldFile);
-  if (!reactVar) {
-    console.error('patch: toolsets: failed to find React variable');
-    return null;
-  }
+  if (!reactVar) return null;
 
   const insertionPoint = findTopLevelPositionBeforeSlashCommand(oldFile);
   if (insertionPoint === null) {
@@ -2112,9 +2111,12 @@ export const writeSlashCommandDefinition = (
   toolsets?: Toolset[],
   defaultToolset?: string | null,
   acceptEditsToolset?: string | null,
-  planModeToolset?: string | null
+  planModeToolset?: string | null,
+  componentInserted = true
 ): string | null => {
-  const reactVar = getReactVar(oldFile);
+  // The JSX command renders `toolsetComp`, so it is only valid when step 3
+  // inserted that component.
+  const reactVar = componentInserted ? getReactVar(oldFile) : undefined;
   if (reactVar) {
     const commandDef = `, {
   aliases: ["change-tools"],
@@ -2536,7 +2538,8 @@ export const writeToolsets = (
   // Step 3: Add toolset component definition (JSX UI). On ESM-split builds
   // React is not a global in the insertion module — skip the component and
   // register a text /toolset command instead.
-  const withUi = getReactVar(result)
+  const hasReact = getReactVar(result) !== undefined;
+  const withUi = hasReact
     ? writeToolsetComponentDefinition(
         result,
         toolsets,
@@ -2549,7 +2552,9 @@ export const writeToolsets = (
     result = withUi;
   } else {
     console.log(
-      'patch: toolsets: step 3 skipped (no React global — using text /toolset)'
+      hasReact
+        ? 'patch: toolsets: step 3 skipped (toolset picker UI unavailable — using text /toolset)'
+        : 'patch: toolsets: step 3 skipped (no React global — using text /toolset)'
     );
   }
 
@@ -2559,7 +2564,8 @@ export const writeToolsets = (
     toolsets,
     defaultToolset,
     acceptEditsToolset,
-    planModeToolset
+    planModeToolset,
+    withUi !== null
   );
   if (!result) {
     console.error(

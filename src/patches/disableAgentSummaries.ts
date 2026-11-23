@@ -15,7 +15,9 @@
 //
 // We make the scheduler return before arming, so no summary request is ever
 // sent. The rest of the summarizer (stop handle, cleanup) stays intact, and
-// the agent row falls back to its launch description.
+// the agent row falls back to its launch description. If a future build
+// reshapes the scheduler, we patch the timer callback instead, which is
+// located from the log string alone.
 
 import { showDiff } from './index';
 
@@ -65,10 +67,18 @@ export const writeDisableAgentSummaries = (oldFile: string): string | null => {
     if (m) break;
   }
   if (!m || m.index === undefined) {
-    console.error(
-      'patch: disableAgentSummaries: failed to find summary timer scheduler'
-    );
-    return null;
+    // The scheduler was reshaped. The callback is found from the log line
+    // itself, so returning there still stops every summary request: the timer
+    // fires once and nothing re-arms it, since the reschedule sits in the
+    // callback's own `finally`.
+    const cbStart = Math.max(0, anchorIdx - 600) + cbMatch.index!;
+    const cbPrefix = `async function ${callback}(){`;
+    const cbReplacement = `${cbPrefix}${MARKER}return;`;
+    const cbEnd = cbStart + cbPrefix.length;
+    const newFile =
+      oldFile.slice(0, cbStart) + cbReplacement + oldFile.slice(cbEnd);
+    showDiff(oldFile, newFile, cbReplacement, cbStart, cbEnd);
+    return newFile;
   }
 
   const start = searchFrom + m.index;
