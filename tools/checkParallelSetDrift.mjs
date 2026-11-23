@@ -186,4 +186,4 @@ if (FIX && stale.length && active) {
   console.log(`\nmirrored ${stale.length} stale stub(s) from ${active.name}`);
 }
 
-process.exit((stale.length && !FIX) || versionLag.length ? 1 : 0);
+process.exitCode = (stale.length && !FIX) || versionLag.length ? 1 : 0;

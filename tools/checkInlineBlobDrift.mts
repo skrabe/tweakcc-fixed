@@ -76,4 +76,4 @@ log(
   `inline-blob drift: ${bad} of ${files.length} override(s) need a realign` +
     (bad ? ' (pristine text under them changed)' : '')
 );
-process.exit(bad ? 1 : 0);
+process.exitCode = bad ? 1 : 0;

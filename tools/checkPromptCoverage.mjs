@@ -202,7 +202,8 @@ const main = () => {
         console.log(`    ${String(m.tokens).padStart(6)} tk  ${m.id}`);
       }
     }
-    process.exit(0);
+    process.exitCode = 0;
+    return;
   }
 
   if (stale.length > 0) {
@@ -218,7 +219,7 @@ const main = () => {
     console.log(`  ${String(m.tokens).padStart(6)} tk  ${m.id}`);
   }
   console.log(`\n(${trailer}.)`);
-  process.exit(1);
+  process.exitCode = 1;
 };
 
 if (isMain(import.meta.url)) main();

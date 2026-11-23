@@ -342,7 +342,8 @@ function main() {
     fs.writeFileSync(ALLOWLIST, JSON.stringify(allow, null, 2) + '\n');
     console.log(`param-slot: allowlist written with ${Object.keys(allow).length} entries`);
     console.log('Set each "verdict", then re-run without the flag.');
-    process.exit(0);
+    process.exitCode = 0;
+    return;
   }
 
   const sites = [...findings.values()].reduce((n, f) => n + f.sites.length, 0);
@@ -366,7 +367,8 @@ function main() {
         'TWEAKCC_DUMP_CANDIDATES). A label or separator is "glue". Then:\n' +
         '  node tools/checkParamSlotLiterals.mjs <cli.js> <json> --update-allowlist'
     );
-    process.exit(1);
+    process.exitCode = 1;
+    return;
   }
   console.log('param-slot literals: PASS — every call-site argument reviewed');
 }

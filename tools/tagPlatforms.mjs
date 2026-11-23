@@ -15,11 +15,7 @@
 // a prompt missing from either is treated as missing from the platform.
 //
 import fs from 'node:fs';
-import {
-  loadMatcherCore,
-  readBundle,
-  scanInWorkers,
-} from './checkBakedIdentifiers.mjs';
+import { readBundle, scanInWorkers } from './checkBakedIdentifiers.mjs';
 
 const usage = msg => {
   if (msg) console.error(`tagPlatforms: ${msg}`);
@@ -68,30 +64,20 @@ const isShort = p =>
   Array.isArray(p.pieces) &&
   p.pieces.every(x => typeof x === 'string') &&
   p.pieces.join('').length < SHORT_ENTRY_CHARS;
-const DELIMITER = '["\'`]';
-
-const core = await loadMatcherCore();
-const bundles = new Map(
-  specs.map(s => [s.file, readBundle(s.file, s.platform)])
+const shortIdx = data.prompts.flatMap((p, i) => (isShort(p) ? [i] : []));
+const bounded = await scanInWorkers(
+  shortIdx.map(i => data.prompts[i]),
+  specs,
+  workerLimit,
+  'bounded'
 );
-const boundedCount = (p, bundle) => {
-  const pattern = core.buildSearchRegexFromPieces(
-    p.pieces,
-    bundle.version,
-    bundle.buildTime
-  );
-  return new RegExp(
-    `(?<=${DELIMITER})(?:${pattern})(?=${DELIMITER})`,
-    's'
-  ).test(bundle.content)
-    ? 1
-    : 0;
-};
-data.prompts.forEach((p, i) => {
-  if (!isShort(p)) return;
+shortIdx.forEach((i, j) => {
   for (const s of specs) {
     const r = perFile.get(s.file)[i];
-    if (!r.error && r.count > 0) r.count = boundedCount(p, bundles.get(s.file));
+    if (r.error || !(r.count > 0)) continue;
+    const b = bounded.get(s.file)[j];
+    if (b.error) r.error = b.error;
+    else r.count = b.count;
   }
 });
 
