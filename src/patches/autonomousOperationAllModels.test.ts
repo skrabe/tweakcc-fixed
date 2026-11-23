@@ -67,4 +67,32 @@ describe('autonomousOperationAllModels (treat model as fable/mythos)', () => {
   it('no-ops (does not error) when the model ids are absent entirely', () => {
     expect(writeAutonomousOperationAllModels('const x=1;')).toBe('const x=1;');
   });
+
+  it('also turns on finishing_work_guidance for every model (2.1.322 shape)', () => {
+    const resolver =
+      'var ot=new Set(["silent_turn_reminder","finishing_work_guidance","memory_guidance"]),nt=64;' +
+      'function vT(e,n,r,s){if(s!==void 0)return s;let d=vb(n,e,r);if(d!==void 0)return d;let h=ot.has(e)&&Z(n);return h}';
+    const gate =
+      'function nae(e,n){let o=pm(e,"fable_5_mitigations",n);if(o!==void 0)return o;if(e==="claude-mythos-5")return!0;return!1}';
+    const out = writeAutonomousOperationAllModels(`${gate};${resolver}`)!;
+    expect(out).toContain('if(e==="claude-mythos-5")return!0;return!0}');
+    expect(out).toContain(
+      'let d=vb(n,e,r);if(d!==void 0)return d;if(e=="finishing_work_guidance")return!0;let h=ot.has(e)'
+    );
+    expect(writeAutonomousOperationAllModels(out)).toBe(out);
+  });
+
+  it('also turns on finishing_work_guidance for every model (2.1.325 shape)', () => {
+    const resolver =
+      'var K=new Set(["silent_turn_reminder","finishing_work_guidance","memory_guidance"]),Z=64;' +
+      'function LR(e,n,r,s){if(s!==void 0)return s;let u=yw(n,e,r);if(u===void 0)return M(e,n,r);if(u!==M(e,n,r))J(e);return u}';
+    const gate =
+      'function nae(e,n){let o=pm(e,"fable_5_mitigations",n);if(o!==void 0)return o;if(e==="claude-mythos-5")return!0;return!1}';
+    const out = writeAutonomousOperationAllModels(`${gate};${resolver}`)!;
+    expect(out).toContain('if(e==="claude-mythos-5")return!0;return!0}');
+    expect(out).toContain(
+      'let u=yw(n,e,r);if(u===void 0&&e=="finishing_work_guidance")return!0;if(u===void 0)return M(e,n,r);if(u!==M(e,n,r))J(e);return u}'
+    );
+    expect(writeAutonomousOperationAllModels(out)).toBe(out);
+  });
 });

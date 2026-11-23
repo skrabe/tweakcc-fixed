@@ -23,7 +23,8 @@ const instructionFixture =
   ';async function fffContext($messages,$model,$permissions,$visible,$agents,$details){let{session:$session,terminalWidth:$width,toolUseContext:$current,mainThreadAgentDefinition:$agent}=$details;' +
   'let $saved=$details.snapshot,$fallback=$details.prompt,$tools={};let $counted=$saved?.systemPrompt??$fallback,$descriptions=$tools?.toolDescriptions,$schemas=$tools?.toolEntries;return $counted;}' +
   ';function fffRender($rows,$visible=[],$model,$config){$rows=$fold($rows,$config?.accountMemoryWithheld,$memo(()=>$visible));let $output=[];for(let $row of $rows){' +
-  'let $options={},$active=false,$result=$config?.withoutAttachmentHooks?$live($row,$options):$recorded($row,$options,$active),$rendered=$result.messages,{isKnownType:$known,recordedRole:$role}=$result;$output.push(...$rendered)}return $output;}';
+  'let $options={},$active=false,$result=$config?.withoutAttachmentHooks?$live($row,$options):$recorded($row,$options,$active),$rendered=$result.messages,{isKnownType:$known,recordedRole:$role}=$result;$output.push(...$rendered)}return $output;}' +
+  ';async function $describe($tool,$options){let $cached=$options.cached??{description:await $tool.prompt(),input_schema:$tool.input_schema},$entry=$options.recordedEntry,$redescribed=$options.isRedescribed===true,$result={name:$tool.name,description:$redescribed?$cached.description:$entry?.description??$options.recordedDescription??$cached.description,input_schema:$entry?.input_schema??$cached.input_schema};return $result;}';
 const fixtureFor = (binary: string): string => {
   const patched = writeSwapRipgrepForFff(
     searchFixture + instructionFixture + commandFixture,
@@ -89,6 +90,39 @@ describe('fffBashReads', () => {
     expect(patched).not.toBeNull();
     expect(patched).toContain(
       ');$commands.push(fast?direct():`eval ${command}`),$commands.push(`pwd -P >| '
+    );
+    for (const fast of [false, true]) {
+      const commands = new Function(
+        'quote',
+        'fast',
+        'direct',
+        patched + ';return build("task")'
+      )(
+        () => 'cwd',
+        fast,
+        () => 'direct task'
+      ) as string[];
+      expect(commands.slice(0, 2)).toEqual(['snapshot', 'scrub']);
+      expect(commands[2]).toBe(fffViewerSetup('/tmp/viewers', wrapper));
+      expect(commands[3]).toBe(fast ? 'direct task' : 'eval task');
+      expect(commands[4]).toBe('pwd -P >| cwd');
+    }
+    expect(writeFffBashReads(patched, '/tmp/viewers', wrapper)).toBe(patched);
+  });
+
+  it('applies on top of the 2.1.319 joined command list shape', () => {
+    const command319 =
+      ';function build(command){let $commands=[];$commands.push("snapshot");$commands.push("scrub");' +
+      'let $run=fast?direct():`eval ${command}`,$cwd=`pwd -P >| ${quote(["cwd"])}`,$joined=[...$commands,$run,$cwd].join(" && ");return[...$commands,$run,$cwd]}';
+    const integrated = writeSwapRipgrepForFff(
+      searchFixture + instructionFixture + command319,
+      wrapper
+    )!;
+    expect(integrated).not.toBeNull();
+    const patched = writeFffBashReads(integrated, '/tmp/viewers', wrapper)!;
+    expect(patched).not.toBeNull();
+    expect(patched).toContain(
+      ');let $run=fast?direct():`eval ${command}`,$cwd=`pwd -P >| '
     );
     for (const fast of [false, true]) {
       const commands = new Function(

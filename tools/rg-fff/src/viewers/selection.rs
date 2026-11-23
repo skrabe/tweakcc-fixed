@@ -161,10 +161,27 @@ pub(super) fn trusted_gnu(path: &Path, viewer: Viewer) -> bool {
     false
 }
 
+// Ubuntu 25.10+ links cat/head/tail to one ~10 MB uutils multicall image, too
+// large to scan per call, so trust rests on its root-owned packaged path.
+pub(super) fn trusted_uutils(path: &Path, viewer: Viewer, metadata: &fs::Metadata) -> bool {
+    viewer != Viewer::Sed
+        && path == Path::new("/usr/lib/cargo/bin/coreutils").join(viewer.name())
+        && metadata.uid() == 0
+        && metadata.mode() & 0o022 == 0
+}
+
 pub(super) fn recognize(path: &Path, viewer: Viewer) -> Option<Flavor> {
     let path = fs::canonicalize(path).ok()?;
     let metadata = fs::metadata(&path).ok()?;
-    if metadata.len() > MAX_IMAGE || !metadata.is_file() {
+    if !metadata.is_file() {
+        return None;
+    }
+    if trusted_uutils(&path, viewer, &metadata) {
+        let mut header = [0; 4];
+        fs::File::open(&path).ok()?.read_exact(&mut header).ok()?;
+        return native_image(&header).then_some(Flavor::Uutils);
+    }
+    if metadata.len() > MAX_IMAGE {
         return None;
     }
     let mut bytes = Vec::new();

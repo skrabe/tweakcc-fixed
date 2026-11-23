@@ -16,6 +16,16 @@ describe('probe model environment arguments', () => {
       'ANTHROPIC_MODEL=',
     ]);
   });
+
+  it('forwards each defined variable PROBE_ENV names, once', () => {
+    expect(
+      probeModelEnvironmentArgs({
+        PROBE_ENV: 'CLAUDE_CODE_MODEL_CAPABILITIES, UNSET_ONE ANTHROPIC_MODEL',
+        ANTHROPIC_MODEL: 'haiku',
+        CLAUDE_CODE_MODEL_CAPABILITIES: '{"x":1}',
+      })
+    ).toEqual(['-e', 'ANTHROPIC_MODEL=haiku', '-e', 'CLAUDE_CODE_MODEL_CAPABILITIES={"x":1}']);
+  });
 });
 
 describe('probe command prefix', () => {

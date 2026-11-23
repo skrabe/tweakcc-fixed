@@ -68,6 +68,8 @@
 import { FablePlanConfig } from '../types';
 import { debug } from '../utils';
 import { escapeIdent, showDiff } from './index';
+import { runPatchSteps } from './patchSteps';
+import { literalAnchored } from '../literalAnchoredSearch';
 
 const ALIAS = 'fableplan';
 
@@ -83,6 +85,11 @@ const MODEL_FOR = 'globalThis.__tweakccFablePlanModelFor';
 // resolver, carrying that request's effective permission mode (session mode
 // with the context's permission layers applied, the same value `uM` is given).
 const MODE_KEY = '__tweakccPermissionMode';
+
+// Set beside MODE_KEY where the plan-mode resolver takes `setting` from its
+// caller (CC >= 2.1.325): the request context's own plan-mode setting, which
+// side and forked contexts clear. Absent, MODEL_FOR asks the session getter.
+const SETTING_KEY = '__tweakccPlanModeSetting';
 
 const MODULE_MARK = '/*@@TWEAKCC_MODULE:';
 
@@ -160,13 +167,59 @@ const patchAliasWhitelist = (file: string): string | null => {
  * Also defines `MODEL_FOR` beside the resolver, at module scope, so the effort
  * lookup can ask the same question without reaching names it cannot see.
  */
+const PLAN_SETTING_PARAM =
+  /(function ([$\w]+)\(\{permissionMode:([$\w]+),mainLoopModel:([$\w]+),exceeds200kTokens:[$\w]+=!1,setting:([$\w]+)\}\)\{)(if\(\3!=="plan"\)return\{model:\4,clampWarning:null\};)/;
+
 const patchPlanResolver = (
   file: string,
   config: FablePlanConfig,
   aliasToModel: string
 ): string | null => {
-  // Method -2 — CC >= 2.1.311: a caller may hand the resolver the selected
-  // alias as `setting`, and the getter is only the fallback:
+  // Method -3 — CC >= 2.1.325: the resolver destructures its argument in the
+  // parameter list and never calls the getter; every caller passes
+  // `setting:GETTER()` (or a context's `getPlanModeSetting?.()`):
+  //   function gat({permissionMode:e,mainLoopModel:n,exceeds200kTokens:r=!1,setting:s}){
+  //     if(e!=="plan")return{model:n,clampWarning:null};let h=H_e(s);…
+  // The answer keys on `setting` as handed, like upstream's own pairings.
+  // MODEL_FOR keys on the request context's setting when splice 9 attached it,
+  // else on the getter taken from a same-module call of the resolver.
+  const matchParam = file.match(PLAN_SETTING_PARAM);
+  if (matchParam && matchParam.index !== undefined) {
+    const at = matchParam.index;
+    const resolver = escapeIdent(matchParam[2]);
+    const callPattern = new RegExp(
+      `[^$\\w.]${resolver}\\(\\{permissionMode:[^{}]*?,setting:([$\\w]+)\\(\\),`,
+      'g'
+    );
+    const getter = [...file.matchAll(callPattern)]
+      .map(m => m[1])
+      .find(name => boundInModule(file, at, name));
+    if (!getter) {
+      console.error(
+        'patch: fablePlan: failed to find the selected-alias getter at a plan-mode resolver call'
+      );
+      return null;
+    }
+    if (!boundInModule(file, at, aliasToModel)) {
+      console.error(
+        `patch: fablePlan: ${aliasToModel} is not in scope at the plan-mode model resolver`
+      );
+      return null;
+    }
+    const planModel = `${aliasToModel}("${config.planModel}")`;
+    const replacement =
+      `${MODEL_FOR}=(m,s)=>m==="plan"&&(s&&"${SETTING_KEY}"in s?s.${SETTING_KEY}:${getter}())==="${ALIAS}"?` +
+      `${planModel}:void 0;` +
+      `${matchParam[1]}${matchParam[6]}` +
+      `if(${matchParam[5]}==="${ALIAS}")return{model:${planModel},clampWarning:null};`;
+    const newFile =
+      file.slice(0, at) + replacement + file.slice(at + matchParam[0].length);
+    showDiff(file, newFile, replacement, at, at + matchParam[0].length);
+    return newFile;
+  }
+
+  // Method -2 — CC 2.1.311 - 2.1.324: a caller may hand the resolver the
+  // selected alias as `setting`, and the getter is only the fallback:
   //   let h=e.setting===void 0?b_():e.setting,y=Kse(h);
   // The answer keys on that resolved alias, after the whole declaration.
   const patternSetting =
@@ -214,7 +267,7 @@ const patchPlanResolver = (
   const planModel = `${aliasToModel}("${config.planModel}")`;
   // Like opusplan, every plan-mode request goes to the planning model while
   // the alias is selected, whatever model it was handed. The effort lookup
-  // asks the same question through MODEL_FOR, so the two always agree.
+  // asks the same question through MODEL_FOR, which reads the same getter.
   const modelFor =
     `${MODEL_FOR}=(m)=>m==="plan"&&${getter}()==="${ALIAS}"?` +
     `${planModel}:void 0;`;
@@ -406,7 +459,7 @@ const patchEffortLookup = (
   file: string
 ): { file: string; resolver: string | undefined; block: boolean } | null => {
   const key = (state: string): string =>
-    `${MODEL_FOR}?.(${state}.${MODE_KEY}??${state}.toolPermissionContext?.mode)??`;
+    `${MODEL_FOR}?.(${state}.${MODE_KEY}??${state}.toolPermissionContext?.mode,${state})??`;
   // The function whose `inherit` arm this is (for splice 9 to find its
   // callers) and its model parameter, which must lead the key expression.
   const resolverAt = (
@@ -527,7 +580,8 @@ const ROUTED = 'routed';
 const patchEffortContext = (
   file: string,
   resolver: string | undefined,
-  required: boolean
+  required: boolean,
+  planSetting: boolean
 ): string | null => {
   const fail = (what: string): string | null => {
     if (!required) {
@@ -538,9 +592,17 @@ const patchEffortContext = (
     return null;
   };
   if (!resolver) return fail('failed to name the per-model effort lookup');
-  const ctxFn =
-    /function ([$\w]+)\(([$\w]+)\)\{let ([$\w]+)=\2\.getAppState\(\)\.toolPermissionContext[,;]/;
-  const ctx = file.match(ctxFn);
+  // CC >= 2.1.326 adds a defaulted flag parameter:
+  //   function ee(e,o=!1){let t=e.getAppState().toolPermissionContext;
+  const ctxFns = [
+    /function ([$\w]+)\(([$\w]+)(?:,[$\w]+=[^,(){}]+)+\)\{let ([$\w]+)=\2\.getAppState\(\)\.toolPermissionContext[,;]/,
+    /function ([$\w]+)\(([$\w]+)\)\{let ([$\w]+)=\2\.getAppState\(\)\.toolPermissionContext[,;]/,
+  ];
+  let ctx: RegExpMatchArray | null = null;
+  for (const ctxFn of ctxFns) {
+    ctx = file.match(ctxFn);
+    if (ctx) break;
+  }
   if (!ctx || ctx.index === undefined) {
     return fail('failed to find the effective permission context function');
   }
@@ -564,10 +626,17 @@ const patchEffortContext = (
     `([^$\\w.]${r}\\()([$\\w]+)\\?\\.getAppState\\?\\.\\(\\)\\?\\?\\{\\},`,
     'g'
   );
-  // C — the spawn helper's destructured `model` and `effortState`.
-  const spawn = /model:([$\w]+),effortState:([$\w]+)[,}]/g;
+  // C — the spawn helper's destructured `model` and `effortState`. CC >= 2.1.330
+  // passes `modelFacts` and destructures `{model:a}=o` in the body.
+  const spawn =
+    /(?:modelFacts:([$\w]+)|model:([$\w]+)),effortState:([$\w]+)[,}]/g;
   const inScope = (at: number, ...names: string[]): boolean =>
     names.every(n => boundInModule(file, at, n));
+  const setting = (c: string, guard?: string): string => {
+    if (!planSetting) return '';
+    const pair = `${SETTING_KEY}:${c}.options?.getPlanModeSetting?.()`;
+    return guard ? `,...${guard}&&{${pair}}` : `,${pair}`;
+  };
 
   const found = { a: 0, b: 0, c: 0 };
   for (const c of file.matchAll(wrapped)) {
@@ -577,7 +646,7 @@ const patchEffortContext = (
     edits.push([
       c.index,
       c.index + c[0].length,
-      `${c[1]}{...${c[2]}.getAppState?.()??{},${MODE_KEY}:${c[2]}.getAppState?${de}(${c[2]}).mode:void 0},`,
+      `${c[1]}{...${c[2]}.getAppState?.()??{},${MODE_KEY}:${c[2]}.getAppState?${de}(${c[2]}).mode:void 0${setting(c[2], `${c[2]}.getAppState`)}},`,
     ]);
   }
   for (const c of file.matchAll(perRequest)) {
@@ -586,7 +655,7 @@ const patchEffortContext = (
     edits.push([
       c.index,
       c.index + c[0].length,
-      `${c[1]}{...${c[2]}.getAppState(),${MODE_KEY}:${de}(${c[2]}).mode},${c[3]}(${c[2]})`,
+      `${c[1]}{...${c[2]}.getAppState(),${MODE_KEY}:${de}(${c[2]}).mode${setting(c[2])}},${c[3]}(${c[2]})`,
     ]);
   }
   for (const c of file.matchAll(optional)) {
@@ -595,7 +664,7 @@ const patchEffortContext = (
     edits.push([
       c.index,
       c.index + c[0].length,
-      `${c[1]}{...${c[2]}?.getAppState?.()??{},${MODE_KEY}:${c[2]}?.getAppState?${de}(${c[2]}).mode:void 0},`,
+      `${c[1]}{...${c[2]}?.getAppState?.()??{},${MODE_KEY}:${c[2]}?.getAppState?${de}(${c[2]}).mode:void 0${setting(`${c[2]}?`, `${c[2]}?.getAppState`)}},`,
     ]);
   }
   for (const c of file.matchAll(spawn)) {
@@ -603,22 +672,31 @@ const patchEffortContext = (
     // The call sits in the body of the function this destructuring opens.
     const body = c.index + c[0].length;
     const next = file.indexOf('function ', body);
-    const model = escapeIdent(c[1]);
-    const state = escapeIdent(c[2]);
+    const fnBody = file.slice(body, next === -1 ? undefined : next);
+    let modelName = c[2];
+    if (c[1] !== undefined) {
+      const facts = new RegExp(
+        `[{,]model:([$\\w]+)[,}][^=;]*=${escapeIdent(c[1])}[,;]`
+      ).exec(fnBody);
+      if (!facts) continue;
+      modelName = facts[1];
+    }
+    const model = escapeIdent(modelName);
+    const state = escapeIdent(c[3]);
     // CC >= 2.1.317: `Kl(odt(state,model,picked),model)`; before: `Kl(state,model)`.
     const call = new RegExp(
       `[^$\\w.]${r}\\((?:([$\\w]+)\\(${state},${model},([$\\w]+)\\),${model}|${state},${model})\\)`
-    ).exec(file.slice(body, next === -1 ? undefined : next));
+    ).exec(fnBody);
     if (!call) continue;
     found.c++;
     const at = body + call.index + 1;
-    const routed = `{...${c[2]},${MODE_KEY}:"${ROUTED}"}`;
+    const routed = `{...${c[3]},${MODE_KEY}:"${ROUTED}"}`;
     edits.push([
       at,
       at + call[0].length - 1,
       call[1]
-        ? `${resolver}(${call[1]}(${routed},${c[1]},${call[2]}),${c[1]})`
-        : `${resolver}(${routed},${c[1]})`,
+        ? `${resolver}(${call[1]}(${routed},${modelName},${call[2]}),${modelName})`
+        : `${resolver}(${routed},${modelName})`,
     ]);
   }
 
@@ -659,6 +737,29 @@ const patchEffortContext = (
   return newFile;
 };
 
+export const PICKER_EFFORT_DISPLAY =
+  /(([$\w]+)!==void 0&&![$\w]+&&[$\w]+\([$\w]+,\{marginBottom:1,flexDirection:"column",children:)([$\w]+\?)/;
+export const PICKER_EFFORT_UNSUPPORTEDS = [
+  // CC >= 2.1.330: the label became a template literal and the icon is
+  // unconditional again.
+  //   o(r,{dimColor:!0,children:[e(_1,{effort:void 0})," ",
+  //   `Effort not supported${Vr?` for ${Vr}`:""}`]})
+  /([$\w]+)\(([$\w]+),\{dimColor:!0,children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," ",`Effort not supported/,
+  // CC 2.1.326 - 2.1.329: the icon and its leading space became conditional.
+  //   r(n,{dimColor:!0,children:[!sn&&e(a$,{effort:void 0}),sn?"":" ",
+  //   "Effort not supported",…
+  /([$\w]+)\(([$\w]+),\{dimColor:!0,children:\[![$\w]+&&[$\w]+\([$\w]+,\{effort:void 0\}\),[$\w]+\?"":" ","Effort not supported"/,
+  // CC 2.1.319 - 2.1.325: dimmed, no subtle color.
+  //   r(n,{dimColor:!0,children:[e(QW,{effort:void 0})," ","Effort not supported",…
+  /([$\w]+)\(([$\w]+),\{dimColor:!0,children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," ","Effort not supported"/,
+  // CC >= 2.1.312: the label undims and its leading space is its own child.
+  //   r(n,{color:"subtle",dimColor:!1,children:[e(Gj,{effort:void 0})," ",
+  //   "Effort not supported",…
+  /([$\w]+)\(([$\w]+),\{color:"subtle",dimColor:!1,children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," ","Effort not supported"/,
+  // CC <= 2.1.311.
+  /([$\w]+)\(([$\w]+),\{color:"subtle",children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," Effort not supported"/,
+];
+
 /**
  * Splice 8 — no single effort control on the fableplan row of `/model`.
  *
@@ -685,21 +786,17 @@ const patchPickerEffortRow = (
     return file;
   }
 
+  // CC >= 2.1.319 also returns on the "more models" row:
+  //   if(as===void 0||as.disabled===!0||as.value===ig)return;
   const adjust =
-    /(=[$\w]+\(\(([$\w]+)\)=>\{let ([$\w]+)=[$\w]+\(\),([$\w]+)=[$\w]+\.find\(\(([$\w]+)\)=>\5\.value===\3\);if\(\4===void 0\|\|\4\.disabled===!0\)return;)(let ([$\w]+)=[$\w]+\(\3\);if\(!\7\.supportsEffort\)return;)/;
-  const display =
-    /(([$\w]+)!==void 0&&![$\w]+&&[$\w]+\([$\w]+,\{marginBottom:1,flexDirection:"column",children:)([$\w]+\?)/;
-  const unsupporteds = [
-    // CC >= 2.1.312: the label undims and its leading space is its own child.
-    //   r(n,{color:"subtle",dimColor:!1,children:[e(Gj,{effort:void 0})," ",
-    //   "Effort not supported",…
-    /([$\w]+)\(([$\w]+),\{color:"subtle",dimColor:!1,children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," ","Effort not supported"/,
-    // CC <= 2.1.311.
-    /([$\w]+)\(([$\w]+),\{color:"subtle",children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," Effort not supported"/,
-  ];
+    /(=[$\w]+\(\(([$\w]+)\)=>\{let ([$\w]+)=[$\w]+\(\),([$\w]+)=[$\w]+\.find\(\(([$\w]+)\)=>\5\.value===\3\);if\(\4===void 0\|\|\4\.disabled===!0(?:\|\|\4\.value===[$\w]+)?\)return;)(let ([$\w]+)=[$\w]+\(\3\);if\(!\7\.supportsEffort\)return;)/;
   const commits = [
-    // CC >= 2.1.284: ultracode left the effort scale for its own session flag,
-    // so the commit no longer guards the level against it.
+    // CC >= 2.1.319: the commit first returns on the "more models" row.
+    //   function ws(gs){if(gs===ig)return;let Yn=nk(gs),as=tr(),Bs=Dn(),
+    //   wr=Yn&&as!==void 0?Nse(as,Yn):as;l("tengu_model_command_menu_effort",…
+    /(function ([$\w]+)\(([$\w]+)\)\{if\(\3===[$\w]+\)return;)(let ([$\w]+)=[$\w]+\(\3\),(?:[$\w]+=[$\w]+\(\),)*[$\w]+=\5&&([$\w]+)!==void 0\?[$\w]+\(\6,\5\):\6;[$\w]+\("tengu_model_command_menu_effort")/,
+    // CC 2.1.284 - 2.1.318: ultracode left the effort scale for its own session
+    // flag, so the commit no longer guards the level against it.
     //   function ir(es){let ss=wy(es),Cs=nn(),ws=Yo(),Is=ss&&Cs!==void 0?
     //   zV(Cs,ss):Cs;i("tengu_model_command_menu_effort",…
     /(function ([$\w]+)\(([$\w]+)\)\{)(let ([$\w]+)=[$\w]+\(\3\),(?:[$\w]+=[$\w]+\(\),)*[$\w]+=\5&&([$\w]+)!==void 0\?[$\w]+\(\6,\5\):\6;[$\w]+\("tengu_model_command_menu_effort")/,
@@ -713,10 +810,10 @@ const patchPickerEffortRow = (
   ];
 
   const a = file.match(adjust);
-  const d = file.match(display);
+  const d = literalAnchored.match(file, PICKER_EFFORT_DISPLAY);
   let u: RegExpMatchArray | null = null;
-  for (const unsupported of unsupporteds) {
-    u = file.match(unsupported);
+  for (const unsupported of PICKER_EFFORT_UNSUPPORTEDS) {
+    u = literalAnchored.match(file, unsupported);
     if (u) break;
   }
   let c: RegExpMatchArray | null = null;
@@ -847,47 +944,37 @@ export const writeFablePlan = (
     return null;
   }
 
-  // The alias-to-model resolver goes first: it hands back its own minified name,
-  // which the plan resolver calls.
-  const resolved = patchAliasToModel(oldFile, config);
-  if (!resolved) return null;
-  let file = resolved.file;
-
-  const whitelisted = patchAliasWhitelist(file);
-  if (!whitelisted) return null;
-  file = whitelisted;
-
-  const planned = patchPlanResolver(file, config, resolved.resolver);
-  if (!planned) return null;
-  file = planned;
-
-  const defaulted = patchBuiltinDefault(file, config);
-  if (!defaulted) return null;
-  file = defaulted;
-
-  const picked = patchModelPicker(file, config);
-  if (!picked) return null;
-  file = picked;
-
-  const efforted = patchEffortLookup(file);
-  if (!efforted) return null;
-  file = efforted.file;
-
-  // Required where the lookup has its 2.1.291 shape, which is where the
-  // per-request caller is known; older shapes keep the session's mode.
-  const contexted = patchEffortContext(file, efforted.resolver, efforted.block);
-  if (!contexted) return null;
-  file = contexted;
-
-  const effortRow = patchPickerEffortRow(file, config);
-  if (!effortRow) return null;
-  file = effortRow;
-
-  if (config.offerClearContextOnPlanAccept) {
-    const cleared = patchClearContextOption(file);
-    if (!cleared) return null;
-    file = cleared;
-  }
-
-  return file;
+  let aliasResolver = '';
+  let planSetting = false;
+  let effortResolver: string | undefined;
+  let effortBlock = false;
+  return runPatchSteps(oldFile, [
+    // The alias-to-model resolver goes first: it hands back its own minified name,
+    // which the plan resolver calls.
+    file => {
+      const resolved = patchAliasToModel(file, config);
+      if (!resolved) return null;
+      aliasResolver = resolved.resolver;
+      return resolved.file;
+    },
+    patchAliasWhitelist,
+    file => {
+      planSetting = PLAN_SETTING_PARAM.test(file);
+      return patchPlanResolver(file, config, aliasResolver);
+    },
+    file => patchBuiltinDefault(file, config),
+    file => patchModelPicker(file, config),
+    file => {
+      const efforted = patchEffortLookup(file);
+      if (!efforted) return null;
+      effortResolver = efforted.resolver;
+      effortBlock = efforted.block;
+      return efforted.file;
+    },
+    // Required where the lookup has its 2.1.291 shape, which is where the
+    // per-request caller is known; older shapes keep the session's mode.
+    file => patchEffortContext(file, effortResolver, effortBlock, planSetting),
+    file => patchPickerEffortRow(file, config),
+    ...(config.offerClearContextOnPlanAccept ? [patchClearContextOption] : []),
+  ]);
 };

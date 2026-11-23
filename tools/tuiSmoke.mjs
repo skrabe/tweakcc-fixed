@@ -20,6 +20,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { probeModelEnvironmentArgs } from './lib/probeEnvironment.mjs';
+import { isMain } from './lib/isMain.mjs';
 
 const args = process.argv.slice(2);
 const argOf = f => {
@@ -213,4 +214,4 @@ const main = () => {
 };
 
 // Importable for tests; only self-executes when run as the entrypoint.
-if (import.meta.url === `file://${process.argv[1]}`) process.exit(main());
+if (isMain(import.meta.url)) process.exit(main());

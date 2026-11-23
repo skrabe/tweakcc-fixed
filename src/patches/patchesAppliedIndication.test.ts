@@ -272,6 +272,58 @@ describe('writePatchesAppliedIndication', () => {
     expect(out).toContain(']})]}),St]});');
   });
 
+  // CC 2.1.322: a second module (an animated Clawd row) emits the same
+  // `flexDirection:"row",gap:2,alignItems:"center"` row EARLIER in the bundle,
+  // assigned to a var and with no "Claude Code" title in its module. First-hit
+  // selection bound to it and logged "failed to find the Text component".
+  it('skips a title-less decoy banner row in an earlier module (CC 2.1.322)', () => {
+    const MARK = '/*@@TWEAKCC_MODULE:';
+    const decoy =
+      `${MARK}2064:/$bunfs/root/chunk-decoy.js@@*/\n` +
+      'function Dc(h){let Xe=e(bde,{autoplay:!0}),qt=e(s,{children:"x"});let ft;if(h[189]!==qt||h[190]!==Xe)ft=r(s,{flexDirection:"row",gap:2,alignItems:"center",children:[Xe,qt]}),h[189]=qt,h[190]=Xe,h[191]=ft;else ft=h[191];return ft}\n';
+    const header =
+      `${MARK}2092:/$bunfs/root/chunk-header.js@@*/\n` +
+      'function Hd(h){let lt;if(h[18]===w)lt=e(n,{bold:!0,children:"Claude Code"}),h[18]=lt;else lt=h[18];' +
+      'let $e;if(h[19]!==Be)$e=r(n,{children:[lt," ",r(n,{dimColor:!0,children:["v",Be]})]}),h[19]=Be,h[20]=$e;else $e=h[20];' +
+      'let _t=r(s,{flexDirection:"column",children:[$e]}),Ee=e(s,{children:"LOGO"}),ct=null;' +
+      'let $t=r(s,{flexDirection:"column",children:[r(s,{flexDirection:"row",gap:2,alignItems:"center",children:[Ee,_t]}),ct]});return $t}\n';
+    const bundle = VERSION_OUTPUT + ';\n' + decoy + header;
+    const errors: string[] = [];
+    const spy = vi
+      .spyOn(console, 'error')
+      .mockImplementation((...a: unknown[]) => {
+        errors.push(a.join(' '));
+      });
+    const out = writePatchesAppliedIndication(bundle, '3.2.1', [
+      'shrink: 12 fewer chars',
+    ]);
+    spy.mockRestore();
+    expect(errors.filter(e => /failed/.test(e))).toEqual([]);
+    expect(out).not.toBeNull();
+    // Version row gets the marker on the module-local Text `n`.
+    expect(out).toContain(
+      '$e=r(n,{children:[lt," ",r(n,{dimColor:!0,children:["v",Be]})," ",e(n,{color:"warning",bold:!0,children:"+ tweakcc v3.2.1"})]})'
+    );
+    // Decoy row untouched; the header row is wrapped in place, list below it,
+    // and the outer column keeps its trailing `ct` child.
+    expect(out).toContain(
+      'ft=r(s,{flexDirection:"row",gap:2,alignItems:"center",children:[Xe,qt]}),h[189]'
+    );
+    expect(out).toContain(
+      '$t=r(s,{flexDirection:"column",children:[r(s,{flexDirection:"column",children:[r(s,{flexDirection:"row",gap:2,alignItems:"center",children:[Ee,_t]}),r(s,{flexDirection:"column",children:['
+    );
+    expect(out).toContain(
+      'e(n,{dimColor:!0,children:"  * shrink: 12 fewer chars"})]})]})]}),ct]});return $t}'
+    );
+    expect(out).not.toContain('(s,{color:"success"');
+    // Version output keeps the tweakcc-fixed line.
+    expect(out).toContain('(Claude Code)\\n3.2.1 (tweakcc-fixed)');
+    // Idempotent: a second run changes nothing.
+    expect(
+      writePatchesAppliedIndication(out!, '3.2.1', ['shrink: 12 fewer chars'])
+    ).toBe(out);
+  });
+
   // The real 2.1.246 bundle puts ~780 chars between the "Claude Code" title and
   // the banner row; the fixture above puts ~300. A 500-char lookback passed the
   // fixture and missed the binary, so the resolver fell back to the BOX

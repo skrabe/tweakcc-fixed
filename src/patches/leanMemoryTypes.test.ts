@@ -27,8 +27,9 @@ describe('writeLeanMemoryTypes', () => {
     expect(writeLeanMemoryTypes(patched!)).toBe(patched);
   });
 
-  it('no-ops when the flag literal is gone (feature promoted)', () => {
-    const file = 'function nL8(){return!0}';
+  it('no-ops when the flag literal is gone (experiment removed in 2.1.319)', () => {
+    const file =
+      'var YPr=["loop","memory-types","pr"];function nL8(){return!0}';
     expect(writeLeanMemoryTypes(file)).toBe(file);
   });
 

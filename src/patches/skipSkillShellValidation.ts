@@ -26,7 +26,15 @@
 // +else if(dTr(Me))to=await whe(to,{tweakccOwnSkill:!0,...Mn,getAppState:DM(Mn,nn())},`/${e}`,ct);
 // ```
 //
-// Patch 2 - let "ask" through for marked calls in whe():
+// Patch 2 - let "ask" through for marked calls in whe(). Since CC 2.1.325 the
+// bare-git-repository throw comes first and stays live for own skills, and an
+// ask whose reason (or any subcommand reason) is a git-untrusted-checkout
+// refusal still throws:
+// ```diff
+// -if(ot.behavior!=="allow"){t(`...`);let Nt=...;if(tt&&yt&&(...))throw new yx(`...`);if(jo(...
+// +if(ot.behavior!=="allow")tweakccAsk:{t(`...`);let Nt=...;if(tt&&yt&&(...))throw new yx(`...`);if(n.tweakccOwnSkill&&ot.behavior==="ask"&&!(<Nt or its subcommand reasons>).some(<git-untrusted-checkout>))break tweakccAsk;if(jo(...
+// ```
+// Before 2.1.325:
 // ```diff
 // -if(Me.behavior!=="allow"){...Shell command permission check failed...
 // +if(Me.behavior!=="allow"&&!(n.tweakccOwnSkill&&Me.behavior==="ask")){...
@@ -36,13 +44,51 @@ import { showDiff } from './index';
 
 const FAILURE_MESSAGE = 'Shell command permission check failed for pattern';
 
+type CheckEdit = { start: number; end: number; text: string };
+
+const findBareRepoGuardedCheck = (
+  body: string,
+  ctxVar: string
+): CheckEdit | null => {
+  const match = new RegExp(
+    String.raw`if\(([$\w]+)\.behavior!=="allow"\)\{([$\w]+\(\`Shell command permission check failed[\s\S]{0,600}?if\([$\w]+&&[$\w]+&&\(([$\w]+)\?\.type==="other"\|\|\3\?\.type==="subcommandResults"\)\)throw new [$\w]+\(\`(?:\\[\s\S]|[^\`\\])*\`\);)`
+  ).exec(body);
+  if (!match) return null;
+  const [, resultVar, block, reasonVar] = match;
+  const untrustedCheckout = `(${reasonVar}?.type==="subcommandResults"?[...${reasonVar}.reasons.values()].map(tweakccR=>tweakccR?.decisionReason):[${reasonVar}]).some(tweakccR=>tweakccR?.type==="other"&&tweakccR.bashMissKind==="git-untrusted-checkout")`;
+  return {
+    start: match.index,
+    end: match.index + match[0].length,
+    text: `if(${resultVar}.behavior!=="allow")tweakccAsk:{${block}if(${ctxVar}.tweakccOwnSkill&&${resultVar}.behavior==="ask"&&!${untrustedCheckout})break tweakccAsk;`,
+  };
+};
+
+const findPlainCheck = (body: string, ctxVar: string): CheckEdit | null => {
+  const match = new RegExp(
+    String.raw`if\(([$\w]+)\.behavior!=="allow"\)(\{if\([$\w]+\(\`Shell command permission check failed)`
+  ).exec(body);
+  if (!match) return null;
+  const resultVar = match[1];
+  return {
+    start: match.index,
+    end: match.index + match[0].length,
+    text: `if(${resultVar}.behavior!=="allow"&&!(${ctxVar}.tweakccOwnSkill&&${resultVar}.behavior==="ask"))${match[2]}`,
+  };
+};
+
 export const writeSkipSkillShellValidation = (file: string): string | null => {
   if (!file.includes(FAILURE_MESSAGE)) return null;
+  if (file.includes('tweakccOwnSkill')) return file;
 
-  // async function whe(e,n,r,s[,h]){if(n.options.readOnlySkillLoad)...
-  const header = file.match(
-    /async function ([$\w]+)\([$\w]+,([$\w]+)(?:,[$\w]+)*\)\{if\(\2\.options\.readOnlySkillLoad\)/
-  );
+  // 2.1.328+: async function Uze(e,o,r,g,h){if(o=vpe(o),o.options.readOnlySkillLoad)...
+  // Before:   async function whe(e,n,r,s[,h]){if(n.options.readOnlySkillLoad)...
+  const header =
+    file.match(
+      /async function ([$\w]+)\([$\w]+,([$\w]+)(?:,[$\w]+)*\)\{if\(\2=[$\w]+\(\2\),\2\.options\.readOnlySkillLoad\)/
+    ) ??
+    file.match(
+      /async function ([$\w]+)\([$\w]+,([$\w]+)(?:,[$\w]+)*\)\{if\(\2\.options\.readOnlySkillLoad\)/
+    );
   if (!header || header.index === undefined) {
     console.error(
       'patch: skipSkillShellValidation: failed to find prompt-shell expansion function'
@@ -51,11 +97,10 @@ export const writeSkipSkillShellValidation = (file: string): string | null => {
   }
   const [, expandFn, ctxVar] = header;
 
-  const check = new RegExp(
-    String.raw`if\(([$\w]+)\.behavior!=="allow"\)(\{if\([$\w]+\(\`Shell command permission check failed)`
-  );
-  const checkMatch = check.exec(file.slice(header.index));
-  if (!checkMatch || checkMatch.index === undefined) {
+  const body = file.slice(header.index);
+  const checkEdit =
+    findBareRepoGuardedCheck(body, ctxVar) ?? findPlainCheck(body, ctxVar);
+  if (!checkEdit) {
     console.error(
       'patch: skipSkillShellValidation: failed to find permission check in prompt-shell expansion'
     );
@@ -74,17 +119,14 @@ export const writeSkipSkillShellValidation = (file: string): string | null => {
     return null;
   }
 
-  const checkStart = header.index + checkMatch.index;
-  const resultVar = checkMatch[1];
-  const checkReplacement = `if(${resultVar}.behavior!=="allow"&&!(${ctxVar}.tweakccOwnSkill&&${resultVar}.behavior==="ask"))${checkMatch[2]}`;
   const callerReplacement = `${callerMatch[1]}tweakccOwnSkill:!0,${callerMatch[3]}`;
 
   // Apply the later edit first so the earlier offset stays valid.
   const edits = [
     {
-      start: checkStart,
-      end: checkStart + checkMatch[0].length,
-      text: checkReplacement,
+      start: header.index + checkEdit.start,
+      end: header.index + checkEdit.end,
+      text: checkEdit.text,
     },
     {
       start: callerMatch.index,

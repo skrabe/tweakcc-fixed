@@ -11,7 +11,7 @@ fn positive_count(value: &[u8], flavor: Flavor) -> bool {
     }
     let suffix = &value[digits..];
     suffix.is_empty()
-        || flavor == Flavor::Gnu
+        || flavor.gnu_syntax()
             && (suffix == b"b"
                 || suffix == b"kB"
                 || matches!(
@@ -55,7 +55,7 @@ pub(super) fn operands(
                 return None;
             }
         } else if options && bytes.starts_with(b"--") {
-            if flavor != Flavor::Gnu {
+            if !flavor.gnu_syntax() {
                 return None;
             }
             let (name, attached) = bytes
@@ -129,7 +129,7 @@ pub(super) fn operands(
                 let value_option = match viewer {
                     Viewer::Head | Viewer::Tail => matches!(flag, b'n' | b'c'),
                     Viewer::Sed => {
-                        matches!(flag, b'e' | b'f') || flag == b'l' && flavor == Flavor::Gnu
+                        matches!(flag, b'e' | b'f') || flag == b'l' && flavor.gnu_syntax()
                     }
                     Viewer::Cat => false,
                 };
@@ -155,15 +155,14 @@ pub(super) fn operands(
                 }
                 let accepted = match viewer {
                     Viewer::Cat => {
-                        b"benstuv".contains(&flag)
-                            || flavor == Flavor::Gnu && b"AET".contains(&flag)
+                        b"benstuv".contains(&flag) || flavor.gnu_syntax() && b"AET".contains(&flag)
                     }
                     Viewer::Head | Viewer::Tail => {
-                        b"qv".contains(&flag) || flavor == Flavor::Gnu && flag == b'z'
+                        b"qv".contains(&flag) || flavor.gnu_syntax() && flag == b'z'
                     }
                     Viewer::Sed => {
                         b"nEu".contains(&flag)
-                            || flavor == Flavor::Gnu && b"rsbz".contains(&flag)
+                            || flavor.gnu_syntax() && b"rsbz".contains(&flag)
                             || flavor == Flavor::Bsd && b"alr".contains(&flag)
                     }
                 };

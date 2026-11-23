@@ -12,6 +12,37 @@ export const writeContextLimit = (oldFile: string): string | null => {
   // Because the window is `min(o-from-fkt, KQ)`, RAISING the limit requires
   // overriding BOTH (overriding only one leaves the window capped by the other).
   // Env-unset → both stay 200000 → identical to stock CC.
+  if (oldFile.includes(`=${OVERRIDE},`)) {
+    return oldFile;
+  }
+
+  // Method -3 — CC >= 2.1.326: the max-output pair swapped order:
+  // `var ept=200000,$L=200000,nV=1e6,rV=1e6,oV=128000,feo=32000;`.
+  const patternSixSwapped =
+    /var ([$\w]+)=200000,([$\w]+)=200000,([$\w]+)=(1e6|1000000),([$\w]+)=(1e6|1000000),([$\w]+)=(128000|64000),([$\w]+)=(32000);/;
+  const matchSixSwapped = oldFile.match(patternSixSwapped);
+  if (matchSixSwapped) {
+    const m = matchSixSwapped;
+    return oldFile.replace(
+      patternSixSwapped,
+      () =>
+        `var ${m[1]}=${OVERRIDE},${m[2]}=${OVERRIDE},${m[3]}=${m[4]},${m[5]}=${m[6]},${m[7]}=${m[8]},${m[9]}=${m[10]};`
+    );
+  }
+
+  // Method -2 — CC >= 2.1.325: a second 1e6 joined slot 4:
+  // `var bat=200000,cD=200000,S1=1e6,E1=1e6,v1=32000,w1=128000;`.
+  const patternSix =
+    /var ([$\w]+)=200000,([$\w]+)=200000,([$\w]+)=(1e6|1000000),([$\w]+)=(1e6|1000000),([$\w]+)=(32000),([$\w]+)=(128000|64000);/;
+  const matchSix = oldFile.match(patternSix);
+  if (matchSix) {
+    return oldFile.replace(
+      patternSix,
+      () =>
+        `var ${matchSix[1]}=${OVERRIDE},${matchSix[2]}=${OVERRIDE},${matchSix[3]}=${matchSix[4]},${matchSix[5]}=${matchSix[6]},${matchSix[7]}=${matchSix[8]},${matchSix[9]}=${matchSix[10]};`
+    );
+  }
+
   // Method -1 — CC >= 2.1.305: the 1e6 cap rejoined the group in slot 3:
   // `var MCe=200000,c6=200000,n0=1e6,sE=32000,r0=128000;`. Leading pair keeps
   // its roles; the trailing three are preserved verbatim.

@@ -21,6 +21,10 @@
  *                            [--args "<extra claude CLI args>"]
  *
  * Exit 0 when a main-loop request was sent AND the reply rendered; 1 otherwise.
+ * Exit 2 ("turnProbe: USAGE-LIMIT — usage limit, resets <time>") when the
+ * account's usage limit blocked the turn: the patch was never tested, which is
+ * not a failure of it. A plain 429 (no usage-limit banner) is retried once
+ * after --retry-backoff <ms> (default 30000).
  * Prints every captured request with its size and class so a failure reads
  * as "only a 4.6 KB side call went out", not as a bare red X.
  */
@@ -30,7 +34,11 @@ import http from 'node:http';
 import https from 'node:https';
 import os from 'node:os';
 import path from 'node:path';
-import { probeCommandPrefix, probeModelEnvironmentArgs } from './lib/probeEnvironment.mjs';
+import {
+  probeCommandPrefix,
+  probeModelEnvironmentArgs,
+} from './lib/probeEnvironment.mjs';
+import { isMain } from './lib/isMain.mjs';
 
 const args = process.argv.slice(2);
 const argOf = f => {
@@ -50,6 +58,42 @@ const SKIP_PERMISSIONS = /--permission-mode\b/.test(EXTRA_ARGS)
   ? ''
   : '--dangerously-skip-permissions ';
 const SESSION = `tweakcc-turnprobe-${process.pid}`;
+
+export const EXIT_USAGE_LIMIT = 2;
+const RETRY_BACKOFF = Number(argOf('--retry-backoff') ?? 30000);
+const USAGE_LIMIT_BANNER =
+  /You've hit your [\w-]+ limit|Usage limit reached|limit resets/i;
+
+export const parseUsageLimit = pane => {
+  if (!USAGE_LIMIT_BANNER.test(pane)) return null;
+  const reset = pane.match(/resets\s+([^\n·]*?)\s*(?:·|$)/im);
+  return { resets: reset?.[1] || null };
+};
+
+export const classifyOutcome = ({ requests, pane, gotPong }) => {
+  const mainStatuses = requests
+    .filter(r => r.kind === 'main-loop')
+    .map(r => r.status);
+  if (gotPong && mainStatuses.includes(200)) return { verdict: 'ok' };
+  if (requests.some(r => r.status === 429)) {
+    const limit = parseUsageLimit(pane);
+    if (limit) return { verdict: 'usage-limit', resets: limit.resets };
+    if (mainStatuses.includes(429) && !mainStatuses.includes(200))
+      return { verdict: 'rate-limited' };
+  }
+  return { verdict: 'fail' };
+};
+
+export const probeWithRetry = async (
+  run,
+  { backoffMs, wait, log = () => {} }
+) => {
+  const first = await run();
+  if (first.verdict !== 'rate-limited') return first;
+  log(`turnProbe: plain 429, retrying once after ${backoffMs} ms`);
+  await wait(backoffMs);
+  return run();
+};
 
 const sh = (cmd, a, opts = {}) =>
   spawnSync(cmd, a, { encoding: 'utf8', ...opts });
@@ -176,15 +220,15 @@ const key = async k => {
   await sleep(300);
 };
 
-const main = async () => {
+const runProbe = async () => {
   if (sh('tmux', ['-V']).status !== 0) {
     console.log('turnProbe: SKIP — tmux not installed');
-    return 0;
+    return { code: 0, verdict: 'skip' };
   }
   const bin = resolveBinary();
   if (!bin || !fs.existsSync(bin)) {
     console.log('turnProbe: FAIL — could not resolve the claude binary');
-    return 1;
+    return { code: 1, verdict: 'fail' };
   }
   const outDir =
     argOf('--out') ??
@@ -228,10 +272,11 @@ const main = async () => {
       `turnProbe: FAIL — tmux new-session: ${started.stderr?.trim()}`
     );
     server.close();
-    return 1;
+    return { code: 1, verdict: 'fail' };
   }
 
   const failures = [];
+  let outcome = { verdict: 'fail' };
   const note = (ok, msg) => {
     console.log(`${ok ? '  ✓' : '  ✗'} ${msg}`);
     if (!ok) failures.push(msg);
@@ -247,7 +292,7 @@ const main = async () => {
     if (!trust.ok) {
       note(false, `boot: ${trust.reason}`);
       console.log(trust.pane.split('\n').slice(-25).join('\n'));
-      return 1;
+      return { code: 1, verdict: 'fail' };
     }
     if (/Is this a project you created or one you trust/i.test(trust.pane)) {
       const YES = /❯\s*Yes, I trust this folder/;
@@ -260,7 +305,7 @@ const main = async () => {
       }
       if (!onYes) {
         note(false, 'boot: could not select "Yes, I trust this folder"');
-        return 1;
+        return { code: 1, verdict: 'fail' };
       }
       await key('Enter');
     }
@@ -275,7 +320,7 @@ const main = async () => {
     );
     if (!composer.ok) {
       console.log(composer.pane.split('\n').slice(-25).join('\n'));
-      return 1;
+      return { code: 1, verdict: 'fail' };
     }
 
     await key('C-u');
@@ -307,6 +352,18 @@ const main = async () => {
       console.log(
         `    ${r.id} ${r.method} ${r.url}  ${String(r.bytes).padStart(7)} B  ${r.kind}${r.model ? `  model=${r.model}` : ''}${r.tools ? `  tools=${r.tools} system=${r.system}` : ''}  status=${r.status}`
       );
+    }
+    outcome = classifyOutcome({ requests, pane, gotPong });
+    if (outcome.verdict === 'usage-limit') {
+      fs.writeFileSync(path.join(outDir, 'pane.txt'), pane);
+      fs.writeFileSync(
+        path.join(outDir, 'requests.json'),
+        JSON.stringify(requests, null, 2)
+      );
+      console.log(
+        `turnProbe: USAGE-LIMIT — usage limit, resets ${outcome.resets ?? 'at an unknown time'} (the patch was not exercised; not a probe failure)`
+      );
+      return { code: EXIT_USAGE_LIMIT, verdict: 'usage-limit' };
     }
     note(
       mainLoopSent(),
@@ -358,11 +415,19 @@ const main = async () => {
   }
   if (failures.length) {
     console.log(`turnProbe: FAIL — ${failures.length} check(s) failed`);
-    return 1;
+    return { code: 1, verdict: outcome.verdict };
   }
   console.log('turnProbe: PASS');
-  return 0;
+  return { code: 0, verdict: 'ok' };
 };
 
-if (import.meta.url === `file://${process.argv[1]}`)
-  main().then(c => process.exit(c));
+const main = async () =>
+  (
+    await probeWithRetry(runProbe, {
+      backoffMs: RETRY_BACKOFF,
+      wait: sleep,
+      log: console.log,
+    })
+  ).code;
+
+if (isMain(import.meta.url)) main().then(c => process.exit(c));

@@ -54,6 +54,17 @@ const TOOL_POOL =
   'function hbt(h,E){return h.toolPermissionContext===E.toolPermissionContext&&h.mcpTools===E.mcpTools&&h.githubRepo===E.githubRepo' +
   '&&h.workspaceRestricted===E.workspaceRestricted&&h.waitForMcpServersDeclared===E.waitForMcpServersDeclared}';
 
+// 2.1.325: the key and its comparison gained fields after
+// waitForMcpServersDeclared, and the key ends in a spread.
+const TOOL_POOL_325 =
+  'class Ae{toolPoolCache=null;computeToolPool(h,P,D){let H={toolPermissionContext:h.toolPermissionContext,mcpTools:h.mcp.tools,' +
+  'githubRepo:ntr(),workspaceRestricted:bC(),waitForMcpServersDeclared:N_t(),toolListRevision:tDr(),...{}},ee=this.toolPoolCache;' +
+  'if(ee!==null&&ZHt(ee.key,H))return ee.result;' +
+  'return this.toolPoolCache={key:H,result:ENt(h)},this.toolPoolCache.result}}' +
+  'function ZHt(h,P){return h.toolPermissionContext===P.toolPermissionContext&&h.mcpTools===P.mcpTools&&h.githubRepo===P.githubRepo' +
+  '&&h.workspaceRestricted===P.workspaceRestricted&&h.waitForMcpServersDeclared===P.waitForMcpServersDeclared' +
+  '&&h.toolListRevision===P.toolListRevision&&!0}';
+
 const FIXTURE =
   mark(135, 'chunk-9dpf1mt6') +
   DEFINING +
@@ -70,6 +81,20 @@ const FIXTURE =
   mark(1700, 'chunk-8kvgr3rw') +
   TOOL_POOL;
 
+const FIXTURE_325 = FIXTURE.replace(TOOL_POOL, TOOL_POOL_325);
+
+// 2.1.326: the goal tools share one gate, and SetGoal's call guard defers to it.
+const PROPOSE_GOAL_326 =
+  'import{ge,dg,Rn}from"/$bunfs/root/chunk-3zn9cw12.js";import{Lt,b}from"/$bunfs/root/chunk-9dpf1mt6.js";' +
+  'function jRs(){return b("tengu_propose_goal",!1)}' +
+  'function Ort(){if(ge()||Rn())return;if(dg())return;if(Lt())return;if(!jRs())return;let e=XQe();return e==="disabled"?void 0:e}' +
+  'var G={isEnabled(){return Ort()!==void 0}},' +
+  'K={isEnabled(){let e=Ort();if(e===void 0)return!1;return M(e),!0},' +
+  'create(e){return{async call({condition:r,ask_user:T}){if(e.agentId)throw Error("SetGoal cannot be used in agent contexts");' +
+  'if(Ort()===void 0&&XQe()!=="disabled")throw d("goal_propose","session_shape"),Error("Goal proposals are only available in interactive local sessions that have /goal.")}}}};';
+
+const FIXTURE_326 = FIXTURE_325.replace(PROPOSE_GOAL, PROPOSE_GOAL_326);
+
 const BRIDGE = 'globalThis.__tweakccUnattendedBg';
 
 describe('writeAttachedBackgroundInteractive', () => {
@@ -83,38 +108,47 @@ describe('writeAttachedBackgroundInteractive', () => {
     );
   });
 
-  it('assembles the pool again when the predicate changes, and only then', () => {
-    const out = writeAttachedBackgroundInteractive(FIXTURE)!;
-    const engine = out.slice(out.indexOf('class Ae{'));
-    let built = 0;
-    let unattended = true;
-    const g = globalThis as Record<string, unknown>;
-    g.__tweakccUnattendedBg = () => unattended;
-    const make = new Function(
-      'ENt',
-      'uQt',
-      'AR',
-      'xWe',
-      `${engine};return Ae;`
+  it('keys the 2.1.325 tool pool cache on the unattended predicate', () => {
+    const out = writeAttachedBackgroundInteractive(FIXTURE_325)!;
+    expect(out).toContain(
+      `waitForMcpServersDeclared:N_t(),unattendedBg:${BRIDGE}(),toolListRevision:tDr(),...{}},ee=this.toolPoolCache;`
     );
-    const Engine = make(
-      () => ({ n: ++built }),
-      () => 'repo',
-      () => false,
-      () => false
+    expect(out).toContain(
+      '&&h.waitForMcpServersDeclared===P.waitForMcpServersDeclared&&h.unattendedBg===P.unattendedBg&&h.toolListRevision===P.toolListRevision&&!0}'
     );
-    const engineInstance = new Engine();
-    const state = { toolPermissionContext: {}, mcp: { tools: [] } };
-    engineInstance.computeToolPool(state);
-    engineInstance.computeToolPool(state);
-    expect(built).toBe(1);
-    unattended = false;
-    engineInstance.computeToolPool(state);
-    expect(built).toBe(2);
-    engineInstance.computeToolPool(state);
-    expect(built).toBe(2);
-    delete g.__tweakccUnattendedBg;
+    expect(writeAttachedBackgroundInteractive(out)).toBe(out);
   });
+
+  it.each([
+    ['2.1.294', () => FIXTURE, ['ENt', 'uQt', 'AR', 'xWe']],
+    ['2.1.325', () => FIXTURE_325, ['ENt', 'ntr', 'bC', 'N_t', 'tDr']],
+  ])(
+    '%s: assembles the pool again when the predicate changes, and only then',
+    (_v, fixture, names) => {
+      const out = writeAttachedBackgroundInteractive(fixture())!;
+      const engine = out.slice(out.indexOf('class Ae{'));
+      let built = 0;
+      let unattended = true;
+      const g = globalThis as Record<string, unknown>;
+      g.__tweakccUnattendedBg = () => unattended;
+      const make = new Function(...names, `${engine};return Ae;`);
+      const Engine = make(
+        () => ({ n: ++built }),
+        ...names.slice(1).map(() => () => false)
+      );
+      const engineInstance = new Engine();
+      const state = { toolPermissionContext: {}, mcp: { tools: [] } };
+      engineInstance.computeToolPool(state);
+      engineInstance.computeToolPool(state);
+      expect(built).toBe(1);
+      unattended = false;
+      engineInstance.computeToolPool(state);
+      expect(built).toBe(2);
+      engineInstance.computeToolPool(state);
+      expect(built).toBe(2);
+      delete g.__tweakccUnattendedBg;
+    }
+  );
 
   it('moves each background-only gate to the unattended predicate', () => {
     const out = writeAttachedBackgroundInteractive(FIXTURE);
@@ -131,6 +165,50 @@ describe('writeAttachedBackgroundInteractive', () => {
       `if(${BRIDGE}()||v0e())return!1;if(!Rn("userSettings"))`
     );
     expect(out).toContain(`if(${BRIDGE}())return!1;if(v0e())return!1;if(ZT(`);
+  });
+
+  it('2.1.326: moves the shared goal gate and leaves the delegating guard', () => {
+    const out = writeAttachedBackgroundInteractive(FIXTURE_326)!;
+    expect(out).not.toBeNull();
+    expect(out).toContain(
+      `function Ort(){if(ge()||Rn())return;if(dg())return;if(${BRIDGE}())return;if(!jRs())return;let e=XQe();return e==="disabled"?void 0:e}`
+    );
+    expect(out).toContain(
+      'if(Ort()===void 0&&XQe()!=="disabled")throw d("goal_propose","session_shape")'
+    );
+    expect(out).toContain('var G={isEnabled(){return Ort()!==void 0}}');
+    expect(out).toContain(`function SBt(){return fp()&&!${BRIDGE}()&&!Dt()}`);
+    expect(out).toContain(`${BRIDGE}=Vu;`);
+    expect(writeAttachedBackgroundInteractive(out)).toBe(out);
+  });
+
+  it('2.1.326: fails when the goal gate keeps its old background test', () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const out = writeAttachedBackgroundInteractive(
+      FIXTURE_326.replace('if(Lt())return;if(!jRs())', 'if(!jRs())')
+    );
+    expect(out).toBeNull();
+    expect(errorSpy).toHaveBeenCalledWith(
+      'patch: attachedBackgroundInteractive: failed to find the ProposeGoal isEnabled'
+    );
+    errorSpy.mockRestore();
+  });
+
+  it('2.1.330: moves the workflow consent gate past its multi-model check', () => {
+    const workflow330 =
+      'import{Lt}from"/$bunfs/root/chunk-9dpf1mt6.js";' +
+      'function u(r,o){if(r!==xc)return!1;if(o.options.isNonInteractiveSession)return!1;if(EI(Z(o)))return!1;' +
+      'if(Lt())return!1;if(wst())return!1;if([o.loopModel,mwe(o)].every((e)=>IC(CYe(o),e)))return!1;' +
+      'return!o.session.workflowUsageConsent.isGranted()&&!RMs()}' +
+      'export{u as workflowNeedsUsageConsentPrompt};';
+    const out = writeAttachedBackgroundInteractive(
+      FIXTURE_326.replace(WORKFLOW, workflow330)
+    )!;
+    expect(out).not.toBeNull();
+    expect(out).toContain(
+      `if(EI(Z(o)))return!1;if(${BRIDGE}())return!1;if(wst())return!1;if([o.loopModel,mwe(o)].every((e)=>IC(CYe(o),e)))return!1;return!o.session.workflowUsageConsent.isGranted()&&!RMs()}`
+    );
+    expect(writeAttachedBackgroundInteractive(out)).toBe(out);
   });
 
   it('publishes the unattended predicate beside its definition, once', () => {

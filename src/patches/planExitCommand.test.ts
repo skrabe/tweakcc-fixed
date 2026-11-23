@@ -26,7 +26,56 @@ const moduleOf = (file: string, name: string): string => {
   return file.slice(start, next === -1 ? undefined : next);
 };
 
+// Trimmed from real CC 2.1.326: the handler reads the state once and its
+// result strings changed.
+const HANDLER_326 =
+  'function S(i){return e(n,{children:i.planContent})}async function de(s,o,T){let{getAppState:c,setAppState:f}=o,h=c(),y=h.toolPermissionContext.mode,l=y!=="plan";if(l)JFe(y,"plan"),f((i)=>({...i,toolPermissionContext:Fm(xBt(i.toolPermissionContext),{type:"setMode",mode:"plan",destination:"session"})}));else if(h.toolPermissionContext.planEnteredBy!==void 0)f((i)=>({...i,toolPermissionContext:mKe(i.toolPermissionContext)}));if(St()){if(!ol())return OH(o.session.host)?.holdMode(()=>c().toolPermissionContext.mode),s(l?"Turned on plan mode":"Already in plan mode."),null;let i=sr(),d=T.trim();let m=Ie({content:d,origin:{kind:"human"}});o.setMessages((u)=>[...u,m]);return s("Turned on plan mode"),null}let _=T.trim();if(_&&_!=="open"&&_!=="share")return s(l?"Turned on plan mode":"Already in plan mode.",{shouldQuery:!0}),null;if(l&&!eLe())return s("Turned on plan mode"),null;let w=rR();nR(w);let R=await Bxt(void 0,o.storageV5);if(!R)return s(l?"Turned on plan mode":"Already in plan mode. No plan written yet."),null;let N=(i)=>e(S,{planContent:R,planPath:i?void 0:w,editorName:void 0}),b=await sbr(N(!1),{storageV5:o.storageV5});return s(b),null}export{de as call};\n';
+const COMMAND_326 =
+  'var Mos={type:"local-jsx",name:"plan",description:"Turn on plan mode or view the plan",argumentHint:"[open|<description>]",requires:{ink:!0}},W$e=Mos;';
+
 describe('writePlanExitCommand', () => {
+  it('renders the plan approval dialog for /plan exit (CC 2.1.326)', () => {
+    const file =
+      mark(0, 'chunk-56ya5pzg.js') +
+      HANDLER_326 +
+      mark(1, 'chunk-tjhhhqzz.js') +
+      DIALOG +
+      mark(2, 'chunk-53bsrq2x.js') +
+      COMMAND_326;
+    const patched = writePlanExitCommand(file)!;
+
+    const handler = moduleOf(patched, 'chunk-56ya5pzg.js');
+    expect(handler).toContain(
+      'l=y!=="plan";if(T.trim()==="exit"){if(l)return s("Not in plan mode."),null;' +
+        'if(St())return s("/plan exit is not available in cloud sessions. Ask Claude to exit plan mode."),null;' +
+        'if(typeof globalThis.__tweakccPlanExitDialog!=="function")'
+    );
+    expect(handler).toContain(
+      'let tccPath=rR(),tccPlan=await Bxt(void 0,o.storageV5);'
+    );
+    expect(handler).toContain(
+      'return e(globalThis.__tweakccPlanExitDialog,{payload:{plan:tccPlan,planFilePath:tccPath,'
+    );
+    expect(handler).toContain(
+      'f((tccState)=>({...tccState,initialMessage:{message:Ie({content:"Implement the following plan:\\n\\n"'
+    );
+    expect(handler).toContain(
+      'return!0}})}if(l)JFe(y,"plan"),f((i)=>({...i,toolPermissionContext:'
+    );
+    const body = handler.slice(handler.indexOf('function S('));
+    expect(
+      () => new Function(body.replace('export{de as call};', ''))
+    ).not.toThrow();
+
+    expect(moduleOf(patched, 'chunk-tjhhhqzz.js')).toContain(
+      'globalThis.__tweakccPlanExitDialog=Bot;export{'
+    );
+    expect(moduleOf(patched, 'chunk-53bsrq2x.js')).toContain(
+      'argumentHint:"[open|exit|<description>]"'
+    );
+    expect(writePlanExitCommand(patched)).toBe(patched);
+  });
+
   it('renders the plan approval dialog for /plan exit (CC 2.1.295)', () => {
     const patched = writePlanExitCommand(bundle())!;
 

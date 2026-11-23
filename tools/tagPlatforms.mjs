@@ -59,6 +59,28 @@ const perFile = await scanInWorkers(
   workerLimit,
   'presence'
 );
+const SHORT_ENTRY_CHARS = 40;
+const isShort = p =>
+  Array.isArray(p.pieces) &&
+  p.pieces.every(x => typeof x === 'string') &&
+  p.pieces.join('').length < SHORT_ENTRY_CHARS;
+const shortIdx = data.prompts.flatMap((p, i) => (isShort(p) ? [i] : []));
+const bounded = await scanInWorkers(
+  shortIdx.map(i => data.prompts[i]),
+  specs,
+  workerLimit,
+  'bounded'
+);
+shortIdx.forEach((i, j) => {
+  for (const s of specs) {
+    const r = perFile.get(s.file)[i];
+    if (r.error || !(r.count > 0)) continue;
+    const b = bounded.get(s.file)[j];
+    if (b.error) r.error = b.error;
+    else r.count = b.count;
+  }
+});
+
 const errors = [];
 const missing = data.prompts.map((p, i) => {
   const miss = new Set();

@@ -74,6 +74,8 @@
  *   node tools/checkRemovedIdCoverage.mjs <cli.js> <prev.json> <cur.json> [--update-allowlist]
  */
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
+import os from 'node:os';
 import path from 'node:path';
 import { parseExpressionAt, tokenizer, tokTypes } from 'acorn';
 import { loadMatcherCore } from './checkBakedIdentifiers.mjs';
@@ -93,8 +95,18 @@ const ALLOWLIST =
 
 const [cliPath, prevPath, curPath, ...flags] = process.argv.slice(2);
 const updateAllowlist = flags.includes('--update-allowlist');
-const RENAME_MAP =
-  process.env.TWEAKCC_RENAME_MAP || '/tmp/removed-id-renames.json';
+const RENAME_MAP_NAME = 'removed-id-renames.json';
+const renameMapTarget = () => {
+  if (process.env.TWEAKCC_RENAME_MAP)
+    return { file: process.env.TWEAKCC_RENAME_MAP, announce: false };
+  if (process.env.SHOWTIME_TMP)
+    return {
+      file: path.join(process.env.SHOWTIME_TMP, RENAME_MAP_NAME),
+      announce: false,
+    };
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'removed-id-'));
+  return { file: path.join(dir, RENAME_MAP_NAME), announce: true };
+};
 
 if (!cliPath || !prevPath || !curPath) {
   console.error(
@@ -132,8 +144,14 @@ const reconstruct = p => {
 // Only ASCII runs are probeable: everything else escapes in the bundle.
 const isAscii = s => !/[^\x20-\x7e]/.test(s);
 
-const literalRuns = p =>
-  (p.pieces || []).filter(x => typeof x === 'string' && x.length >= WINDOW);
+const literalRuns = p => {
+  const pieces = p.pieces || [];
+  return pieces
+    .map((x, i) =>
+      typeof x === 'string' ? proseOfPiece(x, i, pieces.length) : ''
+    )
+    .filter(x => x.length >= WINDOW);
+};
 
 // A prompt built almost entirely of slots has no run this long and therefore no
 // probe surface at all: every WINDOW pass and `midBodyProbes` come back empty
@@ -154,6 +172,12 @@ const literalRuns = p =>
 // pass was added. The match engines generalize exactly this shape; here it is
 // cheaper to drop such a piece from the required set than to rebuild a matcher.
 const MINIFIED_BRACKET_KEY = /\[[$\w]{1,3}[.\]-]/;
+// An older extractor split some slot expressions into literal pieces, so a
+// catalogued body can be nothing but code (`.reasonCode??"canvas",`). That code
+// stays in the bundle after the template that held it is gone, which read a
+// removed computer-use fragment as IN-BUNDLE on 2.1.330. A piece with no
+// whitespace that carries an operator or a quote is code, not prose.
+const CODE_PIECE = /^\S*(?:\?\?|&&|\|\||=>|["'`])\S*$/;
 const SHORT_PIECE_MIN = 8;
 const shortRuns = p =>
   (p.pieces || [])
@@ -163,7 +187,8 @@ const shortRuns = p =>
         s.length >= SHORT_PIECE_MIN &&
         isAscii(s) &&
         /[A-Za-z]{3,}/.test(s) &&
-        !MINIFIED_BRACKET_KEY.test(s)
+        !MINIFIED_BRACKET_KEY.test(s) &&
+        !CODE_PIECE.test(s)
     );
 
 // The share of an old body's distinctive units the catalogue must carry for the
@@ -299,9 +324,8 @@ const cli = fs.readFileSync(cliPath, 'utf8');
 const prev = readPrompts(prevPath);
 const cur = readPrompts(curPath);
 const core = await loadMatcherCore();
-const coverageBody = body => {
-  let out = '';
-  let cursor = 0;
+const slotSpans = body => {
+  const spans = [];
   for (let i = 0; i < body.length; i++) {
     if (body[i] !== '$' || body[i + 1] !== '{') continue;
     let backslashes = 0;
@@ -320,15 +344,23 @@ const coverageBody = body => {
       }).getToken();
       if (close.type !== tokTypes.braceR) continue;
       const end = expression.end + close.end;
-      out += body.slice(cursor, i);
-      out += core
-        .generalizeExpressionIdentifiers(['${', body.slice(i + 2, end)])
-        .join('');
-      cursor = end;
+      spans.push([i, end]);
       i = end - 1;
     } catch {
       continue;
     }
+  }
+  return spans;
+};
+const coverageBody = body => {
+  let out = '';
+  let cursor = 0;
+  for (const [i, end] of slotSpans(body)) {
+    out += body.slice(cursor, i);
+    out += core
+      .generalizeExpressionIdentifiers(['${', body.slice(i + 2, end)])
+      .join('');
+    cursor = end;
   }
   return out + body.slice(cursor);
 };
@@ -347,6 +379,13 @@ const curBodies = cur
   .filter(p => p.id)
   .map(p => ({
     id: p.id,
+    labels: [
+      ...new Set(
+        (p.identifiers || []).map(
+          i => (p.identifierMap || {})[String(i)] ?? `UNKNOWN_${i}`
+        )
+      ),
+    ],
     body: reconstruct(p),
     coverageBody: coverageBody(reconstruct(p)),
     cooked: cookEscapes(reconstruct(p)),
@@ -357,15 +396,207 @@ const nestedIn = (b, o) =>
   (o.coverageBody.length > b.coverageBody.length &&
     o.coverageBody.includes(b.coverageBody)) ||
   (o.cooked.length > b.cooked.length && o.cooked.includes(b.cooked));
+const { splitModuleBundle } = createRequire(import.meta.url)(
+  './lib/moduleBundle.cjs'
+);
+const bundleSegments = splitModuleBundle(cli) || [{ start: 0, source: cli }];
+const literalIndex = new Map();
+const literalsOfSegment = si => {
+  if (literalIndex.has(si)) return literalIndex.get(si);
+  const { start, source } = bundleSegments[si];
+  const lits = [];
+  const stack = [];
+  try {
+    for (const tok of tokenizer(source, {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      allowHashBang: true,
+      allowReturnOutsideFunction: true,
+      allowImportExportEverywhere: true,
+      allowAwaitOutsideFunction: true,
+    })) {
+      const t = tok.type;
+      const top = stack.at(-1);
+      const s0 = start + tok.start;
+      const s1 = start + tok.end;
+      if (t === tokTypes.backQuote) {
+        if (top && top.depth === null) {
+          stack.pop();
+          lits.push(top.lit);
+        } else {
+          const lit = { chunks: [], parent: top?.lit ?? null };
+          stack.push({ lit, depth: null });
+        }
+      } else if (t === tokTypes.template || t === tokTypes.invalidTemplate) {
+        top?.lit.chunks.push([s0, s1]);
+      } else if (t === tokTypes.dollarBraceL) {
+        if (top) top.depth = 0;
+      } else if (t === tokTypes.string) {
+        lits.push({ chunks: [[s0 + 1, s1 - 1]], parent: top?.lit ?? null });
+      } else if (top && top.depth !== null) {
+        if (t === tokTypes.braceL) top.depth++;
+        else if (t === tokTypes.braceR)
+          top.depth = top.depth === 0 ? null : top.depth - 1;
+      }
+    }
+  } catch {
+    literalIndex.set(si, []);
+    return [];
+  }
+  const index = lits
+    .flatMap(lit => lit.chunks.map(([s0, s1]) => [s0, s1, lit]))
+    .sort((x, y) => x[0] - y[0]);
+  literalIndex.set(si, index);
+  return index;
+};
+const segmentAt = at => {
+  let lo = 0;
+  let hi = bundleSegments.length - 1;
+  while (lo < hi) {
+    const mid = (lo + hi + 1) >> 1;
+    if (bundleSegments[mid].start <= at) lo = mid;
+    else hi = mid - 1;
+  }
+  return lo;
+};
+const literalsAround = (at, len) => {
+  const index = literalsOfSegment(segmentAt(at));
+  let lo = 0;
+  let hi = index.length - 1;
+  let best = -1;
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1;
+    if (index[mid][0] <= at) {
+      best = mid;
+      lo = mid + 1;
+    } else hi = mid - 1;
+  }
+  if (best < 0 || at + len > index[best][1]) return [];
+  const out = [];
+  for (let lit = index[best][2]; lit; lit = lit.parent) out.push(lit);
+  return out;
+};
+const shapeOf = b => {
+  if (b.shape) return b.shape;
+  const chunks = [];
+  const exprs = [];
+  let cursor = 0;
+  for (const [i, end] of slotSpans(b.body)) {
+    chunks.push([cursor, i]);
+    exprs.push([i, end]);
+    cursor = end;
+  }
+  chunks.push([cursor, b.body.length]);
+  const texts = chunks.map(([s0, s1]) => cookEscapes(b.body.slice(s0, s1)));
+  b.shape = { chunks, exprs, texts, fills: new Map() };
+  return b.shape;
+};
+const fillsLiteral = (shape, lit) => {
+  if (shape.fills.has(lit)) return shape.fills.get(lit);
+  const ok =
+    lit.chunks.length === shape.chunks.length &&
+    shape.texts.every((text, k) => {
+      const w = walkForward(cli, lit.chunks[k][0], text, 0);
+      return w.n === text.length && w.j === lit.chunks[k][1];
+    });
+  shape.fills.set(lit, ok);
+  return ok;
+};
+const claimsSite = (b, q, len, lit, at) => {
+  const shape = shapeOf(b);
+  if (!fillsLiteral(shape, lit)) return false;
+  const k = shape.chunks.findIndex(([s0, s1]) => s0 <= q && q + len <= s1);
+  if (k >= 0) {
+    const text = cookEscapes(b.body.slice(shape.chunks[k][0], q));
+    const w = walkForward(cli, lit.chunks[k][0], text, 0);
+    return w.n === text.length && w.j === at;
+  }
+  const e = shape.exprs.findIndex(([s0, s1]) => s0 <= q && q + len <= s1);
+  if (e < 0) return false;
+  const [s0, s1] = shape.exprs[e];
+  const parts = exprParts(b, b.body.slice(s0, q));
+  const tail = exprParts(b, b.body.slice(q + len, s1));
+  const j = walkExpr(lit.chunks[e][1], parts);
+  if (j !== at) return false;
+  return walkExpr(at + len, tail) === lit.chunks[e + 1][0];
+};
+const IDENT = /[$\w]+/y;
+const exprParts = (b, src) => {
+  if (!b.labels.length) return [src];
+  const escaped = b.labels.map(l => l.replace(/[$]/g, '\\$'));
+  return src.split(new RegExp(`(?<![$\\w])(?:${escaped.join('|')})(?![$\\w])`));
+};
+const walkExpr = (j, parts) => {
+  for (let k = 0; k < parts.length; k++) {
+    if (k > 0) {
+      IDENT.lastIndex = j;
+      if (!IDENT.test(cli)) return -1;
+      j = IDENT.lastIndex;
+    }
+    const w = walkForward(cli, j, parts[k], 0);
+    if (w.n !== parts[k].length) return -1;
+    j = w.j;
+  }
+  return j;
+};
+const maxMatching = choices => {
+  const owner = new Map();
+  const assign = (c, seen) => {
+    for (const s of choices[c]) {
+      if (seen.has(s)) continue;
+      seen.add(s);
+      if (!owner.has(s) || assign(owner.get(s), seen)) {
+        owner.set(s, c);
+        return true;
+      }
+    }
+    return false;
+  };
+  let n = 0;
+  for (let c = 0; c < choices.length; c++) if (assign(c, new Set())) n++;
+  return n;
+};
 const namedSites = (run, lines) => {
-  const holders = curBodies.filter(b => b.body.includes(run));
-  return holders
-    .filter((b, i) => !holders.some((o, j) => j !== i && nestedIn(b, o)))
-    .reduce(
-      (n, b) =>
-        n + (lines ? countSites(b.body, run, lines) : countOf(b.body, run)),
-      0
-    );
+  const holders = bodiesWith(run).map(i => curBodies[i]);
+  if (!holders.length) return 0;
+  const sites = cliPositions(run).map(i => ({
+    at: i,
+    lits: literalsAround(i, run.length),
+  }));
+  const placed = [];
+  const unplaced = [];
+  for (const b of holders) {
+    const choices = [];
+    for (let q = b.body.indexOf(run); q >= 0; q = b.body.indexOf(run, q + 1)) {
+      choices.push(
+        sites
+          .filter(({ at, lits }) =>
+            lits.some(lit => claimsSite(b, q, run.length, lit, at))
+          )
+          .map(({ at }) => at)
+      );
+    }
+    if (choices.some(c => c.length)) placed.push({ b, choices });
+    else unplaced.push(b);
+  }
+  const counted = lines ? new Set(siteOffsets(cli, run, lines)) : null;
+  const choices = placed.flatMap(({ choices }) =>
+    choices.map(c => (counted ? c.filter(s => counted.has(s)) : c))
+  );
+  return (
+    maxMatching(choices) +
+    unplaced
+      .filter(
+        b =>
+          !holders.some(o => o !== b && nestedIn(b, o)) &&
+          !placed.some(({ b: o }) => nestedIn(o, b))
+      )
+      .reduce(
+        (n, b) =>
+          n + (lines ? countSites(b.body, run, lines) : countOf(b.body, run)),
+        0
+      )
+  );
 };
 // The current id carrying the largest share of `units`, and that share.
 // Testing every unit against every body made this the gate's hot loop (85 s of
@@ -387,10 +618,7 @@ const bodiesHolding = u => {
   const all = [...u.matchAll(WORD)];
   const words = all
     .filter(
-      m =>
-        m.index > 0 &&
-        m.index + m[0].length < u.length &&
-        m[0].length >= 3
+      m => m.index > 0 && m.index + m[0].length < u.length && m[0].length >= 3
     )
     .map(m => m[0]);
   if (!words.length) return null;
@@ -405,10 +633,7 @@ const bodiesHolding = u => {
 const bestSuccessor = units => {
   const hits = new Map();
   for (const u of units) {
-    const cand = bodiesHolding(u);
-    const scan = cand ?? curBodies.map((_, i) => i);
-    for (const i of scan)
-      if (curBodies[i].body.includes(u)) hits.set(i, (hits.get(i) || 0) + 1);
+    for (const i of bodiesWith(u)) hits.set(i, (hits.get(i) || 0) + 1);
   }
   let best = null;
   let bestHit = 0;
@@ -522,7 +747,7 @@ const encodingsOf = ch => {
 
 // How many old-line characters, starting at `off`, the haystack continues from
 // `at` (forward) or ends with before `at` (backward), escape-aware.
-const extendForward = (hay, at, line, off) => {
+const walkForward = (hay, at, line, off) => {
   let n = 0;
   let j = at;
   while (off + n < line.length && j < hay.length) {
@@ -531,8 +756,9 @@ const extendForward = (hay, at, line, off) => {
     j += enc.length;
     n++;
   }
-  return n;
+  return { n, j };
 };
+const extendForward = (hay, at, line, off) => walkForward(hay, at, line, off).n;
 // Walking backward, an escape ending at `j` is real only when the backslash
 // that opens it is not itself escaped (an even run of backslashes before it).
 const escapeOpensAt = (hay, i) => {
@@ -562,61 +788,220 @@ const runAround = (hay, at, line, off) =>
   WINDOW +
   extendForward(hay, at + WINDOW, line, off + WINDOW);
 
-// Occurrences of `u` in `hay` that continue some old line that holds it.
-const countSites = (hay, u, lines) => {
-  const contexts = [];
-  for (const line of lines) {
-    for (let o = line.indexOf(u); o >= 0; o = line.indexOf(u, o + 1)) {
-      contexts.push({ line, off: o });
+const removedEntries = [...prevById]
+  .filter(([id]) => !curIds.has(id))
+  .flatMap(([, entries]) => entries);
+const probeKeys = (() => {
+  const keys = new Set();
+  const add = s => {
+    if (s.length >= WINDOW) keys.add(s.slice(0, WINDOW));
+  };
+  for (const p of removedEntries) {
+    strayProbes(p).forEach(add);
+    midBodyProbes(p).forEach(add);
+    proseLines(p).flatMap(asciiRunsOnLine).forEach(add);
+    for (const run of literalRuns(p)) {
+      for (let off = 0; off + WINDOW <= run.length; off += STRIDE)
+        add(run.slice(off, off + WINDOW));
     }
   }
-  let n = 0;
-  for (let i = hay.indexOf(u); i >= 0; i = hay.indexOf(u, i + 1)) {
+  return keys;
+})();
+
+const UNIT_KEY = 8;
+const unitKeys = (() => {
+  const keys = new Set([...probeKeys].map(k => k.slice(0, UNIT_KEY)));
+  for (const p of removedEntries) {
+    for (const u of shareUnits(p))
+      if (u.length >= UNIT_KEY) keys.add(u.slice(0, UNIT_KEY));
+  }
+  return keys;
+})();
+
+const HASH_BASE = 31;
+const HASH_BITS = 24;
+const hashWindow = (s, at, width) => {
+  let h = 0;
+  for (let k = 0; k < width; k++)
+    h = (Math.imul(h, HASH_BASE) + s.charCodeAt(at + k)) | 0;
+  return h;
+};
+const hashBucket = h => (h ^ (h >>> 13)) & ((1 << HASH_BITS) - 1);
+const windowIndex = (hay, keys, width) => {
+  const hits = new Map();
+  for (const k of keys) hits.set(k, []);
+  if (hay.length < width || !hits.size) return hits;
+  let top = 1;
+  for (let k = 1; k < width; k++) top = Math.imul(top, HASH_BASE);
+  const filter = new Uint8Array(1 << (HASH_BITS - 3));
+  for (const k of hits.keys()) {
+    const b = hashBucket(hashWindow(k, 0, width));
+    filter[b >>> 3] |= 1 << (b & 7);
+  }
+  let h = hashWindow(hay, 0, width);
+  for (let i = 0; ; i++) {
+    const b = hashBucket(h);
+    if (filter[b >>> 3] & (1 << (b & 7))) {
+      const list = hits.get(hay.slice(i, i + width));
+      if (list) list.push(i);
+    }
+    if (i + width >= hay.length) break;
+    h =
+      (Math.imul(h - Math.imul(hay.charCodeAt(i), top), HASH_BASE) +
+        hay.charCodeAt(i + width)) |
+      0;
+  }
+  return hits;
+};
+const scanPositions = (hay, u) => {
+  const positions = [];
+  for (let i = hay.indexOf(u); i >= 0; i = hay.indexOf(u, i + 1))
+    positions.push(i);
+  return positions;
+};
+const indexedHaystack = (hay, keys, width) => {
+  let index = null;
+  const cache = new Map();
+  return u => {
+    let positions = cache.get(u);
+    if (positions) return positions;
+    index ??= windowIndex(hay, keys, width);
+    const list = u.length >= width ? index.get(u.slice(0, width)) : null;
+    if (!list) positions = scanPositions(hay, u);
+    else if (u.length === width) positions = list;
+    else positions = list.filter(i => hay.startsWith(u, i));
+    cache.set(u, positions);
+    return positions;
+  };
+};
+const cliPositions = indexedHaystack(cli, probeKeys, WINDOW);
+const sidecarPositions = indexedHaystack(sidecarBlob, unitKeys, UNIT_KEY);
+const curBlobPositions = indexedHaystack(curBlob, probeKeys, WINDOW);
+const bodiesBlob = curBodies.map(b => b.body).join('\n');
+const bodyStarts = [];
+curBodies.reduce((at, b) => {
+  bodyStarts.push(at);
+  return at + b.body.length + 1;
+}, 0);
+const bodiesBlobPositions = indexedHaystack(bodiesBlob, unitKeys, UNIT_KEY);
+const bodiesWithCache = new Map();
+const bodiesWith = u => {
+  let ids = bodiesWithCache.get(u);
+  if (ids) return ids;
+  if (u.includes('\n') || u.length < UNIT_KEY) {
+    ids = (bodiesHolding(u) ?? curBodies.map((_, i) => i)).filter(i =>
+      curBodies[i].body.includes(u)
+    );
+  } else {
+    ids = [];
+    let b = 0;
+    for (const at of bodiesBlobPositions(u)) {
+      while (b + 1 < bodyStarts.length && bodyStarts[b + 1] <= at) b++;
+      if (ids.at(-1) !== b) ids.push(b);
+    }
+  }
+  bodiesWithCache.set(u, ids);
+  return ids;
+};
+const siteCaches = new Map([
+  [cli, new WeakMap()],
+  [sidecarBlob, new WeakMap()],
+]);
+const positionsIn = hay =>
+  hay === cli
+    ? cliPositions
+    : hay === sidecarBlob
+      ? sidecarPositions
+      : u => scanPositions(hay, u);
+const contextIndex = new WeakMap();
+const contextsOf = (u, lines) => {
+  if (u.length !== WINDOW) {
+    const contexts = [];
+    for (const line of lines) {
+      for (let o = line.indexOf(u); o >= 0; o = line.indexOf(u, o + 1)) {
+        contexts.push({ line, off: o });
+      }
+    }
+    return contexts;
+  }
+  let byWindow = contextIndex.get(lines);
+  if (!byWindow) {
+    byWindow = new Map();
+    for (const line of lines) {
+      for (let o = 0; o + WINDOW <= line.length; o++) {
+        const w = line.slice(o, o + WINDOW);
+        if (!byWindow.has(w)) byWindow.set(w, []);
+        byWindow.get(w).push({ line, off: o });
+      }
+    }
+    contextIndex.set(lines, byWindow);
+  }
+  return byWindow.get(u) || [];
+};
+
+// Occurrences of `u` in `hay` that continue some old line that holds it.
+const siteOffsets = (hay, u, lines) => {
+  const siteCache = siteCaches.get(hay);
+  if (siteCache) {
+    let byUnit = siteCache.get(lines);
+    if (!byUnit) siteCache.set(lines, (byUnit = new Map()));
+    if (!byUnit.has(u)) byUnit.set(u, scanSiteOffsets(hay, u, lines));
+    return byUnit.get(u);
+  }
+  return scanSiteOffsets(hay, u, lines);
+};
+const scanSiteOffsets = (hay, u, lines) => {
+  const contexts = contextsOf(u, lines);
+  const out = [];
+  const positions = positionsIn(hay)(u);
+  for (const i of positions) {
     if (
       contexts.some(
         ({ line, off }) => runAround(hay, i, line, off) >= siteRunMin(line)
       )
     ) {
-      n++;
+      out.push(i);
     }
   }
-  return n;
+  return out;
 };
+const countSites = (hay, u, lines) => siteOffsets(hay, u, lines).length;
 
 // Distinctive units the bundle holds more often than the catalogue and the
 // classify sidecar together. Each catalogue entry is one bundle site, so a
 // surplus is a site carrying the old text that nothing catalogues. Only
 // single-line ASCII units are countable in the bundle (see the header).
 const strayUnits = (probes, lines) =>
-  probes.filter(
-    u =>
-      isAscii(u) &&
-      countSites(cli, u, lines) >
-        namedSites(u, lines) + countSites(sidecarBlob, u, lines)
-  );
+  probes.filter(u => {
+    if (!isAscii(u)) return false;
+    const inBundle = countSites(cli, u, lines);
+    return (
+      inBundle > 0 &&
+      inBundle > namedSites(u, lines) + countSites(sidecarBlob, u, lines)
+    );
+  });
 
-const share = (units, haystack) =>
-  units.filter(u => haystack.includes(u)).length / units.length;
+const share = (units, positions) =>
+  units.filter(u => positions(u).length > 0).length / units.length;
 
 // `share(windows, curBlob)` was the gate's hot spot (174 s of 259 s on CC
 // 2.1.312): every 25-char window scanned the whole 10 MB catalogue blob. Every
 // window of every blob position is precomputed once instead, so the test is a
 // set lookup. Exact for fixed-length windows: a window is in the blob iff it is
 // one of the blob's own WINDOW-length substrings.
-const windowSet = blob => {
-  const set = new Set();
-  for (let i = 0; i + WINDOW <= blob.length; i++)
-    set.add(blob.slice(i, i + WINDOW));
-  return set;
-};
-let curWindows = null;
-let curSidecarWindows = null;
+const curSidecarSeam = `${curBlob.slice(Math.max(0, curBlob.length - (WINDOW - 1)))}\n${sidecarBlob.slice(0, WINDOW - 1)}`;
 // strayProbes only emits WINDOW-length windows.
 const shareWindows = (windows, set) =>
   windows.filter(w => set().has(w)).length / windows.length;
-const curWindowSet = () => (curWindows ??= windowSet(curBlob));
-const curSidecarWindowSet = () =>
-  (curSidecarWindows ??= windowSet(`${curBlob}\n${sidecarBlob}`));
+const curWindows = { has: w => curBlobPositions(w).length > 0 };
+const curSidecarWindows = {
+  has: w =>
+    curWindows.has(w) ||
+    sidecarPositions(w).length > 0 ||
+    curSidecarSeam.includes(w),
+};
+const curWindowSet = () => curWindows;
+const curSidecarWindowSet = () => curSidecarWindows;
 
 const classify = id => {
   const entries = prevById.get(id) || [];
@@ -638,7 +1023,7 @@ const classify = id => {
     const pending =
       !to &&
       !split &&
-      (share(units, sidecarBlob) >= RENAME_SHARE ||
+      (share(units, sidecarPositions) >= RENAME_SHARE ||
         (windows.length > 0 &&
           shareWindows(windows, curSidecarWindowSet) >= RENAME_SHARE));
     if (to || split || pending) {
@@ -664,8 +1049,8 @@ const classify = id => {
         ...entries.flatMap(proseLines).flatMap(asciiRunsOnLine),
       ]),
     ];
-    const live = runs.filter(r => cli.includes(r));
-    const uncovered = live.filter(r => countOf(cli, r) > namedSites(r));
+    const live = runs.filter(r => cliPositions(r).length > 0);
+    const uncovered = live.filter(r => cliPositions(r).length > namedSites(r));
     return { bucket: uncovered.length ? 'IN-BUNDLE' : 'gone', near };
   }
   for (const p of entries) {
@@ -676,7 +1061,7 @@ const classify = id => {
         // A window a named id already holds at every bundle site is that id's
         // text, not this one surviving (2.1.305: a reworded fence error shared
         // one window with the catalogued verify-inconclusive message).
-        if (countOf(cli, w) > namedSites(w))
+        if (cliPositions(w).length > namedSites(w))
           return { bucket: 'IN-BUNDLE', near };
       }
     }
@@ -787,7 +1172,9 @@ if (split.length) {
   for (const id of split) console.log(`  ${id}`);
 }
 if (buckets['in-catalogue'].length) {
-  fs.writeFileSync(RENAME_MAP, `${JSON.stringify(renamedTo, null, 2)}\n`);
+  const { file, announce } = renameMapTarget();
+  fs.writeFileSync(file, `${JSON.stringify(renamedTo, null, 2)}\n`);
+  if (announce) console.log(`\nrename map: ${file}`);
 }
 
 // `no-probe-surface` needs a decision too: the gate could not test it, and
@@ -879,8 +1266,9 @@ if (unreviewedGone.length) {
 
 if (buckets['IN-BUNDLE'].length) {
   console.log('\nremoved-id coverage: FAIL');
-  process.exit(1);
+  process.exitCode = 1;
+} else {
+  console.log(
+    `\nremoved-id coverage: PASS (${unreviewedGone.length} removal(s) awaiting archival)`
+  );
 }
-console.log(
-  `\nremoved-id coverage: PASS (${unreviewedGone.length} removal(s) awaiting archival)`
-);

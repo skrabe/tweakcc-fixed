@@ -225,6 +225,21 @@ describe('parseSentinelBundle', () => {
     );
   });
 
+  it('hands back views of the bundle, not copies', () => {
+    const buf = bundle([
+      [0, '/$bunfs/root/_821.js', 'let a=1;\n'],
+      [7, '/$bunfs/root/cli', 'let b=2;\n'],
+    ]);
+    const got = parseSentinelBundle(buf)!;
+    for (const body of got.values()) {
+      expect(body.buffer).toBe(buf.buffer);
+      expect(body.byteOffset).toBeGreaterThanOrEqual(buf.byteOffset);
+      expect(body.byteOffset + body.length).toBeLessThanOrEqual(
+        buf.byteOffset + buf.length
+      );
+    }
+  });
+
   it('keeps a body that itself contains backticks and ${} slots intact', () => {
     const src = 'let p=`a ${VAR} b`;\n';
     const got = parseSentinelBundle(bundle([[1, '/$bunfs/root/_1.js', src]]));
@@ -469,6 +484,35 @@ describe('text assets in the virtual bundle', () => {
     expect(() =>
       rebuildBunDataFromVirtualBundle(blob, Buffer.from(edited, 'latin1'))
     ).toThrow(/doc-1\.md.*substitution/);
+  });
+
+  it('frames the rebuilt blob in place for every writer', () => {
+    const edited = Buffer.from(
+      text.replace('# Doc\n', '# Doc framed\n'),
+      'latin1'
+    );
+    for (const bundleBytes of [bundle, edited]) {
+      const plain = rebuildBunDataFromVirtualBundle(blob, bundleBytes);
+      const u64 = rebuildBunDataFromVirtualBundle(blob, bundleBytes, {
+        head: 8,
+        tail: 0,
+      });
+      expect(u64.length).toBe(plain.length + 8);
+      expect(u64.readBigUInt64LE(0)).toBe(BigInt(plain.length));
+      expect(u64.subarray(8).equals(plain)).toBe(true);
+      const u32 = rebuildBunDataFromVirtualBundle(blob, bundleBytes, {
+        head: 4,
+        tail: 0,
+      });
+      expect(u32.readUInt32LE(0)).toBe(plain.length);
+      expect(u32.subarray(4).equals(plain)).toBe(true);
+      const overlay = rebuildBunDataFromVirtualBundle(blob, bundleBytes, {
+        head: 0,
+        tail: 8,
+      });
+      expect(overlay.subarray(0, plain.length).equals(plain)).toBe(true);
+      expect(overlay.readBigUInt64LE(plain.length)).toBe(BigInt(plain.length));
+    }
   });
 
   it('refuses a bundle that lost an asset segment', () => {

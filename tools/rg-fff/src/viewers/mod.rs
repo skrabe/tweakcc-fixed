@@ -53,6 +53,14 @@ impl Viewer {
 pub(super) enum Flavor {
     Gnu,
     Bsd,
+    // uutils accepts GNU's option grammar but permutes even under POSIXLY_CORRECT.
+    Uutils,
+}
+
+impl Flavor {
+    fn gnu_syntax(self) -> bool {
+        self != Self::Bsd
+    }
 }
 
 pub fn dispatch() -> bool {
@@ -121,7 +129,11 @@ pub fn dispatch() -> bool {
         }
     };
     let record = recognize(&original, viewer).and_then(|flavor| {
-        let permute = flavor == Flavor::Gnu && std::env::var_os("POSIXLY_CORRECT").is_none();
+        let permute = match flavor {
+            Flavor::Gnu => std::env::var_os("POSIXLY_CORRECT").is_none(),
+            Flavor::Uutils => true,
+            Flavor::Bsd => false,
+        };
         operands(viewer, flavor, &args[1..], permute).and_then(|files| recording(&files, &cwd))
     });
     let Some(record) = record else {

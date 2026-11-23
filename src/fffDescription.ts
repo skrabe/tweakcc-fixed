@@ -2,7 +2,7 @@ export const FFF_FEATURE_TITLE =
   '[EXPERIMENTAL] native search and fff filename discovery';
 
 export const FFF_FEATURE_DESCRIPTION =
-  'Guide Claude to discover unknown project files with fff files in Bash, then inspect candidate code. Guidance follows custom and saved system prompts whenever Bash is available. Keep native Grep and Glob available, retaining matching, ordering, pagination, and permissions. Fuzzy filename words can match in any order; ranking uses local file usage and Git activity. Also adds fuzzy @ suggestions and optional Bash-read learning. Normal Bash searches retain native behavior. History stays under ~/.tweakcc/fff.';
+  'Discover unknown project files with fff files in Bash, then inspect candidates. A short note in the final Bash tool description explains the workflow. Grep, Glob and normal Bash searches keep native behavior. Includes fuzzy @ suggestions, local filename ranking and optional learning from Bash file reads. History stays under ~/.tweakcc/fff.';
 
 export const FFF_BASH_READ_TITLE = 'fff: learn from Bash file reads';
 

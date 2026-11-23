@@ -1050,15 +1050,46 @@ export const writePrintToolsFilter = (
   // off the `{session:…,refreshTools:…}` object (one match), read `computeFn`
   // and `getterFn` out of its declaration, then find the eager declaration by
   // `computeFn` and confirm it against its own `tools:` use site.
-  const csPattern =
-    /\{session:[$\w]+,refreshTools:([$\w]+),refreshMcpClients:([$\w]+),verbose:/;
-  const csMatch = oldFile.match(csPattern);
+  // CC 2.1.326 put `admitsMcpTool:(L)=>{…}` between `refreshTools:` and
+  // `refreshMcpClients:`. Its body nests braces, so pin the object by its
+  // `{session:…,refreshTools:X,admitsMcpTool:` head and take the first
+  // `refreshMcpClients:Y,verbose:` after it.
+  const findPrintContext = ():
+    | { index: number; thunkVar: string; mcpVar: string }
+    | undefined => {
+    const head = oldFile.match(
+      /\{session:[$\w]+,refreshTools:([$\w]+),admitsMcpTool:/
+    );
+    if (head && head.index !== undefined) {
+      const tailRe = /refreshMcpClients:([$\w]+),verbose:/g;
+      tailRe.lastIndex = head.index;
+      const tail = tailRe.exec(oldFile);
+      if (tail)
+        return { index: head.index, thunkVar: head[1], mcpVar: tail[1] };
+    }
+    const legacy = oldFile.match(
+      /\{session:[$\w]+,refreshTools:([$\w]+),refreshMcpClients:([$\w]+),verbose:/
+    );
+    if (legacy && legacy.index !== undefined)
+      return { index: legacy.index, thunkVar: legacy[1], mcpVar: legacy[2] };
+    return undefined;
+  };
+  const csMatch = findPrintContext();
   // Method 2 (below) handles every build up to and including CC 2.1.237, where
   // `tools:` and `refreshTools:` still shared one object literal. Fall through
   // rather than failing, so this patch keeps working on the older shape.
   const escapeIdent = (name: string) => name.replace(/\$/g, '\\$');
-  if (csMatch && csMatch.index !== undefined) {
-    const thunkVar = csMatch[1];
+  if (csMatch) {
+    const thunkVar = csMatch.thunkVar;
+
+    // Already patched: the thunk was rewritten to call the filter expression.
+    if (
+      new RegExp(
+        `[,;{ ]${escapeIdent(thunkVar)}=\\(\\)=>\\{let s=[$\\w]+\\(\\);return \\(\\(t,s\\)=>\\{const p=`
+      ).test(oldFile)
+    ) {
+      return oldFile;
+    }
 
     const thunkDeclRe = new RegExp(
       `${escapeIdent(thunkVar)}=\\(\\)=>([$\\w]+)\\(([$\\w]+)\\(\\)\\)`,
@@ -1115,26 +1146,47 @@ export const writePrintToolsFilter = (
       thunkDecl.index + thunkReplacement.length
     );
 
-    // Site 2: the eager array the non-SDK branch submits. Identify it by its own
-    // `tools:X,mcpClients:` use site so a same-shaped declaration elsewhere in
-    // the bundle cannot be picked up by accident, then rewrite its declaration.
-    const eagerUse = [
+    // Site 2: the eager array the non-SDK branch submits, if this build still
+    // has one. Each `tools:X,mcpClients:Y,appendSystemPrompt:` use site is a
+    // candidate; only one whose X is declared as `X=computeFn(S)` is the print
+    // path's eager array. Unrelated callers share the use-site shape (CC 2.1.322
+    // has an `analysisOnly` caller passing a parameter), so a candidate with no
+    // such declaration is skipped rather than treated as a failure.
+    const eagerCandidates = [
       ...newFile.matchAll(
         /tools:([$\w]+),mcpClients:([$\w]+),appendSystemPrompt:/g
       ),
     ]
       .map(m => m[1])
-      .find(name => name !== thunkVar);
-    if (eagerUse === undefined) {
+      .filter(name => name !== thunkVar);
+    let eagerUse: string | undefined;
+    let eagerDecl: RegExpMatchArray | null = null;
+    for (const name of eagerCandidates) {
+      eagerDecl = newFile.match(
+        new RegExp(
+          `(?<![$\\w.])${escapeIdent(name)}=${escapeIdent(computeFn)}\\(([$\\w]+)\\)`
+        )
+      );
+      if (eagerDecl) {
+        eagerUse = name;
+        break;
+      }
+    }
+    if (eagerCandidates.length === 0) {
       // Only the lazy branch exists in this build — the thunk covers everything.
       return newFile;
     }
-    const eagerDecl = newFile.match(
-      new RegExp(
-        `${escapeIdent(eagerUse)}=${escapeIdent(computeFn)}\\(([$\\w]+)\\)`
-      )
-    );
-    if (!eagerDecl || eagerDecl.index === undefined) {
+    if (eagerUse === undefined) {
+      // Method 1 — CC >=2.1.322: the eager array is gone. The print context is
+      // built by `X=(M)=>({...M,…,tools:THUNK,mcpClients:MCP,…})`, so the query
+      // engine reads tools only through the thunk patched above. Confirm that
+      // wiring before declaring the eager site absent.
+      const directWiring = new RegExp(
+        `[{,]tools:${escapeIdent(thunkVar)},mcpClients:${escapeIdent(csMatch.mcpVar)}[,}]`
+      );
+      if (directWiring.test(newFile)) return newFile;
+    }
+    if (eagerUse === undefined || !eagerDecl || eagerDecl.index === undefined) {
       console.error(
         'patch: toolsets: printToolsFilter: failed to find print tools initialization'
       );
@@ -2314,6 +2366,27 @@ export const findModeChange = (
   // `r` is the setState and `e` the requested mode. Everything before this
   // `return` has already rejected an unavailable mode, so injecting there runs
   // only for a mode change that is actually going to happen.
+  // CC 2.1.326 turned the same-mode early return into a block
+  // (`if(i===e){let k=…;return k===…?o:{…}}`), so match the head and the
+  // `return{...o,toolPermissionContext:{...s,mode:e}}})` tail separately and
+  // require the tail to close the same setter arrow.
+  const setterHead =
+    /return ([$\w]+)\(\([$\w]+\)=>\{let ([$\w]+)=[$\w]+\.toolPermissionContext\.mode;if\(\2===([$\w]+)\)/g;
+  for (const head of fileContents.matchAll(setterHead)) {
+    if (head.index === undefined) continue;
+    const modeVar = head[3];
+    const tailRe = new RegExp(
+      `let ([$\\w]+)=[$\\w]+\\(${head[2].replace(/\$/g, '\\$')},${modeVar.replace(/\$/g, '\\$')},[$\\w]+\\.toolPermissionContext\\);return\\{\\.\\.\\.[$\\w]+,toolPermissionContext:\\{\\.\\.\\.\\1,mode:${modeVar.replace(/\$/g, '\\$')}\\}\\}\\}\\)`,
+      'g'
+    );
+    tailRe.lastIndex = head.index + head[0].length;
+    const tail = tailRe.exec(fileContents);
+    if (!tail) continue;
+    const between = fileContents.slice(head.index + head[0].length, tail.index);
+    if (/\bfunction\b|\}\)[,;]/.test(between)) continue;
+    return { index: head.index, modeVar, setStateVar: head[1] };
+  }
+
   const setterPattern =
     /return ([$\w]+)\(\([$\w]+\)=>\{let ([$\w]+)=[$\w]+\.toolPermissionContext\.mode;if\(\2===([$\w]+)\)return [$\w]+;let ([$\w]+)=[$\w]+\(\2,\3,[$\w]+\.toolPermissionContext\);return\{\.\.\.[$\w]+,toolPermissionContext:\{\.\.\.\4,mode:\3\}\}\}\)/;
   const setterMatch = fileContents.match(setterPattern);
@@ -2463,13 +2536,15 @@ export const writeToolsets = (
   // Step 3: Add toolset component definition (JSX UI). On ESM-split builds
   // React is not a global in the insertion module — skip the component and
   // register a text /toolset command instead.
-  const withUi = writeToolsetComponentDefinition(
-    result,
-    toolsets,
-    defaultToolset,
-    acceptEditsToolset,
-    planModeToolset
-  );
+  const withUi = getReactVar(result)
+    ? writeToolsetComponentDefinition(
+        result,
+        toolsets,
+        defaultToolset,
+        acceptEditsToolset,
+        planModeToolset
+      )
+    : null;
   if (withUi) {
     result = withUi;
   } else {

@@ -21,6 +21,7 @@ const MODEL_FACING_IDS = [
   'lean-memory-types',
   'suppress-deferred-tools',
   'claudemd-context-once-per-conversation',
+  'compaction-high-effort',
   'unlock-responsive-mode',
   'attached-background-interactive',
   'enable-propose-goal',

@@ -41,33 +41,27 @@ adoption or a general relevance improvement. See the
 
 ## The binary integration
 
-Claude can use the same workflow through `fff files` in its existing Bash tool.
-The patch attaches an explicit navigation paragraph to the final API system
-prompt after native live/saved prompt selection. It also corrects the search
-clause in native auto-mode messages after rendering. These additions are
-conditional on the feature and Bash availability; custom prompt content and
-native permission instructions are preserved.
+Claude uses this workflow through `fff files` in its existing Bash tool.
+On main, the patch adds a 234-character note to Bash's final API description,
+after live or saved tool selection. It also changes the search clause in native
+auto-mode messages to point to that description. Both changes require FFF and
+Bash. Custom system prompts and native permission instructions keep their text.
 
-Attaching the paragraph earlier in prompt assembly was insufficient: saved
-prompt selection could discard it. Appending instructions to tool descriptions
-also created an undo problem: native snapshots store those descriptions and
-can replay them after the feature is disabled.
+Saved descriptions are cleaned before use, then receive one copy of the current
+note. An always-applied repair removes exact old FFF additions from selected
+Bash/Grep descriptions, schemas and system prompts. It runs with FFF off too,
+without rewriting snapshots or historical transcripts. `/context` uses the same
+normalized descriptions. No `CLAUDE.md` or user override file receives an append.
 
-The final approach keeps additions transient. It leaves native tool descriptions
-unchanged and cleans exact previously owned fff additions from selected saved
-Bash/Grep descriptions and schemas at runtime. That cleanup remains available
-when the discovery feature is off. It preserves other text, schema fields,
-tool names, snapshot records, and permission selection, without rewriting
-historical transcripts. `/context` uses the same selected-description cleanup
-and system appendix for token accounting.
+Changing the setting and applying rebuilds from the pristine backup. Restart
+Claude Code to use the rebuilt binary, including resumed sessions. The current
+insertion sites are checked on 2.1.317; missing or ambiguous required sites fail
+apply.
 
-No `CLAUDE.md` or user override file receives an append. Changing the main
-setting and applying rebuilds the binary from its pristine backup. Restart
-Claude Code to use that rebuilt binary, including when resuming a session.
-There are no instruction-file edits to undo. The native insertion sites are
-verified on Claude Code 2.1.296; ambiguous sites fail instead of guessing a
-neighboring function. The always-applied cleanup can also fail apply on an
-older snapshot-enabled build with different sites, even when fff is off.
+Published v2.9.23 attached guidance to the final system prompt. The adoption
+evaluation below tested that earlier placement on 2.1.296. It does not measure
+adoption of the current Bash-description note. The current placement was checked
+for rendering, saved-prompt cleanup and disable behavior separately.
 
 ## Concrete benefits and limits
 

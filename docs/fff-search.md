@@ -18,32 +18,34 @@ candidates, then use native content search when filenames provide no useful
 lead or the task needs exact code text. Known paths can be read directly. Fuzzy
 filename results are candidates, not evidence about what their code does.
 
-This guidance is attached to the final API system prompt after Claude selects
-its live or saved prompt. Custom system-prompt overrides retain their content;
-main queries, subagent queries, and resumed sessions receive the appendix when
-Bash is available. `/context` accounts for the same appendix. The patch also
-updates the search clause in native auto-mode messages after rendering,
-preserving permission instructions and edit rules. Native Bash/Grep tool
-descriptions retain their content.
+On main, a 234-character note is appended to the final Bash tool description,
+after live or saved tool selection. Main queries, subagents and resumed sessions
+get one copy when Bash is available. Custom system prompts keep their text;
+no FFF paragraph is added to the root system prompt. `/context` counts the same
+description. The patch also updates the search clause in native auto-mode
+messages to point to Bash's description, preserving permission and edit rules.
+Grep's description is unchanged.
 
-The appendix is not written into saved prompt snapshots or override files.
-Disabling the feature, reapplying from the pristine backup, and restarting
-removes its discovery appendix and auto-mode changes. Toolsets without Bash
-receive no fff appendix. No separate plugin, MCP server, or shell-search
-interception is needed.
+The note is added at request assembly, rather than written into override files
+or historical session records. Saved descriptions are normalized before use.
+Disabling the feature, applying from the pristine backup and restarting removes
+the note and auto-mode change. Toolsets without Bash receive no note.
 
-An always-applied compatibility repair removes exact old fff additions from
-selected saved Bash/Grep tool descriptions and schema descriptions. This
-prevents resumed snapshots from retaining old guidance after discovery is off.
-Other text, schema fields, tool names, and native snapshot records are
-preserved. Historical transcript files remain intact. The repair also runs
-with `--patches` filters and needs no fff executable or separate setting.
+An always-applied compatibility repair removes exact owned FFF additions from
+selected saved Bash/Grep descriptions, schema descriptions and system prompts.
+It preserves other content and runs with `--patches` filters, even when FFF is
+off. It needs no FFF executable. Native snapshots and historical transcripts
+remain intact.
+
+Published v2.9.23 used a system-prompt appendix. Build main for the Bash placement
+and restored-prompt cleanup described here.
 
 The [adoption evaluation](../tools/navigation-eval/adoption/README.md) compares
 instruction integration with frozen synthetic tasks and records both successful
-and unsuccessful discovery. In the two final Opus 5.5 task pairs, the guided
-binary used fff in both tasks and the baseline in neither. Both conditions
-answered the requested facts correctly, so better answers remain unproven.
+and unsuccessful discovery. That evaluation used the earlier system-appendix
+placement. In its two final Opus 5.5 task pairs, the guided binary used fff in
+both tasks and the baseline in neither. Both conditions answered the requested
+facts correctly, so better answers remain unproven.
 The [Pi comparison](fff-agent-navigation.md) explains the workflow and binary
 insertion points. This is a navigation capability, not a semantic code search
 engine or a guarantee of better answers.
@@ -70,20 +72,22 @@ effects. There is no interleaving toggle or formatter in the installed patch.
 
 Bash `grep`, `rg`, and `find`, their native shell setup, and Claude's embedded
 ripgrep resolver retain native behavior. The patch no longer redirects them to
-fff. Navigation guidance is attached to the final system prompt when the
-feature is applied. Earlier description-only trials did not use fff; the newer
-paired evaluation tests explicit guidance rather than assuming tool visibility
-causes adoption. Guidance does not guarantee which tools the model will choose.
+fff. Navigation guidance now lives in Bash's final description. Earlier
+description-only trials did not use fff; the paired system-appendix evaluation
+tested explicit guidance rather than assuming tool visibility causes adoption.
+Those trials do not establish adoption for the current Bash note. Guidance does
+not guarantee which tools the model will choose.
 File pointers are no longer appended to compaction summaries, and file-history
 counts no longer affect the Jev effort router.
 
-The native insertion points are checked against Claude Code 2.1.296. Missing or
-ambiguous required tool-selection and instruction boundaries fail the patch.
+The current native insertion points are checked against Claude Code 2.1.317.
+Missing or ambiguous required tool-selection and instruction boundaries fail
+the patch.
 An AST parser bounds each instruction site to its native function, rejecting
 neighboring or nested lookalikes rather than patching an unrelated function.
 Older installed builds can require another verified match method. Reapply from
 the pristine backup to replace a previously intercepted search configuration.
-The always-applied snapshot repair is also verified on 2.1.296. Builds without
+The always-applied snapshot repair is also checked on 2.1.317. Builds without
 native prompt snapshots need no repair; a snapshot-enabled build with different
 required sites can fail apply even when fff is disabled.
 

@@ -340,6 +340,27 @@ const patchExtractMode = (file: string): string | null => {
 };
 
 /**
+ * Patch 6: Neutralize the inline tengu_passport_quail checks that remain
+ * after the extract-mode helper is collapsed. CC >= 2.1.317 re-checks the
+ * flag inside the per-turn extractor, so collapsing the helper alone leaves
+ * extraction dead:
+ *   if(!I&&!v("tengu_passport_quail",!1)&&!Xt())return;
+ * Each negated check becomes `!1`, which keeps every other clause intact.
+ */
+const INLINE_PASSPORT_GATE = /![$\w]+\("tengu_passport_quail",!1\)/g;
+
+const patchInlineExtractGates = (file: string): string | null => {
+  const newFile = file.replace(INLINE_PASSPORT_GATE, '!1');
+  if (newFile.includes('"tengu_passport_quail"')) {
+    console.error(
+      'patch: sessionMemory: failed to neutralize an inline passport_quail gate'
+    );
+    return null;
+  }
+  return newFile;
+};
+
+/**
  * Combined patch - applies extraction, past sessions, token limits, and update thresholds
  */
 export const writeSessionMemory = (oldFile: string): string | null => {
@@ -359,6 +380,12 @@ export const writeSessionMemory = (oldFile: string): string | null => {
     return null;
   }
   newFile = withExtractMode;
+
+  const withInlineGates = patchInlineExtractGates(newFile);
+  if (!withInlineGates) {
+    return null;
+  }
+  newFile = withInlineGates;
 
   const tokenLimitsFile = patchTokenLimits(newFile, usedLegacyExtraction);
   if (tokenLimitsFile) {

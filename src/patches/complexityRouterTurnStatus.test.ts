@@ -55,7 +55,39 @@ const fixture317 =
   'class T{a(N,Z){N.transcript.apply({type:"append",messages:[duration(Z.durationMs,V(N.transcript.getSnapshot(),TE),Z.pendingBackgroundAgentCount,Z.pendingWorkflowCount)]})}}' +
   'function render(m){let{message:l,addMargin:p,verb:h}=m,q="42s",W="5:17 PM";return{children:`${h} for ${q}${W?` \\xB7 done ${W}`:""}`}}';
 
+// 2.1.328: the done line is one branch of a pending-agents conditional inside
+// a children array, so the template no longer follows `children:`.
+const fixture328 =
+  'function duration(e,n,r,s){return{type:"system",subtype:"turn_duration",durationMs:e,messageCount:n,pendingBackgroundAgentCount:r,pendingWorkflowCount:s}}' +
+  'async function*query(e,n,r,s,g,{modelFacts:h,...b},w){let{fallbackModel:L}=x(b.model,b.fallbackModel),Z=L===b.fallbackModel?b:{...b,fallbackModel:L},we=f=>f();let Ur=we(()=>carry(Z)),wt=Z.model;let Te=we(()=>ow(wt,Z.effortValue,{turnEffort:Z.turnEffort,hookEffortValue:Z.hookEffortValue,carriedEffort:Ur}));yield Te}' +
+  'class T{a(N,Z){N.transcript.apply({type:"append",messages:[duration(Z.durationMs,V(N.transcript.getSnapshot(),TE),Z.pendingBackgroundAgentCount,Z.pendingWorkflowCount)]})}}' +
+  'function render(d){let{message:l,addMargin:m,verb:u,snapshot:f,hasLaterTurn:h}=d,q="42s",U="5:17 PM",v=!0,me=(l.pendingBackgroundAgentCount??0)>0,ye="waiting",le="";return{children:[v&&(me?ye:`${u} for ${q}${U?` \\xB7 done ${U}`:""}`),le]}}';
+
 describe('router completed-turn status', () => {
+  it('patches the 2.1.328 shape: done line inside a pending-agents conditional', () => {
+    const patched = writeComplexityRouterTurnStatus(fixture328)!;
+    expect(patched).not.toBeNull();
+    expect(writeComplexityRouterTurnStatus(patched)).toBe(patched);
+    expect(patched).toContain('children:[v&&(me?ye:`${u} for ${q}${U?`');
+    expect(patched).toContain('Router \\u2192 "+l.tweakccRouter.effort');
+    const context = vm.createContext({});
+    vm.runInContext(patched, context);
+    const run = (source: string) => vm.runInContext(source, context);
+    expect(
+      run(
+        'render({message:{tweakccRouter:{effort:"medium",source:"pinned"}},verb:"Worked"}).children[0]'
+      )
+    ).toBe('Worked for 42s · done 5:17 PM · Router → medium (pinned)');
+    expect(
+      run(
+        'render({message:{pendingBackgroundAgentCount:1,tweakccRouter:{effort:"medium"}},verb:"Worked"}).children[0]'
+      )
+    ).toBe('waiting');
+    expect(run('render({message:{},verb:"Worked"}).children[0]')).toBe(
+      'Worked for 42s · done 5:17 PM'
+    );
+  });
+
   it('patches the 2.1.317 shape: a trailing parameter after the destructured options', () => {
     const patched = writeComplexityRouterTurnStatus(fixture317)!;
     expect(patched).not.toBeNull();
@@ -70,6 +102,28 @@ describe('router completed-turn status', () => {
     );
     expect(patched).toContain('Router \\u2192 "+l.tweakccRouter.effort');
     expect(() => new vm.Script(patched)).not.toThrow();
+  });
+
+  it('prefers the enclosing generator over an earlier one with trailing params', () => {
+    const early = 'async function*early(x,n,r,s,g,V,w){yield V}' + fixture288;
+    const patched = writeComplexityRouterTurnStatus(early)!;
+    expect(patched).not.toBeNull();
+    expect(patched).toContain(
+      'globalThis.__tweakccRouterRecordTurn?.(e,V,__tweakccResolved'
+    );
+    expect(patched).not.toContain('__tweakccRouterRecordTurn?.(x,');
+  });
+
+  it('never binds an earlier generator that does not enclose the request site', () => {
+    // The enclosing signature drifted out of the shape regex; an unrelated
+    // earlier generator whose sixth param shares the options name must not win.
+    const drifted =
+      'async function*far(t,n,r,s,g,b){yield b}' +
+      fixture288.replace(
+        'async function*query(e,n,r,s,g,{modelFacts:h,...b}){',
+        'async function*query(e,n,r,s,g,{modelFacts:h,...b}={}){'
+      );
+    expect(writeComplexityRouterTurnStatus(drifted)).toBeNull();
   });
 
   it('patches the 2.1.295 shape: four-parameter duration factory without a budget argument', () => {

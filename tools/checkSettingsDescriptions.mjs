@@ -126,6 +126,7 @@ const summary =
   `${extra.length} extra; ${safe} fragment(s) catalogued-safe, ${unsafe} unsafe`;
 if (failures) {
   console.log(`${summary} — FAIL (${failures})`);
-  process.exit(1);
+  process.exitCode = 1;
+} else {
+  console.log(`${summary} — PASS`);
 }
-console.log(`${summary} — PASS`);

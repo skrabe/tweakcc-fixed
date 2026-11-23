@@ -77,6 +77,16 @@ if (
   process.exit(2);
 }
 const resolved = resolveOverrideSets(parsed, { fallback: 'none' });
+// Reviewed reasons for slots an override deliberately drops. Without them a
+// realign agent sees a slot pristine has and the override lacks, and puts it
+// back (2.1.318 regrew the compaction prompt's analysis walkthrough this way).
+const trimSlotAllowPath = new URL(
+  '../data/trim-slot-allowlist.json',
+  import.meta.url
+);
+const trimSlotAllow = fs.existsSync(trimSlotAllowPath)
+  ? JSON.parse(fs.readFileSync(trimSlotAllowPath, 'utf8'))
+  : {};
 printAuditedSets(resolved);
 const setDirs = resolved.map(s => s.dir);
 
@@ -197,6 +207,20 @@ for (const id of idList) {
   lines.push(`- sites in the new catalogue: ${curEntries.length}`);
   lines.push(`- pristine ${oldBody.length} -> ${newBody.length} chars`);
   lines.push('');
+  const cuts = Object.entries(trimSlotAllow[id]?.tokens || {});
+  if (cuts.length) {
+    lines.push('## Deliberate cuts (reviewed; keep them cut)');
+    lines.push('');
+    lines.push(
+      'The override drops these slots on purpose. Keep each one out, even where the NEW'
+    );
+    lines.push(
+      'pristine still has it, unless the change below makes the reason false.'
+    );
+    lines.push('');
+    for (const [token, why] of cuts) lines.push(`- \`${token}\`: ${why}`);
+    lines.push('');
+  }
   lines.push('## OLD pristine (what each override was trimmed against)');
   lines.push('');
   lines.push('```');

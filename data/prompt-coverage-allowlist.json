@@ -493,5 +493,420 @@
     "verdict": "not-model-facing",
     "version": "2.1.314",
     "why": "Template assigned to Ui @11773965 in g$ (chunk with the cloud-session bundle builder); Ui is read only by e.onBundleNotice on the launch path without an environmentId. Every onBundleNotice handler is ui (the --remote launcher writes it to stderr; session openers pass it to host streams); model-invoked callers of g$ set none."
+  },
+  "data-sdk-startup-failure-reason-codes": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "chunk-nxc9btm2 (module 119 SDK schema) describe() on the startup-failure reason enum; already cached internal. SDK/host control-protocol schema, never sent as a prompt or tool schema"
+  },
+  "data-sdk-result-request-build-detail-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the @internal result-message field (cli.js zod result schema, chunk-nxc9btm2). Timing telemetry for SDK hosts on stdout JSON"
+  },
+  "data-sdk-result-process-turn-states-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the @internal result-message field, SDK stdout schema for hosts; not a tool schema, not read by the model"
+  },
+  "data-sdk-result-tool-schema-build-detail-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the @internal result-message timing field, SDK stdout schema"
+  },
+  "data-sdk-get-settings-policy-origins-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() inside the get_settings control_response schema (cached internal literal); control-protocol reply to the host, not a model message"
+  },
+  "data-sdk-result-message-normalization-detail-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the @internal result-message timing field, SDK stdout schema"
+  },
+  "data-thin-client-diff-dialog-no-diff-reason-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() in the thin-client diff-response schema (cached internal); host protocol, no model route"
+  },
+  "data-sdk-warning-model-restriction-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the system/informational SDK event field (@internal); the model never sees the stdout event schema"
+  },
+  "data-self-named-extra-ca-certificate-warning": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "selfNamed message in we @2242379, a startup notice object routed to the terminal/host warning list (cached ui); not a model message"
+  },
+  "data-sdk-ui-attach-draws-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the ui_attach control_request field (@internal); SDK/remote-surface protocol schema"
+  },
+  "data-self-hosted-runner-control-plane-idle-release-notice": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "h() runner log line '[runner:session] ... idle limit ... from Anthropic's control plane' in onServerIdleLimit (cached ui); self-hosted-runner operator log, stderr only"
+  },
+  "data-sdk-user-message-ultrathink-typed-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the SDK user-message schema field (@internal); input-protocol schema for hosts"
+  },
+  "data-sdk-model-fallback-api-refusal-cyber-verification-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the system/model_refusal_fallback SDK event field (@internal); stdout event schema"
+  },
+  "data-sdk-result-credential-expires-at-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the result schema field (cached internal); SDK stdout schema"
+  },
+  "data-self-named-ca-certificate-drop-debug-guidance": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "t(`CA certs: Dropped the certificate ...`) debug-log call in the CA loader (cached internal); debug log only"
+  },
+  "data-sdk-system-init-ultrathink-typed-raises-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the system/init SDK event field (@internal); the field value is set at 19285713 into the init frame for hosts, the description is schema only"
+  },
+  "data-sdk-ui-invalidate-instances-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the system/ui_invalidate SDK event field (@internal)"
+  },
+  "data-mcp-server-status-urlhost-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the mcp status schema field (@internal) in the control_response; host protocol, not an MCP tool result"
+  },
+  "data-sdk-read-file-lossy-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the read_file control_response schema (cached internal); host file-read protocol, not the Read tool"
+  },
+  "data-sdk-initialize-response-hook-on-failure-supported-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the initialize control_response schema (cached internal); SDK handshake, host only"
+  },
+  "data-pending-elicitation-requests-initialization-response": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the initialize response field (cached internal); host protocol"
+  },
+  "data-sdk-ui-invalidate-event": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the system/ui_invalidate event schema (@internal); push to remote surfaces"
+  },
+  "data-ultrathink-availability-session-initialization": {
+    "verdict": "not-model-facing",
+    "version": "2.1.318",
+    "why": "describe() on the system/init SDK event field (@internal); value only informs hosts whether to color the word"
+  },
+  "data-sdk-result-process-turn-threads-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.319",
+    "why": "chunk-khgpwghf.js SDK control-protocol zod schema (result/success message process_turn_threads field, @internal CPU telemetry) .describe(): host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-mcp-call-check-permissions-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.319",
+    "why": "chunk-khgpwghf.js SDK control-protocol zod schema (mcp_call control request check_permissions field) .describe(): host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-set-has-subscribers-control-request": {
+    "verdict": "not-model-facing",
+    "version": "2.1.319",
+    "why": "chunk-khgpwghf.js SDK control-protocol zod schema (set_has_subscribers control request) .describe(): host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-voice-call-message-origin-schema": {
+    "verdict": "not-model-facing",
+    "version": "2.1.319",
+    "why": "chunk-khgpwghf.js SDK control-protocol zod schema (voice-call message origin; the model sees a separate framing text, not this describe) .describe(): host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-mcp-server-connectorid-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.319",
+    "why": "chunk-khgpwghf.js SDK control-protocol zod schema (SDK MCP server connectorId field) .describe(): host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-gateway-govcloud-upstream-isolation-warning": {
+    "verdict": "not-model-facing",
+    "version": "2.1.319",
+    "why": "chunk-85d4q736.js awe() (called from swe gateway startup): returned warnings go to Cr(\"warn\", ...) which sinks to stdio (stderr/log) for the gateway operator; the gateway process is a proxy and the text is never a tool_result or system reminder."
+  },
+  "data-sdk-can-use-tool-decision-reason-code-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.319",
+    "why": "chunk-khgpwghf.js SDK control-protocol zod schema (can_use_tool request decision_reason_code field and the sibling permission_denied system event) .describe(): host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-gateway-model-policy-overlap-warning": {
+    "verdict": "not-model-facing",
+    "version": "2.1.319",
+    "why": "chunk-85d4q736.js awe() (called from swe gateway startup): returned warnings go to Cr(\"warn\", ...) which sinks to stdio (stderr/log) for the gateway operator; the gateway process is a proxy and the text is never a tool_result or system reminder."
+  },
+  "data-block-file-tool-reads-outside-working-directories-setting": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-gywtf5sd.js Jl() permissions settings zod schema @1093164, property blockFileToolReadsOutsideWorkingDirectories, .describe(\"@internal …\"): CC deletes every properties entry whose own description matches ^@internal (with its subtree) before sending the settings JSON schema via /update-config, so it is absent from data/settings-descriptions/oracle-2.1.325.json (0 @internal descriptions); the remaining sinks are settings validation/compare, never a model request."
+  },
+  "data-sdk-api-error-type-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (assistant SDK message api_error_type field) .describe() @2776242: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-initialize-sdk-mcp-server-manifests-origin-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (initialize control request sdkMcpServerManifestsOrigin field; cached internal) .describe() @3015042: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-oauth-token-refresh-refused-call-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (oauth_token_refresh control request refused_call field; cached internal) .describe() @3239197: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-teleport-stash-unexpected-entry-refusal": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-wqb2b4v0.js vLe() @13133190 (stash list unexpected entry refusal; cached ui): thrown as vu error from the /teleport auto-stash (hPn/gPn via jvs); jvs's only caller is the teleport dialog's onConfirm (chunk-eef7meah.js K @36508741, \"Stash changes and continue\"), where the error goes to setState and renders as a jsx prop (bundleQuery trace sink jsx-prop [ui]); no tool or model route, never a tool_result or system reminder."
+  },
+  "data-sdk-read-file-offset-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (read_file control request offset field) .describe() @3131440: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-read-file-live-reply-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (read_file control request liveReply field) .describe() @3133509: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-read-file-for-upload-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (read_file control request for_upload field) .describe() @3132488: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-reload-plugins-refuse-if-busy-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (reload_plugins control request refuse_if_busy field; cached internal) .describe() @3189172: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sandbox-unchecked-protected-paths-warning": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-rsqzfbnr.js SS() sandbox config builder, closure pe @8068131: t(`[Sandbox] ${fA().join(\", \")} (among the paths Claude Code itself keeps…`) — bundleQuery trace sink debug-log [internal], cached internal; a startup/debug warning for the user, never placed in a tool_result, system reminder or prompt."
+  },
+  "data-sdk-get-workspace-diff-omitted-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (get_workspace_diff response omitted field; cached internal) .describe() @3145596: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-initialize-response-other-hook-ask-outranks-host-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (initialize response other_hook_ask_outranks_host field) .describe() @3033891: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-stream-event-owed-rows-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (stream_event SDK message owed_rows field) .describe() @2897513: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-teleport-stash-unsafe-ref-file-refusal": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-wqb2b4v0.js RLe() @13130423 (unsafe ref file refusal; cached ui): thrown as vu error from the /teleport auto-stash (hPn/gPn via jvs); jvs's only caller is the teleport dialog's onConfirm (chunk-eef7meah.js K @36508741, \"Stash changes and continue\"), where the error goes to setState and renders as a jsx prop (bundleQuery trace sink jsx-prop [ui]); no tool or model route, never a tool_result or system reminder."
+  },
+  "data-sdk-read-file-requested-path-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (read_file success response requested_path field) .describe() @3137518: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-initialize-response-managed-settings-applied-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (initialize response managed_settings_applied field) .describe() @3035701: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-initialize-managed-settings-parameter": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (initialize control request managedSettings field) .describe() @3023869: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-ui-render-component-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (ui_render control request component field) .describe() @3258715: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-teleport-stash-unsafe-object-store-or-ref-table-refusal": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-wqb2b4v0.js RLe() @13129810 (unsafe object store/ref table refusal; cached ui): thrown as vu error from the /teleport auto-stash (hPn/gPn via jvs); jvs's only caller is the teleport dialog's onConfirm (chunk-eef7meah.js K @36508741, \"Stash changes and continue\"), where the error goes to setState and renders as a jsx prop (bundleQuery trace sink jsx-prop [ui]); no tool or model route, never a tool_result or system reminder."
+  },
+  "data-teleport-stash-ref-without-entries-refusal": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-wqb2b4v0.js _Pn() @13131850 (refs/stash without entries refusal; cached ui): thrown as vu error from the /teleport auto-stash (hPn/gPn via jvs); jvs's only caller is the teleport dialog's onConfirm (chunk-eef7meah.js K @36508741, \"Stash changes and continue\"), where the error goes to setState and renders as a jsx prop (bundleQuery trace sink jsx-prop [ui]); no tool or model route, never a tool_result or system reminder."
+  },
+  "data-sdk-warning-hook-no-verdict-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (system/informational SDK event hook_no_verdict detail field) .describe() @2909142: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-mcp-server-data-flow-server-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (SDK MCP server config dataFlowServer field) .describe() @2655564: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-user-message-retracted-message-uuids-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (user SDK message retracted_message_uuids field) .describe() @2727838: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "tool-parameter-set-cwd-needs-trust-trust-root": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js @3195579: trust_root field of the needs_trust arm of Or(\"status\",[…]).describe(\"@internal Result of a set_cwd request\") — the set_cwd control_response schema, registered in the SDK control-protocol table @3306658 (S(schema,\"client\",…)); set_cwd is a host control request, not a model tool, so this is not a tool parameter description and never reaches a model request; cached internal."
+  },
+  "data-sandbox-linked-worktree-write-denial-warning": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-rsqzfbnr.js SS() sandbox config builder, closure Pt @8086432: t(`[Sandbox] ${St} is, or is inside, a link…write-denied…`) — bundleQuery trace sink debug-log [internal], cached internal; sibling t(...,{level:\"warn\"}) calls in the same builder are user warnings, never a tool_result, system reminder or prompt."
+  },
+  "data-sdk-can-use-tool-plugin-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (can_use_tool control request plugin field) .describe() @3070865: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-plugin-install-system-message": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (system/plugin_install SDK message schema; cached internal; schema registered only via .lazy protocol tables) .describe() @2929531: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-sdk-interrupt-spare-background-tasks-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-29cd2nzs.js SDK control-protocol zod schema (interrupt control request spare_background_tasks field) .describe() @3052362: host-facing documentation of the stdout/control protocol; bundleQuery sink sdk-control-schema [internal], not converted via toJSONSchema into any tool input schema and not in the settings oracle, never in a model request."
+  },
+  "data-teleport-stash-index-update-failure-error": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-wqb2b4v0.js hPn() @13123585 (index update failure; passed to vLe as indexRepair, then thrown; cached ui): thrown as vu error from the /teleport auto-stash (hPn/gPn via jvs); jvs's only caller is the teleport dialog's onConfirm (chunk-eef7meah.js K @36508741, \"Stash changes and continue\"), where the error goes to setState and renders as a jsx prop (bundleQuery trace sink jsx-prop [ui]); no tool or model route, never a tool_result or system reminder."
+  },
+  "data-teleport-stash-merge-autostash-refusal": {
+    "verdict": "not-model-facing",
+    "version": "2.1.325",
+    "why": "chunk-wqb2b4v0.js RLe() @13128332 (MERGE_AUTOSTASH refusal; cached ui): thrown as vu error from the /teleport auto-stash (hPn/gPn via jvs); jvs's only caller is the teleport dialog's onConfirm (chunk-eef7meah.js K @36508741, \"Stash changes and continue\"), where the error goes to setState and renders as a jsx prop (bundleQuery trace sink jsx-prop [ui]); no tool or model route, never a tool_result or system reminder."
+  },
+  "data-sdk-initialize-mcp-servers-parameter": {
+    "verdict": "not-model-facing",
+    "version": "2.1.326",
+    "why": "SDK control-protocol schema description read by the host program: host-facing documentation, never in a model request."
+  },
+  "data-sdk-initialize-response-mcp-servers-applied-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.326",
+    "why": "SDK control-protocol schema description read by the host program: host-facing documentation, never in a model request."
+  },
+  "data-sdk-mcp-server-errors-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.326",
+    "why": "SDK control-protocol schema description read by the host program: host-facing documentation, never in a model request."
+  },
+  "data-sdk-result-memory-check-detail-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.326",
+    "why": "SDK control-protocol schema description read by the host program: host-facing documentation, never in a model request."
+  },
+  "data-sdk-set-message-waiting-control-request": {
+    "verdict": "not-model-facing",
+    "version": "2.1.326",
+    "why": "SDK control-protocol schema description read by the host program: host-facing documentation, never in a model request."
+  },
+  "data-sdk-ui-message-control-request": {
+    "verdict": "not-model-facing",
+    "version": "2.1.326",
+    "why": "SDK control-protocol schema description read by the host program: host-facing documentation, never in a model request."
+  },
+  "data-sdk-ui-render-props-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.326",
+    "why": "SDK control-protocol schema description read by the host program: host-facing documentation, never in a model request."
+  },
+  "data-sdk-ui-shader-backdrop-component": {
+    "verdict": "not-model-facing",
+    "version": "2.1.326",
+    "why": "SDK control-protocol schema description read by the host program: host-facing documentation, never in a model request."
+  },
+  "data-sdk-initialize-settings-parameter": {
+    "verdict": "not-model-facing",
+    "version": "2.1.328",
+    "why": "@internal .describe() on the settings field of the SDK initialize control_request schema (@2937399 chunk-20bv8pca.js): control-protocol documentation for SDK hosts, never in a model request."
+  },
+  "data-sdk-initialize-response-settings-applied-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.328",
+    "why": "@internal .describe() on settings_applied in the SDK initialize response schema (@2951269 chunk-20bv8pca.js): control-protocol documentation for SDK hosts, never in a model request."
+  },
+  "data-sdk-read-file-diff-rootid-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.328",
+    "why": "rootId .describe() on the diff_root anchor of the read_file control_request schema (@3052472 chunk-20bv8pca.js, already cached internal); read_file is a host request, not a model tool."
+  },
+  "data-sdk-initialize-disallowedtools-parameter": {
+    "verdict": "not-model-facing",
+    "version": "2.1.328",
+    "why": "@internal .describe() on disallowedTools of the SDK initialize control_request schema (@2938238 chunk-20bv8pca.js): control-protocol documentation for SDK hosts, never in a model request."
+  },
+  "data-server-classifier-instruction-file-retry-warning": {
+    "verdict": "not-model-facing",
+    "version": "2.1.328",
+    "why": "tno @14508362 chunk-56bhcxay.js: [server-classifier] t(...,{level:\"warn\"}) debug/warn log on a 400/413 retry; only the retry tag is returned, the text never reaches a model."
+  },
+  "data-sdk-initialize-host-dropped-env-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.328",
+    "why": "@internal .describe() on host_dropped_env of the SDK system/init message schema (@2785627 chunk-20bv8pca.js): stdout schema documentation for SDK hosts, never in a model request."
+  },
+  "data-self-hosted-runner-disableallhooks-warning": {
+    "verdict": "not-model-facing",
+    "version": "2.1.328",
+    "why": "fp @17921084 chunk-gv1b3n3g.js: [runner:session] line passed to the runner's onStatus log writer y; operator-facing runner output, never in a model request."
+  },
+  "data-sdk-plugin-requiredbyorganization-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.328",
+    "why": "@internal .describe() on requiredByOrganization of the SDK plugin config schema (@2592358 chunk-20bv8pca.js): control-protocol documentation for SDK hosts, never in a model request."
+  },
+  "data-sdk-get-settings-additional-directory-config-roots-withheld-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.330",
+    "why": "chunk-xfj2cwfv.js get_settings control_response zod schema (additionalDirectoryConfigRootsWithheld) @internal .describe() @3140979: control-protocol reply documentation for the SDK host, consumed only via .lazy schema; not converted via toJSONSchema into any tool schema, not in the settings oracle, never in a model request (same as data-sdk-get-settings-policy-origins-field)."
+  },
+  "data-sdk-get-workspace-diff-new-path-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.330",
+    "why": "chunk-xfj2cwfv.js get_workspace_diff control_response zod schema (newPath; cached internal) .describe() @3059049: host-facing documentation of the stdout/control protocol (the read_file it names is the host control request), not a tool schema, never in a model request (same as data-sdk-get-workspace-diff-omitted-field)."
+  },
+  "data-sdk-get-task-output-agent-message-frames-field": {
+    "verdict": "not-model-facing",
+    "version": "2.1.330",
+    "why": "chunk-xfj2cwfv.js get_task_output control_response zod schema (messages.frames; cached internal) .describe() @3132491: host-facing documentation of the SDK control protocol, not converted via toJSONSchema into any tool schema, never in a model request."
+  },
+  "data-additional-directory-config-roots-setting": {
+    "verdict": "not-model-facing",
+    "version": "2.1.330",
+    "why": "chunk-xcgcdx61.js settings zod schema property additionalDirectoryConfigRoots @1289987, .describe(\"@internal …\"): CC strips ^@internal properties before sending the settings JSON schema via /update-config, so it is absent from data/settings-descriptions/oracle-2.1.330.json; remaining sinks are settings parsing, never a model request (same as data-block-file-tool-reads-outside-working-directories-setting)."
+  },
+  "system-reminder-ship-branch-behind-a-cloud-watcher": {
+    "verdict": "not-model-facing",
+    "version": "2.1.330",
+    "why": "chunk-j93j69ny.js ni() @47231603 end.text (word already_own_session, cached ui) returned via jo() to /ship getPromptForCommand, which shows it through V=(Re)=>Qh(appendSystemMessage, lp(text,\"suggestion\")) @47393901, a transcript system message for the user; the model gets only R.say \"The message before this command says why.\". Siblings already_watched / nothing_to_ship are cached ui and uncatalogued."
+  },
+  "data-conversation-resume-requires-active-organization-settings": {
+    "verdict": "not-model-facing",
+    "version": "2.1.330",
+    "why": "chunk-p1ewvgeh.js HSo() @6302186 throws Lx(...) @6303726 (cached ui) when resuming a conversation whose organization settings are not active; caught by the resume paths (iBe callers in Er/q4, session host resume) and printed to stderr/the resume UI before any request; all 13 HSo sibling literals are ui and uncatalogued."
   }
 }

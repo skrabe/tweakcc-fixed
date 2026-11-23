@@ -648,5 +648,129 @@
     "id": "tool-result-bash-worktree-guard-find-exec-clause-gnu-bsd-end",
     "name": "Tool Result: worktree guard find exec clause GNU/BSD end",
     "desc": "Worktree guard operand detail for a find -exec clause that GNU and BSD end differently"
+  },
+  "9c2474bbaf1c0315": {
+    "promptId": "data-task-notification-claude-doc-comment-wake-not-registered",
+    "builder": "fXn",
+    "param": "r",
+    "verdict": "glue",
+    "note": "Fjo @18552090 calls fXn(n,r,\"comment events unsupported\") when a Claude Doc registered without comment events; fXn @18552826 queues sn({…event:`@Claude comments on the Claude Doc ${n} … its comment wake was not registered (${r}).…`}) as a task-notification (model). The literal is the parenthesised reason code, the same slot the other call fills with `${l}: ${b}`; the instruction (read the comments yourself, do not claim to be subscribed) is host text.",
+    "text": "comment events unsupported"
+  },
+  "767340d6ccb0133f": {
+    "promptId": "tool-result-bash-sandbox-mxc-setting-unsupported",
+    "builder": "n",
+    "param": "r",
+    "text": "COMMAND_NOT_SUPPORTED",
+    "verdict": "not-a-slot",
+    "note": "not-a-slot: XI @7798306 is the bundled SOCKS5 server's reply helper (`if(e.command!==\"connect\")return n(\"COMMAND_NOT_SUPPORTED\")`); the argument is a reply-status key looked up in Yx and written to the socket as a byte (`Buffer.from([5,Yx[e],…])`). It never becomes text. The gate attributed it to the sandbox-mxc builder n because fnByName is last-wins across modules"
+  },
+  "9c79da1855242956": {
+    "promptId": "tool-description-invoke-skill",
+    "promptIds": ["tool-description-skill-invoke-packaged-instructions"],
+    "builder": "KLn",
+    "param": "e",
+    "text": "a listing from the system",
+    "verdict": "glue",
+    "note": "KLn @13571798 builds the Skill tool description (`Available skills appear in ${e} with one-line descriptions.`); the argument only names where the listing is (sibling R7r passes `a system-reminder listing`). The instruction (call the tool first, exact name from the listing) is host text"
+  },
+  "e3a9d16e69a42eb1": {
+    "promptId": "tool-result-worktree-create-unexpected-file-found",
+    "builder": "jys",
+    "param": "n",
+    "text": "Cannot create worktree.",
+    "verdict": "glue",
+    "note": "jys @15024564 starts the refusal with `${n} Found an unexpected file, ${path}, after git ran…`; n is the leading label of the message (`Cannot create worktree.`), the remedy (what to check, what not to run) is host text"
+  },
+  "9bb5cfa2820150ff": {
+    "promptId": "tool-result-sendmessage-paused-automatic-loop",
+    "builder": "w",
+    "param": "t",
+    "text": "Remote Control and cloud sessions",
+    "verdict": "glue",
+    "note": "w @20744445 builds `Not delivered: … Sending to ${t} is paused until your user's next prompt starts a turn in this session.`; t only names the target (sibling call passes `sessions on this machine`); the constraint is host text"
+  },
+  "eff66d017efc4412": {
+    "promptId": "tool-result-permission-deny-hard-link-write",
+    "promptIds": ["tool-result-permission-hard-link-write-reason"],
+    "builder": "lg",
+    "param": "e",
+    "text": "one of Claude Code’s sign-in files",
+    "verdict": "glue",
+    "note": "Noun phrase naming the hard-link target in `This is a hard link to ${e}, …` via lg(\"one of Claude Code’s sign-in files\") @6205536; the constraint is host text"
+  },
+  "7f4d6947b7150122": {
+    "promptId": "slash-command-plugin-validate-shader-steps-limit",
+    "builder": "fe",
+    "param": "t",
+    "text": "unrolled in all its passes",
+    "verdict": "glue",
+    "note": "Qualifier after the interpolated step count in `this is over ${e} steps ${t}: call less, or loop fewer turns` via fe(i.unrolledInAll,\"unrolled in all its passes\") @30943133; the limit and remedy are host text"
+  },
+  "f20338f67a6366c4": {
+    "builder": "ci",
+    "param": "e",
+    "text": "an organization’s cached settings file or the organization lock",
+    "verdict": "glue",
+    "note": "Noun phrase naming the hard-link target in `This is a hard link to ${e}, …` via ci(…) @6387423; the constraint is host text (same ruling as eff66d017efc4412)"
+  },
+  "2d43645ec1dfbfc3": {
+    "builder": "t_",
+    "param": "e",
+    "text": "copying this session's files to this machine failed or was cut short${}",
+    "verdict": "glue",
+    "note": "reason clause in `Not run: ${e}, so files can be missing or old.` via t_(…) @9356730; the instructions are host text"
+  },
+  "8dbf30c9701e74c1": {
+    "builder": "D_",
+    "param": "o",
+    "text": "$.fs.ancestors off the start-up walk",
+    "verdict": "glue",
+    "note": "operation label `$.fs.ancestors off the start-up walk` via D_(…,o) @14966058 in `${…}: ${o} is not available in this mode`"
+  },
+  "9df0e3ffbb1d8d30": {
+    "builder": "mr",
+    "param": "r",
+    "text": "the app you meant to click",
+    "verdict": "glue",
+    "note": "noun phrase in `bring ${r} forward with open_application` via mr(…) @26017997; the remedy is host text"
+  },
+  "73d4ed637730736e": {
+    "builder": "co",
+    "param": "e",
+    "text": "${}, or an action just before it,",
+    "verdict": "glue",
+    "note": "action label `${qc[kind]}, or an action just before it,` via co(…) @26147615; the instructions are host text"
+  },
+  "e8e72954f5f94bce": {
+    "builder": "Ut",
+    "param": "e",
+    "text": "save text under that limit over",
+    "verdict": "glue",
+    "note": "verb phrase in `lets no tool ${e} such a doc` via Ut(…) @45045746; the limit and fallback are host text"
+  },
+  "4dd798d72acd5876": {
+    "builder": "dn",
+    "param": "n",
+    "text": "Typing stopped after ${} of ${} graphemes",
+    "verdict": "catalogue",
+    "id": "tool-result-computer-delivery-stopped-typing-partial",
+    "why": "dn(e,o,n) call-site argument rendering as the headline of the catalogued tool-result-computer-use-partial-delivery-stopped tool_result; it names how much input landed, which decides what the model resends. Catalogued via a classification-cache model verdict (key 745c7c3e8396b59dcb3361c04486ead26fe68e83) in the L3 verdict file."
+  },
+  "1ffd3b7146682589": {
+    "builder": "dn",
+    "param": "n",
+    "text": "Key repeat stopped after ${} of ${} presses",
+    "verdict": "catalogue",
+    "id": "tool-result-computer-delivery-stopped-key-repeat-partial",
+    "why": "dn(e,o,n) call-site argument rendering as the headline of the catalogued tool-result-computer-use-partial-delivery-stopped tool_result; it names how much input landed, which decides what the model resends. Catalogued via a classification-cache model verdict (key b4c3a28f9d1afb186e45d3b41cbe7c64e16205ef) in the L3 verdict file."
+  },
+  "5ecdce8bb9adb283": {
+    "promptId": "tool-description-invoke-skill",
+    "builder": "X6n",
+    "param": "e",
+    "text": "a system-reminder listing",
+    "verdict": "glue",
+    "why": "X6n @13818136 builds the Skill tool description (`Available skills appear in ${e} with one-line descriptions.`); the argument only names where the listing is, like its allowlisted sibling `a listing from the system` (9c79da1855242956). The instruction is host text"
   }
 }

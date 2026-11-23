@@ -425,7 +425,54 @@ const wrapEffortResolver = (
   //     if(typeof S==="number"&&NUM)S=CONVERT(S);return NORM(S,MODEL)}
   const patternCarriedEffort =
     /(function [$\w]+\(([$\w]+),([$\w]+),\{turnEffort:([$\w]+),hookEffortValue:[$\w]+,carriedEffort:[$\w]+=[$\w]+\(\2\)\}=\{\}\)\{if\(![$\w]+\(\2\)\)return;let [$\w]+=[$\w]+\(\2\)!==null;if\([$\w]+!==void 0\)\{let [$\w]+=typeof [$\w]+==="number"&&[$\w]+\?[$\w]+\([$\w]+\):[$\w]+;return [$\w]+\([$\w]+,\2\)\}let ([$\w]+)=[$\w]+\(\);)if\(\5===null&&![$\w]+\)return;let [$\w]+=[$\w]+\(\2,[$\w]+\),([$\w]+)=\5\?\?\(\5===null\?[$\w]+:void 0\)\?\?\4\?\?\3\?\?[$\w]+;if\(typeof \6==="number"&&[$\w]+\)\6=[$\w]+\(\6\);return ([$\w]+)\(\6,\2\)\}/;
+  //
+  // CC 2.1.325: the resolver accepts a model object as well as a name, so it
+  // binds the name first (`MID=NAME_OF(MODEL)`) and every lookup, the DEFAULT
+  // and NORM take MID. The carried-effort default reads NAME_OF(MODEL) too.
+  // The bound name is in scope where the wrap rides, so it stands in for
+  // MODEL. Captures: 1=prefix, 2=MODEL, 3=FALLBACK, 4=TURN, 5=MID, 6=ENV,
+  // 7=S, 8=NORM; remapped below to patternTurnEffort's groups with MID as 2.
+  //   function NAME(MODEL,FALLBACK,{turnEffort:TURN,hookEffortValue:HOOK,carriedEffort:CARRY=k(NAME_OF(MODEL))}={}){
+  //     if(!SUPPORT(MODEL))return;let MID=NAME_OF(MODEL),NUM=NUMERIC(MID)!==null;
+  //     if(HOOK!==void 0){let V=typeof HOOK==="number"&&NUM?CONVERT(HOOK):HOOK;return NORM(V,MID)}
+  //     let ENV=ENVFN();if(ENV===null&&!NUM)return;
+  //     let DEF=DEFAULT(MID,CARRY),S=ENV??(ENV===null?DEF:void 0)??TURN??FALLBACK??DEF;
+  //     if(typeof S==="number"&&NUM)S=CONVERT(S);return NORM(S,MID)}
+  const patternModelId =
+    /(function [$\w]+\(([$\w]+),([$\w]+),\{turnEffort:([$\w]+),hookEffortValue:[$\w]+,carriedEffort:[$\w]+=[$\w]+\([$\w]+\(\2\)\)\}=\{\}\)\{if\(![$\w]+\(\2\)\)return;let ([$\w]+)=[$\w]+\(\2\),[$\w]+=[$\w]+\(\5\)!==null;if\([$\w]+!==void 0\)\{let [$\w]+=typeof [$\w]+==="number"&&[$\w]+\?[$\w]+\([$\w]+\):[$\w]+;return [$\w]+\([$\w]+,\5\)\}let ([$\w]+)=[$\w]+\(\);)if\(\6===null&&![$\w]+\)return;let [$\w]+=[$\w]+\(\5,[$\w]+\),([$\w]+)=\6\?\?\(\6===null\?[$\w]+:void 0\)\?\?\4\?\?\3\?\?[$\w]+;if\(typeof \7==="number"&&[$\w]+\)\7=[$\w]+\(\7\);return ([$\w]+)\(\7,\5\)\}/;
+  //
+  // CC 2.1.330: a forced-effort gate returns NORM("medium",MID) before ENV is
+  // read, ENV gained a per-run override (`OVERRIDE()?.effort??ENVFN()`) that
+  // the router must yield to like ENV, and DEFAULT takes MODEL instead of MID.
+  // The wrap still rides right after the ENV binding. Same captures as
+  // patternModelId.
+  //   function NAME(MODEL,FALLBACK,{turnEffort:TURN,hookEffortValue:HOOK,carriedEffort:CARRY=k(NAME_OF(MODEL))}={}){
+  //     if(!SUPPORT(MODEL))return;let MID=NAME_OF(MODEL),NUM=NUMERIC(MID)!==null;
+  //     if(HOOK!==void 0){let V=typeof HOOK==="number"&&NUM?CONVERT(HOOK):HOOK;return NORM(V,MID)}
+  //     if(FORCED(MID))return NORM("medium",MID);let ENV=OVERRIDE()?.effort??ENVFN();if(ENV===null&&!NUM)return;
+  //     let DEF=DEFAULT(MODEL,CARRY),S=ENV??(ENV===null?DEF:void 0)??TURN??FALLBACK??DEF;
+  //     if(typeof S==="number"&&NUM)S=CONVERT(S);return NORM(S,MID)}
+  const patternForcedEffort =
+    /(function [$\w]+\(([$\w]+),([$\w]+),\{turnEffort:([$\w]+),hookEffortValue:[$\w]+,carriedEffort:[$\w]+=[$\w]+\([$\w]+\(\2\)\)\}=\{\}\)\{if\(![$\w]+\(\2\)\)return;let ([$\w]+)=[$\w]+\(\2\),[$\w]+=[$\w]+\(\5\)!==null;if\([$\w]+!==void 0\)\{let [$\w]+=typeof [$\w]+==="number"&&[$\w]+\?[$\w]+\([$\w]+\):[$\w]+;return [$\w]+\([$\w]+,\5\)\}(?:if\([$\w]+\(\5\)\)return [$\w]+\("[a-z]+",\5\);)?let ([$\w]+)=[$\w]+\(\)\?\.effort\?\?[$\w]+\(\);)if\(\6===null&&![$\w]+\)return;let [$\w]+=[$\w]+\((?:\2|\5),[$\w]+\),([$\w]+)=\6\?\?\(\6===null\?[$\w]+:void 0\)\?\?\4\?\?\3\?\?[$\w]+;if\(typeof \7==="number"&&[$\w]+\)\7=[$\w]+\(\7\);return ([$\w]+)\(\7,\5\)\}/;
+  const modelIdMatch =
+    file.match(patternForcedEffort) || file.match(patternModelId);
+  const modelIdRemapped = modelIdMatch
+    ? Object.assign(
+        [
+          modelIdMatch[0],
+          modelIdMatch[1],
+          modelIdMatch[5],
+          modelIdMatch[3],
+          modelIdMatch[4],
+          modelIdMatch[6],
+          modelIdMatch[7],
+          modelIdMatch[8],
+        ],
+        { index: modelIdMatch.index, input: modelIdMatch.input }
+      )
+    : null;
   const turnMatch =
+    modelIdRemapped ||
     file.match(patternCarriedEffort) ||
     file.match(patternNoLaunchPin) ||
     file.match(patternHookEffort) ||

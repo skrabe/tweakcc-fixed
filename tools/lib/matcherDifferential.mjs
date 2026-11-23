@@ -33,7 +33,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, '..', '..');
 const CORE_ENTRY = path.join(REPO, 'src', 'matcherDifferential.ts');
 const WORKER_FILE = path.join(HERE, 'matcherDifferentialWorker.mjs');
-const CACHE_FORMAT = 1;
+const CACHE_FORMAT = 2;
 const MIN_CHECKED = 2000;
 const MIN_EXERCISED_RATIO = 0.9;
 const DETAIL_LIMIT = 10;
@@ -156,18 +156,35 @@ const promptsVersionOf = (promptsFile, data) => {
   return version;
 };
 
+const ANSWER_CODES = { token: 't', 'token-past-cap': 'p', 'no-anchor': 'n' };
+const ANSWERS_BY_CODE = Object.fromEntries(
+  Object.entries(ANSWER_CODES).map(([answer, code]) => [code, answer])
+);
+
 const CACHEABLE = {
-  match: r => (r.exercised ? 'x' : 'm'),
+  match: (r, kindList) =>
+    (r.exercised ? 'x' : 'm') +
+    ANSWER_CODES[r.answer] +
+    kindList
+      .reduce(
+        (mask, kind, bit) => mask | (r.kinds.includes(kind) ? 1 << bit : 0),
+        0
+      )
+      .toString(36),
   'skip-build': () => 'b',
 };
-const fromCache = code =>
-  code === 'x'
-    ? { status: 'match', exercised: true }
-    : code === 'm'
-      ? { status: 'match', exercised: false }
-      : code === 'b'
-        ? { status: 'skip-build' }
-        : null;
+const fromCache = (code, kindList) => {
+  if (code === 'b') return { status: 'skip-build' };
+  if (typeof code !== 'string' || !/^[xm][tpn][0-9a-z]+$/.test(code))
+    return null;
+  const mask = parseInt(code.slice(2), 36);
+  return {
+    status: 'match',
+    exercised: code[0] === 'x',
+    answer: ANSWERS_BY_CODE[code[1]],
+    kinds: kindList.filter((_, bit) => mask & (1 << bit)),
+  };
+};
 
 const readCacheFile = file => {
   try {
@@ -315,6 +332,7 @@ export const runMatcherDifferential = async ({
     });
   }
 
+  const kindList = [...core.TOKEN_KINDS];
   const tasks = [];
   for (const [t, target] of targets.entries()) {
     target.results = new Array(prompts.length);
@@ -326,12 +344,28 @@ export const runMatcherDifferential = async ({
     const cached = cache ? readCacheFile(target.cacheFile) : {};
     const pending = [];
     prompts.forEach((p, i) => {
-      const hit = fromCache(cached[keys[i]]);
+      const hit = fromCache(cached[keys[i]], kindList);
       if (hit) target.results[i] = hit;
       else pending.push(i);
     });
     target.cached = prompts.length - pending.length;
     target.pending = pending.length;
+    // The apply's own anchor index over this bundle, built once: each prompt
+    // is checked on exactly the occurrences the apply answers from.
+    let indexed = null;
+    if (target.bytes && pending.length > 0) {
+      const indexStarted = Date.now();
+      indexed = core.indexBundleOccurrences(
+        prompts.map(p => p.pieces),
+        target.version,
+        Buffer.from(
+          target.bytes.buffer,
+          target.bytes.byteOffset,
+          target.bytes.length
+        ).toString('utf8')
+      );
+      log(`${target.label}: anchor index built in ${secs(indexStarted)}`);
+    }
     target.done = 0;
     target.mismatchCount = 0;
     // Longest prompts first so the slow ones do not form the tail.
@@ -345,9 +379,11 @@ export const runMatcherDifferential = async ({
       tasks.push({
         target: t,
         version: target.version,
-        items: pending
-          .slice(s, s + chunk)
-          .map(i => ({ i, pieces: prompts[i].pieces })),
+        items: pending.slice(s, s + chunk).map(i => ({
+          i,
+          pieces: prompts[i].pieces,
+          occurrences: indexed ? indexed[i] : undefined,
+        })),
       });
     log(
       `${target.label}: ${prompts.length} prompt(s)` +
@@ -373,7 +409,7 @@ export const runMatcherDifferential = async ({
         target.results[i] = r;
         if (r.status === 'mismatch' || r.status === 'error')
           target.mismatchCount++;
-        const code = CACHEABLE[r.status]?.(r);
+        const code = CACHEABLE[r.status]?.(r, kindList);
         if (code) target.fresh[keys[i]] = code;
         target.done++;
         if (target.done % PROGRESS_EVERY === 0)
@@ -400,6 +436,9 @@ export const runMatcherDifferential = async ({
       skippedBuild: 0,
       skippedRegex: 0,
       cached: target.cached,
+      answered: { token: 0, tokenPastCap: 0, noAnchor: 0 },
+      tokenKinds: Object.fromEntries(kindList.map(kind => [kind, 0])),
+      tokenKindsPresent: Object.fromEntries(kindList.map(kind => [kind, 0])),
       mismatches: [],
       errors: [],
       failures: [],
@@ -413,6 +452,14 @@ export const runMatcherDifferential = async ({
       else {
         s.checked++;
         if (r.status === 'match' && r.exercised) s.exercised++;
+        if (r.answer === 'token') s.answered.token++;
+        else if (r.answer === 'token-past-cap') s.answered.tokenPastCap++;
+        else if (r.answer === 'no-anchor') s.answered.noAnchor++;
+        if (r.status === 'match' && r.answer !== 'no-anchor')
+          for (const kind of r.kinds) {
+            s.tokenKindsPresent[kind]++;
+            if (r.exercised) s.tokenKinds[kind]++;
+          }
         if (r.status === 'mismatch')
           s.mismatches.push({
             id: p.id,
@@ -437,6 +484,20 @@ export const runMatcherDifferential = async ({
       s.failures.push(
         `only ${s.exercised}/${s.checked} synthetic haystacks matched (want > ${MIN_EXERCISED_RATIO}); the test went vacuous`
       );
+    const tokenCompared = s.answered.token + s.answered.tokenPastCap;
+    if (tokenCompared <= MIN_CHECKED)
+      s.failures.push(
+        `the token matcher was compared on only ${tokenCompared} prompt(s) (want > ${MIN_CHECKED})`
+      );
+    if (target.kind === 'bundle') {
+      const unanswered = kindList.filter(
+        kind => s.tokenKindsPresent[kind] > 0 && s.tokenKinds[kind] === 0
+      );
+      if (unanswered.length)
+        s.failures.push(
+          `no matched prompt answered by tokens contains a ${unanswered.join(', ')} token`
+        );
+    }
     if (s.mismatches.length)
       s.failures.push(`${s.mismatches.length} mismatch(es)`);
     if (s.errors.length) s.failures.push(`${s.errors.length} error(s)`);
@@ -468,6 +529,8 @@ export const runMatcherDifferential = async ({
     log(
       `${s.label}: ${s.checked}/${s.total} checked, ${s.mismatches.length} mismatch(es), ${s.errors.length} error(s)` +
         (s.kind === 'synthetic' ? `, ${s.exercised} exercised` : '') +
+        `, answered by tokens ${s.answered.token} + past the cap ${s.answered.tokenPastCap}, no anchor ${s.answered.noAnchor}` +
+        `, matched per token kind ${kindList.map(kind => `${kind} ${s.tokenKinds[kind]}/${s.tokenKindsPresent[kind]}`).join(' ')}` +
         `, skipped ${s.skippedBuild} (regex build) + ${s.skippedRegex} (RegExp rejected), ${s.cached} from cache — ${s.ok ? 'PASS' : `FAIL: ${s.failures.join('; ')}`}`
     );
   }
