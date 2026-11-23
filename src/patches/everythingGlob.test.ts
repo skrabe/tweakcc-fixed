@@ -46,6 +46,39 @@ describe('writeEverythingGlob', () => {
   });
 });
 
+const hasBun = spawnSync('bun', ['--version']).status === 0;
+
+describe.skipIf(process.platform === 'win32' || !hasBun)(
+  'Everything runtime when es hangs',
+  () => {
+    it('falls back to rg once es times out', () => {
+      const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tweakcc-es-hang-'));
+      try {
+        const fakeEs = path.join(dir, 'es');
+        fs.writeFileSync(fakeEs, '#!/bin/sh\nsleep 30\n', { mode: 0o755 });
+        const script = path.join(dir, 'run.mjs');
+        fs.writeFileSync(
+          script,
+          `const run=${buildEverythingGlobRuntime(fakeEs, 300)};\n` +
+            'const args=["--files","--null","--glob","*.ts","--sort=modified","--no-ignore","--hidden"];\n' +
+            `const files=await run(()=>["from rg"],{},args,${JSON.stringify(dir)},new AbortController().signal,{cwd:${JSON.stringify(dir)},beforeSpawn(){}});\n` +
+            'console.log(JSON.stringify(files));\n'
+        );
+        const started = Date.now();
+        const bun = spawnSync('bun', [script], {
+          encoding: 'utf8',
+          timeout: 20000,
+        });
+        expect(bun.stderr).toBe('');
+        expect(JSON.parse(bun.stdout)).toEqual(['from rg']);
+        expect(Date.now() - started).toBeLessThan(10000);
+      } finally {
+        fs.rmSync(dir, { recursive: true, force: true });
+      }
+    }, 30000);
+  }
+);
+
 const onPath = (exe: string): string | null => {
   const r = spawnSync('where.exe', [exe], { encoding: 'utf8' });
   return r.status === 0 ? r.stdout.split(/\r?\n/)[0].trim() : null;
