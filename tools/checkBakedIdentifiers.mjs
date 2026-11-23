@@ -202,6 +202,264 @@ export const presenceInBundle = (core, entry, bundle) => {
   return { names: [], count: found ? 1 : 0, seen: [] };
 };
 
+const DELIMITER = '["\'`]';
+
+export const boundedInBundle = (core, entry, bundle) => {
+  const pattern = core.buildSearchRegexFromPieces(
+    entry.pieces,
+    bundle.version,
+    bundle.buildTime
+  );
+  const found = new RegExp(
+    `(?<=${DELIMITER})(?:${pattern})(?=${DELIMITER})`,
+    's'
+  ).test(bundle.content);
+  return { names: [], count: found ? 1 : 0, seen: [] };
+};
+
+const LITERAL_ESCAPES = new Set([...'.*+?^${}()|[]\\']);
+const QUANTIFIERS = new Set(['*', '+', '?']);
+const GRAM = 8;
+const FAST_PATTERN_LIMIT = 20000;
+const SLOT_BITS = 22;
+const FILTER_BITS = 21;
+const COUNT_STRIDE_MASK = 3;
+const POSITION_CAP = 1 << 17;
+
+const skipClass = (pattern, from) => {
+  for (let j = from + 1; j < pattern.length; j++) {
+    if (pattern[j] === '\\') j++;
+    else if (pattern[j] === ']') return j + 1;
+  }
+  return -1;
+};
+
+const skipGroup = (pattern, from) => {
+  let depth = 0;
+  for (let j = from; j < pattern.length; j++) {
+    const c = pattern[j];
+    if (c === '\\') j++;
+    else if (c === '[') {
+      const end = skipClass(pattern, j);
+      if (end < 0) return -1;
+      j = end - 1;
+    } else if (c === '(') depth++;
+    else if (c === ')' && --depth === 0) return j + 1;
+  }
+  return -1;
+};
+
+export const literalRuns = pattern => {
+  if (/\\[1-9]|\\k</.test(pattern)) return null;
+  const runs = [];
+  let run = null;
+  const close = () => {
+    if (run) runs.push(run);
+    run = null;
+  };
+  for (let i = 0; i < pattern.length; ) {
+    const c = pattern[i];
+    let end = i + 1;
+    let literal = null;
+    if (c === '\\') {
+      if (!LITERAL_ESCAPES.has(pattern[i + 1])) return null;
+      literal = pattern[i + 1];
+      end = i + 2;
+    } else if (c === '(') end = skipGroup(pattern, i);
+    else if (c === '[') end = skipClass(pattern, i);
+    else if ('|)]{'.includes(c) || QUANTIFIERS.has(c)) return null;
+    else if (!'.^$'.includes(c)) literal = c;
+    if (end < 0) return null;
+    if (pattern[end] === '{') return null;
+    if (QUANTIFIERS.has(pattern[end])) {
+      close();
+      end++;
+      if (pattern[end] === '?') end++;
+      i = end;
+      continue;
+    }
+    if (literal === null) close();
+    else {
+      run ??= { text: '', from: i, to: i };
+      run.text += literal;
+      run.to = end;
+    }
+    i = end;
+  }
+  close();
+  return runs;
+};
+
+const fastPlan = (core, entry, bundle, bounded) => {
+  const pattern = core.buildSearchRegexFromPieces(
+    entry.pieces,
+    bundle.version,
+    bundle.buildTime
+  );
+  if (pattern.length > FAST_PATTERN_LIMIT) return null;
+  const runs = literalRuns(pattern);
+  if (!runs?.length) return null;
+  const run = runs.reduce((a, b) => (b.text.length > a.text.length ? b : a));
+  if (run.text.length < GRAM) return null;
+  const pre = pattern.slice(0, run.from);
+  const rest = pattern.slice(run.from);
+  const lead = bounded
+    ? `(?<=${DELIMITER}${pre ? `(?:${pre})` : ''})`
+    : pre
+      ? `(?<=${pre})`
+      : '';
+  const trail = bounded ? `(?=${DELIMITER})` : '';
+  return {
+    needle: run.text,
+    source: `${lead}${rest}${trail}`,
+    literal: run.from === 0 && run.to === pattern.length,
+    bounded,
+  };
+};
+
+const gramStep = (h, code) => ((h << 4) ^ code) | 0;
+const gramHash = (text, from) => {
+  let h = 0;
+  for (let j = 0; j < GRAM; j++) h = gramStep(h, text.charCodeAt(from + j));
+  return h;
+};
+const gramSlot = h => Math.imul(h, 0x9e3779b1) >>> (32 - SLOT_BITS);
+const filterSlot = h => Math.imul(h, 0x85ebca6b) >>> (32 - FILTER_BITS);
+
+const leastCommonGram = (needle, counts) => {
+  let offset = 0;
+  let least = Infinity;
+  let h = 0;
+  for (let i = 0; i < needle.length; i++) {
+    h = gramStep(h, needle.charCodeAt(i));
+    if (i < GRAM - 1) continue;
+    const n = counts[gramSlot(h)];
+    if (n < least) {
+      least = n;
+      offset = i - GRAM + 1;
+    }
+  }
+  return offset;
+};
+
+const countGrams = content => {
+  const counts = new Uint16Array(1 << SLOT_BITS);
+  let h = 0;
+  for (let i = 0; i < content.length; i++) {
+    h = gramStep(h, content.charCodeAt(i));
+    if (i & COUNT_STRIDE_MASK || i < GRAM - 1) continue;
+    const s = gramSlot(h);
+    if (counts[s] < 0xffff) counts[s]++;
+  }
+  return counts;
+};
+
+const collectGrams = (content, grams, filter) => {
+  let h = 0;
+  for (let i = 0; i < content.length; i++) {
+    h = gramStep(h, content.charCodeAt(i));
+    const s = filterSlot(h);
+    if (!(filter[s >>> 3] & (1 << (s & 7))) || i < GRAM - 1) continue;
+    const at = i - GRAM + 1;
+    const gram = content.slice(at, i + 1);
+    const positions = grams.get(gram);
+    if (!positions) continue;
+    if (positions.length < POSITION_CAP) positions.push(at);
+    else grams.set(gram, null);
+  }
+};
+
+const gramIndex = (content, needles) => {
+  const chosen = new Map();
+  const grams = new Map();
+  if (!needles.length) return { chosen, grams };
+  const counts = countGrams(content);
+  const filter = new Uint8Array(1 << (FILTER_BITS - 3));
+  for (const needle of needles) {
+    if (chosen.has(needle)) continue;
+    const offset = leastCommonGram(needle, counts);
+    const gram = needle.slice(offset, offset + GRAM);
+    chosen.set(needle, { gram, offset });
+    if (grams.has(gram)) continue;
+    grams.set(gram, []);
+    const s = filterSlot(gramHash(gram, 0));
+    filter[s >>> 3] |= 1 << (s & 7);
+  }
+  collectGrams(content, grams, filter);
+  return { chosen, grams };
+};
+
+const matchesAt = (re, content, at) => {
+  re.lastIndex = at;
+  return re.test(content);
+};
+
+const DELIMITER_CHARS = new Set(['"', "'", '`']);
+
+const fastFound = (
+  { needle, source, literal, bounded },
+  { chosen, grams },
+  content
+) => {
+  let re;
+  const foundAt = at => {
+    if (!literal)
+      return matchesAt((re ??= new RegExp(source, 'sy')), content, at);
+    return (
+      !bounded ||
+      (DELIMITER_CHARS.has(content[at - 1]) &&
+        DELIMITER_CHARS.has(content[at + needle.length]))
+    );
+  };
+  const { gram, offset } = chosen.get(needle);
+  const positions = grams.get(gram);
+  if (positions) {
+    for (const at of positions) {
+      const start = at - offset;
+      if (start >= 0 && content.startsWith(needle, start) && foundAt(start))
+        return true;
+    }
+    return false;
+  }
+  for (
+    let at = content.indexOf(needle);
+    at >= 0;
+    at = content.indexOf(needle, at + 1)
+  )
+    if (foundAt(at)) return true;
+  return false;
+};
+
+export const presenceBatch = (core, entries, bundle, bounded = false) => {
+  const exact = bounded ? boundedInBundle : presenceInBundle;
+  const plans = entries.map(e => {
+    try {
+      return fastPlan(core, e, bundle, bounded);
+    } catch {
+      return null;
+    }
+  });
+  const index = gramIndex(
+    bundle.content,
+    plans.filter(Boolean).map(p => p.needle)
+  );
+  return entries.map((e, i) => {
+    let found;
+    try {
+      if (plans[i]) found = fastFound(plans[i], index, bundle.content);
+    } catch {
+      found = undefined;
+    }
+    if (found !== undefined)
+      return { names: [], count: found ? 1 : 0, seen: [] };
+    try {
+      return exact(core, e, bundle);
+    } catch (err) {
+      return { error: err.message };
+    }
+  });
+};
+
 const inspectBakedInBundle = (core, entry, bundle, presence) => {
   const { names, marked } = bakedPositions(core, entry.pieces);
   if (!names.flat().length) return presence;
@@ -348,17 +606,16 @@ const runWorker = async () => {
   const { coreFile, file, platform, entries, mode } = workerData.bakedScan;
   const core = await importCore(coreFile);
   const bundle = readBundle(file, platform);
-  const out = entries.map(e => {
-    try {
-      return (mode === 'presence' ? presenceInBundle : matchInBundle)(
-        core,
-        e,
-        bundle
-      );
-    } catch (err) {
-      return { error: err.message };
-    }
-  });
+  const out =
+    mode === 'baked'
+      ? entries.map(e => {
+          try {
+            return matchInBundle(core, e, bundle);
+          } catch (err) {
+            return { error: err.message };
+          }
+        })
+      : presenceBatch(core, entries, bundle, mode === 'bounded');
   parentPort.postMessage(out);
 };
 
@@ -409,8 +666,8 @@ export const scanInWorkers = async (
 ) => {
   if (!Number.isInteger(workerLimit) || workerLimit < 1)
     throw new Error('worker limit must be a positive integer');
-  if (!['baked', 'presence'].includes(mode))
-    throw new Error('scan mode must be baked or presence');
+  if (!['baked', 'presence', 'bounded'].includes(mode))
+    throw new Error('scan mode must be baked, presence or bounded');
   const results = new Map(specs.map(s => [s.file, new Array(entries.length)]));
   const coreFile = await buildMatcherCore();
   const keys = entries.map(entryKey);

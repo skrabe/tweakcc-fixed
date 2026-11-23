@@ -75,6 +75,7 @@
  */
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
+import os from 'node:os';
 import path from 'node:path';
 import { parseExpressionAt, tokenizer, tokTypes } from 'acorn';
 import { loadMatcherCore } from './checkBakedIdentifiers.mjs';
@@ -94,8 +95,18 @@ const ALLOWLIST =
 
 const [cliPath, prevPath, curPath, ...flags] = process.argv.slice(2);
 const updateAllowlist = flags.includes('--update-allowlist');
-const RENAME_MAP =
-  process.env.TWEAKCC_RENAME_MAP || '/tmp/removed-id-renames.json';
+const RENAME_MAP_NAME = 'removed-id-renames.json';
+const renameMapTarget = () => {
+  if (process.env.TWEAKCC_RENAME_MAP)
+    return { file: process.env.TWEAKCC_RENAME_MAP, announce: false };
+  if (process.env.SHOWTIME_TMP)
+    return {
+      file: path.join(process.env.SHOWTIME_TMP, RENAME_MAP_NAME),
+      announce: false,
+    };
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'removed-id-'));
+  return { file: path.join(dir, RENAME_MAP_NAME), announce: true };
+};
 
 if (!cliPath || !prevPath || !curPath) {
   console.error(
@@ -1161,7 +1172,9 @@ if (split.length) {
   for (const id of split) console.log(`  ${id}`);
 }
 if (buckets['in-catalogue'].length) {
-  fs.writeFileSync(RENAME_MAP, `${JSON.stringify(renamedTo, null, 2)}\n`);
+  const { file, announce } = renameMapTarget();
+  fs.writeFileSync(file, `${JSON.stringify(renamedTo, null, 2)}\n`);
+  if (announce) console.log(`\nrename map: ${file}`);
 }
 
 // `no-probe-surface` needs a decision too: the gate could not test it, and

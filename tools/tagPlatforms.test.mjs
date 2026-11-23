@@ -166,6 +166,20 @@ describe('tagPlatforms', () => {
     expect(prompts()[0].platforms).toBeUndefined();
   });
 
+  it('bounds a longer short fragment to its own literal in every build', () => {
+    write([
+      { id: 'own', pieces: ['Default to grading'] },
+      { id: 'inside', pieces: ['Default to grading'], name: 'twin' },
+    ]);
+    const darwin = bundle('darwin.js', 'a="Default to grading";');
+    const linux = bundle(
+      'linux.js',
+      'a="when the conversation is done. Default to grading it";'
+    );
+    expect(tag(`darwin=${darwin}`, `linux=${linux}`).status).toBe(0);
+    expect(prompts().map(p => p.platforms)).toEqual([['darwin'], ['darwin']]);
+  });
+
   it('rejects an unknown platform', () => {
     write([]);
     expect(tag('not-platform=/dev/null').status).toBe(2);

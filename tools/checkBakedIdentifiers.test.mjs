@@ -8,10 +8,13 @@ import { fileURLToPath } from 'node:url';
 import { Worker } from 'node:worker_threads';
 
 import {
+  boundedInBundle,
   bundleVersion,
+  literalRuns,
   loadMatcherCore,
   matchInBundle,
   parseBundleSpec,
+  presenceBatch,
   presenceInBundle,
   publishOnce,
   readBundle,
@@ -174,6 +177,115 @@ describe('checkBakedIdentifiers', () => {
       linux,
     ]);
     expect(gone.missing).toEqual(['darwin']);
+  });
+
+  it('reads the literal runs every match of a built pattern must contain', () => {
+    expect(literalRuns('abc(?:x|y)de\\.f[\\w$]+gh').map(r => r.text)).toEqual([
+      'abc',
+      'de.f',
+      'gh',
+    ]);
+    expect(literalRuns('ab+c?d').map(r => r.text)).toEqual(['a', 'd']);
+    expect(literalRuns('ab|cd')).toBeNull();
+    expect(literalRuns('(a)\\1')).toBeNull();
+    expect(literalRuns('a\\db')).toBeNull();
+    expect(literalRuns('a{2}')).toBeNull();
+  });
+
+  it('answers presence from the literal index exactly as the per-entry regex does', () => {
+    const asset = 'An asset line that repeats. '.repeat(900);
+    const b = bundle(
+      'darwin',
+      [
+        `a="It isn\\'t ready yet, retry later."`,
+        'b=`Line one\nLine two with ${x.y} interpolation`',
+        'c=`Use the ${n} tool to read files.`',
+        'd="the shared long tail of words"',
+        `e="\\'Quoted\\' word then the shared long tail of words"`,
+        'f="Done \\u2014 all set and finished"',
+        'g="path C:\\\\temp\\\\file is used here"',
+        'h="aaaaaaaaaaaaaab"',
+        'i=" when the conversation isn\'t. Default to grading it"',
+        'j="Default to grading"',
+        `k="${asset}"`,
+        'l=`Use the ${s} long tail of words twice`',
+      ].join(';')
+    );
+    const entries = [
+      ["It isn't ready yet, retry later."],
+      ['Line one\nLine two with ${x.y} interpolation'],
+      ['Use the ${', '} tool to read files.'],
+      ["'Quoted' word then the shared long tail of words"],
+      ['"Quoted" word then the shared long tail of words'],
+      ['not in this bundle at all, nowhere'],
+      ["isn't."],
+      ['Done \u2014 all set and finished'],
+      ['path C:\\temp\\file is used here'],
+      ['aaaaaaaaaab'],
+      ['aaaaaaaaaaaaaaab'],
+      ['Default to grading'],
+      ['to grading it'],
+      [asset],
+      [`${asset}x`],
+      ['Use the ${', '} long tail of words twice'],
+      ['Use the ${', '} long tail of words thrice'],
+      [null],
+      [''],
+    ].map(pieces => ({ pieces }));
+    const exact = fn =>
+      entries.map(e => {
+        try {
+          return fn(core, e, b);
+        } catch (err) {
+          return { error: err.message };
+        }
+      });
+    const presence = exact(presenceInBundle);
+    const bounded = exact(boundedInBundle);
+    expect(presenceBatch(core, entries, b)).toEqual(presence);
+    expect(presenceBatch(core, entries, b, true)).toEqual(bounded);
+    expect(presence.map(r => r.count ?? 'error')).toEqual([
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      0,
+      1,
+      1,
+      1,
+      0,
+      1,
+      0,
+      'error',
+      1,
+    ]);
+    expect(bounded.map(r => r.count ?? 'error')).toEqual([
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      0,
+      0,
+      1,
+      0,
+      1,
+      0,
+      1,
+      0,
+      'error',
+      0,
+    ]);
   });
 
   it('reads a bundle platform from its spec or its path', () => {
