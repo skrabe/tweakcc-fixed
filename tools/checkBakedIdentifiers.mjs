@@ -555,7 +555,7 @@ const main = async () => {
       `baked-identifier scan: ${scanned.length} entr(ies) matched in ${bundles.length} bundle(s); ${named.length} keep a name inside a slot expression, ${baked.length} differ across builds; ${missing.length} missing from a build that should carry them; ${errors.length} error(s)`
     );
   }
-  process.exit(baked.length || missing.length || errors.length ? 1 : 0);
+  process.exitCode = baked.length || missing.length || errors.length ? 1 : 0;
 };
 
 if (isMainThread && process.argv[1] === fileURLToPath(import.meta.url))

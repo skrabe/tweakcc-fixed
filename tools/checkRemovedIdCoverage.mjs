@@ -1253,8 +1253,9 @@ if (unreviewedGone.length) {
 
 if (buckets['IN-BUNDLE'].length) {
   console.log('\nremoved-id coverage: FAIL');
-  process.exit(1);
+  process.exitCode = 1;
+} else {
+  console.log(
+    `\nremoved-id coverage: PASS (${unreviewedGone.length} removal(s) awaiting archival)`
+  );
 }
-console.log(
-  `\nremoved-id coverage: PASS (${unreviewedGone.length} removal(s) awaiting archival)`
-);
