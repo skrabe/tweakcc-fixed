@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as os from 'os';
 import * as child_process from 'child_process';
 import * as crypto from 'crypto';
-import { CUSTOM_MODELS } from './patches/modelSelector';
+import { CUSTOM_MODELS } from './customModels';
 
 let isDebugModeOn = false;
 let isVerboseModeOn = false;
