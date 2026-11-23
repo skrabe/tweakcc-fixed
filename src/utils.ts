@@ -5,6 +5,7 @@ import * as os from 'os';
 import * as child_process from 'child_process';
 import * as crypto from 'crypto';
 import { CUSTOM_MODELS } from './patches/modelSelector';
+import { oneByteText } from './oneByteText';
 
 let isDebugModeOn = false;
 let isVerboseModeOn = false;
@@ -59,9 +60,11 @@ export const verbose = (message: any, ...optionalParams: any[]) => {
  * because a raw non-ASCII char is never preceded there by a lone backslash.
  */
 export const escapeNonAscii = (s: string): string =>
-  s.replace(
-    /[\u0080-\uffff]/g,
-    c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0')
+  oneByteText(
+    s.replace(
+      /[\u0080-\uffff]/g,
+      c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0')
+    )
   );
 
 export function getCurrentClaudeCodeTheme(): string {

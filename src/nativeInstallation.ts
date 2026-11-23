@@ -216,10 +216,53 @@ interface BunData {
   moduleStructSize: number;
 }
 
-interface LocatedBundle extends BunData {
-  offset: number;
-  length: number;
-  write(newBunBuffer: Buffer, outputPath: string): void;
+type BundleWriter =
+  | {
+      kind: 'MachO';
+      binary: LIEF.MachO.Binary;
+      binPath: string;
+      headerSize: number;
+    }
+  | { kind: 'PE'; binary: LIEF.PE.Binary; binPath: string; headerSize: number }
+  | {
+      kind: 'ELFSection';
+      binary: LIEF.ELF.Binary;
+      binPath: string;
+      headerSize: number;
+    }
+  | { kind: 'ELFOverlay'; binary: LIEF.ELF.Binary; binPath: string };
+
+interface LocatedBundle {
+  data: BunData;
+  writer: BundleWriter;
+}
+
+export interface SectionRoom {
+  head: number;
+  tail: number;
+}
+
+const NO_ROOM: SectionRoom = { head: 0, tail: 0 };
+
+const sectionRoom = (writer: BundleWriter): SectionRoom =>
+  writer.kind === 'ELFOverlay'
+    ? { head: 0, tail: 8 }
+    : { head: writer.headerSize, tail: 0 };
+
+function frameBlob(
+  blobLength: number,
+  room: SectionRoom
+): { framed: Buffer; blob: Buffer } {
+  const framed = Buffer.allocUnsafe(room.head + blobLength + room.tail);
+  if (room.head === 8) {
+    framed.writeBigUInt64LE(BigInt(blobLength), 0);
+  } else if (room.head > 0) {
+    framed.writeUInt32LE(blobLength, 0);
+  }
+  if (room.tail > 0) {
+    framed.writeBigUInt64LE(BigInt(blobLength), room.head + blobLength);
+  }
+  return { framed, blob: framed.subarray(room.head, room.head + blobLength) };
 }
 
 /**
@@ -350,7 +393,7 @@ export function parseSentinelBundle(buf: Buffer): Map<number, Buffer> | null {
   for (let i = 0; i < marks.length; i++) {
     const from = marks[i].end;
     const to = i + 1 < marks.length ? marks[i + 1].start : buf.length;
-    byIndex.set(marks[i].index, Buffer.from(buf.subarray(from, to)));
+    byIndex.set(marks[i].index, buf.subarray(from, to));
   }
   return byIndex;
 }
@@ -836,19 +879,14 @@ function locateBundle(
       if (!data.sectionHeaderSize) {
         throw new Error('sectionHeaderSize is required for Mach-O binaries');
       }
-      const bunSection = machoBinary.getSegment('__BUN')!.getSection('__bun')!;
       return {
-        ...data,
-        offset: Number(bunSection.fileOffset),
-        length: bunSection.content.length,
-        write: (newBunBuffer, outputPath) =>
-          repackMachO(
-            machoBinary,
-            binPath,
-            newBunBuffer,
-            outputPath,
-            data.sectionHeaderSize!
-          ),
+        data,
+        writer: {
+          kind: 'MachO',
+          binary: machoBinary,
+          binPath,
+          headerSize: data.sectionHeaderSize,
+        },
       };
     }
     case 'PE': {
@@ -857,19 +895,14 @@ function locateBundle(
       if (!data.sectionHeaderSize) {
         throw new Error('sectionHeaderSize is required for PE binaries');
       }
-      const bunSection = peBinary.sections().find(s => s.name === '.bun')!;
       return {
-        ...data,
-        offset: Number(bunSection.fileOffset),
-        length: bunSection.content.length,
-        write: (newBunBuffer, outputPath) =>
-          repackPE(
-            peBinary,
-            binPath,
-            newBunBuffer,
-            outputPath,
-            data.sectionHeaderSize!
-          ),
+        data,
+        writer: {
+          kind: 'PE',
+          binary: peBinary,
+          binPath,
+          headerSize: data.sectionHeaderSize,
+        },
       };
     }
     case 'ELF': {
@@ -881,28 +914,19 @@ function locateBundle(
           throw new Error('sectionHeaderSize is required for ELF .bun section');
         }
         return {
-          ...sectionResult,
-          offset: Number(elfBinary.getSection('.bun')!.fileOffset),
-          length: elfBinary.getSection('.bun')!.content.length,
-          write: (newBunBuffer, outputPath) =>
-            repackELFSection(
-              elfBinary,
-              binPath,
-              newBunBuffer,
-              outputPath,
-              sectionResult.sectionHeaderSize!
-            ),
+          data: sectionResult,
+          writer: {
+            kind: 'ELFSection',
+            binary: elfBinary,
+            binPath,
+            headerSize: sectionResult.sectionHeaderSize,
+          },
         };
       }
       debug('locateBundle: Falling back to legacy ELF overlay format');
-      const data = extractBunDataFromELFOverlay(elfBinary);
-      const stat = fs.statSync(binPath);
       return {
-        ...data,
-        offset: stat.size - elfBinary.overlay.length,
-        length: elfBinary.overlay.length,
-        write: (newBunBuffer, outputPath) =>
-          repackELFOverlay(elfBinary, binPath, newBunBuffer, outputPath),
+        data: extractBunDataFromELFOverlay(elfBinary),
+        writer: { kind: 'ELFOverlay', binary: elfBinary, binPath },
       };
     }
     default: {
@@ -1068,7 +1092,7 @@ export function extractClaudeJsFromNativeInstallation(
     const { bunOffsets, bunData, moduleStructSize } = locateBundle(
       binary,
       nativeInstallationPath
-    );
+    ).data;
 
     debug(
       `extractClaudeJsFromNativeInstallation: Got bunData, size=${bunData.length} bytes, moduleStructSize=${moduleStructSize}`
@@ -1212,7 +1236,8 @@ function rebuildBunDataAppendOnly(
   bunOffsets: BunOffsets,
   moduleStructSize: number,
   moduleOverrides: Map<number, Buffer>,
-  encodingOverrides: Map<number, number> = new Map()
+  encodingOverrides: Map<number, number> = new Map(),
+  room: SectionRoom = NO_ROOM
 ): Buffer {
   const ALIGN = 8;
   // `encoding` is the first byte after the pointers: 6 of them in the 52-byte
@@ -1269,7 +1294,11 @@ function rebuildBunDataAppendOnly(
   // Nothing to append: hand back the original bytes. Padding the table to
   // 8 bytes here would shift it by a few bytes for no reason and break the
   // no-edit round trip.
-  if (changedCount === 0) return Buffer.from(bunData);
+  if (changedCount === 0) {
+    const { framed, blob } = frameBlob(bunData.length, room);
+    bunData.copy(blob);
+    return framed;
+  }
 
   const tailPad = cursor % ALIGN === 0 ? 0 : ALIGN - (cursor % ALIGN);
   if (tailPad > 0) appended.push(Buffer.alloc(tailPad));
@@ -1282,7 +1311,10 @@ function rebuildBunDataAppendOnly(
     } bytes, tail shifted by ${delta}`
   );
 
-  const out = Buffer.concat([dataRegion, ...appended, tail]);
+  const { framed, blob: out } = frameBlob(newModOff + tail.length, room);
+  let at = dataRegion.copy(out, 0);
+  for (const part of appended) at += part.copy(out, at);
+  tail.copy(out, at);
 
   // Fix up the offsets struct (the 32 bytes before the 16-byte trailer).
   const st = out.length - SIZEOF_OFFSETS - BUN_TRAILER.length;
@@ -1290,7 +1322,7 @@ function rebuildBunDataAppendOnly(
   out.writeUInt32LE(newModOff, st + 8);
   out.writeUInt32LE(bunOffsets.compileExecArgvPtr.offset + delta, st + 20);
 
-  return out;
+  return framed;
 }
 
 /**
@@ -1306,7 +1338,8 @@ function rebuildFromModuleOverrides(
   bunData: Buffer,
   bunOffsets: BunOffsets,
   moduleStructSize: number,
-  moduleOverrides: Map<number, Buffer>
+  moduleOverrides: Map<number, Buffer>,
+  room: SectionRoom = NO_ROOM
 ): Buffer {
   // A patch that deleted or fabricated a sentinel would silently merge two
   // modules' source into one. Fail loudly instead: the set of indices in the
@@ -1360,7 +1393,8 @@ function rebuildFromModuleOverrides(
     bunOffsets,
     moduleStructSize,
     contents,
-    encodings
+    encodings,
+    room
   );
 }
 
@@ -1380,7 +1414,8 @@ export function virtualBundleFromBunData(blob: Buffer): Buffer | null {
  */
 export function rebuildBunDataFromVirtualBundle(
   blob: Buffer,
-  modifiedBundle: Buffer
+  modifiedBundle: Buffer,
+  room: SectionRoom = NO_ROOM
 ): Buffer {
   const { bunOffsets, bunData, moduleStructSize } = parseBunDataBlob(blob);
   const overrides = parseSentinelBundle(modifiedBundle);
@@ -1389,7 +1424,8 @@ export function rebuildBunDataFromVirtualBundle(
     bunData,
     bunOffsets,
     moduleStructSize,
-    overrides
+    overrides,
+    room
   );
 }
 
@@ -1398,7 +1434,8 @@ function rebuildBunData(
   bunOffsets: BunOffsets,
   modifiedClaudeJs: Buffer | null,
   moduleStructSize: number,
-  clearBytecode: boolean
+  clearBytecode: boolean,
+  room: SectionRoom
 ): Buffer {
   // Phase 1: Collect all string data
   const stringsData: Buffer[] = [];
@@ -1502,7 +1539,7 @@ function rebuildBunData(
   currentOffset += BUN_TRAILER.length;
 
   // Phase 3: Build the new buffer
-  const newBuffer = Buffer.allocUnsafe(currentOffset);
+  const { framed, blob: newBuffer } = frameBlob(currentOffset, room);
   newBuffer.fill(0);
 
   // Write all strings with null terminators
@@ -1620,7 +1657,7 @@ function rebuildBunData(
   // Write trailer
   BUN_TRAILER.copy(newBuffer, trailerOffset);
 
-  return newBuffer;
+  return framed;
 }
 
 /**
@@ -1674,28 +1711,10 @@ function atomicWriteBinary(
   }
 }
 
-/**
- * Builds section data with size header followed by content.
- * Format: [size header][content]
- *
- * @param bunBuffer - The bun data buffer to wrap
- * @param headerSize - Header size: 4 for old format (Bun < 1.3.4), 8 for new format (default)
- */
-function buildSectionData(bunBuffer: Buffer, headerSize: number = 8): Buffer {
-  const sectionData = Buffer.allocUnsafe(headerSize + bunBuffer.length);
-  if (headerSize === 8) {
-    sectionData.writeBigUInt64LE(BigInt(bunBuffer.length), 0);
-  } else {
-    sectionData.writeUInt32LE(bunBuffer.length, 0);
-  }
-  bunBuffer.copy(sectionData, headerSize);
-  return sectionData;
-}
-
 function repackMachO(
   machoBinary: LIEF.MachO.Binary,
   binPath: string,
-  newBunBuffer: Buffer,
+  newSectionData: Buffer,
   outputPath: string,
   sectionHeaderSize: number
 ): void {
@@ -1717,9 +1736,6 @@ function repackMachO(
     if (!bunSection) {
       throw new Error('__bun section not found');
     }
-
-    // Use the same header size as the original binary
-    const newSectionData = buildSectionData(newBunBuffer, sectionHeaderSize);
 
     debug(`repackMachO: Original section size: ${bunSection.size}`);
     debug(`repackMachO: Original segment fileSize: ${bunSegment.fileSize}`);
@@ -1800,7 +1816,7 @@ function repackMachO(
 function repackPE(
   peBinary: LIEF.PE.Binary,
   binPath: string,
-  newBunBuffer: Buffer,
+  newSectionData: Buffer,
   outputPath: string,
   sectionHeaderSize: number
 ): void {
@@ -1809,9 +1825,6 @@ function repackPE(
     if (!bunSection) {
       throw new Error('.bun section not found');
     }
-
-    // Use the same header size as the original binary
-    const newSectionData = buildSectionData(newBunBuffer, sectionHeaderSize);
 
     debug(
       `repackPE: Original section size: ${bunSection.size}, virtual size: ${bunSection.virtualSize}`
@@ -1948,6 +1961,30 @@ export const selectBunRwSegment = <T extends LoadSegmentShape>(
   return below[below.length - 1] ?? writable[0];
 };
 
+function readSegmentPrefix(
+  binPath: string,
+  segment: LIEF.ELF.Segment,
+  length: number
+): Buffer {
+  const prefix = Buffer.alloc(Math.max(0, length));
+  const fd = fs.openSync(binPath, 'r');
+  try {
+    const read = fs.readSync(
+      fd,
+      prefix,
+      0,
+      prefix.length,
+      Number(segment.fileOffset)
+    );
+    if (read !== prefix.length) {
+      return segment.content.subarray(0, prefix.length);
+    }
+  } finally {
+    fs.closeSync(fd);
+  }
+  return prefix;
+}
+
 /**
  * Repack an ELF binary that uses the new .bun section format (post-PR#26923).
  *
@@ -1965,9 +2002,8 @@ export const selectBunRwSegment = <T extends LoadSegmentShape>(
 function repackELFSection(
   elfBinary: LIEF.ELF.Binary,
   binPath: string,
-  newBunBuffer: Buffer,
-  outputPath: string,
-  sectionHeaderSize: number
+  newSectionData: Buffer,
+  outputPath: string
 ): void {
   try {
     const bunSection = elfBinary.getSection('.bun');
@@ -1983,7 +2019,6 @@ function repackELFSection(
       throw new Error('No writable ELF PT_LOAD segment found');
     }
 
-    const newSectionData = buildSectionData(newBunBuffer, sectionHeaderSize);
     const oldBunSectionVaddr = bunSection.virtualAddress;
     const vaddrBytes = Buffer.alloc(8);
     vaddrBytes.writeBigUInt64LE(oldBunSectionVaddr);
@@ -1999,13 +2034,17 @@ function repackELFSection(
     // and the blob itself (the JS payload) is full of arbitrary bytes that
     // can spell the same value (five such false hits on 2.1.258).
     let bunCompiledVaddr: bigint | null = null;
-    const rwContent = rwSegment.content;
     const rwVaddrStart = rwSegment.virtualAddress;
-    const rwVaddrEnd = rwVaddrStart + BigInt(rwContent.length);
+    const rwVaddrEnd = rwVaddrStart + rwSegment.fileSize;
     const searchEnd =
       oldBunSectionVaddr > rwVaddrStart && oldBunSectionVaddr < rwVaddrEnd
         ? oldBunSectionVaddr
         : rwVaddrEnd;
+    const rwContent = readSegmentPrefix(
+      binPath,
+      rwSegment,
+      Number(searchEnd - rwVaddrStart)
+    );
     const firstAligned = alignBigInt(rwVaddrStart, 8n);
     const lastCandidate = searchEnd - 8n;
     const hits: bigint[] = [];
@@ -2102,19 +2141,10 @@ function repackELFSection(
 function repackELFOverlay(
   elfBinary: LIEF.ELF.Binary,
   binPath: string,
-  newBunBuffer: Buffer,
+  newOverlay: Buffer,
   outputPath: string
 ): void {
   try {
-    // Build new overlay: [bunData][totalByteCount (8 bytes)]
-    // Note: newBunBuffer already includes offsets and trailer
-    const newOverlay = Buffer.allocUnsafe(newBunBuffer.length + 8);
-    newBunBuffer.copy(newOverlay, 0);
-    newOverlay.writeBigUInt64LE(
-      BigInt(newBunBuffer.length),
-      newBunBuffer.length
-    );
-
     debug(
       `repackELFOverlay: Setting overlay data (${newOverlay.length} bytes)`
     );
@@ -2151,28 +2181,83 @@ export function repackNativeInstallation(
 ): void {
   LIEF.logging.disable();
   const binary = LIEF.parse(binPath);
+  const { writer, section } = rebuildBundleSection(
+    binary,
+    binPath,
+    modifiedClaudeJs,
+    clearBytecode
+  );
+  writeBundleSection(writer, section, outputPath);
+}
 
-  const bundle = locateBundle(binary, binPath);
+function rebuildBundleSection(
+  binary: LIEF.ELF.Binary | LIEF.PE.Binary | LIEF.MachO.Binary,
+  binPath: string,
+  modifiedClaudeJs: Buffer,
+  clearBytecode: boolean
+): { writer: BundleWriter; section: Buffer } {
+  const { data, writer } = locateBundle(binary, binPath);
+  const room = sectionRoom(writer);
 
   // A virtual bundle (CC 2.1.246+) carries its own module boundaries. Split it
   // back into per-module contents; a pre-2.1.246 single module parses as null
   // and takes the legacy path untouched.
   const moduleOverrides = parseSentinelBundle(modifiedClaudeJs);
 
-  const newBuffer = moduleOverrides
+  const section = moduleOverrides
     ? rebuildFromModuleOverrides(
-        bundle.bunData,
-        bundle.bunOffsets,
-        bundle.moduleStructSize,
-        moduleOverrides
+        data.bunData,
+        data.bunOffsets,
+        data.moduleStructSize,
+        moduleOverrides,
+        room
       )
     : rebuildBunData(
-        bundle.bunData,
-        bundle.bunOffsets,
+        data.bunData,
+        data.bunOffsets,
         modifiedClaudeJs,
-        bundle.moduleStructSize,
-        clearBytecode
+        data.moduleStructSize,
+        clearBytecode,
+        room
       );
+  return { writer, section };
+}
 
-  bundle.write(newBuffer, outputPath);
+function writeBundleSection(
+  writer: BundleWriter,
+  section: Buffer,
+  outputPath: string
+): void {
+  switch (writer.kind) {
+    case 'MachO':
+      return repackMachO(
+        writer.binary,
+        writer.binPath,
+        section,
+        outputPath,
+        writer.headerSize
+      );
+    case 'PE':
+      return repackPE(
+        writer.binary,
+        writer.binPath,
+        section,
+        outputPath,
+        writer.headerSize
+      );
+    case 'ELFSection':
+      return repackELFSection(
+        writer.binary,
+        writer.binPath,
+        section,
+        outputPath
+      );
+    case 'ELFOverlay':
+      return repackELFOverlay(
+        writer.binary,
+        writer.binPath,
+        section,
+        outputPath
+      );
+  }
 }

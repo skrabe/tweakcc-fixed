@@ -1,3 +1,4 @@
+import { oneByteText } from '../oneByteText';
 import { showDiff } from './index';
 
 export function suppressEmptyEnvironment(
@@ -10,7 +11,7 @@ export function suppressEmptyEnvironment(
 }
 
 export const writeEmptyEnvironment = (file: string): string | null => {
-  const source = suppressEmptyEnvironment.toString();
+  const source = oneByteText(suppressEmptyEnvironment.toString());
   const helper = `function __tweakccEmptyEnvironment${source.slice(source.indexOf('('))}`;
   const pattern =
     /[;,](?:return)?(\[([$\w]+),\.\.\.([$\w]+)\(([$\w]+)\)\]\.join\(`\n`\))/g;

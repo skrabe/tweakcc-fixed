@@ -33,6 +33,7 @@
 // "tengu_sysprompt_using_tool_based_cache". The side query cross-checks it
 // when present; the identity set is the one checked after that telemetry call.
 
+import { detachedSlice } from '../systemPromptSites';
 import { debug } from '../utils';
 import { showDiff } from './index';
 
@@ -87,20 +88,44 @@ export const identityLiterals = (file: string): string[] | null => {
   return literals;
 };
 
+export interface PristineIdentity {
+  literals: string[] | null;
+  hasStockTexts: boolean;
+  text: string | null;
+}
+
+export const pristineIdentityOf = (pristineFile: string): PristineIdentity => {
+  const literals =
+    identityLiterals(pristineFile)?.map(literal =>
+      detachedSlice(literal, 0, literal.length)
+    ) ?? null;
+  return {
+    literals,
+    hasStockTexts: STOCK_IDENTITY_TEXTS.every(text =>
+      pristineFile.includes(text)
+    ),
+    text: literals ? null : pristineFile,
+  };
+};
+
 export const writeNoGlobalCacheScope = (
   oldFile: string,
-  pristineFile: string,
+  pristineFile: string | PristineIdentity,
   identityOverrideApplied?: boolean
 ): string | null => {
-  const stock = identityLiterals(pristineFile);
+  const pristine =
+    typeof pristineFile === 'string'
+      ? pristineIdentityOf(pristineFile)
+      : pristineFile;
+  const stock = pristine.literals;
   const current = identityLiterals(oldFile);
   const identityIsStock =
     stock && current
       ? stock.length === current.length &&
         stock.every((literal, i) => literal === current[i])
-      : oldFile === pristineFile ||
+      : (pristine.text !== null && oldFile === pristine.text) ||
         (identityOverrideApplied !== true &&
-          (!STOCK_IDENTITY_TEXTS.every(text => pristineFile.includes(text)) ||
+          (!pristine.hasStockTexts ||
             STOCK_IDENTITY_TEXTS.every(text => oldFile.includes(text))));
   if (identityIsStock) {
     debug(

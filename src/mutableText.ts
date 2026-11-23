@@ -1,3 +1,5 @@
+import { oneByteText } from './oneByteText';
+
 export class MutableText {
   private chunks: string[];
   length: number;
@@ -56,7 +58,8 @@ export class MutableText {
     return parts.join('');
   }
 
-  splice(start: number, end: number, replacement: string): void {
+  splice(start: number, end: number, text: string): void {
+    const replacement = oneByteText(text);
     const from = Math.max(0, Math.min(this.length, start));
     const to = Math.max(from, Math.min(this.length, end));
     const next: string[] = [];

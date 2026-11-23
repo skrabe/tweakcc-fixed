@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { identityLiterals, writeNoGlobalCacheScope } from './globalCacheScope';
+import {
+  identityLiterals,
+  pristineIdentityOf,
+  writeNoGlobalCacheScope,
+} from './globalCacheScope';
 
 // The identity set, the predicate, the one caller that builds its own global
 // marker, and the system prompt's scope split, as CC 2.1.280 minifies them,
@@ -167,6 +171,81 @@ describe('writeNoGlobalCacheScope', () => {
       stock
     ) as string;
     expect(writeNoGlobalCacheScope(once, stock)).toBe(once);
+  });
+});
+
+describe('writeNoGlobalCacheScope: pristine identity facts', () => {
+  beforeEach(() => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  const unrecognized = bundle(PREDICATE, CALLER);
+  const noSplit = bundle(IDENTITY_MODULE, PREDICATE, CALLER);
+  const cases: Array<[string, string, string, boolean | undefined]> = [
+    ['stock', stock, stock, undefined],
+    ['replaced', withIdentity(stock, '"You are Echo."'), stock, undefined],
+    ['emptied', withIdentity(stock, '""'), stock, true],
+    [
+      'current split missing',
+      stock.replace(
+        '"tengu_sysprompt_using_tool_based_cache"',
+        '"other_telemetry"'
+      ),
+      stock,
+      undefined,
+    ],
+    [
+      'current split missing, override applied',
+      stock.replace(
+        '"tengu_sysprompt_using_tool_based_cache"',
+        '"other_telemetry"'
+      ),
+      stock,
+      true,
+    ],
+    ['no split, stock', noSplit, noSplit, undefined],
+    [
+      'no split, replaced',
+      withIdentity(noSplit, '"You are Echo."'),
+      noSplit,
+      true,
+    ],
+    ['unrecognized, same text', unrecognized, unrecognized, true],
+    [
+      'unrecognized, same text copy',
+      `${unrecognized} `.trimEnd(),
+      unrecognized,
+      true,
+    ],
+    [
+      'unrecognized, changed',
+      `${unrecognized}var unrelated=1`,
+      unrecognized,
+      false,
+    ],
+    [
+      'unrecognized, changed, override',
+      `${unrecognized}var unrelated=1`,
+      unrecognized,
+      true,
+    ],
+  ];
+
+  it.each(cases)(
+    '%s: same answer as from the text',
+    (_, current, pristine, override) => {
+      expect(
+        writeNoGlobalCacheScope(current, pristineIdentityOf(pristine), override)
+      ).toBe(writeNoGlobalCacheScope(current, pristine, override));
+    }
+  );
+
+  it('keeps the text only when the identity literals are not found', () => {
+    expect(pristineIdentityOf(stock).text).toBeNull();
+    expect(pristineIdentityOf(unrecognized).text).toBe(unrecognized);
   });
 });
 
