@@ -134,3 +134,47 @@ describe('checkTrimSlots: token scope', () => {
     expect(lostTokens(['on {{MYTHOS_NAME}}'], 'sentence deleted')).toEqual(['MYTHOS_NAME']);
   });
 });
+
+describe('checkTrimSlots: nested template slots', () => {
+  const pristine =
+    'Read files ${HAS_READ_TOOL?`with ${READ_TOOL_NAME} before editing`:""} and then edit.';
+
+  it('collects a slot that only appears inside a ternary-nested template', () => {
+    expect([...scopedTokensOf(pristine).slots].sort()).toEqual(['HAS_READ_TOOL', 'READ_TOOL_NAME']);
+  });
+
+  it('does not report the nested slot as lost when the override keeps the ternary', () => {
+    expect(lostTokens([pristine], 'Edit ${HAS_READ_TOOL?`after ${READ_TOOL_NAME}`:""}.')).toEqual([]);
+  });
+
+  it('does not report it as lost when the override hoists the nested slot to top level', () => {
+    expect(lostTokens([pristine], 'Use ${READ_TOOL_NAME} ${HAS_READ_TOOL?"first":""}.')).toEqual([]);
+  });
+
+  it('still reports the nested slot when the override drops it from the ternary', () => {
+    expect(lostTokens([pristine], 'Edit ${HAS_READ_TOOL?`carefully`:""}.')).toEqual(['READ_TOOL_NAME']);
+  });
+
+  it('counts a nested slot the override moved into a bare ternary arm', () => {
+    const p = '${CITATIONS?`- ${UNTRUSTED_NOTE}\n`:`add a Sources section`}';
+    expect(lostTokens([p], '${CITATIONS?UNTRUSTED_NOTE:"end with Sources"}')).toEqual([]);
+  });
+
+  it('reports a bare ternary-arm slot the override dropped', () => {
+    expect(lostTokens(['${CITATIONS?UNTRUSTED_NOTE:""}'], '${CITATIONS?"cite":""}')).toEqual([
+      'UNTRUSTED_NOTE',
+    ]);
+  });
+
+  it('descends any depth and reads catalogue templates inside slot strings', () => {
+    const { slots, templates } = scopedTokensOf(
+      '${A?`a ${B>0?`deep ${C(D)}`:""}`:"use {{OPUS_ID}}"}'
+    );
+    expect([...slots].sort()).toEqual(['A', 'B', 'C']);
+    expect([...templates]).toEqual(['OPUS_ID']);
+  });
+
+  it('falls back to the leading identifier when the slot is not a JS expression', () => {
+    expect([...scopedTokensOf('run ${foo:-bar} in ${HOME}').slots].sort()).toEqual(['HOME', 'foo']);
+  });
+});

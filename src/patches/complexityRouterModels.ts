@@ -44,6 +44,8 @@ const patchEffortControls = (file: string): string | null => {
   const display =
     /(([$\w]+)!==void 0&&![$\w]+&&[$\w]+\([$\w]+,\{marginBottom:1,flexDirection:"column",children:)/;
   const texts = [
+    // CC >= 2.1.330: unconditional glyph, label is a template literal.
+    /([$\w]+)\(([$\w]+),\{dimColor:!0,children:\[[$\w]+\([$\w]+,\{effort:void 0\}\)," ",`Effort not supported/,
     // CC >= 2.1.326: the effort glyph is conditional on a compact flag.
     /([$\w]+)\(([$\w]+),\{dimColor:!0,children:\[!([$\w]+)&&[$\w]+\([$\w]+,\{effort:void 0\}\),\3\?"":" ",/,
     // CC >= 2.1.319: dimmed, no subtle color.

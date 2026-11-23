@@ -137,6 +137,35 @@ describe('tagPlatforms', () => {
     expect(fs.readFileSync(json, 'utf8')).toBe(before);
   });
 
+  it('does not count a short fragment found only inside unrelated text', () => {
+    write([
+      { id: 'tail', pieces: ["isn't."] },
+      {
+        id: 'long',
+        pieces: ['A much longer sentence that is carried verbatim.'],
+      },
+    ]);
+    const darwin = bundle(
+      'darwin.js',
+      'a="call request_access first if it "+"isn\'t.";b="A much longer sentence that is carried verbatim.";'
+    );
+    const linux = bundle(
+      'linux.js',
+      'a="when the conversation isn\'t. Default to grading";b="A much longer sentence that is carried verbatim.";'
+    );
+    const r = tag(`darwin=${darwin}`, `linux=${linux}`);
+    expect(r.status).toBe(0);
+    expect(prompts().map(p => p.platforms)).toEqual([['darwin'], undefined]);
+  });
+
+  it('keeps a short fragment carried when a build holds it as its own literal', () => {
+    write([{ id: 'tail', pieces: ["isn't."] }]);
+    const darwin = bundle('darwin.js', 'a="x "+"isn\'t.";');
+    const linux = bundle('linux.js', "a=`isn't.`;");
+    expect(tag(`darwin=${darwin}`, `linux=${linux}`).status).toBe(0);
+    expect(prompts()[0].platforms).toBeUndefined();
+  });
+
   it('rejects an unknown platform', () => {
     write([]);
     expect(tag('not-platform=/dev/null').status).toBe(2);

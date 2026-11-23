@@ -706,5 +706,71 @@
     "text": "unrolled in all its passes",
     "verdict": "glue",
     "note": "Qualifier after the interpolated step count in `this is over ${e} steps ${t}: call less, or loop fewer turns` via fe(i.unrolledInAll,\"unrolled in all its passes\") @30943133; the limit and remedy are host text"
+  },
+  "f20338f67a6366c4": {
+    "builder": "ci",
+    "param": "e",
+    "text": "an organization’s cached settings file or the organization lock",
+    "verdict": "glue",
+    "note": "Noun phrase naming the hard-link target in `This is a hard link to ${e}, …` via ci(…) @6387423; the constraint is host text (same ruling as eff66d017efc4412)"
+  },
+  "2d43645ec1dfbfc3": {
+    "builder": "t_",
+    "param": "e",
+    "text": "copying this session's files to this machine failed or was cut short${}",
+    "verdict": "glue",
+    "note": "reason clause in `Not run: ${e}, so files can be missing or old.` via t_(…) @9356730; the instructions are host text"
+  },
+  "8dbf30c9701e74c1": {
+    "builder": "D_",
+    "param": "o",
+    "text": "$.fs.ancestors off the start-up walk",
+    "verdict": "glue",
+    "note": "operation label `$.fs.ancestors off the start-up walk` via D_(…,o) @14966058 in `${…}: ${o} is not available in this mode`"
+  },
+  "9df0e3ffbb1d8d30": {
+    "builder": "mr",
+    "param": "r",
+    "text": "the app you meant to click",
+    "verdict": "glue",
+    "note": "noun phrase in `bring ${r} forward with open_application` via mr(…) @26017997; the remedy is host text"
+  },
+  "73d4ed637730736e": {
+    "builder": "co",
+    "param": "e",
+    "text": "${}, or an action just before it,",
+    "verdict": "glue",
+    "note": "action label `${qc[kind]}, or an action just before it,` via co(…) @26147615; the instructions are host text"
+  },
+  "e8e72954f5f94bce": {
+    "builder": "Ut",
+    "param": "e",
+    "text": "save text under that limit over",
+    "verdict": "glue",
+    "note": "verb phrase in `lets no tool ${e} such a doc` via Ut(…) @45045746; the limit and fallback are host text"
+  },
+  "4dd798d72acd5876": {
+    "builder": "dn",
+    "param": "n",
+    "text": "Typing stopped after ${} of ${} graphemes",
+    "verdict": "catalogue",
+    "id": "tool-result-computer-delivery-stopped-typing-partial",
+    "why": "dn(e,o,n) call-site argument rendering as the headline of the catalogued tool-result-computer-use-partial-delivery-stopped tool_result; it names how much input landed, which decides what the model resends. Catalogued via a classification-cache model verdict (key 745c7c3e8396b59dcb3361c04486ead26fe68e83) in the L3 verdict file."
+  },
+  "1ffd3b7146682589": {
+    "builder": "dn",
+    "param": "n",
+    "text": "Key repeat stopped after ${} of ${} presses",
+    "verdict": "catalogue",
+    "id": "tool-result-computer-delivery-stopped-key-repeat-partial",
+    "why": "dn(e,o,n) call-site argument rendering as the headline of the catalogued tool-result-computer-use-partial-delivery-stopped tool_result; it names how much input landed, which decides what the model resends. Catalogued via a classification-cache model verdict (key b4c3a28f9d1afb186e45d3b41cbe7c64e16205ef) in the L3 verdict file."
+  },
+  "5ecdce8bb9adb283": {
+    "promptId": "tool-description-invoke-skill",
+    "builder": "X6n",
+    "param": "e",
+    "text": "a system-reminder listing",
+    "verdict": "glue",
+    "why": "X6n @13818136 builds the Skill tool description (`Available skills appear in ${e} with one-line descriptions.`); the argument only names where the listing is, like its allowlisted sibling `a listing from the system` (9c79da1855242956). The instruction is host text"
   }
 }

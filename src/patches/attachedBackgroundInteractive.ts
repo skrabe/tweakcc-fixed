@@ -174,6 +174,9 @@ const SITES: Site[] = [
     name: 'workflow usage consent prompt',
     methods: p => [
       new RegExp(
+        `(if\\()${either(p)}(\\(\\)\\)return!1;if\\([$\\w]+\\(\\)\\)return!1;if\\([^;]*?\\)return!1;return![$\\w]+\\.session\\.workflowUsageConsent\\.isGranted\\(\\))`
+      ),
+      new RegExp(
         `(if\\()${either(p)}(\\(\\)\\)return!1;if\\([$\\w]+\\(\\)\\)return!1;if\\([$\\w]+\\([$\\w]+\\([$\\w]+\\),[$\\w]+\\.options\\.mainLoopModel\\)\\)return!1;return![$\\w]+\\.session\\.workflowUsageConsent)`
       ),
     ],

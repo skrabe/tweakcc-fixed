@@ -1143,6 +1143,51 @@ const CURATED_IDENTIFIER_MAPS = {
 };
 
 const NEW_PROMPT_ASSIGNMENTS = [
+  // 2.1.330 ships two design-sync skills side by side, the claude.ai/design
+  // one and one that publishes to a Design System artifact, each with its own
+  // Storybook source-shape sub-skill. Both SKILL.md files say `name:
+  // design-sync`, so frontmatter inference gives them one id and the
+  // disambiguator numbers them by position. The claude.ai/design files keep
+  // the old ids; the artifact files get their own.
+  {
+    matcher: t =>
+      t.startsWith(
+        '---\nname: design-sync\ndescription: Publish a React design system to a Design System artifact'
+      ),
+    name: 'Skill: design-sync (Design System artifact)',
+    id: 'skill-design-sync-artifact',
+    description:
+      'Bundled design-sync skill that publishes a React design system to a Design System artifact on claude.ai instead of claude.ai/design.',
+  },
+  {
+    matcher: t =>
+      t.startsWith('# Storybook source shape') &&
+      t.includes('the same bundle the design agent builds with'),
+    name: 'Skill: /design-sync Storybook source shape (Design System artifact)',
+    id: 'skill-design-sync-artifact-storybook-source-shape',
+    description:
+      'Storybook source-shape sub-skill of the design-sync skill that publishes to a Design System artifact.',
+  },
+  // 2.1.330 Phase 0 of the code-review skill diffs against origin/HEAD unless
+  // a target is named; the @{upstream} wording survives as a separate branch.
+  {
+    matcher: t =>
+      t.startsWith('## Phase 0 — Gather the diff\n\nUnless a review target'),
+    name: 'Skill: Code Review (Phase 0 — gather the diff)',
+    id: 'skill-code-review-phase-0-gather-diff',
+    description:
+      'Phase 0 of the code-review skill: gather the unified diff under review against origin/HEAD unless a review target is named.',
+  },
+  {
+    matcher: t =>
+      t.startsWith(
+        '## Phase 0 — Gather the diff\n\nRun \\`git diff @{upstream}'
+      ),
+    name: 'Skill: Code Review (Phase 0 — upstream diff)',
+    id: 'skill-code-review-phase-0-gather-diff-upstream',
+    description:
+      'Phase 0 branch of the code-review skill that diffs against the upstream branch, falling back to main or HEAD~1.',
+  },
   // 2.1.233 — the OTHER branch of four conditionals whose first branch is a
   // catalogued slot literal. Both branches share the phrase the slot-literal
   // allowlist is keyed on, so both capture and both want the same name; the

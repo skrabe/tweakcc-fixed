@@ -28,7 +28,7 @@ import * as path from 'node:path';
 import matter from 'gray-matter';
 
 import { debug, escapeNonAscii as escapeNonAsciiUnicode } from '../utils';
-import { detectUnicodeEscaping } from '../systemPromptSites';
+import { detachedSlice, detectUnicodeEscaping } from '../systemPromptSites';
 import { SYSTEM_PROMPTS_DIR } from '../config';
 import { showDiff } from './patchDiffing';
 
@@ -1163,7 +1163,7 @@ export const applyInlineBlobOverrides = async (
       applied: true,
       failed: false,
       details: status,
-      replaced: before.slice(startOfBlob, endOfBlob),
+      replaced: detachedSlice(before, startOfBlob, endOfBlob),
     });
   }
 

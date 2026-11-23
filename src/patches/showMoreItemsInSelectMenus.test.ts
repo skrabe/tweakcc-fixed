@@ -66,6 +66,36 @@ describe('writeShowMoreItemsInSelectMenus', () => {
     errSpy.mockRestore();
   });
 
+  it('treats the uncapped commands list as a no-op (CC ≥ 2.1.329)', () => {
+    const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const uncapped = FIXTURE.replace(
+      'let v$=Math.max(1,Math.floor((H$-10)/2));',
+      'function U(m){let i=k(8),{commands:s}=m,{headerFocused:t,focusHeader:a}=pC(),n;' +
+        'if(i[4]!==a)p=e(Qn,{maxVisibleCount:Infinity,onUpFromFirstItem:a,isDisabled:t,children:c});return p}'
+    );
+    const out = writeShowMoreItemsInSelectMenus(uncapped, 12)!;
+    expect(out).not.toBeNull();
+    expect(out).toContain('visibleOptionCount:$opt=12');
+    expect(out).toContain('Math.max(6,Y$)');
+    expect(out).toContain('s$=Math.max(1,Z$-3)');
+    expect(out).toContain('maxVisibleCount:Infinity,onUpFromFirstItem:a');
+    expect(errSpy).not.toHaveBeenCalled();
+    errSpy.mockRestore();
+  });
+
+  it('errors when the commands list is neither capped nor uncapped', () => {
+    const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const out = writeShowMoreItemsInSelectMenus(
+      FIXTURE.replace('let v$=Math.max(1,Math.floor((H$-10)/2));', ''),
+      12
+    );
+    expect(out).not.toBeNull();
+    expect(errSpy).toHaveBeenCalledWith(
+      expect.stringContaining('failed to find visibleCount pattern')
+    );
+    errSpy.mockRestore();
+  });
+
   it('returns null when no visibleOptionCount site exists at all', () => {
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     expect(

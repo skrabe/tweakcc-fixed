@@ -81,6 +81,36 @@ describe('writeShimmerStyle', () => {
     expect(runHook(result, 'responding', 0).dt).toBe(30);
   });
 
+  it('re-applies cleanly to its own output', () => {
+    const options = { enabled: false, stepMs: 80, width: 24 };
+    for (const base of [MODULE, SPINNER + RENDERER_2_1_328]) {
+      const once = writeShimmerStyle(base, options)!;
+      expect(once).not.toBeNull();
+      expect(writeShimmerStyle(once, options)).toBe(once);
+    }
+    const once = writeShimmerStyle(MODULE, options)!;
+    const { Z, dt, Lt, At } = runHook(once, 'tool-use', 1234);
+    expect([Z, dt, Lt, At]).toEqual([80, 58, -100, 0]);
+  });
+
+  it('applies new settings over a previous run', () => {
+    const first = writeShimmerStyle(MODULE, {
+      ...DEFAULTS,
+      stepMs: 80,
+      width: 24,
+    })!;
+    const second = writeShimmerStyle(first, {
+      ...DEFAULTS,
+      stepMs: 120,
+      width: 5,
+    })!;
+    expect(second).toBe(
+      writeShimmerStyle(MODULE, { ...DEFAULTS, stepMs: 120, width: 5 })
+    );
+    expect(second).toContain('let kt=c-2,xt=c+2;');
+    expect(runHook(second, 'requesting', 0).Z).toBe(120);
+  });
+
   it('is only enabled when a shimmer option differs from the default', () => {
     expect(isShimmerCustomized(undefined)).toBe(false);
     expect(isShimmerCustomized(DEFAULTS)).toBe(false);

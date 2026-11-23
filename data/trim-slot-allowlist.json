@@ -4,7 +4,8 @@
     "reviewed": "2026-09-02 (CC 2.1.258)",
     "tokens": {
       "SYSTEM_PROMPT_BACKGROUND_SUBAGENT_DELEGATION_EXAMPLES_VAR_2": "Suppressed worked example; the slot only names the callee inside an illustrative code block. Every behavioural signal survives in deployed siblings (agent-subagents-background-default, task-background-subagent-notification, coordinator-mode \"never fabricate or predict agent results\", writing-subagent-prompts).",
-      "SYSTEM_PROMPT_BACKGROUND_SUBAGENT_DELEGATION_EXAMPLES_VAR_3": "Same slot in the synchronous branch of the same suppressed example; the \"report arrives as the tool result — relay it\" signal is in agent-simple-usage-notes."
+      "SYSTEM_PROMPT_BACKGROUND_SUBAGENT_DELEGATION_EXAMPLES_VAR_3": "Same slot in the synchronous branch of the same suppressed example; the \"report arrives as the tool result — relay it\" signal is in agent-simple-usage-notes.",
+      "SYSTEM_PROMPT_BACKGROUND_SUBAGENT_DELEGATION_EXAMPLES_VAR_1": "Gate selecting the background versus synchronous branch of the suppressed worked example; both branches are cut together and their signals live in the siblings cited on VAR_2 and VAR_3."
     }
   },
   "system-prompt-fresh-subagent-delegation-example": {
@@ -27,7 +28,8 @@
     "tokens": {
       "GREP_TOOL_NAME": "The cut bullet is the \"ALWAYS use Grep / NEVER grep via Bash\" routing rule the set deliberately inverts (bash-first-tool-preference deployed; bash-alt-content-search suppressed). The tool name reaches the model from its own schema.",
       "BASH_TOOL_NAME": "Same bullet as GREP_TOOL_NAME; the slot only names the tool inside the reversed prohibition.",
-      "SUBAGENT_STEERING_MODE_FN": "Same bullet; renders the Grep name in \"The X tool has been optimized for correct permissions\" — justification prose for the reversed rule. identifiers=[0,1,0,2,3]: the map is correct (third interpolation reuses id 0)."
+      "SUBAGENT_STEERING_MODE_FN": "Same bullet; renders the Grep name in \"The X tool has been optimized for correct permissions\" — justification prose for the reversed rule. identifiers=[0,1,0,2,3]: the map is correct (third interpolation reuses id 0).",
+      "AGENT_TOOL_NAME": "Same cut as the other Grep slots: the \"use the Agent tool for open-ended searches requiring multiple rounds\" bullet; the routing rule is carried by deployed tool-description-agent-simple-usage-notes, where the slot stays live."
     }
   },
   "tool-description-todowrite": {
@@ -111,7 +113,8 @@
       "SYSTEM_PROMPT_PLAN_MODE_WHAT_HAPPENS_VAR_3": "Same enumeration.",
       "SYSTEM_PROMPT_PLAN_MODE_WHAT_HAPPENS_VAR_4": "Same enumeration.",
       "SYSTEM_PROMPT_PLAN_MODE_WHAT_HAPPENS_VAR_5": "${ASK_USER_QUESTION_TOOL_NAME} live in plan-mode-is-active and plan-mode-workflow.",
-      "SYSTEM_PROMPT_PLAN_MODE_WHAT_HAPPENS_VAR_6": "${EXIT_PLAN_MODE_TOOL_NAME} live in plan-mode-is-active, plan-mode-workflow, plan-mode-sparse-end-turn-tools."
+      "SYSTEM_PROMPT_PLAN_MODE_WHAT_HAPPENS_VAR_6": "${EXIT_PLAN_MODE_TOOL_NAME} live in plan-mode-is-active, plan-mode-workflow, plan-mode-sparse-end-turn-tools.",
+      "SYSTEM_PROMPT_PLAN_MODE_WHAT_HAPPENS_VAR_0": "Gate of the find/grep-versus-tool-name variant of the suppressed explore step; the same step is delivered by deployed plan-mode-is-active and plan-mode-workflow."
     }
   },
   "system-prompt-prefer-dedicated-tools-default-cli": {
@@ -318,7 +321,8 @@
     "bodyHash": "da39a3ee5e6b",
     "reviewed": "2026-09-02 (CC 2.1.258)",
     "tokens": {
-      "TOOL_RESULT_WEBFETCH_OVERFLOW_SUMMARY_UNAVAILABLE_2_VAR_0.length": "Co-emitted from the same z.length in the same branch as the deployed sibling tool-result-webfetch-overflow-summary-unavailable, which keeps the count, the cause and the disclosure duty; this piece is the size-line restatement. Verified in the 2.1.258 bundle."
+      "TOOL_RESULT_WEBFETCH_OVERFLOW_SUMMARY_UNAVAILABLE_2_VAR_0.length": "Co-emitted from the same z.length in the same branch as the deployed sibling tool-result-webfetch-overflow-summary-unavailable, which keeps the count, the cause and the disclosure duty; this piece is the size-line restatement. Verified in the 2.1.258 bundle.",
+      "TOOL_RESULT_WEBFETCH_OVERFLOW_SUMMARY_UNAVAILABLE_2_VAR_1": "Trailing suffix of the suppressed header restatement; the same branch emits tool-result-webfetch-overflow-summary-unavailable into the body, which keeps the count, the cause and the disclosure duty."
     }
   },
   "tool-description-workflow": {
@@ -347,7 +351,7 @@
     }
   },
   "agent-prompt-conversation-summarization": {
-    "bodyHash": "638d043305bc",
+    "bodyHash": "3debb2a239a0",
     "reviewed": "2026-11-05 (CC 2.1.318)",
     "tokens": {
       "AGENT_PROMPT_CONVERSATION_SUMMARIZATION_VAR_0": "The body carries its own analysis steps (walk the conversation in order, mark which user messages still bind, check whether the last reply already answered, play the next window forward, copy exact strings) and its own sectioned summary contract, so Anthropic's analysis-instructions slot (an unconditional slot since 2.1.318, a chronological walk demanding full code snippets) would duplicate it. A blind replay of six real compactions ranked this body above both the stock prompt and the previous override. The slot's security note is not lost: the compaction builder appends it whenever the template lacks it. VAR_1, the user-message attribution guard, is interpolated and stays live, and the body still names <analysis>, so the builder keeps the analysis-then-summary reply shape."
@@ -362,7 +366,7 @@
     }
   },
   "system-prompt-partial-compaction-instructions": {
-    "bodyHash": "847650ca7c79",
+    "bodyHash": "379f7f238675",
     "reviewed": "2026-10-14 (CC 2.1.299)",
     "tokens": {
       "SUMMARY_ANALYSIS_INSTRUCTIONS": "The body carries its own contract for this path (what the newer messages will rely on, a length rule scaled to the remaining work) plus the transcript-fidelity and verbatim-security-constraint rules, so Anthropic's analysis block would restate it with a full-code-snippet walk. USER_MESSAGE_ATTRIBUTION_GUARD is interpolated and stays live."
@@ -388,7 +392,8 @@
     "reviewed": "2026-10-07 (CC 2.1.292)",
     "tokens": {
       "IS_WEB_FETCH_AGENT_AVAILABLE_FN": "Deliberately suppressed spawn restriction; 2.1.292 added a web-fetch-agent carve-out to the restriction itself, which has nothing to qualify while the restriction is off. agent-prompt-web-fetch-agent-usage-guidance (pristine) still tells the model that calling the web-fetch agent is ordinary tool use.",
-      "WEBFETCH_TOOL_NAME": "Same carve-out sentence as IS_WEB_FETCH_AGENT_AVAILABLE_FN; the tool name is still rendered by agent-prompt-web-fetch-agent-usage-guidance and the WebFetch tool itself."
+      "WEBFETCH_TOOL_NAME": "Same carve-out sentence as IS_WEB_FETCH_AGENT_AVAILABLE_FN; the tool name is still rendered by agent-prompt-web-fetch-agent-usage-guidance and the WebFetch tool itself.",
+      "WEB_FETCH_AGENT_TYPE": "Same suppressed web-fetch-agent carve-out as IS_WEB_FETCH_AGENT_AVAILABLE_FN; the restriction it qualifies is off, and agent-prompt-web-fetch-agent-usage-guidance (pristine) names the agent type."
     }
   },
   "tool-description-bash-run-in-background-deadline-suffix": {
@@ -397,7 +402,9 @@
     "tokens": {
       "TOOL_DESCRIPTION_BASH_RUN_IN_BACKGROUND_DEADLINE_SUFFIX_VAR_0": "Standing wipe-merge: the background-timeout default/max are carried by tool-description-bash-run-in-background-detached's timeout clause; 2.1.292 only reshaped the number formatting inside the suppressed sentence.",
       "TOOL_DESCRIPTION_BASH_RUN_IN_BACKGROUND_DEADLINE_SUFFIX_VAR_2": "New 2.1.292 slot (minutes/hours rounding) inside the same suppressed sentence; the detached bullet carries default and max.",
-      "TOOL_DESCRIPTION_BASH_RUN_IN_BACKGROUND_DEADLINE_SUFFIX_VAR_3": "New 2.1.304 slot (whether you are notified at the limit) inside the same suppressed sentence; the detached bullet now carries the notification wording."
+      "TOOL_DESCRIPTION_BASH_RUN_IN_BACKGROUND_DEADLINE_SUFFIX_VAR_3": "New 2.1.304 slot (whether you are notified at the limit) inside the same suppressed sentence; the detached bullet now carries the notification wording.",
+      "TOOL_DESCRIPTION_BASH_RUN_IN_BACKGROUND_DEADLINE_SUFFIX_VAR_1.round": "Minutes rounding of the default inside the same suppressed sentence; tool-description-bash-run-in-background-detached carries the default and max in its own formatted slots.",
+      "TOOL_DESCRIPTION_BASH_RUN_IN_BACKGROUND_DEADLINE_SUFFIX_VAR_5": "Trailing slot of the same suppressed sentence; the detached bullet states the stop-at-limit behaviour and the re-invocation wording."
     }
   },
   "tool-result-enterworktree-now-working-message": {
@@ -434,14 +441,51 @@
     "reviewed": "2026-11-15 (CC 2.1.325)",
     "tokens": {
       "CAN_YIELD": "Suppressed fragment (PowerShell sleep guidance, wiped since 2.1.314). CC 2.1.325 added a yield-dependent wait-on-background-work line to it; that same instruction and its gate reach the model through tool-description-background-monitor-streaming-events, which keeps both slots.",
-      "DOES_SESSION_STOP_AFTER_REPLY": "Suppressed fragment (PowerShell sleep guidance, wiped since 2.1.314). CC 2.1.325 added a yield-dependent wait-on-background-work line to it; that same instruction and its gate reach the model through tool-description-background-monitor-streaming-events, which keeps both slots."
+      "DOES_SESSION_STOP_AFTER_REPLY": "Suppressed fragment (PowerShell sleep guidance, wiped since 2.1.314). CC 2.1.325 added a yield-dependent wait-on-background-work line to it; that same instruction and its gate reach the model through tool-description-background-monitor-streaming-events, which keeps both slots.",
+      "IS_BACKGROUND_COMPLETION_NOTICE_ENABLED": "Selects the wording of the \"you will be notified when it completes — do not poll\" line in the same suppressed PowerShell sleep fragment; the notification contract is stated by deployed tool-description-bash-run-in-background-detached (notified on exit, re-invoked) and its timeout clause.",
+      "WAIT_ON_BACKGROUND_WORK_INSTRUCTION": "Yield-dependent wait-on-background-work line in the same suppressed fragment (see CAN_YIELD); the same instruction reaches the model through the deployed background-run guidance (tool-description-bash-run-in-background-detached and tool-description-background-monitor-streaming-events)."
     }
   },
-  "system-reminder-file-truncated": {
-    "bodyHash": "0f75ec4b3879",
-    "reviewed": "2026-11-17 (CC 2.1.326)",
+  "tool-result-sendmessage-attachments-desktop-only-tail": {
+    "bodyHash": "3ac5e9dc7761",
+    "reviewed": "2026-11-22 (CC 2.1.330)",
     "tokens": {
-      "READ_TOOL_NAME": "Still rendered: it sits in the nested template of the rest-cannot-be-read ternary that CC 2.1.326 added, exactly where pristine has it. The checker does not descend into a nested template."
+      "TOOL_RESULT_SENDMESSAGE_ATTACHMENTS_DESKTOP_ONLY_TAIL_VAR_0": "Pluralizer for the cut sentence \"Tell the user the attachment(s) is/are only visible in the desktop app, and why.\" The lead line the override keeps already states the fact (header says the files/attachments are NOT delivered to Remote Control and only visible in the desktop app on this machine, or could not be delivered); the cut tail sentence only restated it with a pluralized count and \"tell the user ... and why\". The trailing detail slot survives."
+    }
+  },
+  "tool-result-sendmessage-attachments-not-delivered-tail": {
+    "bodyHash": "45e3ed71cf06",
+    "reviewed": "2026-11-22 (CC 2.1.330)",
+    "tokens": {
+      "TOOL_RESULT_SENDMESSAGE_ATTACHMENTS_NOT_DELIVERED_TAIL_VAR_0": "Pluralizer for the cut sentence \"Tell the user the attachment(s) was/were not delivered and why.\" The lead line the override keeps already states the fact (header says the files/attachments are NOT delivered to Remote Control and only visible in the desktop app on this machine, or could not be delivered); the cut tail sentence only restated it with a pluralized count and \"tell the user ... and why\". The trailing detail slot survives."
+    }
+  },
+  "tool-result-sendfile-files-desktop-only-tail": {
+    "bodyHash": "ba1bbceb345c",
+    "reviewed": "2026-11-22 (CC 2.1.330)",
+    "tokens": {
+      "TOOL_RESULT_SENDFILE_FILES_DESKTOP_ONLY_TAIL_VAR_0": "Pluralizer for the cut sentence \"Tell the user the file(s) is/are only visible in the desktop app, and why.\" The lead line the override keeps already states the fact (header says the files/attachments are NOT delivered to Remote Control and only visible in the desktop app on this machine, or could not be delivered); the cut tail sentence only restated it with a pluralized count and \"tell the user ... and why\". The trailing detail slot survives."
+    }
+  },
+  "system-prompt-project-attached-memory-guidance": {
+    "bodyHash": "39c610e079a6",
+    "reviewed": "2026-11-22 (CC 2.1.330)",
+    "tokens": {
+      "SYSTEM_PROMPT_PROJECT_ATTACHED_MEMORY_GUIDANCE_VAR_0": "Gate of the \"read a file with project_memory_read when relevant; project_memory_list gives sizes and dates\" sentence. The override keeps the data-not-instructions rule; read-on-demand and both tool names are carried by the deployed tool-description-projects entries for those tools."
+    }
+  },
+  "tool-result-artifact-list-types-create-unavailable-footer": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-11-22 (CC 2.1.330)",
+    "tokens": {
+      "TOOL_RESULT_ARTIFACT_LIST_TYPES_CREATE_UNAVAILABLE_FOOTER_VAR_0": "Suppressed footer whose slot only names the describe tool; the list_types result stays complete without it, and the describe_type action is documented in the tool schema and the deployed tool-result-artifact-describe-type-* results."
+    }
+  },
+  "system-reminder-deferred-tools-replaced-no-longer-available": {
+    "bodyHash": "da39a3ee5e6b",
+    "reviewed": "2026-11-22 (CC 2.1.330)",
+    "tokens": {
+      "SYSTEM_REMINDER_DEFERRED_TOOLS_REPLACED_NO_LONGER_AVAILABLE_VAR_0.map": "Wipe-merge verdict (prompt-verdicts.json, 2.1.328): whenever this renders, system-reminder-tool-definitions-source-removed and system-reminder-tool-replaced-by-mcp-server-reason co-render with the same tool names and the do-not-call rule plus the replacement reason."
     }
   }
 }

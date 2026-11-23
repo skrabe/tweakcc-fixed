@@ -58,6 +58,7 @@ import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
+import { isDeepStrictEqual } from 'node:util';
 import {
   buildEntries,
   detectVersion,
@@ -1109,6 +1110,68 @@ function mixedRulings(arms, position, isEarned) {
   };
 }
 
+let scannerSourceHash = null;
+export function scannerVersion() {
+  if (scannerSourceHash) return scannerSourceHash;
+  const h = createHash('sha256');
+  for (const dir of [HERE, path.join(HERE, 'lib')])
+    for (const name of fs.readdirSync(dir).sort())
+      if (/\.(?:[cm]?js|mts)$/.test(name) && !/\.test\.[cm]?[jt]s$/.test(name))
+        h.update(`${path.relative(HERE, path.join(dir, name))}\0`).update(
+          fs.readFileSync(path.join(dir, name))
+        );
+  for (const pkg of ['acorn', '@babel/parser'])
+    h.update(`${pkg}@${require(`${pkg}/package.json`).version}\0`);
+  scannerSourceHash = h.digest('hex');
+  return scannerSourceHash;
+}
+
+export function scanKey(code, { catalogue, cache, version }) {
+  return createHash('sha256')
+    .update(scannerVersion())
+    .update('\0')
+    .update(createHash('sha256').update(code).digest('hex'))
+    .update('\0')
+    .update(String(version))
+    .update('\0')
+    .update(JSON.stringify(catalogue ?? null))
+    .update('\0')
+    .update(JSON.stringify(cache ?? null))
+    .digest('hex');
+}
+
+export function scanSiblingArmsShared(
+  cliPath,
+  { catalogue, cache, version } = {},
+  { dir = process.env.SHOWTIME_TMP } = {}
+) {
+  const code = fs.readFileSync(cliPath, 'utf8');
+  const resolved = version || detectVersion(cliPath, code);
+  const inputs = { catalogue, cache, version: resolved };
+  if (!dir) return scanSiblingArms(cliPath, inputs);
+  const key = scanKey(code, inputs);
+  const file = path.join(dir, `sibling-scan-${key}.json`);
+  let entry = null;
+  try {
+    entry = JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch {
+    entry = null;
+  }
+  if (entry && entry.key === key && entry.result) return entry.result;
+  const result = scanSiblingArms(cliPath, inputs);
+  const text = JSON.stringify({ key, result });
+  if (isDeepStrictEqual(JSON.parse(text).result, result)) {
+    const tmp = `${file}.${process.pid}.tmp`;
+    try {
+      fs.writeFileSync(tmp, text);
+      fs.renameSync(tmp, file);
+    } catch {
+      fs.rmSync(tmp, { force: true });
+    }
+  }
+  return result;
+}
+
 // A provisional anchor proves nothing about a call group: one new string passed
 // to the debug logger would make every other log line through that callee a
 // sibling (CC 2.1.310: 2,760 of them). Flow groups keep their provisional
@@ -1201,7 +1264,7 @@ function main() {
   const cache = JSON.parse(
     fs.readFileSync(opt.cache ? path.resolve(opt.cache) : DEFAULT_CACHE, 'utf8')
   );
-  const r = scanSiblingArms(cli, { catalogue, cache });
+  const r = scanSiblingArmsShared(cli, { catalogue, cache });
   if (opt.json) console.log(JSON.stringify(r, null, 1));
   else
     for (const f of r.findings)

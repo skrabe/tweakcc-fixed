@@ -48,5 +48,9 @@
   "2.1.326->2.1.328": {
     "skill-code-review-applying-fixes": "CC 2.1.328 hoisted the report-tool ternary into a local and added a bugs-only clause, so slot 0 is now the bugs-only flag and slot 1 the resolved closing sentence. Upstream rebound both slots; names re-derived from the binary. The override must be realigned.",
     "tool-description-workflow": "CC 2.1.328 moved the opt-in block into a helper called with the same parameter, so SYSTEM_MESSAGE_PHRASE still names the function's parameter, now at slot 1 after the helper. The opt-in text and its Agent tool name are no longer in this template, so the override must be realigned."
+  },
+  "2.1.328->2.1.330": {
+    "skill-loop-external-wakeup-handover": "2.1.330 replaced the stop-after-N-days number with a whole end-condition phrase (\"with no date to stop\" or \"stop after at most …\"); upstream renamed the slot to match and the override is realigned to the new wording.",
+    "system-prompt-artifact-comment-fast-acknowledgement": "2.1.330 moved \"plain text only\" into the literal and the slot now carries the comment character guidance; upstream renamed it to match and the override is realigned."
   }
 }

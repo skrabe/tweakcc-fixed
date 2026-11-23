@@ -1,7 +1,7 @@
 {
   "name": "tweakcc-fixed",
-  "version": "2.9.34",
-  "supportedClaudeCode": "2.1.328",
+  "version": "2.9.36",
+  "supportedClaudeCode": "2.1.330",
   "type": "module",
   "description": "Maintained fork of tweakcc — patch an installed Claude Code (npm or native binary) with curated system-prompt overrides, system-reminder overrides, and fork-only patches. Pairs with skrabe/lobotomized-claude-code.",
   "main": "dist/lib/index.mjs",
@@ -91,6 +91,7 @@
     "*.{json,md}": "prettier --write"
   },
   "dependencies": {
+    "@eslint-community/regexpp": "^4.12.1",
     "acorn": "^8.15.0",
     "chalk": "^5.5.0",
     "cli-spinners": "^3.4.0",

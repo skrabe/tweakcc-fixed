@@ -911,6 +911,83 @@ describe('writeFablePlan', () => {
     expect(writeFablePlan(out, config())).toBe(out);
   });
 
+  it('drops the effort control on the CC 2.1.330 template-literal label', () => {
+    const picker =
+      'bn({"modelPicker:decreaseEffort":()=>{fs("left")}});' +
+      'fs=ue((gs)=>{let Yn=oo(),as=Sr.find((wr)=>wr.value===Yn);if(as===void 0||as.disabled===!0||as.value===ig)return;' +
+      'let Bs=m5(Yn);if(!Bs.supportsEffort)return;Sn(!0)},[Sr]);' +
+      'function ws(gs){if(gs===ig)return;let Yn=nk(gs),as=tr(),Bs=Dn(),wr=Yn&&as!==void 0?Nse(as,Yn):as;' +
+      'l("tengu_model_command_menu_effort",{effort:de(wr),toggled:Bs});let Gr=Bs&&Yn&&Sw(Yn)&&!jM(gs)?wr:void 0;' +
+      'if(gs===Fw){D(null,Gr);return}D(gs,Gr)}' +
+      'ls!==void 0&&!jn&&e(s,{marginBottom:1,flexDirection:"column",children:yr?r(ne,{children:[1]}):' +
+      'e(s,{minHeight:void 0,children:r(n,{dimColor:!0,children:[e(QW,{effort:void 0})," ",`Effort not supported${sr?` for ${sr}`:""}`]})})})';
+    const out = writeFablePlan(cli + picker, config())!;
+    expect(out).not.toBeNull();
+    expect(out).toContain(
+      'function ws(gs){if(gs===ig)return;if(gs==="fableplan"){D(gs,void 0);return}let Yn=nk(gs)'
+    );
+    expect(out).toContain(
+      'as.value===ig)return;if(Yn==="fableplan")return;let Bs=m5(Yn)'
+    );
+    expect(out).toContain(
+      'children:ls==="fableplan"?r(n,{color:"subtle",children:["Fable and Opus each use their own effort (set it on their rows)"]}):yr?'
+    );
+    expect(out).toContain(
+      'r(n,{dimColor:!0,children:[e(QW,{effort:void 0})," ",`Effort not supported${sr?` for ${sr}`:""}`'
+    );
+    expect(writeFablePlan(out, config())).toBe(out);
+  });
+
+  it('routes CC 2.1.330 spawn effort through the destructured model facts', () => {
+    const src = RUNNABLE_317.replace(
+      'function bln({agentDefinition:e,isFork:t,model:r,effortState:n,pickedEffortModel:f,inheritedLayers:s}){' +
+        'let l=Cz(n),i=Qk(odt(n,r,f),r);return i}',
+      'function bln({agentDefinition:e,isFork:t,modelFacts:o,effortState:n,pickedEffortModel:f,inheritedLayers:s}){' +
+        'let{model:r}=o,l=Cz(n),i=Qk(odt(n,r,f),r);return i}'
+    );
+    expect(src).toContain('modelFacts:o,effortState:n');
+    const out = writeFablePlan(src, config())!;
+    expect(out).not.toBeNull();
+    expect(out).toContain(
+      'let{model:r}=o,l=Cz(n),i=Qk(odt({...n,__tweakccPermissionMode:"routed"},r,f),r)'
+    );
+    const rt = run(out);
+    const state = {
+      toolPermissionContext: { mode: 'plan' },
+      settingsEffortTable: {
+        default: 'medium',
+        byModel: {
+          'claude-fable-5': 'max',
+          'claude-opus-5': 'low',
+          'claude-haiku-5': 'high',
+        },
+      },
+    };
+    const spawn = rt.bln as unknown as (args: {
+      agentDefinition: unknown;
+      isFork: boolean;
+      modelFacts: { model: string };
+      effortState: unknown;
+    }) => string | undefined;
+    expect(
+      spawn({
+        agentDefinition: {},
+        isFork: false,
+        modelFacts: { model: rt.LF('claude-haiku-5', 'default') },
+        effortState: state,
+      })
+    ).toBe('high');
+    expect(
+      spawn({
+        agentDefinition: {},
+        isFork: false,
+        modelFacts: { model: rt.LF('claude-haiku-5', 'plan') },
+        effortState: state,
+      })
+    ).toBe('max');
+    expect(writeFablePlan(out, config())).toBe(out);
+  });
+
   it('reads the mode from the CC 2.1.326 two-parameter permission context', () => {
     const src = RUNNABLE_325.replace(
       'function de(e){let o=e.getAppState().toolPermissionContext;',

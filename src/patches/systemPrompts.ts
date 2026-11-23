@@ -23,8 +23,51 @@ import {
 } from '../systemPromptPieceMatcher';
 import { textAssetVisible } from '../nativeTextAssets';
 import { BundleRegions, matchesInRegion } from '../virtualBundle';
+import { matchListDigest, SHADOW, shadowFail, TRACE } from '../perfTrace';
 
 export { isTweakccHumanName } from '../systemPromptSites';
+
+const matchSignature = (matches: RegExpExecArray[]): string =>
+  JSON.stringify(matches.map(m => [m.index, ...Array.from(m)]));
+
+const shadowClobberVerdict = async (
+  spec: PromptMatchSpec | undefined,
+  pristineContent: string,
+  pristineRegions: BundleRegions | null,
+  asset: boolean,
+  verdict: boolean,
+  matched: RegExpExecArray[] | null,
+  promptId: string
+): Promise<void> => {
+  let previous: RegExpExecArray[] | null;
+  try {
+    previous = spec
+      ? matchesInRegion(
+          await findAllPromptPieceMatches(spec, pristineContent),
+          pristineRegions,
+          asset
+        )
+      : [];
+  } catch {
+    previous = null;
+  }
+  const previousVerdict = previous !== null && previous.length > 0;
+  if (
+    previousVerdict !== verdict ||
+    (previous !== null &&
+      matched !== null &&
+      matchSignature(previous) !== matchSignature(matched))
+  ) {
+    shadowFail('u1-clobber', {
+      id: promptId,
+      verdict,
+      previousVerdict,
+      matched: matched?.length ?? null,
+      previous: previous?.length ?? null,
+    });
+  }
+  if (TRACE) TRACE.emit('shadow', { check: 'u1-clobber', id: promptId });
+};
 
 /**
  * Result of applying system prompts
@@ -218,10 +261,41 @@ export const applySystemPrompts = async (
       retained,
       index => working.charAt(index)
     );
+    if (TRACE) {
+      TRACE.emit('prompt', {
+        i: promptIndex,
+        id: promptId,
+        re: TRACE.digest(regex),
+        matches: matchListDigest(TRACE, allMatches),
+        remaining,
+        retained,
+        sel: match?.index ?? null,
+        amb: ambiguous,
+        dis: disambiguated,
+      });
+    }
     if (disambiguated) {
       debug(
         `Disambiguated ${allMatches.length} matches \u2192 ${remaining} standalone for "${prompt.name}"`
       );
+    }
+
+    if (
+      ambiguous &&
+      prompt.content.trim() ===
+        reconstructContentFromPieces(pieces, identifiers, identifierMap).trim()
+    ) {
+      debug(
+        `"${prompt.name}": ${allMatches.length} ambiguous sites, still vanilla — nothing to apply`
+      );
+      results.push({
+        id: promptId,
+        name: prompt.name,
+        group: PatchGroup.SYSTEM_PROMPTS,
+        applied: false,
+        details: 'unchanged',
+      });
+      continue;
     }
 
     if (ambiguous) {
@@ -493,6 +567,15 @@ export const applySystemPrompts = async (
           end: matchIndex + matchLength,
           replacementLength: replacementContent.length,
         });
+        if (TRACE) {
+          TRACE.emit('splice', {
+            i: promptIndex,
+            start: matchIndex,
+            end: matchIndex + matchLength,
+            len: replacementContent.length,
+            rep: TRACE.digest(replacementContent),
+          });
+        }
       } else {
         // Same bytes: the site keeps matching, so the group's next entry must
         // index past it rather than resolve to it again.
@@ -554,11 +637,12 @@ export const applySystemPrompts = async (
       // surfacing.
       let clobberedByEarlierSplice = false;
       if (pristineContent !== undefined && contentChanged) {
+        const spec = matchSpecs.get(regex);
+        let matchedPristine: RegExpExecArray[] | null = null;
         try {
-          const spec = matchSpecs.get(regex);
-          const matchedPristine = spec
+          matchedPristine = spec
             ? matchesInRegion(
-                await findAllPromptPieceMatches(spec, pristineContent),
+                await matchCatalog.matchPristine(spec, pristineContent),
                 pristineRegions,
                 Boolean(entry.asset)
               )
@@ -566,6 +650,27 @@ export const applySystemPrompts = async (
           clobberedByEarlierSplice = matchedPristine.length > 0;
         } catch {
           clobberedByEarlierSplice = false;
+        }
+        if (TRACE) {
+          TRACE.emit('clobber', {
+            i: promptIndex,
+            id: promptId,
+            verdict: clobberedByEarlierSplice,
+            matches: matchedPristine
+              ? matchListDigest(TRACE, matchedPristine)
+              : null,
+          });
+        }
+        if (SHADOW) {
+          await shadowClobberVerdict(
+            spec,
+            pristineContent,
+            pristineRegions,
+            Boolean(entry.asset),
+            clobberedByEarlierSplice,
+            matchedPristine,
+            promptId
+          );
         }
       }
 
@@ -659,6 +764,10 @@ export const applySystemPrompts = async (
         ? `${result.details} (hash storage failed)`
         : 'hash storage failed';
     }
+  }
+
+  if (TRACE) {
+    for (const result of results) TRACE.emit('row', { row: result });
   }
 
   return {

@@ -15,6 +15,7 @@ import matter from 'gray-matter';
 
 import { SYSTEM_PROMPTS_DIR, SYSTEM_REMINDERS_DIR } from './config';
 import { MutableText } from './mutableText';
+import { matchListDigest, TRACE } from './perfTrace';
 import {
   findAllPromptPieceMatchesBatch,
   foldPromptMatchContent,
@@ -62,7 +63,8 @@ export type PreflightCheck =
   | 'cardinality'
   | 'ownership'
   | 'backtick-escape'
-  | 'raw-non-ascii';
+  | 'raw-non-ascii'
+  | 'interpolation';
 
 export type PreflightSeverity = 'error' | 'warning' | 'info';
 
@@ -149,6 +151,7 @@ interface PromptLanding {
   order: number;
   getInterpolatedContent: (match: RegExpMatchArray) => string;
   shouldSkip: (interpolatedContent: string, delimiter: string) => boolean;
+  unchanged: boolean;
   asset: boolean;
 }
 
@@ -170,6 +173,7 @@ export interface PromptReplayPlan {
   order: number;
   getInterpolatedContent: (match: RegExpMatchArray) => string;
   shouldSkip?: (interpolatedContent: string, delimiter: string) => boolean;
+  unchanged?: boolean;
   /** The entry is a whole text asset: its sites lie inside one asset. */
   asset?: boolean;
 }
@@ -255,7 +259,19 @@ export const replayPromptPlans = async (
       end: match.index + match[0].length,
     };
     const delimiter = working.charAt(span.start - 1);
-    const interpolatedContent = plan.getInterpolatedContent(match);
+    if (plan.unchanged) {
+      landed.set(plan.claim, false);
+      planRetained.set(key, retained + 1);
+      continue;
+    }
+    let interpolatedContent: string;
+    try {
+      interpolatedContent = plan.getInterpolatedContent(match);
+    } catch {
+      landed.set(plan.claim, false);
+      planRetained.set(key, retained + 1);
+      continue;
+    }
     if (plan.shouldSkip?.(interpolatedContent, delimiter)) {
       landed.set(plan.claim, false);
       planRetained.set(key, retained + 1);
@@ -318,6 +334,19 @@ export const replayPromptPlans = async (
       regex: plan.regex,
       order: plan.order,
     });
+  }
+  if (TRACE) {
+    for (const plan of orderedPlans) {
+      const destination = destinations.get(plan.claim);
+      const replacement = replacements.get(plan.claim);
+      TRACE.emit('replay', {
+        order: plan.order,
+        re: TRACE.digest(plan.regex),
+        landed: landed.get(plan.claim) ?? null,
+        dest: destination ? [destination.start, destination.end] : null,
+        rep: replacement === undefined ? null : TRACE.digest(replacement),
+      });
+    }
   }
   return {
     content: working.toString(),
@@ -531,6 +560,14 @@ export const runSystemPromptPreflight = async ({
     pristine,
     foldPromptMatchContent(pristine)
   );
+  if (TRACE) {
+    for (const [regex, matches] of groupMatches) {
+      TRACE.emit('batch', {
+        re: TRACE.digest(regex),
+        matches: matchListDigest(TRACE, matches),
+      });
+    }
+  }
 
   for (const entries of groups.values()) {
     const { regex, asset } = entries[0].entry;
@@ -613,7 +650,6 @@ export const runSystemPromptPreflight = async ({
         }
       }
 
-      const interpolatedContent = entry.getInterpolatedContent(match);
       // Every reason the apply leaves a resolved site alone, so the replay
       // predicts the same bytes: a body still equal to the vanilla baseline is
       // written back verbatim rather than re-encoded, and a site whose
@@ -627,7 +663,6 @@ export const runSystemPromptPreflight = async ({
           entry.identifierMap
         ).trim();
       const shouldSkip = (content: string, siteDelimiter: string): boolean => {
-        if (stillVanilla) return true;
         if (
           siteDelimiter !== '"' &&
           siteDelimiter !== "'" &&
@@ -655,14 +690,63 @@ export const runSystemPromptPreflight = async ({
               );
         return siblingShape || drifted.length > 0;
       };
+      const siteStart = match.index;
+      const pristineSite = pristine.slice(
+        siteStart,
+        siteStart + match[0].length
+      );
+      const landing = {
+        regex,
+        spec: { regex, pieces: entry.pieces, version, buildTime },
+        sites: landingSites,
+        order,
+        getInterpolatedContent: entry.getInterpolatedContent,
+        shouldSkip,
+        unchanged: stillVanilla,
+        asset: Boolean(entry.asset),
+      };
+      const retainedClaim = (): SpanClaim => ({
+        start: siteStart,
+        end: siteStart + match[0].length,
+        surface: 'prompt',
+        id: entry.promptId,
+        site,
+        mutates: false,
+        body,
+        delimiter,
+        replacement: pristineSite,
+      });
+
+      if (stillVanilla) {
+        const claim = retainedClaim();
+        promptLandings.set(claim, landing);
+        promptClaims.push({ order, claim });
+        continue;
+      }
+
+      let interpolatedContent: string;
+      try {
+        interpolatedContent = entry.getInterpolatedContent(match);
+      } catch (error) {
+        findings.push({
+          check: 'interpolation',
+          severity: 'error',
+          id: entry.promptId,
+          site,
+          message:
+            'malformed ${...} interpolation: ' +
+            `${error instanceof Error ? error.message : String(error)} — ` +
+            'the apply skips this override and leaves the site untouched',
+        });
+        const claim = retainedClaim();
+        promptLandings.set(claim, landing);
+        promptClaims.push({ order, claim });
+        continue;
+      }
       const encoded = encodeReplacementForDelimiter(
         interpolatedContent,
         delimiter,
         escapeNonAscii
-      );
-      const pristineSite = pristine.slice(
-        match.index,
-        match.index + match[0].length
       );
 
       // Check 5 — raw non-ASCII the splice would introduce. Compared against
@@ -700,15 +784,7 @@ export const runSystemPromptPreflight = async ({
         delimiter,
         replacement: encoded.content,
       };
-      promptLandings.set(claim, {
-        regex,
-        spec: { regex, pieces: entry.pieces, version, buildTime },
-        sites: landingSites,
-        order,
-        getInterpolatedContent: entry.getInterpolatedContent,
-        shouldSkip,
-        asset: Boolean(entry.asset),
-      });
+      promptLandings.set(claim, landing);
       promptClaims.push({ order, claim });
     }
   }
@@ -729,6 +805,7 @@ export const runSystemPromptPreflight = async ({
         order: landing.order,
         getInterpolatedContent: landing.getInterpolatedContent,
         shouldSkip: landing.shouldSkip,
+        unchanged: landing.unchanged,
         asset: landing.asset,
       },
     ];

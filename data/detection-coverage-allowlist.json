@@ -1227,5 +1227,23 @@
     "verdict": "ui",
     "shape": "array",
     "excerpt": "put_tool_policy_not_allowed Your organization's settings or your role may not allow sending this file, or they couldn't be checked. Ask an a"
+  },
+  "fa9e3616b634a645": {
+    "verdict": "ui",
+    "shape": "array",
+    "excerpt": "This machine's managed settings require a sign-in to Anthropic for each Claude Code session (enforceAnthropicSignIn), so it cannot run the C",
+    "why": "claude gateway command error printed to the terminal when managed settings require sign-in; never sent to the model"
+  },
+  "953ea49d59454317": {
+    "verdict": "ui",
+    "shape": "array",
+    "excerpt": "This gateway can push settings that run commands on developer machines. Keep it on your private network. Never expose it to the public inter",
+    "why": "claude apps gateway startup banner written to stderr (or the gateway log); never sent to the model"
+  },
+  "98b3483d7d587c80": {
+    "verdict": "ui",
+    "shape": "array",
+    "excerpt": "put_network_not_allowed Your organization doesn't allow access to Claude from this network. Connect from an allowed network, then ask Claude",
+    "why": "upload error table (put_network_not_allowed and siblings) shown to the person in the artifact upload UI; addressed to the user, not the model"
   }
 }
