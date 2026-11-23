@@ -153,10 +153,20 @@ export interface SyncSummary {
  * Parses markdown file with YAML frontmatter using gray-matter
  * Uses HTML comment delimiters to avoid conflicts with markdown content
  */
-export const parseMarkdownPrompt = (markdown: string): MarkdownPrompt => {
-  const parsed = matter(markdown, {
+type ParsedMarkdown = ReturnType<typeof matter>;
+
+const parseFrontmatter = (markdown: string): ParsedMarkdown =>
+  matter(markdown, {
     delimiters: ['<!--', '-->'],
   });
+
+export const parseMarkdownPrompt = (markdown: string): MarkdownPrompt =>
+  markdownPromptFrom(markdown, parseFrontmatter(markdown));
+
+const markdownPromptFrom = (
+  markdown: string,
+  parsed: ParsedMarkdown
+): MarkdownPrompt => {
   const { name, description, ccVersion, variables } = parsed.data;
 
   // Compute how many lines appear before the start of parsed.content in the
@@ -355,10 +365,20 @@ export const updateVariables = async (
 ): Promise<void> => {
   const filePath = getPromptFilePath(promptId);
   const markdown = await fs.readFile(filePath, 'utf-8');
-  const parsed = matter(markdown, {
-    delimiters: ['<!--', '-->'],
-  });
+  await writeVariables(
+    promptId,
+    markdown,
+    parseFrontmatter(markdown),
+    newIdentifierMap
+  );
+};
 
+const writeVariables = async (
+  promptId: string,
+  markdown: string,
+  parsed: ParsedMarkdown,
+  newIdentifierMap: Record<string, string>
+): Promise<void> => {
   // Extract unique variables from identifierMap
   const variables =
     Object.keys(newIdentifierMap).length > 0
@@ -885,11 +905,13 @@ export const syncPrompt = async (
   }
 
   // File exists - read and update
-  const existingFile = await readPromptFile(prompt.id);
+  const markdown = await fs.readFile(getPromptFilePath(prompt.id), 'utf-8');
+  const parsed = parseFrontmatter(markdown);
+  const existingFile = markdownPromptFrom(markdown, parsed);
   result.oldVersion = existingFile.ccVersion;
 
   // Always update variables list
-  await updateVariables(prompt.id, prompt.identifierMap);
+  await writeVariables(prompt.id, markdown, parsed, prompt.identifierMap);
 
   // Check version comparison
   if (existingFile.ccVersion && prompt.version) {

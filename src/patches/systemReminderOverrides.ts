@@ -7,6 +7,7 @@ import {
   normalizeLineEndings,
   substitutePlaceholders,
 } from '../systemReminderSync';
+import { literalAnchored } from '../literalAnchoredSearch';
 import { showDiff } from './index';
 
 export interface ReminderApplyResult {
@@ -52,7 +53,7 @@ const findAndReplace = (
   patchName: string,
   idempotencyCheck?: (content: string) => boolean
 ): string | null => {
-  const match = content.match(pattern);
+  const match = literalAnchored.match(content, pattern);
   if (!match || match.index === undefined) {
     if (idempotencyCheck && idempotencyCheck(content)) return content;
     console.error(`patch: reminder ${patchName}: failed to find anchor`);

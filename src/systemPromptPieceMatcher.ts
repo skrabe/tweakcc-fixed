@@ -1,4 +1,4 @@
-import { TRACE } from './perfTrace';
+import { SHADOW, shadowFail, TRACE } from './perfTrace';
 import { findAllMatchesWithStackFallback } from './safeRegexMatch';
 import {
   generalizeExpressionIdentifiers,
@@ -718,31 +718,111 @@ const scanTinyAnchor = (
   }
 };
 
-class AnchorIndex {
+const BITMAP_SHIFT = 12;
+
+const isLatin1 = (text: string): boolean => {
+  for (let i = 0; i < text.length; i++) {
+    if (text.charCodeAt(i) > 0xff) return false;
+  }
+  return true;
+};
+
+const hashBitmap = (byHash: Map<number, string[]>): Int32Array => {
+  const bitmap = new Int32Array(1 << (32 - BITMAP_SHIFT - 5));
+  for (const hash of byHash.keys()) {
+    const slot = hash >>> BITMAP_SHIFT;
+    bitmap[slot >>> 5] |= 1 << (slot & 31);
+  }
+  return bitmap;
+};
+
+const scanHashedAnchorBytes = (
+  content: string,
+  bytes: Uint8Array,
+  window: number,
+  byHash: Map<number, string[]>,
+  bitmap: Int32Array,
+  found: Map<string, number[] | null>
+): void => {
+  if (byHash.size === 0 || bytes.length < window) return;
+  const power = windowPower(window);
+  let hash = 0;
+  for (let i = 0; i < window; i++) {
+    hash = (Math.imul(hash, HASH_BASE) + bytes[i]) >>> 0;
+  }
+  const last = bytes.length - window;
+  for (let index = 0; index <= last; index++) {
+    const slot = hash >>> BITMAP_SHIFT;
+    if ((bitmap[slot >>> 5] & (1 << (slot & 31))) !== 0) {
+      const candidates = byHash.get(hash);
+      if (candidates) {
+        for (const anchor of candidates) {
+          if (content.startsWith(anchor, index)) {
+            recordOccurrence(found, anchor, index);
+          }
+        }
+      }
+    }
+    if (index === last) break;
+    hash =
+      (Math.imul((hash - Math.imul(bytes[index], power)) >>> 0, HASH_BASE) +
+        bytes[index + window]) >>>
+      0;
+  }
+};
+
+const sameOccurrences = (
+  a: Map<string, number[] | null>,
+  b: Map<string, number[] | null>
+): string | null => {
+  if (a.size !== b.size) return `size ${a.size} vs ${b.size}`;
+  for (const [anchor, positions] of a) {
+    if (!b.has(anchor)) return anchor;
+    const other = b.get(anchor);
+    if (positions === null || other === null || other === undefined) {
+      if (positions !== other) return anchor;
+      continue;
+    }
+    if (
+      positions.length !== other.length ||
+      positions.some((position, i) => position !== other[i])
+    ) {
+      return anchor;
+    }
+  }
+  return null;
+};
+
+export class AnchorIndex {
   private long = new Map<number, string[]>();
   private short = new Map<number, string[]>();
+  private wideLong = new Map<number, string[]>();
+  private wideShort = new Map<number, string[]>();
   private tiny = new Set<string>();
+  private bitmaps: { long: Int32Array; short: Int32Array } | null = null;
+
+  private mapFor(anchor: string, window: number): Map<number, string[]> {
+    const latin1 = isLatin1(anchor);
+    if (window === MIN_ANCHOR) return latin1 ? this.long : this.wideLong;
+    return latin1 ? this.short : this.wideShort;
+  }
 
   add(anchor: string): void {
     const window = hashWindowFor(anchor);
     if (window === 0) this.tiny.add(anchor);
-    else
-      addHashedAnchor(
-        window === MIN_ANCHOR ? this.long : this.short,
-        anchor,
-        window
-      );
+    else {
+      addHashedAnchor(this.mapFor(anchor, window), anchor, window);
+      this.bitmaps = null;
+    }
   }
 
   remove(anchor: string): void {
     const window = hashWindowFor(anchor);
     if (window === 0) this.tiny.delete(anchor);
-    else
-      removeHashedAnchor(
-        window === MIN_ANCHOR ? this.long : this.short,
-        anchor,
-        window
-      );
+    else {
+      removeHashedAnchor(this.mapFor(anchor, window), anchor, window);
+      this.bitmaps = null;
+    }
   }
 
   // Occurrences of the indexed anchors in `content`. `skip` names anchors
@@ -753,14 +833,68 @@ class AnchorIndex {
     found = new Map<string, number[] | null>(),
     skip?: (anchor: string) => boolean
   ): Map<string, number[] | null> {
+    if (
+      (this.long.size > 0 || this.short.size > 0) &&
+      content.length >= SHORT_WINDOW
+    ) {
+      this.bitmaps ??= {
+        long: hashBitmap(this.long),
+        short: hashBitmap(this.short),
+      };
+      const bytes = Buffer.from(content, 'latin1');
+      scanHashedAnchorBytes(
+        content,
+        bytes,
+        MIN_ANCHOR,
+        this.long,
+        this.bitmaps.long,
+        found
+      );
+      scanHashedAnchorBytes(
+        content,
+        bytes,
+        SHORT_WINDOW,
+        this.short,
+        this.bitmaps.short,
+        found
+      );
+    }
+    scanHashedAnchors(content, MIN_ANCHOR, this.wideLong, found);
+    scanHashedAnchors(content, SHORT_WINDOW, this.wideShort, found);
+    for (const anchor of this.tiny) {
+      if (!skip?.(anchor)) scanTinyAnchor(content, anchor, found);
+    }
+    return found;
+  }
+
+  scanByCharCodes(
+    content: string,
+    found = new Map<string, number[] | null>(),
+    skip?: (anchor: string) => boolean
+  ): Map<string, number[] | null> {
     scanHashedAnchors(content, MIN_ANCHOR, this.long, found);
+    scanHashedAnchors(content, MIN_ANCHOR, this.wideLong, found);
     scanHashedAnchors(content, SHORT_WINDOW, this.short, found);
+    scanHashedAnchors(content, SHORT_WINDOW, this.wideShort, found);
     for (const anchor of this.tiny) {
       if (!skip?.(anchor)) scanTinyAnchor(content, anchor, found);
     }
     return found;
   }
 }
+
+const shadowAnchorScan = (
+  stage: string,
+  scanned: Map<string, number[] | null>,
+  reference: Map<string, number[] | null>,
+  length: number
+): void => {
+  const differs = sameOccurrences(scanned, reference);
+  if (differs !== null) {
+    shadowFail('u5-anchor-scan', { stage, anchor: differs, length });
+  }
+  if (TRACE) TRACE.emit('shadow', { check: 'u5-anchor-scan', stage });
+};
 
 /**
  * Identity. Kept so the callers that used to hand the matcher a case-folded
@@ -825,6 +959,28 @@ export const findAllPromptPieceMatches = async (
   return findAllMatchesWithStackFallback(spec.regex, 'sg', content);
 };
 
+const execSignature = (matches: RegExpExecArray[]): string =>
+  JSON.stringify(matches.map(match => [match.index, ...Array.from(match)]));
+
+const shadowMemo = async (
+  regex: string,
+  content: PromptMatchSource,
+  memoized: RegExpExecArray[]
+): Promise<void> => {
+  const fresh = await findAllMatchesWithStackFallback(
+    regex,
+    'sg',
+    sourceString(content)
+  );
+  if (execSignature(fresh) !== execSignature(memoized)) {
+    shadowFail('u6-memo', {
+      memoized: memoized.length,
+      fresh: fresh.length,
+    });
+  }
+  if (TRACE) TRACE.emit('shadow', { check: 'u6-memo' });
+};
+
 export class PromptPieceMatcherCatalog {
   private specs = new Map<string, PromptMatchSpec>();
   private compiled = new Map<string, CompiledPromptMatcher>();
@@ -838,6 +994,9 @@ export class PromptPieceMatcherCatalog {
     occurrences: Map<string, number[] | null>;
   } | null = null;
   private pristineRescans = 0;
+  private memo = new Map<string, RegExpExecArray[]>();
+  private memoContent: PromptMatchSource | null = null;
+  private memoGeneration = 0;
 
   constructor(specs: PromptMatchSpec[]) {
     for (const spec of specs) {
@@ -860,8 +1019,19 @@ export class PromptPieceMatcherCatalog {
     for (const anchor of this.anchorRegexes.keys()) this.anchors.add(anchor);
   }
 
+  specFor(regex: string): PromptMatchSpec | undefined {
+    return this.specs.get(regex);
+  }
+
+  private clearMemo(): void {
+    this.memo.clear();
+    this.memoContent = null;
+    this.memoGeneration++;
+  }
+
   delete(regex: string): void {
     const anchor = this.compiled.get(regex)?.plan?.anchor;
+    this.memo.delete(regex);
     this.specs.delete(regex);
     this.compiled.delete(regex);
     if (!anchor) return;
@@ -891,16 +1061,24 @@ export class PromptPieceMatcherCatalog {
     content: string,
     foldedContent = foldPromptMatchContent(content)
   ): void {
+    this.clearMemo();
     if (foldedContent.length !== content.length) {
       this.anchorOccurrences.clear();
       return;
     }
-    this.anchorOccurrences = this.anchors.scan(
-      foldedContent,
+    const initial = (): Map<string, number[] | null> =>
       new Map<string, number[] | null>(
         [...this.anchorRegexes.keys()].map(anchor => [anchor, []])
-      )
-    );
+      );
+    this.anchorOccurrences = this.anchors.scan(foldedContent, initial());
+    if (SHADOW) {
+      shadowAnchorScan(
+        'index',
+        this.anchorOccurrences,
+        this.anchors.scanByCharCodes(foldedContent, initial()),
+        foldedContent.length
+      );
+    }
     if (TRACE) {
       TRACE.emit('index', {
         anchors: this.anchorRegexes.size,
@@ -933,13 +1111,29 @@ export class PromptPieceMatcherCatalog {
         anchored: Boolean(anchor),
       });
     }
-    const matches =
-      indexed ??
-      (await findAllMatchesWithStackFallback(
-        spec.regex,
-        'sg',
-        sourceString(content)
-      ));
+    if (indexed) return indexed;
+    if (this.memoContent !== content) {
+      this.clearMemo();
+      this.memoContent = content;
+    }
+    const memoized = this.memo.get(regex);
+    if (memoized) {
+      if (TRACE) TRACE.emit('memo', { hit: true });
+      if (SHADOW) await shadowMemo(spec.regex, content, memoized);
+      return memoized;
+    }
+    const generation = this.memoGeneration;
+    const matches = await findAllMatchesWithStackFallback(
+      spec.regex,
+      'sg',
+      sourceString(content)
+    );
+    for (const match of matches) Object.freeze(match);
+    Object.freeze(matches);
+    if (this.memoGeneration === generation && this.memoContent === content) {
+      this.memo.set(regex, matches);
+    }
+    if (TRACE) TRACE.emit('memo', { hit: false });
     return matches;
   }
 
@@ -1003,6 +1197,7 @@ export class PromptPieceMatcherCatalog {
   }
 
   recordSplice(content: PromptMatchText, splice: PromptMatchSplice): void {
+    this.clearMemo();
     const delta = splice.replacementLength - (splice.end - splice.start);
     for (const [anchor, positions] of this.anchorOccurrences) {
       if (positions === null) continue;
@@ -1020,11 +1215,17 @@ export class PromptPieceMatcherCatalog {
       splice.start + splice.replacementLength + this.maxAnchorLength - 1
     );
     const local = foldPromptMatchContent(content.slice(localStart, localEnd));
-    const rescanned = this.anchors.scan(
-      local,
-      undefined,
-      anchor => this.anchorOccurrences.get(anchor) === null
-    );
+    const skip = (anchor: string): boolean =>
+      this.anchorOccurrences.get(anchor) === null;
+    const rescanned = this.anchors.scan(local, undefined, skip);
+    if (SHADOW) {
+      shadowAnchorScan(
+        'splice',
+        rescanned,
+        this.anchors.scanByCharCodes(local, undefined, skip),
+        local.length
+      );
+    }
     for (const [anchor, positions] of rescanned) {
       const current = this.anchorOccurrences.get(anchor);
       if (current === null || positions === null) {
@@ -1072,6 +1273,60 @@ export class PromptPieceMatcherCatalog {
     return results;
   }
 }
+
+export interface PristinePromptAnswers {
+  pristine: string;
+  patchFilter: string[] | null;
+  answers: Map<
+    string,
+    {
+      spec: PromptMatchSpec;
+      matches: RegExpExecArray[];
+      accepted: Set<string[]>;
+    }
+  >;
+}
+
+export type PristineAnswerDecline =
+  | 'noSession'
+  | 'filtered'
+  | 'specMismatch'
+  | 'buildTimeMismatch';
+
+const sameFilter = (
+  a: string[] | null | undefined,
+  b: string[] | null | undefined
+): boolean => {
+  if (!a || !b) return !a && !b;
+  return a.length === b.length && a.every((id, i) => id === b[i]);
+};
+
+export const pristineAnswerFor = (
+  session: PristinePromptAnswers | null | undefined,
+  pristine: string,
+  patchFilter: string[] | null | undefined,
+  spec: PromptMatchSpec
+): { matches: RegExpExecArray[] } | { declined: PristineAnswerDecline } => {
+  if (!session || session.pristine !== pristine) {
+    return { declined: 'noSession' };
+  }
+  if (!sameFilter(session.patchFilter, patchFilter)) {
+    return { declined: 'filtered' };
+  }
+  const stored = session.answers.get(spec.regex);
+  if (
+    !stored ||
+    stored.spec.regex !== spec.regex ||
+    !stored.accepted.has(spec.pieces) ||
+    stored.spec.version !== spec.version
+  ) {
+    return { declined: 'specMismatch' };
+  }
+  if (stored.spec.buildTime !== spec.buildTime) {
+    return { declined: 'buildTimeMismatch' };
+  }
+  return { matches: stored.matches };
+};
 
 export const findAllPromptPieceMatchesBatch = async (
   specs: PromptMatchSpec[],

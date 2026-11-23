@@ -1,4 +1,5 @@
 import { parseExpressionAt } from 'acorn';
+import { oneByteText } from '../oneByteText';
 import { escapeNonAscii } from '../utils';
 import { showDiff } from './index';
 import { normalizeRecordedPrompt } from './promptHygiene';
@@ -220,7 +221,7 @@ const serialize = (
     | typeof normalizeFffRecordedTools,
   name: string
 ): string => {
-  const source = fn.toString();
+  const source = oneByteText(fn.toString());
   return `function ${name}${source.slice(source.indexOf('('))}`;
 };
 

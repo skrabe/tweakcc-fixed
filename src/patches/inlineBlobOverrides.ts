@@ -29,6 +29,8 @@ import matter from 'gray-matter';
 
 import { debug, escapeNonAscii as escapeNonAsciiUnicode } from '../utils';
 import { detachedSlice, detectUnicodeEscaping } from '../systemPromptSites';
+import { literalAnchored } from '../literalAnchoredSearch';
+import { oneByteText } from '../oneByteText';
 import { SYSTEM_PROMPTS_DIR } from '../config';
 import { showDiff } from './patchDiffing';
 
@@ -820,7 +822,10 @@ export const applyInlineBlobOverrides = async (
       continue;
     }
 
-    const m = anchorRe.exec(content);
+    const m = literalAnchored.match(
+      content,
+      anchorRe
+    ) as RegExpExecArray | null;
     if (!m) {
       results.push({
         filename,
@@ -1136,7 +1141,9 @@ export const applyInlineBlobOverrides = async (
 
     const before = content;
     content =
-      content.slice(0, startOfBlob) + replacement + content.slice(endOfBlob);
+      content.slice(0, startOfBlob) +
+      oneByteText(replacement) +
+      content.slice(endOfBlob);
     const delta = replacement.length - (endOfBlob - startOfBlob);
     for (const w of written)
       if (w.start >= endOfBlob) {
