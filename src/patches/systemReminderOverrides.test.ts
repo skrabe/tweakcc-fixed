@@ -560,6 +560,33 @@ describe('local-command-caveat reminder anchoring', () => {
     expect(out).toContain('function jae(){return ke({content:"",isMeta:!0})}');
   });
 
+  describe('2.1.331 shape (rowSource prop before content)', () => {
+    const KEYS331 =
+      'var ep="local-command-stdout",PS="local-command-stderr",wae="local-command-caveat",Ygt=[ep,PS,wae];';
+    const fn331 = (text: string) =>
+      `function F0e(){return De({rowSource:"harness",content:\`<\${wae}>${text}</\${wae}>\`,isMeta:!0})}function $0e(e,n){return 1}`;
+    const file = KEYS331 + fn331('The command below was run directly.');
+
+    it('splices an edited body and keeps rowSource', () => {
+      const out = caveat.apply(file, 'Custom ${Gq_} note.', false)!;
+      expect(out).toContain(
+        'function F0e(){return De({rowSource:"harness",content:`<${wae}>Custom ${wae} note.</${wae}>`,isMeta:!0})}function $0e('
+      );
+      expect(out).not.toContain('run directly');
+      expect(caveat.apply(out, 'Custom ${Gq_} note.', false)).toBe(out);
+      expect(() => new Function(out)).not.toThrow();
+    });
+
+    it('suppresses to an empty harness emit, idempotently', () => {
+      const out = caveat.apply(file, '', true)!;
+      expect(out).toContain(
+        'function F0e(){return De({rowSource:"harness",content:"",isMeta:!0})}'
+      );
+      expect(caveat.apply(out, '', true)).toBe(out);
+      expect(() => new Function(out)).not.toThrow();
+    });
+  });
+
   it('fails cleanly when the tag key is absent', () => {
     expect(caveat.apply(fn('anything'), 'x', false)).toBeNull();
   });

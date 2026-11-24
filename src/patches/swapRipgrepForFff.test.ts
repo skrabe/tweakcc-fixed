@@ -237,6 +237,31 @@ describe('swapRipgrepForFff', () => {
     expect(disabled).not.toContain('unalias find 2>/dev/null || true');
   });
 
+  it('installs into the 2.1.331 shared snapshot line builder', () => {
+    const snapshot331 =
+      ';function lines($kind){let $lines=$kind==="function"?["# rg"]:[],$commands=snippets();if($commands!==null)$lines.push("# Shadow find/grep with embedded bfs/ugrep",$commands);$lines.push("# tail");return $lines}' +
+      'function snapshot(){let $end=`CLAUDE_CODE_END_${"x"}`,$body=lines("alias");return $body.join("\\n")}' +
+      'function reused(){return["# reused",...lines("alias")]}';
+    const source = BASE.replace(SNAPSHOT, snapshot331);
+    const patched = writeSwapRipgrepForFff(source, WRAPPER)!;
+    expect(patched).not.toBeNull();
+    expect(patched).toContain(SETUP);
+    expect(patched).toContain(
+      'let $lines=$kind==="function"?["# rg"]:[],$commands=['
+    );
+    expect(patched).toContain(
+      'snippets()].filter(Boolean).join("\\n");if($commands!==null)$lines.push("# Shadow find/grep with embedded bfs/ugrep",$commands);'
+    );
+    expect(patched).toContain('$body=lines("alias");');
+    expect(hasFffShellIntegration(patched, WRAPPER)).toBe(true);
+    expect(writeSwapRipgrepForFff(patched, WRAPPER)).toBe(patched);
+    const lines = shellCommands(patched);
+    expect(lines[0]).toBe('# Shadow find/grep with embedded bfs/ugrep');
+    expect(lines[1]).toContain(`if [ -x '${WRAPPER}' ]; then`);
+    expect(lines).toContain('unalias find 2>/dev/null || true');
+    expect(lines.at(-1)).toBe('# tail');
+  });
+
   it('requires the 2.1.316 consumer to push into the snapshot line array', () => {
     const error = vi.spyOn(console, 'error').mockImplementation(() => {});
     try {

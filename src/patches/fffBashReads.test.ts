@@ -143,6 +143,44 @@ describe('fffBashReads', () => {
     expect(writeFffBashReads(patched, '/tmp/viewers', wrapper)).toBe(patched);
   });
 
+  it('applies on top of the 2.1.331 brace-grouped evaluation shape', () => {
+    const command331 =
+      ';function build(command){let $commands=[];$commands.push("snapshot");$commands.push("scrub");' +
+      'let $run=fast?direct():`eval ${command}`,$cwd=`pwd -P >| ${quote(["cwd"])}`,$grouped=group&&safe({safe:!0})?`{ ${$run}; }`:$run,$joined=[...$commands,$grouped,$cwd].join(" && ");return[...$commands,$grouped,$cwd]}';
+    const integrated = writeSwapRipgrepForFff(
+      searchFixture + instructionFixture + command331,
+      wrapper
+    )!;
+    expect(integrated).not.toBeNull();
+    const patched = writeFffBashReads(integrated, '/tmp/viewers', wrapper)!;
+    expect(patched).not.toBeNull();
+    expect(patched).toContain(
+      ');let $run=fast?direct():`eval ${command}`,$cwd=`pwd -P >| '
+    );
+    expect(patched).toContain('?`{ ${$run}; }`:$run,');
+    for (const group of [false, true]) {
+      const commands = new Function(
+        'quote',
+        'fast',
+        'direct',
+        'group',
+        'safe',
+        patched + ';return build("task")'
+      )(
+        () => 'cwd',
+        false,
+        () => 'direct task',
+        group,
+        () => true
+      ) as string[];
+      expect(commands.slice(0, 2)).toEqual(['snapshot', 'scrub']);
+      expect(commands[2]).toBe(fffViewerSetup('/tmp/viewers', wrapper));
+      expect(commands[3]).toBe(group ? '{ eval task; }' : 'eval task');
+      expect(commands[4]).toBe('pwd -P >| cwd');
+    }
+    expect(writeFffBashReads(patched, '/tmp/viewers', wrapper)).toBe(patched);
+  });
+
   it('keeps JS and shell syntax valid for difficult directory names', () => {
     const directory = "/tmp/José/'`x${HOME}/viewers";
     const trickyWrapper = directory + '/../rg-fff';

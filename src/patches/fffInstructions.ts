@@ -461,21 +461,36 @@ export const writeFffInstructionHygiene = (file: string): string | null => {
   );
   const sites: Array<Site | null> = [
     api &&
-      // CC 2.1.329+: a declarator appending a session section to the
-      // selected prompt comes first, and the merge reads that instead.
+      // CC 2.1.331+: the session-section declarator is gone again, and a
+      // head-row builder taking one parameter precedes the tool-input-copies
+      // builder after the bare declarators.
       (selectSite(
         file,
         api,
-        /let ([$\w]+)=([$\w]+)\(([$\w]+)\.systemPrompt,([$\w]+),([$\w]+)\),([$\w]+)=([$\w]+)\(([$\w]+)\(\1,([$\w]+)\.systemContext\)\),([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+)=\(\)=>\{let ([$\w]+)=([$\w]+)\(([$\w]+),\12,\{options:([$\w]+)\.options,querySource:([$\w]+),stamp:([$\w]+),toolInputCopies:\13\}\)/g,
+        /let ([$\w]+)=([$\w]+)\(([$\w]+)\(([$\w]+)\.systemPrompt,([$\w]+)\.systemContext\)\),(?:[$\w]+,)+[$\w]+=\([$\w]+\)=>\{let [$\w]+=[$\w]+\([$\w]+,[$\w]+,\{options:[$\w]+\.options,querySource:[$\w]+,head:[\s\S]*?\},[$\w]+=\(\)=>\{let [$\w]+=[$\w]+\([$\w]+,[$\w]+,\{options:[$\w]+\.options,querySource:[$\w]+,stamp:[$\w]+,toolInputCopies:[$\w]+\}\)/g,
         '__tweakccRecordedPrompt',
         promptHelper,
         FFF_OWNED_PROJECT_GUIDANCE,
         match => ({
-          original: `${match[7]}(${match[8]}(${match[1]},${match[9]}.systemContext))`,
+          original: `${match[2]}(${match[3]}(${match[4]}.systemPrompt,${match[5]}.systemContext))`,
           args: [],
-        }),
-        6
+        })
       ) ??
+        // CC 2.1.329+: a declarator appending a session section to the
+        // selected prompt comes first, and the merge reads that instead.
+        selectSite(
+          file,
+          api,
+          /let ([$\w]+)=([$\w]+)\(([$\w]+)\.systemPrompt,([$\w]+),([$\w]+)\),([$\w]+)=([$\w]+)\(([$\w]+)\(\1,([$\w]+)\.systemContext\)\),([$\w]+),([$\w]+),([$\w]+),([$\w]+),([$\w]+)=\(\)=>\{let ([$\w]+)=([$\w]+)\(([$\w]+),\12,\{options:([$\w]+)\.options,querySource:([$\w]+),stamp:([$\w]+),toolInputCopies:\13\}\)/g,
+          '__tweakccRecordedPrompt',
+          promptHelper,
+          FFF_OWNED_PROJECT_GUIDANCE,
+          match => ({
+            original: `${match[7]}(${match[8]}(${match[1]},${match[9]}.systemContext))`,
+            args: [],
+          }),
+          6
+        ) ??
         selectSite(
           file,
           api,

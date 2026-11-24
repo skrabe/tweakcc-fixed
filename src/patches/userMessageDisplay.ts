@@ -505,6 +505,13 @@ export const writeUserMessageDisplay = (
     (!memoizedChildMatch || memoizedChildMatch.index === undefined) &&
     (!legacyMatch || legacyMatch.index === undefined)
   ) {
+    if (
+      /No content found in user prompt message[\s\S]{0,1500}?children:`[^`]*\$\{\(typeof ([$\w]+)==="object"&&\1!==null\?\1\.head\+"\\n\("\+\1\.hiddenLines\+" line"\+/.test(
+        oldFile
+      )
+    ) {
+      return oldFile;
+    }
     console.error(
       'patch: userMessageDisplay: failed to find user message display pattern'
     );

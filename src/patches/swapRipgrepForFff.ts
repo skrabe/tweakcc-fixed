@@ -31,6 +31,7 @@ export const hasFffShellIntegration = (
 interface ShellSetupConsumer {
   start: number;
   end: number;
+  lead: string;
   variable: string;
   tail: string;
 }
@@ -39,6 +40,36 @@ const findShellSetupConsumer = (
   file: string,
   producer: string
 ): ShellSetupConsumer | null => {
+  // CC 2.1.331+: a lines builder shared by the fresh and reused snapshot
+  // paths declares the producer's result after its line array:
+  // `function B(e){let n=...,r=P();if(r!==null)n.push(...,r);...return n}`,
+  // and the fresh path calls it beside the heredoc delimiter
+  // (`A=<CLAUDE_CODE_END_...>,L=B(y)`).
+  const call = producer.replaceAll('$', '\\$');
+  const builders = [
+    ...file.matchAll(
+      new RegExp(
+        String.raw`function ([$\w]+)\([$\w]+\)\{let ([$\w]+)=(?:(?!function )[\s\S]){0,600}?,([$\w]+)=(${call})\(\);if\(\3!==null\)\2\.push\([^;]*?,\3\);`,
+        'g'
+      )
+    ),
+  ].filter(match =>
+    [...file.matchAll(/`CLAUDE_CODE_END_/g)].some(end =>
+      file.slice(end.index, end.index + 200).includes(`=${match[1]}(`)
+    )
+  );
+  if (builders.length === 1 && builders[0].index !== undefined) {
+    const match = builders[0];
+    const head = `${match[3]}=${match[4]}()`;
+    const start = match.index + match[0].lastIndexOf(`,${head};if(`) + 1;
+    return {
+      start,
+      end: start + head.length,
+      lead: '',
+      variable: match[3],
+      tail: '',
+    };
+  }
   // CC 2.1.316+: `D=\`CLAUDE_CODE_END_...\`,G=[];...let Y=P();if(Y!==null)G.push(...,Y);`
   const pushes = [
     ...file.matchAll(
@@ -56,6 +87,7 @@ const findShellSetupConsumer = (
     return {
       start: match.index,
       end: match.index + head.length,
+      lead: 'let ',
       variable: match[1],
       tail: ';',
     };
@@ -75,6 +107,7 @@ const findShellSetupConsumer = (
     return {
       start: match.index,
       end: match.index + match[0].length,
+      lead: 'let ',
       variable: match[1],
       tail: ',',
     };
@@ -93,6 +126,7 @@ const findShellSetupConsumer = (
     return {
       start: match.index,
       end: match.index + match[0].length,
+      lead: 'let ',
       variable: match[1],
       tail: `;if(${match[1]}!==null)`,
     };
@@ -119,9 +153,9 @@ const installFffShell = (file: string, wrapperPath: string): string | null => {
     );
     return null;
   }
-  const { start, end, variable, tail } = consumer;
+  const { start, end, lead, variable, tail } = consumer;
   const insertion =
-    `let ${variable}=[${fffShellSetup(wrapperPath)},${producer}()].filter(Boolean).join("\\n")` +
+    `${lead}${variable}=[${fffShellSetup(wrapperPath)},${producer}()].filter(Boolean).join("\\n")` +
     tail;
   const updated = file.slice(0, start) + insertion + file.slice(end);
   showDiff(file, updated, insertion, start, end);

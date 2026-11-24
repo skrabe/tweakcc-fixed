@@ -4,6 +4,7 @@ import {
   writeUserMessageDisplay,
 } from './userMessageDisplay';
 import { UserMessageDisplayConfig } from '../types';
+import { findTextComponentDefinition } from './helpers';
 
 const BT = '`';
 
@@ -408,5 +409,44 @@ describe('writeUserMessageDisplay — CC 2.1.328 imported Text binding', () => {
       'import{na,Kn,g,kn}from'
     );
     expect(writeUserMessageDisplay(noImport, REAL_CONFIG)).toBeNull();
+  });
+});
+
+// CC 2.1.331: Ink's themed Text is no longer React-Compiler memoized. An
+// inner `"use no memo"` function destructures only the theme props and the
+// exported binding is a factory wrapper around it (`var n=Xy(uN)`).
+const INK_MODULE_331 =
+  MARK(1308, '/$bunfs/root/chunk-ybw2hmbm.js') +
+  'function g(h){return null}var fE=Xy(jR);' +
+  'function uN(h){"use no memo";let{color:b,backgroundColor:v,dimColor:R}=h;' +
+  'if(!b&&!v&&!R)return Pu(h,void 0,void 0,void 0);let M=ks(rle).resolvedTheme;' +
+  'return Pu(h,lGe(b,M),lGe(v,M),void 0)}var n=Xy(uN);j();' +
+  ';export{Nvt,g,fE,n,kn};';
+const FIXTURE_331 =
+  INK_MODULE_331 +
+  MARK(2098, '/$bunfs/root/chunk-bjgpjqze.js') +
+  'import{na,Kn,g,n,kn}from"/$bunfs/root/chunk-ybw2hmbm.js";' +
+  USER_MSG_328;
+
+describe('writeUserMessageDisplay — CC 2.1.331 wrapped Text', () => {
+  it('resolves Text to the factory-wrapped binding', () => {
+    expect(findTextComponentDefinition(FIXTURE_331)?.name).toBe('n');
+    const out = writeUserMessageDisplay(FIXTURE_331, REAL_CONFIG)!;
+    expect(out).not.toBeNull();
+    const body = out.slice(out.indexOf('function Sh('));
+    expect(body).toContain(
+      'paddingX:1,children:e(n,{color:"text",backgroundColor:"rgb(28,32,48)",children:` > ${(typeof We==="object"'
+    );
+    expect(body).toContain('co=e(g,{flexDirection:"column",marginTop:ye,');
+    const fnSrc = body.slice(
+      0,
+      body.indexOf('return co}') + 'return co}'.length
+    );
+    expect(() => new Function(`return (${fnSrc})`)).not.toThrow();
+  });
+
+  it('leaves its own output unchanged', () => {
+    const out = writeUserMessageDisplay(FIXTURE_331, REAL_CONFIG)!;
+    expect(writeUserMessageDisplay(out, REAL_CONFIG)).toBe(out);
   });
 });

@@ -2044,20 +2044,42 @@ const LOCAL_CMD_CAVEAT_INJECTION: ReminderInjection = {
       return null;
     }
     const tag = key[1].replace(/\$/g, '\\$');
+    // Method 1 (2.1.331+): string-valued props such as `rowSource:"harness",`
+    // precede `content:`; they are captured and re-emitted. Method 2 is the
+    // pre-2.1.331 `X({content:…,isMeta:!0})` shape.
+    const methods = [
+      new RegExp(
+        '([$\\w]+)\\(\\{((?:[$\\w]+:"[^"`]*",)+)content:`<\\$\\{(' +
+          tag +
+          ')\\}>[^`]*?<\\/\\$\\{\\3\\}>`,isMeta:!0\\}\\)'
+      ),
+      new RegExp(
+        '([$\\w]+)\\(\\{()content:`<\\$\\{(' +
+          tag +
+          ')\\}>[^`]*?<\\/\\$\\{\\3\\}>`,isMeta:!0\\}\\)'
+      ),
+    ];
+    const pattern =
+      methods.find(re => literalAnchored.match(content, re)) ?? methods[0];
+    // A suppressed caveat leaves no `<${TAG}>` template behind; seeing the
+    // empty harness emit instead means this patch already ran.
+    const alreadySuppressed = (c: string) =>
+      isSuppressed &&
+      !c.includes('content:`<${' + key[1] + '}>') &&
+      /function [$\w]+\(\)\{return [$\w]+\(\{rowSource:"harness",content:"",isMeta:!0\}\)\}/.test(
+        c
+      );
     return findAndReplace(
       content,
-      new RegExp(
-        '([$\\w]+)\\(\\{content:`<\\$\\{(' +
-          tag +
-          ')\\}>[^`]*?<\\/\\$\\{\\2\\}>`,isMeta:!0\\}\\)'
-      ),
+      pattern,
       m => {
-        const [, j6Name, tagVar] = m;
-        if (isSuppressed) return `${j6Name}({content:"",isMeta:!0})`;
+        const [, j6Name, preProps, tagVar] = m;
+        if (isSuppressed) return `${j6Name}({${preProps}content:"",isMeta:!0})`;
         const innerBody = body.replace(/\$\{Gq_\}/g, `\${${tagVar}}`);
-        return `${j6Name}({content:\`<\${${tagVar}}>${innerBody}</\${${tagVar}}>\`,isMeta:!0})`;
+        return `${j6Name}({${preProps}content:\`<\${${tagVar}}>${innerBody}</\${${tagVar}}>\`,isMeta:!0})`;
       },
-      'local-command-caveat'
+      'local-command-caveat',
+      alreadySuppressed
     );
   },
 };
