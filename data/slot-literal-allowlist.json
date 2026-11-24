@@ -6167,5 +6167,65 @@
     "verdict": "glue",
     "text": "Other computers",
     "reason": "noun-phrase arm of o @63747623; its other arm `Cloud sessions and other computers` is allowlisted glue"
+  },
+  "873aad05d55c1104": {
+    "promptId": "tool-result-bash-dangerous-op-rm-guard-added-named-variable",
+    "label": "TOOL_RESULT_BASH_DANGEROUS_OP_RM_GUARD_ADDED_NAMED_VARIABLE_VAR_2",
+    "text": "this rm removes everything under it",
+    "verdict": "glue",
+    "reason": "same z arm @12588380 completing the fallback reason's 'If a variable here holds a wrong path, even /, ${z}.'"
+  },
+  "173476540088cdd7": {
+    "promptId": "tool-result-bash-dangerous-op-rm-guard-added-named-variable",
+    "label": "TOOL_RESULT_BASH_DANGEROUS_OP_RM_GUARD_ADDED_NAMED_VARIABLE_VAR_2",
+    "text": "this rm removes the path it names",
+    "verdict": "glue",
+    "reason": "same z arm @12588418 completing the fallback reason's sentence"
+  },
+  "8e60d289db708a51": {
+    "promptId": "tool-result-bash-pkill-macos-signal-loop-errors",
+    "label": "TOOL_RESULT_BASH_PKILL_MACOS_SIGNAL_LOOP_ERRORS_VAR_0",
+    "text": "command env -u GREP_OPTIONS LC_ALL=C grep -a",
+    "verdict": "glue",
+    "reason": "W3e @16414249 is the grep command prefix spliced into the pkill wrapper's shell pipeline ('{ ${W3e} -vxF ... }'); executable code that completes the host command, no prose"
+  },
+  "f3dfee631e40b80d": {
+    "promptId": "slash-command-usage-credits-request-send-failed-ask-admin",
+    "promptIds": [
+      "slash-command-usage-credits-request-send-failed-try-later-target",
+      "slash-command-usage-credits-request-already-pending"
+    ],
+    "label": "SLASH_COMMAND_USAGE_CREDITS_REQUEST_SEND_FAILED_ASK_ADMIN_VAR_0",
+    "text": "raise your ",
+    "verdict": "off-route",
+    "reason": "literal from AWe @23126732 completing /usage-credits admin-request messages whose siblings are cached ui; reaches the terminal only"
+  },
+  "77329514ffb7a4d8": {
+    "promptId": "slash-command-plugin-install-success",
+    "label": "SLASH_COMMAND_PLUGIN_INSTALL_SUCCESS_VAR_4",
+    "text": ". This plugin is disabled by default",
+    "verdict": "glue",
+    "reason": "arm of A @24335952 completing the install-success sentence. It states the plugin's state; the enable instruction is the separate U slot (' — enable it with: ...')"
+  },
+  "2a4dce4ec5a6764a": {
+    "promptId": "slash-command-plugin-install-success",
+    "label": "SLASH_COMMAND_PLUGIN_INSTALL_SUCCESS_VAR_4",
+    "text": ". This plugin is disabled in your settings",
+    "verdict": "glue",
+    "reason": "other arm of A @24335995; state clause followed by the same separate U instruction"
+  },
+  "e55d621316085836": {
+    "promptId": "slash-command-plugin-install-success",
+    "label": "SLASH_COMMAND_PLUGIN_INSTALL_SUCCESS_VAR_5",
+    "text": " — installed from the cached catalog, so the version may be stale",
+    "verdict": "glue",
+    "reason": "tail of re @24336094 after the interpolated warning; caveat clause completing '. Warning: ${V} ...', no instruction"
+  },
+  "2580e4ace8d14493": {
+    "promptId": "slash-command-steward-claude-settings-set-gh-git-variable",
+    "label": "SLASH_COMMAND_STEWARD_CLAUDE_SETTINGS_SET_GH_GIT_VARIABLE_VAR_1",
+    "text": " can't tell which host gh or git would contact",
+    "verdict": "glue",
+    "reason": "quasi of c @48156960 (`so ${e} can't tell which host gh or git would contact`) that completes the host's 'this checkout's .claude settings set X, ${c}'; reason clause, and the remedy is the separate array element"
   }
 }

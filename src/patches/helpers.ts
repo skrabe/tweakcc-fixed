@@ -322,7 +322,19 @@ export const clearCaches = (): void => {
 export const findTextComponentDefinition = (
   fileContents: string
 ): { name: string; index: number } | undefined => {
-  // Method 1 (CC 2.1.204+): the Ink Text component is now React-Compiler
+  // Method 1 (CC 2.1.331+): the themed Text is an un-memoized inner function
+  // that destructures only the theme props, wrapped by a component factory;
+  // callers use the wrapper binding:
+  //   function uN(h){"use no memo";let{color:b,backgroundColor:v,dimColor:R}=h;
+  //   ...return Pu(h,...)}var n=Xy(uN);
+  const wrappedTextPattern =
+    /[;}]function ([$\w]+)\([$\w]+\)\{(?:"use no memo";)?let\{color:[$\w]+,backgroundColor:[$\w]+,dimColor:[$\w]+\}=[$\w]+;[^]{0,400}?\}var ([$\w]+)=[$\w.]+\(\1\)[;,]/;
+  const wrappedMatch = fileContents.match(wrappedTextPattern);
+  if (wrappedMatch && wrappedMatch.index !== undefined) {
+    return { name: wrappedMatch[2], index: wrappedMatch.index + 1 };
+  }
+
+  // Method 2 (CC 2.1.204+): the Ink Text component is now React-Compiler
   // memoized, so the color/backgroundColor/dimColor/bold props are destructured
   // out of the body AFTER a memo-cache guard rather than in the params:
   //   function h(P){let $=X.c(31),...;if($[0]!==P)({color:A,backgroundColor:B,
@@ -335,7 +347,7 @@ export const findTextComponentDefinition = (
     return { name: memoMatch[1], index: memoMatch.index };
   }
 
-  // Method 2 (CC <= 2.1.202): the minified Text component destructures its props
+  // Method 3 (CC <= 2.1.202): the minified Text component destructures its props
   // directly in the signature:
   //   function X({color:A,backgroundColor:B,dimColor:C=!1,bold:D=!1,...})
   const textComponentPattern =

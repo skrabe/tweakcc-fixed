@@ -240,3 +240,51 @@ function build(){return u({${ROOT_KEYS}
     expect(texts).toContain('Second member');
   });
 });
+
+describe('findSettingsDescriptions — class-built union factories', () => {
+  // CC 2.1.331's schema library builds nodes from classes: the imported
+  // factory is `function $o(e,t,n){return new pe(e,t,n)}` and the union kind
+  // is a `type` getter inherited from pe's base class, so the factory body
+  // never spells `type:"union"`.
+  const lib = `class Base{describe(){return this}optional(){return this}}
+class Str extends Base{get type(){return"string"}}
+class Obj extends Base{constructor(s){super();this.shape=s}get type(){return"object"}}
+class Un extends Base{constructor(e,t){super();this.options=e}get type(){return"union"}}
+class Disc extends Un{constructor(d,e,t){super(e,t);this.discriminator=d}}
+class Tup extends Base{constructor(e){super();this.items=e}get type(){return"tuple"}}
+function o(){return new Str}
+function u(e){return new Obj(e)}
+function x(e){return new Str}
+function un(e,t){return new Un(e,t)}
+function $o(e,t,n){return new Disc(e,t,n)}
+function tu(e){return new Tup(e)}
+export{o,u,x,un,$o,tu};`;
+  const settings = `import{o,u,x,un,$o,tu}from"/$bunfs/root/m0.js";
+var p=(g)=>g;
+var at=p(()=>un([u({source:x("github"),repo:o().describe("GitHub repo")}),u({source:x("url"),url:o().describe("Marketplace URL")})]));
+function lt(){return at()}
+var Ima=p(()=>{let e=lt();return $o("source",[u({source:x("pluginDirectory"),dir:o().describe("Sentinel child")}).describe("@internal Policy-list sentinel"),...e.options])});
+function build(){return u({${ROOT_KEYS}
+  blocked:Ima(),
+  pair:tu([o().describe("@internal Tuple member"),o().describe("Second member")])})}`;
+  const { root, descriptions } = findSettingsDescriptions(
+    bundle([lib, settings])
+  );
+  const texts = descriptions.map(d => d.joined);
+
+  it('drops the @internal option of an imported class-built union', () => {
+    expect(root).not.toBeNull();
+    expect(texts).not.toContain('@internal Policy-list sentinel');
+    expect(texts).not.toContain('Sentinel child');
+  });
+
+  it('still walks the spread options of the other union', () => {
+    expect(texts).toContain('GitHub repo');
+    expect(texts).toContain('Marketplace URL');
+  });
+
+  it('keeps an @internal member of a non-union class factory', () => {
+    expect(texts).toContain('@internal Tuple member');
+    expect(texts).toContain('Second member');
+  });
+});

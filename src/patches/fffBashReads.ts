@@ -38,6 +38,13 @@ export const writeFffBashReads = (
   }
   if (file.includes('export RG_FFF_VIEWER_DIR=')) return file;
   const methods: Array<{ pattern: RegExp; parts: number }> = [
+    // CC 2.1.331+: the eval may be wrapped in a brace group before joining:
+    // `...,P=\`pwd -P >| ...\`,W=c&&g()?\`{ ${E}; }\`:E,J=[...A,W,P].join(" && ")`
+    {
+      pattern:
+        /;let ([$\w]+)=(?:[$\w]+\?[$\w]+\(\):)?`eval \$\{[$\w]+\}`,([$\w]+)=`pwd -P >\| [^;`]*`,([$\w]+)=[^;`]*\?`\{ \$\{\1\}; \}`:\1,[$\w]+=\[\.\.\.([$\w]+),\3,\2\]\.join\(" && "\)/g,
+      parts: 4,
+    },
     // CC 2.1.319+: `let E=c?f():\`eval ${x}\`,P=\`pwd -P >| ...\`,J=[...A,E,P].join(" && ")`
     {
       pattern:

@@ -105,6 +105,18 @@ const PRISTINE_2_1_329 =
   RENDER_2_1_299 +
   SERIALIZER +
   ';function $section($prompt){return $prompt}var $type="prompt_snapshot";';
+// CC 2.1.331: the session section is gone and a head-row builder taking
+// one parameter precedes the tool-input-copies builder.
+const API_2_1_331 = API_2_1_326.replace(
+  '$copies,$record=()=>',
+  '$copies,$head=($v)=>{let $q=$gather($rows,$unused,{options:$current.options,querySource:$source,head:$other,stamp:$v?{now:()=>$v.timestamp}:$stamp});return $q},$record=()=>'
+);
+const PRISTINE_2_1_331 =
+  API_2_1_331 +
+  CONTEXT_2_1_322 +
+  RENDER_2_1_299 +
+  SERIALIZER +
+  ';var $type="prompt_snapshot";';
 const TOOLS = [{ name: 'Bash' }, { name: 'Grep' }, { name: 'Glob' }];
 
 type Entry = {
@@ -393,6 +405,8 @@ describe('fff hygiene native call sites', () => {
     ['2.1.326', PRISTINE_2_1_326, true],
     ['2.1.329', PRISTINE_2_1_329, false],
     ['2.1.329', PRISTINE_2_1_329, true],
+    ['2.1.331', PRISTINE_2_1_331, false],
+    ['2.1.331', PRISTINE_2_1_331, true],
   ] as const)(
     'cleans resumed API/context maps without changing saved records, shape=%s, enabled=%s',
     async (_shape, pristine, enabled) => {
@@ -616,6 +630,20 @@ describe('fff hygiene native call sites', () => {
     );
     expect(repaired).toContain(
       'leadingTools:$w=>$leading.leadingTools??($w?[$w]:[]),contextRendering:$routing.rendering,'
+    );
+    expect(writeFffInstructionHygiene(repaired)).toBe(repaired);
+  });
+
+  it('wraps the 2.1.331 merged prompt and keeps the head-row builder intact', () => {
+    expect(API_2_1_331).toContain('$head=($v)=>{let $q=$gather(');
+    const repaired = writeFffInstructionHygiene(PRISTINE_2_1_331)!;
+    expect(repaired).not.toBeNull();
+    expect(repaired).toContain('let $wire=(function __tweakccRecordedPrompt(');
+    expect(repaired).toContain(
+      '$head=($v)=>{let $q=$gather($rows,$unused,{options:$current.options,querySource:$source,head:$other,'
+    );
+    expect(repaired).toContain(
+      ',$record=()=>{let $next=$extra($rows,$entries,{options:$current.options,querySource:$source,stamp:$stamp,toolInputCopies:$copies});return $next};'
     );
     expect(writeFffInstructionHygiene(repaired)).toBe(repaired);
   });
