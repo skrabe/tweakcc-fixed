@@ -41,8 +41,10 @@ const INTERNAL_RE = /^@internal(?:\b|$)/;
 
 // A zod union factory (`union`, `discriminatedUnion`, `xor`) builds its node
 // with this literal; its options are what JSON-schema generation emits as
-// `anyOf`/`oneOf`.
+// `anyOf`/`oneOf`. CC 2.1.331's class-based schema library instead returns
+// `new C(…)` where C, or a class it extends, has `get type(){return"union"}`.
 const UNION_FACTORY_RE = /\btype:\s*["']union["']/;
+const UNION_TYPE = 'union';
 
 const isFunctionNode = n =>
   n &&
@@ -233,9 +235,14 @@ function createFinder(code, { warn } = {}) {
     let mod = null;
     if (ast) {
       const top = collectDeclarations(ast.program.body, new Map());
+      const classes = new Map();
       const imports = new Map();
       const exports = new Map();
       for (const st of ast.program.body) {
+        const decl = st.type === 'ExportNamedDeclaration' ? st.declaration : st;
+        if (decl && decl.type === 'ClassDeclaration' && decl.id) {
+          classes.set(decl.id.name, decl);
+        }
         if (st.type === 'ImportDeclaration') {
           for (const sp of st.specifiers) {
             if (sp.type === 'ImportSpecifier') {
@@ -259,7 +266,7 @@ function createFinder(code, { warn } = {}) {
           }
         }
       }
-      mod = { seg, ast, top, imports, exports };
+      mod = { seg, ast, top, classes, imports, exports };
     }
     modules.set(seg.name, mod);
     return mod;
@@ -536,6 +543,67 @@ function createFinder(code, { warn } = {}) {
     };
   }
 
+  function resolveClass(name, mod, depth = 0) {
+    if (depth > 8) return null;
+    if (mod.classes.has(name)) return { node: mod.classes.get(name), mod };
+    const init = mod.top.get(name);
+    if (init && init.type === 'ClassExpression') return { node: init, mod };
+    if (init && init.type === 'Identifier') {
+      return resolveClass(init.name, mod, depth + 1);
+    }
+    const imp = mod.imports.get(name);
+    const seg = imp && byName.get(imp.from);
+    const target = seg && loadModule(seg);
+    if (!target) return null;
+    return resolveClass(
+      target.exports.get(imp.name) || imp.name,
+      target,
+      depth + 1
+    );
+  }
+
+  function classType(cls, depth = 0) {
+    if (!cls || depth > 8) return null;
+    for (const m of cls.node.body.body) {
+      if (
+        m.type !== 'ClassMethod' ||
+        m.kind !== 'get' ||
+        m.static ||
+        m.computed ||
+        propKeyName(m) !== 'type'
+      ) {
+        continue;
+      }
+      const [only, ...rest] = m.body.body;
+      return only &&
+        !rest.length &&
+        only.type === 'ReturnStatement' &&
+        only.argument &&
+        only.argument.type === 'StringLiteral'
+        ? only.argument.value
+        : null;
+    }
+    const sup = cls.node.superClass;
+    if (!sup || sup.type !== 'Identifier') return null;
+    return classType(resolveClass(sup.name, cls.mod), depth + 1);
+  }
+
+  function constructsUnion(r) {
+    const fn = r.node;
+    if (!isFunctionNode(fn)) return false;
+    let ret = fn.body;
+    if (ret.type === 'BlockStatement') {
+      const [only, ...rest] = ret.body;
+      ret =
+        only && !rest.length && only.type === 'ReturnStatement'
+          ? only.argument
+          : null;
+    }
+    if (!ret || ret.type !== 'NewExpression') return false;
+    if (ret.callee.type !== 'Identifier') return false;
+    return classType(resolveClass(ret.callee.name, r.mod)) === UNION_TYPE;
+  }
+
   const unionFactories = new Map();
   function isUnionFactory(r) {
     const key = `${r.mod.seg.name}:${r.node.start}`;
@@ -545,7 +613,10 @@ function createFinder(code, { warn } = {}) {
         r.node.start - r.mod.seg.start,
         r.node.end - r.mod.seg.start
       );
-      unionFactories.set(key, len <= WRAPPER_MAX && UNION_FACTORY_RE.test(src));
+      unionFactories.set(
+        key,
+        len <= WRAPPER_MAX && (UNION_FACTORY_RE.test(src) || constructsUnion(r))
+      );
     }
     return unionFactories.get(key);
   }
