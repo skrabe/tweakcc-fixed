@@ -470,6 +470,222 @@ describe('writeRefusalFallbackModel: the 2.1.328 override wrapper', () => {
   }
 });
 
+// 2.1.332 moves the walker and the shipped table into a module of their own,
+// which exports a mapper over the table but not the table, and the wrapper's
+// module imports that mapper for the served table. Copied verbatim from the
+// pristine 2.1.332 bundle.
+const CATEGORIES_332 =
+  'function oIo(e){return e==="cyber"||e==="bio"}function Rn(e){return e==="frontier_llm"||e==="reasoning_extraction"}function bIe(e){return oIo(e)||Rn(e)?e:"other"}';
+const CHAIN_LENGTH_332 = 'var bn=3;';
+const TABLE_332 =
+  'function I(e){if(XIs(e))return kn;if(e==="claude-opus-5-5"||e==="claude-opus-5-5[1m]")return hn;if(e==="claude-opus-5"||e==="claude-opus-5[1m]")return Tn;if(e==="claude-sonnet-5-5"||e==="claude-sonnet-5-5[1m]")return Cn;return xn}';
+const MAPPER_332 = 'function DLl(e,r){return Zn(I(e),(n,o)=>r(o,U(n)))}';
+const CHAIN_332 =
+  'function U(e){return(typeof e==="string"?[e]:e).slice(0,bn)}';
+const WALKER_332 =
+  'function V3i(e){let{originalModelCanonical:r,apiRefusalCategory:n}=e,o=e.routesOverride??I(r),a=n!=null&&Object.hasOwn(o,n)?o[n]:void 0;if(a!==void 0){let u=U(a),c=rIo(u,e.resolveTarget);if(c!==void 0)return{matched:"category",model:c.model,remainingChain:c.remainingChain,skippedStages:c.skippedStages,chainLength:u.length};return{matched:"none",model:void 0,reason:"mapped_target_unresolvable",skippedStages:u.slice(0,-1),chainLength:u.length}}if(Pn()&&!e.armedTargetIsRefusingModel)return{matched:"catch_all",model:e.armedFallbackModel};return{matched:"none",model:void 0,reason:"unmapped"}}';
+const EXPORTS_332 =
+  'export{MLl,_Ot,HLl,$Or,YIs,XIs,oIo,bIe,DLl,G3i,z3i,rIo,V3i};';
+const IMPORT_332 =
+  'import{_Ot,$Or,YIs,XIs,oIo,bIe,DLl,G3i,rIo}from"/$bunfs/root/chunk-ayxs6xwb.js";';
+const WRAPPER_332 =
+  'function YPs({canonical:e,servedRefusalRoutes:n}){return Pb()??Yf(e,n)}';
+const SUPPLIER_332 = 'function Pb(){return}';
+const CALL_SITE_332 =
+  'callerChecksFit:ie.querySource!=="compact"}),routesOverride:YPs(ln)}):void 0,uf=Mu!==void 0?Mu.model:sl;';
+
+const ROUTING_332 = module(
+  412,
+  'chunk-ayxs6xwb.js',
+  CATEGORIES_332,
+  CHAIN_LENGTH_332,
+  TABLE_332,
+  MAPPER_332,
+  CHAIN_332,
+  WALKER_332,
+  EXPORTS_332
+);
+const wrapperModule332 = (imports = IMPORT_332): string =>
+  module(
+    416,
+    'chunk-7qqq55km.js',
+    imports,
+    WRAPPER_332,
+    SUPPLIER_332,
+    SWITCHED
+  );
+
+const bundle332 = (routing = ROUTING_332, imports = IMPORT_332): string =>
+  [
+    SESSION_STATE,
+    module(128, 'chunk-zfg8t6ef.js', QUEUE),
+    routing,
+    wrapperModule332(imports),
+    module(355, 'chunk-k0q6ndrk.js', MESSAGE, DECOY, CALL_SITE_332),
+    module(
+      565,
+      'chunk-bja7hb37.js',
+      APPLY_REGISTRATION,
+      DROP_REGISTRATION,
+      WRITER
+    ),
+    module(1223, 'chunk-skp01brc.js', HEADLESS),
+    module(1405, 'chunk-cz85x099.js', REPL),
+  ].join('');
+
+const patched332 = (routes: unknown = ROUTES, file = bundle332()): string => {
+  const out = writeRefusalFallbackModel(file, routes);
+  expect(out).not.toBeNull();
+  return out as string;
+};
+
+/**
+ * The patched wrapper and supplier, run with the served table stubbed and the
+ * mapper the wrapper imports taken from the walker's module, both over the
+ * stand-in tables, feeding that module's stock walker as the main loop does.
+ */
+const router332 = (file: string) => {
+  const routing = moduleText(file, 412);
+  const walkerModule = new Function(
+    'Zn',
+    'I',
+    'rIo',
+    'Pn',
+    `${CHAIN_LENGTH_332}${MAPPER_332}${CHAIN_332}${WALKER_332};return{DLl,V3i}`
+  )(
+    (
+      table: Record<string, unknown>,
+      map: (value: unknown, key: string) => unknown
+    ) =>
+      Object.fromEntries(
+        Object.entries(table).map(([key, value]) => [key, map(value, key)])
+      ),
+    (model: string) => STOCK[model] ?? {},
+    walk,
+    () => false
+  ) as {
+    DLl: unknown;
+    V3i: (e: Record<string, unknown>) => {
+      matched: string;
+      model?: string;
+      reason?: string;
+    };
+  };
+  expect(routing).toContain(WALKER_332);
+  const text = moduleText(file, 416);
+  const at = text.indexOf('function YPs(');
+  const end = text.indexOf('globalThis.__tweakccRefusalFallbackLine=', at);
+  const wrapper = new Function(
+    'Yf',
+    'DLl',
+    'I',
+    `${text.slice(at, end)};return YPs`
+  )(
+    () => undefined,
+    walkerModule.DLl,
+    () => {
+      throw new Error('the shipped table is not in scope in this module');
+    }
+  ) as (e: {
+    canonical: string;
+    servedRefusalRoutes: unknown;
+  }) => Record<string, unknown> | undefined;
+  return (
+    flagged: string,
+    category: string,
+    usable: (m: string) => boolean = () => true
+  ) =>
+    walkerModule.V3i({
+      originalModelCanonical: flagged,
+      apiRefusalCategory: category,
+      resolveTarget: (m: string) => (usable(m) ? m : undefined),
+      routesOverride: wrapper({
+        canonical: flagged,
+        servedRefusalRoutes: undefined,
+      }),
+    });
+};
+
+describe('writeRefusalFallbackModel: the 2.1.332 split routing module', () => {
+  it("merges in the wrapper over the shipped table, read through the mapper the wrapper's module imports", () => {
+    const out = patched332();
+    expect(moduleText(out, 412)).toBe(moduleText(bundle332(), 412));
+    expect(moduleText(out, 416)).toContain(
+      'function YPs({canonical:e,servedRefusalRoutes:n}){let __tweakccO=Pb();if(!__tweakccO||!Object.keys(__tweakccO).length)return Yf(e,n);let __tweakccD=Yf(e,n)??DLl(e,(__tweakccJ,__tweakccC)=>__tweakccC),'
+    );
+    expect(moduleText(out, 416)).toContain('function Pb(){return JSON.parse(');
+    expect(out).toContain(CALL_SITE_332);
+    expect(out).toContain(DECOY);
+  });
+
+  it('routes a configured category to its chain, then the shipped route, and leaves the others as stock', () => {
+    const route = router332(patched332({ cyber: 'claude-opus-5-5' }));
+    expect(route('claude-fable-5-1', 'cyber')).toMatchObject({
+      matched: 'category',
+      model: 'claude-opus-5-5',
+    });
+    expect(
+      route('claude-fable-5-1', 'cyber', m => m !== 'claude-opus-5-5')
+    ).toMatchObject({ matched: 'category', model: 'claude-opus-4-8' });
+    expect(route('claude-fable-5-1', 'bio')).toMatchObject({
+      matched: 'category',
+      model: 'claude-opus-5',
+    });
+    expect(route('claude-fable-5-1', 'frontier_llm')).toMatchObject({
+      matched: 'none',
+      reason: 'unmapped',
+    });
+  });
+
+  it('keeps a mapped chain with no usable model reported as unresolvable', () => {
+    const route = router332(patched332({ frontier_llm: 'claude-typo' }));
+    expect(
+      route('claude-fable-5-1', 'frontier_llm', m => m !== 'claude-typo')
+    ).toMatchObject({ matched: 'none', reason: 'mapped_target_unresolvable' });
+  });
+
+  it('calls the mapper by the name the import binds it to', () => {
+    const out = patched332(
+      ROUTES,
+      bundle332(ROUTING_332, IMPORT_332.replace(',DLl,', ',DLl as Qx,'))
+    );
+    expect(out).toContain('??Qx(e,(__tweakccJ,__tweakccC)=>__tweakccC),');
+  });
+
+  it('reads the categories and chain length from the walker module', () => {
+    const warned = warnings();
+    patched332({ nope: ['a', 'b', 'c', 'd'] });
+    expect(warned()).toEqual([
+      expect.stringContaining('nope is not a refusal category'),
+      expect.stringContaining(
+        'lists 4 models, and Claude Code tries only the first 3'
+      ),
+    ]);
+  });
+
+  it('is idempotent', () => {
+    const once = patched332();
+    expect(writeRefusalFallbackModel(once, ROUTES)).toBe(once);
+  });
+
+  for (const [site, file] of [
+    [
+      'mapper is not imported',
+      bundle332(ROUTING_332, IMPORT_332.replace(',DLl,', ',')),
+    ],
+    [
+      'mapper is not exported',
+      bundle332(ROUTING_332.replace(',DLl,', ','), IMPORT_332),
+    ],
+    ['mapper is absent', bundle332(ROUTING_332.replace(MAPPER_332, ''))],
+  ] as const) {
+    it(`fails rather than half-patching when the ${site}`, () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+      expect(writeRefusalFallbackModel(file, ROUTES)).toBeNull();
+    });
+  }
+});
+
 describe('writeRefusalFallbackModel: config validation', () => {
   it('skips a route that is not a model id or a list of them, and says why', () => {
     const warned = warnings();

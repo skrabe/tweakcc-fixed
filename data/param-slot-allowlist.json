@@ -772,5 +772,47 @@
     "text": "a system-reminder listing",
     "verdict": "glue",
     "why": "X6n @13818136 builds the Skill tool description (`Available skills appear in ${e} with one-line descriptions.`); the argument only names where the listing is, like its allowlisted sibling `a listing from the system` (9c79da1855242956). The instruction is host text"
+  },
+  "9d7154670d013499": {
+    "promptId": "tool-result-subagent-output-unreviewed-security-warning",
+    "builder": "F4t",
+    "param": "n",
+    "text": "the subagent ended before the safety check could review it",
+    "verdict": "catalogue",
+    "id": "tool-result-subagent-unreviewed-ended-before-check-reason",
+    "why": "Xml() call-site argument @17367976 rendered as the reason in the UNREVIEWED subagent warning; its sibling 'the safety check gave no verdict on it' is catalogued as tool-result-subagent-unreviewed-no-verdict-reason. Lands via a classification-cache model verdict (key 07912a6cb7ed7d1ea0530e84e60d14d4794b2fb0) through classify-merge"
+  },
+  "9a0fb1e07dd5648a": {
+    "promptId": "tool-result-computer-keystrokes-follow-key-focus-so",
+    "builder": "Fe",
+    "param": "s",
+    "text": "${}, part-way through",
+    "verdict": "glue",
+    "why": "Sn() @26388416 passes `${r}, part-way through` as the headline label before ': ${l}. Keystrokes follow key focus...'; it only qualifies the interpolated action name, the instruction is host text"
+  },
+  "3fa911bfe9b86312": {
+    "promptId": "tool-result-artifact-quickstart-start-from-named-type",
+    "builder": "ce",
+    "param": "t",
+    "text": "a whiteboard, a brainstorm or retro board, or a diagram too big for a reply or that people will work on together",
+    "verdict": "catalogue",
+    "id": "tool-result-artifact-quickstart-whiteboard-type",
+    "why": "xe() call-site argument @47196492 naming when to start from the Whiteboard type in the quickstart result; its sibling motion phrase is catalogued as tool-result-artifact-quickstart-motion-type. Lands via a classification-cache model verdict (key 90789d5ca0d14aecd63b4969e2acdad3a4c07a4d) through classify-merge"
+  },
+  "7b31d4546dce0e2a": {
+    "builder": "Ji",
+    "note": "Instruction content of 'Tell the user ${}' in the unanswered request_access result (@26574409): what the model must tell the user. Catalogued via a classification-cache model verdict on d2916d1042786be44e8760d8de2a217dff7e7174 (verdicts-l3.json).",
+    "param": "n",
+    "promptId": "tool-result-computer-use-access-request-unanswered",
+    "text": "what you need access to and why",
+    "verdict": "catalogue"
+  },
+  "9c6e16f9c7bd4a38": {
+    "builder": "Ji",
+    "note": "Instruction content of 'Tell the user ${}' in the unanswered request_teach_access result (@26588411): what the model must tell the user. Catalogued via a classification-cache model verdict on 89f699707569391be6fb683fafb8a6d0b3032f1f (verdicts-l3.json).",
+    "param": "n",
+    "promptId": "tool-result-computer-use-access-request-unanswered",
+    "text": "what you wanted to walk them through",
+    "verdict": "catalogue"
   }
 }

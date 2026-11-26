@@ -2211,3 +2211,68 @@ describe('task-list-reminder 2.1.328 statusKeeper arms', () => {
     expect(taskListReminder.apply(suppressed, '', true)).toBe(suppressed);
   });
 });
+
+const nestedMemory = REMINDER_REGISTRY.find(r => r.id === 'nested-memory')!;
+
+// CC 2.1.332's nested_memory: a `replacesPath` ternary holding a nested
+// template sits between the path and the colon.
+const NESTED_MEMORY_2_1_332 =
+  'x={nested_memory:(e)=>sf([Ne({content:R_(`Contents of ${e.content.path}${e.replacesPath===void 0?"":` (in its worktree it replaces ${e.replacesPath})`}:\\n\\n${e.content.content}`),isMeta:!0,...e.content.unverified&&{content:ZFo([e.content])}})])}';
+const WORKTREE_NOTE =
+  '${e.replacesPath===void 0?"":` (in its worktree it replaces ${e.replacesPath})`}';
+const parses = (js: string) => new Function(js);
+
+describe('nested-memory reminder on the 2.1.332 shape', () => {
+  it('keeps the worktree note when the body places it', () => {
+    const body =
+      'Memory ${H.content.path}${H.worktreeNote}:\n\n${H.content.content}';
+    const once = nestedMemory.apply(NESTED_MEMORY_2_1_332, body, false)!;
+    expect(once).toContain('R_(`Memory ${e.content.path}' + WORKTREE_NOTE);
+    expect(once).toContain(
+      '...e.content.unverified&&{content:ZFo([e.content])}'
+    );
+    expect(() => parses(once)).not.toThrow();
+  });
+
+  it('inserts the worktree note after the path for a body that lacks it', () => {
+    const body = 'Contents of ${H.content.path}:\n\n${H.content.content}';
+    const once = nestedMemory.apply(NESTED_MEMORY_2_1_332, body, false)!;
+    expect(once).toContain(
+      'Contents of ${e.content.path}' + WORKTREE_NOTE + ':'
+    );
+    expect(() => parses(once)).not.toThrow();
+  });
+
+  it('drops the note for a body without the path', () => {
+    const body = 'Memory file:\n\n${H.content.content}';
+    const once = nestedMemory.apply(NESTED_MEMORY_2_1_332, body, false)!;
+    expect(once).not.toContain('replacesPath');
+    expect(() => parses(once)).not.toThrow();
+  });
+
+  it('keeps replacement-pattern text in a body literal', () => {
+    const body = 'Cost $& and $1 at ${H.content.path}:\n\n${H.content.content}';
+    const once = nestedMemory.apply(NESTED_MEMORY_2_1_332, body, false)!;
+    expect(once).toContain('Cost $& and $1 at ${e.content.path}');
+    expect(() => parses(once)).not.toThrow();
+  });
+
+  it('is idempotent and suppresses cleanly', () => {
+    const body = 'Contents of ${H.content.path}:\n\n${H.content.content}';
+    const once = nestedMemory.apply(NESTED_MEMORY_2_1_332, body, false)!;
+    expect(nestedMemory.apply(once, body, false)).toBe(once);
+    const off = nestedMemory.apply(NESTED_MEMORY_2_1_332, '', true)!;
+    expect(off).toContain('nested_memory:(e)=>[]');
+    expect(() => parses(off)).not.toThrow();
+  });
+
+  it('leaves the note out on a build without replacesPath', () => {
+    const old =
+      'x={nested_memory:(e)=>sf([Ne({content:R_(`Contents of ${e.content.path}:\\n\\n${e.content.content}`),isMeta:!0})])}';
+    const body =
+      'Memory ${H.content.path}${H.worktreeNote}:\n\n${H.content.content}';
+    const once = nestedMemory.apply(old, body, false)!;
+    expect(once).toContain('R_(`Memory ${e.content.path}:');
+    expect(() => parses(once)).not.toThrow();
+  });
+});

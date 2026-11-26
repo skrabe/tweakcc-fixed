@@ -21,6 +21,15 @@ const FRAGMENT =
   '.then((bt)=>({lines:bt,timedOut:!1})).finally(gt);xe=wt.timedOut,Ce=xko(wt.lines,"files_with_matches")}' +
   'let He=e.judgeEveryResult===!0;return{files:Ce,He}}';
 
+// trimmed from CC 2.1.332's Glob search function
+const FRAGMENT_332 =
+  'async function sJr(e,n,{limit:r,offset:g},h,y,k,A){let z=MPt(y,[e.canonical]),Y=eVn(z,e),' +
+  'ie=["--files","--null","--glob",n,"--no-ignore","--hidden"];' +
+  'let Se=(Et)=>xie(Et,e.target,h,{rawLines:!0,rejectOnInputError:!0,rejectIfStoppedAfterOutput:Et===ie,searchOtherAppsData:!0,' +
+  'cwd:e.spawnCwd,spawnDirFd:e.spawnDirFd,inheritFd:e.inheritFd,beforeSpawn:()=>{e.recheckBeforeSpawn(),nOs(z,e,Y)}})' +
+  '.then((Xt)=>({lines:Xt,timedOut:!1}),(Xt)=>{throw Xt}),Ce=[...ie,"--sort=modified"],Le=!1;' +
+  'let Ze=await Se(Le?ie:Ce),ot=e.judgeEveryResult===!0;return{Ze,ot}}';
+
 describe('writeEverythingGlob', () => {
   it('routes the Glob rg call through the Everything runtime', () => {
     const out = writeEverythingGlob(FRAGMENT, ES)!;
@@ -33,6 +42,19 @@ describe('writeEverythingGlob', () => {
     expect(out).toContain(JSON.stringify(ES));
     // the String.raw runtime has regexes and backslashes; make sure it still parses
     expect(() => new Function(out)).not.toThrow();
+  });
+
+  it('routes the 2.1.332 arrow-wrapped rg call through the runtime', () => {
+    const out = writeEverythingGlob(FRAGMENT_332, ES)!;
+    expect(out).toContain(
+      'let Se=(Et)=>(globalThis.__tweakccEverythingGlob??=(async(rg,state,args,target,signal,opts)=>{'
+    );
+    expect(out).toContain(
+      '(xie,e,Et,e.target,h,{rawLines:!0,rejectOnInputError:!0,rejectIfStoppedAfterOutput:Et===ie,searchOtherAppsData:!0,cwd:e.spawnCwd,'
+    );
+    expect(out).toContain('.then((Xt)=>({lines:Xt,timedOut:!1})');
+    expect(() => new Function(out)).not.toThrow();
+    expect(writeEverythingGlob(out, ES)).toBe(out);
   });
 
   it('is a no-op the second time', () => {

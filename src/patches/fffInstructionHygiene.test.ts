@@ -117,6 +117,27 @@ const PRISTINE_2_1_331 =
   RENDER_2_1_299 +
   SERIALIZER +
   ';var $type="prompt_snapshot";';
+// CC 2.1.332: the stop-hook guard leads with a dependency-list call, a
+// stamp-builder arrow precedes the head-row builder, and the
+// tool-input-copies builder takes a parameter.
+const API_2_1_332 = API_2_1_331.replace(
+  'async function*$loop(){if($halted)',
+  'async function*$loop(){if($deps(()=>[$state,$pending,$note]),$halted)'
+)
+  .replace(
+    '$copies,$head=($v)=>',
+    '$copies,$stampOf=($v)=>$live()?{now:()=>$v.timestamp}:$stamp,$head=($v)=>'
+  )
+  .replace(
+    '$record=()=>{let $next=$extra($rows,$entries,{options:$current.options,querySource:$source,stamp:$stamp,',
+    '$record=($v)=>{let $next=$extra($rows,$entries,{options:$current.options,querySource:$source,stamp:$v?$stampOf($v):$stamp,'
+  );
+const PRISTINE_2_1_332 =
+  API_2_1_332 +
+  CONTEXT_2_1_322 +
+  RENDER_2_1_299 +
+  SERIALIZER +
+  ';function $deps(){}var $type="prompt_snapshot";';
 const TOOLS = [{ name: 'Bash' }, { name: 'Grep' }, { name: 'Glob' }];
 
 type Entry = {
@@ -407,6 +428,8 @@ describe('fff hygiene native call sites', () => {
     ['2.1.329', PRISTINE_2_1_329, true],
     ['2.1.331', PRISTINE_2_1_331, false],
     ['2.1.331', PRISTINE_2_1_331, true],
+    ['2.1.332', PRISTINE_2_1_332, false],
+    ['2.1.332', PRISTINE_2_1_332, true],
   ] as const)(
     'cleans resumed API/context maps without changing saved records, shape=%s, enabled=%s',
     async (_shape, pristine, enabled) => {
@@ -644,6 +667,34 @@ describe('fff hygiene native call sites', () => {
     );
     expect(repaired).toContain(
       ',$record=()=>{let $next=$extra($rows,$entries,{options:$current.options,querySource:$source,stamp:$stamp,toolInputCopies:$copies});return $next};'
+    );
+    expect(writeFffInstructionHygiene(repaired)).toBe(repaired);
+  });
+
+  it('scopes the 2.1.332 API selection to the dependency-guarded loop', () => {
+    expect(API_2_1_332).toContain(
+      'if($deps(()=>[$state,$pending,$note]),$halted)'
+    );
+    expect(API_2_1_332).toContain(',$stampOf=($v)=>$live()?');
+    expect(
+      writeFffInstructionHygiene(
+        PRISTINE_2_1_331.replace(
+          'async function*$loop(){if($halted)',
+          'async function*$loop(){if($deps(()=>[$state,$pending,$note]),$halted)'
+        )
+      )
+    ).not.toBeNull();
+    const repaired = writeFffInstructionHygiene(PRISTINE_2_1_332)!;
+    expect(repaired).not.toBeNull();
+    const loop = repaired.indexOf('async function*$loop(){if($deps(');
+    const site = repaired.indexOf(
+      '$selected=(function __tweakccFffToolRecords'
+    );
+    expect(loop).toBeGreaterThan(-1);
+    expect(site).toBeGreaterThan(loop);
+    expect(repaired).toContain('let $wire=(function __tweakccRecordedPrompt(');
+    expect(repaired).toContain(
+      ',$record=($v)=>{let $next=$extra($rows,$entries,{options:$current.options,querySource:$source,stamp:$v?$stampOf($v):$stamp,toolInputCopies:$copies});return $next};'
     );
     expect(writeFffInstructionHygiene(repaired)).toBe(repaired);
   });

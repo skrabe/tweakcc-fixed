@@ -99,8 +99,16 @@ const moduleText = (src: string, header: string): string => {
   return src.slice(start + header.length, end < 0 ? undefined : end);
 };
 
-/** Each top-level declaration of a module, as an expression for its value. */
-const declarations = (text: string): Map<string, string> => {
+interface ModuleDeclarations {
+  /** Each top-level declaration, as an expression for its value. */
+  declared: Map<string, string>;
+  /** Each imported name: the importing path and the name it exports. */
+  imported: Map<string, [string, string]>;
+  /** Each exported name: the name declared for it. */
+  exported: Map<string, string>;
+}
+
+const declarations = (text: string): ModuleDeclarations => {
   const file = ts.createSourceFile(
     'module.js',
     text,
@@ -111,7 +119,38 @@ const declarations = (text: string): Map<string, string> => {
   const source = (node: ts.Node): string =>
     text.slice(node.getStart(file), node.end);
   const out = new Map<string, string>();
+  const imported = new Map<string, [string, string]>();
+  const exported = new Map<string, string>();
   for (const statement of file.statements) {
+    if (
+      ts.isImportDeclaration(statement) &&
+      ts.isStringLiteral(statement.moduleSpecifier)
+    ) {
+      const bindings = statement.importClause?.namedBindings;
+      if (bindings && ts.isNamedImports(bindings)) {
+        for (const element of bindings.elements) {
+          imported.set(element.name.text, [
+            statement.moduleSpecifier.text,
+            (element.propertyName ?? element.name).text,
+          ]);
+        }
+      }
+      continue;
+    }
+    if (
+      ts.isExportDeclaration(statement) &&
+      !statement.moduleSpecifier &&
+      statement.exportClause &&
+      ts.isNamedExports(statement.exportClause)
+    ) {
+      for (const element of statement.exportClause.elements) {
+        exported.set(
+          element.name.text,
+          (element.propertyName ?? element.name).text
+        );
+      }
+      continue;
+    }
     if (
       (ts.isFunctionDeclaration(statement) ||
         ts.isClassDeclaration(statement)) &&
@@ -134,37 +173,64 @@ const declarations = (text: string): Map<string, string> => {
       }
     }
   }
-  return out;
+  return { declared: out, imported, exported };
+};
+
+type Scope = ((name: string) => unknown) & {
+  exported: (name: string) => unknown;
 };
 
 /**
- * A module's declarations, each evaluated the first time something reads it,
- * in a scope where the names it reads resolve the same way. A name the module
- * does not declare and that is not a global is a stub returning nothing.
+ * The scopes of a bundle's modules, by module header. Each module's
+ * declarations are evaluated the first time something reads them, in a scope
+ * where the names they read resolve the same way: a name the module imports
+ * from another module of the bundle resolves in that module's scope, and a
+ * name the module neither declares nor imports from the bundle, and that is
+ * not a global, is a stub returning nothing.
  */
-const moduleScope = (text: string): ((name: string) => unknown) => {
-  const declared = declarations(text);
-  const values = new Map<string, unknown>();
-  const stub = () => undefined;
-  const scope: Record<string, unknown> = new Proxy(
-    {},
-    {
-      has: (_, key) =>
-        typeof key === 'string' && (declared.has(key) || !(key in globalThis)),
-      get: (_, key) => {
-        if (typeof key !== 'string') return undefined;
-        if (values.has(key)) return values.get(key);
-        const code = declared.get(key);
-        if (code === undefined) return stub;
-        const value = new Function('scope', `with (scope) { return ${code}; }`)(
-          scope
-        );
-        values.set(key, value);
-        return value;
-      },
-    }
-  );
-  return name => scope[name];
+const bundleScopes = (src: string): ((header: string) => Scope) => {
+  const scopes = new Map<string, Scope>();
+  const headerOf = (path: string): string | undefined => {
+    const at = src.indexOf(`:${path}@@*/`);
+    return at < 0 ? undefined : moduleHeaderAt(src, at);
+  };
+  const scopeOf = (header: string): Scope => {
+    const known = scopes.get(header);
+    if (known) return known;
+    const { declared, imported, exported } = declarations(
+      moduleText(src, header)
+    );
+    const values = new Map<string, unknown>();
+    const stub = () => undefined;
+    const resolve = (key: string): unknown => {
+      const code = declared.get(key);
+      if (code !== undefined) {
+        return new Function('scope', `with (scope) { return ${code}; }`)(scope);
+      }
+      const from = imported.get(key);
+      const source = from && headerOf(from[0]);
+      return source ? scopeOf(source).exported(from[1]) : stub;
+    };
+    const scope: Record<string, unknown> = new Proxy(
+      {},
+      {
+        has: (_, key) =>
+          typeof key === 'string' &&
+          (declared.has(key) || imported.has(key) || !(key in globalThis)),
+        get: (_, key) => {
+          if (typeof key !== 'string') return undefined;
+          if (!values.has(key)) values.set(key, resolve(key));
+          return values.get(key);
+        },
+      }
+    );
+    const named = Object.assign((name: string) => scope[name], {
+      exported: (name: string) => scope[exported.get(name) ?? name],
+    });
+    scopes.set(header, named);
+    return named;
+  };
+  return scopeOf;
 };
 
 interface RefusalResult {
@@ -208,11 +274,9 @@ type Router = (
  * override, and a resolver standing for "can this session use that model".
  */
 const routerOf = (src: string, sites: RoutingSites): Router => {
-  const walkerScope = moduleScope(moduleText(src, sites.walkerModule));
-  const supplierScope =
-    sites.supplierModule === sites.walkerModule
-      ? walkerScope
-      : moduleScope(moduleText(src, sites.supplierModule));
+  const scopeOf = bundleScopes(src);
+  const walkerScope = scopeOf(sites.walkerModule);
+  const supplierScope = scopeOf(sites.supplierModule);
   const walk = walkerScope(sites.walker) as (
     e: Record<string, unknown>
   ) => RefusalResult;

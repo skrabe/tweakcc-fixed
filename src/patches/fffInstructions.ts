@@ -290,7 +290,12 @@ const API_LOOP_SCOPE =
 // CC 2.1.314+: a stop-hook early return precedes the background check.
 const API_HOOK_LOOP_SCOPE =
   /(?:^|[;}])async function\*([$\w]+)\(\)\{if\([$\w]+\)return yield\*[$\w]+,[^;]*?\{reason:"hook_stopped"\};if\([$\w]+&&[$\w]+\.toolUseContext\.shouldStopBeforeNextApiCall\?\.\(\)\)return yield\*[$\w]+,\{reason:"background_requested"\};/g;
+// CC 2.1.332+: the stop-hook guard is a comma expression led by a
+// dependency-list call.
+const API_DEPS_HOOK_LOOP_SCOPE =
+  /(?:^|[;}])async function\*([$\w]+)\(\)\{if\([$\w]+\(\(\)=>\[[$\w,]*\]\),[$\w]+\)return yield\*[$\w]+,[^;]*?\{reason:"hook_stopped"\};if\([$\w]+&&[$\w]+\.toolUseContext\.shouldStopBeforeNextApiCall\?\.\(\)\)return yield\*[$\w]+,\{reason:"background_requested"\};/g;
 const readApiScope = (file: string): Scope | null =>
+  readScope(file, API_DEPS_HOOK_LOOP_SCOPE) ??
   readScope(file, API_HOOK_LOOP_SCOPE) ??
   readScope(file, API_LOOP_SCOPE) ??
   readScope(file, API_SCOPE);
@@ -461,13 +466,13 @@ export const writeFffInstructionHygiene = (file: string): string | null => {
   );
   const sites: Array<Site | null> = [
     api &&
-      // CC 2.1.331+: the session-section declarator is gone again, and a
-      // head-row builder taking one parameter precedes the tool-input-copies
-      // builder after the bare declarators.
+      // CC 2.1.332+: a stamp-builder arrow sits between the bare declarators
+      // and the head-row builder, and the tool-input-copies builder takes a
+      // parameter and a computed stamp.
       (selectSite(
         file,
         api,
-        /let ([$\w]+)=([$\w]+)\(([$\w]+)\(([$\w]+)\.systemPrompt,([$\w]+)\.systemContext\)\),(?:[$\w]+,)+[$\w]+=\([$\w]+\)=>\{let [$\w]+=[$\w]+\([$\w]+,[$\w]+,\{options:[$\w]+\.options,querySource:[$\w]+,head:[\s\S]*?\},[$\w]+=\(\)=>\{let [$\w]+=[$\w]+\([$\w]+,[$\w]+,\{options:[$\w]+\.options,querySource:[$\w]+,stamp:[$\w]+,toolInputCopies:[$\w]+\}\)/g,
+        /let ([$\w]+)=([$\w]+)\(([$\w]+)\(([$\w]+)\.systemPrompt,([$\w]+)\.systemContext\)\),(?:[$\w]+,)+[$\w]+=\([$\w]+\)=>[^;]*?,[$\w]+=\([$\w]+\)=>\{let [$\w]+=[$\w]+\([$\w]+,[$\w]+,\{options:[$\w]+\.options,querySource:[$\w]+,head:[\s\S]*?\},[$\w]+=\([$\w]*\)=>\{let [$\w]+=[$\w]+\([$\w]+,[$\w]+,\{options:[$\w]+\.options,querySource:[$\w]+,stamp:[^,{}]+,toolInputCopies:[$\w]+\}\)/g,
         '__tweakccRecordedPrompt',
         promptHelper,
         FFF_OWNED_PROJECT_GUIDANCE,
@@ -476,6 +481,21 @@ export const writeFffInstructionHygiene = (file: string): string | null => {
           args: [],
         })
       ) ??
+        // CC 2.1.331+: the session-section declarator is gone again, and a
+        // head-row builder taking one parameter precedes the tool-input-copies
+        // builder after the bare declarators.
+        selectSite(
+          file,
+          api,
+          /let ([$\w]+)=([$\w]+)\(([$\w]+)\(([$\w]+)\.systemPrompt,([$\w]+)\.systemContext\)\),(?:[$\w]+,)+[$\w]+=\([$\w]+\)=>\{let [$\w]+=[$\w]+\([$\w]+,[$\w]+,\{options:[$\w]+\.options,querySource:[$\w]+,head:[\s\S]*?\},[$\w]+=\(\)=>\{let [$\w]+=[$\w]+\([$\w]+,[$\w]+,\{options:[$\w]+\.options,querySource:[$\w]+,stamp:[$\w]+,toolInputCopies:[$\w]+\}\)/g,
+          '__tweakccRecordedPrompt',
+          promptHelper,
+          FFF_OWNED_PROJECT_GUIDANCE,
+          match => ({
+            original: `${match[2]}(${match[3]}(${match[4]}.systemPrompt,${match[5]}.systemContext))`,
+            args: [],
+          })
+        ) ??
         // CC 2.1.329+: a declarator appending a session section to the
         // selected prompt comes first, and the merge reads that instead.
         selectSite(
