@@ -50,22 +50,29 @@ export const writeEverythingGlob = (
   esPath: string
 ): string | null => {
   if (oldFile.includes('globalThis.__tweakccEverythingGlob??=')) return oldFile;
-  // CC 2.1.323: `wt=await hJ(Ee,e.target,h,{rawLines:!0,rejectOnInputError:!0,searchOtherAppsData:!0,cwd:e.spawnCwd,...`
-  const pattern =
-    /=await ([$\w]+)\(([$\w]+),([$\w]+)\.target,([$\w]+),\{rawLines:!0,rejectOnInputError:!0,searchOtherAppsData:!0,/g;
-  const matches = [...oldFile.matchAll(pattern)];
+  const patterns = [
+    // CC 2.1.332: `Se=(Et)=>xie(Et,e.target,h,{rawLines:!0,rejectOnInputError:!0,rejectIfStoppedAfterOutput:Et===ie,searchOtherAppsData:!0,...`
+    /(=>)([$\w]+)\(([$\w]+),([$\w]+)\.target,([$\w]+),\{rawLines:!0,rejectOnInputError:!0,(rejectIfStoppedAfterOutput:[$\w]+===[$\w]+,)searchOtherAppsData:!0,/g,
+    // CC 2.1.323: `wt=await hJ(Ee,e.target,h,{rawLines:!0,rejectOnInputError:!0,searchOtherAppsData:!0,cwd:e.spawnCwd,...`
+    /(=await )([$\w]+)\(([$\w]+),([$\w]+)\.target,([$\w]+),\{rawLines:!0,rejectOnInputError:!0,()searchOtherAppsData:!0,/g,
+  ];
+  let matches: RegExpMatchArray[] = [];
+  for (const pattern of patterns) {
+    matches = [...oldFile.matchAll(pattern)];
+    if (matches.length > 0) break;
+  }
   if (matches.length !== 1 || matches[0].index === undefined) {
     console.error(
       `patch: everythingGlob: expected one Glob ripgrep call, found ${matches.length}`
     );
     return null;
   }
-  const [original, rg, args, state, signal] = matches[0];
+  const [original, lead, rg, args, state, signal, extra] = matches[0];
   const start = matches[0].index;
   const end = start + original.length;
   const replacement =
-    `=await (globalThis.__tweakccEverythingGlob??=${buildEverythingGlobRuntime(esPath)})` +
-    `(${rg},${state},${args},${state}.target,${signal},{rawLines:!0,rejectOnInputError:!0,searchOtherAppsData:!0,`;
+    `${lead}(globalThis.__tweakccEverythingGlob??=${buildEverythingGlobRuntime(esPath)})` +
+    `(${rg},${state},${args},${state}.target,${signal},{rawLines:!0,rejectOnInputError:!0,${extra}searchOtherAppsData:!0,`;
   const updated = oldFile.slice(0, start) + replacement + oldFile.slice(end);
   showDiff(oldFile, updated, replacement, start, end);
   return updated;

@@ -2703,25 +2703,63 @@ const NESTED_MEMORY_INJECTION: ReminderInjection = {
     'Loads a referenced memory file into context. Conditional. Empty .md body = nested memory invisible.',
   placeholders: {
     memory_path: '${H.content.path}',
+    memory_worktree_note: '${H.worktreeNote}',
     memory_content: '${H.content.content}',
   },
-  defaultBody: 'Contents of {{memory_path}}:\n\n{{memory_content}}',
+  defaultBody:
+    'Contents of {{memory_path}}{{memory_worktree_note}}:\n\n{{memory_content}}',
   apply(content, body, isSuppressed) {
     // 2.1.304+ spreads a replacement content for unverified memories after
     // isMeta (optional group); it is re-emitted so that arm stays pristine.
     // 2.1.308+ wraps the literal in a one-arg helper call (optional group),
     // kept around the overridden body.
+    // 2.1.332+ interpolates a `replacesPath` ternary holding a nested template
+    // after the path; {{memory_worktree_note}} re-emits it (empty on older
+    // builds), and a body that lacks it gets it right after the path.
+    const tpl =
+      '`((?:[^`\\\\$]|\\\\.|\\$(?!\\{)|\\$\\{(?:[^{}`]|`(?:[^`\\\\]|\\\\.)*`)*\\})*)`';
+    const shape = new RegExp(
+      `nested_memory:\\(([$\\w]+)\\)=>([$\\w]+)\\(\\[([$\\w]+)\\(\\{content:(?:([$\\w]+)\\(${tpl}\\)|${tpl}),isMeta:!0(,\\.\\.\\.\\1\\.content\\.unverified&&\\{content:[$\\w]+\\(\\[\\1\\.content\\]\\)\\})?\\}\\)\\]\\)`
+    );
     return findAndReplace(
       content,
-      /nested_memory:\(([$\w]+)\)=>([$\w]+)\(\[([$\w]+)\(\{content:(?:([$\w]+)\(`(?:[^`\\]|\\.)*`\)|`(?:[^`\\]|\\.)*`),isMeta:!0(,\.\.\.\1\.content\.unverified&&\{content:[$\w]+\(\[\1\.content\]\)\})?\}\)\]\)/,
+      shape,
       m => {
-        const [, hParam, o5Name, j6Name, wrapper, unverifiedSpread = ''] = m;
+        const [
+          ,
+          hParam,
+          o5Name,
+          j6Name,
+          wrapper,
+          wrappedTpl,
+          plainTpl,
+          unverifiedSpread = '',
+        ] = m;
         if (isSuppressed) return `nested_memory:(${hParam})=>[]`;
-        const bodyForBuild = body
-          .replace(/\$\{H\.content\.path\}/g, `\${${hParam}.content.path}`)
+        const replacesRef = new RegExp(
+          `(?:^|[^$\\w.])${hParam.replace(/\$/g, '\\$')}\\.replacesPath(?![$\\w])`
+        );
+        const note = interpolations(wrappedTpl ?? plainTpl ?? '').find(x =>
+          replacesRef.test(x)
+        );
+        const noteExpr = note === undefined ? '' : `\${${note}}`;
+        const withNote =
+          body.includes('${H.worktreeNote}') ||
+          !body.includes('${H.content.path}')
+            ? body
+            : body.replace(
+                '${H.content.path}',
+                () => '${H.content.path}${H.worktreeNote}'
+              );
+        const bodyForBuild = withNote
+          .replace(/\$\{H\.worktreeNote\}/g, () => noteExpr)
+          .replace(
+            /\$\{H\.content\.path\}/g,
+            () => `\${${hParam}.content.path}`
+          )
           .replace(
             /\$\{H\.content\.content\}/g,
-            `\${${hParam}.content.content}`
+            () => `\${${hParam}.content.content}`
           );
         const literal = `\`${bodyForBuild}\``;
         const contentExpr = wrapper ? `${wrapper}(${literal})` : literal;

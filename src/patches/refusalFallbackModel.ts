@@ -367,19 +367,75 @@ export const findRouteSupplier = (
   return { index: match.index, length: match[0].length, name: match[1] };
 };
 
+const MODULE_PATH = /^\/\*@@TWEAKCC_MODULE:\d+:(.*?)@@\*\//;
+
+/** `{a,b as c}` specifiers as [name in the declaring scope, name outside]. */
+const specifiers = (list: string): Array<[string, string]> =>
+  list.split(',').map(spec => {
+    const [inner, outer = inner] = spec.trim().split(/\s+as\s+/);
+    return [inner, outer];
+  });
+
+/**
+ * The shipped table for the flagged model, as an expression the wrapper's
+ * module can evaluate with the flagged model bound to the wrapper's
+ * `canonical`.
+ */
+export const findShippedTable = (
+  file: string,
+  wrapper: RouteWrapper,
+  walker: NonNullable<ReturnType<typeof findRouteWalker>>
+): string | null => {
+  const [start, end] = moduleSpan(file, wrapper.index);
+  const [walkerStart, walkerEnd] = moduleSpan(file, walker.index);
+
+  // Method 1 (2.1.332+): the walker and its table sit in a module of their own
+  // that does not export the table. It exports a mapper over the table's
+  // routes, as chains, which the served table imports into the wrapper's
+  // module; mapping each chain to itself gives the table back.
+  if (walkerStart !== start) {
+    const walkerText = file.slice(walkerStart, walkerEnd);
+    const path = walkerText.match(MODULE_PATH)?.[1];
+    const mapper = walkerText.match(
+      new RegExp(
+        `function ([$\\w]+)\\(([$\\w]+),([$\\w]+)\\)\\{return [$\\w]+\\(${escapeName(walker.table)}\\(\\2\\),\\(([$\\w]+),([$\\w]+)\\)=>\\3\\(\\5,[$\\w]+\\(\\4\\)\\)\\)\\}`
+      )
+    );
+    if (!path || !mapper) return null;
+    const exported = [...walkerText.matchAll(/export\{([^}]*)\}/g)]
+      .flatMap(m => specifiers(m[1]))
+      .find(([local]) => local === mapper[1])?.[1];
+    if (!exported) return null;
+    const local = [
+      ...file.slice(start, end).matchAll(/import\{([^}]*)\}from"([^"]*)"/g),
+    ]
+      .filter(m => m[2] === path)
+      .flatMap(m => specifiers(m[1]))
+      .find(([name]) => name === exported)?.[1];
+    if (!local) return null;
+    return `${local}(${wrapper.canonical},(__tweakccJ,__tweakccC)=>__tweakccC)`;
+  }
+
+  // Method 2: the table is declared in the wrapper's module
+  if (file.slice(start, end).includes(`function ${walker.table}(`)) {
+    return `${walker.table}(${wrapper.canonical})`;
+  }
+  return null;
+};
+
 /**
  * The wrapper's body, merging the configured routes over the routes stock would
  * use: the served table, or the shipped one when nothing is served. With no
  * route configured it returns what stock does, so a served table that gives a
  * category no route keeps giving it none.
  */
-const wrapperMerge = (wrapper: RouteWrapper, table: string): string => {
+const wrapperMerge = (wrapper: RouteWrapper, shipped: string): string => {
   const { name, canonical, served, supplier, servedTable } = wrapper;
   const stock = `${servedTable}(${canonical},${served})`;
   return (
     `function ${name}({canonical:${canonical},servedRefusalRoutes:${served}}){` +
     `let __tweakccO=${supplier}();if(!__tweakccO||!Object.keys(__tweakccO).length)return ${stock};` +
-    `let __tweakccD=${stock}??${table}(${canonical}),__tweakccM=Object.assign(Object.create(null),__tweakccD);` +
+    `let __tweakccD=${stock}??${shipped},__tweakccM=Object.assign(Object.create(null),__tweakccD);` +
     'for(let __tweakccK of Object.keys(__tweakccO))' +
     '__tweakccM[__tweakccK]=[...new Set([].concat(__tweakccO[__tweakccK],Object.hasOwn(__tweakccD,__tweakccK)?__tweakccD[__tweakccK]:[]))];' +
     'return __tweakccM}'
@@ -411,13 +467,8 @@ const patchRouteSupplier = (
   const { wrapper } = supplier;
   if (wrapper) {
     const walker = findRouteWalker(file);
-    const [start, end] = moduleSpan(file, wrapper.index);
-    if (
-      !walker ||
-      walker.index < start ||
-      walker.index >= end ||
-      !file.slice(start, end).includes(`function ${walker.table}(`)
-    ) {
+    const shipped = walker && findShippedTable(file, wrapper, walker);
+    if (!shipped) {
       console.error(
         "patch: refusalFallbackModel: failed to find the shipped route table in the override wrapper's module"
       );
@@ -432,7 +483,7 @@ const patchRouteSupplier = (
       {
         at: wrapper.index,
         length: wrapper.length,
-        text: wrapperMerge(wrapper, walker.table),
+        text: wrapperMerge(wrapper, shipped),
       },
     ].sort((a, b) => b.at - a.at);
     let out = file;
