@@ -52,5 +52,16 @@
   "2.1.328->2.1.330": {
     "skill-loop-external-wakeup-handover": "2.1.330 replaced the stop-after-N-days number with a whole end-condition phrase (\"with no date to stop\" or \"stop after at most …\"); upstream renamed the slot to match and the override is realigned to the new wording.",
     "system-prompt-artifact-comment-fast-acknowledgement": "2.1.330 moved \"plain text only\" into the literal and the slot now carries the comment character guidance; upstream renamed it to match and the override is realigned."
+  },
+  "2.1.331->2.1.332": {
+    "tool-description-sendmessage-cross-session-guidance": "Same slots and variables; the generic slot names are replaced by the descriptive names from the upstream map, each checked against the binary. Overrides were renamed to match.",
+    "tool-description-sendmessage-other-cloud-sessions": "Same slots and variables; the generic slot names are replaced by the descriptive names from the upstream map, each checked against the binary. Overrides were renamed to match.",
+    "skill-steward-start-pull-request-watch": "Same slots and variables; the generic slot names are replaced by the upstream names, except slots 18-20, which upstream mislabels and are curated from the binary (earlier-reviews sentence builder, review-comment snapshot, pull request lookup). Overrides were renamed to match.",
+    "skill-steward-watch-pass": "Same slots and variables; the 2.1.331 map put PROJECT_REVIEW_GUIDANCE_PATH on slot 14, which is the function that builds the guidance section, and the path is slot 15. Adopted the upstream names and renamed the override so the call reads the same as the binary.",
+    "skill-steward-review-only": "Same slots and variables; the generic slot names are replaced by the upstream names, except slots 0, 2, 3, 9 and 10, which upstream mislabels and are curated from the binary. Overrides were renamed to match.",
+    "skill-steward-watch-ended": "Same slots and variables; the generic slot names are replaced by the descriptive names from the upstream map, each checked against the binary. Overrides were renamed to match.",
+    "skill-steward-watch-pass-steps": "Same slots and variables; the generic slot names are replaced by the descriptive names from the upstream map, each checked against the binary. Overrides were renamed to match.",
+    "skill-insights-report-output": "Same slots and variables; the generic slot names are replaced by the descriptive names from the upstream map, each checked against the binary. Overrides were renamed to match.",
+    "data-built-in-gh-stand-in-api-command-help": "Same slots and variables; the generic slot names are replaced by the descriptive names from the upstream map, each checked against the binary. Overrides were renamed to match."
   }
 }
