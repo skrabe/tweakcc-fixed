@@ -170,6 +170,7 @@ export interface MiscConfig {
   useEverythingForGlob: boolean;
   allowCustomAgentModels: boolean;
   enableContextLimitOverride: boolean;
+  enableModelContextTokens: boolean;
   enableModelCustomizations: boolean;
   enableVoiceMode: boolean;
   enableVoiceConciseOutput: boolean;

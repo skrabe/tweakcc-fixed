@@ -749,6 +749,7 @@ export const DEFAULT_SETTINGS: Settings = {
     useEverythingForGlob: false,
     allowCustomAgentModels: false,
     enableContextLimitOverride: false,
+    enableModelContextTokens: false,
     enableModelCustomizations: true,
     enableVoiceMode: false,
     enableVoiceConciseOutput: true,
